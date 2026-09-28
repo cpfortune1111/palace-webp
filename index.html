@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>IKEMEN Web Prototype 0.3 · StageTraining</title>
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;color:#fff;font-family:system-ui,-apple-system,sans-serif}
+#app,canvas{width:100%;height:100%;display:block}
+#status{position:fixed;left:16px;top:16px;z-index:10;background:#08080dcc;padding:14px 18px;border-radius:18px;min-width:280px;max-width:calc(100vw - 68px)}
+#title{font-weight:800;font-size:19px}.small{font-size:13px;opacity:.75;margin-top:5px}
+#bar{height:7px;background:#ffffff1a;border-radius:8px;margin-top:11px;overflow:hidden}
+#fill{height:100%;width:0;background:#fff;transition:width .15s}
+#error{white-space:pre-wrap;color:#ffb3b3;font-size:12px;margin-top:8px;display:none}
+#buttons{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:9px}
+button{background:#09090dcc;color:#fff;border:1px solid #ffffff55;border-radius:18px;padding:14px 17px;font-size:16px;white-space:nowrap}
+#guide{position:fixed;inset:0;pointer-events:none;z-index:4}
+.v,.h{position:absolute;background:#ffffff25}.v{width:1px;top:0;bottom:0}.h{height:1px;left:0;right:0}
+#v1{left:5%}#v2{left:50%}#v3{right:5%}#h1{top:50%}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="guide"><div id="v1" class="v"></div><div id="v2" class="v"></div><div id="v3" class="v"></div><div id="h1" class="h"></div></div>
+<div id="status">
+ <div id="title">Prototype 0.3 · StageTraining</div>
+ <div id="msg">Starting…</div>
+ <div class="small" id="detail">HTTPS / separate GLB test</div>
+ <div id="bar"><div id="fill"></div></div>
+ <div id="error"></div>
+</div>
+<div id="buttons">
+ <button id="reset">IKEMEN View</button>
+ <button id="anim">Pause Anim</button>
+ <button id="guides">Hide Guides</button>
+</div>
+
+<script type="importmap">
+{"imports":{
+ "three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+ "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+
+const msg=document.querySelector('#msg'), detail=document.querySelector('#detail'),
+ fill=document.querySelector('#fill'), error=document.querySelector('#error');
+const set=(m,p=null,d=null)=>{msg.textContent=m;if(p!==null)fill.style.width=p+'%';if(d!==null)detail.textContent=d};
+
+window.addEventListener('error',e=>fail(e.message));
+window.addEventListener('unhandledrejection',e=>fail(String(e.reason)));
+function fail(x){msg.textContent='ERROR';error.style.display='block';error.textContent=x;fill.style.width='100%'}
+
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.setSize(innerWidth,innerHeight);
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
+document.querySelector('#app').appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x05050d);
+const camera=new THREE.PerspectiveCamera(30,innerWidth/innerHeight,.01,500);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+controls.dampingFactor=.08;
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x303040,2.2));
+const sun=new THREE.DirectionalLight(0xffffff,2.4); sun.position.set(4,8,5); scene.add(sun);
+
+let mixer=null, playing=true, stage=null;
+function resetView(){
+ camera.fov=30; camera.near=.01; camera.far=500;
+ camera.position.set(0,5.1,20.5);
+ camera.updateProjectionMatrix();
+ controls.target.set(0,2.2,-3.8);
+ controls.update();
+}
+resetView();
+
+set('Downloading StageTraining.glb…',0,'0 / ? MB');
+const loader=new GLTFLoader();
+loader.load('./assets/StageTraining.glb',
+ gltf=>{
+   set('Parsing / preparing GPU…',100,'Applying IKEMEN DEF transform');
+   stage=gltf.scene;
+   // StageTraining.def [Model]
+   stage.scale.setScalar(.075);
+   stage.position.set(0,-.2,-.9);
+   scene.add(stage);
+   if(gltf.animations.length){
+     mixer=new THREE.AnimationMixer(stage);
+     gltf.animations.forEach(c=>mixer.clipAction(c).play());
+   }
+   set('READY',100,`${gltf.animations.length} GLB animation(s) · FOV 30 · scale 0.075`);
+   setTimeout(()=>document.querySelector('#status').style.opacity=.72,1800);
+ },
+ xhr=>{
+   if(xhr.lengthComputable){
+     const p=Math.min(99,(xhr.loaded/xhr.total)*100);
+     set(`Downloading… ${p.toFixed(1)}%`,p,
+       `${(xhr.loaded/1048576).toFixed(1)} / ${(xhr.total/1048576).toFixed(1)} MB`);
+   }else{
+     set('Downloading StageTraining.glb…',5,`${(xhr.loaded/1048576).toFixed(1)} MB received`);
+   }
+ },
+ e=>fail(`Could not load assets/StageTraining.glb\n${e?.message||e}\n\nThis build must be opened from an HTTP/HTTPS host, not content:// or file://.`)
+);
+
+const clock=new THREE.Clock();
+function loop(){
+ requestAnimationFrame(loop);
+ const dt=Math.min(clock.getDelta(),.05);
+ if(mixer&&playing)mixer.update(dt);
+ controls.update();
+ renderer.render(scene,camera);
+}
+loop();
+
+addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+document.querySelector('#reset').onclick=resetView;
+document.querySelector('#anim').onclick=e=>{playing=!playing;e.currentTarget.textContent=playing?'Pause Anim':'Play Anim'};
+document.querySelector('#guides').onclick=e=>{
+ const g=document.querySelector('#guide'), hidden=g.style.display==='none';
+ g.style.display=hidden?'block':'none'; e.currentTarget.textContent=hidden?'Hide Guides':'Show Guides';
+};
+</script>
+</body>
+</html>
