@@ -1,111 +1,47 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.8 Venus + StageTraining</title>
+<title>Prototype 0.9 Venus + StageTraining</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
-#app{position:fixed;inset:0;z-index:0;pointer-events:none}
-#app canvas{position:absolute;display:block}
+#app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
 #venus{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
 #hud{position:fixed;z-index:10;left:12px;top:12px;background:#08080dcc;padding:11px 14px;border-radius:14px;max-width:min(330px,70vw)}
 #ctrl{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;white-space:nowrap}
 button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}
-#detail{font-size:13px;opacity:.8;margin-top:3px}
-#pbar{height:6px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:7px;width:min(260px,60vw)}
+#detail{font-size:13px;opacity:.8;margin-top:3px} #pbar{height:6px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:7px;width:min(260px,60vw)}
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.8 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.9 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-const app=document.querySelector('#app'), status=document.querySelector('#status'), act=document.querySelector('#act');
-const r=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.setSize(innerWidth,innerHeight);r.outputColorSpace=THREE.SRGBColorSpace;app.appendChild(r.domElement);
+const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act');
+const r=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.outputColorSpace=THREE.SRGBColorSpace;app.appendChild(r.domElement);
 const s=new THREE.Scene();s.background=new THREE.Color(0x05050d);
 const IK={w:1280,h:720,fov:30,zoomout:.75,zoffset:660,modelOffset:[0,-.2,-.9],modelScale:.075};
 const posMul=Math.tan(THREE.MathUtils.degToRad(IK.fov/2))*(-IK.modelOffset[2])/(IK.h/2);
 const derivedZOffset=IK.h/2-IK.modelOffset[1]/posMul;
 const c=new THREE.PerspectiveCamera(IK.fov,IK.w/IK.h,.01,500);
-// Bridge v1: fixed 1280x720 fight projection. Camera pose is no longer used as a tuning knob;
-// DEF fighting scale is represented by projection zoom.
 c.position.set(0,4.27,13.56);c.lookAt(0,2.2,-3.8);
-c.zoom=1/IK.zoomout;c.updateProjectionMatrix();
+// 0.8 showed ~11 checker cells; IKEMEN reference ~7.6.
+// Apply this only to the 3D projection; Venus remains 1:1 localcoord.
+const STAGE_CALIBRATION=11/7.6;
+c.zoom=(1/IK.zoomout)*STAGE_CALIBRATION;c.updateProjectionMatrix();
 s.add(new THREE.HemisphereLight(0xffffff,0x303040,2.2));const sun=new THREE.DirectionalLight(0xffffff,2.4);sun.position.set(4,8,5);s.add(sun);
-let mix;
-const detail=document.querySelector('#detail'),pfill=document.querySelector('#pfill');
-const STAGE_BYTES=16414592; // compiled StageTraining.glb manifest size
-async function loadStage(){
- try{
-   status.textContent='Downloading StageTraining.glb… 0.0%';
-   detail.textContent='0.0 / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';
-   const res=await fetch('./StageTraining.glb',{cache:'default'});
-   if(!res.ok) throw new Error('HTTP '+res.status);
-   let buffer;
-   if(res.body && res.body.getReader){
-     const reader=res.body.getReader(), chunks=[]; let received=0;
-     while(true){
-       const {done,value}=await reader.read(); if(done) break;
-       chunks.push(value); received+=value.byteLength;
-       const p=Math.min(100,received/STAGE_BYTES*100);
-       status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';
-       detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';
-       pfill.style.width=p+'%';
-     }
-     const all=new Uint8Array(received); let off=0;
-     for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}
-     buffer=all.buffer;
-   }else{
-     buffer=await res.arrayBuffer();
-   }
-   status.textContent='Parsing / preparing GPU…';
-   detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';
-   pfill.style.width='100%';
-   new GLTFLoader().parse(buffer,'./',g=>{
-     g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);
-     if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}
-     status.textContent='READY · camera locked';
-     detail.textContent='IK bridge · FOV '+IK.fov+' · zoomout '+IK.zoomout+' · zoffset '+derivedZOffset.toFixed(1);
-     resize(); // important if Android rotated while assets were loading
-   },e=>{throw e});
- }catch(e){
-   status.textContent='Stage ERROR';
-   detail.textContent=String(e?.message||e);
- }
-}
-loadStage();
-const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0,last=performance.now();
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_atlas.png'}),fetch('./venus_anim.json').then(x=>x.json())]).then(x=>{dat=x[1];});
-function setAction(a){current=+a;fi=0;ticks=0;act.textContent='Action '+a+({0:' · Idle',20:' · Walk right',21:' · Walk left',11:' · Crouch',41:' · Jump'}[a]||'')}
-document.querySelectorAll('button').forEach(b=>{b.onclick=()=>setAction(b.dataset.a)});
-function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi];let key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;
- ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
- const vw=window.visualViewport?visualViewport.width:innerWidth, vh=window.visualViewport?visualViewport.height:innerHeight;
- const fit=Math.min(vw/1280,vh/720);
- const viewW=1280*fit, viewH=720*fit;
- const viewX=(vw-viewW)*0.5, viewY=(vh-viewH)*0.5;
- const scale=fit; // SFF localcoord 1280x720 => 1:1 game-coordinate baseline
- const ground=viewY+660*fit; // StageInfo zoffset = 660
- const px=viewX+640*fit;
- const dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;
- ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
-}
-const clock=new THREE.Clock();function loop(now){requestAnimationFrame(loop);let dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);r.render(s,c);draw(dt)}requestAnimationFrame(loop);
-function resize(){
- const vw=window.visualViewport?visualViewport.width:innerWidth;
- const vh=window.visualViewport?visualViewport.height:innerHeight;
- const targetAspect=IK.w/IK.h, screenAspect=vw/vh;
- let rw=vw,rh=vh;
- if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}
- else{rw=vw;rh=rw/targetAspect}
- r.setSize(Math.round(rw),Math.round(rh),false);
- r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';
- r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';
- c.aspect=targetAspect;c.updateProjectionMatrix();
- cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);
- cv.style.width=vw+'px';cv.style.height=vh+'px';
- ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
- document.querySelector('#hud').style.display='block';
- document.querySelector('#ctrl').style.display='flex';
-}addEventListener('resize',resize);
-addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});
-if(window.visualViewport) visualViewport.addEventListener('resize',resize);
-resize();
+let mix;const detail=document.querySelector('#detail'),pfill=document.querySelector('#pfill');const STAGE_BYTES=16414592;
+async function loadStage(){try{
+status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0.0 / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';
+const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
+if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
+status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · stage zoom '+c.zoom.toFixed(3)+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
+}catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
+const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0;
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_atlas.png'}),fetch('./venus_anim.json').then(x=>x.json())]).then(x=>{dat=x[1];resize()});
+function setAction(a){current=+a;fi=0;ticks=0;act.textContent='Action '+a+({0:' · Idle',20:' · Walk right',21:' · Walk left',11:' · Crouch',41:' · Jump'}[a]||'')}document.querySelectorAll('button').forEach(b=>b.onclick=()=>setAction(b.dataset.a));
+function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
+const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+640*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
+const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);r.render(s,c);draw(dt)}requestAnimationFrame(loop);
+function resize(){const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
