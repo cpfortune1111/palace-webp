@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.10 Venus + StageTraining</title>
+<title>Prototype 0.11 Venus + StageTraining</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -11,7 +11,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.10 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.11 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -26,7 +26,12 @@ c.position.set(0,4.27,13.56);c.lookAt(0,2.2,-3.8);
 // 0.8 showed ~11 checker cells; IKEMEN reference ~7.6.
 // Apply this only to the 3D projection; Venus remains 1:1 localcoord.
 const STAGE_CALIBRATION=1.86;
-c.zoom=STAGE_CALIBRATION;c.updateProjectionMatrix();
+const STAGE_Y_LOGICAL=-60;
+c.zoom=STAGE_CALIBRATION;
+// Shift only the 3D projection upward by 60 logical pixels.
+// Scale and Venus mapping remain untouched.
+c.setViewOffset(IK.w,IK.h,0,60,IK.w,IK.h);
+c.updateProjectionMatrix();
 s.add(new THREE.HemisphereLight(0xffffff,0x303040,2.2));const sun=new THREE.DirectionalLight(0xffffff,2.4);sun.position.set(4,8,5);s.add(sun);
 let mix;const detail=document.querySelector('#detail'),pfill=document.querySelector('#pfill');const STAGE_BYTES=16414592;
 async function loadStage(){try{
@@ -34,7 +39,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · stage zoom '+c.zoom.toFixed(3)+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · zoom '+c.zoom.toFixed(3)+' · stage Y '+STAGE_Y_LOGICAL+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0;
 Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_atlas.png'}),fetch('./venus_anim.json').then(x=>x.json())]).then(x=>{dat=x[1];resize()});
