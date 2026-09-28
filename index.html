@@ -1,9 +1,10 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.11 Venus + StageTraining</title>
+<title>Prototype 0.12 Venus + Mars + StageTraining</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
 #venus{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
+#mars{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
 #hud{position:fixed;z-index:10;left:12px;top:12px;background:#08080dcc;padding:11px 14px;border-radius:14px;max-width:min(330px,70vw)}
 #ctrl{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;white-space:nowrap}
 button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}
@@ -11,7 +12,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.11 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.12 · Venus + Mars</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -43,10 +44,23 @@ new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.pos
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0;
 Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_atlas.png'}),fetch('./venus_anim.json').then(x=>x.json())]).then(x=>{dat=x[1];resize()});
+const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
+Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
+function drawMars(dt){
+ mctx.clearRect(0,0,mcv.width,mcv.height);if(!mdat||!matlas)return;
+ const frames=mdat.actions['0'];let f=frames[mfi],sp=mdat.sprites[f.group+','+f.item];if(!sp)return;
+ mticks+=dt*60;const dur=f.time<0?1e9:Math.max(1,f.time);if(mticks>=dur){mticks=0;mfi=(mfi+1)%frames.length;f=frames[mfi];sp=mdat.sprites[f.group+','+f.item]||sp}
+ const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,ground=viewY+660*fit,px=viewX+(640+280)*fit;
+ // P2 facing=-1: mirror around its logical axis.
+ mctx.save();mctx.translate(px,0);mctx.scale(-1,1);
+ const dx=-(sp.axisX-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit;
+ mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
+}
 function setAction(a){current=+a;fi=0;ticks=0;act.textContent='Action '+a+({0:' · Idle',20:' · Walk right',21:' · Walk left',11:' · Crouch',41:' · Jump'}[a]||'')}document.querySelectorAll('button').forEach(b=>b.onclick=()=>setAction(b.dataset.a));
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
-const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+640*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
-const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);r.render(s,c);draw(dt)}requestAnimationFrame(loop);
-function resize(){const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
+const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640-280)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
+const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);r.render(s,c);draw(dt);drawMars(dt)}requestAnimationFrame(loop);
+function resize(){const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
