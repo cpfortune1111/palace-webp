@@ -108,7 +108,7 @@ loader.load('./StageTraining.glb',
      set('Downloading StageTraining.glb…',5,`${(xhr.loaded/1048576).toFixed(1)} MB received`);
    }
  },
- e=>fail(`Could not load assets/StageTraining.glb\n${e?.message||e}\n\nThis build must be opened from an HTTP/HTTPS host, not content:// or file://.`)
+ e=>fail(`Could not load StageTraining.glb\n${e?.message||e}\n\nThis build must be opened from an HTTP/HTTPS host, not content:// or file://.`)
 );
 
 const clock=new THREE.Clock();
