@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.9 Venus + StageTraining</title>
+<title>Prototype 0.10 Venus + StageTraining</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -11,7 +11,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.9 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.10 · Venus</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -25,8 +25,8 @@ const c=new THREE.PerspectiveCamera(IK.fov,IK.w/IK.h,.01,500);
 c.position.set(0,4.27,13.56);c.lookAt(0,2.2,-3.8);
 // 0.8 showed ~11 checker cells; IKEMEN reference ~7.6.
 // Apply this only to the 3D projection; Venus remains 1:1 localcoord.
-const STAGE_CALIBRATION=11/7.6;
-c.zoom=(1/IK.zoomout)*STAGE_CALIBRATION;c.updateProjectionMatrix();
+const STAGE_CALIBRATION=1.86;
+c.zoom=STAGE_CALIBRATION;c.updateProjectionMatrix();
 s.add(new THREE.HemisphereLight(0xffffff,0x303040,2.2));const sun=new THREE.DirectionalLight(0xffffff,2.4);sun.position.set(4,8,5);s.add(sun);
 let mix;const detail=document.querySelector('#detail'),pfill=document.querySelector('#pfill');const STAGE_BYTES=16414592;
 async function loadStage(){try{
