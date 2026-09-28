@@ -1,14 +1,16 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.4 Venus + StageTraining</title>
-<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}#app,canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#venus{pointer-events:none}#hud{position:fixed;z-index:5;left:12px;top:12px;background:#08080dbb;padding:11px 14px;border-radius:14px}#ctrl{position:fixed;z-index:6;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px}button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}</style>
+<title>Prototype 0.5 Venus + StageTraining</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}#app,canvas{position:absolute;inset:0;width:100%;height:100%;display:block}#venus{pointer-events:none}#hud{position:fixed;z-index:5;left:12px;top:12px;background:#08080dbb;padding:11px 14px;border-radius:14px}#ctrl{position:fixed;z-index:6;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px}button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}#rotate{display:none;position:fixed;z-index:20;inset:0;background:#05050df2;align-items:center;justify-content:center;text-align:center;font-size:22px;font-weight:700;padding:30px}
+@media (orientation:portrait){#rotate{display:flex}#hud,#ctrl{display:none}}
+</style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.4 · Venus</b><div id="status">Loading…</div><div id="act">Action 0 · Idle</div></div>
+<body><div id="rotate">請將手機打橫 ↻<br><small style="font-size:14px;font-weight:400">Prototype 0.5 uses a 1280 × 720 battle viewport</small></div><div id="app"></div><canvas id="venus"></canvas><div id="hud"><b>Prototype 0.5 · Venus</b><div id="status">Loading…</div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'), status=document.querySelector('#status'), act=document.querySelector('#act');
 const r=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.setSize(innerWidth,innerHeight);r.outputColorSpace=THREE.SRGBColorSpace;app.appendChild(r.domElement);
-const s=new THREE.Scene();s.background=new THREE.Color(0x05050d);const c=new THREE.PerspectiveCamera(30,innerWidth/innerHeight,.01,500);c.position.set(0,5.1,20.5);c.lookAt(0,2.2,-3.8);
+const s=new THREE.Scene();s.background=new THREE.Color(0x05050d);const c=new THREE.PerspectiveCamera(30,innerWidth/innerHeight,.01,500);c.position.set(0,4.55,15.8);c.lookAt(0,2.2,-3.8);
 s.add(new THREE.HemisphereLight(0xffffff,0x303040,2.2));const sun=new THREE.DirectionalLight(0xffffff,2.4);sun.position.set(4,8,5);s.add(sun);
 let mix;new GLTFLoader().load('./StageTraining.glb',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked'},undefined,e=>status.textContent='Stage ERROR '+e);
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0,last=performance.now();
@@ -17,7 +19,12 @@ function setAction(a){current=+a;fi=0;ticks=0;act.textContent='Action '+a+({0:' 
 document.querySelectorAll('button').forEach(b=>{b.onclick=()=>setAction(b.dataset.a)});
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi];let key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;
  ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
- const scale=Math.min(innerWidth/1280,innerHeight/720)*0.78;const ground=innerHeight*0.735;const px=innerWidth*.5;
+ const fit=Math.min(innerWidth/1280,innerHeight/720);
+ const viewW=1280*fit, viewH=720*fit;
+ const viewX=(innerWidth-viewW)*0.5, viewY=(innerHeight-viewH)*0.5;
+ const scale=fit; // SFF localcoord 1280x720 => 1:1 game-coordinate baseline
+ const ground=viewY+660*fit; // StageInfo zoffset = 660
+ const px=viewX+640*fit;
  const dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;
  ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
 }
