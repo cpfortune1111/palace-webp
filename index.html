@@ -10,10 +10,16 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;fon
 button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}
 #detail{font-size:13px;opacity:.8;margin-top:3px} #pbar{height:6px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:7px;width:min(260px,60vw)}
 #pfill{height:100%;width:0;background:white;transition:width .15s}
+
+#ctrl{position:fixed!important;z-index:4!important;left:34px!important;right:auto!important;bottom:max(28px,env(safe-area-inset-bottom))!important;transform:none!important;display:block!important}
+#ctrl button{display:none!important}
+#stick{width:150px;height:150px;border-radius:50%;background:#202126cc;border:2px solid #777;position:relative;touch-action:none;box-shadow:0 4px 18px #0008}
+#stick:before{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:#777;transform:translate(-50%,-50%)}
+#stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
 <body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.14 · Venus Runtime + Mars</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
-<div id="ctrl"><button id="leftBtn">◀ Walk</button><button id="rightBtn">Walk ▶</button><button id="jumpBtn">Jump</button></div>
+<div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act');
@@ -56,33 +62,41 @@ function drawMars(dt){
  const dx=-(sp.axisX-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit;
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
-const input={left:false,right:false,down:false,jump:false};
+const input={left:false,right:false,up:false,down:false,jump:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,stateTicks=0;
 function enterState(st,anim){
  state=st; current=anim; fi=0;ticks=0;stateTicks=0;
  act.textContent='State '+st+' · AIR '+anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
 }
-function bindHold(btn,key){
- const on=e=>{e.preventDefault();input[key]=true};
- const off=e=>{e.preventDefault();input[key]=false};
- btn.addEventListener('pointerdown',on);btn.addEventListener('pointerup',off);
- btn.addEventListener('pointercancel',off);btn.addEventListener('pointerleave',off);
+const stick=document.querySelector('#stick'),knob=document.querySelector('#stickKnob');
+let stickPointer=null;
+function setStick(clientX,clientY){
+ const r=stick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ let dx=clientX-cx,dy=clientY-cy;const max=r.width*.34,mag=Math.hypot(dx,dy);
+ if(mag>max){dx*=max/mag;dy*=max/mag}
+ knob.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
+ const nx=dx/max,ny=dy/max,dead=.28;
+ input.left=nx<-dead;input.right=nx>dead;input.up=ny<-dead;input.down=ny>dead;input.jump=input.up;
 }
-bindHold(document.querySelector('#leftBtn'),'left');
-bindHold(document.querySelector('#rightBtn'),'right');
-bindHold(document.querySelector('#jumpBtn'),'jump');
-const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'jump',z:'jump',Z:'jump'};
-addEventListener('keydown',e=>{if(keymap[e.key]){e.preventDefault();input[keymap[e.key]]=true}});
-addEventListener('keyup',e=>{if(keymap[e.key]){e.preventDefault();input[keymap[e.key]]=false}});
+function clearStick(){input.left=input.right=input.up=input.down=input.jump=false;knob.style.transform='translate(-50%,-50%)'}
+stick.addEventListener('pointerdown',e=>{e.preventDefault();stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);setStick(e.clientX,e.clientY)});
+stick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer){e.preventDefault();setStick(e.clientX,e.clientY)}});
+function endStick(e){if(e.pointerId===stickPointer){stickPointer=null;clearStick()}}
+stick.addEventListener('pointerup',endStick);stick.addEventListener('pointercancel',endStick);
+const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'down',ArrowUp:'up'};
+addEventListener('keydown',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=true;if(k==='up')input.jump=true}});
+addEventListener('keyup',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=false;if(k==='up')input.jump=false}});
 function simStep(){
  if(!dat)return;
  const K=dat.constants;
  stateTicks++;
 
- if(state===0||state===20){
+ if(state===0||state===20||state===11){
    posY=0;vy=0;
    if(input.jump&&!jumpLatch){
      jumpLatch=true; enterState(40,40);
+   } else if(input.down){
+     vx=0;if(state!==11||current!==11)enterState(11,11);
    } else if(input.left||input.right){
      if(input.right){
        vx=K.walkFwd;
@@ -124,7 +138,7 @@ function simStep(){
  }
 
  posX=Math.max(-580,Math.min(580,posX));
- act.textContent='State '+state+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
+ act.textContent='State '+state+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
