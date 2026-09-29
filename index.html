@@ -1,14 +1,22 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.19.1 Ground Transition M1</title>
+<title>Prototype 0.19.2 Generic Controller M2</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
 #venus{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
 #mars{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
-#hud{position:fixed;z-index:10;left:12px;top:12px;background:#08080dcc;padding:11px 14px;border-radius:14px;max-width:min(330px,70vw)}
+#hud{position:fixed;z-index:10;left:8px;top:8px;background:#08080dcc;padding:6px 8px;border-radius:9px;width:min(226px,58vw);max-width:58vw;font-size:10px;line-height:1.22;overflow-wrap:anywhere;cursor:pointer;user-select:none;-webkit-user-select:none}
+#hud b{font-size:13px;line-height:1.15;display:block}
+#buildid{font-size:9px!important;line-height:1.15;margin-top:1px!important}
+#status{font-size:10px;margin-top:2px}
+#act{font-size:10px;line-height:1.22;margin-top:3px}
+#hud.collapsed{width:auto;max-width:70vw;padding:5px 7px}
+#hud.collapsed #buildid,#hud.collapsed #status,#hud.collapsed #detail,#hud.collapsed #pbar{display:none}
+#hud.collapsed b{display:none}
+#hud.collapsed #act{margin:0;white-space:nowrap}
 #ctrl{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;white-space:nowrap}
 button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}
-#detail{font-size:13px;opacity:.8;margin-top:3px} #pbar{height:6px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:7px;width:min(260px,60vw)}
+#detail{font-size:9px;line-height:1.18;opacity:.78;margin-top:2px} #pbar{height:3px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:4px;width:100%}
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 
 #ctrl{position:fixed!important;z-index:4!important;left:34px!important;right:auto!important;bottom:max(28px,env(safe-area-inset-bottom))!important;transform:none!important;display:block!important}
@@ -18,11 +26,14 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.1 · Ground Transition M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD ground-transition-m1-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.2 · Generic Controller M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD generic-controller-m2-20260929-01 · compact HUD</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act');
+const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
+let hudCollapsed=false;
+hud.addEventListener('click',()=>{hudCollapsed=!hudCollapsed;hud.classList.toggle('collapsed',hudCollapsed)});
+
 const r=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});r.setPixelRatio(Math.min(devicePixelRatio,1.5));r.outputColorSpace=THREE.SRGBColorSpace;app.appendChild(r.domElement);
 const s=new THREE.Scene();s.background=new THREE.Color(0x05050d);
 const IK={w:1280,h:720,fov:30,zoomout:.75,zoffset:660,modelOffset:[0,-.2,-.9],modelScale:.075};
@@ -46,10 +57,10 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · ground transition M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · generic controller M2';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0191'}),fetch('./venus_runtime.json?v=0191',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0191',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0192'}),fetch('./venus_runtime.json?v=0192',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0192',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -64,6 +75,7 @@ function drawMars(dt){
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
 const STAGE_PLAYER={leftbound:-3750,rightbound:3750,screenleft:60,screenright:60};
@@ -172,15 +184,34 @@ function latchJumpIntent(){
  else if(input.left)jumpIntent='back';
  else jumpIntent='neutral';
 }
+function splitArgsM1(s){
+ const out=[];let cur='',depth=0;
+ for(const ch of s){if(ch==='(')depth++;else if(ch===')')depth--;if(ch===','&&depth===0){out.push(cur.trim());cur='';}else cur+=ch}
+ if(cur.trim())out.push(cur.trim());return out;
+}
+function expandIfElseM1(e){
+ let lower=e.toLowerCase(),i=lower.indexOf('ifelse(');
+ while(i>=0){
+  let depth=0,end=-1;
+  for(let j=i+7;j<e.length;j++){if(e[j]==='(')depth++;else if(e[j]===')'){if(depth===0){end=j;break}depth--}}
+  if(end<0)throw new Error('M2 malformed ifelse: '+e);
+  const args=splitArgsM1(e.slice(i+7,end));if(args.length!==3)throw new Error('M2 ifelse args: '+e);
+  const repl='(('+args[0]+')?('+args[1]+'):('+args[2]+'))';e=e.slice(0,i)+repl+e.slice(end+1);lower=e.toLowerCase();i=lower.indexOf('ifelse(');
+ }return e;
+}
 function evalM1(expr){
  let e=String(expr).trim();
- const values=[['PrevStateNo',prevState],['StateNo',state],['AnimTime',animDone()?0:-1],['AILevel',0],['Ctrl',runtimeCtrl],['Time',stateTicks],['Anim',current],['Pos Y',posY],['Pos X',posX],['Vel Y',vy],['Vel X',vx]];
+ e=e.replace(/\bcommand\s*=\s*"holdfwd"/gi,()=>input.right?'1':'0');
+ e=e.replace(/\bcommand\s*=\s*"holdback"/gi,()=>input.left?'1':'0');
+ e=e.replace(/\bsysvar\s*\(\s*(\d+)\s*\)/gi,(_,n)=>String(runtimeSysVar[Number(n)]||0));
+ e=e.replace(/\bvar\s*\(\s*(\d+)\s*\)/gi,(_,n)=>String(runtimeVar[Number(n)]||0));
  e=e.replace(/\babs\s*\(/gi,'Math.abs(');
  e=e.replace(/\bConst\s*\(\s*([^)]+?)\s*\)/gi,(_,k)=>String(constVal(String(k).trim())));
- for(const [name,value] of values){const pat=name.replace(/\s+/g,'\\s+');e=e.replace(new RegExp('\\b'+pat+'\\b','gi'),String(value));}
- e=e.replace(/(?<![!<>=])=(?!=)/g,'==');
- if(!/^[0-9eE+\-*/%().,<>=!&|\sA-Za-z]+$/.test(e))throw new Error('M1 unsupported expression: '+expr);
- try{return Function('"use strict";return ('+e+')')()}catch(err){throw new Error('M1 expression error ['+expr+']: '+err.message)}
+ const values=[['PrevStateNo',prevState],['StateNo',state],['AnimTime',animDone()?0:-1],['AILevel',0],['Ctrl',runtimeCtrl],['Time',stateTicks],['Anim',current],['Pos Y',posY],['Pos X',posX],['Vel Y',vy],['Vel X',vx]];
+ for(const [name,value] of values){const pat=name.replace(/\s+/g,'\\s+');e=e.replace(new RegExp('\\b'+pat+'\\b','gi'),String(value))}
+ e=expandIfElseM1(e);e=e.replace(/(?<![!<>=])=(?!=)/g,'==');
+ if(!/^[0-9eE+\-*/%().,<>=!&|?:\sA-Za-z]+$/.test(e))throw new Error('M2 unsupported expression: '+expr);
+ try{return Function('"use strict";return ('+e+')')()}catch(err){throw new Error('M2 expression error ['+expr+']: '+err.message)}
 }
 function controllerTriggered(c){
  if(!c.triggers)return null;
@@ -198,8 +229,9 @@ function runController(c){
  }
  const p=c.params||c;
  switch(c.type){
-  case 'WalkVelocity':vx=input.right?constVal('velocity.walk.fwd.x'):constVal('velocity.walk.back.x');posX+=vx;break;
-  case 'JumpTakeoff':vx=jumpIntent==='forward'?constVal('velocity.jump.fwd.x'):(jumpIntent==='back'?constVal('velocity.jump.back.x'):constVal('velocity.jump.neu.x'));vy=constVal('velocity.jump.y');enterIRState(c.nextState);break;
+  case 'VarSet':{
+   const m=String(p.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!m)throw new Error('M2 VarSet target '+p.target);
+   const arr=m[1].toLowerCase()==='sysvar'?runtimeSysVar:runtimeVar;arr[Number(m[2])]=Number(paramM1(p.value));break}
   case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x));if(p.y!==undefined)vy=Number(paramM1(p.y));break;
   case 'VelAdd':if(p.x!==undefined)vx+=Number(paramM1(p.x));if(p.y!==undefined)vy+=Number(paramM1(p.y));break;
   case 'VelMul':if(p.x!==undefined)vx*=Number(paramM1(p.x));if(p.y!==undefined)vy*=Number(paramM1(p.y));break;
@@ -207,10 +239,9 @@ function runController(c){
   case 'PosAdd':if(p.x!==undefined)posX+=Number(paramM1(p.x));if(p.y!==undefined)posY+=Number(paramM1(p.y));break;
   case 'CtrlSet':runtimeCtrl=Number(paramM1(p.value));break;
   case 'ChangeAnim':current=Number(paramM1(p.value));fi=0;ticks=0;break;
-  case 'VelSetThreshold':if(c.axis==='x'&&Math.abs(vx)<constVal(c.absBelowConst))vx=Number(c.value);break;
   case 'ChangeState':enterIRState(Number(paramM1(p.value)));if(p.ctrl!==undefined)runtimeCtrl=Number(paramM1(p.ctrl));break;
   case 'Land':posY=0;vy=0;enterIRState(c.value);break;
-  default:throw new Error('M1 unsupported controller: '+c.type);
+  default:throw new Error('M2 unsupported controller: '+c.type);
  }
 }
 function applyPhysics(def){
@@ -229,7 +260,7 @@ function dispatchGroundCommands(){
  // without waiting for State 0 and without an artificial release/re-press latch.
  const def=stateDef();if(!def||def.type==='A'||!runtimeCtrl)return;
  posY=0;vy=0;
- if(input.jump){latchJumpIntent();enterIRState(40);return}
+ if(input.jump){enterIRState(40);return}
  if(state===52)return; // keep landing state until its own CNS controller changes it
  // Source ground chain: Stand -> State 10 -> State 11 -> State 12 -> Stand.
  if(input.down){
@@ -241,8 +272,7 @@ function dispatchGroundCommands(){
  if(state===11){enterIRState(12);return} // release hold-down: crouch-to-stand transition
  if(state===12)return; // State 12's AnimTime controller owns 12 -> 0.
  if(input.left||input.right){
-   const wantedAnim=input.right?20:21;
-   if(state!==20||current!==wantedAnim)enterIRState(20,wantedAnim);
+   if(state!==20)enterIRState(20);
    return;
  }
  vx=0;if(state!==0)enterIRState(0);
@@ -280,7 +310,9 @@ function simStep(){
  }
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const pd=stateDef();
- act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
+ act.textContent=hudCollapsed
+  ? '0.19.2 · S'+state+' · CTRL '+runtimeCtrl
+  : 'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}

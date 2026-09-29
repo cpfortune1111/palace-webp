@@ -1,6 +1,6 @@
 {
-  "version": "0.19.1-ground-transition-m1",
-  "generatedBy": "CNS Runtime M1.1",
+  "version": "0.19.2-generic-controller-m2",
+  "generatedBy": "CNS Runtime Generic Controller M2",
   "states": {
     "0": {
       "type": "S",
@@ -144,8 +144,70 @@
       "ctrl": 1,
       "controllers": [
         {
-          "type": "WalkVelocity",
-          "source": "legacy movement adapter"
+          "type": "VelSet",
+          "triggerall": [
+            "!AILevel"
+          ],
+          "triggers": {
+            "1": [
+              "command = \"holdfwd\""
+            ]
+          },
+          "params": {
+            "x": "const(velocity.walk.fwd.x)"
+          },
+          "source": "venus_Common.cns State 20"
+        },
+        {
+          "type": "VelSet",
+          "triggerall": [
+            "!AILevel"
+          ],
+          "triggers": {
+            "1": [
+              "command = \"holdback\""
+            ]
+          },
+          "params": {
+            "x": "const(velocity.walk.back.x)"
+          },
+          "source": "venus_Common.cns State 20"
+        },
+        {
+          "type": "ChangeAnim",
+          "triggerall": [
+            "Vel X > 0"
+          ],
+          "triggers": {
+            "1": [
+              "Anim != 20 && Anim != 5"
+            ],
+            "2": [
+              "Anim = 5 && AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "20"
+          },
+          "source": "venus_Common.cns State 20"
+        },
+        {
+          "type": "ChangeAnim",
+          "triggerall": [
+            "Vel X < 0"
+          ],
+          "triggers": {
+            "1": [
+              "Anim != 21 && Anim != 5"
+            ],
+            "2": [
+              "Anim = 5 && AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "21"
+          },
+          "source": "venus_Common.cns State 20"
         }
       ]
     },
@@ -156,28 +218,125 @@
       "ctrl": 0,
       "controllers": [
         {
-          "type": "JumpTakeoff",
-          "trigger": "AnimDone",
-          "nextState": 50,
-          "source": "legacy movement adapter"
+          "type": "VarSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "target": "sysvar(1)",
+            "value": "0"
+          },
+          "source": "venus_Common.cns State 40"
+        },
+        {
+          "type": "VarSet",
+          "triggerall": [
+            "!AILevel"
+          ],
+          "triggers": {
+            "1": [
+              "command = \"holdfwd\""
+            ]
+          },
+          "params": {
+            "target": "sysvar(1)",
+            "value": "1"
+          },
+          "source": "venus_Common.cns State 40"
+        },
+        {
+          "type": "VarSet",
+          "triggerall": [
+            "!AILevel"
+          ],
+          "triggers": {
+            "1": [
+              "command = \"holdback\""
+            ]
+          },
+          "params": {
+            "target": "sysvar(1)",
+            "value": "-1"
+          },
+          "source": "venus_Common.cns State 40"
+        },
+        {
+          "type": "VelSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "x": "ifelse(sysvar(1) = 0, const(velocity.jump.neu.x), ifelse(sysvar(1) = 1, const(velocity.jump.fwd.x), const(velocity.jump.back.x)))",
+            "y": "const(velocity.jump.y)"
+          },
+          "source": "venus_Common.cns State 40"
+        },
+        {
+          "type": "ChangeState",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "50",
+            "ctrl": "1"
+          },
+          "source": "venus_Common.cns State 40"
         }
       ]
     },
     "50": {
       "type": "A",
       "physics": "A",
-      "anim": "JumpByVelocity",
+      "anim": "Keep",
       "ctrl": 1,
       "controllers": [
         {
+          "type": "VarSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "target": "sysvar(1)",
+            "value": "0"
+          },
+          "source": "venus_Common.cns State 50"
+        },
+        {
+          "type": "ChangeAnim",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "value": "ifelse(Vel X = 0, 41, ifelse(Vel X > 0, 42, 43))"
+          },
+          "source": "venus_Common.cns State 50"
+        },
+        {
           "type": "ChangeState",
           "trigger": "VelYPositive",
-          "value": 51
+          "value": 51,
+          "source": "temporary engine phase adapter"
         },
         {
           "type": "Land",
           "trigger": "PosYAtGround",
-          "value": 52
+          "value": 52,
+          "source": "temporary engine landing adapter"
         }
       ]
     },
@@ -228,10 +387,17 @@
           }
         },
         {
-          "type": "VelSetThreshold",
-          "axis": "x",
-          "absBelowConst": "movement.stand.friction.threshold",
-          "value": 0
+          "type": "VelSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "abs(Vel X) < Const(movement.stand.friction.threshold)"
+            ]
+          },
+          "params": {
+            "x": "0"
+          },
+          "source": "venus_Common.cns State 52"
         },
         {
           "type": "ChangeState",
