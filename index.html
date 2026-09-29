@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.17.3 · State 52 Corrected</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state52-corrected-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.18 · Camera Follow Slice 1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD camera-follow-s1-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -46,17 +46,17 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · zoom '+c.zoom.toFixed(3)+' · stage Y '+STAGE_Y_LOGICAL+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera follow S1';detail.textContent='IK camera · tension 200 · floor 200 · vfollow .5 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0173'}),fetch('./venus_runtime.json?v=0173',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0173',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0180'}),fetch('./venus_runtime.json?v=0180',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0180',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
  mctx.clearRect(0,0,mcv.width,mcv.height);if(!mdat||!matlas)return;
  const frames=mdat.actions['0'];let f=frames[mfi],sp=mdat.sprites[f.group+','+f.item];if(!sp)return;
  mticks+=dt*60;const dur=f.time<0?1e9:Math.max(1,f.time);if(mticks>=dur){mticks=0;mfi=(mfi+1)%frames.length;f=frames[mfi];sp=mdat.sprites[f.group+','+f.item]||sp}
- const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,ground=viewY+660*fit,px=viewX+(640+280)*fit;
+ const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,ground=viewY+(660-cameraY)*fit,px=viewX+(640+280-cameraX)*fit;
  // P2 facing=-1: mirror around its logical axis.
  mctx.save();mctx.translate(px,0);mctx.scale(-1,1);
  const dx=-(sp.axisX-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit;
@@ -64,6 +64,23 @@ function drawMars(dt){
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+// StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
+const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
+let cameraX=0,cameraY=0;
+function updateCamera(){
+ // Horizontal S1 follows the midpoint between P1 and the fixed P2 dummy.
+ // A tension dead-zone prevents the camera from moving at the original -280/+280 start positions.
+ const midpoint=(posX+280)*.5;
+ if(midpoint>STAGE_CAMERA.tension)cameraX=midpoint-STAGE_CAMERA.tension;
+ else if(midpoint<-STAGE_CAMERA.tension)cameraX=midpoint+STAGE_CAMERA.tension;
+ else cameraX=0;
+ cameraX=Math.max(STAGE_CAMERA.boundleft,Math.min(STAGE_CAMERA.boundright,cameraX));
+ // MUGEN Y is negative above ground. Only follow once P1 rises above floortension.
+ const yTarget=posY < -STAGE_CAMERA.floortension ? (posY+STAGE_CAMERA.floortension)*STAGE_CAMERA.verticalfollow : 0;
+ cameraY=Math.max(STAGE_CAMERA.boundhigh,Math.min(STAGE_CAMERA.boundlow,yTarget));
+ // Apply camera as a runtime projection offset on top of the locked stage calibration.
+ c.setViewOffset(IK.w,IK.h,cameraX,60+cameraY,IK.w,IK.h);c.updateProjectionMatrix();
+}
 function enterState(st,anim){
  state=st; current=anim; fi=0;ticks=0;stateTicks=0;
  act.textContent='State '+st+' · AIR '+anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
@@ -210,10 +227,10 @@ function simStep(){
  if(state===tickState)stateTicks++;
  posX=Math.max(-580,Math.min(580,posX));
  const pd=stateDef();
- act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
+ act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1);
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
-const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
+const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
  runtimeFailed=true;console.error(e);
@@ -224,7 +241,7 @@ function loop(){
  requestAnimationFrame(loop);
  if(runtimeFailed)return;
  try{
-  const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);simStep();r.render(s,c);draw(dt);drawMars(dt);
+  const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);simStep();updateCamera();r.render(s,c);draw(dt);drawMars(dt);
  }catch(e){showRuntimeError(e)}
 }
 requestAnimationFrame(loop);
