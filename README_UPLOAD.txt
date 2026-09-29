@@ -1,13 +1,11 @@
-0.19.2a Movement Fix
-Upload/replace ONLY index.html. Keep the existing 0.19.2 venus_runtime_states.json.
+0.19.3 Air Physics Landing M3
+Upload/replace index.html + venus_runtime_states.json.
 
-Fixes:
-1. Ground physics S/C now integrates posX from source VelSet velocity, restoring forward/back walk.
-2. command="holdfwd"/"holdback" ignores tiny horizontal joystick drift inside the locked ±15° neutral vertical cone, restoring true neutral jump.
+Source/engine verification:
+Venus State 50 and 51 use physics=A; State 51 is empty.
+IKEMEN engine performs position update and hardcoded landing from physics=A to State 52 when descending at ground contact.
+Removed prototype VelYPositive and PosYAtGround/Land adapters.
 
-Test:
-- pure left/right walk moves Venus
-- straight up => neutral jump
-- up-right/up-left outside ±15° => forward/back jump
-- crouch 10->11->12->0 remains good
-- camera/EDGE/zoom/joystick thresholds unchanged
+Expected normal path: 40 -> 50 -> engine landing -> 52 -> 0.
+State 50 source ChangeAnim still owns AIR 41/42/43 selection.
+Regression: walk; neutral/fwd/back jump; landing; crouch chain; camera/EDGE/zoom/joystick.

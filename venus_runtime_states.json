@@ -1,6 +1,6 @@
 {
-  "version": "0.19.2-generic-controller-m2",
-  "generatedBy": "CNS Runtime Generic Controller M2",
+  "version": "0.19.3-air-physics-landing-m3",
+  "generatedBy": "CNS Runtime Air Physics/Landing M3",
   "states": {
     "0": {
       "type": "S",
@@ -325,18 +325,6 @@
             "value": "ifelse(Vel X = 0, 41, ifelse(Vel X > 0, 42, 43))"
           },
           "source": "venus_Common.cns State 50"
-        },
-        {
-          "type": "ChangeState",
-          "trigger": "VelYPositive",
-          "value": 51,
-          "source": "temporary engine phase adapter"
-        },
-        {
-          "type": "Land",
-          "trigger": "PosYAtGround",
-          "value": 52,
-          "source": "temporary engine landing adapter"
         }
       ]
     },
@@ -345,13 +333,7 @@
       "physics": "A",
       "anim": "Keep",
       "ctrl": 1,
-      "controllers": [
-        {
-          "type": "Land",
-          "trigger": "PosYAtGround",
-          "value": 52
-        }
-      ]
+      "controllers": []
     },
     "52": {
       "type": "S",
