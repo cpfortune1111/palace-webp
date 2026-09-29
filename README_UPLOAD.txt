@@ -1,11 +1,12 @@
-0.19.3 Air Physics Landing M3
-Upload/replace index.html + venus_runtime_states.json.
+0.19.4 Expression AST M3
+Upload index.html + venus_runtime_states.json.
 
-Source/engine verification:
-Venus State 50 and 51 use physics=A; State 51 is empty.
-IKEMEN engine performs position update and hardcoded landing from physics=A to State 52 when descending at ground contact.
-Removed prototype VelYPositive and PosYAtGround/Land adapters.
+Architecture:
+- Removed executable JavaScript Function() expression evaluation.
+- Added deterministic Tokenizer -> Parser -> AST -> Evaluator.
+- AST is cached after first parse.
+- Current verified movement slice: literals; unary !/+/-; arithmetic; comparisons; &&/||; parentheses; Time/Anim/AnimTime/StateNo/PrevStateNo/Ctrl/AILevel/Pos/Vel; abs(), Const(), var(), sysvar(), ifelse()/cond(); holdfwd/holdback.
+- Unsupported expressions fail loudly instead of falling through to JS.
 
-Expected normal path: 40 -> 50 -> engine landing -> 52 -> 0.
-State 50 source ChangeAnim still owns AIR 41/42/43 selection.
-Regression: walk; neutral/fwd/back jump; landing; crouch chain; camera/EDGE/zoom/joystick.
+Gameplay expected unchanged from 0.19.3.
+Regression: walk, crouch 10->11->12->0, neutral/fwd/back jump, landing, camera/EDGE/zoom/joystick.
