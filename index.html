@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.19.6 CMD Sequence Buffer M2</title>
+<title>Prototype 0.19.7 State -1 First Attack M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -24,9 +24,10 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stick{width:150px;height:150px;border-radius:50%;background:#202126cc;border:2px solid #777;position:relative;touch-action:none;box-shadow:0 4px 18px #0008}
 #stick:before{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:#777;transform:translate(-50%,-50%)}
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+#atkX{position:fixed;right:48px;bottom:74px;width:82px;height:82px;border-radius:50%;border:2px solid #aaa;background:#333a;color:#fff;font:bold 28px system-ui;z-index:9;touch-action:none}#atkX.pressed{background:#777a}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.6 · CMD Sequence Buffer M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-sequence-buffer-m2-20260930-03 · tick-order fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.7 · State -1 First Attack M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state-minus1-attack-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -57,11 +58,11 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD sequence buffer M2b';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · State -1 first attack M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
 let cmdDat=null;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0196'}),fetch('./venus_runtime.json?v=0196',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0196',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0196',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197'}),fetch('./venus_runtime.json?v=0197',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0197',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -185,12 +186,15 @@ function latchJumpIntent(){
  else if(input.left)jumpIntent='back';
  else jumpIntent='neutral';
 }
+const atkX=document.querySelector('#atkX');let xHeld=false;
+atkX.addEventListener('pointerdown',e=>{e.preventDefault();xHeld=true;atkX.classList.add('pressed');atkX.setPointerCapture?.(e.pointerId)});
+function releaseX(){xHeld=false;atkX.classList.remove('pressed')}atkX.addEventListener('pointerup',releaseX);atkX.addEventListener('pointercancel',releaseX);
 const inputHistory=[];
 const commandBuffer=new Map();
 let prevCanonical={F:false,B:false,U:false,D:false,a:false,b:false,c:false,x:false,y:false,z:false,s:false};
 function canonicalNow(){
  return {F:!!input.right&&!input.neutralVertical,B:!!input.left&&!input.neutralVertical,U:!!input.jump,D:!!input.down,
-         a:!!input.a,b:!!input.b,c:!!input.c,x:!!input.x,y:!!input.y,z:!!input.z,s:!!input.s};
+         a:!!input.a,b:!!input.b,c:!!input.c,x:xHeld||!!input.x,y:!!input.y,z:!!input.z,s:!!input.s};
 }
 function sampleInputHistory(){
  const now=canonicalNow(),edge={};
@@ -299,6 +303,11 @@ function applyPhysics(def){
    vx*=friction;
  }
 }
+function runAttackReturnM1(){if(state===200&&animDone()){enterIRState(0);return true}return false}
+function runStateMinus1M1(){
+ if(runtimeCtrl && stateDef()?.type!=='A' && commandActive('x') && !commandActive('holddown')){enterIRState(200);return true}
+ return false;
+}
 function dispatchGroundCommands(){
  // Follow source control semantics: commands may run in any grounded state once ctrl=1.
  // In particular State 52 sets ctrl=1 at Time=3, so held holdup can enter State 40
@@ -335,7 +344,7 @@ function simStep(){
  for(const c of (def.controllers||[])){
    const st=state;runController(c);if(state!==st)break;
  }
- dispatchGroundCommands();
+ if(!runAttackReturnM1()&&!runStateMinus1M1())dispatchGroundCommands();
  // A newly entered state must get a real Time=0 evaluation on the next tick.
  // Previously we incremented immediately after ChangeState, so State 50 skipped
  // its Time=0 ChangeAnim and remained on AIR 40.
@@ -361,7 +370,7 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const pd=stateDef();
  act.textContent=hudCollapsed
-  ? '0.19.6 · S'+state+' · CTRL '+runtimeCtrl
+  ? '0.19.7 · S'+state+' · CTRL '+runtimeCtrl
   : 'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}

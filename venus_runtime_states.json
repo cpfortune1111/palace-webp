@@ -1,5 +1,5 @@
 {
-  "version": "0.19.6-cmd-sequence-buffer-m2",
+  "version": "0.19.7-state-minus1-first-attack-m1",
   "generatedBy": "CNS Runtime Expression AST M3",
   "states": {
     "0": {
@@ -396,6 +396,19 @@
           "source": "venus_Common.cns State 52 ChangeState"
         }
       ]
+    },
+    "200": {
+      "source": "venus.cns",
+      "stateDef": {
+        "type": "S",
+        "movetype": "A",
+        "physics": "S",
+        "anim": 200,
+        "ctrl": 0,
+        "juggle": 1,
+        "velset": "0,0"
+      },
+      "controllers": []
     }
   },
   "constants": {
