@@ -1,24 +1,14 @@
-0.19.7e CMD Expiry / No Deferred X Fix
-Upload/replace ONLY index.html. Keep all 0.19.7d attack atlas/JSON files.
+0.19.7f Generic StateDef velset
+Upload/replace ONLY index.html. Keep 0.19.7d attack atlas/JSON and existing state/CMD JSON.
 
-Observed:
-- rapid second X during State 200 caused another attack after returning to State 0
-- X while holding down caused State 200 after standing
-- X in air caused State 200 after landing
-
-Root cause:
-commandActive() incorrectly searched the entire CMD 'time' history for the FINAL step,
-so an old X press could become active later. Its buffer also used stateTicks, which resets
-on ChangeState, instead of a monotonic input clock.
+Source:
+State 200 declares velset = 0,0.
 
 Fix:
-- final command step must complete on the CURRENT simulation tick
-- older input history is used only for earlier steps of multi-step commands
-- buffer.time uses monotonic inputTick, never State Time
-- held /$F /$B /$U /$D remain continuous and unbuffered
+enterIRState() now applies a state's normalized IR velset generically at state entry.
+This is not a State-200 special case.
 
 Expected:
-- X in State 0 -> one State 200
-- second X while first attack is busy -> discarded, no queued second attack
-- hold down + X -> no attack now and no attack after standing
-- jump + X -> no attack now and no attack after landing
+- S20/S21 -> X -> S200 immediately sets VX=0 and VY=0.
+- attack no longer slides with walk velocity.
+- normal walk/crouch/jump and previous no-deferred-X behavior unchanged.
