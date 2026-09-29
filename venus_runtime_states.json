@@ -408,7 +408,49 @@
         0,
         0
       ],
-      "controllers": []
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) > 0",
+              "command = \"holdup\""
+            ]
+          },
+          "value": 40,
+          "ctrl": 0
+        },
+        {
+          "type": "ChangeState",
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) > 0",
+              "command = \"holddown\""
+            ]
+          },
+          "value": 10,
+          "ctrl": 0
+        },
+        {
+          "type": "StateTypeSet",
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) > 0"
+            ]
+          },
+          "moveType": "I"
+        },
+        {
+          "type": "ChangeState",
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "value": 0,
+          "ctrl": 1
+        }
+      ]
     }
   },
   "constants": {

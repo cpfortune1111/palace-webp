@@ -1,14 +1,12 @@
-0.19.7f Generic StateDef velset
-Upload/replace ONLY index.html. Keep 0.19.7d attack atlas/JSON and existing state/CMD JSON.
+0.19.8 State 200 Controllers M2
+Upload/replace index.html + venus_runtime_states.json. Keep 0.19.7d attack atlas/JSON.
 
-Source:
-State 200 declares velset = 0,0.
+Actual venus.cns State 200 source slice now lowered:
+- AnimElemTime(5)>0 + holdup -> State 40
+- AnimElemTime(5)>0 + holddown -> State 10
+- AnimElemTime(5)>0 -> StateTypeSet movetype=I
+- AnimTime=0 -> State 0, ctrl=1
 
-Fix:
-enterIRState() now applies a state's normalized IR velset generically at state entry.
-This is not a State-200 special case.
-
-Expected:
-- S20/S21 -> X -> S200 immediately sets VX=0 and VY=0.
-- attack no longer slides with walk velocity.
-- normal walk/crouch/jump and previous no-deferred-X behavior unchanged.
+Generic runtime additions: AnimElemTime(n), MoveType, StateTypeSet movetype.
+Temporary Web-only animDone State200 return is no longer used.
+Deferred: HitDef, PlaySnd, VarSet/P2/MoveContact and AI branches.
