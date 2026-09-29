@@ -1,0 +1,11 @@
+Prototype 0.18.4 — Screen Edge Allowance
+BUILD screen-edge-allowance-20260929-01
+
+Change from 0.18.3:
+- Keep IKEMEN-derived 3D camera posMul formula unchanged.
+- Keep camera bounds ±2850, player world bounds ±3750, tension 200, zoom 1.860, ground 660 unchanged.
+- At the camera edge, allow approximately 25% of the current rendered character sprite width to leave the physical 1280-wide frame.
+- Allowance is calculated from the current sprite width/axis rather than a fixed pixel offset.
+- Left and right clipping are derived from actual sprite extents, giving visually symmetric ~25% clipping despite asymmetric sprite axes.
+
+This is an explicit Web presentation override requested by the project owner; it is not claimed to be stock IKEMEN [Bound] semantics.

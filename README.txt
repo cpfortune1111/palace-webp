@@ -1,3 +1,6 @@
+Prototype 0.18.4 — Screen Edge Allowance
+BUILD screen-edge-allowance-20260929-01
+
 Prototype 0.18.3 — IKEMEN 3D Camera Formula
 BUILD ikemen-3d-camera-formula-20260929-01
 
