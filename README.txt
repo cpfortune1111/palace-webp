@@ -1,18 +1,14 @@
-Prototype 0.18.2 — 3D Camera Mapping
-BUILD camera-3d-map-s3-20260929-01
+Prototype 0.18.3 — IKEMEN 3D Camera Formula
+BUILD ikemen-3d-camera-formula-20260929-01
 
-Upload these files over the current GitHub Pages repo files.
-Do not remove StageTraining.glb already in the repo.
+Upload/replace these files in the existing palace-webp repository. Keep the existing StageTraining.glb, mars_atlas.png and mars_anim.json already in the repo.
 
-Main camera correction:
-0.18.1 proved logical horizontal follow works, but incorrectly fed cameraX (up to ±2850 logical pixels) directly into Three.js PerspectiveCamera.setViewOffset. That exposed the outside of the GLB.
+0.18.3 changes only the 3D horizontal camera conversion: the old hardcoded 0.004 mapping is removed and replaced by the IKEMEN GO Stage.drawModel() formula derived from FOV, model Z offset and localcoord height. For StageTraining the resulting posMul is about 0.00066987, so cameraX +/-2850 corresponds to about +/-1.91 3D units.
 
-0.18.2 separates coordinate spaces:
-- IKEMEN logical camera: ±2850
-- IKEMEN player bounds: ±3750
-- 2D fighter projection: exact logical coordinates
-- 3D GLB camera: logical cameraX * 0.004 world units
+The locked 1.860 stage calibration, -60 stage Y shift, ground 660, joystick feel, Venus runtime/state behavior and camera/player bounds are preserved. Vertical/zoom source parity is intentionally not changed in this milestone.
 
-The 0.004 conversion comes from StageTraining GLB's approximately ±15 X span after the DEF model scale 0.075 versus the ±3750 logical player range.
+After GitHub Pages deploys, the HUD must show:
+Prototype 0.18.3 · IKEMEN 3D Camera Formula
+BUILD ikemen-3d-camera-formula-20260929-01
 
-Vertical follow and existing stage calibration are unchanged.
+READY detail should show posMul about 0.00066987. At CAM X -2850, HUD GLBX should be about -1.91 (instead of -11.40).

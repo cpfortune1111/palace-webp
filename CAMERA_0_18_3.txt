@@ -1,0 +1,26 @@
+Prototype 0.18.3 — IKEMEN 3D Camera Formula
+BUILD ikemen-3d-camera-formula-20260929-01
+
+Source-first correction based on IKEMEN GO develop src/model.go Stage.drawModel().
+
+Removed the hand-calibrated 0.004 GLB-units-per-logical-X mapping.
+Runtime now derives horizontal 3D camera conversion as:
+
+posMul = tan(FOV / 2) * -model.offset.z / (localcoord.height / 2)
+
+StageTraining values:
+FOV = 30 deg
+model.offset.z = -0.9
+localcoord.height = 720
+posMul ~= 0.00066987
+
+At cameraX = +/-2850, 3D translation magnitude is about 1.91, not 11.40.
+
+Locked calibration preserved:
+- stage projection zoom 1.860
+- stage Y logical offset -60
+- character ground 660
+- player bounds +/-3750
+- camera bounds +/-2850
+
+Vertical camera mapping remains the previously validated S1 behavior; IKEMEN source-faithful vertical/zoom projection is a later milestone.
