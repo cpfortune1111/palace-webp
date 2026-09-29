@@ -1,16 +1,11 @@
-0.19.7c X One-Shot Fix
-Upload/replace ONLY index.html. Keep 0.19.7a JSON files.
+0.19.7d AIR 200 / SFF Sprite Import
+Upload/replace index.html and ADD venus_attack200_atlas.png + venus_attack200.json.
+Keep the existing 0.19.7a venus_runtime_states.json and venus_cmd_runtime.json.
 
-Observed: after one X press, State 200 and State 0 repeatedly alternated, blocking walk/jump.
-Cause: the M1 State -1 consumer could consume the same physical X press again after the temporary State 200 -> 0 animation return.
+Source-first:
+- venus.air Action 200 = 7 frames: 200,0(1), 200,1(1), 200,2(1), 200,3(5), 200,2(1), 200,1(2), 200,0(2)
+- extracted SFF v2 PNG8 sprites 200,0..3 from actual venus.sff
+- resolved each sprite's SFF palette bank and palette-index-0 transparency
+- dedicated compact attack atlas; existing movement atlas is untouched
 
-Fix:
-- X press is consumed once by the State -1 M1 route.
-- It cannot trigger State 200 again until X is physically released.
-- release resets the one-shot latch.
-- no CNS/CMD/camera/joystick changes.
-
-Expected:
-tap X -> State 200 once -> AIR 200 -> State 0 once.
-After return, walk/jump/crouch work normally.
-A new X attack requires release then press again.
+Scope remains animation only: no HitDef, collision, damage, or PlaySnd yet.
