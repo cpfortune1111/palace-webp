@@ -1,6 +1,17 @@
-0.19.7 State -1 / First Attack M1
-Upload index.html + venus_runtime_states.json + venus_cmd_runtime.json.
-Verified venus.cmd Stand Light Punch: ChangeState value=200; !AILevel; command="x"; command!="holddown"; StateType!=A; trigger1=ctrl. Combo trigger2 deferred.
-Verified venus.cns State 200: type=S, movetype=A, physics=S, juggle=1, velset=0,0, ctrl=0, anim=200.
-Adds X touch button -> canonical x -> CMD matcher -> verified State -1 slice -> State 200/AIR200.
-State 200 source also contains PlaySnd and HitDef; intentionally NOT enabled in M1. Temporary anim-end return to State 0 until full State 200 controllers are lowered.
+0.19.7a State IR Shape Fix
+Upload/replace index.html + venus_runtime_states.json. venus_cmd_runtime.json is unchanged and included only for convenience.
+
+Root cause of blank stage/character/X button:
+State 200 was emitted in the wrong nested schema:
+  {"stateDef": {...}}
+but the runtime's normalized state IR expects flat fields:
+  {"type":"S","physics":"S","anim":200,"ctrl":0,...}
+Runtime validation therefore failed during startup and the page stayed in the pre-runtime fallback HUD ("Action 0 · Idle").
+
+Fixed State 200 to the same normalized schema as states 0/10/11/etc.
+Added explicit State 200 validation so this cannot fail silently again.
+
+Expected after deploy:
+- stage + Venus + Mars + X button visible
+- X -> State 200 / AIR 200 -> temporary return State 0
+- movement regression unchanged
