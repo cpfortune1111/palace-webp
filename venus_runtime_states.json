@@ -1,5 +1,5 @@
 {
-  "version": "0.16-slice1",
+  "version": "0.16.1-slice1",
   "sourceNote": "Normalized runtime IR for the currently tested Venus common movement slice. CNS/ZSS parsers will later emit this same shape.",
   "states": {
     "0": {
@@ -84,5 +84,27 @@
         }
       ]
     }
+  },
+  "constants": {
+    "velocity.walk.fwd.x": 9.0,
+    "velocity.walk.back.x": -6.75,
+    "velocity.jump.neu.x": 0.0,
+    "velocity.jump.y": -40.0,
+    "velocity.jump.fwd.x": 8.0,
+    "velocity.jump.back.x": -8.0,
+    "velocity.runjump.fwd.x": 16.0,
+    "velocity.runjump.back.x": -16.0,
+    "velocity.runjump.y": -40.0,
+    "velocity.airjump.neu.x": 0.0,
+    "velocity.airjump.y": -8.1,
+    "velocity.airjump.back.x": -2.55,
+    "velocity.airjump.fwd.x": 2.5,
+    "movement.yaccel": 1.76,
+    "movement.stand.friction": 0.85,
+    "movement.crouch.friction": 0.82,
+    "movement.stand.friction.threshold": 8.0,
+    "movement.crouch.friction.threshold": 0.2,
+    "movement.airjump.num": 0,
+    "movement.airjump.height": 140.0
   }
 }
