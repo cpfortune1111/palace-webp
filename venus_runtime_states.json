@@ -1,0 +1,88 @@
+{
+  "version": "0.16-slice1",
+  "sourceNote": "Normalized runtime IR for the currently tested Venus common movement slice. CNS/ZSS parsers will later emit this same shape.",
+  "states": {
+    "0": {
+      "type": "S",
+      "physics": "S",
+      "anim": 0,
+      "ctrl": 1,
+      "controllers": []
+    },
+    "11": {
+      "type": "C",
+      "physics": "C",
+      "anim": 11,
+      "ctrl": 1,
+      "controllers": []
+    },
+    "20": {
+      "type": "S",
+      "physics": "N",
+      "anim": 20,
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "WalkVelocity"
+        }
+      ]
+    },
+    "40": {
+      "type": "S",
+      "physics": "S",
+      "anim": 40,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "JumpTakeoff",
+          "trigger": "AnimDone",
+          "nextState": 50
+        }
+      ]
+    },
+    "50": {
+      "type": "A",
+      "physics": "A",
+      "anim": "JumpByVelocity",
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "trigger": "VelYPositive",
+          "value": 51
+        },
+        {
+          "type": "Land",
+          "trigger": "PosYAtGround",
+          "value": 52
+        }
+      ]
+    },
+    "51": {
+      "type": "A",
+      "physics": "A",
+      "anim": "Keep",
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "Land",
+          "trigger": "PosYAtGround",
+          "value": 52
+        }
+      ]
+    },
+    "52": {
+      "type": "S",
+      "physics": "S",
+      "anim": 47,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "trigger": "AnimDone",
+          "value": 0
+        }
+      ]
+    }
+  }
+}

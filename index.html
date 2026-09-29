@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.15 · Venus Runtime + Mars · joystick calibration</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.16 · CNS/ZSS Runtime Slice 1</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -48,8 +48,8 @@ if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
 new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · zoom '+c.zoom.toFixed(3)+' · stage Y '+STAGE_Y_LOGICAL+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
-const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png'}),fetch('./venus_runtime.json').then(x=>x.json())]).then(x=>{dat=x[1];resize()});
+const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png'}),fetch('./venus_runtime.json').then(x=>x.json()),fetch('./venus_runtime_states.json').then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];resize()});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -63,7 +63,7 @@ function drawMars(dt){
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
-let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,stateTicks=0;
+let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 function enterState(st,anim){
  state=st; current=anim; fi=0;ticks=0;stateTicks=0;
  act.textContent='State '+st+' · AIR '+anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
@@ -103,59 +103,92 @@ stick.addEventListener('pointerup',endStick);stick.addEventListener('pointercanc
 const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'down',ArrowUp:'up'};
 addEventListener('keydown',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=true;if(k==='up')input.jump=true}});
 addEventListener('keyup',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=false;if(k==='up')input.jump=false}});
-function simStep(){
- if(!dat)return;
- const K=dat.constants;
- stateTicks++;
-
- if(state===0||state===20||state===11){
-   posY=0;vy=0;
-   if(input.jump&&!jumpLatch){
-     jumpLatch=true; enterState(40,40);
-   } else if(input.down){
-     vx=0;if(state!==11||current!==11)enterState(11,11);
-   } else if(input.left||input.right){
-     if(input.right){
-       vx=K.walkFwd;
-       if(state!==20||current!==20)enterState(20,20);
-     } else {
-       vx=K.walkBack;
-       if(state!==20||current!==21)enterState(20,21);
-     }
-   } else {
-     // Releasing Walk returns to idle automatically. No Idle button needed.
-     vx=0;
-     if(state!==0||current!==0)enterState(0,0);
-   }
+function actionDuration(anim){
+ const fs=dat.actions[String(anim)]||[];let total=0;
+ for(const q of fs) total+=q.time<0?0:Math.max(1,q.time);
+ return Math.max(1,total);
+}
+function constVal(name){return dat.constants[name]??0}
+function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
+function animDone(){return stateTicks>=actionDuration(current)}
+function setAnimForState(def){
+ if(def.anim==='Keep')return;
+ if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
+ current=Number(def.anim);fi=0;ticks=0;
+}
+function enterIRState(st,animOverride){
+ state=st;stateTicks=0;
+ const def=stateIR.states[String(st)];
+ if(animOverride!==undefined){current=animOverride;fi=0;ticks=0}else if(def)setAnimForState(def);
+}
+function latchJumpIntent(){
+ // Input is sampled once at State 40 entry, so releasing/moving the stick during startup
+ // cannot change the takeoff vector.
+ if(input.neutralVertical)jumpIntent='neutral';
+ else if(input.right)jumpIntent='forward';
+ else if(input.left)jumpIntent='back';
+ else jumpIntent='neutral';
+}
+function runController(c){
+ if(c.trigger==='AnimDone'&&!animDone())return;
+ if(c.trigger==='VelYPositive'&&!(vy>0))return;
+ if(c.trigger==='PosYAtGround'&&!(posY>=0))return;
+ switch(c.type){
+  case 'WalkVelocity':
+   vx=input.right?constVal('velocity.walk.fwd.x'):constVal('velocity.walk.back.x');
+   posX+=vx;
+   break;
+  case 'JumpTakeoff':
+   vx=jumpIntent==='forward'?constVal('velocity.jump.fwd.x'):(jumpIntent==='back'?constVal('velocity.jump.back.x'):constVal('velocity.jump.neu.x'));
+   vy=constVal('velocity.jump.y');
+   enterIRState(c.nextState);
+   break;
+  case 'ChangeState': enterIRState(c.value); break;
+  case 'Land':
+   posY=0;vy=0;vx=0;enterIRState(c.value);
+   break;
  }
- if(!input.jump)jumpLatch=false;
-
- if(state===40){
-   // AIR 40 is 2 + 3 ticks. stateTicks is separate from AIR frame timing.
-   const fs=dat.actions['40']||[];
-   let total=0;for(const q of fs)total+=q.time<0?0:Math.max(1,q.time);
-   if(stateTicks>=Math.max(1,total)){
-     vx=input.neutralVertical?0:(input.right?K.jumpFwd:(input.left?K.jumpBack:0));
-     vy=K.jumpY;
-     const air=vx>0?42:(vx<0?43:41);
-     enterState(50,air);
-   }
- } else if(state===50||state===51){
-   posY+=vy; vy+=K.yaccel; posX+=vx;
-   if(vy>0&&state!==51){state=51;stateTicks=0}
-   if(posY>=0){
-     posY=0;vy=0;vx=0;enterState(52,47);
-   }
- } else if(state===52){
-   const fs=dat.actions['47']||[];
-   let total=0;for(const q of fs)total+=q.time<0?0:Math.max(1,q.time);
-   if(stateTicks>=Math.max(1,total))enterState(0,0);
- } else if(state===20){
+}
+function applyPhysics(def){
+ if(!def)return;
+ // Critical compatibility rule: StateType=A does NOT imply gravity.
+ // Only physics=A receives movement.yaccel automatically.
+ if(def.physics==='A'){
+   posY+=vy;
+   vy+=constVal('movement.yaccel');
    posX+=vx;
  }
-
+}
+function dispatchGroundCommands(){
+ if(!(state===0||state===20||state===11))return;
+ posY=0;vy=0;
+ if(input.jump&&!jumpLatch){
+   jumpLatch=true;latchJumpIntent();enterIRState(40);return;
+ }
+ if(input.down){vx=0;if(state!==11)enterIRState(11);return}
+ if(input.left||input.right){
+   const wantedAnim=input.right?20:21;
+   if(state!==20||current!==wantedAnim)enterIRState(20,wantedAnim);
+   return;
+ }
+ vx=0;if(state!==0)enterIRState(0);
+}
+function simStep(){
+ if(!dat||!stateIR)return;
+ stateTicks++;
+ dispatchGroundCommands();
+ if(!input.jump)jumpLatch=false;
+ const before=state;
+ let def=stateDef();
+ applyPhysics(def);
+ // Physics may have crossed the floor; controllers are evaluated afterwards.
+ def=stateDef();
+ for(const c of (def.controllers||[])){
+   const st=state;runController(c);if(state!==st)break;
+ }
  posX=Math.max(-580,Math.min(580,posX));
- act.textContent='State '+state+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
+ const pd=stateDef();
+ act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
