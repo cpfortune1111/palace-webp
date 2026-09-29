@@ -1,0 +1,12 @@
+Prototype 0.18.2 — 3D Camera Mapping
+BUILD camera-3d-map-s3-20260929-01
+
+Source-first correction after 0.18.1 test:
+- Logical camera remains StageTraining.def boundleft/right ±2850.
+- Player world bounds remain ±3750.
+- screenleft/right remain 60.
+- Horizontal 3D stage movement is no longer PerspectiveCamera.setViewOffset(cameraX,...).
+- StageTraining GLB geometry is ~±15 world X after DEF model scale 0.075; map logical X to GLB X at 15/3750 = 0.004.
+- 2D fighters still use exact IKEMEN logical world-to-screen: screenX = 640 + posX - cameraX.
+- Vertical camera behavior is unchanged from the accepted 0.18 slice.
+- Locked stage calibration remains zoom 1.860, stage Y -60, ground 660, character scale 1.0.
