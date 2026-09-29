@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.19.4 Expression AST M3</title>
+<title>Prototype 0.19.5 CMD Input M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -26,7 +26,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.4 · Expression AST M3</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD expression-ast-m3-20260929-01 · no Function()</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.5 · CMD Input M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-input-m1-20260930-01 · Venus CMD</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -57,10 +57,11 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · expression AST M3';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD input M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0194'}),fetch('./venus_runtime.json?v=0194',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0194',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+let cmdDat=null;
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0195'}),fetch('./venus_runtime.json?v=0195',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0195',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0195',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -184,6 +185,15 @@ function latchJumpIntent(){
  else if(input.left)jumpIntent='back';
  else jumpIntent='neutral';
 }
+function commandActive(name){
+ const n=String(name).toLowerCase();
+ if(n==='holdfwd')return !!input.right&&!input.neutralVertical;
+ if(n==='holdback')return !!input.left&&!input.neutralVertical;
+ if(n==='holdup')return !!input.jump;
+ if(n==='holddown')return !!input.down;
+ return false;
+}
+function hasCommandDef(name){return !!cmdDat?.commands?.some(c=>String(c.name).toLowerCase()===String(name).toLowerCase())}
 function tokenizeExpr(src){
  const t=[];let i=0;while(i<src.length){const c=src[i];if(/\s/.test(c)){i++;continue}
  if(c==='"'){let j=i+1,s='';while(j<src.length&&src[j]!=='"')s+=src[j++];if(j>=src.length)throw Error('AST string');t.push({k:'str',v:s});i=j+1;continue}
@@ -201,7 +211,9 @@ function evalAST(n){if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return 
  if(n.t==='bin'){if(n.op==='&&')return !!evalAST(n.a)&&!!evalAST(n.b);if(n.op==='||')return !!evalAST(n.a)||!!evalAST(n.b);let a=evalAST(n.a),b=evalAST(n.b);if(n.op==='='||n.op==='==')return a==b;if(n.op==='!=')return a!=b;if(n.op==='>')return a>b;if(n.op==='<')return a<b;if(n.op==='>=')return a>=b;if(n.op==='<=')return a<=b;if(n.op==='+')return +a + +b;if(n.op==='-')return a-b;if(n.op==='*')return a*b;if(n.op==='/')return a/b;if(n.op==='%')return a%b}
  if(n.t==='call'){let f=n.name.toLowerCase();if(f==='abs')return Math.abs(evalAST(n.args[0]));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0]));if(f==='var')return runtimeVar[+evalAST(n.args[0])]||0;if(f==='sysvar')return runtimeSysVar[+evalAST(n.args[0])]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0])?evalAST(n.args[1]):evalAST(n.args[2]);throw Error('AST function '+n.name)}throw Error('AST node')}
 const exprCache=new Map();
-function evalM1(expr){let src=String(expr).trim();src=src.replace(/\bcommand\s*=\s*"holdfwd"/gi,()=>(input.right&&!input.neutralVertical)?'1':'0');src=src.replace(/\bcommand\s*=\s*"holdback"/gi,()=>(input.left&&!input.neutralVertical)?'1':'0');let a=exprCache.get(src);if(!a){a=parseExprAST(src);exprCache.set(src,a)}return evalAST(a)}
+function evalM1(expr){let src=String(expr).trim();
+ src=src.replace(/\bcommand\s*(!=|=)\s*"([^"]+)"/gi,(_,op,name)=>{if(!hasCommandDef(name))throw Error('CMD undefined command: '+name);const on=commandActive(name);return String(op==='!='?!on:on)});
+ let a=exprCache.get(src);if(!a){a=parseExprAST(src);exprCache.set(src,a)}return evalAST(a)}
 function controllerTriggered(c){
  if(!c.triggers)return null;
  if((c.triggerall||[]).some(x=>!evalM1(x)))return false;
@@ -257,10 +269,10 @@ function dispatchGroundCommands(){
  // without waiting for State 0 and without an artificial release/re-press latch.
  const def=stateDef();if(!def||def.type==='A'||!runtimeCtrl)return;
  posY=0;vy=0;
- if(input.jump){enterIRState(40);return}
+ if(commandActive('holdup')){enterIRState(40);return}
  if(state===52)return; // keep landing state until its own CNS controller changes it
  // Source ground chain: Stand -> State 10 -> State 11 -> State 12 -> Stand.
- if(input.down){
+ if(commandActive('holddown')){
    vx=0;
    if(state===0||state===20||state===12)enterIRState(10);
    return;
@@ -268,7 +280,7 @@ function dispatchGroundCommands(){
  if(state===10)return; // State 10's AnimTime controller owns 10 -> 11.
  if(state===11){enterIRState(12);return} // release hold-down: crouch-to-stand transition
  if(state===12)return; // State 12's AnimTime controller owns 12 -> 0.
- if(input.left||input.right){
+ if(commandActive('holdback')||commandActive('holdfwd')){
    if(state!==20)enterIRState(20);
    return;
  }
@@ -308,7 +320,7 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const pd=stateDef();
  act.textContent=hudCollapsed
-  ? '0.19.4 · S'+state+' · CTRL '+runtimeCtrl
+  ? '0.19.5 · S'+state+' · CTRL '+runtimeCtrl
   : 'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}

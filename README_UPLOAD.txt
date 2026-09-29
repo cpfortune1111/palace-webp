@@ -1,12 +1,6 @@
-0.19.4 Expression AST M3
-Upload index.html + venus_runtime_states.json.
-
-Architecture:
-- Removed executable JavaScript Function() expression evaluation.
-- Added deterministic Tokenizer -> Parser -> AST -> Evaluator.
-- AST is cached after first parse.
-- Current verified movement slice: literals; unary !/+/-; arithmetic; comparisons; &&/||; parentheses; Time/Anim/AnimTime/StateNo/PrevStateNo/Ctrl/AILevel/Pos/Vel; abs(), Const(), var(), sysvar(), ifelse()/cond(); holdfwd/holdback.
-- Unsupported expressions fail loudly instead of falling through to JS.
-
-Gameplay expected unchanged from 0.19.3.
-Regression: walk, crouch 10->11->12->0, neutral/fwd/back jump, landing, camera/EDGE/zoom/joystick.
+0.19.5 CMD/Input Compatibility M1
+Upload index.html + venus_runtime_states.json + venus_cmd_runtime.json.
+Parsed actual venus.cmd: 23 Command definitions.
+M1 activates held-direction commands holdfwd /$F, holdback /$B, holdup /$U, holddown /$D.
+Expression evaluator resolves command = "name" and command != "name" via CMD registry.
+Scope: no full sequence/buffer syntax (~ / $ + comma timing) or buttons yet; State -1 attacks not enabled. Existing basic movement dispatcher remains, but now consumes named CMD commands instead of raw joystick booleans.
