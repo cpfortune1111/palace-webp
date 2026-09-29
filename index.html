@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.19.5 CMD Input M1</title>
+<title>Prototype 0.19.6 CMD Sequence Buffer M2</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -26,7 +26,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.5 · CMD Input M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-input-m1-20260930-02 · bool fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.6 · CMD Sequence Buffer M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-sequence-buffer-m2-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -57,11 +57,11 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD input M1a';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD sequence buffer M2';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
 let cmdDat=null;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0195'}),fetch('./venus_runtime.json?v=0195',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0195',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0195',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0196'}),fetch('./venus_runtime.json?v=0196',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0196',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0196',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -185,13 +185,46 @@ function latchJumpIntent(){
  else if(input.left)jumpIntent='back';
  else jumpIntent='neutral';
 }
+const inputHistory=[];
+const commandBuffer=new Map();
+let prevCanonical={F:false,B:false,U:false,D:false,a:false,b:false,c:false,x:false,y:false,z:false,s:false};
+function canonicalNow(){
+ return {F:!!input.right&&!input.neutralVertical,B:!!input.left&&!input.neutralVertical,U:!!input.jump,D:!!input.down,
+         a:!!input.a,b:!!input.b,c:!!input.c,x:!!input.x,y:!!input.y,z:!!input.z,s:!!input.s};
+}
+function sampleInputHistory(){
+ const now=canonicalNow(),edge={};
+ for(const k of Object.keys(now))edge[k]={down:now[k],press:now[k]&&!prevCanonical[k],release:!now[k]&&prevCanonical[k]};
+ inputHistory.unshift(edge);if(inputHistory.length>120)inputHistory.pop();prevCanonical=now;
+}
+function tokenMatch(tok,frame){
+ let key=tok.key,keys=[key];
+ if(tok.fourWay){
+   if(key==='F')keys=['F','U','D']; else if(key==='B')keys=['B','U','D']; else if(key==='U')keys=['U','F','B']; else if(key==='D')keys=['D','F','B'];
+ }
+ return keys.some(k=>tok.release?frame[k]?.release:tok.hold?frame[k]?.down:frame[k]?.press);
+}
 function commandActive(name){
- const n=String(name).toLowerCase();
- if(n==='holdfwd')return !!input.right&&!input.neutralVertical;
- if(n==='holdback')return !!input.left&&!input.neutralVertical;
- if(n==='holdup')return !!input.jump;
- if(n==='holddown')return !!input.down;
- return false;
+ const def=cmdDat?.commands?.find(c=>String(c.name).toLowerCase()===String(name).toLowerCase());
+ if(!def)return false;
+ // Held directions are continuous by definition in Venus CMD (/$F, /$B, /$U, /$D).
+ if(def.steps?.length===1&&def.steps[0].length===1&&def.steps[0][0].hold)return tokenMatch(def.steps[0][0],inputHistory[0]||{});
+ if(!def.supportedM2)return false;
+ const limit=Math.max(1,Number(def.time||cmdDat.defaults?.time||15));let cursor=0;
+ // Search newest->older for command steps in reverse chronological order.
+ for(let si=def.steps.length-1;si>=0;si--){
+   let found=-1;
+   for(let f=cursor;f<Math.min(inputHistory.length,limit);f++){
+     if(def.steps[si].every(t=>tokenMatch(t,inputHistory[f]))){found=f;break}
+   }
+   if(found<0){
+     const until=commandBuffer.get(String(name).toLowerCase())||-1;
+     return stateTicks<=until;
+   }cursor=found+1;
+ }
+ const bt=Math.max(1,Number(def.bufferTime||cmdDat.defaults?.['buffer.time']||1));
+ commandBuffer.set(String(name).toLowerCase(),stateTicks+bt-1);
+ return true;
 }
 function hasCommandDef(name){return !!cmdDat?.commands?.some(c=>String(c.name).toLowerCase()===String(name).toLowerCase())}
 function tokenizeExpr(src){
@@ -298,7 +331,8 @@ function simStep(){
    const st=state;runController(c);if(state!==st)break;
  }
  dispatchGroundCommands();
- if(state===tickState)stateTicks++;
+ if(state===tickState)sampleInputHistory();
+ stateTicks++;
  // First apply the actual StageTraining player world bounds, not the old prototype ±580 clamp.
  posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
  // 0.18.4 presentation override requested for the Web runtime: at a camera limit,
@@ -320,7 +354,7 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const pd=stateDef();
  act.textContent=hudCollapsed
-  ? '0.19.5 · S'+state+' · CTRL '+runtimeCtrl
+  ? '0.19.6 · S'+state+' · CTRL '+runtimeCtrl
   : 'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}

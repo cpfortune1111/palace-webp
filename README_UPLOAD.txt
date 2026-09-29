@@ -1,11 +1,16 @@
-0.19.5a CMD Boolean Fix
-Upload/replace ONLY index.html. Keep the 0.19.5 venus_runtime_states.json and venus_cmd_runtime.json.
+0.19.6 CMD Sequence / Input Buffer M2
+Upload index.html + venus_runtime_states.json + venus_cmd_runtime.json.
 
-Root cause:
-command = "..." preprocessing returned the strings "true"/"false".
-The deterministic AST correctly treated those as identifiers/queries, producing:
-AST query true / AST query false.
-Fix: command query preprocessing now emits numeric MUGEN-style truth values 1/0.
+Source basis: actual venus.cmd.
+Added generic canonical input history and command matcher:
+- comma sequence ordering
+- + simultaneous tokens
+- / hold
+- ~ release
+- $ four-way directional modifier
+- per-command time window
+- buffer.time latch
+- canonical keys F B U D a b c x y z s
 
-No gameplay/camera/joystick/state IR changes.
-Retest walk, crouch, neutral/fwd/back jump, landing.
+Current touch UI still exposes directional joystick only, so this milestone regression-tests the held movement commands. Button commands are parsed and matcher-ready, but no attack buttons / State -1 activation yet.
+Camera/EDGE/zoom/joystick geometry unchanged.

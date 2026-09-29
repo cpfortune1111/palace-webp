@@ -1,5 +1,5 @@
 {
-  "version": "0.19.5-cmd-input-m1",
+  "version": "0.19.6-cmd-sequence-buffer-m2",
   "source": "venus.cmd",
   "defaults": {
     "time": 15,
@@ -10,139 +10,590 @@
       "name": "S_ChainExplosive",
       "command": "~B, D, $F, $D, y",
       "time": 30,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": true,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "Beam_l",
       "command": "~D,$D, F, x",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "Beam_h",
       "command": "~D,$D, F, y",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "Sword_l",
       "command": "~$D,$U, x",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "Sword_h",
       "command": "~$D,$U, y",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": false,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "Chain_l",
       "command": "~F, D, DF, x",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": true,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "DF",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": false
     },
     {
       "name": "Chain_h",
       "command": "~F, D, DF, y",
       "time": 15,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": true,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "DF",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": false
     },
     {
       "name": "FF",
       "command": "F, F",
       "time": 10,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "BB",
       "command": "B, B",
       "time": 10,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ],
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "recovery",
       "command": "x+y",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          },
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "down_a",
       "command": "/$D,a",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "down_b",
       "command": "/$D,b",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ],
+        [
+          {
+            "key": "b",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "a",
       "command": "a",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "b",
       "command": "b",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "b",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "c",
       "command": "c",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "c",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "x",
       "command": "x",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "y",
       "command": "y",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "z",
       "command": "z",
       "time": 1,
-      "bufferTime": 3
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "z",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "start",
       "command": "s",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "s",
+            "release": false,
+            "hold": false,
+            "fourWay": false
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "holdfwd",
       "command": "/$F",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "holdback",
       "command": "/$B",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "holdup",
       "command": "/$U",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ]
+      ],
+      "supportedM2": true
     },
     {
       "name": "holddown",
       "command": "/$D",
       "time": 1,
-      "bufferTime": 1
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourWay": true
+          }
+        ]
+      ],
+      "supportedM2": true
     }
   ]
 }
