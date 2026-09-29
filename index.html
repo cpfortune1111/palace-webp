@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.14 · Venus Runtime + Mars · 30° stick</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.15 · Venus Runtime + Mars · joystick calibration</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -62,7 +62,7 @@ function drawMars(dt){
  const dx=-(sp.axisX-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit;
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
-const input={left:false,right:false,up:false,down:false,jump:false};
+const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,stateTicks=0;
 function enterState(st,anim){
  state=st; current=anim; fi=0;ticks=0;stateTicks=0;
@@ -77,14 +77,25 @@ function setStick(clientX,clientY){
  knob.style.transform=`translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px))`;
  const nx=dx/max,ny=dy/max,dead=.28;
  const active=Math.hypot(nx,ny)>dead;
+
+ // Horizontal +/-30 degrees is reserved for walking.
  const verticalBeyond30=Math.abs(ny)>Math.abs(nx)*0.57735026919;
- input.left=active&&nx<0;
- input.right=active&&nx>0;
+
+ // Vertical +/-15 degrees is the neutral up/down cone.
+ // tan(15deg) ~= 0.267949: |x| <= |y|*tan(15deg).
+ const neutralVertical=Math.abs(nx)<=Math.abs(ny)*0.26794919243;
+
  input.up=active&&ny<0&&verticalBeyond30;
  input.down=active&&ny>0&&verticalBeyond30;
+
+ // Left/right still describe facing movement direction outside the neutral cone.
+ // simStep will ignore horizontal jump velocity when neutralVertical is true.
+ input.left=active&&nx<0;
+ input.right=active&&nx>0;
+ input.neutralVertical=active&&neutralVertical;
  input.jump=input.up;
 }
-function clearStick(){input.left=input.right=input.up=input.down=input.jump=false;knob.style.transform='translate(-50%,-50%)'}
+function clearStick(){input.left=input.right=input.up=input.down=input.jump=input.neutralVertical=false;knob.style.transform='translate(-50%,-50%)'}
 stick.addEventListener('pointerdown',e=>{e.preventDefault();stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);setStick(e.clientX,e.clientY)});
 stick.addEventListener('pointermove',e=>{if(e.pointerId===stickPointer){e.preventDefault();setStick(e.clientX,e.clientY)}});
 function endStick(e){if(e.pointerId===stickPointer){stickPointer=null;clearStick()}}
@@ -124,7 +135,7 @@ function simStep(){
    const fs=dat.actions['40']||[];
    let total=0;for(const q of fs)total+=q.time<0?0:Math.max(1,q.time);
    if(stateTicks>=Math.max(1,total)){
-     vx=input.right?K.jumpFwd:(input.left?K.jumpBack:0);
+     vx=input.neutralVertical?0:(input.right?K.jumpFwd:(input.left?K.jumpBack:0));
      vy=K.jumpY;
      const air=vx>0?42:(vx<0?43:41);
      enterState(50,air);
