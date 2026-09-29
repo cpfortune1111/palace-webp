@@ -1,5 +1,5 @@
 {
-  "version": "0.17-parser-m1",
+  "version": "0.17.2-parser-m1-state52-sourcefix",
   "generatedBy": "compile_runtime.py",
   "states": {
     "0": {
@@ -83,10 +83,40 @@
       "ctrl": 0,
       "controllers": [
         {
+          "type": "VelSet",
+          "trigger": "TimeEquals",
+          "time": 0,
+          "y": 0,
+          "source": "venus_Common.cns State 52 VelSet Time=0"
+        },
+        {
+          "type": "PosSet",
+          "trigger": "TimeEquals",
+          "time": 0,
+          "y": 0,
+          "source": "venus_Common.cns State 52 PosSet Time=0"
+        },
+        {
+          "type": "CtrlSet",
+          "trigger": "TimeEqualsOrPrevState",
+          "time": 3,
+          "prevState": 5040,
+          "value": 1,
+          "source": "venus_Common.cns State 52 CtrlSet: Time=3 OR PrevStateNo=5040"
+        },
+        {
+          "type": "VelSetThreshold",
+          "axis": "x",
+          "absBelowConst": "movement.stand.friction.threshold",
+          "value": 0,
+          "source": "venus_Common.cns State 52 VelSet friction threshold"
+        },
+        {
           "type": "ChangeState",
           "trigger": "AnimDone",
           "value": 0,
-          "source": "CNS ChangeState AnimTime=0"
+          "ctrl": 1,
+          "source": "venus_Common.cns State 52 ChangeState AnimTime=0"
         }
       ]
     }

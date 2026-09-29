@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.17.1 CNS/ZSS Parser M1</title>
+<title>Prototype 0.17.2 State 52 Source Fix</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.17.1 · CNS/ZSS Parser M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD parser-m1-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.17.2 · State 52 Source Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state52-sourcefix-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -49,7 +49,7 @@ status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteL
 new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · zoom '+c.zoom.toFixed(3)+' · stage Y '+STAGE_Y_LOGICAL+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0171'}),fetch('./venus_runtime.json?v=0171',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0171',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0172'}),fetch('./venus_runtime.json?v=0172',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0172',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -127,8 +127,9 @@ function setAnimForState(def){
  current=Number(def.anim);fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
- state=st;stateTicks=0;
- const def=stateIR.states[String(st)];
+ prevState=state;state=st;stateTicks=0;
+ const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
+ const def=incoming;
  if(animOverride!==undefined){current=animOverride;fi=0;ticks=0}else if(def)setAnimForState(def);
 }
 function latchJumpIntent(){
@@ -143,6 +144,8 @@ function runController(c){
  if(c.trigger==='AnimDone'&&!animDone())return;
  if(c.trigger==='VelYPositive'&&!(vy>0))return;
  if(c.trigger==='PosYAtGround'&&!(posY>=0))return;
+ if(c.trigger==='TimeEquals'&&stateTicks!==c.time)return;
+ if(c.trigger==='TimeEqualsOrPrevState'&&!(stateTicks===c.time||prevState===c.prevState))return;
  switch(c.type){
   case 'WalkVelocity':
    vx=input.right?constVal('velocity.walk.fwd.x'):constVal('velocity.walk.back.x');
@@ -153,9 +156,16 @@ function runController(c){
    vy=constVal('velocity.jump.y');
    enterIRState(c.nextState);
    break;
-  case 'ChangeState': enterIRState(c.value); break;
+  case 'VelSet':
+   if(c.x!==undefined)vx=Number(c.x);if(c.y!==undefined)vy=Number(c.y);break;
+  case 'PosSet':
+   if(c.x!==undefined)posX=Number(c.x);if(c.y!==undefined)posY=Number(c.y);break;
+  case 'CtrlSet': runtimeCtrl=Number(c.value); break;
+  case 'VelSetThreshold':
+   if(c.axis==='x'&&Math.abs(vx)<constVal(c.absBelowConst))vx=Number(c.value);break;
+  case 'ChangeState': enterIRState(c.value); if(c.ctrl!==undefined)runtimeCtrl=Number(c.ctrl); break;
   case 'Land':
-   posY=0;vy=0;vx=0;enterIRState(c.value);
+   posY=0;vy=0;enterIRState(c.value);
    break;
  }
 }
@@ -170,11 +180,13 @@ function applyPhysics(def){
  }
 }
 function dispatchGroundCommands(){
- if(!(state===0||state===20||state===11))return;
+ // Follow source control semantics: commands may run in any grounded state once ctrl=1.
+ // In particular State 52 sets ctrl=1 at Time=3, so held holdup can enter State 40
+ // without waiting for State 0 and without an artificial release/re-press latch.
+ const def=stateDef();if(!def||def.type==='A'||!runtimeCtrl)return;
  posY=0;vy=0;
- if(input.jump&&!jumpLatch){
-   jumpLatch=true;latchJumpIntent();enterIRState(40);return;
- }
+ if(input.jump){latchJumpIntent();enterIRState(40);return}
+ if(state===52)return; // keep landing state until its own CNS controller changes it
  if(input.down){vx=0;if(state!==11)enterIRState(11);return}
  if(input.left||input.right){
    const wantedAnim=input.right?20:21;
@@ -185,20 +197,20 @@ function dispatchGroundCommands(){
 }
 function simStep(){
  if(!dat||!stateIR)return;
- stateTicks++;
- dispatchGroundCommands();
- if(!input.jump)jumpLatch=false;
- const before=state;
+ const tickState=state;
  let def=stateDef();
  applyPhysics(def);
- // Physics may have crossed the floor; controllers are evaluated afterwards.
+ // State controllers run before command dispatch so State 52 CtrlSet(Time=3)
+ // can grant control according to the original CNS.
  def=stateDef();
  for(const c of (def.controllers||[])){
    const st=state;runController(c);if(state!==st)break;
  }
+ dispatchGroundCommands();
+ if(state===tickState)stateTicks++;
  posX=Math.max(-580,Math.min(580,posX));
  const pd=stateDef();
- act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
+ act.textContent='State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1);
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}

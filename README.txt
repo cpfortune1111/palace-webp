@@ -20,3 +20,9 @@ For GitHub Pages testing upload all files in this package. Python is build-time 
 
 Build ID: parser-m1-20260929-01
 Correction: index.html title/HUD now identifies 0.17.1; runtime asset URLs use ?v=0171 for cache busting.
+
+0.17.2 SOURCE-FIDELITY FIX
+- State 52 follows venus_Common.cns: ctrl=0 on entry; CtrlSet value=1 at Time=3 (or PrevStateNo=5040); ChangeState 0 only at AnimTime=0.
+- Held holdup may re-enter State 40 as soon as control is restored. No Web-only release/re-press jump latch.
+- State 52 VelSet/PosSet Time=0 and horizontal friction-threshold VelSet are represented in IR.
+- BUILD state52-sourcefix-20260929-01 / cache bust v=0172.

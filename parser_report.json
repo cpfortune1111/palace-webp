@@ -1,5 +1,5 @@
 {
-  "version": "0.17-parser-m1",
+  "version": "0.17.2-parser-m1-state52-sourcefix",
   "sourceFiles": [
     "venus.cns",
     "venus_Common.cns",

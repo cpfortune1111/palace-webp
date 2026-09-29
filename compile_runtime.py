@@ -85,9 +85,15 @@ def lower(cns_states, ctrls, consts):
         elif n=='40': st['controllers']=[{'type':'JumpTakeoff','trigger':'AnimDone','nextState':50,'source':'VelSet + ChangeState'}]
         elif n=='50': st['anim']='JumpByVelocity';st['controllers']=[{'type':'ChangeState','trigger':'VelYPositive','value':51,'source':'runtime phase split'},{'type':'Land','trigger':'PosYAtGround','value':52,'source':'air physics landing'}]
         elif n=='51': st['anim']='Keep';st['controllers']=[{'type':'Land','trigger':'PosYAtGround','value':52,'source':'air physics landing'}]
-        elif n=='52': st['controllers']=[{'type':'ChangeState','trigger':'AnimDone','value':0,'source':'CNS ChangeState AnimTime=0'}]
+        elif n=='52': st['controllers']=[
+            {'type':'VelSet','trigger':'TimeEquals','time':0,'y':0,'source':'venus_Common.cns State 52 VelSet Time=0'},
+            {'type':'PosSet','trigger':'TimeEquals','time':0,'y':0,'source':'venus_Common.cns State 52 PosSet Time=0'},
+            {'type':'CtrlSet','trigger':'TimeEqualsOrPrevState','time':3,'prevState':5040,'value':1,'source':'venus_Common.cns State 52 CtrlSet: Time=3 OR PrevStateNo=5040'},
+            {'type':'VelSetThreshold','axis':'x','absBelowConst':'movement.stand.friction.threshold','value':0,'source':'venus_Common.cns State 52 VelSet friction threshold'},
+            {'type':'ChangeState','trigger':'AnimDone','value':0,'ctrl':1,'source':'venus_Common.cns State 52 ChangeState AnimTime=0'}
+        ]
         out[n]=st
-    return {'version':'0.17-parser-m1','generatedBy':'compile_runtime.py','states':out,'constants':consts}
+    return {'version':'0.17.2-parser-m1-state52-sourcefix','generatedBy':'compile_runtime.py','states':out,'constants':consts}
 
 cns=(ROOT/'venus.cns').read_text(errors='replace')
 common=(ROOT/'venus_Common.cns').read_text(errors='replace')
@@ -98,6 +104,6 @@ ir=lower(cs,ctrls,consts)
 wanted=['0','11','20','40','50','51','52']; parity={}
 for n in wanted:
     parity[n]={'cns':cs.get(n),'zss':zs.get(n),'typePhysicsMatch': bool(cs.get(n) and zs.get(n) and cs[n]['type']==zs[n]['type'] and cs[n]['physics']==zs[n]['physics']), 'cnsControllers':[x['type'] for x in ctrls.get(n,[])]}
-report={'version':'0.17-parser-m1','sourceFiles':['venus.cns','venus_Common.cns','common1.cns.zss'],'parsedConstantCount':len(consts),'parsedCnsStateCount':len(cs),'parsedZssStateCount':len(zs),'movementSliceParity':parity,'scope':'Parser M1 lowers only tested movement states. Unsupported controllers are retained in this report, not silently treated as implemented.'}
+report={'version':'0.17.2-parser-m1-state52-sourcefix','sourceFiles':['venus.cns','venus_Common.cns','common1.cns.zss'],'parsedConstantCount':len(consts),'parsedCnsStateCount':len(cs),'parsedZssStateCount':len(zs),'movementSliceParity':parity,'scope':'Parser M1 lowers only tested movement states. Unsupported controllers are retained in this report, not silently treated as implemented.'}
 (ROOT/'parser_report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print(json.dumps({'constants':len(consts),'cnsStates':len(cs),'zssStates':len(zs),'parity':{k:v['typePhysicsMatch'] for k,v in parity.items()}},indent=2))
