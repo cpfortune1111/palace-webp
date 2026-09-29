@@ -1,6 +1,6 @@
 {
-  "version": "0.19.0-cns-runtime-m1",
-  "generatedBy": "CNS/ZSS Compatibility Core M1",
+  "version": "0.19.1-ground-transition-m1",
+  "generatedBy": "CNS Runtime M1.1",
   "states": {
     "0": {
       "type": "S",
@@ -8,6 +8,53 @@
       "anim": 0,
       "ctrl": 1,
       "controllers": []
+    },
+    "10": {
+      "type": "C",
+      "physics": "C",
+      "anim": 10,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "VelMul",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "x": "0.75"
+          },
+          "source": "venus_Common.cns State 10 VelMul"
+        },
+        {
+          "type": "CtrlSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "!AILevel"
+            ]
+          },
+          "params": {
+            "value": "1"
+          },
+          "source": "venus_Common.cns State 10 CtrlSet human trigger"
+        },
+        {
+          "type": "ChangeState",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "11"
+          },
+          "source": "venus_Common.cns State 10 ChangeState"
+        }
+      ]
     },
     "11": {
       "type": "C",
@@ -26,7 +73,67 @@
           "params": {
             "value": "1"
           },
-          "source": "venus_Common.cns State 11 CtrlSet"
+          "source": "venus_Common.cns State 11 CtrlSet human trigger"
+        },
+        {
+          "type": "ChangeAnim",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Anim = 6 && AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "11"
+          },
+          "source": "venus_Common.cns State 11 ChangeAnim"
+        },
+        {
+          "type": "VelSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "abs(Vel X) < Const(movement.crouch.friction.threshold)"
+            ]
+          },
+          "params": {
+            "x": "0"
+          },
+          "source": "venus_Common.cns State 11 StopLowVelocity"
+        }
+      ]
+    },
+    "12": {
+      "type": "S",
+      "physics": "S",
+      "anim": 12,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "CtrlSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 1"
+            ]
+          },
+          "params": {
+            "value": "1"
+          },
+          "source": "venus_Common.cns State 12 CtrlSet"
+        },
+        {
+          "type": "ChangeState",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "0"
+          },
+          "source": "venus_Common.cns State 12 ChangeState"
         }
       ]
     },
@@ -38,7 +145,7 @@
       "controllers": [
         {
           "type": "WalkVelocity",
-          "source": "legacy movement adapter; not yet generic CMD"
+          "source": "legacy movement adapter"
         }
       ]
     },
@@ -65,14 +172,12 @@
         {
           "type": "ChangeState",
           "trigger": "VelYPositive",
-          "value": 51,
-          "source": "legacy phase adapter"
+          "value": 51
         },
         {
           "type": "Land",
           "trigger": "PosYAtGround",
-          "value": 52,
-          "source": "legacy landing adapter"
+          "value": 52
         }
       ]
     },
@@ -85,8 +190,7 @@
         {
           "type": "Land",
           "trigger": "PosYAtGround",
-          "value": 52,
-          "source": "legacy landing adapter"
+          "value": 52
         }
       ]
     },
@@ -100,15 +204,13 @@
           "type": "VelSet",
           "trigger": "TimeEquals",
           "time": 0,
-          "y": 0,
-          "source": "legacy M1 adapter"
+          "y": 0
         },
         {
           "type": "PosSet",
           "trigger": "TimeEquals",
           "time": 0,
-          "y": 0,
-          "source": "legacy M1 adapter"
+          "y": 0
         },
         {
           "type": "CtrlSet",
@@ -123,15 +225,13 @@
           },
           "params": {
             "value": "1"
-          },
-          "source": "venus_Common.cns State 52 CtrlSet"
+          }
         },
         {
           "type": "VelSetThreshold",
           "axis": "x",
           "absBelowConst": "movement.stand.friction.threshold",
-          "value": 0,
-          "source": "legacy friction adapter"
+          "value": 0
         },
         {
           "type": "ChangeState",

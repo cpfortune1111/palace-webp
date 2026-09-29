@@ -1,18 +1,17 @@
-Prototype 0.19.0 · CNS Runtime M1
-BUILD cns-runtime-m1-20260929-01
+0.19.1 Ground Transition M1
+Upload/replace ONLY:
+- index.html
+- venus_runtime_states.json
 
-Upload/replace:
-1. index.html
-2. venus_runtime_states.json
+Test:
+1. From State 0 hold DOWN: 0 -> 10 -> 11.
+2. State 11 must show CTRL 1.
+3. Release DOWN: 11 -> 12 -> 0.
+4. State 12: CTRL becomes 1 at Time=1.
+5. Regression: jump/landing, camera ±2850, EDGE 25%, zoom 1.860, joystick feel unchanged.
 
-Do NOT replace StageTraining.glb or image/atlas files.
-
-Acceptance tests:
-- Hold DOWN: State 11 should show CTRL 1 (generic !AILevel -> CtrlSet).
-- Jump/land: State 52 begins CTRL 0; at Time=3 generic trigger group grants CTRL 1.
-- Hold UP through landing: once State 52 gains CTRL, direct 52 -> 40 is allowed.
-- Camera ±2850, player ±3750, EDGE 25%, zoom 1.860, joystick ±30°/±15° unchanged.
-
-M1 note:
-Generic trigger-group/evaluator path is now used for State 11 and State 52 CtrlSet/ChangeState.
-Movement/landing adapters remain temporarily for regression safety and will be removed incrementally.
+Source-derived additions:
+State 10 VelMul Time=0 x=.75; CtrlSet !AILevel; ChangeState AnimTime=0 -> 11.
+State 11 ChangeAnim Anim=6 && AnimTime=0 -> 11; low velocity check using abs()/Const().
+State 12 CtrlSet Time=1; ChangeState AnimTime=0 -> 0.
+The P2/AI guard-specific trigger group in State 12 is not active for this human single-player M1 slice yet.
