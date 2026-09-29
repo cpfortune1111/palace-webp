@@ -1,15 +1,16 @@
-0.19.7b X DOM Fix
-Upload/replace ONLY index.html. Keep the 0.19.7a JSON files.
+0.19.7c X One-Shot Fix
+Upload/replace ONLY index.html. Keep 0.19.7a JSON files.
 
-Actual root cause of the completely blank runtime:
-0.19.7 attempted to insert the X button after obsolete #joy markup.
-The current baseline uses #ctrl > #stick > #stickKnob, so #atkX never existed.
-JavaScript then executed:
-  document.querySelector('#atkX') -> null
-  null.addEventListener(...) -> synchronous module crash
-This happened before stage/character/runtime loading, explaining why the HUD stayed at Action 0 · Idle and everything was absent.
+Observed: after one X press, State 200 and State 0 repeatedly alternated, blocking walk/jump.
+Cause: the M1 State -1 consumer could consume the same physical X press again after the temporary State 200 -> 0 animation return.
 
 Fix:
-- X button inserted into the actual current DOM.
-- explicit #atkX startup guard added.
-- no gameplay/CNS/CMD/camera/joystick changes.
+- X press is consumed once by the State -1 M1 route.
+- It cannot trigger State 200 again until X is physically released.
+- release resets the one-shot latch.
+- no CNS/CMD/camera/joystick changes.
+
+Expected:
+tap X -> State 200 once -> AIR 200 -> State 0 once.
+After return, walk/jump/crouch work normally.
+A new X attack requires release then press again.
