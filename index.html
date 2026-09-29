@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.17.2 · State 52 Source Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state52-sourcefix-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.17.3 · State 52 Corrected</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state52-corrected-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -49,7 +49,7 @@ status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteL
 new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · camera locked';detail.textContent='IK bridge · zoom '+c.zoom.toFixed(3)+' · stage Y '+STAGE_Y_LOGICAL+' · zoffset '+derivedZOffset.toFixed(1);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0172'}),fetch('./venus_runtime.json?v=0172',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0172',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0173'}),fetch('./venus_runtime.json?v=0173',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0173',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -63,7 +63,7 @@ function drawMars(dt){
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
-let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 function enterState(st,anim){
  state=st; current=anim; fi=0;ticks=0;stateTicks=0;
  act.textContent='State '+st+' · AIR '+anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
@@ -214,7 +214,20 @@ function simStep(){
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
-const clock=new THREE.Clock();function loop(){requestAnimationFrame(loop);const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);simStep();r.render(s,c);draw(dt);drawMars(dt)}requestAnimationFrame(loop);
+const clock=new THREE.Clock();let runtimeFailed=false;
+function showRuntimeError(e){
+ runtimeFailed=true;console.error(e);
+ status.textContent='RUNTIME ERROR · '+(e&&e.message?e.message:String(e));
+ act.textContent='Simulation stopped — check runtime error above';
+}
+function loop(){
+ requestAnimationFrame(loop);
+ if(runtimeFailed)return;
+ try{
+  const dt=Math.min(clock.getDelta(),.05);if(mix)mix.update(dt);simStep();r.render(s,c);draw(dt);drawMars(dt);
+ }catch(e){showRuntimeError(e)}
+}
+requestAnimationFrame(loop);
 function resize(){const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
