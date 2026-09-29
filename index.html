@@ -26,7 +26,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.6 · CMD Sequence Buffer M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-sequence-buffer-m2-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.6 · CMD Sequence Buffer M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cmd-sequence-buffer-m2-20260930-02 · direction fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -57,7 +57,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD sequence buffer M2';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CMD sequence buffer M2a';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
 let cmdDat=null;
@@ -198,17 +198,20 @@ function sampleInputHistory(){
  inputHistory.unshift(edge);if(inputHistory.length>120)inputHistory.pop();prevCanonical=now;
 }
 function tokenMatch(tok,frame){
- let key=tok.key,keys=[key];
- if(tok.fourWay){
-   if(key==='F')keys=['F','U','D']; else if(key==='B')keys=['B','U','D']; else if(key==='U')keys=['U','F','B']; else if(key==='D')keys=['D','F','B'];
- }
- return keys.some(k=>tok.release?frame[k]?.release:tok.hold?frame[k]?.down:frame[k]?.press);
+ const key=tok.key;
+ // MUGEN '$' means 4-way direction detection around the requested axis,
+ // not "any neighbouring cardinal". For the current canonical joystick:
+ // $F/$B require that horizontal direction; $U/$D require that vertical direction.
+ // Diagonals naturally satisfy both component directions.
+ return tok.release?!!frame[key]?.release:tok.hold?!!frame[key]?.down:!!frame[key]?.press;
 }
 function commandActive(name){
  const def=cmdDat?.commands?.find(c=>String(c.name).toLowerCase()===String(name).toLowerCase());
  if(!def)return false;
  // Held directions are continuous by definition in Venus CMD (/$F, /$B, /$U, /$D).
- if(def.steps?.length===1&&def.steps[0].length===1&&def.steps[0][0].hold)return tokenMatch(def.steps[0][0],inputHistory[0]||{});
+ if(def.steps?.length===1&&def.steps[0].length===1&&def.steps[0][0].hold){
+   return tokenMatch(def.steps[0][0],inputHistory[0]||{});
+ }
  if(!def.supportedM2)return false;
  const limit=Math.max(1,Number(def.time||cmdDat.defaults?.time||15));let cursor=0;
  // Search newest->older for command steps in reverse chronological order.

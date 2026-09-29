@@ -1,16 +1,14 @@
-0.19.6 CMD Sequence / Input Buffer M2
-Upload index.html + venus_runtime_states.json + venus_cmd_runtime.json.
+0.19.6a CMD Direction Fix
+Upload/replace ONLY index.html. Keep 0.19.6 venus_runtime_states.json + venus_cmd_runtime.json.
 
-Source basis: actual venus.cmd.
-Added generic canonical input history and command matcher:
-- comma sequence ordering
-- + simultaneous tokens
-- / hold
-- ~ release
-- $ four-way directional modifier
-- per-command time window
-- buffer.time latch
-- canonical keys F B U D a b c x y z s
+Root cause:
+The M2 implementation of '$' was wrong. /$U was allowed to match F/B, so walking could satisfy holdup and enter State 40. Because jump remained held/matched, it could repeatedly re-enter jump start animation.
 
-Current touch UI still exposes directional joystick only, so this milestone regression-tests the held movement commands. Button commands are parsed and matcher-ready, but no attack buttons / State -1 activation yet.
-Camera/EDGE/zoom/joystick geometry unchanged.
+Fix:
+- $F/$B now require the requested horizontal component.
+- $U/$D now require the requested vertical component.
+- diagonals naturally satisfy both relevant components.
+- one-token held commands remain current-state queries and bypass sequence buffer latching.
+
+No state IR, camera, EDGE, zoom, or joystick geometry changes.
+Retest: left/right walk; straight-up neutral jump; diagonal fwd/back jump; crouch; landing.
