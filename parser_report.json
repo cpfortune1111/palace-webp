@@ -1,0 +1,164 @@
+{
+  "version": "0.17-parser-m1",
+  "sourceFiles": [
+    "venus.cns",
+    "venus_Common.cns",
+    "common1.cns.zss"
+  ],
+  "parsedConstantCount": 37,
+  "parsedCnsStateCount": 50,
+  "parsedZssStateCount": 53,
+  "movementSliceParity": {
+    "0": {
+      "cns": {
+        "type": "S",
+        "physics": "S",
+        "sprpriority": 0
+      },
+      "zss": {
+        "type": "S",
+        "physics": "S",
+        "sprpriority": 0
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "StopSnd",
+        "ChangeAnim",
+        "ChangeAnim",
+        "PosSet",
+        "VelSet",
+        "VelSet",
+        "CtrlSet",
+        "ChangeState"
+      ]
+    },
+    "11": {
+      "cns": {
+        "type": "C",
+        "physics": "C",
+        "anim": 11,
+        "ctrl": 0,
+        "sprpriority": 0
+      },
+      "zss": {
+        "type": "C",
+        "physics": "C",
+        "anim": 11,
+        "sprpriority": 0
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "CtrlSet",
+        "ChangeAnim",
+        "VelSet"
+      ]
+    },
+    "20": {
+      "cns": {
+        "type": "S",
+        "physics": "S",
+        "sprpriority": 0
+      },
+      "zss": {
+        "type": "S",
+        "physics": "S",
+        "sprpriority": 0
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "VelSet",
+        "VelSet",
+        "VelSet",
+        "VelSet",
+        "ChangeAnim",
+        "ChangeAnim",
+        "CtrlSet",
+        "CtrlSet",
+        "ChangeState"
+      ]
+    },
+    "40": {
+      "cns": {
+        "type": "S",
+        "physics": "S",
+        "anim": 40,
+        "ctrl": 0,
+        "sprpriority": 1
+      },
+      "zss": {
+        "type": "S",
+        "physics": "S",
+        "anim": 40,
+        "ctrl": 0,
+        "sprpriority": 1
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "VarSet",
+        "VarSet",
+        "VarSet",
+        "VarSet",
+        "VarSet",
+        "VelSet",
+        "VelSet",
+        "ChangeState",
+        "PlaySnd",
+        "ChangeState"
+      ]
+    },
+    "50": {
+      "cns": {
+        "type": "A",
+        "physics": "A"
+      },
+      "zss": {
+        "type": "A",
+        "physics": "A"
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "VarSet",
+        "ChangeAnim"
+      ]
+    },
+    "51": {
+      "cns": {
+        "type": "A",
+        "physics": "A"
+      },
+      "zss": {
+        "type": "A",
+        "physics": "A"
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "Null"
+      ]
+    },
+    "52": {
+      "cns": {
+        "type": "S",
+        "physics": "S",
+        "anim": 47,
+        "ctrl": 0
+      },
+      "zss": {
+        "type": "S",
+        "physics": "S",
+        "anim": 47,
+        "ctrl": 0
+      },
+      "typePhysicsMatch": true,
+      "cnsControllers": [
+        "PlaySnd",
+        "NotHitBy",
+        "VelSet",
+        "PosSet",
+        "CtrlSet",
+        "VelSet",
+        "ChangeState"
+      ]
+    }
+  },
+  "scope": "Parser M1 lowers only tested movement states. Unsupported controllers are retained in this report, not silently treated as implemented."
+}

@@ -1,6 +1,6 @@
 {
-  "version": "0.16.1-slice1",
-  "sourceNote": "Normalized runtime IR for the currently tested Venus common movement slice. CNS/ZSS parsers will later emit this same shape.",
+  "version": "0.17-parser-m1",
+  "generatedBy": "compile_runtime.py",
   "states": {
     "0": {
       "type": "S",
@@ -13,17 +13,18 @@
       "type": "C",
       "physics": "C",
       "anim": 11,
-      "ctrl": 1,
+      "ctrl": 0,
       "controllers": []
     },
     "20": {
       "type": "S",
-      "physics": "N",
+      "physics": "S",
       "anim": 20,
       "ctrl": 1,
       "controllers": [
         {
-          "type": "WalkVelocity"
+          "type": "WalkVelocity",
+          "source": "State 20 movement semantics"
         }
       ]
     },
@@ -36,7 +37,8 @@
         {
           "type": "JumpTakeoff",
           "trigger": "AnimDone",
-          "nextState": 50
+          "nextState": 50,
+          "source": "VelSet + ChangeState"
         }
       ]
     },
@@ -49,12 +51,14 @@
         {
           "type": "ChangeState",
           "trigger": "VelYPositive",
-          "value": 51
+          "value": 51,
+          "source": "runtime phase split"
         },
         {
           "type": "Land",
           "trigger": "PosYAtGround",
-          "value": 52
+          "value": 52,
+          "source": "air physics landing"
         }
       ]
     },
@@ -67,7 +71,8 @@
         {
           "type": "Land",
           "trigger": "PosYAtGround",
-          "value": 52
+          "value": 52,
+          "source": "air physics landing"
         }
       ]
     },
@@ -80,7 +85,8 @@
         {
           "type": "ChangeState",
           "trigger": "AnimDone",
-          "value": 0
+          "value": 0,
+          "source": "CNS ChangeState AnimTime=0"
         }
       ]
     }
@@ -88,23 +94,40 @@
   "constants": {
     "velocity.walk.fwd.x": 9.0,
     "velocity.walk.back.x": -6.75,
+    "velocity.run.fwd.x": 18.0,
+    "velocity.run.fwd.y": 0.0,
+    "velocity.run.back.x": -30.0,
+    "velocity.run.back.y": -5.0,
     "velocity.jump.neu.x": 0.0,
-    "velocity.jump.y": -40.0,
+    "velocity.jump.neu.y": -40.0,
     "velocity.jump.fwd.x": 8.0,
     "velocity.jump.back.x": -8.0,
     "velocity.runjump.fwd.x": 16.0,
+    "velocity.runjump.fwd.y": -40.0,
     "velocity.runjump.back.x": -16.0,
-    "velocity.runjump.y": -40.0,
+    "velocity.runjump.back.y": -40.0,
     "velocity.airjump.neu.x": 0.0,
-    "velocity.airjump.y": -8.1,
-    "velocity.airjump.back.x": -2.55,
+    "velocity.airjump.neu.y": -8.1,
     "velocity.airjump.fwd.x": 2.5,
+    "velocity.airjump.back.x": -2.55,
+    "velocity.jump.y": -40.0,
+    "velocity.runjump.y": -40.0,
+    "velocity.airjump.y": -8.1,
+    "movement.airjump.num": 0.0,
+    "movement.airjump.height": 140.0,
     "movement.yaccel": 1.76,
     "movement.stand.friction": 0.85,
     "movement.crouch.friction": 0.82,
     "movement.stand.friction.threshold": 8.0,
     "movement.crouch.friction.threshold": 0.2,
-    "movement.airjump.num": 0,
-    "movement.airjump.height": 140.0
+    "movement.air.gethit.groundlevel": 100.0,
+    "movement.air.gethit.groundrecover.ground.threshold": -80.0,
+    "movement.air.gethit.groundrecover.groundlevel": 40.0,
+    "movement.air.gethit.airrecover.threshold": -4.0,
+    "movement.air.gethit.airrecover.yaccel": 1.4,
+    "movement.air.gethit.trip.groundlevel": 60.0,
+    "movement.down.bounce.yaccel": 1.6,
+    "movement.down.bounce.groundlevel": 48.0,
+    "movement.down.friction.threshold": 0.2
   }
 }

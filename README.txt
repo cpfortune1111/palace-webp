@@ -1,18 +1,19 @@
-Prototype 0.16.1 — CNS/ZSS Runtime Slice 1 hotfix
+Prototype 0.17 — CNS/ZSS Parser Milestone 1
 
-Fixes movement constants binding:
-- Runtime movement constants now live in venus_runtime_states.json with the State IR.
-- index.html reads constants from stateIR.constants, not venus_runtime.json.
-- JSON fetches use cache:no-store plus ?v=0161 cache busting.
-- Required constants are validated at startup; missing values show RUNTIME ERROR instead of silently becoming 0.
+What changed:
+- compile_runtime.py now reads the actual source files:
+  venus.cns
+  venus_Common.cns
+  common1.cns.zss
+- Parses [Velocity] / [Movement] constants from venus.cns.
+- Parses CNS StateDef metadata and controller blocks.
+- Parses ZSS StateDef metadata.
+- Generates venus_runtime_states.json automatically.
+- Generates parser_report.json with CNS/ZSS parity and controller inventory.
+- Browser runtime consumes the generated IR; movement regression behavior remains the 0.16.1 baseline.
 
-Expected regression values:
-walk.fwd.x = 9
-walk.back.x = -6.75
-jump.neu.x = 0
-jump.fwd.x = 8
-jump.back.x = -8
-jump.y = -40
-movement.yaccel = 1.76
+Current parser/lowering scope:
+States 0, 11, 20, 40, 50, 51, 52 only.
+This is NOT full CNS/ZSS compatibility yet. Unsupported controllers are inventoried rather than silently claimed as implemented.
 
-Joystick and stage/camera calibration unchanged.
+For GitHub Pages testing upload all files in this package. Python is build-time only; GitHub Pages does not execute it.
