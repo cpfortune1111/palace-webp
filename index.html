@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.13 Venus Runtime + Mars</title>
+<title>Prototype 0.14 Venus Runtime + Mars</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -12,8 +12,8 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.13 · Venus Runtime + Mars</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
-<div id="ctrl"><button data-a="21">◀ Walk</button><button data-a="0">Idle</button><button data-a="20">Walk ▶</button><button data-a="11">Crouch</button><button data-a="41">Jump</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.14 · Venus Runtime + Mars</b><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<div id="ctrl"><button id="leftBtn">◀ Walk</button><button id="rightBtn">Walk ▶</button><button id="jumpBtn">Jump</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act');
@@ -50,16 +50,16 @@ function drawMars(dt){
  mctx.clearRect(0,0,mcv.width,mcv.height);if(!mdat||!matlas)return;
  const frames=mdat.actions['0'];let f=frames[mfi],sp=mdat.sprites[f.group+','+f.item];if(!sp)return;
  mticks+=dt*60;const dur=f.time<0?1e9:Math.max(1,f.time);if(mticks>=dur){mticks=0;mfi=(mfi+1)%frames.length;f=frames[mfi];sp=mdat.sprites[f.group+','+f.item]||sp}
- const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,ground=viewY+(660+posY)*fit,px=viewX+(640+280)*fit;
+ const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,ground=viewY+660*fit,px=viewX+(640+280)*fit;
  // P2 facing=-1: mirror around its logical axis.
  mctx.save();mctx.translate(px,0);mctx.scale(-1,1);
  const dx=-(sp.axisX-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit;
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
 const input={left:false,right:false,down:false,jump:false};
-let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false;
+let vx=0,vy=0,posX=-280,posY=0,state=0,jumpLatch=false,stateTicks=0;
 function enterState(st,anim){
- state=st; current=anim; fi=0;ticks=0;
+ state=st; current=anim; fi=0;ticks=0;stateTicks=0;
  act.textContent='State '+st+' · AIR '+anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
 }
 function bindHold(btn,key){
@@ -68,49 +68,63 @@ function bindHold(btn,key){
  btn.addEventListener('pointerdown',on);btn.addEventListener('pointerup',off);
  btn.addEventListener('pointercancel',off);btn.addEventListener('pointerleave',off);
 }
-const bs=[...document.querySelectorAll('button')];
-bindHold(bs[0],'left'); bindHold(bs[2],'right'); bindHold(bs[3],'down'); bindHold(bs[4],'jump');
-bs[1].addEventListener('pointerdown',e=>{e.preventDefault();input.left=input.right=input.down=input.jump=false});
-const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'down',ArrowUp:'jump',z:'jump',Z:'jump'};
+bindHold(document.querySelector('#leftBtn'),'left');
+bindHold(document.querySelector('#rightBtn'),'right');
+bindHold(document.querySelector('#jumpBtn'),'jump');
+const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'jump',z:'jump',Z:'jump'};
 addEventListener('keydown',e=>{if(keymap[e.key]){e.preventDefault();input[keymap[e.key]]=true}});
 addEventListener('keyup',e=>{if(keymap[e.key]){e.preventDefault();input[keymap[e.key]]=false}});
 function simStep(){
  if(!dat)return;
  const K=dat.constants;
- if(state===0||state===20||state===10||state===11||state===12){
+ stateTicks++;
+
+ if(state===0||state===20){
    posY=0;vy=0;
    if(input.jump&&!jumpLatch){
-     jumpLatch=true; state=40; current=40;fi=0;ticks=0;
-   } else if(input.down){
-     if(state!==11) enterState(11,11);
-     vx=0;
+     jumpLatch=true; enterState(40,40);
    } else if(input.left||input.right){
-     state=20;
-     if(input.right){vx=K.walkFwd;if(current!==20)enterState(20,20)}
-     else {vx=K.walkBack;if(current!==21)enterState(20,21)}
+     if(input.right){
+       vx=K.walkFwd;
+       if(state!==20||current!==20)enterState(20,20);
+     } else {
+       vx=K.walkBack;
+       if(state!==20||current!==21)enterState(20,21);
+     }
    } else {
-     vx=0;if(state!==0||current!==0)enterState(0,0);
+     // Releasing Walk returns to idle automatically. No Idle button needed.
+     vx=0;
+     if(state!==0||current!==0)enterState(0,0);
    }
  }
  if(!input.jump)jumpLatch=false;
+
  if(state===40){
-   // CNS state 40: after jump-start AIR finishes, apply jump constants and enter state 50.
-   const fs=dat.actions['40']||[]; let total=0; for(const q of fs) total+=Math.max(1,q.time);
-   if(ticks>=Math.max(1,total-1)){
-     vx=input.right?K.jumpFwd:(input.left?K.jumpBack:0);vy=K.jumpY;
-     state=50;current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;
+   // AIR 40 is 2 + 3 ticks. stateTicks is separate from AIR frame timing.
+   const fs=dat.actions['40']||[];
+   let total=0;for(const q of fs)total+=q.time<0?0:Math.max(1,q.time);
+   if(stateTicks>=Math.max(1,total)){
+     vx=input.right?K.jumpFwd:(input.left?K.jumpBack:0);
+     vy=K.jumpY;
+     const air=vx>0?42:(vx<0?43:41);
+     enterState(50,air);
    }
  } else if(state===50||state===51){
-   posY+=vy;vy+=K.yaccel;posX+=vx;
-   if(vy>0)state=51;
-   if(posY>=0){posY=0;vy=0;vx=0;enterState(52,47)}
+   posY+=vy; vy+=K.yaccel; posX+=vx;
+   if(vy>0&&state!==51){state=51;stateTicks=0}
+   if(posY>=0){
+     posY=0;vy=0;vx=0;enterState(52,47);
+   }
  } else if(state===52){
-   const fs=dat.actions['47']||[];let total=0;for(const q of fs)total+=Math.max(1,q.time);
-   if(ticks>=Math.max(1,total-1))enterState(0,0);
+   const fs=dat.actions['47']||[];
+   let total=0;for(const q of fs)total+=q.time<0?0:Math.max(1,q.time);
+   if(stateTicks>=Math.max(1,total))enterState(0,0);
  } else if(state===20){
    posX+=vx;
  }
+
  posX=Math.max(-580,Math.min(580,posX));
+ act.textContent='State '+state+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1);
 }
 function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=dat.actions[current]||dat.actions[0];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=dat.sprites[key];if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=dat.sprites[key]||sp}
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+660*fit,px=viewX+(640+posX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
