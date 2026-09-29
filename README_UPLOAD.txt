@@ -1,17 +1,15 @@
-0.19.7a State IR Shape Fix
-Upload/replace index.html + venus_runtime_states.json. venus_cmd_runtime.json is unchanged and included only for convenience.
+0.19.7b X DOM Fix
+Upload/replace ONLY index.html. Keep the 0.19.7a JSON files.
 
-Root cause of blank stage/character/X button:
-State 200 was emitted in the wrong nested schema:
-  {"stateDef": {...}}
-but the runtime's normalized state IR expects flat fields:
-  {"type":"S","physics":"S","anim":200,"ctrl":0,...}
-Runtime validation therefore failed during startup and the page stayed in the pre-runtime fallback HUD ("Action 0 · Idle").
+Actual root cause of the completely blank runtime:
+0.19.7 attempted to insert the X button after obsolete #joy markup.
+The current baseline uses #ctrl > #stick > #stickKnob, so #atkX never existed.
+JavaScript then executed:
+  document.querySelector('#atkX') -> null
+  null.addEventListener(...) -> synchronous module crash
+This happened before stage/character/runtime loading, explaining why the HUD stayed at Action 0 · Idle and everything was absent.
 
-Fixed State 200 to the same normalized schema as states 0/10/11/etc.
-Added explicit State 200 validation so this cannot fail silently again.
-
-Expected after deploy:
-- stage + Venus + Mars + X button visible
-- X -> State 200 / AIR 200 -> temporary return State 0
-- movement regression unchanged
+Fix:
+- X button inserted into the actual current DOM.
+- explicit #atkX startup guard added.
+- no gameplay/CNS/CMD/camera/joystick changes.
