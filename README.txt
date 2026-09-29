@@ -1,4 +1,4 @@
-Prototype 0.17 — CNS/ZSS Parser Milestone 1
+Prototype 0.17.1 — CNS/ZSS Parser Milestone 1 (Corrected Package)
 
 What changed:
 - compile_runtime.py now reads the actual source files:
@@ -17,3 +17,6 @@ States 0, 11, 20, 40, 50, 51, 52 only.
 This is NOT full CNS/ZSS compatibility yet. Unsupported controllers are inventoried rather than silently claimed as implemented.
 
 For GitHub Pages testing upload all files in this package. Python is build-time only; GitHub Pages does not execute it.
+
+Build ID: parser-m1-20260929-01
+Correction: index.html title/HUD now identifies 0.17.1; runtime asset URLs use ?v=0171 for cache busting.
