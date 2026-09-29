@@ -1,11 +1,24 @@
-0.19.7d AIR 200 / SFF Sprite Import
-Upload/replace index.html and ADD venus_attack200_atlas.png + venus_attack200.json.
-Keep the existing 0.19.7a venus_runtime_states.json and venus_cmd_runtime.json.
+0.19.7e CMD Expiry / No Deferred X Fix
+Upload/replace ONLY index.html. Keep all 0.19.7d attack atlas/JSON files.
 
-Source-first:
-- venus.air Action 200 = 7 frames: 200,0(1), 200,1(1), 200,2(1), 200,3(5), 200,2(1), 200,1(2), 200,0(2)
-- extracted SFF v2 PNG8 sprites 200,0..3 from actual venus.sff
-- resolved each sprite's SFF palette bank and palette-index-0 transparency
-- dedicated compact attack atlas; existing movement atlas is untouched
+Observed:
+- rapid second X during State 200 caused another attack after returning to State 0
+- X while holding down caused State 200 after standing
+- X in air caused State 200 after landing
 
-Scope remains animation only: no HitDef, collision, damage, or PlaySnd yet.
+Root cause:
+commandActive() incorrectly searched the entire CMD 'time' history for the FINAL step,
+so an old X press could become active later. Its buffer also used stateTicks, which resets
+on ChangeState, instead of a monotonic input clock.
+
+Fix:
+- final command step must complete on the CURRENT simulation tick
+- older input history is used only for earlier steps of multi-step commands
+- buffer.time uses monotonic inputTick, never State Time
+- held /$F /$B /$U /$D remain continuous and unbuffered
+
+Expected:
+- X in State 0 -> one State 200
+- second X while first attack is busy -> discarded, no queued second attack
+- hold down + X -> no attack now and no attack after standing
+- jump + X -> no attack now and no attack after landing
