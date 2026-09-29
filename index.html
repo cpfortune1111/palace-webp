@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.18.4 Screen Edge Allowance</title>
+<title>Prototype 0.19.0 CNS Runtime M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -18,7 +18,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.18.4 · Screen Edge Allowance</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD screen-edge-allowance-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.0 · CNS Runtime M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-runtime-m1-20260929-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -46,10 +46,10 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · screen edge allowance S4';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CNS runtime M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0184'}),fetch('./venus_runtime.json?v=0184',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0184',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0190'}),fetch('./venus_runtime.json?v=0190',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0190',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];validateRuntime();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');let matlas,mdat,mfi=0,mticks=0;
 Promise.all([new Promise((ok,err)=>{matlas=new Image();matlas.onload=ok;matlas.onerror=err;matlas.src='./mars_atlas.png'}),fetch('./mars_anim.json').then(x=>x.json())]).then(x=>{mdat=x[1];resize()});
 function drawMars(dt){
@@ -172,33 +172,77 @@ function latchJumpIntent(){
  else if(input.left)jumpIntent='back';
  else jumpIntent='neutral';
 }
+function evalM1(expr){
+ let e=String(expr).trim();
+ // M1 generic expression/query layer used by trigger groups and controller params.
+ // Keep this deliberately strict: unknown symbols fail visibly rather than being ignored.
+ const values=[
+  ['PrevStateNo',prevState],['StateNo',state],['AnimTime',animDone()?0:-1],
+  ['StateType',JSON.stringify(stateDef()?.type||'')],['MoveType',JSON.stringify('I')],
+  ['AILevel',0],['Ctrl',runtimeCtrl],['Time',stateTicks],['Anim',current],
+  ['Pos Y',posY],['Pos X',posX],['Vel Y',vy],['Vel X',vx]
+ ];
+ for(const [name,value] of values){
+  const pat=name.replace(/\s+/g,'\\s+');
+  e=e.replace(new RegExp('\\b'+pat+'\\b','gi'),String(value));
+ }
+ e=e.replace(/\bconst\s*\(\s*([^)]+?)\s*\)/gi,(_,k)=>String(constVal(String(k).trim())));
+ e=e.replace(/(?<![!<>=])=(?!=)/g,'==');
+ if(!/^[0-9eE+\-*/%().<>=!&|\s"'A-Za-z_]+$/.test(e))
+   throw new Error('M1 unsupported expression: '+expr);
+ try{return Function('"use strict";return ('+e+')')()}
+ catch(err){throw new Error('M1 expression error ['+expr+']: '+err.message)}
+}
+function controllerTriggered(c){
+ if(!c.triggers)return null; // legacy adapter path
+ for(const x of (c.triggerall||[]))if(!evalM1(x))return false;
+ const groups=Object.values(c.triggers);
+ if(!groups.length)return true;
+ return groups.some(group=>group.every(x=>!!evalM1(x)));
+}
+function paramM1(v){
+ if(typeof v==='number')return v;
+ if(v===undefined||v===null)return v;
+ return evalM1(String(v));
+}
 function runController(c){
- if(c.trigger==='AnimDone'&&!animDone())return;
- if(c.trigger==='VelYPositive'&&!(vy>0))return;
- if(c.trigger==='PosYAtGround'&&!(posY>=0))return;
- if(c.trigger==='TimeEquals'&&stateTicks!==c.time)return;
- if(c.trigger==='TimeEqualsOrPrevState'&&!(stateTicks===c.time||prevState===c.prevState))return;
+ const generic=controllerTriggered(c);
+ if(generic===false)return;
+ if(generic===null){
+  // Temporary legacy adapters retained only for movement/landing regression safety.
+  if(c.trigger==='AnimDone'&&!animDone())return;
+  if(c.trigger==='VelYPositive'&&!(vy>0))return;
+  if(c.trigger==='PosYAtGround'&&!(posY>=0))return;
+  if(c.trigger==='TimeEquals'&&stateTicks!==c.time)return;
+ }
+ const p=c.params||c;
  switch(c.type){
   case 'WalkVelocity':
-   vx=input.right?constVal('velocity.walk.fwd.x'):constVal('velocity.walk.back.x');
-   posX+=vx;
-   break;
+   vx=input.right?constVal('velocity.walk.fwd.x'):constVal('velocity.walk.back.x');posX+=vx;break;
   case 'JumpTakeoff':
    vx=jumpIntent==='forward'?constVal('velocity.jump.fwd.x'):(jumpIntent==='back'?constVal('velocity.jump.back.x'):constVal('velocity.jump.neu.x'));
-   vy=constVal('velocity.jump.y');
-   enterIRState(c.nextState);
-   break;
+   vy=constVal('velocity.jump.y');enterIRState(c.nextState);break;
   case 'VelSet':
-   if(c.x!==undefined)vx=Number(c.x);if(c.y!==undefined)vy=Number(c.y);break;
+   if(p.x!==undefined)vx=Number(paramM1(p.x));if(p.y!==undefined)vy=Number(paramM1(p.y));break;
+  case 'VelAdd':
+   if(p.x!==undefined)vx+=Number(paramM1(p.x));if(p.y!==undefined)vy+=Number(paramM1(p.y));break;
+  case 'VelMul':
+   if(p.x!==undefined)vx*=Number(paramM1(p.x));if(p.y!==undefined)vy*=Number(paramM1(p.y));break;
   case 'PosSet':
-   if(c.x!==undefined)posX=Number(c.x);if(c.y!==undefined)posY=Number(c.y);break;
-  case 'CtrlSet': runtimeCtrl=Number(c.value); break;
+   if(p.x!==undefined)posX=Number(paramM1(p.x));if(p.y!==undefined)posY=Number(paramM1(p.y));break;
+  case 'PosAdd':
+   if(p.x!==undefined)posX+=Number(paramM1(p.x));if(p.y!==undefined)posY+=Number(paramM1(p.y));break;
+  case 'CtrlSet': runtimeCtrl=Number(paramM1(p.value));break;
+  case 'StateTypeSet':
+   // Runtime state metadata remains immutable; this M1 override is per-instance.
+   if(p.physics!==undefined)stateDef().physics=String(p.physics);
+   if(p.statetype!==undefined)stateDef().type=String(p.statetype);break;
   case 'VelSetThreshold':
    if(c.axis==='x'&&Math.abs(vx)<constVal(c.absBelowConst))vx=Number(c.value);break;
-  case 'ChangeState': enterIRState(c.value); if(c.ctrl!==undefined)runtimeCtrl=Number(c.ctrl); break;
-  case 'Land':
-   posY=0;vy=0;enterIRState(c.value);
-   break;
+  case 'ChangeState':
+   enterIRState(Number(paramM1(p.value)));if(p.ctrl!==undefined)runtimeCtrl=Number(paramM1(p.ctrl));break;
+  case 'Land':posY=0;vy=0;enterIRState(c.value);break;
+  default: throw new Error('M1 unsupported controller: '+c.type);
  }
 }
 function applyPhysics(def){

@@ -1,6 +1,6 @@
 {
-  "version": "0.17.2-parser-m1-state52-sourcefix",
-  "generatedBy": "compile_runtime.py",
+  "version": "0.19.0-cns-runtime-m1",
+  "generatedBy": "CNS/ZSS Compatibility Core M1",
   "states": {
     "0": {
       "type": "S",
@@ -14,7 +14,21 @@
       "physics": "C",
       "anim": 11,
       "ctrl": 0,
-      "controllers": []
+      "controllers": [
+        {
+          "type": "CtrlSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "!AILevel"
+            ]
+          },
+          "params": {
+            "value": "1"
+          },
+          "source": "venus_Common.cns State 11 CtrlSet"
+        }
+      ]
     },
     "20": {
       "type": "S",
@@ -24,7 +38,7 @@
       "controllers": [
         {
           "type": "WalkVelocity",
-          "source": "State 20 movement semantics"
+          "source": "legacy movement adapter; not yet generic CMD"
         }
       ]
     },
@@ -38,7 +52,7 @@
           "type": "JumpTakeoff",
           "trigger": "AnimDone",
           "nextState": 50,
-          "source": "VelSet + ChangeState"
+          "source": "legacy movement adapter"
         }
       ]
     },
@@ -52,13 +66,13 @@
           "type": "ChangeState",
           "trigger": "VelYPositive",
           "value": 51,
-          "source": "runtime phase split"
+          "source": "legacy phase adapter"
         },
         {
           "type": "Land",
           "trigger": "PosYAtGround",
           "value": 52,
-          "source": "air physics landing"
+          "source": "legacy landing adapter"
         }
       ]
     },
@@ -72,7 +86,7 @@
           "type": "Land",
           "trigger": "PosYAtGround",
           "value": 52,
-          "source": "air physics landing"
+          "source": "legacy landing adapter"
         }
       ]
     },
@@ -87,36 +101,51 @@
           "trigger": "TimeEquals",
           "time": 0,
           "y": 0,
-          "source": "venus_Common.cns State 52 VelSet Time=0"
+          "source": "legacy M1 adapter"
         },
         {
           "type": "PosSet",
           "trigger": "TimeEquals",
           "time": 0,
           "y": 0,
-          "source": "venus_Common.cns State 52 PosSet Time=0"
+          "source": "legacy M1 adapter"
         },
         {
           "type": "CtrlSet",
-          "trigger": "TimeEqualsOrPrevState",
-          "time": 3,
-          "prevState": 5040,
-          "value": 1,
-          "source": "venus_Common.cns State 52 CtrlSet: Time=3 OR PrevStateNo=5040"
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 3"
+            ],
+            "2": [
+              "PrevStateNo = 5040"
+            ]
+          },
+          "params": {
+            "value": "1"
+          },
+          "source": "venus_Common.cns State 52 CtrlSet"
         },
         {
           "type": "VelSetThreshold",
           "axis": "x",
           "absBelowConst": "movement.stand.friction.threshold",
           "value": 0,
-          "source": "venus_Common.cns State 52 VelSet friction threshold"
+          "source": "legacy friction adapter"
         },
         {
           "type": "ChangeState",
-          "trigger": "AnimDone",
-          "value": 0,
-          "ctrl": 1,
-          "source": "venus_Common.cns State 52 ChangeState AnimTime=0"
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "source": "venus_Common.cns State 52 ChangeState"
         }
       ]
     }
