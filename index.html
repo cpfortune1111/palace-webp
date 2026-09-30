@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.22.0 · Damage + GetHit M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD damage-gethit-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.22.1 · Hit Acceptance + GetHit Visual Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hit-accept-gethit-visual-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -78,11 +78,16 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · Damage/GetHit M1 · Dual Venus';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · single-hit + facing knockback + GetHit visual';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
 Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+let gethitAtlas,gethitDat;
+Promise.all([
+ new Promise((ok,err)=>{gethitAtlas=new Image();gethitAtlas.onload=ok;gethitAtlas.onerror=err;gethitAtlas.src='./venus_gethit_atlas.png?v=0221'}),
+ fetch('./venus_gethit.json?v=0221',{cache:'no-store'}).then(x=>x.json())
+]).then(x=>{gethitDat=x[1];resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');
 function p2Data(){return dat}
 function p2AtlasFor(f){return atlasFor(f)}
@@ -103,7 +108,7 @@ function drawMars(){
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
-let activeHitDef=null,hitDefSerial=0;
+let activeHitDef=null,hitDefSerial=0,stateEntrySerial=0;
 let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',x:-280,y:0,hitDef:null,overlap:false,contact:false};
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
@@ -177,8 +182,8 @@ const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowDown:'down',ArrowUp:'up'}
 addEventListener('keydown',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=true;if(k==='up')input.jump=true}});
 addEventListener('keyup',e=>{const k=keymap[e.key];if(k){e.preventDefault();input[k]=false;if(k==='up')input.jump=false}});
 function framesFor(anim){return (attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
-function spriteFor(frame){const k=frame.group+','+frame.item;return attackDat?.sprites?.[k]||dat?.sprites?.[k]}
-function atlasFor(frame){const k=frame.group+','+frame.item;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+function spriteFor(frame){const k=frame.group+','+frame.item;return gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
+function atlasFor(frame){const k=frame.group+','+frame.item;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
 function actionDuration(anim){
  const fs=framesFor(anim);let total=0;
  for(const q of fs) total+=q.time<0?0:Math.max(1,q.time);
@@ -203,7 +208,7 @@ function setAnimForState(def){
  current=Number(def.anim);fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
- prevState=state;state=st;stateTicks=0;activeHitDef=null;
+ prevState=state;state=st;stateTicks=0;activeHitDef=null;stateEntrySerial++;
  const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  if(incoming&&incoming.moveType!==undefined)runtimeMoveType=String(incoming.moveType).toUpperCase();
  const def=incoming;
@@ -328,7 +333,7 @@ function runController(c){
   case 'CtrlSet':runtimeCtrl=Number(paramM1(p.value));break;
   case 'StateTypeSet':if(p.moveType!==undefined)runtimeMoveType=String(p.moveType).toUpperCase();break;
   case 'HitDef':
-   activeHitDef={serial:++hitDefSerial,state,anim:current,elem:fi+1,tick:inputTick,params:{...p}};
+   activeHitDef={serial:++hitDefSerial,hitKey:stateEntrySerial+':'+state+':'+current,state,anim:current,elem:fi+1,tick:inputTick,params:{...p}};
    break;
   case 'ChangeAnim':current=Number(paramM1(p.value));fi=0;ticks=0;break;
   case 'ChangeState':enterIRState(Number(paramM1(p.value)));if(p.ctrl!==undefined)runtimeCtrl=Number(paramM1(p.ctrl));break;
@@ -404,9 +409,9 @@ function advanceAirOneTick(){
 const p2={
  id:2,name:'Sailor Venus',x:280,y:0,vx:0,vy:0,facing:-1,
  state:0,time:0,anim:0,elem:1,elemTick:0,ctrl:1,
- type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastContactTick:-1
+ type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
-function p2Frames(){const d=p2Data();return d?.actions?.[p2.anim]||d?.actions?.[String(p2.anim)]||[]}
+function p2Frames(){return gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
 function advanceFighterAirOneTick(f){
  const frames=p2Frames();if(!frames.length)return;
  const el=frames[Math.max(0,Math.min(frames.length-1,f.elem-1))];
@@ -422,11 +427,11 @@ function enterP2State(n){
  p2.state=n;p2.time=0;p2.elem=1;p2.elemTick=0;
  if(n===0){p2.type='S';p2.moveType='I';p2.physics='S';p2.ctrl=1;p2.anim=0}
  if(n===5000){p2.type='S';p2.moveType='H';p2.physics='N';p2.vx=0;p2.vy=0;p2.ctrl=0;p2.anim=5000}
- if(n===5001){p2.type='S';p2.moveType='H';p2.physics='S';p2.ctrl=0;if(p2.getHit)p2.vx=p2.getHit.xvel}
+ if(n===5001){p2.type='S';p2.moveType='H';p2.physics='S';p2.ctrl=0;if(p2.getHit){p2.vx=p2.getHit.xvel*p2.facing;p2.anim=5005}}
 }
 function applyP2HitM1(hitDef){
- if(!hitDef||p2.lastContactTick===inputTick)return;
- p2.lastContactTick=inputTick;
+ if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
+ p2.lastHitKey=hitDef.hitKey;
  const dmg=20;
  p2.life=Math.max(0,p2.life-dmg);
  p2.getHit={damage:dmg,animtype:0,groundtype:1,xvel:-16,slidetime:11,hittime:15};
@@ -445,7 +450,7 @@ function stepP2M1(){
  }
  p2.x+=p2.vx;p2.y+=p2.vy;
  p2.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,p2.x));
- p2.time++;advanceFighterAirOneTick(p2);
+ p2.time++;if(p2.state!==5000)advanceFighterAirOneTick(p2);
 }
 const VENUS_ACTION0_CLSN2=[[-27,-429,25,-360],[-35,-360,36,-243],[-34,-243,39,1],[39,-56,63,1]];
 let collisionContact=false;
@@ -517,7 +522,7 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
  act.textContent=hudCollapsed
-  ? '0.22.0 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
+  ? '0.22.1 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
   : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'')+(lf.hitDef?' · OVERLAP '+(lf.overlap?1:0):'')+(lf.contact?' · CONTACT':'')+' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
 }
 
