@@ -1,10 +1,9 @@
-0.19.8a HUD Tick Debugger
+0.19.8b MoveType declaration fix
 Upload/replace ONLY index.html.
 
-HUD right side:
-▶ Play: resume continuous simulation.
-Ⅱ Pause: pause simulation.
-While paused, the same right button changes to ▸|. Each press advances exactly one simStep tick and remains paused.
+0.19.8 introduced generic MoveType support, but runtimeMoveType was referenced without
+being declared in the actual runtime variable declaration. Pressing X entered State 200,
+then StateTypeSet/MoveType evaluation threw ReferenceError and stopped simulation.
 
-Rendering remains active while paused, but battle simulation and character animation do not advance.
-No CNS/CMD/state/camera/input rules changed.
+Fix: declare runtimeMoveType='I' in the existing runtime state variable block.
+No gameplay/state/CMD/tick-debugger behavior changed.

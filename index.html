@@ -31,7 +31,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #debugBtns button:active{transform:scale(.94)}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.8 · State 200 Controllers M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-state200-controllers-20260930-02 · tick debugger</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.8 · State 200 Controllers M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-state200-controllers-20260930-03 · MoveType declaration fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -71,7 +71,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CNS State 200 controllers M2 · tick debugger';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CNS State 200 controllers M2 · tick debugger fixed';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -89,7 +89,7 @@ function drawMars(dt){
  mctx.imageSmoothingEnabled=true;mctx.drawImage(matlas,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
-let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
