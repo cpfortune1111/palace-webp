@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.19.7 State -1 First Attack M1</title>
+<title>Prototype 0.23.0 Fighter Interaction M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.22.1 · Hit Acceptance + GetHit Visual Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hit-accept-gethit-visual-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.0 · Fighter Interaction M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD fighter-interaction-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -78,7 +78,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · single-hit + facing knockback + GetHit visual';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · Fighter Interaction M1 · push + turn + dual screen bounds';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -106,7 +106,7 @@ function drawMars(){
  mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
-let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+let vx=0,vy=0,posX=-280,posY=0,p1Facing=1,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 let activeHitDef=null,hitDefSerial=0,stateEntrySerial=0;
 let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',x:-280,y:0,hitDef:null,overlap:false,contact:false};
@@ -246,7 +246,10 @@ let consumedXPress=false;
 const commandBuffer=new Map();
 let prevCanonical={F:false,B:false,U:false,D:false,a:false,b:false,c:false,x:false,y:false,z:false,s:false};
 function canonicalNow(){
- return {F:!!input.right&&!input.neutralVertical,B:!!input.left&&!input.neutralVertical,U:!!input.jump,D:!!input.down,
+ // MUGEN F/B are facing-relative. Physical right is F only while facing right.
+ const physF=p1Facing>0?!!input.right:!!input.left;
+ const physB=p1Facing>0?!!input.left:!!input.right;
+ return {F:physF&&!input.neutralVertical,B:physB&&!input.neutralVertical,U:!!input.jump,D:!!input.down,
          a:!!input.a,b:!!input.b,c:!!input.c,x:xHeld||!!input.x,y:!!input.y,z:!!input.z,s:!!input.s};
 }
 function sampleInputHistory(){
@@ -333,7 +336,7 @@ function runController(c){
   case 'VarSet':{
    const m=String(p.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!m)throw new Error('M2 VarSet target '+p.target);
    const arr=m[1].toLowerCase()==='sysvar'?runtimeSysVar:runtimeVar;arr[Number(m[2])]=Number(paramM1(p.value));break}
-  case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x));if(p.y!==undefined)vy=Number(paramM1(p.y));break;
+  case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x))*p1Facing;if(p.y!==undefined)vy=Number(paramM1(p.y));break;
   case 'VelAdd':if(p.x!==undefined)vx+=Number(paramM1(p.x));if(p.y!==undefined)vy+=Number(paramM1(p.y));break;
   case 'VelMul':if(p.x!==undefined)vx*=Number(paramM1(p.x));if(p.y!==undefined)vy*=Number(paramM1(p.y));break;
   case 'PosSet':if(p.x!==undefined)posX=Number(paramM1(p.x));if(p.y!==undefined)posY=Number(paramM1(p.y));break;
@@ -469,12 +472,59 @@ function rectOverlap(a,b){return a.l<=b.r&&a.r>=b.l&&a.t<=b.b&&a.b>=b.t}
 function resolveCollisionM1(frame){
  if(!frame?.hitDef)return {overlap:false,contact:false};
  const set=CLSN_M1[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
- const atk=worldBoxes(set?.c1||[],frame.x,frame.y,1);
+ const atk=worldBoxes(set?.c1||[],frame.x,frame.y,p1Facing);
  const body=worldBoxes(VENUS_ACTION0_CLSN2,p2.x,p2.y,p2.facing);
  const overlap=atk.some(a=>body.some(b=>rectOverlap(a,b)));
  return {overlap,contact:overlap};
 }
 
+// Fighter Interaction M1. Source basis: IKEMEN pushDetection uses Size boxes,
+// Clsn2 overlap, equal-priority/weight push factors, then xScreenBound; auto-turn
+// is suppressed by noAutoTurn. This Venus-vs-Venus slice uses Venus [Size]
+// ground.back/front=40 and equal factors. Full dynamic Clsn2 gating is deferred.
+const VENUS_GROUND_BACK=40,VENUS_GROUND_FRONT=40;
+function clampFighterScreenM1(){
+ // Preserve the already accepted Web edge-overflow presentation rule, now for BOTH fighters.
+ // At camera/stage limits neither fighter axis may continue indefinitely offscreen.
+ const half=640;
+ function spriteEdges(frames,elem,facing){
+  const f=frames[Math.max(0,Math.min(frames.length-1,elem))],sp=f?spriteFor(f):null;
+  if(!f||!sp)return {left:0,right:0,allow:0};
+  let left=sp.axisX-f.ox,right=sp.w-left;
+  if(facing<0)[left,right]=[right,left];
+  return {left,right,allow:sp.w*.25};
+ }
+ const e1=spriteEdges(framesFor(current),fi,p1Facing),e2=spriteEdges(p2Frames(),p2.elem-1,p2.facing);
+ posX=Math.max(cameraX-half+e1.left-e1.allow,Math.min(cameraX+half-e1.right+e1.allow,posX));
+ p2.x=Math.max(cameraX-half+e2.left-e2.allow,Math.min(cameraX+half-e2.right+e2.allow,p2.x));
+ posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
+ p2.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,p2.x));
+}
+function playerPushM1(){
+ // Ground Size boxes: Venus source ground.back/front = 40. Equal Venus weight/priority
+ // means split penetration evenly, matching IKEMEN's equal-factor branch.
+ if(posY!==0||p2.y!==0)return;
+ const p1L=posX-VENUS_GROUND_BACK,p1R=posX+VENUS_GROUND_FRONT;
+ const p2L=p2.x-VENUS_GROUND_BACK,p2R=p2.x+VENUS_GROUND_FRONT;
+ const overlap=Math.min(p1R,p2R)-Math.max(p1L,p2L);if(overlap<=0)return;
+ const half=overlap*.5;
+ if(posX<p2.x){posX-=half;p2.x+=half}
+ else if(posX>p2.x){posX+=half;p2.x-=half}
+ else {posX-=half;p2.x+=half}
+ clampFighterScreenM1();
+ // Corner compensation: if screen clamp prevented one half, move the other fighter
+ // by the remaining penetration, as IKEMEN does for equal push priority.
+ const l=posX-VENUS_GROUND_BACK,r=posX+VENUS_GROUND_FRONT,
+       l2=p2.x-VENUS_GROUND_BACK,r2=p2.x+VENUS_GROUND_FRONT;
+ const rem=Math.min(r,r2)-Math.max(l,l2);
+ if(rem>0){if(posX<=p2.x){p2.x+=rem}else{p2.x-=rem};clampFighterScreenM1()}
+}
+function autoTurnM1(){
+ // Default engine auto-turn slice. Later AssertSpecial noAutoTurn/StateDef facep2
+ // will feed this generic flag instead of character-specific rules.
+ if(posX<p2.x){p1Facing=1;p2.facing=-1}
+ else if(posX>p2.x){p1Facing=-1;p2.facing=1}
+}
 function simStep(){
  if(!dat||!stateIR)return;
  stepP2M1();
@@ -493,6 +543,7 @@ function simStep(){
    const st=state;runController(c);if(state!==st)break;
  }
  if(!runStateMinus1M1())dispatchGroundCommands();
+ playerPushM1();autoTurnM1();clampFighterScreenM1();
  // Freeze ONE authoritative logical-frame snapshot after controller evaluation.
  // HitDef, collision resolution, Step rendering and HUD all consume this same frame.
  {
@@ -511,27 +562,8 @@ function simStep(){
  if(state===tickState){stateTicks++;advanceAirOneTick()}
  // First apply the actual StageTraining player world bounds, not the old prototype ±580 clamp.
  posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
- // 0.18.4 presentation override requested for the Web runtime: at a camera limit,
- // allow about 25% of the CURRENT rendered sprite width to leave the physical frame.
- // This is sprite-relative rather than a hard-coded pixel amount, so differently sized
- // frames/characters keep the same visible fraction. Stage/player logical bounds stay unchanged.
- const EDGE_OVERFLOW_RATIO=0.25;
- let edgeLeft=cameraX-640,edgeRight=cameraX+640;
- const edgeFrames=framesFor(current).length?framesFor(current):(dat.actions['0']||[]);
- const edgeFrame=edgeFrames[Math.min(fi,Math.max(0,edgeFrames.length-1))];
- const edgeSprite=edgeFrame?dat.sprites[edgeFrame.group+','+edgeFrame.item]:null;
- if(edgeSprite){
-   const leftExtent=edgeSprite.axisX-edgeFrame.ox;
-   const rightExtent=edgeSprite.w-leftExtent;
-   const allowance=edgeSprite.w*EDGE_OVERFLOW_RATIO;
-   edgeLeft=cameraX-640+leftExtent-allowance;
-   edgeRight=cameraX+640-rightExtent+allowance;
- }
- posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
- const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
- act.textContent=hudCollapsed
-  ? '0.22.1 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'')+(lf.hitDef?' · OVERLAP '+(lf.overlap?1:0):'')+(lf.contact?' · CONTACT':'')+' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
+ // Dual-fighter screen bound is handled by clampFighterScreenM1().
+ clampFighterScreenM1();
 }
 
 const CLSN_M1={
@@ -575,7 +607,9 @@ function draw(){
  const drawAnim=simPaused?logicFrame.anim:current;
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
  let frames=framesFor(drawAnim);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
-const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
+const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
+ if(p1Facing<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
+ else ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
