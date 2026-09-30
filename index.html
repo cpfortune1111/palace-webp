@@ -26,12 +26,12 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
 #atkX{position:fixed;right:48px;bottom:74px;width:82px;height:82px;border-radius:50%;border:2px solid #aaa;background:#333a;color:#fff;font:bold 28px system-ui;z-index:9;touch-action:none}#atkX.pressed{background:#777a}
 
-#debugBtns{position:absolute;right:8px;top:8px;display:flex;gap:6px;z-index:30}
+#debugBtns{position:fixed;right:8px;top:8px;display:flex;gap:6px;z-index:30}
 #debugBtns button{width:38px;height:32px;border:1px solid rgba(255,255,255,.35);border-radius:7px;background:rgba(0,0,0,.58);color:#fff;font:700 16px system-ui;touch-action:manipulation}
 #debugBtns button:active{transform:scale(.94)}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.20.0 · HitDef Activation M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hitdef-activation-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.20.1 · Logic Frame Debugger</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD logic-frame-debugger-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -74,7 +74,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · HitDef activation M1 · deterministic AIR';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · logic-frame debugger · HitDef M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -95,6 +95,7 @@ const input={left:false,right:false,up:false,down:false,jump:false,neutralVertic
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 let activeHitDef=null,hitDefSerial=0;
+let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',hitDef:null};
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
 const STAGE_PLAYER={leftbound:-3750,rightbound:3750,screenleft:60,screenright:60};
@@ -405,6 +406,15 @@ function simStep(){
    const st=state;runController(c);if(state!==st)break;
  }
  if(!runStateMinus1M1())dispatchGroundCommands();
+ // Capture the exact logical frame evaluated by CNS controllers BEFORE the
+ // end-of-tick state/AIR clocks advance. Step debugger renders/reports this
+ // snapshot so AnimElem/HitDef cannot appear visually one tick apart.
+ {
+   const ld=stateDef();
+   logicFrame={state,time:stateTicks,anim:current,elem:fi+1,ctrl:runtimeCtrl,
+     physics:ld?.physics||'',type:ld?.type||'',moveType:runtimeMoveType,
+     hitDef:activeHitDef?{...activeHitDef}:null};
+ }
  // A newly entered state must get a real Time=0 evaluation on the next tick.
  // Previously we incremented immediately after ChangeState, so State 50 skipped
  // its Time=0 ChangeAnim and remained on AIR 40.
@@ -428,12 +438,16 @@ function simStep(){
    edgeRight=cameraX+640-rightExtent+allowance;
  }
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
- const pd=stateDef();
+ const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
  act.textContent=hudCollapsed
-  ? '0.19.7 · S'+state+' · CTRL '+runtimeCtrl
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(activeHitDef?' · HITDEF E'+activeHitDef.elem+' #'+activeHitDef.serial:'');
+  ? '0.20.1 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
+  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem+' #'+lf.hitDef.serial:'');
 }
-function draw(){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(fi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
+function draw(){
+ ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;
+ const drawAnim=simPaused?logicFrame.anim:current;
+ const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
+ let frames=framesFor(drawAnim);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
