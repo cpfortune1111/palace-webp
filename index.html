@@ -31,7 +31,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #debugBtns button:active{transform:scale(.94)}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.8 · State 200 Controllers M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-state200-controllers-20260930-05 · AIR tick order fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.9 · Deterministic AIR Clock</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD deterministic-air-clock-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -74,7 +74,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · CNS State 200 controllers M2 · tick debugger fixed';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · deterministic AIR clock · tick debugger';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -185,7 +185,7 @@ function validateRuntime(){
  if(missing.length){status.textContent='RUNTIME ERROR · missing const: '+missing.join(', ');throw new Error('Missing runtime constants: '+missing.join(', '));}
 }
 function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
-function animDone(){return stateTicks>=Math.max(0,actionDuration(current)-1)}
+function animDone(){return stateTicks>=actionDuration(current)}
 function setAnimForState(def){
  if(def.anim==='Keep')return;
  if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
@@ -374,6 +374,19 @@ function dispatchGroundCommands(){
  }
  vx=0;if(state!==0)enterIRState(0);
 }
+function advanceAirOneTick(){
+ const frames=framesFor(current);if(!frames.length)return;
+ const f=frames[Math.min(fi,frames.length-1)];
+ if(Number(f.time)<0)return;
+ ticks+=1;
+ const dur=Math.max(1,Number(f.time)||1);
+ if(ticks>=dur){
+   ticks=0;
+   if(fi<frames.length-1)fi++;
+   // Do not renderer-loop a completed AIR action. State controllers decide what
+   // happens at AnimTime=0; looping actions are re-entered/changed explicitly.
+ }
+}
 function simStep(){
  if(!dat||!stateIR)return;
  // Input must be sampled before any command query on this simulation tick.
@@ -391,7 +404,7 @@ function simStep(){
  // A newly entered state must get a real Time=0 evaluation on the next tick.
  // Previously we incremented immediately after ChangeState, so State 50 skipped
  // its Time=0 ChangeAnim and remained on AIR 40.
- if(state===tickState)stateTicks++;
+ if(state===tickState){stateTicks++;advanceAirOneTick()}
  // First apply the actual StageTraining player world bounds, not the old prototype ±580 clamp.
  posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
  // 0.18.4 presentation override requested for the Web runtime: at a camera limit,
@@ -416,11 +429,8 @@ function simStep(){
   ? '0.19.7 · S'+state+' · CTRL '+runtimeCtrl
   : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
-function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
+function draw(){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(fi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
- // Advance AFTER rendering the current AIR element. Previously a 1-tick first
- // element was skipped visually because fi advanced before it was ever drawn.
- if(dt>0){ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length}}
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
@@ -439,7 +449,7 @@ function loop(){
    simStep();
    stepRequested=false;
   }
-  updateCamera();r.render(s,c);draw(advance?dt:0);drawMars(advance?dt:0);
+  updateCamera();r.render(s,c);draw();drawMars(advance?dt:0);
  }catch(e){showRuntimeError(e)}
 }
 requestAnimationFrame(loop);

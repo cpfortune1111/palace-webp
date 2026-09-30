@@ -1,20 +1,21 @@
-0.19.8d AIR Tick Order Fix
+0.19.9 Deterministic AIR Clock
 Upload/replace ONLY index.html.
 
-Source verification:
-Action 10 = 40,0 (1 tick) -> 40,1 (2 ticks)
-Action 11 = crouch idle
-Action 12 = 40,1 (1 tick) -> 40,0 (2 ticks)
-Runtime atlas mappings for 40,0 / 40,1 are correct.
+Engine-level change:
+- Venus AIR animation is advanced by simStep(), exactly one AIR tick per simulation tick.
+- draw() is render-only and never advances Venus AIR animation.
+- Pause freezes both state logic and AIR animation.
+- Each Step commits current physical input, runs exactly one sim tick, advances AIR exactly one tick, then stays paused.
+- A newly entered state stays on its first AIR element at Time=0 until the next simulation tick.
+- Completed AIR actions do not visually wrap in the renderer; CNS controllers decide transitions.
 
-Root cause was NOT swapped SFF sprites:
-draw() advanced fi BEFORE drawing. A 1-tick AIR element could therefore be skipped.
-Also the visual animation could wrap one frame before the AnimTime=0 ChangeState.
+No SFF, AIR sequence, atlas, CNS, CMD, camera or joystick data changed.
+Mars remains a comparison dummy and still uses its old visual-only clock; it is not a fighter runtime yet.
 
-Fix:
-- render current AIR element first, advance its clock afterwards
-- align animDone/AnimTime=0 with the final visible tick
-- no AIR order or atlas sprite mapping changed
-
-Expected crouch: 40,0 -> 40,1 -> Action11 crouch.
-Expected stand: Action11 -> 40,1 -> 40,0 -> State0.
+Regression tests:
+1 normal Play crouch/stand still looks normal.
+2 Pause -> hold down -> Step repeatedly:
+  State10 AIR10 must progress deterministically, then State11 AIR11.
+3 release down -> Step: State12 AIR12 progresses deterministically -> State0.
+4 X -> State200; each Step advances attack by exactly one simulation/AIR tick.
+5 paused without Step: Venus frame must never change.
