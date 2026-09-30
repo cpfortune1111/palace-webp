@@ -122,21 +122,29 @@ const BASE_CAMERA_POS={x:0,y:4.27,z:13.56};
 const BASE_LOOK_AT={x:0,y:2.2,z:-3.8};
 let cameraX=0,cameraY=0;
 function updateCamera(){
- // StageTraining.def keeps three different concepts separate:
- // camera travel (±2850), player world bounds (±3750), and screen bounds (60).
- // `tension` is treated as the horizontal camera activation margin from each screen edge.
- const leftTrigger=cameraX-640+STAGE_CAMERA.tension;
- const rightTrigger=cameraX+640-STAGE_CAMERA.tension;
- if(posX<leftTrigger)cameraX=posX+640-STAGE_CAMERA.tension;
- else if(posX>rightTrigger)cameraX=posX-640+STAGE_CAMERA.tension;
- cameraX=Math.max(STAGE_CAMERA.boundleft,Math.min(STAGE_CAMERA.boundright,cameraX));
- // MUGEN Y is negative above ground. Preserve the S1 vertical behavior the test found acceptable.
- const yTarget=posY < -STAGE_CAMERA.floortension ? (posY+STAGE_CAMERA.floortension)*STAGE_CAMERA.verticalfollow : 0;
+ // IKEMEN Fighting_View M1: track the leftmost/rightmost fighters, then move
+ // the current 1280-wide view only when either fighter enters the stage tension zone.
+ // This intentionally keeps the locked fixed zoom; auto-zoom is a later slice.
+ const leftest=Math.min(posX,p2.x),rightest=Math.max(posX,p2.x);
+ let targetLeft=cameraX-640,targetRight=cameraX+640;
+ const tension=Math.max(0,STAGE_CAMERA.tension);
+ if(leftest<targetLeft+tension){
+   const diff=targetLeft-Math.max(leftest-tension,STAGE_CAMERA.boundleft-640);
+   targetLeft=Math.max(leftest-tension,STAGE_CAMERA.boundleft-640);
+   targetRight=Math.max((cameraX+640)-diff,Math.min(rightest+tension,STAGE_CAMERA.boundright+640));
+ }else if(rightest>targetRight-tension){
+   const diff=targetRight-Math.min(rightest+tension,STAGE_CAMERA.boundright+640);
+   targetRight=Math.min(rightest+tension,STAGE_CAMERA.boundright+640);
+   targetLeft=Math.min((cameraX-640)-diff,Math.max(leftest-tension,STAGE_CAMERA.boundleft-640));
+ }
+ const targetX=(targetLeft+targetRight)/2;
+ // M1 keeps the established immediate response rather than introducing IKEMEN
+ // tension smoothing at the same time as dual-fighter tracking.
+ cameraX=Math.max(STAGE_CAMERA.boundleft,Math.min(STAGE_CAMERA.boundright,targetX));
+ // Track the highest fighter for the existing vertical-follow slice.
+ const highest=Math.min(posY,p2.y);
+ const yTarget=highest < -STAGE_CAMERA.floortension ? (highest+STAGE_CAMERA.floortension)*STAGE_CAMERA.verticalfollow : 0;
  cameraY=Math.max(STAGE_CAMERA.boundhigh,Math.min(STAGE_CAMERA.boundlow,yTarget));
- // Horizontal follow uses IKEMEN GO's source-derived posMul. In IKEMEN the
- // model view offset is pos.x * -posMul; translating this Three.js camera by
- // +cameraX*posMul produces the equivalent opposite scene displacement.
- // Vertical keeps the already-validated S1 mapping for this milestone.
  const glbCamX=cameraX*GLB_X_PER_LOGICAL;
  c.position.x=BASE_CAMERA_POS.x+glbCamX;
  c.lookAt(BASE_LOOK_AT.x+glbCamX,BASE_LOOK_AT.y,BASE_LOOK_AT.z);
