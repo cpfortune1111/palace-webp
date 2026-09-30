@@ -31,7 +31,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #debugBtns button:active{transform:scale(.94)}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.9 · Deterministic AIR Clock</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD deterministic-air-clock-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.20.0 · HitDef Activation M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hitdef-activation-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -74,7 +74,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · deterministic AIR clock · tick debugger';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · HitDef activation M1 · deterministic AIR';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -94,6 +94,7 @@ function drawMars(dt){
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
+let activeHitDef=null,hitDefSerial=0;
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
 const STAGE_PLAYER={leftbound:-3750,rightbound:3750,screenleft:60,screenright:60};
@@ -192,7 +193,7 @@ function setAnimForState(def){
  current=Number(def.anim);fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
- prevState=state;state=st;stateTicks=0;
+ prevState=state;state=st;stateTicks=0;activeHitDef=null;
  const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  if(incoming&&incoming.moveType!==undefined)runtimeMoveType=String(incoming.moveType).toUpperCase();
  const def=incoming;
@@ -280,7 +281,7 @@ function parseExprAST(src){const t=tokenizeExpr(src);let p=0,peek=()=>t[p],take=
  function atom(){let x=take();if(x.k==='num'||x.k==='str')return {t:x.k,v:x.v};if(x.v==='('){let n=expr(0);if(take().v!==')')throw Error('AST )');return n}if(x.v==='!'||x.v==='-'||x.v==='+')return {t:'un',op:x.v,a:atom()};
  if(x.k==='id'){let name=x.v;if(/^(Pos|Vel)$/i.test(name)&&peek().k==='id'&&/^[XY]$/i.test(peek().v))name+=' '+take().v;if(peek().v==='('){take();let args=[];if(peek().v!==')')while(true){args.push(expr(0));if(peek().v===','){take();continue}break}if(take().v!==')')throw Error('AST call )');return {t:'call',name,args}}return {t:'id',name}}throw Error('AST expression')}
  function expr(min){let l=atom();while(prec[peek().v]!==undefined&&prec[peek().v]>=min){let op=take().v,pr=prec[op];l={t:'bin',op,a:l,b:expr(pr+1)}}return l}let root=expr(0);if(peek().k!=='eof')throw Error('AST trailing '+peek().v);return root}
-function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return 0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;throw Error('AST query '+name)}
+function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return 0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='animelem')return fi+1;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;throw Error('AST query '+name)}
 function animElemStartTick(elem){const fs=framesFor(current);let t=0;for(let i=0;i<fs.length;i++){if(i+1===Number(elem))return t;t+=Math.max(0,Number(fs[i].time||0))}return Infinity}
 function animElemTime(elem){return stateTicks-animElemStartTick(elem)}
 function evalAST(n){if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return queryValue(n.name);if(n.t==='un'){let a=evalAST(n.a);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
@@ -316,6 +317,9 @@ function runController(c){
   case 'PosAdd':if(p.x!==undefined)posX+=Number(paramM1(p.x));if(p.y!==undefined)posY+=Number(paramM1(p.y));break;
   case 'CtrlSet':runtimeCtrl=Number(paramM1(p.value));break;
   case 'StateTypeSet':if(p.moveType!==undefined)runtimeMoveType=String(p.moveType).toUpperCase();break;
+  case 'HitDef':
+   activeHitDef={serial:++hitDefSerial,state,anim:current,elem:fi+1,tick:inputTick,params:{...p}};
+   break;
   case 'ChangeAnim':current=Number(paramM1(p.value));fi=0;ticks=0;break;
   case 'ChangeState':enterIRState(Number(paramM1(p.value)));if(p.ctrl!==undefined)runtimeCtrl=Number(paramM1(p.ctrl));break;
   default:throw new Error('M2 unsupported controller: '+c.type);
@@ -427,7 +431,7 @@ function simStep(){
  const pd=stateDef();
  act.textContent=hudCollapsed
   ? '0.19.7 · S'+state+' · CTRL '+runtimeCtrl
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
+  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(activeHitDef?' · HITDEF E'+activeHitDef.elem+' #'+activeHitDef.serial:'');
 }
 function draw(){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(fi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);

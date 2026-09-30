@@ -410,6 +410,41 @@
       ],
       "controllers": [
         {
+          "type": "HitDef",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimElem = 4"
+            ]
+          },
+          "params": {
+            "attr": "S, NA",
+            "damage": "20, 0",
+            "animtype": "Light",
+            "guardflag": "M",
+            "hitflag": "MAF",
+            "priority": "3, Hit",
+            "pausetime": "8, 8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60, -355",
+            "hitsound": "S5, 1",
+            "guardsound": "S6, 0",
+            "ground.type": "High",
+            "air.type": "High",
+            "ground.slidetime": "11",
+            "ground.hittime": "15",
+            "guard.slidetime": "16",
+            "guard.hittime": "22",
+            "ground.velocity": "-16",
+            "guard.velocity": "-24",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-24",
+            "guard.cornerpush.veloff": "-28"
+          },
+          "source": "venus.cns State 200 HitDef"
+        },
+        {
           "type": "ChangeState",
           "triggers": {
             "1": [
