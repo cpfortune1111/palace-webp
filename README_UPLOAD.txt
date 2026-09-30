@@ -1,29 +1,29 @@
-0.21.0 P2 FighterInstance M1
+0.21.1 Dual Venus FighterInstance M1
 Upload/replace index.html + venus_runtime_states.json.
 
-Source-first Mars references checked:
-SailorMars.def -> stcommon=mars_Common.cns, cns/st=mars.cns, anim=mars.air.
-mars_Common.cns State 0:
-type=S, physics=S, sprpriority=0; healthy standing resolves to Anim 0;
-Time=0 PosSet y=0 and VelSet y=0.
+Direction change:
+- P2 Mars is removed from active runtime.
+- P1 and P2 now instantiate Sailor Venus from the SAME Venus runtime data/atlas.
+- No mars_atlas.png or mars_anim.json is loaded by this build.
+  Existing Mars files may remain in repo unused.
 
-M1:
-- Mars is no longer just a hardcoded render/collision coordinate.
-- Added P2 FighterInstance state: x/y, vx/vy, facing, state/time, anim/elem,
-  ctrl, StateType, Physics, MoveType, life.
-- P2 starts from StageTraining source p2startx=280, p2facing=-1.
-- Mars Action 0 animation now advances on deterministic battle sim ticks.
-- Pause freezes Mars; each Step advances Mars exactly one battle tick.
-- Mars renderer and Mars Clsn2 collision both consume the P2 instance.
-- HUD shows P2 S/T/E.
+Source-first P2 Venus:
+- StageTraining P2 start x=+280, facing=-1.
+- venus.air Action 0 is the P2 deterministic idle animation.
+- venus.air Action 0 Clsn2Default:
+  [-27,-429,25,-360]
+  [-35,-360,36,-243]
+  [-34,-243,39,1]
+  [39,-56,63,1]
 
-Deliberately deferred:
-- Mars CMD/input/AI
-- full Mars CNS controller lowering
-- P1+P2 battle camera
-- damage/GetHit states/hitpause/guard/sparks/sound
+M1 validation:
+- Both visible fighters should now be Venus.
+- P2 is horizontally facing P1.
+- P2 S/T/E advances independently on battle ticks.
+- Pause freezes both; Step advances both one tick.
+- Venus P1 State200 Clsn1 vs Venus P2 Action0 Clsn2 can produce OVERLAP 1 / CONTACT.
+- Collision debug: red P1 Clsn1; blue P1/P2 Clsn2.
 
-Regression:
-- Existing Venus CONTACT at E4 must still work.
-- Pause without Step: Mars idle frame and P2 time do not advance.
-- Step: P2 T increments by exactly 1.
+Deferred:
+P2 CMD/AI, complete generic state-controller execution for P2, P1+P2 camera,
+damage/GetHit/hitpause/guard/spark/sound.
