@@ -29,20 +29,24 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #debugBtns{position:fixed;right:8px;top:8px;display:flex;gap:6px;z-index:30}
 #debugBtns button{width:38px;height:32px;border:1px solid rgba(255,255,255,.35);border-radius:7px;background:rgba(0,0,0,.58);color:#fff;font:700 16px system-ui;touch-action:manipulation}
 #debugBtns button:active{transform:scale(.94)}
+#debugBtns button.on{background:rgba(255,255,255,.22)}
+#collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.20.1 · Logic Frame Debugger</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD logic-frame-debugger-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.20.2 · Collision Debugger M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD collision-debugger-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause');
+const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
+let showCollision=false;
 function debugPress(el,fn){
  el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn()});
  el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation()});
 }
+debugPress(dbgBoxes,()=>{showCollision=!showCollision;dbgBoxes.classList.toggle('on',showCollision)});
 debugPress(dbgPlay,()=>{simPaused=false;stepRequested=false;dbgPause.textContent='Ⅱ'});
 debugPress(dbgPause,()=>{
  if(!simPaused){simPaused=true;stepRequested=false;dbgPause.textContent='▸|'}
@@ -74,7 +78,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · logic-frame debugger · HitDef M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · collision debugger M1 · HitDef lifetime fixed';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -402,6 +406,9 @@ function simStep(){
  // State controllers run before command dispatch so State 52 CtrlSet(Time=3)
  // can grant control according to the original CNS.
  def=stateDef();
+ // HitDef HUD/debug state is current-logical-frame state, not historical state.
+ // A matching HitDef controller will set it again during this tick.
+ activeHitDef=null;
  for(const c of (def.controllers||[])){
    const st=state;runController(c);if(state!==st)break;
  }
@@ -440,9 +447,43 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
  act.textContent=hudCollapsed
-  ? '0.20.1 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem+' #'+lf.hitDef.serial:'');
+  ? '0.20.2 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
+  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'');
 }
+
+const CLSN_M1={
+ '200':[
+  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
+  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
+  {c1:[],c2:[[-7,-430,45,-361],[-20,-362,58,-147],[-24,-147,57,2]]},
+  {c1:[[10,-383,168,-315]],c2:[[2,-431,53,-364],[-14,-364,66,-148],[-21,-148,63,0],[66,-360,97,-341]]},
+  {c1:[],c2:[[-7,-430,45,-361],[-20,-362,58,-147],[-24,-147,57,2]]},
+  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
+  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]}
+ ]
+};
+const colcv=document.querySelector('#collision'),colctx=colcv.getContext('2d');
+function drawCollision(){
+ colctx.clearRect(0,0,colcv.width,colcv.height);
+ if(!showCollision||!dat)return;
+ const lf=simPaused?logicFrame:{state,time:stateTicks,anim:current,elem:fi+1};
+ const set=CLSN_M1[String(lf.anim)]?.[Math.max(0,lf.elem-1)];if(!set)return;
+ const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight;
+ const fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2;
+ const axisX=viewX+(640+posX-cameraX)*fit,axisY=viewY+(660-cameraY)*fit+posY*fit;
+ function boxes(list,stroke,fill){
+  colctx.strokeStyle=stroke;colctx.fillStyle=fill;colctx.lineWidth=2;
+  for(const b of list){
+   const x=axisX+Math.min(b[0],b[2])*fit,y=axisY+Math.min(b[1],b[3])*fit;
+   const w=Math.abs(b[2]-b[0])*fit,h=Math.abs(b[3]-b[1])*fit;
+   colctx.fillRect(x,y,w,h);colctx.strokeRect(x,y,w,h);
+  }
+ }
+ // User debug convention: Clsn2/body collision blue; Clsn1/attack hitbox red.
+ boxes(set.c2,'rgba(70,150,255,.95)','rgba(70,150,255,.18)');
+ boxes(set.c1,'rgba(255,60,60,.98)','rgba(255,60,60,.22)');
+}
+
 function draw(){
  ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;
  const drawAnim=simPaused?logicFrame.anim:current;
@@ -467,11 +508,11 @@ function loop(){
    simStep();
    stepRequested=false;
   }
-  updateCamera();r.render(s,c);draw();drawMars(advance?dt:0);
+  updateCamera();r.render(s,c);draw();drawMars(advance?dt:0);drawCollision();
  }catch(e){showRuntimeError(e)}
 }
 requestAnimationFrame(loop);
-function resize(){const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+function resize(){colcv.width=innerWidth*devicePixelRatio;colcv.height=innerHeight*devicePixelRatio;colcv.style.width=innerWidth+'px';colcv.style.height=innerHeight+'px';colctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,targetAspect=IK.w/IK.h,screenAspect=vw/vh;let rw=vw,rh=vh;if(screenAspect>targetAspect){rh=vh;rw=rh*targetAspect}else{rw=vw;rh=rw/targetAspect}r.setSize(Math.round(rw),Math.round(rh),false);r.domElement.style.width=rw+'px';r.domElement.style.height=rh+'px';r.domElement.style.left=((vw-rw)/2)+'px';r.domElement.style.top=((vh-rh)/2)+'px';c.aspect=targetAspect;c.updateProjectionMatrix();cv.width=Math.round(vw*devicePixelRatio);cv.height=Math.round(vh*devicePixelRatio);cv.style.width=vw+'px';cv.style.height=vh+'px';ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
 mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
