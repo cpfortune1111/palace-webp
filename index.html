@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.21.3 · IKEMEN AIR Loop Patch</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD ikemen-air-loop-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.22.0 · Damage + GetHit M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD damage-gethit-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -78,7 +78,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · IKEMEN AIR loop · Dual Venus M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · Damage/GetHit M1 · Dual Venus';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -404,7 +404,7 @@ function advanceAirOneTick(){
 const p2={
  id:2,name:'Sailor Venus',x:280,y:0,vx:0,vy:0,facing:-1,
  state:0,time:0,anim:0,elem:1,elemTick:0,ctrl:1,
- type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000
+ type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastContactTick:-1
 };
 function p2Frames(){const d=p2Data();return d?.actions?.[p2.anim]||d?.actions?.[String(p2.anim)]||[]}
 function advanceFighterAirOneTick(f){
@@ -418,10 +418,31 @@ function advanceFighterAirOneTick(f){
    else f.elem=1; // Action 0 idle animation loops.
  }
 }
+function enterP2State(n){
+ p2.state=n;p2.time=0;p2.elem=1;p2.elemTick=0;
+ if(n===0){p2.type='S';p2.moveType='I';p2.physics='S';p2.ctrl=1;p2.anim=0}
+ if(n===5000){p2.type='S';p2.moveType='H';p2.physics='N';p2.vx=0;p2.vy=0;p2.ctrl=0;p2.anim=5000}
+ if(n===5001){p2.type='S';p2.moveType='H';p2.physics='S';p2.ctrl=0;if(p2.getHit)p2.vx=p2.getHit.xvel}
+}
+function applyP2HitM1(hitDef){
+ if(!hitDef||p2.lastContactTick===inputTick)return;
+ p2.lastContactTick=inputTick;
+ const dmg=20;
+ p2.life=Math.max(0,p2.life-dmg);
+ p2.getHit={damage:dmg,animtype:0,groundtype:1,xvel:-16,slidetime:11,hittime:15};
+ p2.hitShake=8;p2.hitTime=15;
+ enterP2State(5000);
+}
 function stepP2M1(){
- // Second instance of the same Venus character runtime. No P2 CMD dispatch yet.
- // State 0 PosSet/VelSet on Time=0 keeps Mars grounded.
  if(p2.state===0&&p2.time===0){p2.y=0;p2.vy=0}
+ if(p2.state===5000){
+   if(p2.hitShake>0)p2.hitShake--;
+   else {enterP2State(5001);return}
+ }else if(p2.state===5001){
+   if(p2.hitTime>0)p2.hitTime--;
+   if(p2.time>=Number(p2.getHit?.slidetime||11))p2.vx*=.6;
+   if(p2.hitTime<=0){p2.vx=0;enterP2State(0);return}
+ }
  p2.x+=p2.vx;p2.y+=p2.vy;
  p2.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,p2.x));
  p2.time++;advanceFighterAirOneTick(p2);
@@ -468,6 +489,7 @@ function simStep(){
      x:posX,y:posY,hitDef:activeHitDef?{...activeHitDef}:null};
    const hit=resolveCollisionM1(frame);
    collisionContact=hit.contact;
+   if(hit.contact)applyP2HitM1(frame.hitDef);
    logicFrame={...frame,overlap:hit.overlap,contact:hit.contact};
  }
  // A newly entered state must get a real Time=0 evaluation on the next tick.
@@ -495,8 +517,8 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
  act.textContent=hudCollapsed
-  ? '0.21.3 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'')+(lf.hitDef?' · OVERLAP '+(lf.overlap?1:0):'')+(lf.contact?' · CONTACT':'')+' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem;
+  ? '0.22.0 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
+  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'')+(lf.hitDef?' · OVERLAP '+(lf.overlap?1:0):'')+(lf.contact?' · CONTACT':'')+' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
 }
 
 const CLSN_M1={
