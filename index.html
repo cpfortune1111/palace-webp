@@ -31,7 +31,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #debugBtns button:active{transform:scale(.94)}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.8 · State 200 Controllers M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-state200-controllers-20260930-04 · multitouch tick input</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><div id="hud"><b>Prototype 0.19.8 · State 200 Controllers M2</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD cns-state200-controllers-20260930-05 · AIR tick order fix</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div><div id="debugBtns"><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -185,7 +185,7 @@ function validateRuntime(){
  if(missing.length){status.textContent='RUNTIME ERROR · missing const: '+missing.join(', ');throw new Error('Missing runtime constants: '+missing.join(', '));}
 }
 function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
-function animDone(){return stateTicks>=actionDuration(current)}
+function animDone(){return stateTicks>=Math.max(0,actionDuration(current)-1)}
 function setAnimForState(def){
  if(def.anim==='Keep')return;
  if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
@@ -416,8 +416,12 @@ function simStep(){
   ? '0.19.7 · S'+state+' · CTRL '+runtimeCtrl
   : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+state+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+runtimeCtrl+' · AIR '+current+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%';
 }
-function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length;f=frames[fi];key=f.group+','+f.item;sp=spriteFor(f)||sp}
-const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale)}
+function draw(dt){ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;let frames=framesFor(current);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[fi],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
+const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
+ // Advance AFTER rendering the current AIR element. Previously a 1-tick first
+ // element was skipped visually because fi advanced before it was ever drawn.
+ if(dt>0){ticks+=dt*60;let dur=f.time<0?1e9:Math.max(1,f.time);if(ticks>=dur){ticks=0;fi=(fi+1)%frames.length}}
+}
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
  runtimeFailed=true;console.error(e);

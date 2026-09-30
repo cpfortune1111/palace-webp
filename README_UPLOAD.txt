@@ -1,11 +1,20 @@
-0.19.8c Multitouch Tick Debug Input
+0.19.8d AIR Tick Order Fix
 Upload/replace ONLY index.html.
 
-Debugger-only improvements:
-1. Joystick no longer captures its pointer, allowing a second finger to press HUD Play/Pause/Step while joystick is held.
-2. HUD debug buttons use pointerdown for reliable mobile multitouch.
-3. While paused, physical input state is intentionally NOT sampled into CMD history until a single-step tick is requested.
-   Therefore you can set joystick/buttons while paused, then press ▸| to commit that input on exactly one simulation tick.
-4. Each ▸| press = one normal input sample + one simStep, then remains paused.
+Source verification:
+Action 10 = 40,0 (1 tick) -> 40,1 (2 ticks)
+Action 11 = crouch idle
+Action 12 = 40,1 (1 tick) -> 40,0 (2 ticks)
+Runtime atlas mappings for 40,0 / 40,1 are correct.
 
-This does NOT add artificial gameplay command buffering. It exposes the real tick-by-tick CMD input pipeline for debugging long commands.
+Root cause was NOT swapped SFF sprites:
+draw() advanced fi BEFORE drawing. A 1-tick AIR element could therefore be skipped.
+Also the visual animation could wrap one frame before the AnimTime=0 ChangeState.
+
+Fix:
+- render current AIR element first, advance its clock afterwards
+- align animDone/AnimTime=0 with the final visible tick
+- no AIR order or atlas sprite mapping changed
+
+Expected crouch: 40,0 -> 40,1 -> Action11 crouch.
+Expected stand: Action11 -> 40,1 -> 40,0 -> State0.
