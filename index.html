@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.20.2 · Collision Debugger M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD collision-debugger-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.20.3 · Collision Resolution M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD collision-resolution-m1-20260930-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -78,7 +78,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · collision debugger M1 · HitDef lifetime fixed';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · collision resolution M1 · source boxes';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -99,7 +99,7 @@ const input={left:false,right:false,up:false,down:false,jump:false,neutralVertic
 let vx=0,vy=0,posX=-280,posY=0,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 let activeHitDef=null,hitDefSerial=0;
-let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',hitDef:null};
+let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',hitDef:null,contact:false};
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
 const STAGE_CAMERA={boundleft:-2850,boundright:2850,boundhigh:-1300,boundlow:0,verticalfollow:.5,floortension:200,tension:200};
 const STAGE_PLAYER={leftbound:-3750,rightbound:3750,screenleft:60,screenright:60};
@@ -396,6 +396,19 @@ function advanceAirOneTick(){
    // happens at AnimTime=0; looping actions are re-entered/changed explicitly.
  }
 }
+
+const MARS_ACTION0_CLSN2=[[-30,-440,25,-372],[-45,-372,41,-236],[-47,-236,32,-145],[-64,-145,23,0]];
+let collisionContact=false;
+function worldBoxes(localBoxes,x,y,facing=1){
+ return localBoxes.map(b=>{const ax=x+(facing>=0?b[0]:-b[2]),bx=x+(facing>=0?b[2]:-b[0]),ay=y+b[1],by=y+b[3];return {l:Math.min(ax,bx),r:Math.max(ax,bx),t:Math.min(ay,by),b:Math.max(ay,by)}})
+}
+function rectOverlap(a,b){return a.l<=b.r&&a.r>=b.l&&a.t<=b.b&&a.b>=b.t}
+function resolveCollisionM1(){
+ collisionContact=false;if(!activeHitDef)return;
+ const set=CLSN_M1[String(current)]?.[Math.max(0,fi)],atk=worldBoxes(set?.c1||[],posX,posY,1),body=worldBoxes(MARS_ACTION0_CLSN2,280,0,-1);
+ collisionContact=atk.some(a=>body.some(b=>rectOverlap(a,b)));
+}
+
 function simStep(){
  if(!dat||!stateIR)return;
  // Input must be sampled before any command query on this simulation tick.
@@ -413,6 +426,7 @@ function simStep(){
    const st=state;runController(c);if(state!==st)break;
  }
  if(!runStateMinus1M1())dispatchGroundCommands();
+ resolveCollisionM1();
  // Capture the exact logical frame evaluated by CNS controllers BEFORE the
  // end-of-tick state/AIR clocks advance. Step debugger renders/reports this
  // snapshot so AnimElem/HitDef cannot appear visually one tick apart.
@@ -447,8 +461,8 @@ function simStep(){
  posX=Math.max(edgeLeft,Math.min(edgeRight,posX));
  const lf=logicFrame,pd=stateIR?.states?.[String(lf.state)];
  act.textContent=hudCollapsed
-  ? '0.20.2 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
-  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'');
+  ? '0.20.3 · S'+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem
+  : (simPaused?'[PAUSED input→next tick] · ':'')+'State '+lf.state+' · TIME '+lf.time+' · ELEM '+lf.elem+' · '+(pd?'P:'+pd.physics+' T:'+pd.type:'')+' · CTRL '+lf.ctrl+' · AIR '+lf.anim+' · X '+posX.toFixed(1)+' · Y '+posY.toFixed(1)+' · VY '+vy.toFixed(1)+' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+' · GLBX '+(cameraX*GLB_X_PER_LOGICAL).toFixed(2)+' · EDGE 25%'+(lf.hitDef?' · HITDEF E'+lf.hitDef.elem:'')+(lf.contact?' · CONTACT':'');
 }
 
 const CLSN_M1={
@@ -482,6 +496,9 @@ function drawCollision(){
  // User debug convention: Clsn2/body collision blue; Clsn1/attack hitbox red.
  boxes(set.c2,'rgba(70,150,255,.95)','rgba(70,150,255,.18)');
  boxes(set.c1,'rgba(255,60,60,.98)','rgba(255,60,60,.22)');
+ const marsAxisX=viewX+(640+280-cameraX)*fit,marsAxisY=viewY+(660-cameraY)*fit;
+ colctx.strokeStyle='rgba(70,150,255,.95)';colctx.fillStyle='rgba(70,150,255,.18)';colctx.lineWidth=2;
+ for(const b of MARS_ACTION0_CLSN2){const x1=marsAxisX-b[2]*fit,x2=marsAxisX-b[0]*fit,y1=marsAxisY+b[1]*fit,y2=marsAxisY+b[3]*fit;colctx.fillRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1));colctx.strokeRect(Math.min(x1,x2),Math.min(y1,y2),Math.abs(x2-x1),Math.abs(y2-y1))}
 }
 
 function draw(){
