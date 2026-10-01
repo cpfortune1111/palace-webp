@@ -164,6 +164,29 @@ const server=http.createServer((request,response)=>{
  }
  await run("p2.state=5001;p2.moveType='H';p2.ctrl=0;p2.type='S';p2.y=0;p2.lastHitKey=null;enterIRState(200);applyP2HitM1({hitKey:'not-guard-stun',params:battleDat.state200.controllers.find(controller=>controller.type==='HitDef').params})");
  assert.equal(await run('p2.getHit.guarded'),false);
+ await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
+ for(let tick=0;tick<12;tick++)await step();
+ const trace=await run('combatTraceExport()');
+ assert.equal(trace.version,'0.23.13');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
+ assert.equal(trace.frames[3].after.p2.life,980);
+ assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
+ for(const frame of trace.frames.filter(frame=>frame.before.p1.hitPause>0)){
+  assert.equal(frame.after.p1.x,frame.before.p1.x);assert.equal(frame.randomValue,null);
+  assert.equal(frame.after.p1.hitPause,frame.before.p1.hitPause-1);
+ }
+ await run('p2.life=777');
+ assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
+ const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
+ assert.equal(download.suggestedFilename(),'palace-0.23.13-trace.json');
+ const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
+ assert.deepEqual(downloaded,trace);
+ const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
+ assert.equal(await run('combatTraceTick'),pausedCount);await run('simPaused=false');
+ await run('for(let tick=0;tick<605;tick++)simStep()');
+ const bounded=await run('combatTraceExport()');
+ assert.equal(bounded.frames.length,600);assert.equal(bounded.droppedTicks,17);
+ assert.equal(bounded.firstTick,17);assert.equal(bounded.lastTick,616);
  assert.deepEqual(errors,[]);
  console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

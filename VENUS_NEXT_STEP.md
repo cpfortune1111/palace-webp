@@ -1,5 +1,10 @@
 # Venus Source Audit V1 — 下一步驗收
 
+## 最新進度：0.23.13
+0.23.12 hitshake x2 已由使用者 PASS；0.23.13 新增最近 600 ticks 的 input／state／hitpause 診斷 JSON 匯出。右上「↓」下載，詳見 NOTES_02313.md。此為核對工具，不是完整重播存檔。下面保留初次來源盤點；地面防禦、cornerpush、CLSN／HUD 已有後續版本補齊，見 VENUS_TODO.md。
+
+下一個對戰功能里程碑仍為 P1/P2 共用 fighter context、雙向 State 200；先逐項對照原 CNS／Common controllers，保留已 PASS 的角落／防禦／hitshake 行為，不跳過驗收。
+
 ## 作者確認（2026-10-02 更新，優先於下方初次盤點）
 122,0 與 951,99 均是刻意空影格；Action 645／投技未完成；空中無防禦；175／5500 未完成，使用現有 lose/default fallback。匯入器已更新，現在剩餘 9 個缺圖引用全屬 Action 645。State 200 地面切片已接入 0.23.8，見 NOTES_0238.md。
 

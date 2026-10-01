@@ -34,6 +34,7 @@
 ## P1 — 最小完整對戰閉環（下一個可玩里程碑）
 - [x] 固定 60 Hz 邏輯 tick；30/60/120 Hz 相同地面攻擊結果一致。
 - [ ] 完整可重播 input / state trace。
+- [x] 0.23.12 使用者 PASS；0.23.13 新增最近 600 個 tick 的 input／state／hitpause／命中診斷 JSON 匯出；不是完整 replay save。
 - [ ] State 200：CMD→State→AIR Clsn→原始 HitDef→命中／防禦→hitpause→damage／擊退→恢復。
 - [ ] P1 / P2 同一套角色執行器，Venus vs Venus；移除 P2 硬編碼受擊數值。
 - [ ] 逐項補足 State 200 所需 trigger、HitDef 欄位及共同受擊／防禦 state controllers。

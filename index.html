@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.12 Hitshake x2 M1</title>
+<title>Prototype 0.23.13 Combat Trace M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.12 · Hitshake x2 M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hitshake-x2-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.13 · Combat Trace M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD combat-trace-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label>P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.12 · Hitshake x2 M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.13 · Combat Trace M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -705,7 +705,36 @@ function autoTurnM1(){
   p2.facing=-desired;
  }
 }
+const combatTraceCapacity=600;
+const combatTraceFrames=new Array(combatTraceCapacity);
+let combatTraceTick=0,combatTraceCount=0;
+function combatTraceSnapshot(){
+ return {p1:{state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,ctrl:runtimeCtrl,moveType:runtimeMoveType,hitPause:p1HitPause},
+  p2:{state:p2.state,time:p2.time,anim:p2.anim,elem:p2.elem,facing:p2.facing,x:p2.x,y:p2.y,vx:p2.vx,vy:p2.vy,life:p2.life,ctrl:p2.ctrl,moveType:p2.moveType,hitShake:p2.hitShake,getHit:p2.getHit?{...p2.getHit}:null},
+  cornerPushVelocity,moveContact,moveGuarded,hitDef:activeHitDef?{serial:activeHitDef.serial,state:activeHitDef.state,anim:activeHitDef.anim,elem:activeHitDef.elem}:null};
+}
+function combatTraceExport(){
+ const frames=[];
+ for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
+ return {schema:'palace-combat-trace-v1',version:'0.23.13',build:'combat-trace-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
+  firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
+  purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
+}
+document.querySelector('#dbgTrace').addEventListener('click',()=>{
+ const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='palace-0.23.13-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ document.querySelector('#dbgTrace').blur();
+});
 function simStep(){
+ if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
+ const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x},guardMode=document.querySelector('#p2Guard').value;
+ simStepCore();
+ combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,
+  randomValue:before.p1.hitPause>0?null:randomValue,before,after:combatTraceSnapshot()};
+ combatTraceTick++;combatTraceCount=Math.min(combatTraceCount+1,combatTraceCapacity);
+}
+function simStepCore(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
  if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
