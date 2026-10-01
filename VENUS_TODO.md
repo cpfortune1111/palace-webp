@@ -37,6 +37,7 @@
 - [x] 0.23.12 使用者 PASS；0.23.13 新增最近 600 個 tick 的 input／state／hitpause／命中診斷 JSON 匯出；不是完整 replay save。
 - [ ] State 200：CMD→State→AIR Clsn→原始 HitDef→命中／防禦→hitpause→damage／擊退→恢復。
 - [ ] P1 / P2 同一套角色執行器，Venus vs Venus；移除 P2 硬編碼受擊數值。
+- [x] 0.23.14 第一切片：共用 ground HitDef 結果／AIR 碰撞 context；12 組雙 id／facing 隔離測試。完整雙向 runner／P1 受擊仍未完成。
 - [ ] 逐項補足 State 200 所需 trigger、HitDef 欄位及共同受擊／防禦 state controllers。
 - [ ] 驗收：命中、揮空、防禦各可重播；兩邊可互相受擊；數值對照原 CNS 與 IKEMEN。
 

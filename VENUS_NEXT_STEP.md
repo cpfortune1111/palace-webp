@@ -1,6 +1,7 @@
 # Venus Source Audit V1 — 下一步驗收
 
-## 最新進度：0.23.13
+## 最新進度：0.23.14
+共用 ground HitDef／AIR collision context 已接入，詳見 NOTES_02314.md。此版未新增 P2 攻擊操控；下一切片仍是雙向 controller／Common runner 與 P1 受擊。保留以下歷史進度。
 0.23.12 hitshake x2 已由使用者 PASS；0.23.13 新增最近 600 ticks 的 input／state／hitpause 診斷 JSON 匯出。右上「↓」下載，詳見 NOTES_02313.md。此為核對工具，不是完整重播存檔。下面保留初次來源盤點；地面防禦、cornerpush、CLSN／HUD 已有後續版本補齊，見 VENUS_TODO.md。
 
 下一個對戰功能里程碑仍為 P1/P2 共用 fighter context、雙向 State 200；先逐項對照原 CNS／Common controllers，保留已 PASS 的角落／防禦／hitshake 行為，不跳過驗收。

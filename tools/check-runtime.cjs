@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.13');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.14');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.13-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.14-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -187,6 +187,37 @@ const server=http.createServer((request,response)=>{
  const bounded=await run('combatTraceExport()');
  assert.equal(bounded.frames.length,600);assert.equal(bounded.droppedTicks,17);
  assert.equal(bounded.firstTick,17);assert.equal(bounded.lastTick,616);
+ const sharedHitChecks=await run(`(()=>{
+  const params=battleDat.state200.controllers.find(controller=>controller.type==='HitDef').params;
+  let checks=0;
+  for(const id of [1,2])for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
+   const attacker={id,facing},defender={id:3-id,life:1000,ctrl:1,moveType:'I',state:0,type:'S',y:0,anim:0,elem:1,x:facing*140,facing:-facing};
+   const original=JSON.stringify({attacker,defender});
+   const result=resolveGroundHitM1(attacker,defender,params,mode),guarded=mode!=='none';
+   if(result.life!==(guarded?1000:980)||result.getHit.attackerId!==id||result.getHit.attackerFacing!==facing)throw Error('Shared receiver identity/damage');
+   if(result.getHit.xvel!==(guarded?-24:-16)||result.getHit.slidetime!==(guarded?16:11)||result.getHit.hittime!==(guarded?22:15))throw Error('Shared source gethit values');
+   if(result.cornerPushVelocity!==facing*(guarded?-28:-24)||result.attackerPause!==8||result.defenderPause!==8)throw Error('Shared source pause/push');
+   if(result.state!==(mode==='crouch'?152:guarded?150:5000)||result.sound!==params[guarded?'guardsound':'hitsound'])throw Error('Shared state/sound');
+   if(JSON.stringify({attacker,defender})!==original)throw Error('Shared resolver mutated contexts');
+   const frame={anim:200,elem:4,x:0,y:0,facing,hitDef:{}};
+   if(!resolveFighterCollisionM1(frame,defender).contact)throw Error('Shared mirrored collision');
+   if(resolveFighterCollisionM1(frame,{...defender,x:facing*1000}).contact)throw Error('Shared mirrored whiff');
+   if(resolveFighterCollisionM1({...frame,hitDef:null},defender).contact)throw Error('Inactive HitDef collided');
+   const guardStun=resolveGroundHitM1(attacker,{...defender,state:151,ctrl:0,moveType:'H'},params,'stand');
+   const hitStun=resolveGroundHitM1(attacker,{...defender,state:5001,ctrl:0,moveType:'H'},params,'stand');
+   const air=resolveGroundHitM1(attacker,{...defender,type:'A',y:-10},params,'stand');
+   if(!guardStun.guarded||hitStun.guarded||air.guarded)throw Error('Shared guard eligibility');
+   const priority=resolveGroundHitM1(attacker,defender,{...params,p1sprpriority:'3',p2sprpriority:'-1'},mode);
+   if(priority.attackerPriority!==3||priority.defenderPriority!==-1)throw Error('Shared priority');
+   checks++;
+  }
+  return checks;
+ })()`);
+ assert.equal(sharedHitChecks,12);
+ await run("p2.getHit={xvel:-16,attackerFacing:-1};p1Facing=1;enterP2State(5001)");
+ assert.equal(await run('p2.vx'),-16);
+ await run("p2.getHit={xvel:-24,attackerFacing:1,crouch:false};p1Facing=-1;enterP2State(151)");
+ assert.equal(await run('p2.vx'),24);
  assert.deepEqual(errors,[]);
  console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
