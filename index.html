@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.5 Keyboard / Auto Input M1</title>
+<title>Prototype 0.23.6 Sprite / Edge / Turn M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.5 · Keyboard / Auto Input M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD keyboard-auto-input-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.6 · Sprite / Edge / Turn M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD sprite-edge-turn-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div></div>
 <script type="module">
@@ -83,9 +83,14 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.5 · Keyboard / Auto Input M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.6 · Sprite / Edge / Turn M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
+let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
+Promise.all([
+ new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
+ fetch('./venus_turn.json?v=0236',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Turn data HTTP '+response.status);return response.json()})
+]).then(results=>{turnDat=results[1]}).catch(error=>showRuntimeError(error));
 let cmdDat=null;
 Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 let gethitAtlas,gethitDat;
@@ -105,9 +110,11 @@ function drawMars(){
  const flip=p2.facing<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit+p2.y*fit;
  mctx.clearRect(0,0,mcv.width,mcv.height);mctx.save();
- const src=p2AtlasFor(f);
- if(flip){mctx.translate(dx+sp.w*fit,0);mctx.scale(-1,1);mctx.drawImage(src,sp.x,sp.y,sp.w,sp.h,0,dy,sp.w*fit,sp.h*fit)}
- else mctx.drawImage(src,sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*fit,sp.h*fit);
+ const src=spriteCanvasFor(f);
+ if(src){
+ if(flip){mctx.translate(dx+sp.w*fit,0);mctx.scale(-1,1);mctx.drawImage(src,0,dy,sp.w*fit,sp.h*fit)}
+ else mctx.drawImage(src,dx,dy,sp.w*fit,sp.h*fit);
+ }
  mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
@@ -141,6 +148,21 @@ function updateCamera(){
    const diff=targetRight-Math.min(rightest+tension,STAGE_CAMERA.boundright+640);
    targetRight=Math.min(rightest+tension,STAGE_CAMERA.boundright+640);
    targetLeft=Math.min((cameraX-640)-diff,Math.max(leftest-tension,STAGE_CAMERA.boundleft-640));
+ }
+ if(targetRight-targetLeft>1280){
+  const leftOverflow=Math.max(targetLeft+tension-leftest,0),rightOverflow=Math.max(rightest-(targetRight-tension),0);
+  let excess=targetRight-targetLeft-1280;
+  if(leftOverflow>rightOverflow){const correction=Math.min(leftOverflow-rightOverflow,excess);targetRight-=correction;excess-=correction}
+  else if(rightOverflow>leftOverflow){const correction=Math.min(rightOverflow-leftOverflow,excess);targetLeft+=correction;excess-=correction}
+  targetLeft+=excess/2;targetRight-=excess/2;
+  if(leftest-targetLeft<STAGE_PLAYER.screenleft){
+   let correction=Math.min(STAGE_PLAYER.screenleft-(leftest-targetLeft),targetLeft-(STAGE_CAMERA.boundleft-640));
+   if(targetRight-rightest<STAGE_PLAYER.screenright)correction-=Math.min(STAGE_PLAYER.screenright-(targetRight-rightest),STAGE_CAMERA.boundright+640-targetRight);
+   targetLeft-=correction;targetRight-=correction;
+  }else if(targetRight-rightest<STAGE_PLAYER.screenright){
+   const correction=Math.min(STAGE_PLAYER.screenright-(targetRight-rightest),STAGE_CAMERA.boundright+640-targetRight);
+   targetLeft+=correction;targetRight+=correction;
+  }
  }
  const targetX=(targetLeft+targetRight)/2;
  // M1 keeps the established immediate response rather than introducing IKEMEN
@@ -236,9 +258,23 @@ modeSelect.addEventListener('change',()=>{
  modeSelect.blur();
 });
 coarsePointer.addEventListener('change',()=>{if(inputPreference==='auto')setInputMode(initialInputMode())});
-function framesFor(anim){return (attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
-function spriteFor(frame){const k=frame.group+','+frame.item;return gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
-function atlasFor(frame){const k=frame.group+','+frame.item;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+function framesFor(anim){return (turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
+function spriteFor(frame){const k=frame.group+','+frame.item;return turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
+function atlasFor(frame){const k=frame.group+','+frame.item;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+const spriteCanvasCache=new WeakMap();
+function spriteCanvasFor(frame){
+ const source=atlasFor(frame),sprite=spriteFor(frame);
+ if(!source?.complete||!source.naturalWidth||!sprite)return null;
+ let cache=spriteCanvasCache.get(source);if(!cache){cache=new Map();spriteCanvasCache.set(source,cache)}
+ const key=[sprite.x,sprite.y,sprite.w,sprite.h].join(',');
+ if(!cache.has(key)){
+  const canvas=document.createElement('canvas');canvas.width=sprite.w;canvas.height=sprite.h;
+  const context=canvas.getContext('2d');context.imageSmoothingEnabled=false;
+  context.drawImage(source,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h);
+  cache.set(key,canvas);
+ }
+ return cache.get(key);
+}
 function actionDuration(anim){
  const fs=framesFor(anim);let total=0;
  for(const q of fs) total+=q.time<0?0:Math.max(1,q.time);
@@ -256,8 +292,9 @@ function validateRuntime(){
  if(missing.length){status.textContent='RUNTIME ERROR · missing const: '+missing.join(', ');throw new Error('Missing runtime constants: '+missing.join(', '));}
 }
 function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
-function animDone(){return stateTicks>=actionDuration(current)}
+function animDone(){return (current===5||current===6?p1TurnTime:stateTicks)>=actionDuration(current)}
 function setAnimForState(def){
+ if((state===0||state===20)&&current===5&&!animDone())return;
  if(def.anim==='Keep')return;
  if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
  current=Number(def.anim);fi=0;ticks=0;
@@ -267,6 +304,7 @@ function enterIRState(st,animOverride){
  const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  if(incoming&&incoming.moveType!==undefined)runtimeMoveType=String(incoming.moveType).toUpperCase();
  const def=incoming;
+ if(st===40&&posX!==p2.x)setP1Facing(posX<p2.x?1:-1);
  // CNS StateDef velset is an entry-time property. Apply it generically when the
  // new state is entered so velocity from the previous state cannot leak through.
  if(def&&Array.isArray(def.velset)){
@@ -358,7 +396,7 @@ function parseExprAST(src){const t=tokenizeExpr(src);let p=0,peek=()=>t[p],take=
  function expr(min){let l=atom();while(prec[peek().v]!==undefined&&prec[peek().v]>=min){let op=take().v,pr=prec[op];l={t:'bin',op,a:l,b:expr(pr+1)}}return l}let root=expr(0);if(peek().k!=='eof')throw Error('AST trailing '+peek().v);return root}
 function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return 0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='animelem')return fi+1;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;throw Error('AST query '+name)}
 function animElemStartTick(elem){const fs=framesFor(current);let t=0;for(let i=0;i<fs.length;i++){if(i+1===Number(elem))return t;t+=Math.max(0,Number(fs[i].time||0))}return Infinity}
-function animElemTime(elem){return stateTicks-animElemStartTick(elem)}
+function animElemTime(elem){return (current===5||current===6?p1TurnTime:stateTicks)-animElemStartTick(elem)}
 function evalAST(n){if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return queryValue(n.name);if(n.t==='un'){let a=evalAST(n.a);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
  if(n.t==='bin'){if(n.op==='&&')return !!evalAST(n.a)&&!!evalAST(n.b);if(n.op==='||')return !!evalAST(n.a)||!!evalAST(n.b);let a=evalAST(n.a),b=evalAST(n.b);if(n.op==='='||n.op==='==')return a==b;if(n.op==='!=')return a!=b;if(n.op==='>')return a>b;if(n.op==='<')return a<b;if(n.op==='>=')return a>=b;if(n.op==='<=')return a<=b;if(n.op==='+')return +a + +b;if(n.op==='-')return a-b;if(n.op==='*')return a*b;if(n.op==='/')return a/b;if(n.op==='%')return a%b}
  if(n.t==='call'){let f=n.name.toLowerCase();if(f==='animelemtime')return animElemTime(evalAST(n.args[0]));if(f==='abs')return Math.abs(evalAST(n.args[0]));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0]));if(f==='var')return runtimeVar[+evalAST(n.args[0])]||0;if(f==='sysvar')return runtimeSysVar[+evalAST(n.args[0])]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0])?evalAST(n.args[1]):evalAST(n.args[2]);throw Error('AST function '+n.name)}throw Error('AST node')}
@@ -454,6 +492,7 @@ function dispatchGroundCommands(){
  vx=0;if(state!==0)enterIRState(0);
 }
 function advanceAirOneTick(){
+ if(current===5||current===6)return;
  const frames=framesFor(current);if(!frames.length)return;
  const f=frames[Math.min(fi,frames.length-1)];
  if(Number(f.time)<0)return; // Time=-1: infinite AIR element.
@@ -471,8 +510,9 @@ const p2={
  state:0,time:0,anim:0,elem:1,elemTick:0,ctrl:1,
  type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
-function p2Frames(){return gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
+function p2Frames(){return turnDat?.actions?.[String(p2.anim)]||gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
 function advanceFighterAirOneTick(f){
+ if(f.anim===5||f.anim===6)return;
  const frames=p2Frames();if(!frames.length)return;
  const el=frames[Math.max(0,Math.min(frames.length-1,f.elem-1))];
  if(Number(el.time)<0)return;
@@ -533,21 +573,10 @@ function resolveCollisionM1(frame){
 // ground.back/front=40 and equal factors. Full dynamic Clsn2 gating is deferred.
 const VENUS_GROUND_BACK=40,VENUS_GROUND_FRONT=40;
 function clampFighterScreenM1(){
- // Preserve the already accepted Web edge-overflow presentation rule, now for BOTH fighters.
- // At camera/stage limits neither fighter axis may continue indefinitely offscreen.
- const half=640;
- function spriteEdges(frames,elem,facing){
-  const f=frames[Math.max(0,Math.min(frames.length-1,elem))],sp=f?spriteFor(f):null;
-  if(!f||!sp)return {left:0,right:0,allow:0};
-  let left=sp.axisX-f.ox,right=sp.w-left;
-  if(facing<0)[left,right]=[right,left];
-  return {left,right,allow:sp.w*.25};
- }
- const e1=spriteEdges(framesFor(current),fi,p1Facing),e2=spriteEdges(p2Frames(),p2.elem-1,p2.facing);
- posX=Math.max(cameraX-half+e1.left-e1.allow,Math.min(cameraX+half-e1.right+e1.allow,posX));
- p2.x=Math.max(cameraX-half+e2.left-e2.allow,Math.min(cameraX+half-e2.right+e2.allow,p2.x));
- posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
- p2.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,p2.x));
+ const left=Math.max(STAGE_PLAYER.leftbound,cameraX-640+STAGE_PLAYER.screenleft);
+ const right=Math.min(STAGE_PLAYER.rightbound,cameraX+640-STAGE_PLAYER.screenright);
+ posX=Math.max(left,Math.min(right,posX));
+ p2.x=Math.max(left,Math.min(right,p2.x));
 }
 function playerPushM1(){
  // Ground Size boxes: Venus source ground.back/front = 40. Equal Venus weight/priority
@@ -568,20 +597,41 @@ function playerPushM1(){
  const rem=Math.min(r,r2)-Math.max(l,l2);
  if(rem>0){if(posX<=p2.x){p2.x+=rem}else{p2.x-=rem};clampFighterScreenM1()}
 }
+function setP1Facing(facing){if(p1Facing!==facing){p1Facing=facing;vx=-vx}}
+function turnElement(anim,time){
+ const frames=framesFor(anim);let elapsed=0;
+ for(let index=0;index<frames.length;index++){elapsed+=Math.max(1,frames[index].time);if(time<elapsed)return index}
+ return Math.max(0,frames.length-1);
+}
+function advanceTurnAnimations(){
+ if(current===5||current===6){
+  p1TurnTime++;fi=turnElement(current,p1TurnTime);
+  if(state===0&&current===5&&animDone()){current=0;fi=0;ticks=0}
+ }
+ if(p2.anim===5||p2.anim===6){
+  p2TurnTime++;
+  if(p2TurnTime>=actionDuration(p2.anim)){p2.anim=p2.type==='C'?11:0;p2.elem=1;p2.elemTick=0}
+  else p2.elem=turnElement(p2.anim,p2TurnTime)+1;
+ }
+}
 function autoTurnM1(){
- // Source-shaped M1:
- // common1 State 40 has facep2:1, so jump startup may face P2.
- // State 50 has no Turn controller / facep2 property: once airborne, keep the
- // takeoff facing instead of continuously turning every tick as fighters cross.
- const d=stateDef();
- const airborne=(d?.type==='A'||state===50||state===51);
- if(!airborne){
-   if(posX<p2.x){p1Facing=1;p2.facing=-1}
-   else if(posX>p2.x){p1Facing=-1;p2.facing=1}
+ if(!turnDat||posX===p2.x)return;
+ const def=stateDef(),desired=posX<p2.x?1:-1;
+ const eligible=runtimeCtrl&&(state===0||state===11||state===20||(state===52&&animDone()));
+ if(eligible&&def?.type!=='A'&&p1Facing!==desired){
+  const anim=def?.type==='C'?6:5;
+  if(current!==anim){current=anim;fi=0;ticks=0;p1TurnTime=0}
+  setP1Facing(desired);
+ }
+ if(p2.ctrl&&(p2.state===0||p2.state===11||p2.state===20)&&p2.type!=='A'&&p2.facing!==-desired){
+  const anim=p2.type==='C'?6:5;
+  if(p2.anim!==anim){p2.anim=anim;p2.elem=1;p2.elemTick=0;p2TurnTime=0}
+  p2.facing=-desired;
  }
 }
 function simStep(){
- if(!dat||!stateIR)return;
+ if(!dat||!stateIR||!turnDat)return;
+ advanceTurnAnimations();autoTurnM1();
  stepP2M1();
  // Input must be sampled before any command query on this simulation tick.
  sampleInputHistory();
@@ -598,7 +648,7 @@ function simStep(){
    const st=state;runController(c);if(state!==st)break;
  }
  if(!runStateMinus1M1())dispatchGroundCommands();
- playerPushM1();autoTurnM1();clampFighterScreenM1();
+ playerPushM1();clampFighterScreenM1();
  // Freeze ONE authoritative logical-frame snapshot after controller evaluation.
  // HitDef, collision resolution, Step rendering and HUD all consume this same frame.
  {
@@ -663,8 +713,9 @@ function draw(){
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
  let frames=framesFor(drawAnim);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
- if(p1Facing<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
- else ctx.drawImage(atlasFor(f),sp.x,sp.y,sp.w,sp.h,dx,dy,sp.w*scale,sp.h*scale);
+ const src=spriteCanvasFor(f);if(!src)return;
+ if(p1Facing<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
+ else ctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
