@@ -1,6 +1,7 @@
 # Venus Source Audit V1 — 下一步驗收
 
-## 最新進度：0.23.15
+## 最新進度：0.23.16
+兩邊 State 200 共用 AST／trigger 評估，新增 U 單次 P2 出拳測試鍵，詳見 NOTES_02316.md。未新增 P2 移動或完整 CMD；下一切片仍為共用 controller handlers 與 P2 移動輸入。以下為歷史進度。
 右上「P2 出拳測試」接通 P2→P1 地面命中／站防／恢復與角落推退，詳見 NOTES_02315.md。僅單次測試輸入，未加入 P2 移動／完整 CMD 或 simultaneous-hit 判定。下一切片應統一雙方完整 controller／input context；以下為歷史進度。
 共用 ground HitDef／AIR collision context 已接入，詳見 NOTES_02314.md。此版未新增 P2 攻擊操控；下一切片仍是雙向 controller／Common runner 與 P1 受擊。保留以下歷史進度。
 0.23.12 hitshake x2 已由使用者 PASS；0.23.13 新增最近 600 ticks 的 input／state／hitpause 診斷 JSON 匯出。右上「↓」下載，詳見 NOTES_02313.md。此為核對工具，不是完整重播存檔。下面保留初次來源盤點；地面防禦、cornerpush、CLSN／HUD 已有後續版本補齊，見 VENUS_TODO.md。

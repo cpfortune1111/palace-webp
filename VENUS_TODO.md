@@ -39,6 +39,7 @@
 - [ ] P1 / P2 同一套角色執行器，Venus vs Venus；移除 P2 硬編碼受擊數值。
 - [x] 0.23.14 第一切片：共用 ground HitDef 結果／AIR 碰撞 context；12 組雙 id／facing 隔離測試。完整雙向 runner／P1 受擊仍未完成。
 - [x] 0.23.15：P2 單次 State 200 測試接通 P1 ground hit／stand guard／恢復／hitshake／cornerpush；雙 facing 及 Pause/Step 驗收。完整 CMD／同時攻擊／空中受擊仍未完成。
+- [x] 0.23.15 使用者 PASS；0.23.16 統一雙方 AST／trigger 評估、隔離 fighter variables／command context，新增 U 單次 P2 出拳測試快捷鍵。
 - [ ] 逐項補足 State 200 所需 trigger、HitDef 欄位及共同受擊／防禦 state controllers。
 - [ ] 驗收：命中、揮空、防禦各可重播；兩邊可互相受擊；數值對照原 CNS 與 IKEMEN。
 

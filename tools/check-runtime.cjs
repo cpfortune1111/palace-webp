@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.15');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.16');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.15-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.16-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -262,6 +262,59 @@ const server=http.createServer((request,response)=>{
  assert.equal(await run('p1Life'),980);assert.equal(await run('logicFrame.life'),980);
  assert.equal(await run('logicFrame.state'),5000);assert.ok(await run('logicFrame.x<1000'));
  await run('simPaused=false;p1Reaction=null;p1HitPause=0;p2.attackPause=0;resetPlayerInput();enterIRState(0);enterP2State(0)');
+ const expressionParity=await run(`(()=>{
+  resetPlayerInput();enterIRState(200);p2.type='S';moveContact=0;moveGuarded=0;
+  let checks=0;
+  for(let time=0;time<=actionDuration(200);time++)for(const random of [0,249,250,999]){
+   stateTicks=time;randomValue=random;
+   const fighter={state:200,time,anim:200,elem:fi+1,ctrl:runtimeCtrl,moveType:runtimeMoveType,type:'S',randomValue:random,vars:[...runtimeVar],sysvars:[...runtimeSysVar],moveContact,moveGuarded};
+   const context=fighterExpressionContext(fighter,{type:p2.type});
+   for(const controller of battleDat.state200.controllers){
+    if(controllerTriggered(controller)!==controllerTriggered(controller,context))throw Error('Expression context mismatch '+time+' '+controller.source.line);
+    checks++;
+   }
+  }
+  return checks;
+ })()`);
+ assert.ok(expressionParity>100);
+ const contextChecks=await run(`(()=>{
+  const first={state:200,time:3,anim:200,elem:4,ctrl:0,moveType:'A',type:'S',randomValue:17,vars:[7],sysvars:[11],x:10,y:-20,vx:5,vy:-2,facing:-1};
+  const second={...first,time:0,randomValue:999,vars:[99],sysvars:[101],facing:1};
+  const opponent={type:'A'};
+  if(evalFighterExpr('var(0)+sysvar(0)',first,opponent)!==18||evalFighterExpr('var(0)+sysvar(0)',second,opponent)!==200)throw Error('Variable isolation');
+  if(evalFighterExpr('var(0)',{...second,vars:undefined},opponent)!==0)throw Error('Variable fallback leaked');
+  if(!evalFighterExpr('AnimElem = 4',first,opponent)||evalFighterExpr('AnimElem = 4',second,opponent))throw Error('Element clock isolation');
+  if(evalFighterExpr('Vel X',first,opponent)!==-5||evalFighterExpr('Vel X',second,opponent)!==5)throw Error('Local velocity query');
+  if(!evalFighterExpr('P2StateType = A && Random < 250',first,opponent))throw Error('Opponent/random context');
+  if(!evalFighterExpr('command = "holdup"',first,opponent,{holdup:true})||evalFighterExpr('command = "holdup"',second,opponent))throw Error('Command isolation');
+  if(evalFighterExpr('ifelse(1,7,UnknownQuery)',first,opponent)!==7||evalFighterExpr('0 && UnknownQuery',first,opponent)!==false)throw Error('Lazy evaluation');
+  const cached=evalFighterExpr('Random',first,opponent);first.randomValue=55;
+  if(cached!==17||evalFighterExpr('Random',first,opponent)!==55)throw Error('Cached AST retained value');
+  for(const expression of ['UnknownQuery','UnknownFunction(1)','command = "nonexistent-command"']){
+   let rejected=false;try{evalFighterExpr(expression,first,opponent)}catch{rejected=true}
+   if(!rejected)throw Error('Unsupported expression silently accepted');
+  }
+  return true;
+ })()`);
+ assert.equal(contextChecks,true);
+ await page.locator('#inputMode').selectOption('keyboard');
+ await run("simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=140;posY=0;p1Facing=-1;p2.x=0;p2.y=0;p2.facing=1;p2.attackPause=0;p2.cornerPushVelocity=0;p2.hitShake=0;enterIRState(0);enterP2State(0)");
+ await page.keyboard.down('u');assert.equal(await run('p2PunchRequested'),true);
+ await step();assert.equal(await run('combatTraceExport().frames.at(-1).physicalInput.p2Punch'),true);
+ for(let tick=0;tick<3;tick++)await step();assert.equal(await run('p1Life'),980);
+ for(let tick=0;tick<45;tick++)await step();
+ assert.equal(await run('p2.state'),0);await page.keyboard.down('u');
+ assert.equal(await run('p2PunchRequested'),false);await page.keyboard.up('u');
+ await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),true);
+ await run('resetPlayerInput()');assert.equal(await run('p2PunchRequested'),false);
+ await page.locator('#p2Guard').focus();await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),false);
+ await run('document.activeElement.blur()');
+ await page.evaluate(()=>window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyU',ctrlKey:true,cancelable:true})));
+ assert.equal(await run('p2PunchRequested'),false);
+ await page.locator('#inputMode').selectOption('touch');await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),false);
+ await page.locator('#inputMode').selectOption('auto');await run("setInputMode('touch')");await page.keyboard.press('u');
+ assert.equal(await run('activeInputMode'),'keyboard');assert.equal(await run('p2PunchRequested'),true);
+ await page.evaluate(()=>window.dispatchEvent(new Event('blur')));assert.equal(await run('p2PunchRequested'),false);
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',whiff:'PASS',browserErrors:errors}));
+ console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
