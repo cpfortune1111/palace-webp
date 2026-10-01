@@ -1,0 +1,2984 @@
+{
+  "schema": 1,
+  "character": "Sailor Venus",
+  "baseline": "0.23.7",
+  "definition": "SailorVenus.def",
+  "dependencies": {
+    "stcommon": "venus_Common.cns",
+    "cmd": "venus.cmd",
+    "cns": "venus.cns",
+    "st": "venus.cns",
+    "st1": "venus_Helper.st",
+    "movelist": "movelist.dat",
+    "sprite": "venus.sff",
+    "anim": "venus.air",
+    "sound": "venus.snd"
+  },
+  "files": [
+    {
+      "path": "SailorVenus.def",
+      "bytes": 465,
+      "sha256": "7f1c230b53c4821fa4215fd040d3a4f64a8350b8c77b87a316603d593c311ef7",
+      "roles": []
+    },
+    {
+      "path": "movelist.dat",
+      "bytes": 196,
+      "sha256": "1c737971f90f73326d9183c4899aee3783320943e3fdf2631aa3e7941b7559f6",
+      "roles": [
+        "movelist"
+      ]
+    },
+    {
+      "path": "venus.air",
+      "bytes": 69326,
+      "sha256": "33d6e309ffcf2c19471f1a067f706131ebb40258ca38e192011402f4c32d329e",
+      "roles": [
+        "anim"
+      ]
+    },
+    {
+      "path": "venus.cmd",
+      "bytes": 26351,
+      "sha256": "4d01cf633e7a23c3723aa65b105385b70b57defc7c601029ba9d1c93b4df23a7",
+      "roles": [
+        "cmd"
+      ]
+    },
+    {
+      "path": "venus.cns",
+      "bytes": 57252,
+      "sha256": "b3fd7ab0db5d267dd3a822fc8be5c76a0e8585b685be2f20f3c89aa2881f9068",
+      "roles": [
+        "cns",
+        "st"
+      ]
+    },
+    {
+      "path": "venus.sff",
+      "bytes": 39455004,
+      "sha256": "1619a50cb24a9fc8cff31cfa502d577e5f9ba57e5de62bffd7b6bd5c2acb494f",
+      "roles": [
+        "sprite"
+      ]
+    },
+    {
+      "path": "venus.snd",
+      "bytes": 7053442,
+      "sha256": "c92133c3722f8e044d7ce798857ba1468764d4d8b13ac9f335fe3e1b1ceffbc4",
+      "roles": [
+        "sound"
+      ]
+    },
+    {
+      "path": "venus_Common.cns",
+      "bytes": 46290,
+      "sha256": "600108c8f796d74373167510ff30d758751325c8c6f92a1c522c1ca1ef22c867",
+      "roles": [
+        "stcommon"
+      ]
+    },
+    {
+      "path": "venus_Helper.st",
+      "bytes": 26978,
+      "sha256": "3794c538b85c8e250751d90dd967a0ce7b99ddcba75a20797a03cacf9b468f63",
+      "roles": [
+        "st1"
+      ]
+    }
+  ],
+  "counts": {
+    "files": 9,
+    "states": 85,
+    "controllers": 661,
+    "commands": 39,
+    "actions": 133,
+    "sprites": 760,
+    "palettes": 708,
+    "sounds": 67
+  },
+  "missingAIRSpriteReferences": [
+    {
+      "action": 122,
+      "line": 575,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 132,
+      "line": 593,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": -1,
+      "extra": []
+    },
+    {
+      "action": 142,
+      "line": 627,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 152,
+      "line": 645,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": -1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1289,
+      "sprite": [
+        645,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1295,
+      "sprite": [
+        645,
+        1
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1301,
+      "sprite": [
+        645,
+        2
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1306,
+      "sprite": [
+        645,
+        3
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1311,
+      "sprite": [
+        645,
+        4
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1316,
+      "sprite": [
+        645,
+        5
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 2,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1324,
+      "sprite": [
+        645,
+        6
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 7,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1331,
+      "sprite": [
+        645,
+        7
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 2,
+      "extra": []
+    },
+    {
+      "action": 645,
+      "line": 1337,
+      "sprite": [
+        645,
+        8
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 2,
+      "extra": []
+    },
+    {
+      "action": 9041,
+      "line": 1455,
+      "sprite": [
+        904,
+        -1
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 2,
+      "extra": []
+    },
+    {
+      "action": 9041,
+      "line": 1457,
+      "sprite": [
+        904,
+        -1
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 3,
+      "extra": []
+    },
+    {
+      "action": 9041,
+      "line": 1459,
+      "sprite": [
+        904,
+        -1
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 4,
+      "extra": []
+    },
+    {
+      "action": 951,
+      "line": 1871,
+      "sprite": [
+        951,
+        99
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 24,
+      "extra": []
+    }
+  ],
+  "controllerCoverage": [
+    {
+      "type": "assertspecial",
+      "controllers": 10,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "bgpalfx",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "bindtoroot",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "changeanim",
+      "controllers": 61,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "changestate",
+      "controllers": 125,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "ctrlset",
+      "controllers": 14,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "defencemulset",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "destroyself",
+      "controllers": 6,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "displaytoclipboard",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "explod",
+      "controllers": 53,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "fallenvshake",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "forcefeedback",
+      "controllers": 15,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "helper",
+      "controllers": 6,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitby",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitdef",
+      "controllers": 19,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "hitfalldamage",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitfallset",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitfallvel",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitoverride",
+      "controllers": 3,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "hitvelset",
+      "controllers": 8,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "makedust",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "nothitby",
+      "controllers": 11,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "null",
+      "controllers": 7,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "parentvarset",
+      "controllers": 8,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "pause",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "playerpush",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "playsnd",
+      "controllers": 53,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "posadd",
+      "controllers": 1,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "posfreeze",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "posset",
+      "controllers": 9,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "powerset",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "projectile",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "removeexplod",
+      "controllers": 22,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "selfstate",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "statetypeset",
+      "controllers": 37,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "stopsnd",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "superpause",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "turn",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "varadd",
+      "controllers": 12,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "varrandom",
+      "controllers": 1,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "varrangeset",
+      "controllers": 2,
+      "status": "no-runtime-handler"
+    },
+    {
+      "type": "varset",
+      "controllers": 96,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "veladd",
+      "controllers": 16,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "velmul",
+      "controllers": 7,
+      "status": "handler-present-not-full-semantic-coverage"
+    },
+    {
+      "type": "velset",
+      "controllers": 31,
+      "status": "handler-present-not-full-semantic-coverage"
+    }
+  ],
+  "referenceChecks": [
+    {
+      "file": "venus.cmd",
+      "line": 228,
+      "state": -1,
+      "type": "changestate",
+      "expression": "3000",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 257,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1200",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 280,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1100",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 305,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1000",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 330,
+      "state": -1,
+      "type": "changestate",
+      "expression": "120",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 347,
+      "state": -1,
+      "type": "changestate",
+      "expression": "ifelse(random < 499,801,800)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 366,
+      "state": -1,
+      "type": "changestate",
+      "expression": "105",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 386,
+      "state": -1,
+      "type": "changestate",
+      "expression": "200",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 409,
+      "state": -1,
+      "type": "changestate",
+      "expression": "210",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 438,
+      "state": -1,
+      "type": "changestate",
+      "expression": "230",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 459,
+      "state": -1,
+      "type": "changestate",
+      "expression": "240",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 486,
+      "state": -1,
+      "type": "changestate",
+      "expression": "400",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 508,
+      "state": -1,
+      "type": "changestate",
+      "expression": "410",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 536,
+      "state": -1,
+      "type": "changestate",
+      "expression": "430",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 567,
+      "state": -1,
+      "type": "changestate",
+      "expression": "440",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 596,
+      "state": -1,
+      "type": "changestate",
+      "expression": "600",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 611,
+      "state": -1,
+      "type": "changestate",
+      "expression": "610",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 626,
+      "state": -1,
+      "type": "changestate",
+      "expression": "630",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 641,
+      "state": -1,
+      "type": "changestate",
+      "expression": "640",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 656,
+      "state": -1,
+      "type": "changestate",
+      "expression": "40",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 669,
+      "state": -1,
+      "type": "changestate",
+      "expression": "100",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 683,
+      "state": -1,
+      "type": "changestate",
+      "expression": "20",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 699,
+      "state": -1,
+      "type": "changestate",
+      "expression": "3000",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 717,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1200",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 734,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1100",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 753,
+      "state": -1,
+      "type": "changestate",
+      "expression": "1000",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 772,
+      "state": -1,
+      "type": "changestate",
+      "expression": "100",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 780,
+      "state": -1,
+      "type": "changestate",
+      "expression": "105",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 798,
+      "state": -1,
+      "type": "changestate",
+      "expression": "801",
+      "status": "missing"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 815,
+      "state": -1,
+      "type": "changestate",
+      "expression": "800",
+      "status": "missing"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 831,
+      "state": -1,
+      "type": "changestate",
+      "expression": "200",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 844,
+      "state": -1,
+      "type": "changestate",
+      "expression": "210",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 857,
+      "state": -1,
+      "type": "changestate",
+      "expression": "230",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 870,
+      "state": -1,
+      "type": "changestate",
+      "expression": "240",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 883,
+      "state": -1,
+      "type": "changestate",
+      "expression": "400",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 896,
+      "state": -1,
+      "type": "changestate",
+      "expression": "410",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 909,
+      "state": -1,
+      "type": "changestate",
+      "expression": "430",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 922,
+      "state": -1,
+      "type": "changestate",
+      "expression": "440",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 935,
+      "state": -1,
+      "type": "changestate",
+      "expression": "600",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 944,
+      "state": -1,
+      "type": "changestate",
+      "expression": "610",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 953,
+      "state": -1,
+      "type": "changestate",
+      "expression": "630",
+      "status": "present"
+    },
+    {
+      "file": "venus.cmd",
+      "line": 962,
+      "state": -1,
+      "type": "changestate",
+      "expression": "640",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 83,
+      "state": 170,
+      "type": "playsnd",
+      "expression": "S170, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 98,
+      "state": 180,
+      "type": "changestate",
+      "expression": "181",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 116,
+      "state": 181,
+      "type": "playsnd",
+      "expression": "S180,0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 123,
+      "state": 181,
+      "type": "playsnd",
+      "expression": "S180,1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 148,
+      "state": 191,
+      "type": "playsnd",
+      "expression": "190, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 155,
+      "state": 191,
+      "type": "playsnd",
+      "expression": "190, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 161,
+      "state": 191,
+      "type": "changestate",
+      "expression": "1990",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 166,
+      "state": 191,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 180,
+      "state": 1990,
+      "type": "changestate",
+      "expression": "1991",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 185,
+      "state": 1990,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 196,
+      "state": 1991,
+      "type": "changeanim",
+      "expression": "Anim + 1",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 202,
+      "state": 1991,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 221,
+      "state": 200,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 227,
+      "state": 200,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 272,
+      "state": 200,
+      "type": "changestate",
+      "expression": "40",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 282,
+      "state": 200,
+      "type": "changestate",
+      "expression": "10",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 293,
+      "state": 200,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 309,
+      "state": 210,
+      "type": "playsnd",
+      "expression": "900, 4",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 316,
+      "state": 210,
+      "type": "playsnd",
+      "expression": "200, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 361,
+      "state": 210,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 379,
+      "state": 230,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 385,
+      "state": 230,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 434,
+      "state": 230,
+      "type": "changestate",
+      "expression": "40",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 444,
+      "state": 230,
+      "type": "changestate",
+      "expression": "10",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 450,
+      "state": 230,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 468,
+      "state": 240,
+      "type": "playsnd",
+      "expression": "200, 3",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 475,
+      "state": 240,
+      "type": "playsnd",
+      "expression": "1, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 549,
+      "state": 240,
+      "type": "changeanim",
+      "expression": "241",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 567,
+      "state": 240,
+      "type": "playsnd",
+      "expression": "52,0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 573,
+      "state": 240,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 589,
+      "state": 400,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 595,
+      "state": 400,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 642,
+      "state": 400,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 656,
+      "state": 410,
+      "type": "playsnd",
+      "expression": "900, 4",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 663,
+      "state": 410,
+      "type": "playsnd",
+      "expression": "200, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 708,
+      "state": 410,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 724,
+      "state": 430,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 730,
+      "state": 430,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 776,
+      "state": 430,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 792,
+      "state": 440,
+      "type": "playsnd",
+      "expression": "200, 3",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 798,
+      "state": 440,
+      "type": "playsnd",
+      "expression": "1, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 844,
+      "state": 440,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 860,
+      "state": 600,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 866,
+      "state": 600,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 914,
+      "state": 610,
+      "type": "playsnd",
+      "expression": "900, 4",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 921,
+      "state": 610,
+      "type": "playsnd",
+      "expression": "200, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 927,
+      "state": 610,
+      "type": "explod",
+      "expression": "900",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 991,
+      "state": 630,
+      "type": "playsnd",
+      "expression": "200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 997,
+      "state": 630,
+      "type": "playsnd",
+      "expression": "1, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1046,
+      "state": 640,
+      "type": "playsnd",
+      "expression": "200, 3",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1052,
+      "state": 640,
+      "type": "playsnd",
+      "expression": "1, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1130,
+      "state": 1000,
+      "type": "changeanim",
+      "expression": "1005",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1135,
+      "state": 1000,
+      "type": "explod",
+      "expression": "901",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1148,
+      "state": 1000,
+      "type": "explod",
+      "expression": "901",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1163,
+      "state": 1000,
+      "type": "explod",
+      "expression": "9011",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1176,
+      "state": 1000,
+      "type": "playsnd",
+      "expression": "1000, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1185,
+      "state": 1000,
+      "type": "playsnd",
+      "expression": "900, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1194,
+      "state": 1000,
+      "type": "projectile",
+      "expression": "902",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1234,
+      "state": 1000,
+      "type": "changestate",
+      "expression": "cond(command=\"holddown\",11,0)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1266,
+      "state": 1100,
+      "type": "changeanim",
+      "expression": "1105",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1271,
+      "state": 1100,
+      "type": "playsnd",
+      "expression": "1100, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1277,
+      "state": 1100,
+      "type": "playsnd",
+      "expression": "900, 2",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1282,
+      "state": 1100,
+      "type": "playsnd",
+      "expression": "900, 3",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1287,
+      "state": 1100,
+      "type": "explod",
+      "expression": "903",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1299,
+      "state": 1100,
+      "type": "explod",
+      "expression": "9042",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1312,
+      "state": 1100,
+      "type": "projectile",
+      "expression": "904",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1353,
+      "state": 1100,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1384,
+      "state": 1200,
+      "type": "changeanim",
+      "expression": "1205",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1389,
+      "state": 1200,
+      "type": "playsnd",
+      "expression": "1200, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1396,
+      "state": 1200,
+      "type": "playsnd",
+      "expression": "900, 4",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1407,
+      "state": 1200,
+      "type": "explod",
+      "expression": "cond(var(2) = 1, 9061, 906)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1561,
+      "state": 1200,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1581,
+      "state": 3000,
+      "type": "changestate",
+      "expression": "3005",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1610,
+      "state": 3000,
+      "type": "explod",
+      "expression": "4001",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1621,
+      "state": 3000,
+      "type": "explod",
+      "expression": "4000",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1632,
+      "state": 3000,
+      "type": "playsnd",
+      "expression": "900, 8",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1638,
+      "state": 3000,
+      "type": "playsnd",
+      "expression": "3000, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1644,
+      "state": 3000,
+      "type": "playsnd",
+      "expression": "3000, 1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1660,
+      "state": 3000,
+      "type": "changestate",
+      "expression": "3005",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1681,
+      "state": 3005,
+      "type": "changeanim",
+      "expression": "3001",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1691,
+      "state": 3005,
+      "type": "playsnd",
+      "expression": "200,2",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1697,
+      "state": 3005,
+      "type": "playsnd",
+      "expression": "900,7",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1738,
+      "state": 3005,
+      "type": "helper",
+      "expression": "3055",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1751,
+      "state": 3005,
+      "type": "helper",
+      "expression": "3050",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 1766,
+      "state": 3005,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2346,
+      "state": -2,
+      "type": "explod",
+      "expression": "F930",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2362,
+      "state": -2,
+      "type": "explod",
+      "expression": "F931",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2378,
+      "state": -2,
+      "type": "explod",
+      "expression": "F932",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2394,
+      "state": -2,
+      "type": "explod",
+      "expression": "F933",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2410,
+      "state": -2,
+      "type": "explod",
+      "expression": "F934",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2426,
+      "state": -2,
+      "type": "explod",
+      "expression": "F935",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2442,
+      "state": -2,
+      "type": "explod",
+      "expression": "F936",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2458,
+      "state": -2,
+      "type": "explod",
+      "expression": "F937",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2553,
+      "state": -2,
+      "type": "helper",
+      "expression": "9999",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2609,
+      "state": -3,
+      "type": "playsnd",
+      "expression": "10,3",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2631,
+      "state": -3,
+      "type": "playsnd",
+      "expression": "10,0",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2650,
+      "state": -3,
+      "type": "playsnd",
+      "expression": "10,1",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2669,
+      "state": -3,
+      "type": "playsnd",
+      "expression": "10,2",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2682,
+      "state": -3,
+      "type": "helper",
+      "expression": "915",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2699,
+      "state": -3,
+      "type": "helper",
+      "expression": "925",
+      "status": "present"
+    },
+    {
+      "file": "venus.cns",
+      "line": 2709,
+      "state": -3,
+      "type": "helper",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 16,
+      "state": 0,
+      "type": "changeanim",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 23,
+      "state": 0,
+      "type": "changeanim",
+      "expression": "5300",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 52,
+      "state": 0,
+      "type": "changestate",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 92,
+      "state": 10,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 129,
+      "state": 11,
+      "type": "changeanim",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 155,
+      "state": 12,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 193,
+      "state": 20,
+      "type": "changeanim",
+      "expression": "20",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 200,
+      "state": 20,
+      "type": "changeanim",
+      "expression": "21",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 230,
+      "state": 20,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 288,
+      "state": 40,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 294,
+      "state": 40,
+      "type": "playsnd",
+      "expression": "S40,1",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 300,
+      "state": 40,
+      "type": "changestate",
+      "expression": "50",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 312,
+      "state": 45,
+      "type": "changeanim",
+      "expression": "44",
+      "status": "missing"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 317,
+      "state": 45,
+      "type": "changeanim",
+      "expression": "ifelse(Vel X = 0, 41, ifelse(Vel X > 0, 42, 43))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 343,
+      "state": 45,
+      "type": "changestate",
+      "expression": "50",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 358,
+      "state": 50,
+      "type": "changeanim",
+      "expression": "ifelse(Vel X = 0, 41, ifelse(Vel X > 0, 42, 43))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 377,
+      "state": 52,
+      "type": "playsnd",
+      "expression": "52, 0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 409,
+      "state": 52,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 419,
+      "state": 57,
+      "type": "changeanim",
+      "expression": "41",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 448,
+      "state": 100,
+      "type": "playsnd",
+      "expression": "100,0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 469,
+      "state": 100,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 484,
+      "state": 100,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 514,
+      "state": 105,
+      "type": "playsnd",
+      "expression": "s105,0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 530,
+      "state": 105,
+      "type": "explod",
+      "expression": "909",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 543,
+      "state": 105,
+      "type": "changestate",
+      "expression": "106",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 554,
+      "state": 106,
+      "type": "playsnd",
+      "expression": "52,0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 576,
+      "state": 106,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 586,
+      "state": 120,
+      "type": "changeanim",
+      "expression": "120 + (statetype = C) + (statetype = A)*2",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 618,
+      "state": 120,
+      "type": "changestate",
+      "expression": "57",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 623,
+      "state": 120,
+      "type": "changestate",
+      "expression": "130 + (statetype = C) + (statetype = A)*2",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 630,
+      "state": 120,
+      "type": "changestate",
+      "expression": "140",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 639,
+      "state": 130,
+      "type": "changeanim",
+      "expression": "130",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 645,
+      "state": 130,
+      "type": "changestate",
+      "expression": "131",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 652,
+      "state": 130,
+      "type": "changestate",
+      "expression": "131",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 659,
+      "state": 130,
+      "type": "changestate",
+      "expression": "140",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 668,
+      "state": 131,
+      "type": "changeanim",
+      "expression": "131",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 675,
+      "state": 131,
+      "type": "changestate",
+      "expression": "130",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 681,
+      "state": 131,
+      "type": "changestate",
+      "expression": "130",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 688,
+      "state": 131,
+      "type": "changestate",
+      "expression": "140",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 699,
+      "state": 132,
+      "type": "changestate",
+      "expression": "140",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 709,
+      "state": 140,
+      "type": "changeanim",
+      "expression": "140 + (statetype = C) + (statetype = A)*2",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 747,
+      "state": 150,
+      "type": "changeanim",
+      "expression": "150",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 752,
+      "state": 150,
+      "type": "changestate",
+      "expression": "151 + 2*(command = \"holddown\")",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 809,
+      "state": 151,
+      "type": "changestate",
+      "expression": "130",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 821,
+      "state": 152,
+      "type": "changeanim",
+      "expression": "151",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 826,
+      "state": 152,
+      "type": "changestate",
+      "expression": "151 + 2*(command = \"holddown\")",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 883,
+      "state": 153,
+      "type": "changestate",
+      "expression": "131",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 895,
+      "state": 154,
+      "type": "changestate",
+      "expression": "155",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 939,
+      "state": 155,
+      "type": "changestate",
+      "expression": "130",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 944,
+      "state": 155,
+      "type": "changestate",
+      "expression": "52",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 955,
+      "state": 175,
+      "type": "changestate",
+      "expression": "170",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 960,
+      "state": 175,
+      "type": "changeanim",
+      "expression": "175",
+      "status": "missing"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1020,
+      "state": 190,
+      "type": "changestate",
+      "expression": "191",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1032,
+      "state": 5000,
+      "type": "changeanim",
+      "expression": "ifelse((GetHitVar(groundtype) = 1),5000,5010) + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1038,
+      "state": 5000,
+      "type": "changeanim",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1044,
+      "state": 5000,
+      "type": "changeanim",
+      "expression": "5047 + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1049,
+      "state": 5000,
+      "type": "changeanim",
+      "expression": "anim",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1089,
+      "state": 5000,
+      "type": "changestate",
+      "expression": "5001",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1094,
+      "state": 5000,
+      "type": "changestate",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1109,
+      "state": 5001,
+      "type": "changeanim",
+      "expression": "5005 + GetHitVar(animtype) + (GetHitVar(groundtype)=2)*10",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1129,
+      "state": 5001,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1142,
+      "state": 5010,
+      "type": "changeanim",
+      "expression": "5020 + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1148,
+      "state": 5010,
+      "type": "changeanim",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1154,
+      "state": 5010,
+      "type": "changeanim",
+      "expression": "5047 + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1159,
+      "state": 5010,
+      "type": "changeanim",
+      "expression": "Anim",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1195,
+      "state": 5010,
+      "type": "changestate",
+      "expression": "5011",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1200,
+      "state": 5010,
+      "type": "changestate",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1215,
+      "state": 5011,
+      "type": "changeanim",
+      "expression": "5025 + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1235,
+      "state": 5011,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1249,
+      "state": 5020,
+      "type": "changeanim",
+      "expression": "ifelse((GetHitVar(airtype) = 1),5000,5010) + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1255,
+      "state": 5020,
+      "type": "changeanim",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1261,
+      "state": 5020,
+      "type": "changeanim",
+      "expression": "5047 + GetHitVar(animtype)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1266,
+      "state": 5020,
+      "type": "changeanim",
+      "expression": "Anim",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1271,
+      "state": 5020,
+      "type": "changestate",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1313,
+      "state": 5030,
+      "type": "changeanim",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1332,
+      "state": 5030,
+      "type": "changestate",
+      "expression": "5040",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1340,
+      "state": 5030,
+      "type": "changestate",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1345,
+      "state": 5030,
+      "type": "changestate",
+      "expression": "5035",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1358,
+      "state": 5035,
+      "type": "changeanim",
+      "expression": "5035",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1374,
+      "state": 5035,
+      "type": "changestate",
+      "expression": "5040",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1385,
+      "state": 5035,
+      "type": "changestate",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1395,
+      "state": 5040,
+      "type": "changestate",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1403,
+      "state": 5040,
+      "type": "changeanim",
+      "expression": "5040",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1424,
+      "state": 5040,
+      "type": "changestate",
+      "expression": "52",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1439,
+      "state": 5050,
+      "type": "changeanim",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1446,
+      "state": 5050,
+      "type": "changeanim",
+      "expression": "anim+10",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1475,
+      "state": 5050,
+      "type": "changestate",
+      "expression": "5100",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1486,
+      "state": 5070,
+      "type": "changeanim",
+      "expression": "5070",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1491,
+      "state": 5070,
+      "type": "changestate",
+      "expression": "5071",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1520,
+      "state": 5071,
+      "type": "changestate",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1550,
+      "state": 5080,
+      "type": "changeanim",
+      "expression": "sysvar(2)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1556,
+      "state": 5080,
+      "type": "changestate",
+      "expression": "5081",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1562,
+      "state": 5080,
+      "type": "changestate",
+      "expression": "5030",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1587,
+      "state": 5081,
+      "type": "changestate",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1615,
+      "state": 5100,
+      "type": "changeanim",
+      "expression": "5100",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1622,
+      "state": 5100,
+      "type": "changeanim",
+      "expression": "5100 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1643,
+      "state": 5100,
+      "type": "changestate",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1648,
+      "state": 5100,
+      "type": "explod",
+      "expression": "F(60 + (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56)))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1659,
+      "state": 5100,
+      "type": "playsnd",
+      "expression": "F7, (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1668,
+      "state": 5100,
+      "type": "changestate",
+      "expression": "5101",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1687,
+      "state": 5101,
+      "type": "changeanim",
+      "expression": "5160",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1694,
+      "state": 5101,
+      "type": "changeanim",
+      "expression": "5160 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1719,
+      "state": 5101,
+      "type": "changestate",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1735,
+      "state": 5110,
+      "type": "changeanim",
+      "expression": "5110 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1743,
+      "state": 5110,
+      "type": "changeanim",
+      "expression": "5170",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1751,
+      "state": 5110,
+      "type": "changeanim",
+      "expression": "5170 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1772,
+      "state": 5110,
+      "type": "playsnd",
+      "expression": "F7, (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1778,
+      "state": 5110,
+      "type": "explod",
+      "expression": "F(60 + (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56)))",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1794,
+      "state": 5110,
+      "type": "changeanim",
+      "expression": "5110 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1802,
+      "state": 5110,
+      "type": "changeanim",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1810,
+      "state": 5110,
+      "type": "changestate",
+      "expression": "5150",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1856,
+      "state": 5120,
+      "type": "changeanim",
+      "expression": "5120",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1863,
+      "state": 5120,
+      "type": "changeanim",
+      "expression": "5120 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1896,
+      "state": 5120,
+      "type": "changestate",
+      "expression": "11",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1912,
+      "state": 5150,
+      "type": "changeanim",
+      "expression": "5140",
+      "status": "missing"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1919,
+      "state": 5150,
+      "type": "changeanim",
+      "expression": "5140 + (anim % 10)",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1928,
+      "state": 5150,
+      "type": "changeanim",
+      "expression": "anim+10",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1935,
+      "state": 5150,
+      "type": "changeanim",
+      "expression": "5110",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1941,
+      "state": 5150,
+      "type": "changeanim",
+      "expression": "9999",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1969,
+      "state": 5200,
+      "type": "changeanim",
+      "expression": "5050",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 1980,
+      "state": 5200,
+      "type": "selfstate",
+      "expression": "5201",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 2013,
+      "state": 5201,
+      "type": "explod",
+      "expression": "F60",
+      "status": "dynamic-or-external-review"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 2119,
+      "state": 5210,
+      "type": "changestate",
+      "expression": "52",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 2132,
+      "state": 5500,
+      "type": "changeanim",
+      "expression": "5500",
+      "status": "missing"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 2152,
+      "state": 5900,
+      "type": "changestate",
+      "expression": "190",
+      "status": "present"
+    },
+    {
+      "file": "venus_Common.cns",
+      "line": 2157,
+      "state": 5900,
+      "type": "changestate",
+      "expression": "0",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 18,
+      "state": 915,
+      "type": "explod",
+      "expression": "916",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 31,
+      "state": 915,
+      "type": "explod",
+      "expression": "919",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 45,
+      "state": 915,
+      "type": "explod",
+      "expression": "917",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 60,
+      "state": 915,
+      "type": "explod",
+      "expression": "918",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 75,
+      "state": 915,
+      "type": "explod",
+      "expression": "915",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 132,
+      "state": 925,
+      "type": "explod",
+      "expression": "926",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 145,
+      "state": 925,
+      "type": "explod",
+      "expression": "929",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 159,
+      "state": 925,
+      "type": "explod",
+      "expression": "927",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 174,
+      "state": 925,
+      "type": "explod",
+      "expression": "928",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 189,
+      "state": 925,
+      "type": "explod",
+      "expression": "925",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 250,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 265,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 279,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 294,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 309,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 323,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 338,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 353,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 367,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 383,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 398,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 412,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 428,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 443,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 457,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 473,
+      "state": 950,
+      "type": "explod",
+      "expression": "950",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 488,
+      "state": 950,
+      "type": "explod",
+      "expression": "951",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 502,
+      "state": 950,
+      "type": "explod",
+      "expression": "952",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 577,
+      "state": 3050,
+      "type": "explod",
+      "expression": "9080",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 589,
+      "state": 3050,
+      "type": "explod",
+      "expression": "9081",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 655,
+      "state": 3051,
+      "type": "explod",
+      "expression": "9081",
+      "status": "present"
+    },
+    {
+      "file": "venus_Helper.st",
+      "line": 682,
+      "state": 3052,
+      "type": "explod",
+      "expression": "9082",
+      "status": "present"
+    }
+  ],
+  "runtimeSHA256": "a393e674ed60bb9a1890d9382e73d3edf35a1e6042efce8211d18f97a2aaaf9c",
+  "limits": [
+    "Raw section entries are preserved; expressions are not compiled or semantically validated.",
+    "Dynamic and external references require review; static missing references may be unused source branches.",
+    "Imported sources are NOT wired into the playable runtime.",
+    "Original SFF/SND are in the local source package, not uploaded to GitHub."
+  ]
+}
