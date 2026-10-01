@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.18');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.19');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.18-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.19-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -195,7 +195,7 @@ const server=http.createServer((request,response)=>{
    const original=JSON.stringify({attacker,defender});
    const result=resolveGroundHitM1(attacker,defender,params,mode),guarded=mode!=='none';
    if(result.life!==(guarded?1000:980)||result.getHit.attackerId!==id||result.getHit.attackerFacing!==facing)throw Error('Shared receiver identity/damage');
-   if(result.getHit.xvel!==(guarded?-24:-16)||result.getHit.slidetime!==(guarded?16:11)||result.getHit.hittime!==(guarded?22:15))throw Error('Shared source gethit values');
+   if(result.getHit.xvel!==facing*(guarded?24:16)||result.getHit.slidetime!==(guarded?16:11)||result.getHit.hittime!==(guarded?22:15))throw Error('Shared source gethit values');
    if(result.cornerPushVelocity!==facing*(guarded?-28:-24)||result.attackerPause!==8||result.defenderPause!==8)throw Error('Shared source pause/push');
    if(result.state!==(mode==='crouch'?152:guarded?150:5000)||result.sound!==params[guarded?'guardsound':'hitsound'])throw Error('Shared state/sound');
    if(JSON.stringify({attacker,defender})!==original)throw Error('Shared resolver mutated contexts');
@@ -216,7 +216,7 @@ const server=http.createServer((request,response)=>{
  assert.equal(sharedHitChecks,12);
  await run("p2.getHit={xvel:-16,attackerFacing:-1};p1Facing=1;enterP2State(5001)");
  assert.equal(await run('p2.vx'),-16);
- await run("p2.getHit={xvel:-24,attackerFacing:1,crouch:false};p1Facing=-1;enterP2State(151)");
+ await run("p2.getHit={xvel:24,attackerFacing:1,crouch:false};p1Facing=-1;enterP2State(151)");
  assert.equal(await run('p2.vx'),24);
  const reverseCases=[];
  for(const facing of [-1,1])for(const guarded of [false,true]){
@@ -432,6 +432,44 @@ const server=http.createServer((request,response)=>{
   assert.equal(await run('state'),0);assert.equal(await run('p2.state'),0);assert.equal(await run('p1Reaction'),null);
   punchTrades.push({facing,order:order.join('+'),life:[980,980]});
  }
+ const getHitSemantics=await run(`(()=>{
+  let checks=0;
+  for(const facing of [-1,1]){
+   const fighter={state:5001,time:0,anim:5000,elem:1,facing,type:'S',ctrl:0,moveType:'H',x:0,y:0,vx:7,vy:9,hitShake:1,hitTime:0,moveContact:3,moveGuarded:3,getHit:{xvel:16,yvel:-8,animtype:0,groundtype:1,fall:0,slidetime:11,ctrltime:16}};
+   const opponent={type:'A'},context=fighterExpressionContext(fighter,opponent);
+   if(evalM1('HitOver',context)||evalM1('HitShakeOver',context))throw Error('Premature HitOver/HitShakeOver');
+   fighter.hitTime=-1;fighter.hitShake=0;
+   if(!evalM1('HitOver && HitShakeOver',context))throw Error('HitOver terminal boundary');
+   if(evalM1('GetHitVar(hittime)',context)!==-1||evalM1('GetHitVar(hitshaketime)',context)!==0)throw Error('Live hit timers');
+   if(!evalM1('P2StateType = A && MoveContact = 3 && MoveGuarded = 3',context))throw Error('Fighter contact isolation');
+   const binding={get vx(){return fighter.vx*facing},set vx(value){fighter.vx=value*facing},get vy(){return fighter.vy},set vy(value){fighter.vy=value}};
+   executeControllerM1({type:'HitVelSet',params:{x:'1',y:'0'},triggers:{1:['Time = 0']}},binding,context,{});
+   if(fighter.vx!==16||fighter.vy!==9)throw Error('HitVelSet local/world X or Y mask');
+   executeControllerM1({type:'HitVelSet',params:{x:'0',y:'1'},triggers:{1:['1']}},binding,context,{});
+   if(fighter.vx!==16||fighter.vy!==-8)throw Error('HitVelSet Y');
+   fighter.time=1;fighter.vx=99;
+   executeControllerM1(battleDat.hitVelocityControllers['5001'],binding,context,{});
+   if(fighter.vx!==99)throw Error('Source HitVelSet Time=0 gate');
+   for(const open of ['[','('])for(const close of [']',')'])for(const value of [-1,0,1,2,3]){
+    fighter.time=value;const inside=(open==='['?value>=0:value>0)&&(close===']'?value<=2:value<2);
+    if(evalM1('Time = '+open+'0,2'+close,context)!==inside||evalM1('Time != '+open+'0,2'+close,context)===inside)throw Error('Range endpoint '+open+close+value);
+    checks++;
+   }
+   if(!evalM1('GetHitVar(animtype) != [3,5] && (GetHitVar(groundtype) = 1)',context))throw Error('Original Common range expression');
+   for(const expression of ['GetHitVar(unsupported)','Time = [0]','Time = [0,2']){
+    let rejected=false;try{evalM1(expression,context)}catch{rejected=true}if(!rejected)throw Error('Malformed/unsupported accepted');
+   }
+  }
+  return checks;
+ })()`);assert.equal(getHitSemantics,40);
+ for(const guarded of [false,true]){
+  await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.lastHitKey=null;p2.getHit=null;p2.hitShake=0;p2.attackPause=0;document.querySelector('#p2Guard').value='${guarded?'stand':'none'}';enterIRState(200);enterP2State(0)`);
+  for(let tick=0;tick<4;tick++)await step();
+  assert.equal(await run('moveContact'),1);assert.equal(await run('moveGuarded'),guarded?1:0);
+  for(let tick=0;tick<8;tick++){await step();assert.equal(await run('moveContact'),1)}
+  await step();assert.equal(await run('moveContact'),2);assert.equal(await run('moveGuarded'),guarded?2:0);
+  await run('enterIRState(0)');assert.equal(await run('moveContact'),0);assert.equal(await run('moveGuarded'),0);
+ }
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,whiff:'PASS',browserErrors:errors}));
+ console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

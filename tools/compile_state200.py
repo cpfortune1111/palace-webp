@@ -53,12 +53,29 @@ for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8'
             pending = {}
     actions[str(action['id'])] = boxes
 priorities = {}
+hit_velocity_controllers = {}
+for controller in states['controllers']:
+    if controller['state'] not in (151, 153, 5001) or controller['type'].lower() != 'hitvelset':
+        continue
+    params, triggers = {}, {}
+    for entry in controller['entries']:
+        key, value = (part.strip() for part in entry['text'].split('=', 1))
+        if key.lower() == 'type':
+            continue
+        if re.fullmatch(r'trigger\d+', key, re.I):
+            triggers.setdefault(key[7:], []).append(value)
+        else:
+            params[key] = value
+    hit_velocity_controllers[str(controller['state'])] = {
+        'type': controller['type'], 'params': params, 'triggers': triggers,
+        'source': {'file': controller['file'], 'line': controller['line']}}
 for state in states['states']:
     for entry in state['entries']:
         match = re.fullmatch(r'sprpriority\s*=\s*(-?\d+)', entry['text'], re.I)
         if match:
             priorities[str(state['id'])] = int(match[1])
-bundle = {'statePriorities': priorities, 'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
+bundle = {'statePriorities': priorities, 'hitVelocityControllers': hit_velocity_controllers,
+          'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
           'cornerpushProfile': {'legacy': True, 'defaultMultiplier': 0.7, 'stopThreshold': 4,
                                 'basis': 'Venus DEF has no ikemenversion; IKEMEN legacyCornerpush defaults and 1280 localcoord originLs=0.25'},
           'state200': {'type': 'S', 'physics': 'S', 'anim': 200, 'ctrl': 0, 'moveType': 'A',

@@ -34,6 +34,53 @@
     "3055": -1,
     "9999": 9
   },
+  "hitVelocityControllers": {
+    "151": {
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 778
+      }
+    },
+    "153": {
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 852
+      }
+    },
+    "5001": {
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 1101
+      }
+    }
+  },
   "hitPriorityDefaults": {
     "attacker": "keep",
     "defender": 0
