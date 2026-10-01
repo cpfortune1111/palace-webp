@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.7 Turn Render Facing Fix M1</title>
+<title>Prototype 0.23.8 State 200 Ground Combat M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,9 +37,9 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.7 · Turn Render Facing Fix M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD turn-render-facing-fix-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.8 · State 200 Ground Combat M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state200-ground-combat-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
-<div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div></div>
+<div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label>P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
@@ -83,10 +83,22 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.7 · Turn Render Facing Fix M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.8 · State 200 Ground Combat M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
+let battleDat,guardDat,guardAtlas,p1HitPause=0,moveContact=0,moveGuarded=0,randomValue=0;
+const soundChannels=new Map();
+function playSourceSound(value,channel=0){
+ const match=String(value).match(/^S?(-?\d+)\s*,\s*(-?\d+)$/i);if(!match)throw Error('Unsupported sound '+value);
+ const key=Number(channel);soundChannels.get(key)?.pause();
+ const sound=new Audio('./battle-sounds/'+match[1]+'-'+match[2]+'.wav');soundChannels.set(key,sound);sound.play().catch(()=>{});
+}
+Promise.all([
+ fetch('./venus_battle200.json?v=0238',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=0238',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=0238'})
+]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
  fetch('./venus_turn.json?v=0236',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Turn data HTTP '+response.status);return response.json()})
@@ -258,9 +270,9 @@ modeSelect.addEventListener('change',()=>{
  modeSelect.blur();
 });
 coarsePointer.addEventListener('change',()=>{if(inputPreference==='auto')setInputMode(initialInputMode())});
-function framesFor(anim){return (turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
-function spriteFor(frame){const k=frame.group+','+frame.item;return turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
-function atlasFor(frame){const k=frame.group+','+frame.item;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+function framesFor(anim){return (guardDat?.actions?.[String(anim)]||gethitDat?.actions?.[String(anim)]||turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
+function spriteFor(frame){const k=frame.group+','+frame.item;return guardDat?.sprites?.[k]||turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
+function atlasFor(frame){const k=frame.group+','+frame.item;if(guardDat?.sprites?.[k])return guardAtlas;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
 const spriteCanvasCache=new WeakMap();
 function spriteCanvasFor(frame){
  const source=atlasFor(frame),sprite=spriteFor(frame);
@@ -291,7 +303,7 @@ function validateRuntime(){
  const missing=REQUIRED_CONSTS.filter(k=>typeof stateIR?.constants?.[k]!=='number');
  if(missing.length){status.textContent='RUNTIME ERROR · missing const: '+missing.join(', ');throw new Error('Missing runtime constants: '+missing.join(', '));}
 }
-function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
+function stateDef(){if(state===200&&battleDat)return battleDat.state200;return stateIR&&stateIR.states?stateIR.states[String(state)]:null}
 function animDone(){return (current===5||current===6?p1TurnTime:stateTicks)>=actionDuration(current)}
 function setAnimForState(def){
  if((state===0||state===20)&&current===5&&!animDone())return;
@@ -300,6 +312,7 @@ function setAnimForState(def){
  current=Number(def.anim);fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
+ moveContact=0;moveGuarded=0;
  prevState=state;state=st;stateTicks=0;activeHitDef=null;stateEntrySerial++;
  const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  if(incoming&&incoming.moveType!==undefined)runtimeMoveType=String(incoming.moveType).toUpperCase();
@@ -394,10 +407,11 @@ function parseExprAST(src){const t=tokenizeExpr(src);let p=0,peek=()=>t[p],take=
  function atom(){let x=take();if(x.k==='num'||x.k==='str')return {t:x.k,v:x.v};if(x.v==='('){let n=expr(0);if(take().v!==')')throw Error('AST )');return n}if(x.v==='!'||x.v==='-'||x.v==='+')return {t:'un',op:x.v,a:atom()};
  if(x.k==='id'){let name=x.v;if(/^(Pos|Vel)$/i.test(name)&&peek().k==='id'&&/^[XY]$/i.test(peek().v))name+=' '+take().v;if(peek().v==='('){take();let args=[];if(peek().v!==')')while(true){args.push(expr(0));if(peek().v===','){take();continue}break}if(take().v!==')')throw Error('AST call )');return {t:'call',name,args}}return {t:'id',name}}throw Error('AST expression')}
  function expr(min){let l=atom();while(prec[peek().v]!==undefined&&prec[peek().v]>=min){let op=take().v,pr=prec[op];l={t:'bin',op,a:l,b:expr(pr+1)}}return l}let root=expr(0);if(peek().k!=='eof')throw Error('AST trailing '+peek().v);return root}
-function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return 0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='animelem')return fi+1;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;throw Error('AST query '+name)}
+function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(n==='p2statetype')return p2.type;if(n==='movecontact')return moveContact;if(n==='moveguarded')return moveGuarded;if(n==='random')return randomValue;if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return 0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='animelem')return fi+1;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;throw Error('AST query '+name)}
 function animElemStartTick(elem){const fs=framesFor(current);let t=0;for(let i=0;i<fs.length;i++){if(i+1===Number(elem))return t;t+=Math.max(0,Number(fs[i].time||0))}return Infinity}
 function animElemTime(elem){return (current===5||current===6?p1TurnTime:stateTicks)-animElemStartTick(elem)}
-function evalAST(n){if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return queryValue(n.name);if(n.t==='un'){let a=evalAST(n.a);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
+function evalAST(n){if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return /^[SCAIH]$/i.test(n.name)?n.name.toUpperCase():queryValue(n.name);if(n.t==='un'){let a=evalAST(n.a);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
+ if(n.t==='bin'&&n.op==='='&&n.a.t==='id'&&n.a.name.toLowerCase()==='animelem')return animElemTime(evalAST(n.b))===0;
  if(n.t==='bin'){if(n.op==='&&')return !!evalAST(n.a)&&!!evalAST(n.b);if(n.op==='||')return !!evalAST(n.a)||!!evalAST(n.b);let a=evalAST(n.a),b=evalAST(n.b);if(n.op==='='||n.op==='==')return a==b;if(n.op==='!=')return a!=b;if(n.op==='>')return a>b;if(n.op==='<')return a<b;if(n.op==='>=')return a>=b;if(n.op==='<=')return a<=b;if(n.op==='+')return +a + +b;if(n.op==='-')return a-b;if(n.op==='*')return a*b;if(n.op==='/')return a/b;if(n.op==='%')return a%b}
  if(n.t==='call'){let f=n.name.toLowerCase();if(f==='animelemtime')return animElemTime(evalAST(n.args[0]));if(f==='abs')return Math.abs(evalAST(n.args[0]));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0]));if(f==='var')return runtimeVar[+evalAST(n.args[0])]||0;if(f==='sysvar')return runtimeSysVar[+evalAST(n.args[0])]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0])?evalAST(n.args[1]):evalAST(n.args[2]);throw Error('AST function '+n.name)}throw Error('AST node')}
 const exprCache=new Map();
@@ -420,6 +434,7 @@ function runController(c){
  }
  const p=c.params||c;
  switch(c.type){
+  case 'PlaySnd':playSourceSound(p.value,p.channel||0);break;
   case 'VarSet':{
    const m=String(p.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!m)throw new Error('M2 VarSet target '+p.target);
    const arr=m[1].toLowerCase()==='sysvar'?runtimeSysVar:runtimeVar;arr[Number(m[2])]=Number(paramM1(p.value));break}
@@ -463,7 +478,7 @@ function validateAttackM1(){
 }
 function runAttackReturnM1(){if(state===200&&animDone()){enterIRState(0);return true}return false}
 function runStateMinus1M1(){
- if(runtimeCtrl && stateDef()?.type!=='A' && !consumedXPress && commandActive('x') && !commandActive('holddown')){
+ if((runtimeCtrl||((state===200||state===230)&&runtimeMoveType==='I')) && stateDef()?.type!=='A' && !consumedXPress && commandActive('x') && !commandActive('holddown')){
    consumedXPress=true;enterIRState(200);return true
  }
  return false;
@@ -510,7 +525,7 @@ const p2={
  state:0,time:0,anim:0,elem:1,elemTick:0,ctrl:1,
  type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
-function p2Frames(){return turnDat?.actions?.[String(p2.anim)]||gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
+function p2Frames(){return guardDat?.actions?.[String(p2.anim)]||turnDat?.actions?.[String(p2.anim)]||gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
 function spriteFacingFor(anim,facing){return anim===5||anim===6?-facing:facing}
 function advanceFighterAirOneTick(f){
  if(f.anim===5||f.anim===6)return;
@@ -528,32 +543,58 @@ function enterP2State(n){
  p2.state=n;p2.time=0;p2.elem=1;p2.elemTick=0;
  if(n===0){p2.type='S';p2.moveType='I';p2.physics='S';p2.ctrl=1;p2.anim=0}
  if(n===5000){p2.type='S';p2.moveType='H';p2.physics='N';p2.vx=0;p2.vy=0;p2.ctrl=0;p2.anim=5000}
- if(n===5001){p2.type='S';p2.moveType='H';p2.physics='S';p2.ctrl=0;if(p2.getHit){p2.vx=p2.getHit.xvel*p2.facing;p2.anim=5005}}
+ if(n===5001){p2.type='S';p2.moveType='H';p2.physics='S';p2.ctrl=0;if(p2.getHit)p2.vx=-p2.getHit.xvel*p1Facing}
+ if(n===130||n===131){p2.type=n===131?'C':'S';p2.physics=p2.type;p2.moveType='I';p2.ctrl=1;p2.anim=n;p2.vx=0}
+ if(n===150||n===152){p2.type=n===152?'C':'S';p2.physics='N';p2.moveType='H';p2.ctrl=0;p2.anim=n===152?151:150;p2.vx=0;p2.vy=0}
+ if(n===151||n===153){p2.type=n===153?'C':'S';p2.physics=p2.type;p2.moveType='H';p2.ctrl=0;p2.anim=n===153?151:150;p2.vx=-p2.getHit.xvel*p1Facing}
 }
 function applyP2HitM1(hitDef){
  if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
  p2.lastHitKey=hitDef.hitKey;
- const dmg=20;
+ const params=hitDef.params,guardMode=document.querySelector('#p2Guard').value;
+ const guarded=p2.type!=='A'&&p2.y===0&&p2.ctrl&&guardMode!=='none'&&String(params.guardflag).includes('M');
+ const pair=value=>String(value).split(',').map(Number);
+ const dmg=pair(params.damage)[guarded?1:0]||0;
  p2.life=Math.max(0,p2.life-dmg);
- p2.getHit={damage:dmg,animtype:0,groundtype:1,xvel:-16,slidetime:11,hittime:15};
- p2.hitShake=8;p2.hitTime=15;
- enterP2State(5000);
+ const prefix=guarded?'guard':'ground',pause=pair(params[guarded?'guard.pausetime':'pausetime']||params.pausetime);
+ p2.getHit={damage:dmg,guarded,animtype:0,groundtype:1,xvel:Number(params[prefix+'.velocity']),slidetime:Number(params[prefix+'.slidetime']),hittime:Number(params[prefix+'.hittime']),crouch:guarded&&guardMode==='crouch'};
+ p1HitPause=pause[0];p2.hitShake=pause[1];p2.hitTime=p2.getHit.hittime;
+ moveContact=1;moveGuarded=guarded?1:0;
+ enterP2State(guarded?(p2.getHit.crouch?152:150):5000);
+ playSourceSound(guarded?params.guardsound:params.hitsound,2);
 }
 function stepP2M1(){
+ const guarding=document.querySelector('#p2Guard').value;
+ if([0,130,131].includes(p2.state)&&p2.ctrl&&p2.type!=='A'&&p2.y===0){
+  const desired=guarding==='stand'?130:guarding==='crouch'?131:0;
+  if(p2.state!==desired)enterP2State(desired);
+ }
+ if([150,152].includes(p2.state)){
+  if(p2.hitShake>0){p2.hitShake--;return}
+  enterP2State(p2.getHit.crouch?153:151);return;
+ }
+ if([151,153].includes(p2.state)){
+  if(p2.time===p2.getHit.slidetime)p2.vx=0;
+  if(p2.time===p2.getHit.slidetime)p2.ctrl=1;
+  if(p2.hitTime<=0){p2.vx=0;enterP2State(p2.getHit.crouch?131:130);return}
+  p2.x+=p2.vx;p2.vx*=constVal(p2.type==='C'?'movement.crouch.friction':'movement.stand.friction');
+  p2.hitTime--;p2.time++;return;
+ }
  if(p2.state===0&&p2.time===0){p2.y=0;p2.vy=0}
  if(p2.state===5000){
    if(p2.hitShake>0)p2.hitShake--;
    else {enterP2State(5001);return}
  }else if(p2.state===5001){
-   if(p2.hitTime>0)p2.hitTime--;
-   if(p2.time>=Number(p2.getHit?.slidetime||11))p2.vx*=.6;
+   if(p2.anim===5000&&p2.time>=actionDuration(5000)){p2.anim=5005;p2.elem=1;p2.elemTick=0}
+   if(p2.time>=Number(p2.getHit.slidetime))p2.vx*=.6;
    if(p2.hitTime<=0){p2.vx=0;enterP2State(0);return}
+   p2.hitTime--;
  }
  p2.x+=p2.vx;p2.y+=p2.vy;
+ if(p2.state===5001)p2.vx*=constVal('movement.stand.friction');
  p2.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,p2.x));
  p2.time++;if(p2.state!==5000)advanceFighterAirOneTick(p2);
 }
-const VENUS_ACTION0_CLSN2=[[-27,-429,25,-360],[-35,-360,36,-243],[-34,-243,39,1],[39,-56,63,1]];
 let collisionContact=false;
 function worldBoxes(localBoxes,x,y,facing=1){
  return localBoxes.map(b=>{const ax=x+(facing>=0?b[0]:-b[2]),bx=x+(facing>=0?b[2]:-b[0]),ay=y+b[1],by=y+b[3];return {l:Math.min(ax,bx),r:Math.max(ax,bx),t:Math.min(ay,by),b:Math.max(ay,by)}})
@@ -561,9 +602,9 @@ function worldBoxes(localBoxes,x,y,facing=1){
 function rectOverlap(a,b){return a.l<=b.r&&a.r>=b.l&&a.t<=b.b&&a.b>=b.t}
 function resolveCollisionM1(frame){
  if(!frame?.hitDef)return {overlap:false,contact:false};
- const set=CLSN_M1[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
+ const set=battleDat.collision[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
  const atk=worldBoxes(set?.c1||[],frame.x,frame.y,p1Facing);
- const body=worldBoxes(VENUS_ACTION0_CLSN2,p2.x,p2.y,p2.facing);
+ const body=worldBoxes(battleDat.collision[String(p2.anim)]?.[Math.max(0,p2.elem-1)]?.c2||[],p2.x,p2.y,p2.facing);
  const overlap=atk.some(a=>body.some(b=>rectOverlap(a,b)));
  return {overlap,contact:overlap};
 }
@@ -631,20 +672,20 @@ function autoTurnM1(){
  }
 }
 function simStep(){
- if(!dat||!stateIR||!turnDat)return;
+ if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
+ if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p2.hitShake>0)p2.hitShake--;return}
+ randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
  stepP2M1();
  // Input must be sampled before any command query on this simulation tick.
  sampleInputHistory();
+ const tickEntry=stateEntrySerial;
  const tickState=state;
  let def=stateDef();
  applyPhysics(def);
  // State controllers run before command dispatch so State 52 CtrlSet(Time=3)
  // can grant control according to the original CNS.
  def=stateDef();
- // HitDef HUD/debug state is current-logical-frame state, not historical state.
- // A matching HitDef controller will set it again during this tick.
- activeHitDef=null;
  for(const c of (def.controllers||[])){
    const st=state;runController(c);if(state!==st)break;
  }
@@ -665,37 +706,26 @@ function simStep(){
  // A newly entered state must get a real Time=0 evaluation on the next tick.
  // Previously we incremented immediately after ChangeState, so State 50 skipped
  // its Time=0 ChangeAnim and remained on AIR 40.
- if(state===tickState){stateTicks++;advanceAirOneTick()}
+ if(state===tickState&&stateEntrySerial===tickEntry){stateTicks++;advanceAirOneTick()}
  // First apply the actual StageTraining player world bounds, not the old prototype ±580 clamp.
  posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
  // Dual-fighter screen bound is handled by clampFighterScreenM1().
  clampFighterScreenM1();
 }
 
-const CLSN_M1={
- '200':[
-  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
-  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
-  {c1:[],c2:[[-7,-430,45,-361],[-20,-362,58,-147],[-24,-147,57,2]]},
-  {c1:[[10,-383,168,-315]],c2:[[2,-431,53,-364],[-14,-364,66,-148],[-21,-148,63,0],[66,-360,97,-341]]},
-  {c1:[],c2:[[-7,-430,45,-361],[-20,-362,58,-147],[-24,-147,57,2]]},
-  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]},
-  {c1:[],c2:[[-18,-430,34,-361],[-30,-361,48,-146],[-26,-146,55,0]]}
- ]
-};
 const colcv=document.querySelector('#collision'),colctx=colcv.getContext('2d');
 function drawCollision(){
  colctx.clearRect(0,0,colcv.width,colcv.height);
  if(!showCollision||!dat)return;
  const lf=simPaused?logicFrame:{state,time:stateTicks,anim:current,elem:fi+1};
- const set=CLSN_M1[String(lf.anim)]?.[Math.max(0,lf.elem-1)];if(!set)return;
+ const set=battleDat?.collision[String(lf.anim)]?.[Math.max(0,lf.elem-1)];if(!set)return;
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight;
  const fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2;
  const axisX=viewX+(640+posX-cameraX)*fit,axisY=viewY+(660-cameraY)*fit+posY*fit;
  function boxes(list,stroke,fill){
   colctx.strokeStyle=stroke;colctx.fillStyle=fill;colctx.lineWidth=2;
   for(const b of list){
-   const x=axisX+Math.min(b[0],b[2])*fit,y=axisY+Math.min(b[1],b[3])*fit;
+   const x=axisX+(p1Facing>0?Math.min(b[0],b[2]):-Math.max(b[0],b[2]))*fit,y=axisY+Math.min(b[1],b[3])*fit;
    const w=Math.abs(b[2]-b[0])*fit,h=Math.abs(b[3]-b[1])*fit;
    colctx.fillRect(x,y,w,h);colctx.strokeRect(x,y,w,h);
   }
@@ -739,17 +769,18 @@ function updateDebugHud(){
    ' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+
    ' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
 }
+let simulationAccumulator=0;
+function advanceSimulation(dt){
+ simulationAccumulator+=dt;
+ while(simulationAccumulator+1e-9>=1/60){if(mix)mix.update(1/60);simStep();simulationAccumulator=Math.max(0,simulationAccumulator-1/60)}
+}
 function loop(){
  requestAnimationFrame(loop);
  if(runtimeFailed)return;
  try{
   const dt=Math.min(clock.getDelta(),.05);
-  const advance=!simPaused||stepRequested;
-  if(advance){
-   if(mix)mix.update(dt);
-   simStep();
-   stepRequested=false;
-  }
+  if(simPaused){simulationAccumulator=0;if(stepRequested){simStep();stepRequested=false}}
+  else advanceSimulation(dt);
   updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawCollision();
  }catch(e){showRuntimeError(e)}
 }
@@ -758,4 +789,3 @@ function resize(){colcv.width=innerWidth*devicePixelRatio;colcv.height=innerHeig
 mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
-

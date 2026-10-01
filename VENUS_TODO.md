@@ -11,9 +11,15 @@
 - [x] 對照目前 index.html 的 controller handlers，分開「有 handler」與「完整支援」。
 - [x] 靜態 state / action / sound 引用檢查；動態或外部引用另列，未假裝已解析。
 
+## 作者補充及 0.23.8
+- [x] 122,0／951,99 作者確認是刻意空影格，保留 ticks；空中無防禦。
+- [x] 645／投技 800、801 未完成，保留參考 code；175／5500 保留 source fallback。
+- [x] State 200 原 CNS controllers、AIR Clsn、地面 hit／guard／hitpause／恢復接入 0.23.8 M1。
+- [ ] 雙向角色執行器、完整 cornerpush、hit spark、空中受擊仍待後續；詳見 NOTES_0238.md。
+
 ## P0 — 來源一致性及匯入驗收
 - [x] 對照 IKEMEN 確認 3 個 904,-1 為刻意空影格；匯入器已修正誤報，保留影格時間。
-- [ ] 餘下 14 個缺失 sprite 引用、11 個不同 pair；已定位來源，仍需與原 IKEMEN 並排確認，不自行補圖。
+- [x] 作者確認後，餘下 9 個缺失引用全屬未完成 Action 645；不自行補圖。
 - [ ] 核對 referenceChecks 所列 missing / dynamic-or-external-review；追至 CNS、Helper、CMD 的觸發條件。
 - [x] 逐 state 比對舊 repo 與本機來源：venus.cns 20 個共同 state 改變、增 2／刪 1；Common 3 個 state 改變。State 200 確有差異，不直接覆蓋。
 - [x] 全部 6 個靜態缺失引用完成條件核對：3 個 SelfAnimExist guard、2 個 State 999 限制入口、1 個有序 fallback。
@@ -22,7 +28,8 @@
 - [ ] 全量編譯器對未知 controller / trigger / expression 明確報告；不靜默忽略。
 
 ## P1 — 最小完整對戰閉環（下一個可玩里程碑）
-- [ ] 固定 60 Hz 邏輯 tick，與顯示幀率分離；建立可重播 input / state trace。
+- [x] 固定 60 Hz 邏輯 tick；30/60/120 Hz 相同地面攻擊結果一致。
+- [ ] 完整可重播 input / state trace。
 - [ ] State 200：CMD→State→AIR Clsn→原始 HitDef→命中／防禦→hitpause→damage／擊退→恢復。
 - [ ] P1 / P2 同一套角色執行器，Venus vs Venus；移除 P2 硬編碼受擊數值。
 - [ ] 逐項補足 State 200 所需 trigger、HitDef 欄位及共同受擊／防禦 state controllers。

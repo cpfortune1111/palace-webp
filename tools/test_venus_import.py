@@ -21,9 +21,15 @@ class ImportTests(unittest.TestCase):
         self.assertEqual(missing, [])
 
     def test_genuine_missing_pair(self):
-        empty, missing = air_sprite_references([{'id': 951, 'frames': [{'sprite': [951, 99], 'ticks': 24}]}], {(951, 9)})
+        empty, missing = air_sprite_references([{'id': 645, 'frames': [{'sprite': [645, 0], 'ticks': 24}]}], {(951, 9)})
         self.assertEqual(empty, [])
-        self.assertEqual(missing[0]['sprite'], [951, 99])
+        self.assertEqual(missing[0]['sprite'], [645, 0])
+
+    def test_author_intentional_blanks(self):
+        actions = [{'id': 152, 'frames': [{'sprite': [122, 0], 'ticks': -1}, {'sprite': [951, 99], 'ticks': 24}]}]
+        empty, missing = air_sprite_references(actions, set())
+        self.assertEqual([frame['ticks'] for frame in empty], [-1, 24])
+        self.assertEqual(missing, [])
 
     def test_source_snapshot(self):
         root = Path('outputs/venus')
@@ -32,7 +38,7 @@ class ImportTests(unittest.TestCase):
         manifest = json.loads((root / 'manifest.json').read_text(encoding='utf-8'))
         for entry in manifest['files']:
             self.assertEqual(hashlib.sha256((root / 'original' / entry['path']).read_bytes()).hexdigest(), entry['sha256'])
-        self.assertEqual(len(manifest['missingAIRSpriteReferences']), 14)
+        self.assertEqual(len(manifest['missingAIRSpriteReferences']), 9)
         self.assertEqual(len([frame for frame in manifest['intentionalEmptyAIRFrames'] if frame['action'] == 9041]), 3)
         report = json.loads(Path('outputs/venus-audit/source_audit.json').read_text(encoding='utf-8'))
         self.assertEqual(len(report['soundExports']), 67)

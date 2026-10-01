@@ -19,7 +19,7 @@ def air_sprite_references(actions, sprite_keys):
     for action in actions:
         for frame in action['frames']:
             reference = {'action': action['id'], **frame}
-            if -1 in frame['sprite']:
+            if -1 in frame['sprite'] or tuple(frame['sprite']) in ((122, 0), (951, 99)):
                 empty_frames.append(reference)
             elif tuple(value & 65535 for value in frame['sprite']) not in sprite_keys:
                 missing_sprites.append(reference)
@@ -164,6 +164,9 @@ def run(source, destination, runtime):
                            'palettes': len(palettes), 'sounds': len(sounds)},
                 'missingAIRSpriteReferences': missing_sprites, 'controllerCoverage': coverage,
                 'intentionalEmptyAIRFrames': empty_frames,
+                'authorClarifications': {'airGuard': False, 'intentionalBlankPairs': [[122, 0], [951, 99]],
+                                         'unfinishedActions': [645], 'unfinishedThrows': [800, 801],
+                                         'drawContinueFallbacks': 'Keep source lose/default animation fallback'},
                 'referenceChecks': references, 'runtimeSHA256': digest(runtime.read_bytes()),
                 'limits': ['Raw section entries are preserved; expressions are not compiled or semantically validated.',
                            'Dynamic and external references require review; static missing references may be unused source branches.',

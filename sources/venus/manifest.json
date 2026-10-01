@@ -99,62 +99,6 @@
   },
   "missingAIRSpriteReferences": [
     {
-      "action": 122,
-      "line": 575,
-      "sprite": [
-        122,
-        0
-      ],
-      "offset": [
-        0,
-        0
-      ],
-      "ticks": 1,
-      "extra": []
-    },
-    {
-      "action": 132,
-      "line": 593,
-      "sprite": [
-        122,
-        0
-      ],
-      "offset": [
-        0,
-        0
-      ],
-      "ticks": -1,
-      "extra": []
-    },
-    {
-      "action": 142,
-      "line": 627,
-      "sprite": [
-        122,
-        0
-      ],
-      "offset": [
-        0,
-        0
-      ],
-      "ticks": 1,
-      "extra": []
-    },
-    {
-      "action": 152,
-      "line": 645,
-      "sprite": [
-        122,
-        0
-      ],
-      "offset": [
-        0,
-        0
-      ],
-      "ticks": -1,
-      "extra": []
-    },
-    {
       "action": 645,
       "line": 1289,
       "sprite": [
@@ -278,20 +222,6 @@
         0
       ],
       "ticks": 2,
-      "extra": []
-    },
-    {
-      "action": 951,
-      "line": 1871,
-      "sprite": [
-        951,
-        99
-      ],
-      "offset": [
-        0,
-        0
-      ],
-      "ticks": 24,
       "extra": []
     }
   ],
@@ -523,6 +453,62 @@
     }
   ],
   "intentionalEmptyAIRFrames": [
+    {
+      "action": 122,
+      "line": 575,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 132,
+      "line": 593,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": -1,
+      "extra": []
+    },
+    {
+      "action": 142,
+      "line": 627,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 1,
+      "extra": []
+    },
+    {
+      "action": 152,
+      "line": 645,
+      "sprite": [
+        122,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": -1,
+      "extra": []
+    },
     {
       "action": 9041,
       "line": 1455,
@@ -846,6 +832,20 @@
       "extra": []
     },
     {
+      "action": 951,
+      "line": 1871,
+      "sprite": [
+        951,
+        99
+      ],
+      "offset": [
+        0,
+        0
+      ],
+      "ticks": 24,
+      "extra": []
+    },
+    {
       "action": 999,
       "line": 3323,
       "sprite": [
@@ -874,6 +874,27 @@
       "extra": []
     }
   ],
+  "authorClarifications": {
+    "airGuard": false,
+    "intentionalBlankPairs": [
+      [
+        122,
+        0
+      ],
+      [
+        951,
+        99
+      ]
+    ],
+    "unfinishedActions": [
+      645
+    ],
+    "unfinishedThrows": [
+      800,
+      801
+    ],
+    "drawContinueFallbacks": "Keep source lose/default animation fallback"
+  },
   "referenceChecks": [
     {
       "file": "venus.cmd",
@@ -3284,7 +3305,7 @@
       "status": "present"
     }
   ],
-  "runtimeSHA256": "a393e674ed60bb9a1890d9382e73d3edf35a1e6042efce8211d18f97a2aaaf9c",
+  "runtimeSHA256": "602a001b7025095e75e67f20c0f0d6aa3a0bc359406756cdba8b11f2e8724d4e",
   "limits": [
     "Raw section entries are preserved; expressions are not compiled or semantically validated.",
     "Dynamic and external references require review; static missing references may be unused source branches.",

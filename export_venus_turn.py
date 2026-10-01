@@ -8,7 +8,7 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 
-def export(source_dir, output_dir):
+def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn'):
     source_dir, output_dir = Path(source_dir), Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     sff = (source_dir / 'venus.sff').read_bytes()
@@ -53,19 +53,22 @@ def export(source_dir, output_dir):
         line = raw.split(';', 1)[0].strip()
         begin = re.match(r'\[Begin Action (\d+)\]', line, re.I)
         if begin:
-            action = begin[1] if begin[1] in ('5', '6') else None
+            action = begin[1] if begin[1] in action_ids else None
             if action:
                 actions[action] = []
         elif action and re.match(r'^-?\d+\s*,', line):
             fields = [part.strip() for part in line.split(',')]
             group, item, ox, oy, time = map(int, fields[:5])
             actions[action].append(dict(group=group, item=item, ox=ox, oy=oy, time=time, flip=fields[5] if len(fields)>5 else ''))
-    assert set(actions) == {'5', '6'}
-    atlas = Image.new('RGBA', (1024, 1024))
+    assert set(actions) == set(action_ids)
+    atlas = Image.new('RGBA', (1024, 1024) if action_ids == ('5', '6') else (2048, 4096))
     sprites = {}
     cursor_x, cursor_y, row_height = 2, 2, 0
     for frames in actions.values():
         for frame in frames:
+            if frame['group'] == -1 or frame['item'] == -1 or (frame['group'], frame['item']) in ((122, 0), (951, 99)):
+                frame['empty'] = True
+                continue
             key = f"{frame['group']},{frame['item']}"
             if key in sprites:
                 continue
@@ -77,11 +80,11 @@ def export(source_dir, output_dir):
             sprites[key] = dict(x=cursor_x, y=cursor_y, w=image.width, h=image.height, axisX=axis_x, axisY=axis_y)
             cursor_x += image.width + 4
             row_height = max(row_height, image.height)
-    atlas = atlas.crop((0, 0, 1024, cursor_y + row_height + 2))
-    atlas.save(output_dir / 'venus_turn_atlas.png')
+    atlas = atlas.crop((0, 0, atlas.width, cursor_y + row_height + 2))
+    atlas.save(output_dir / (prefix + '_atlas.png'))
     data = dict(sprites=sprites, actions=actions, source=dict(sffSHA256=hashlib.sha256(sff).hexdigest(), airSHA256=hashlib.sha256(air).hexdigest()))
-    (output_dir / 'venus_turn.json').write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
-    print('Exported AIR 5/6:', {action: [frame['time'] for frame in frames] for action, frames in actions.items()})
+    (output_dir / (prefix + '.json')).write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
+    print('Exported AIR:', {action: [frame['time'] for frame in frames] for action, frames in actions.items()})
     previous = output_dir / 'venus_runtime_atlas.png'
     runtime = output_dir / 'venus_runtime.json'
     if previous.exists() and runtime.exists():
@@ -99,6 +102,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('source_dir')
     parser.add_argument('output_dir')
+    parser.add_argument('--actions', default='5,6')
+    parser.add_argument('--prefix', default='venus_turn')
     arguments = parser.parse_args()
-    export(arguments.source_dir, arguments.output_dir)
-
+    export(arguments.source_dir, arguments.output_dir, tuple(arguments.actions.split(',')), arguments.prefix)
