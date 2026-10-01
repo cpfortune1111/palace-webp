@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.6 Sprite / Edge / Turn M1</title>
+<title>Prototype 0.23.7 Turn Render Facing Fix M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.6 · Sprite / Edge / Turn M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD sprite-edge-turn-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.7 · Turn Render Facing Fix M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD turn-render-facing-fix-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.6 · Sprite / Edge / Turn M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.7 · Turn Render Facing Fix M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -107,7 +107,7 @@ function drawMars(){
  const f=frames[Math.max(0,Math.min(frames.length-1,p2.elem-1))],sp=spriteFor(f);if(!sp)return;
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2;
  const ground=viewY+(660-cameraY)*fit,px=viewX+(640+p2.x-cameraX)*fit;
- const flip=p2.facing<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
+ const flip=spriteFacingFor(p2.anim,p2.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit+p2.y*fit;
  mctx.clearRect(0,0,mcv.width,mcv.height);mctx.save();
  const src=spriteCanvasFor(f);
@@ -511,6 +511,7 @@ const p2={
  type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
 function p2Frames(){return turnDat?.actions?.[String(p2.anim)]||gethitDat?.actions?.[p2.anim]||gethitDat?.actions?.[String(p2.anim)]||p2Data()?.actions?.[p2.anim]||p2Data()?.actions?.[String(p2.anim)]||[]}
+function spriteFacingFor(anim,facing){return anim===5||anim===6?-facing:facing}
 function advanceFighterAirOneTick(f){
  if(f.anim===5||f.anim===6)return;
  const frames=p2Frames();if(!frames.length)return;
@@ -714,7 +715,7 @@ function draw(){
  let frames=framesFor(drawAnim);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit,ground=viewY+(660-cameraY)*fit,px=viewX+(640+posX-cameraX)*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
  const src=spriteCanvasFor(f);if(!src)return;
- if(p1Facing<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
+ if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
  else ctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
