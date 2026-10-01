@@ -14,6 +14,7 @@
 ## 作者補充及 0.23.8
 - [x] 0.23.9：CLSN viewer crash、sprpriority 排層、5001 轉 A5005 的一幀回圈、統一 P1/P2 HUD。
 - [x] 0.23.9 使用者 PASS；0.23.10 補單 target 的地面 hit／guard cornerpush、近角落距離扣除、legacy 0.7 衰減。
+- [x] 0.23.10 使用者確認角落推退正常；0.23.11 修正 guard stun 期間第二拳破防誤判，補 source renderer hitshake。
 - [x] 122,0／951,99 作者確認是刻意空影格，保留 ticks；空中無防禦。
 - [x] 645／投技 800、801 未完成，保留參考 code；175／5500 保留 source fallback。
 - [x] State 200 原 CNS controllers、AIR Clsn、地面 hit／guard／hitpause／恢復接入 0.23.8 M1。

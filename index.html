@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.10 Ground Cornerpush M1</title>
+<title>Prototype 0.23.11 Guard Continuity / Hitshake M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.10 · Ground Cornerpush M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD ground-cornerpush-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.11 · Guard Continuity / Hitshake M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD guard-continuity-hitshake-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label>P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.10 · Ground Cornerpush M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.11 · Guard Continuity / Hitshake M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -119,7 +119,7 @@ function drawMars(){
  const fighter=displayP2(),frames=framesFor(fighter.anim);if(!frames.length)return;
  const f=frames[Math.max(0,Math.min(frames.length-1,fighter.elem-1))],sp=spriteFor(f);if(!sp)return;
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2;
- const ground=viewY+(660-cameraY)*fit,px=viewX+(640+fighter.x-cameraX)*fit;
+ const ground=viewY+(660-cameraY)*fit,px=viewX+(640+fighter.x+hitShakeOffset(fighter)-cameraX)*fit;
  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*fit,dy=ground-(sp.axisY-f.oy)*fit+fighter.y*fit;
  mctx.clearRect(0,0,mcv.width,mcv.height);mctx.save();
@@ -532,6 +532,8 @@ const p2={
 p2.sprPriority=0;
 function displayP1(){return simPaused?{facing:p1Facing,vx,vy,life:p1Life,sprPriority:p1SprPriority,...logicFrame}:{state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,sprPriority:p1SprPriority}}
 function displayP2(){return simPaused&&logicFrame.p2?logicFrame.p2:p2}
+function hitShakeOffset(fighter){return fighter.hitShake>0&&(fighter.time&1)!==0?-fighter.facing:0}
+function inGroundGuardState(fighter){return [120,130,131,140,150,151,152,153].includes(fighter.state)}
 function updateSpriteLayers(){
  const front=displayP1().sprPriority>displayP2().sprPriority;
  cv.style.zIndex=front?'2':'1';mcv.style.zIndex=front?'1':'2';
@@ -564,7 +566,8 @@ function applyP2HitM1(hitDef){
  if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
  p2.lastHitKey=hitDef.hitKey;
  const params=hitDef.params,guardMode=document.querySelector('#p2Guard').value;
- const guarded=p2.type!=='A'&&p2.y===0&&p2.ctrl&&guardMode!=='none'&&String(params.guardflag).includes('M');
+ const guardReady=(p2.ctrl&&p2.moveType==='I')||inGroundGuardState(p2);
+ const guarded=p2.type!=='A'&&p2.y===0&&guardReady&&guardMode!=='none'&&String(params.guardflag).includes('M');
  const pair=value=>String(value).split(',').map(Number);
  const dmg=pair(params.damage)[guarded?1:0]||0;
  p2.life=Math.max(0,p2.life-dmg);
@@ -704,7 +707,7 @@ function autoTurnM1(){
 }
 function simStep(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
- if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p2.hitShake>0)p2.hitShake--;return}
+ if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
  const cornerPush=checkCornerPushM1();

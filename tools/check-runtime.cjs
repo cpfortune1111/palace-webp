@@ -152,6 +152,18 @@ const server=http.createServer((request,response)=>{
  assert.deepEqual(await run('checkCornerPushM1()'),{distance:-14,multiplier:.7});
  await run('p2.x=200');assert.equal(await run('checkCornerPushM1().distance'),0);
  await run("p2.moveType='I'");assert.equal(await run('checkCornerPushM1().multiplier'),0);
+ for(const direction of [-1,1]){
+  await run(`resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=${direction*2850};posX=${direction*3290};posY=0;p1Facing=${direction};p2.x=${direction*3430};p2.y=0;p2.facing=${-direction};p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='stand';enterP2State(0);enterIRState(200);`);
+  for(let tick=0;tick<4;tick++)await step();
+  const offsets=[];for(let tick=0;tick<8;tick++){const frozen=await step();offsets.push(await run('hitShakeOffset(p2)'));assert.equal(frozen.p2.x,direction*3430)}
+  assert.ok(offsets.includes(0));assert.ok(offsets.includes(direction));
+  await step();assert.equal(await run('p2.state'),151);assert.equal(await run('p2.ctrl'),0);
+  await run(`posX=p2.x-(${direction*140});enterIRState(200)`);
+  for(let tick=0;tick<4;tick++)await step();
+  assert.equal(await run('p2.life'),1000);assert.equal(await run('p2.getHit.guarded'),true);assert.equal(await run('p2.state'),150);
+ }
+ await run("p2.state=5001;p2.moveType='H';p2.ctrl=0;p2.type='S';p2.y=0;p2.lastHitKey=null;enterIRState(200);applyP2HitM1({hitKey:'not-guard-stun',params:battleDat.state200.controllers.find(controller=>controller.type==='HitDef').params})");
+ assert.equal(await run('p2.getHit.guarded'),false);
  assert.deepEqual(errors,[]);
  console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
