@@ -13,6 +13,19 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def air_sprite_references(actions, sprite_keys):
+    empty_frames = []
+    missing_sprites = []
+    for action in actions:
+        for frame in action['frames']:
+            reference = {'action': action['id'], **frame}
+            if -1 in frame['sprite']:
+                empty_frames.append(reference)
+            elif tuple(value & 65535 for value in frame['sprite']) not in sprite_keys:
+                missing_sprites.append(reference)
+    return empty_frames, missing_sprites
+
+
 def sections(data):
     result = []
     for number, raw in enumerate(data.decode('utf-8-sig').splitlines(), 1):
@@ -113,8 +126,7 @@ def run(source, destination, runtime):
                        'offset': offset + 16, 'riff': sample[:4] == b'RIFF'})
         offset = next_offset
     sprite_keys = {(sprite['group'], sprite['number']) for sprite in sprites}
-    missing_sprites = [{'action': action['id'], **frame} for action in actions for frame in action['frames']
-                       if frame['sprite'][0] >= 0 and tuple(frame['sprite']) not in sprite_keys]
+    empty_frames, missing_sprites = air_sprite_references(actions, sprite_keys)
     source_types = Counter(controller['type'].lower() for controller in controllers)
     runtime_types = {value.lower() for value in re.findall(r"case '([^']+)':", runtime.read_text(encoding='utf-8'))}
     coverage = [{'type': kind, 'controllers': amount,
@@ -151,6 +163,7 @@ def run(source, destination, runtime):
                            'commands': len(commands), 'actions': len(actions), 'sprites': len(sprites),
                            'palettes': len(palettes), 'sounds': len(sounds)},
                 'missingAIRSpriteReferences': missing_sprites, 'controllerCoverage': coverage,
+                'intentionalEmptyAIRFrames': empty_frames,
                 'referenceChecks': references, 'runtimeSHA256': digest(runtime.read_bytes()),
                 'limits': ['Raw section entries are preserved; expressions are not compiled or semantically validated.',
                            'Dynamic and external references require review; static missing references may be unused source branches.',

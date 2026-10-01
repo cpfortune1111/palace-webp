@@ -12,9 +12,12 @@
 - [x] 靜態 state / action / sound 引用檢查；動態或外部引用另列，未假裝已解析。
 
 ## P0 — 來源一致性及匯入驗收
-- [ ] 核對 AIR 的 17 個缺失 sprite 引用（不是 17 個獨立 sprite）；以 manifest 行號逐項確認是否未使用分支／原始資料缺漏，不自行補圖。
+- [x] 對照 IKEMEN 確認 3 個 904,-1 為刻意空影格；匯入器已修正誤報，保留影格時間。
+- [ ] 餘下 14 個缺失 sprite 引用、11 個不同 pair；已定位來源，仍需與原 IKEMEN 並排確認，不自行補圖。
 - [ ] 核對 referenceChecks 所列 missing / dynamic-or-external-review；追至 CNS、Helper、CMD 的觸發條件。
-- [ ] 現有 repo 根目錄 venus.cns / venus_Common.cns 與今次本機來源不同；先做語義差異比對，再決定 runtime 遷移，不能直接覆蓋。
+- [x] 逐 state 比對舊 repo 與本機來源：venus.cns 20 個共同 state 改變、增 2／刪 1；Common 3 個 state 改變。State 200 確有差異，不直接覆蓋。
+- [x] 全部 6 個靜態缺失引用完成條件核對：3 個 SelfAnimExist guard、2 個 State 999 限制入口、1 個有序 fallback。
+- [x] 匯出並驗證全部 67 個原樣 WAV payload；尚未接入瀏覽器播放。
 - [ ] 建立全量 SFF→分批 atlas / metadata 及 SND→音效匯出器，驗證 linked sprite / palette、透明度、axis、AIR flip 與 Clsn default 生效範圍。
 - [ ] 全量編譯器對未知 controller / trigger / expression 明確報告；不靜默忽略。
 
