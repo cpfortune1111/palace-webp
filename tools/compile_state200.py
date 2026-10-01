@@ -52,7 +52,15 @@ for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8'
             boxes.append({kind: pending.get(kind, defaults.get(kind, [])) for kind in ('c1', 'c2')})
             pending = {}
     actions[str(action['id'])] = boxes
-bundle = {'state200': {'type': 'S', 'physics': 'S', 'anim': 200, 'ctrl': 0, 'moveType': 'A',
+priorities = {}
+for state in states['states']:
+    for entry in state['entries']:
+        match = re.fullmatch(r'sprpriority\s*=\s*(-?\d+)', entry['text'], re.I)
+        if match:
+            priorities[str(state['id'])] = int(match[1])
+bundle = {'statePriorities': priorities, 'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
+          'state200': {'type': 'S', 'physics': 'S', 'anim': 200, 'ctrl': 0, 'moveType': 'A',
+                       'sprpriority': priorities['200'],
                        'juggle': 1, 'velset': [0, 0], 'controllers': controllers}, 'collision': actions,
           'source': {'definitionLine': definition['line'], 'baseline': 'source-import-v1',
                      'sha256': {name: hashlib.sha256((source / name).read_bytes()).hexdigest()

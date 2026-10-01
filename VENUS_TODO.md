@@ -12,6 +12,7 @@
 - [x] 靜態 state / action / sound 引用檢查；動態或外部引用另列，未假裝已解析。
 
 ## 作者補充及 0.23.8
+- [x] 0.23.9：CLSN viewer crash、sprpriority 排層、5001 轉 A5005 的一幀回圈、統一 P1/P2 HUD。
 - [x] 122,0／951,99 作者確認是刻意空影格，保留 ticks；空中無防禦。
 - [x] 645／投技 800、801 未完成，保留參考 code；175／5500 保留 source fallback。
 - [x] State 200 原 CNS controllers、AIR Clsn、地面 hit／guard／hitpause／恢復接入 0.23.8 M1。

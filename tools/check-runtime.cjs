@@ -47,6 +47,12 @@ const server=http.createServer((request,response)=>{
  `));assert.equal(orientationChecks,24);
  const run=source=>page.evaluate(source=>window.runtimeTest.run(source),source);
  const step=()=>page.evaluate(()=>{window.runtimeTest.step();return window.runtimeTest.snapshot()});
+ await page.locator('#dbgBoxes').dispatchEvent('pointerdown');
+ assert.equal(await run('showCollision'),true);
+ for(const facing of [-1,1]){
+  await run(`simPaused=false;resetPlayerInput();p1Facing=${facing};p2.facing=${-facing};enterIRState(0);enterP2State(0);`);
+  await step();assert.equal(await run('runtimeFailed'),false);
+ }
  await run("resetPlayerInput();posX=200;p2.x=-200;p1Facing=1;vx=0;enterIRState(0);stateTicks=100;p2.ctrl=0");
  const standing=[];for(let tick=0;tick<7;tick++){const frame=await step();standing.push([frame.current,frame.fi])}
  assert.deepEqual(standing,[[5,0],[5,1],[5,1],[5,1],[5,1],[5,2],[0,0]]);
@@ -78,6 +84,7 @@ const server=http.createServer((request,response)=>{
   assert.ok(struck,'Expected contact '+mode);
   const contactIndex=trace.findIndex(frame=>frame.p2.getHit);
   const contactFrame=trace[contactIndex];
+  assert.equal(await run("Number(cv.style.zIndex)>Number(mcv.style.zIndex)"),false);
   for(const pausedFrame of trace.slice(contactIndex+1,contactIndex+9)){
    assert.equal(pausedFrame.stateTicks,contactFrame.stateTicks);assert.equal(pausedFrame.fi,contactFrame.fi);
    assert.equal(pausedFrame.p2.x,contactFrame.p2.x);
@@ -111,6 +118,27 @@ const server=http.createServer((request,response)=>{
  assert.equal(await run('hitDefSerial'),beforeHitDef+1);
  await run('p2.x=140');await step();assert.equal(await run('p2.life'),980);
  for(let tick=0;tick<30;tick++)await step();assert.equal(await run('hitDefSerial'),beforeHitDef+1);
+ await run("resetPlayerInput();p1HitPause=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;enterP2State(0);enterIRState(200)");
+ for(let tick=0;tick<4;tick++)await step();
+ assert.equal(await run('p1SprPriority'),2);assert.equal(await run('p2.sprPriority'),0);
+ assert.equal(await run('Number(cv.style.zIndex)>Number(mcv.style.zIndex)'),true);
+ const hitFrames=[];
+ for(let tick=0;tick<32;tick++){
+  const frame=await step();
+  if(frame.p2.state===5001){
+   const sprite=await run('p2Frames()[p2.elem-1]');hitFrames.push([frame.p2.anim,sprite.group,sprite.item]);
+  }
+ }
+ const sprites=hitFrames.map(frame=>frame[2]);
+ const changes=sprites.filter((value,index)=>index===0||value!==sprites[index-1]);
+ assert.deepEqual(changes,[0,10,0]);
+ assert.ok(hitFrames.some(frame=>frame[0]===5005));
+ await run("simPaused=true;logicFrame={state:200,time:3,anim:200,elem:4,facing:1,x:0,y:0,vx:0,vy:0,life:1000,sprPriority:2,p2:{...p2,state:5001,time:4,anim:5000,elem:2,x:100,y:0,facing:-1,vx:16,vy:0,life:980,sprPriority:0}};updateDebugHud();draw();drawMars();drawCollision()");
+ const hudText=await page.locator('#act').innerText();
+ assert.match(hudText,/P1_S200_T3_A200_E4_F\+1_X\+0\.0_Y\+0\.0_VX\+0\.0_VY\+0\.0_HP1000/);
+ assert.match(hudText,/P2_S5001_T4_A5000_E2_F-1_X\+100\.0_Y\+0\.0_VX-16\.0_VY\+0\.0_HP980/);
+ await page.screenshot({path:'outputs/runtime-0239-clsn-hud.png'});
+ await run('simPaused=false');
  assert.deepEqual(errors,[]);
  console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
