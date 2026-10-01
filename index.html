@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.1 · Facing-Relative Jump Anim Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD facing-relative-jump-anim-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.2 · Jump Anim + HUD Debug Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD jump-anim-hud-debug-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -212,7 +212,7 @@ function stateDef(){return stateIR&&stateIR.states?stateIR.states[String(state)]
 function animDone(){return stateTicks>=actionDuration(current)}
 function setAnimForState(def){
  if(def.anim==='Keep')return;
- if(def.anim==='JumpByVelocity'){const localVx=vx*p1Facing;current=localVx>0?42:(localVx<0?43:41);fi=0;ticks=0;return}
+ if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
  current=Number(def.anim);fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
@@ -617,6 +617,20 @@ function showRuntimeError(e){
  status.textContent='RUNTIME ERROR · '+(e&&e.message?e.message:String(e));
  act.textContent='Simulation stopped — check runtime error above';
 }
+function updateDebugHud(){
+ const lf=simPaused?logicFrame:{state:state,time:stateTicks,anim:current,elem:fi+1,ctrl:runtimeCtrl};
+ const def=stateDef();
+ act.textContent='State '+lf.state+
+   ' · TIME '+lf.time+
+   ' · ANIM '+lf.anim+
+   ' · ELEM '+lf.elem+
+   ' · F '+p1Facing+
+   ' · X '+posX.toFixed(1)+
+   ' · Y '+posY.toFixed(1)+
+   ' · VX '+vx.toFixed(1)+
+   ' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+
+   ' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
+}
 function loop(){
  requestAnimationFrame(loop);
  if(runtimeFailed)return;
@@ -628,7 +642,7 @@ function loop(){
    simStep();
    stepRequested=false;
   }
-  updateCamera();r.render(s,c);draw();drawMars();drawCollision();
+  updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawCollision();
  }catch(e){showRuntimeError(e)}
 }
 requestAnimationFrame(loop);
