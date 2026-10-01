@@ -1,6 +1,7 @@
 # Venus Source Audit V1 — 下一步驗收
 
-## 最新進度：0.23.17
+## 最新進度：0.23.18
+修正 P2 出拳入口依賴 P1 ctrl，同 tick X/U 可同步開始；State 200 地面相同 priority=1, Hit 支援互中，雙方 hitpause／hitshake／恢復已驗證，詳見 NOTES_02318.md。完整 CMD、其他 priority／投技／空中受擊仍未實作。以下為歷史進度。
 P2 新增 J/L 地面前後行與手動後防，U 出拳保留；「控制」可切回 Dummy。雙方使用同一既有 controller handlers，詳見 NOTES_02317.md。P2 蹲／跳與完整 CMD、同時命中尚未實作，下一切片按來源相依順序補齊。以下為歷史進度。
 兩邊 State 200 共用 AST／trigger 評估，新增 U 單次 P2 出拳測試鍵，詳見 NOTES_02316.md。未新增 P2 移動或完整 CMD；下一切片仍為共用 controller handlers 與 P2 移動輸入。以下為歷史進度。
 右上「P2 出拳測試」接通 P2→P1 地面命中／站防／恢復與角落推退，詳見 NOTES_02315.md。僅單次測試輸入，未加入 P2 移動／完整 CMD 或 simultaneous-hit 判定。下一切片應統一雙方完整 controller／input context；以下為歷史進度。

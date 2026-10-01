@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.17 Shared Controllers / P2 Walk M1</title>
+<title>Prototype 0.23.18 Independent Input / Punch Trade M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.17 · Shared Controllers / P2 Walk M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD shared-controllers-p2-walk-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.18 · Independent Input / Punch Trade M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD independent-input-punch-trade-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / J-L-U</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="U / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.17 · Shared Controllers / P2 Walk M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.18 · Independent Input / Punch Trade M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -702,11 +702,11 @@ function applyP1HitM1(frame){
  enterGroundReactionState(p1Reaction,result.state);syncP1Reaction();
  playSourceSound(result.sound,6);
 }
-function resolveP2PunchM1(){
+function resolveP2PunchM1(resolveHit=true){
  if(p2.state!==200||!p2.attackFrame)return;
  const defender={...liveP1(),facing:p1Facing};
- if(!p1Reaction&&stateDef()?.type==='S'&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
- else if(p1Reaction&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
+ if(resolveHit&&!p1Reaction&&stateDef()?.type==='S'&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
+ else if(resolveHit&&p1Reaction&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
  p2.time++;advanceFighterAirOneTick(p2);
 }
 function stepGroundReactionM1(fighter,guarding){
@@ -741,7 +741,7 @@ function stepGroundReactionM1(fighter,guarding){
  fighter.time++;if(fighter.state!==5000)advanceFighterAirOneTick(fighter);
 }
 function stepP2M1(){
- if(p2PunchRequested){p2PunchRequested=false;if(p2.ctrl&&p2.y===0&&posY===0&&runtimeCtrl){if(p2.x!==posX)p2.facing=p2.x<posX?1:-1;enterP2State(200)}}
+ if(p2PunchRequested){p2PunchRequested=false;const ready=p2.ctrl||([200,230].includes(p2.state)&&p2.moveType==='I');if(ready&&p2.y===0&&posY===0){if(p2.x!==posX)p2.facing=p2.x<posX?1:-1;enterP2State(200);return}}
  if(p2.state===200){stepP2AttackM1();return}
  if(p2ControlMode==='keyboard'&&p2.ctrl&&[0,20,130,131].includes(p2.state)){stepP2WalkM1();return}
  stepGroundReactionM1(p2,p2GuardMode());
@@ -880,14 +880,14 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.17',build:'shared-controllers-p2-walk-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.18',build:'independent-input-punch-trade-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.17-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.18-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -900,7 +900,7 @@ function simStep(){
 }
 function simStepCore(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
- if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--;p1Reaction.time++}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}else if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
+ if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--;p1Reaction.time++}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
  const cornerPush=checkCornerPushM1();
@@ -908,6 +908,7 @@ function simStepCore(){
  stepP2M1();
  if(p1Reaction){
   sampleInputHistory();stepGroundReactionM1(p1Reaction,canonicalNow().B?'stand':'none');syncP1Reaction();
+  posX+=cornerPush.distance;cornerPushVelocity*=cornerPush.multiplier;if(Math.abs(cornerPushVelocity)<battleDat.cornerpushProfile.stopThreshold)cornerPushVelocity=0;
   playerPushM1();clampFighterScreenM1();if(p1Reaction)p1Reaction.x=posX;
   resolveP2PunchM1();logicFrame={...liveP1(),p2:{...p2}};return;
  }
@@ -936,8 +937,16 @@ function simStepCore(){
      physics:ld?.physics||'',type:ld?.type||'',moveType:runtimeMoveType,
      x:posX,y:posY,hitDef:activeHitDef?{...activeHitDef}:null};
    const hit=resolveCollisionM1(frame);
+   const reverseFrame=p2.state===200&&p2.attackFrame?.hitDef?{...p2.attackFrame,hitDef:{...p2.attackFrame.hitDef,params:{...p2.attackFrame.hitDef.params}}}:null;
+   const reverseContact=!!reverseFrame&&ld?.type==='S'&&resolveFighterCollisionM1(reverseFrame,{...frame,facing:p1Facing}).contact&&p1LastHitKey!==reverseFrame.hitDef.hitKey;
+   const forwardContact=hit.contact&&p2.lastHitKey!==frame.hitDef?.hitKey;
+   if(forwardContact&&reverseContact){
+    const priorities=[frame.hitDef.params.priority,reverseFrame.hitDef.params.priority].map(value=>String(value).split(',').map(part=>part.trim()));
+    if(priorities[0][0]!==priorities[1][0]||priorities.some(priority=>priority[1].toLowerCase()!=='hit'))throw Error('Unsupported simultaneous HitDef priority');
+   }
    collisionContact=hit.contact;
    if(hit.contact)applyP2HitM1(frame.hitDef);
+   if(reverseContact)applyP1HitM1(reverseFrame);
    logicFrame={...frame,facing:p1Facing,vx,vy,life:p1Life,sprPriority:p1SprPriority,p2:{...p2},overlap:hit.overlap,contact:hit.contact};
  }
  // A newly entered state must get a real Time=0 evaluation on the next tick.
@@ -948,7 +957,7 @@ function simStepCore(){
  posX=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,posX));
  // Dual-fighter screen bound is handled by clampFighterScreenM1().
  clampFighterScreenM1();
- resolveP2PunchM1();
+ resolveP2PunchM1(false);
  if(p1Reaction)logicFrame={...liveP1(),p2:{...p2}};
 }
 

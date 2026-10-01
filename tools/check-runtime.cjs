@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.17');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.18');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.17-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.18-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -222,7 +222,7 @@ const server=http.createServer((request,response)=>{
  for(const facing of [-1,1])for(const guarded of [false,true]){
   await run(`simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=${facing*140};posY=0;p1Facing=${-facing};vx=0;vy=0;p2.x=0;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0);input.left=${guarded&&facing===-1};input.right=${guarded&&facing===1};`);
   await page.locator('#p2Punch').click();
-  for(let tick=0;tick<4;tick++)await step();
+  for(let tick=0;tick<5;tick++)await step();
   assert.equal(await run('p1Life'),guarded?1000:980);
   assert.ok(await run('!!p1Reaction'),JSON.stringify(await run('({facing:p1Facing,posX,state,p2,p1Life,collision:resolveFighterCollisionM1(p2.attackFrame,liveP1())})')));
   assert.equal(await run('p1Reaction.getHit.attackerId'),2);
@@ -243,7 +243,7 @@ const server=http.createServer((request,response)=>{
  }
  for(const facing of [-1,1])for(const guarded of [false,true]){
   await run(`simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=${facing*2850};posX=${facing*3430};posY=0;p1Facing=${-facing};vx=0;vy=0;p2.x=${facing*3290};p2.y=0;p2.vx=0;p2.facing=${facing};p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0);input.left=${guarded&&facing===-1};input.right=${guarded&&facing===1};p2PunchRequested=true;`);
-  for(let tick=0;tick<4;tick++)await step();
+  for(let tick=0;tick<5;tick++)await step();
   assert.equal(await run('p1Life'),guarded?1000:980);
   const attackerX=await run('p2.x'),push=facing*(guarded?-28:-24);
   assert.equal(await run('p2.cornerPushVelocity'),push);
@@ -301,7 +301,7 @@ const server=http.createServer((request,response)=>{
  await run("simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=140;posY=0;p1Facing=-1;p2.x=0;p2.y=0;p2.facing=1;p2.attackPause=0;p2.cornerPushVelocity=0;p2.hitShake=0;enterIRState(0);enterP2State(0)");
  await page.keyboard.down('u');assert.equal(await run('p2PunchRequested'),true);
  await step();assert.equal(await run('combatTraceExport().frames.at(-1).physicalInput.p2Punch'),true);
- for(let tick=0;tick<3;tick++)await step();assert.equal(await run('p1Life'),980);
+ for(let tick=0;tick<4;tick++)await step();assert.equal(await run('p1Life'),980);
  for(let tick=0;tick<45;tick++)await step();
  assert.equal(await run('p2.state'),0);await page.keyboard.down('u');
  assert.equal(await run('p2PunchRequested'),false);await page.keyboard.up('u');
@@ -395,6 +395,43 @@ const server=http.createServer((request,response)=>{
   assert.equal(await run('p2.x'),facing*3430);
  }
  await run("resetPlayerInput();setP2ControlMode('dummy')");
+ const simultaneous=[];
+ for(const facing of [-1,1])for(const order of [['x','u'],['u','x']]){
+  await run(`simPaused=false;resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=${-facing*250};posY=0;p1Facing=${facing};vx=0;vy=0;p2.x=${facing*250};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${-facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;p2.lastHitKey=null;enterIRState(0);enterP2State(0)`);
+  for(const key of order)await page.keyboard.down(key);
+  await step();assert.equal(await run('state'),200);assert.equal(await run('p2.state'),200);
+  assert.equal(await run('stateTicks'),0);assert.equal(await run('p2.time'),0);
+  for(let tick=0;tick<10;tick++){await step();assert.equal(await run('stateTicks'),await run('p2.time'))}
+  assert.equal(await run('p1Life'),1000);assert.equal(await run('p2.life'),1000);
+  for(let tick=0;tick<10;tick++)await step();assert.equal(await run('state'),0);assert.equal(await run('p2.state'),0);
+  for(const key of order)await page.keyboard.up(key);
+  simultaneous.push({facing,order:order.join('+'),result:'both-start'});
+ }
+ await run("resetPlayerInput();p1Reaction=null;p1HitPause=0;cameraX=0;posX=-250;posY=0;p1Facing=1;p2.x=250;p2.y=0;p2.facing=-1;p2.hitShake=0;p2.attackPause=0;enterIRState(0);enterP2State(0)");
+ await page.keyboard.down('x');await step();assert.equal(await run('runtimeCtrl'),0);
+ await page.keyboard.down('u');await step();assert.equal(await run('p2.state'),200);assert.equal(await run('state'),200);
+ await page.keyboard.up('x');await page.keyboard.up('u');
+ const punchTrades=[];
+ for(const facing of [-1,1])for(const order of [['x','u'],['u','x']]){
+  await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=${facing};vx=0;vy=0;p2.x=${facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${-facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;p2.lastHitKey=null;enterIRState(0);enterP2State(0)`);
+  for(const key of order)await page.keyboard.down(key);
+  for(let tick=0;tick<5;tick++)await step();
+  assert.equal(await run('p1Life'),980);assert.equal(await run('p2.life'),980);
+  assert.equal(await run('state'),5000);assert.equal(await run('p2.state'),5000);
+  assert.equal(await run('p1Reaction.getHit.attackerId'),2);assert.equal(await run('p2.getHit.attackerId'),1);
+  const first=await run('posX'),second=await run('p2.x'),firstOffsets=[],secondOffsets=[];
+  for(let tick=0;tick<8;tick++){
+   await step();assert.equal(await run('posX'),first);assert.equal(await run('p2.x'),second);
+   firstOffsets.push(await run('hitShakeOffset(liveP1())'));secondOffsets.push(await run('hitShakeOffset(p2)'));
+  }
+  assert.ok(firstOffsets.includes(-facing*2));assert.ok(secondOffsets.includes(facing*2));
+  assert.equal(await run('p1Reaction.hitShake'),0);assert.equal(await run('p2.hitShake'),0);
+  for(const key of order)await page.keyboard.up(key);
+  for(let tick=0;tick<45;tick++)await step();
+  assert.equal(await run('p1Life'),980);assert.equal(await run('p2.life'),980);
+  assert.equal(await run('state'),0);assert.equal(await run('p2.state'),0);assert.equal(await run('p1Reaction'),null);
+  punchTrades.push({facing,order:order.join('+'),life:[980,980]});
+ }
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',whiff:'PASS',browserErrors:errors}));
+ console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
