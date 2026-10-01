@@ -13,10 +13,11 @@
 
 ## 作者補充及 0.23.8
 - [x] 0.23.9：CLSN viewer crash、sprpriority 排層、5001 轉 A5005 的一幀回圈、統一 P1/P2 HUD。
+- [x] 0.23.9 使用者 PASS；0.23.10 補單 target 的地面 hit／guard cornerpush、近角落距離扣除、legacy 0.7 衰減。
 - [x] 122,0／951,99 作者確認是刻意空影格，保留 ticks；空中無防禦。
 - [x] 645／投技 800、801 未完成，保留參考 code；175／5500 保留 source fallback。
 - [x] State 200 原 CNS controllers、AIR Clsn、地面 hit／guard／hitpause／恢復接入 0.23.8 M1。
-- [ ] 雙向角色執行器、完整 cornerpush、hit spark、空中受擊仍待後續；詳見 NOTES_0238.md。
+- [ ] 雙向角色執行器、多 target／特殊狀態 cornerpush、hit spark、空中受擊仍待後續；詳見 NOTES_02310.md。
 
 ## P0 — 來源一致性及匯入驗收
 - [x] 對照 IKEMEN 確認 3 個 904,-1 為刻意空影格；匯入器已修正誤報，保留影格時間。

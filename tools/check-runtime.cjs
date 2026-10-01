@@ -139,6 +139,19 @@ const server=http.createServer((request,response)=>{
  assert.match(hudText,/P2_S5001_T4_A5000_E2_F-1_X\+100\.0_Y\+0\.0_VX-16\.0_VY\+0\.0_HP980/);
  await page.screenshot({path:'outputs/runtime-0239-clsn-hud.png'});
  await run('simPaused=false');
+ for(const direction of [-1,1])for(const mode of ['none','stand']){
+  await run(`resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=${direction*2850};posX=${direction*3290};posY=0;p1Facing=${direction};p2.x=${direction*3430};p2.y=0;p2.facing=${-direction};p2.life=1000;p2.getHit=null;p2.lastHitKey=null;enterP2State(0);document.querySelector('#p2Guard').value='${mode}';enterIRState(200);`);
+  for(let tick=0;tick<4;tick++)await step();
+  assert.equal(await run('cornerPushVelocity'),direction*(mode==='none'?-24:-28));
+  const startX=await run('posX');for(let tick=0;tick<8;tick++)await step();assert.equal(await run('posX'),startX);
+  await step();assert.equal(await run('posX'),startX+direction*(mode==='none'?-24:-28));
+  for(let tick=0;tick<35;tick++){const frame=await step();assert.ok(Math.abs(frame.p2.x-direction*3430)<0.00001)}
+  assert.equal(await run('cornerPushVelocity'),0);
+ }
+ await run("cameraX=0;p2.x=570;p2.vx=16;p2.moveType='H';p2.type='S';p2.getHit={attackerId:1};cornerPushVelocity=-24;cornerPushMultiplier=.7");
+ assert.deepEqual(await run('checkCornerPushM1()'),{distance:-14,multiplier:.7});
+ await run('p2.x=200');assert.equal(await run('checkCornerPushM1().distance'),0);
+ await run("p2.moveType='I'");assert.equal(await run('checkCornerPushM1().multiplier'),0);
  assert.deepEqual(errors,[]);
  console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

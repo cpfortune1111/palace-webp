@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.9 Combat Debug / Priority Fix M1</title>
+<title>Prototype 0.23.10 Ground Cornerpush M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.9 · Combat Debug / Priority Fix M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD combat-debug-priority-fix-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.10 · Ground Cornerpush M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD ground-cornerpush-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label>P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.9 · Combat Debug / Priority Fix M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.10 · Ground Cornerpush M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -95,7 +95,7 @@ function playSourceSound(value,channel=0){
  const sound=new Audio('./battle-sounds/'+match[1]+'-'+match[2]+'.wav');soundChannels.set(key,sound);sound.play().catch(()=>{});
 }
 Promise.all([
- fetch('./venus_battle200.json?v=0239',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_battle200.json?v=02310',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
  fetch('./venus_guard.json?v=0238',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
  new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=0238'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
@@ -134,6 +134,7 @@ const input={left:false,right:false,up:false,down:false,jump:false,neutralVertic
 let vx=0,vy=0,posX=-280,posY=0,p1Facing=1,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 let p1SprPriority=0,p1Life=1000;
+let cornerPushVelocity=0,cornerPushMultiplier=0.7;
 let activeHitDef=null,hitDefSerial=0,stateEntrySerial=0;
 let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',x:-280,y:0,hitDef:null,overlap:false,contact:false};
 // StageTraining.def camera slice. Keep the locked 1.860 / -60 / ground 660 calibration as the base.
@@ -570,7 +571,10 @@ function applyP2HitM1(hitDef){
  if(params.p1sprpriority!==undefined)p1SprPriority=Number(params.p1sprpriority);
  p2.sprPriority=Number(params.p2sprpriority??battleDat.hitPriorityDefaults.defender);
  const prefix=guarded?'guard':'ground',pause=pair(params[guarded?'guard.pausetime':'pausetime']||params.pausetime);
- p2.getHit={damage:dmg,guarded,animtype:0,groundtype:1,xvel:Number(params[prefix+'.velocity']),slidetime:Number(params[prefix+'.slidetime']),hittime:Number(params[prefix+'.hittime']),crouch:guarded&&guardMode==='crouch'};
+ p2.getHit={attackerId:1,damage:dmg,guarded,animtype:0,groundtype:1,xvel:Number(params[prefix+'.velocity']),slidetime:Number(params[prefix+'.slidetime']),hittime:Number(params[prefix+'.hittime']),crouch:guarded&&guardMode==='crouch'};
+ cornerPushVelocity=Number(params[prefix+'.cornerpush.veloff'])*p1Facing;
+ cornerPushMultiplier=Number(params[prefix+'.cornerpush.velmul']??battleDat.cornerpushProfile.defaultMultiplier);
+ if(!Number.isFinite(cornerPushVelocity)||!Number.isFinite(cornerPushMultiplier))throw Error('Invalid cornerpush parameters');
  p1HitPause=pause[0];p2.hitShake=pause[1];p2.hitTime=p2.getHit.hittime;
  moveContact=1;moveGuarded=guarded?1:0;
  enterP2State(guarded?(p2.getHit.crouch?152:150):5000);
@@ -627,9 +631,23 @@ function resolveCollisionM1(frame){
 // is suppressed by noAutoTurn. This Venus-vs-Venus slice uses Venus [Size]
 // ground.back/front=40 and equal factors. Full dynamic Clsn2 gating is deferred.
 const VENUS_GROUND_BACK=40,VENUS_GROUND_FRONT=40;
-function clampFighterScreenM1(){
+function fighterScreenLimits(){
  const left=Math.max(STAGE_PLAYER.leftbound,cameraX-640+STAGE_PLAYER.screenleft);
  const right=Math.min(STAGE_PLAYER.rightbound,cameraX+640-STAGE_PLAYER.screenright);
+ return {left,right};
+}
+function checkCornerPushM1(){
+ if(cornerPushVelocity===0)return {distance:0,multiplier:1};
+ if(p2.moveType!=='H'||p2.getHit?.attackerId!==1)return {distance:0,multiplier:0};
+ const multiplier=cornerPushMultiplier<0?constVal(p2.type==='C'?'movement.crouch.friction':'movement.stand.friction'):cornerPushMultiplier;
+ const limits=fighterScreenLimits(),next=p2.x+p2.vx;
+ if(next>limits.left&&next<limits.right)return {distance:0,multiplier};
+ const targetMove=Math.max(limits.left,Math.min(limits.right,next))-p2.x;
+ const distance=Math.abs(targetMove)<Math.abs(cornerPushVelocity)?cornerPushVelocity-Math.sign(cornerPushVelocity)*Math.abs(targetMove):0;
+ return {distance,multiplier};
+}
+function clampFighterScreenM1(){
+ const {left,right}=fighterScreenLimits();
  posX=Math.max(left,Math.min(right,posX));
  p2.x=Math.max(left,Math.min(right,p2.x));
 }
@@ -689,6 +707,7 @@ function simStep(){
  if(p1HitPause>0){sampleInputHistory();p1HitPause--;if(p2.hitShake>0)p2.hitShake--;return}
  randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
+ const cornerPush=checkCornerPushM1();
  stepP2M1();
  // Input must be sampled before any command query on this simulation tick.
  sampleInputHistory();
@@ -696,6 +715,9 @@ function simStep(){
  const tickState=state;
  let def=stateDef();
  applyPhysics(def);
+ posX+=cornerPush.distance;
+ cornerPushVelocity*=cornerPush.multiplier;
+ if(Math.abs(cornerPushVelocity)<battleDat.cornerpushProfile.stopThreshold)cornerPushVelocity=0;
  // State controllers run before command dispatch so State 52 CtrlSet(Time=3)
  // can grant control according to the original CNS.
  def=stateDef();
@@ -770,7 +792,7 @@ function updateDebugHud(){
   '_F'+(fighter.facing<0?'-1':'+1')+'_X'+signed(fighter.x)+'_Y'+signed(fighter.y)+
   '_VX'+signed(localVX)+'_VY'+signed(fighter.vy)+'_HP'+fighter.life;
  const first=displayP1(),second=displayP2();
- act.textContent=row(1,first,first.vx)+'\n'+row(2,second,second.vx*second.facing)+'\nVX=CNS/local · CAM '+signed(cameraX)+','+signed(cameraY);
+ act.textContent=row(1,first,first.vx)+'\n'+row(2,second,second.vx*second.facing)+'\nVX=CNS/local · CP(world) '+signed(cornerPushVelocity)+' · CAM '+signed(cameraX)+','+signed(cameraY);
 }
 let simulationAccumulator=0;
 function advanceSimulation(dt){

@@ -59,6 +59,8 @@ for state in states['states']:
         if match:
             priorities[str(state['id'])] = int(match[1])
 bundle = {'statePriorities': priorities, 'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
+          'cornerpushProfile': {'legacy': True, 'defaultMultiplier': 0.7, 'stopThreshold': 4,
+                                'basis': 'Venus DEF has no ikemenversion; IKEMEN legacyCornerpush defaults and 1280 localcoord originLs=0.25'},
           'state200': {'type': 'S', 'physics': 'S', 'anim': 200, 'ctrl': 0, 'moveType': 'A',
                        'sprpriority': priorities['200'],
                        'juggle': 1, 'velset': [0, 0], 'controllers': controllers}, 'collision': actions,
