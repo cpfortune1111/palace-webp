@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.16 Shared Expression / P2 Key M1</title>
+<title>Prototype 0.23.17 Shared Controllers / P2 Walk M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,9 +37,9 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.16 · Shared Expression / P2 Key M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD shared-expression-p2-key-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.17 · Shared Controllers / P2 Walk M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD shared-controllers-p2-walk-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
-<div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label>P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="U / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
+<div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / J-L-U</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="U / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.16 · Shared Expression / P2 Key M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.17 · Shared Controllers / P2 Walk M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -135,6 +135,8 @@ let vx=0,vy=0,posX=-280,posY=0,p1Facing=1,state=0,prevState=0,runtimeCtrl=1,runt
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
 let p1SprPriority=0,p1Life=1000;
 let p1Reaction=null,p2PunchRequested=false,p1LastHitKey=null;
+const p2Input={left:false,right:false},p2HeldKeys=new Set();
+let p2ControlMode='dummy';
 let cornerPushVelocity=0,cornerPushMultiplier=0.7;
 let activeHitDef=null,hitDefSerial=0,stateEntrySerial=0;
 let logicFrame={state:0,time:0,anim:0,elem:1,ctrl:0,physics:'S',type:'S',moveType:'I',x:-280,y:0,hitDef:null,overlap:false,contact:false};
@@ -240,6 +242,7 @@ let inputPreference='auto',activeInputMode='';
 function initialInputMode(){return coarsePointer.matches||/Android|iPhone|iPad|iPod/i.test(deviceText)||inputOS==='iOS / iPadOS'?'touch':'keyboard'}
 function resetPlayerInput(){
  p2PunchRequested=false;
+ p2HeldKeys.clear();p2Input.left=p2Input.right=false;
  heldKeys.clear();stickPointer=null;clearStick();input.x=false;xHeld=false;consumedXPress=false;
  atkX.classList.remove('pressed');inputHistory.length=0;commandBuffer.clear();
  for(const name of Object.keys(prevCanonical))prevCanonical[name]=false;
@@ -247,7 +250,7 @@ function resetPlayerInput(){
 function setInputMode(mode){
  if(activeInputMode!==mode){resetPlayerInput();activeInputMode=mode}
  document.body.dataset.inputMode=mode;
- inputHint.textContent=inputOS+' · '+(mode==='keyboard'?'鍵盤：↑↓←→ / WASD · X 攻擊 · U：P2 出拳測試':'觸控：左搖桿 · X 攻擊');
+ inputHint.textContent=inputOS+' · '+(mode==='keyboard'?'鍵盤：↑↓←→ / WASD · X 攻擊 · P2：J/L 移動 · U 出拳':'觸控：左搖桿 · X 攻擊');
 }
 function useTouchInput(event){
  if(inputPreference==='keyboard')return false;
@@ -261,6 +264,12 @@ function syncKeyboardInput(){
  if(!input.x&&!xHeld)consumedXPress=false;
 }
 addEventListener('keydown',event=>{
+ if(event.code==='KeyJ'||event.code==='KeyL'){
+  if(editableTarget(event.target)||event.ctrlKey||event.metaKey||event.altKey||inputPreference==='touch')return;
+  event.preventDefault();if(inputPreference==='auto')setInputMode('keyboard');
+  if(p2ControlMode!=='keyboard')setP2ControlMode('keyboard');
+  p2HeldKeys.add(event.code);syncP2KeyboardInput();return;
+ }
  if(event.code==='KeyU'){
   if(event.repeat||editableTarget(event.target)||event.ctrlKey||event.metaKey||event.altKey||inputPreference==='touch')return;
   event.preventDefault();if(inputPreference==='auto')setInputMode('keyboard');requestP2Punch();return;
@@ -269,7 +278,7 @@ addEventListener('keydown',event=>{
  event.preventDefault();if(inputPreference==='auto')setInputMode('keyboard');
  heldKeys.add(event.code);syncKeyboardInput();
 });
-addEventListener('keyup',event=>{if(!heldKeys.has(event.code))return;event.preventDefault();heldKeys.delete(event.code);syncKeyboardInput()});
+addEventListener('keyup',event=>{if(p2HeldKeys.has(event.code)){event.preventDefault();p2HeldKeys.delete(event.code);syncP2KeyboardInput();return}if(!heldKeys.has(event.code))return;event.preventDefault();heldKeys.delete(event.code);syncKeyboardInput()});
 addEventListener('blur',()=>resetPlayerInput());
 document.addEventListener('visibilitychange',()=>{if(document.hidden)resetPlayerInput()});
 document.addEventListener('pointerdown',event=>{if(event.pointerType==='touch'&&inputPreference==='auto'&&!event.target.closest('#inputPanel'))setInputMode('touch')},true);
@@ -434,34 +443,54 @@ function controllerTriggered(c,context=null){
  const groups=Object.values(c.triggers);return !groups.length||groups.some(g=>g.every(x=>!!evalM1(x,context)));
 }
 function paramM1(v){if(typeof v==='number')return v;if(v===undefined||v===null)return v;return evalM1(String(v))}
-function runController(c){
- const generic=controllerTriggered(c);if(generic===false)return;
- if(generic===null){
-  if(c.trigger==='AnimDone'&&!animDone())return;
-  if(c.trigger==='VelYPositive'&&!(vy>0))return;
-  if(c.trigger==='PosYAtGround'&&!(posY>=0))return;
-  if(c.trigger==='TimeEquals'&&stateTicks!==c.time)return;
+const p1ControllerBinding={
+ get x(){return posX},set x(value){posX=value},get y(){return posY},set y(value){posY=value},
+ get vx(){return vx},set vx(value){vx=value},get vy(){return vy},set vy(value){vy=value},
+ get ctrl(){return runtimeCtrl},set ctrl(value){runtimeCtrl=value},
+ get moveType(){return runtimeMoveType},set moveType(value){runtimeMoveType=value},
+ get time(){return stateTicks},get anim(){return current},set anim(value){current=value},
+ get elem(){return fi+1},set elem(value){fi=value-1},get elemTick(){return ticks},set elemTick(value){ticks=value},
+ vars:runtimeVar,sysvars:runtimeSysVar
+};
+function executeControllerM1(controller,binding,context,adapter){
+ const triggered=controllerTriggered(controller,context);if(triggered===false)return;
+ if(triggered===null){
+  if(controller.trigger==='AnimDone'&&!adapter.animDone())return;
+  if(controller.trigger==='VelYPositive'&&!(binding.vy>0))return;
+  if(controller.trigger==='PosYAtGround'&&!(binding.y>=0))return;
+  if(controller.trigger==='TimeEquals'&&binding.time!==controller.time)return;
  }
- const p=c.params||c;
- switch(c.type){
-  case 'PlaySnd':playSourceSound(p.value,p.channel||0);break;
+ const params=controller.params||controller;
+ const value=expression=>Number(evalM1(expression,context));
+ switch(controller.type){
+  case 'PlaySnd':adapter.playSound(params.value,Number(params.channel||0));break;
   case 'VarSet':{
-   const m=String(p.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!m)throw new Error('M2 VarSet target '+p.target);
-   const arr=m[1].toLowerCase()==='sysvar'?runtimeSysVar:runtimeVar;arr[Number(m[2])]=Number(paramM1(p.value));break}
-  case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x));if(p.y!==undefined)vy=Number(paramM1(p.y));break;
-  case 'VelAdd':if(p.x!==undefined)vx+=Number(paramM1(p.x));if(p.y!==undefined)vy+=Number(paramM1(p.y));break;
-  case 'VelMul':if(p.x!==undefined)vx*=Number(paramM1(p.x));if(p.y!==undefined)vy*=Number(paramM1(p.y));break;
-  case 'PosSet':if(p.x!==undefined)posX=Number(paramM1(p.x));if(p.y!==undefined)posY=Number(paramM1(p.y));break;
-  case 'PosAdd':if(p.x!==undefined)posX+=Number(paramM1(p.x));if(p.y!==undefined)posY+=Number(paramM1(p.y));break;
-  case 'CtrlSet':runtimeCtrl=Number(paramM1(p.value));break;
-  case 'StateTypeSet':if(p.moveType!==undefined)runtimeMoveType=String(p.moveType).toUpperCase();break;
-  case 'HitDef':
-   activeHitDef={serial:++hitDefSerial,hitKey:stateEntrySerial+':'+state+':'+current,state,anim:current,elem:fi+1,tick:inputTick,params:{...p}};
+   const match=String(params.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!match)throw Error('M2 VarSet target '+params.target);
+   const variables=match[1].toLowerCase()==='sysvar'?binding.sysvars:binding.vars;
+   variables[Number(match[2])]=value(params.value);break;
+  }
+  case 'VelSet':case 'VelAdd':case 'VelMul':
+   for(const axis of ['x','y'])if(params[axis]!==undefined){
+    const field='v'+axis,number=value(params[axis]);
+    binding[field]=controller.type==='VelSet'?number:controller.type==='VelAdd'?binding[field]+number:binding[field]*number;
+   }
    break;
-  case 'ChangeAnim':current=Number(paramM1(p.value));fi=0;ticks=0;break;
-  case 'ChangeState':enterIRState(Number(paramM1(p.value)));if(p.ctrl!==undefined)runtimeCtrl=Number(paramM1(p.ctrl));break;
-  default:throw new Error('M2 unsupported controller: '+c.type);
+  case 'PosSet':case 'PosAdd':
+   for(const axis of ['x','y'])if(params[axis]!==undefined)binding[axis]=controller.type==='PosSet'?value(params[axis]):binding[axis]+value(params[axis]);
+   break;
+  case 'CtrlSet':binding.ctrl=value(params.value);break;
+  case 'StateTypeSet':if(params.moveType!==undefined)binding.moveType=String(params.moveType).toUpperCase();break;
+  case 'HitDef':adapter.hitDef(params);break;
+  case 'ChangeAnim':binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
+  case 'ChangeState':adapter.changeState(value(params.value));if(params.ctrl!==undefined)binding.ctrl=value(params.ctrl);break;
+  default:throw Error('M2 unsupported controller: '+controller.type);
  }
+}
+function runController(controller){
+ executeControllerM1(controller,p1ControllerBinding,null,{
+  animDone,playSound:playSourceSound,changeState:enterIRState,
+  hitDef:params=>{activeHitDef={serial:++hitDefSerial,hitKey:stateEntrySerial+':'+state+':'+current,state,anim:current,elem:fi+1,tick:inputTick,params:{...params}}}
+ });
 }
 function applyPhysics(def){
  if(!def)return;
@@ -560,6 +589,7 @@ function advanceFighterAirOneTick(f){
  }
 }
 function enterGroundReactionState(fighter,n){
+ fighter.prevState=fighter.state;
  if(battleDat?.statePriorities?.[String(n)]!==undefined)fighter.sprPriority=battleDat.statePriorities[String(n)];
  fighter.state=n;fighter.time=0;fighter.elem=1;fighter.elemTick=0;
  if(n===0){fighter.type='S';fighter.moveType='I';fighter.physics='S';fighter.ctrl=1;fighter.anim=0}
@@ -571,11 +601,12 @@ function enterGroundReactionState(fighter,n){
 }
 function enterP2State(n){
  enterGroundReactionState(p2,n);p2.activeHitDef=null;p2.attackFrame=null;
+ if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
  if(n===200){const def=battleDat.state200;p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;p2.anim=def.anim;p2.vx=def.velset[0]*p2.facing;p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveGuarded=0}
 }
 function applyP2HitM1(hitDef){
  if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
- const params=hitDef.params,guardMode=document.querySelector('#p2Guard').value;
+ const params=hitDef.params,guardMode=p2GuardMode();
  const result=resolveGroundHitM1({id:1,facing:p1Facing},p2,params,guardMode);
  p2.lastHitKey=hitDef.hitKey;
  p2.life=result.life;p2.getHit=result.getHit;p2.sprPriority=result.defenderPriority;
@@ -613,7 +644,7 @@ function fighterExpressionContext(fighter,opponent,commands={}){
    const key=name.toLowerCase().replace(/\s+/g,' ');
    const values={time:fighter.time,anim:fighter.anim,animelem:fighter.elem,ctrl:fighter.ctrl,movetype:fighter.moveType,statetype:fighter.type,
     stateno:fighter.state,prevstateno:fighter.prevState||0,p2statetype:opponent.type,movecontact:fighter.moveContact||0,moveguarded:fighter.moveGuarded||0,
-    random:fighter.randomValue,ailevel:0,animtime:fighter.time>=actionDuration(fighter.anim)?0:-1,'pos x':fighter.x,'pos y':fighter.y,
+    random:fighter.randomValue,ailevel:0,animtime:([5,6].includes(fighter.anim)?fighter.turnTime||0:fighter.time)>=actionDuration(fighter.anim)?0:-1,'pos x':fighter.x,'pos y':fighter.y,
     'vel x':fighter.vx*fighter.facing,'vel y':fighter.vy};
    if(!(key in values))throw Error('AST query '+name);return values[key];
   }};
@@ -621,24 +652,31 @@ function fighterExpressionContext(fighter,opponent,commands={}){
 function evalFighterExpr(expression,fighter,opponent,commands={}){
  return evalM1(expression,fighterExpressionContext(fighter,opponent,commands));
 }
+function p2Commands(){
+ const forward=p2.facing>0?p2Input.right:p2Input.left,back=p2.facing>0?p2Input.left:p2Input.right;
+ return {holdfwd:forward&&!back,holdback:back&&!forward};
+}
+function runP2ControllerM1(controller,commands=p2Commands()){
+ p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);
+ const binding={
+  get x(){return p2.x},set x(value){p2.x=value},get y(){return p2.y},set y(value){p2.y=value},
+  get vx(){return p2.vx*p2.facing},set vx(value){p2.vx=value*p2.facing},get vy(){return p2.vy},set vy(value){p2.vy=value},
+  get ctrl(){return p2.ctrl},set ctrl(value){p2.ctrl=value},get moveType(){return p2.moveType},set moveType(value){p2.moveType=value},
+  get time(){return p2.time},get anim(){return p2.anim},set anim(value){p2.anim=value},
+  get elem(){return p2.elem},set elem(value){p2.elem=value},get elemTick(){return p2.elemTick},set elemTick(value){p2.elemTick=value},
+  vars:p2.vars,sysvars:p2.sysvars
+ };
+ executeControllerM1(controller,binding,fighterExpressionContext(p2,{type:p1Reaction?.type||stateDef()?.type||'S'},commands),{
+  animDone:()=>p2.time>=actionDuration(p2.anim),playSound:(value,channel)=>playSourceSound(value,channel+4),
+  changeState:next=>{if(![0,20,200].includes(next))throw Error('P2 ground lab unsupported state '+next);enterP2State(next)},
+  hitDef:params=>{p2.activeHitDef={hitKey:'2:'+p2.attackSerial,params:{...params}}}
+ });
+}
 function stepP2AttackM1(){
  p2.x+=p2.vx;p2.vx*=constVal('movement.stand.friction');p2.randomValue=Math.floor(Math.random()*1000);
- const opponent={type:p1Reaction?.type||stateDef()?.type||'S'};
  for(const controller of battleDat.state200.controllers){
-  if(!controllerTriggered(controller,fighterExpressionContext(p2,opponent)))continue;
-  const params=controller.params;
-  switch(controller.type){
-   case 'PlaySnd':playSourceSound(params.value,Number(params.channel||0)+4);break;
-   case 'HitDef':p2.activeHitDef={hitKey:'2:'+p2.attackSerial,params:{...params}};break;
-   case 'VarSet':p2.vars??=Array(60).fill(0);p2.vars[Number(params.target.match(/\d+/)[0])]=Number(evalFighterExpr(params.value,p2,opponent));break;
-   case 'StateTypeSet':p2.moveType=params.moveType;break;
-   case 'ChangeState':{
-    const next=Number(evalFighterExpr(params.value,p2,opponent));
-    if(next!==0)throw Error('P2 punch lab unsupported cancel '+next);
-    enterP2State(next);if(params.ctrl!==undefined)p2.ctrl=Number(params.ctrl);return;
-   }
-   default:throw Error('P2 punch controller '+controller.type);
-  }
+  runP2ControllerM1(controller);
+  if(p2.state!==200)return;
  }
  p2.attackFrame={state:p2.state,time:p2.time,anim:p2.anim,elem:p2.elem,x:p2.x,y:p2.y,facing:p2.facing,hitDef:p2.activeHitDef};
 }
@@ -705,7 +743,24 @@ function stepGroundReactionM1(fighter,guarding){
 function stepP2M1(){
  if(p2PunchRequested){p2PunchRequested=false;if(p2.ctrl&&p2.y===0&&posY===0&&runtimeCtrl){if(p2.x!==posX)p2.facing=p2.x<posX?1:-1;enterP2State(200)}}
  if(p2.state===200){stepP2AttackM1();return}
- stepGroundReactionM1(p2,document.querySelector('#p2Guard').value);
+ if(p2ControlMode==='keyboard'&&p2.ctrl&&[0,20,130,131].includes(p2.state)){stepP2WalkM1();return}
+ stepGroundReactionM1(p2,p2GuardMode());
+}
+function syncP2KeyboardInput(){p2Input.left=p2HeldKeys.has('KeyJ');p2Input.right=p2HeldKeys.has('KeyL')}
+function setP2ControlMode(mode){
+ p2ControlMode=mode;p2HeldKeys.clear();p2Input.left=p2Input.right=false;p2PunchRequested=false;
+ document.querySelector('#p2Control').value=mode;document.querySelector('#p2Guard').disabled=mode==='keyboard';
+ if(p2.ctrl&&p2.y===0&&[0,20,130,131].includes(p2.state)){p2.vx=0;enterP2State(0)}
+}
+document.querySelector('#p2Control').addEventListener('change',event=>{setP2ControlMode(event.target.value);event.target.blur()});
+function p2GuardMode(){return p2ControlMode==='keyboard'?(p2Commands().holdback?'stand':'none'):document.querySelector('#p2Guard').value}
+function stepP2WalkM1(){
+ const previous=p2.state,commands=p2Commands();
+ p2.x+=p2.vx;p2.vx*=constVal('movement.stand.friction');
+ for(const controller of (stateIR.states[String(p2.state)]?.controllers||[])){runP2ControllerM1(controller,commands);if(p2.state!==previous)break}
+ if(commands.holdfwd||commands.holdback){if(p2.state!==20)enterP2State(20)}
+ else {p2.vx=0;if(p2.state!==0)enterP2State(0)}
+ if(p2.state===previous){p2.time++;advanceFighterAirOneTick(p2)}
 }
 function requestP2Punch(){p2PunchRequested=true}
 document.querySelector('#p2Punch').addEventListener('click',()=>{requestP2Punch();document.querySelector('#p2Punch').blur()});
@@ -794,6 +849,7 @@ function advanceTurnAnimations(){
  }
  if(p2.anim===5||p2.anim===6){
   p2TurnTime++;
+  p2.turnTime=p2TurnTime;
   if(p2TurnTime>=actionDuration(p2.anim)){p2.anim=p2.type==='C'?11:0;p2.elem=1;p2.elemTick=0}
   else p2.elem=turnElement(p2.anim,p2TurnTime)+1;
  }
@@ -809,7 +865,7 @@ function autoTurnM1(){
  }
  if(p2.ctrl&&(p2.state===0||p2.state===11||p2.state===20)&&p2.type!=='A'&&p2.facing!==-desired){
   const anim=p2.type==='C'?6:5;
-  if(p2.anim!==anim){p2.anim=anim;p2.elem=1;p2.elemTick=0;p2TurnTime=0}
+  if(p2.anim!==anim){p2.anim=anim;p2.elem=1;p2.elemTick=0;p2TurnTime=0;p2.turnTime=0}
   p2.facing=-desired;
  }
 }
@@ -824,21 +880,21 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.16',build:'shared-expression-p2-key-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.17',build:'shared-controllers-p2-walk-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.16-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.17-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat)return;
- const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested},guardMode=document.querySelector('#p2Guard').value;
+ const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested,p2Left:p2Input.left,p2Right:p2Input.right},guardMode=p2GuardMode();
  simStepCore();
- combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,
+ combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,p2Control:p2ControlMode,
   randomValue:before.p1.hitPause>0?null:randomValue,before,after:combatTraceSnapshot()};
  combatTraceTick++;combatTraceCount=Math.min(combatTraceCount+1,combatTraceCapacity);
 }
