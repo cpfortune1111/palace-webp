@@ -35,7 +35,7 @@ for controller in states['controllers']:
                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
 actions = {}
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 200, 130, 131, 150, 151, 5000, 5005):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 200, 130, 131, 150, 151, 5000, 5005):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:

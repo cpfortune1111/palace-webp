@@ -24,7 +24,7 @@ const server=http.createServer((request,response)=>{
  const page=await browser.newPage({viewport:{width:1280,height:720}});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('http://127.0.0.1:8765');
- await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!turnDat&&!!attackDat&&!!gethitDat&&!!battleDat&&!!guardDat'),{timeout:45000});
+ await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!turnDat&&!!attackDat&&!!gethitDat&&!!battleDat&&!!guardDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; browser errors: '+JSON.stringify(errors))});
  const orientationChecks=await page.evaluate(()=>window.runtimeTest.run(`
   (()=>{
    let checked=0;
@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.14');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.15');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.14-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.15-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -218,6 +218,50 @@ const server=http.createServer((request,response)=>{
  assert.equal(await run('p2.vx'),-16);
  await run("p2.getHit={xvel:-24,attackerFacing:1,crouch:false};p1Facing=-1;enterP2State(151)");
  assert.equal(await run('p2.vx'),24);
+ const reverseCases=[];
+ for(const facing of [-1,1])for(const guarded of [false,true]){
+  await run(`simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=${facing*140};posY=0;p1Facing=${-facing};vx=0;vy=0;p2.x=0;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0);input.left=${guarded&&facing===-1};input.right=${guarded&&facing===1};`);
+  await page.locator('#p2Punch').click();
+  for(let tick=0;tick<4;tick++)await step();
+  assert.equal(await run('p1Life'),guarded?1000:980);
+  assert.ok(await run('!!p1Reaction'),JSON.stringify(await run('({facing:p1Facing,posX,state,p2,p1Life,collision:resolveFighterCollisionM1(p2.attackFrame,liveP1())})')));
+  assert.equal(await run('p1Reaction.getHit.attackerId'),2);
+  assert.equal(await run('p1Reaction.getHit.guarded'),guarded);
+  assert.equal(await run('state'),guarded?150:5000);
+  assert.equal(await run('p2.sprPriority'),2);assert.equal(await run('p1SprPriority'),0);
+  assert.equal(await run('p2Frames()[0].group'),200);
+  const attackTime=await run('p2.time'),firstX=await run('posX'),secondX=await run('p2.x'),offsets=[];
+  for(let tick=0;tick<8;tick++){
+   await step();assert.equal(await run('p2.time'),attackTime);assert.equal(await run('posX'),firstX);assert.equal(await run('p2.x'),secondX);
+   offsets.push(await run('hitShakeOffset(liveP1())'));
+  }
+  assert.ok(offsets.includes(0));assert.ok(offsets.includes(facing*2));
+  for(let tick=0;tick<45;tick++)await step();
+  assert.equal(await run('p1Reaction'),null);assert.equal(await run('p1Life'),guarded?1000:980);
+  assert.equal(await run('p2.state'),0);assert.equal(await run('runtimeFailed'),false);
+  reverseCases.push({facing,guarded,life:await run('p1Life')});
+ }
+ for(const facing of [-1,1])for(const guarded of [false,true]){
+  await run(`simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=${facing*2850};posX=${facing*3430};posY=0;p1Facing=${-facing};vx=0;vy=0;p2.x=${facing*3290};p2.y=0;p2.vx=0;p2.facing=${facing};p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0);input.left=${guarded&&facing===-1};input.right=${guarded&&facing===1};p2PunchRequested=true;`);
+  for(let tick=0;tick<4;tick++)await step();
+  assert.equal(await run('p1Life'),guarded?1000:980);
+  const attackerX=await run('p2.x'),push=facing*(guarded?-28:-24);
+  assert.equal(await run('p2.cornerPushVelocity'),push);
+  for(let tick=0;tick<8;tick++)await step();
+  assert.equal(await run('p2.x'),attackerX);
+  await step();assert.equal(await run('p2.x'),attackerX+push);
+  assert.equal(await run('posX'),facing*3430);
+  for(let tick=0;tick<40;tick++)await step();
+  assert.equal(await run('p2.cornerPushVelocity'),0);
+ }
+ await run("simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=500;posY=0;p1Facing=-1;p2.x=0;p2.y=0;p2.facing=1;p2.attackPause=0;p2.cornerPushVelocity=0;p2.hitShake=0;enterIRState(0);enterP2State(200)");
+ for(let tick=0;tick<45;tick++)await step();
+ assert.equal(await run('p1Life'),1000);assert.equal(await run('p1Reaction'),null);assert.equal(await run('p2.state'),0);
+ await run("simPaused=true;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cameraX=0;posX=140;posY=0;p1Facing=-1;p2.x=0;p2.y=0;p2.facing=1;p2.attackPause=0;p2.cornerPushVelocity=0;p2.hitShake=0;enterIRState(0);enterP2State(200);logicFrame={state:0,time:999,anim:0,elem:1,x:9999,y:0,life:111,facing:-1}");
+ for(let tick=0;tick<4;tick++)await step();
+ assert.equal(await run('p1Life'),980);assert.equal(await run('logicFrame.life'),980);
+ assert.equal(await run('logicFrame.state'),5000);assert.ok(await run('logicFrame.x<1000'));
+ await run('simPaused=false;p1Reaction=null;p1HitPause=0;p2.attackPause=0;resetPlayerInput();enterIRState(0);enterP2State(0)');
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,whiff:'PASS',browserErrors:errors}));
+ console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
