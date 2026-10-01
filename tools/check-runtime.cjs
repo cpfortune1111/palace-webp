@@ -156,7 +156,7 @@ const server=http.createServer((request,response)=>{
   await run(`resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=${direction*2850};posX=${direction*3290};posY=0;p1Facing=${direction};p2.x=${direction*3430};p2.y=0;p2.facing=${-direction};p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='stand';enterP2State(0);enterIRState(200);`);
   for(let tick=0;tick<4;tick++)await step();
   const offsets=[];for(let tick=0;tick<8;tick++){const frozen=await step();offsets.push(await run('hitShakeOffset(p2)'));assert.equal(frozen.p2.x,direction*3430)}
-  assert.ok(offsets.includes(0));assert.ok(offsets.includes(direction));
+  assert.ok(offsets.includes(0));assert.ok(offsets.includes(direction*2));assert.ok(offsets.every(offset=>offset===0||offset===direction*2));
   await step();assert.equal(await run('p2.state'),151);assert.equal(await run('p2.ctrl'),0);
   await run(`posX=p2.x-(${direction*140});enterIRState(200)`);
   for(let tick=0;tick<4;tick++)await step();
