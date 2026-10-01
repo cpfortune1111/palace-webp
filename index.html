@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.2 · Jump Anim + HUD Debug Fix</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD jump-anim-hud-debug-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.3 · Facing-Relative Vel X M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD facing-relative-velx-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -336,7 +336,7 @@ function runController(c){
   case 'VarSet':{
    const m=String(p.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!m)throw new Error('M2 VarSet target '+p.target);
    const arr=m[1].toLowerCase()==='sysvar'?runtimeSysVar:runtimeVar;arr[Number(m[2])]=Number(paramM1(p.value));break}
-  case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x))*p1Facing;if(p.y!==undefined)vy=Number(paramM1(p.y));break;
+  case 'VelSet':if(p.x!==undefined)vx=Number(paramM1(p.x));if(p.y!==undefined)vy=Number(paramM1(p.y));break;
   case 'VelAdd':if(p.x!==undefined)vx+=Number(paramM1(p.x));if(p.y!==undefined)vy+=Number(paramM1(p.y));break;
   case 'VelMul':if(p.x!==undefined)vx*=Number(paramM1(p.x));if(p.y!==undefined)vy*=Number(paramM1(p.y));break;
   case 'PosSet':if(p.x!==undefined)posX=Number(paramM1(p.x));if(p.y!==undefined)posY=Number(paramM1(p.y));break;
@@ -357,7 +357,7 @@ function applyPhysics(def){
  // landing from physics=A is an engine transition to State 52, not a CNS adapter.
  if(def.physics==='A'){
    posY+=vy;
-   posX+=vx;
+   posX+=vx*p1Facing;
    vy+=constVal('movement.yaccel');
    if(vy>0 && posY>=0 && state!==105){
      posY=0;
@@ -365,7 +365,7 @@ function applyPhysics(def){
      return;
    }
  }else if(def.physics==='S'||def.physics==='C'){
-   posX+=vx;
+   posX+=vx*p1Facing;
    const friction=def.physics==='C'?constVal('movement.crouch.friction'):constVal('movement.stand.friction');
    vx*=friction;
  }
@@ -627,7 +627,8 @@ function updateDebugHud(){
    ' · F '+p1Facing+
    ' · X '+posX.toFixed(1)+
    ' · Y '+posY.toFixed(1)+
-   ' · VX '+vx.toFixed(1)+
+   ' · VX(L) '+vx.toFixed(1)+
+   ' · WVX '+(vx*p1Facing).toFixed(1)+
    ' · CAM '+cameraX.toFixed(1)+','+cameraY.toFixed(1)+
    ' · P2 S'+p2.state+' T'+p2.time+' E'+p2.elem+' HP '+p2.life;
 }

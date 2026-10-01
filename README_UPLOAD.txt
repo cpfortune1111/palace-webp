@@ -1,27 +1,31 @@
-0.23.2 Jump Anim + HUD Debug Fix
+0.23.3 Facing-Relative Vel X M1
 
 Upload/replace:
 - index.html
 
-Fixes:
-1. Restores live debug HUD fields:
-   State / TIME / ANIM / ELEM / Facing / X / Y / VX / Camera / P2 state-time-elem-HP.
-   Pause/Step uses the authoritative logicFrame snapshot.
+Root fix:
+P1 `vx` is now the CNS/MUGEN-facing-relative X velocity.
+World displacement is derived only when applying movement:
+    worldVX = vx * p1Facing
 
-2. Corrects the 0.23.1 regression ONLY in jump animation selection.
-   Movement/velocity/facing code is unchanged.
-   The verified P1 forward/back jump movement from 0.23.0 is preserved.
+Therefore:
+- facing +1, CNS Vel X +8 => world +8
+- facing -1, CNS Vel X +8 => world -8
+- facing +1, CNS Vel X -8 => world -8
+- facing -1, CNS Vel X -8 => world +8
 
-Important:
-- This patch does NOT alter jump velocity.
-- It does NOT alter PlayerPush, AutoTurn, Camera, HitDef, Damage or GetHit.
-- For the current runtime representation, State 50's JumpByVelocity display mapping
-  returns to world vx: vx>0 => AIR 42, vx<0 => AIR 43, vx=0 => AIR 41.
-  Sprite rendering already mirrors with p1Facing, so this swaps the displayed
-  forward/back animation when facing=-1 without changing physical motion.
+AIR selection remains source-shaped:
+    Vel X = 0 -> 41
+    Vel X > 0 -> 42
+    Vel X < 0 -> 43
+Because `Vel X` is now local, Action 42/43 no longer needs a facing-specific patch.
 
-Test:
-- Facing +1: confirm forward/back movement and ANIM in HUD.
-- Facing -1: confirm movement is unchanged from 0.23.0, while the visible
-  forward/back jump animation is now the opposite of 0.23.1.
-- Pause/Step: TIME, ANIM and ELEM must remain visible and advance deterministically.
+HUD:
+- VX(L) = CNS/local velocity
+- WVX = world/screen movement velocity
+- TIME / ANIM / ELEM remain visible
+
+Scope:
+- P1 velocity semantics only.
+- P2 GetHit M1 remains stored as world velocity for now and is intentionally unchanged.
+- PlayerPush, AutoTurn, camera, damage and collision unchanged.
