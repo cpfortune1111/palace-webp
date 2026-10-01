@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.1 Facing-Relative Jump Anim Fix</title>
+<title>Prototype 0.23.4 Air AutoTurn Lock M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -33,7 +33,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #collision{position:fixed;inset:0;z-index:8;pointer-events:none}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.3 · Facing-Relative Vel X M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD facing-relative-velx-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.4 · Air AutoTurn Lock M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD air-autoturn-lock-m1-20261001-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -78,7 +78,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · Fighter Interaction M1 · push + turn + dual screen bounds';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.4 · Air AutoTurn Lock M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · edge overflow 25% · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let cmdDat=null;
@@ -520,10 +520,16 @@ function playerPushM1(){
  if(rem>0){if(posX<=p2.x){p2.x+=rem}else{p2.x-=rem};clampFighterScreenM1()}
 }
 function autoTurnM1(){
- // Default engine auto-turn slice. Later AssertSpecial noAutoTurn/StateDef facep2
- // will feed this generic flag instead of character-specific rules.
- if(posX<p2.x){p1Facing=1;p2.facing=-1}
- else if(posX>p2.x){p1Facing=-1;p2.facing=1}
+ // Source-shaped M1:
+ // common1 State 40 has facep2:1, so jump startup may face P2.
+ // State 50 has no Turn controller / facep2 property: once airborne, keep the
+ // takeoff facing instead of continuously turning every tick as fighters cross.
+ const d=stateDef();
+ const airborne=(d?.type==='A'||state===50||state===51);
+ if(!airborne){
+   if(posX<p2.x){p1Facing=1;p2.facing=-1}
+   else if(posX>p2.x){p1Facing=-1;p2.facing=1}
+ }
 }
 function simStep(){
  if(!dat||!stateIR)return;
@@ -651,3 +657,4 @@ function resize(){colcv.width=innerWidth*devicePixelRatio;colcv.height=innerHeig
 mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
+
