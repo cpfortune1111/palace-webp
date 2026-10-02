@@ -2,7 +2,16 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.36 — Voice / Sound Channels M1
+## 最新版本：0.23.37 — Guard KO Transition M1
+
+BUILD `guard-ko-transition-m1-20261003-01`。0.23.36 使用者 PASS；本版修正致命防禦傷害，待人工驗收。
+
+- 按 IKEMEN 的 guard KO 判定：防禦扣血足以令 HP 歸零時，不再選普通 guard reaction，直接用命中 shaking／KO fall 路徑，避免 S151／153 等到結束、返回 S0 才跌落。保留命中 hitpause，不代表取消必要定格。
+- 防禦可否 KO 使用原 `guard.kill`（預設 1），不是普通 `kill`。`guard.kill=0` 仍保持防禦及至少 1 HP；未致命防禦不變。普通攻擊、Projectile、Helper 共用修正，P1／P2 同樣適用。
+- 人工請測：兩位玩家分別站防／蹲防，以低 HP 防禦 3005 Helper；HP0 當下應直接進入 S5000 受擊，再按 Common 倒地至 S5150，不應經 S0。Space 回 HP／起身仍可用。鏡頭、來源 CNS、動畫、傷害及鍵位不改。
+- 上一輪要求的初始化／Intro／回合／9999／AI 尚未發布；本版是獨立 bugfix，不宣稱該批功能完成。保持 Venus 1v1，partner 部分僅補來源查詢的範圍不變。
+
+## 0.23.36 — Voice / Sound Channels M1（使用者 PASS）
 
 BUILD `voice-sound-channels-m1-20261003-01`。0.23.35 收到三招人聲截斷回報；本版待人工聽音驗收，不將上一版整體標 PASS。
 

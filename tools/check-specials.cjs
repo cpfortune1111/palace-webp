@@ -21,6 +21,22 @@ const server=http.createServer((request,response)=>{
  await page.goto('http://127.0.0.1:8766');
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
+ const guardKOChecks=await run(`(()=>{
+  let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+  const params={damage:'40,10',guardflag:'HL',animtype:'light','ground.type':'high','ground.velocity':'-6,0','guard.velocity':'-2','ground.hittime':20,'guard.hittime':30,pausetime:'8,8','guard.pausetime':'4,4'};
+  for(const facing of [1,-1])for(const crouch of [false,true])for(const life of [9,10,11]){
+   const defender={type:crouch?'C':'S',state:crouch?153:151,y:0,ctrl:0,moveType:'H',facing:-facing,life};
+   const result=resolveGroundHitM1({id:1,facing},defender,params,crouch?'crouch':'stand');
+   expect(result.guarded===(life>10),'Guard survives only above chip damage');
+   expect(result.state===(life>10?(crouch?152:150):5000),'Lethal guard enters hit state without idle');
+   expect(life>10?result.life===1:result.life===0&&result.getHit.fall===1&&result.getHit.yvel<0,'Lethal guard receives KO fall velocity');
+   const safe=resolveGroundHitM1({id:1,facing},defender,{...params,'guard.kill':0},crouch?'crouch':'stand');
+   expect(safe.guarded&&safe.life>=1,'guard.kill=0 prevents chip KO');
+   const independent=resolveGroundHitM1({id:1,facing},defender,{...params,kill:0},crouch?'crouch':'stand');
+   expect(life>10?independent.guarded:independent.life===0&&!independent.guarded,'Guard KO independent of ordinary kill');
+  }
+  return checks;
+ })()`);console.log(JSON.stringify({guardKOChecks}));
  const soundChecks=await run(`(()=>{
   const OriginalAudio=window.Audio,clips=[];let checks=0;
   const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
