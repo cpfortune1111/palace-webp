@@ -24,7 +24,7 @@ const server=http.createServer((request,response)=>{
  const page=await browser.newPage({viewport:{width:1280,height:720}});
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('http://127.0.0.1:8765');
- await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!turnDat&&!!attackDat&&!!gethitDat&&!!battleDat&&!!guardDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; browser errors: '+JSON.stringify(errors))});
+ await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!turnDat&&!!attackDat&&!!gethitDat&&!!battleDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; browser errors: '+JSON.stringify(errors))});
  const orientationChecks=await page.evaluate(()=>window.runtimeTest.run(`
   (()=>{
    let checked=0;
@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.29');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.30');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.29-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.30-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -780,6 +780,87 @@ const server=http.createServer((request,response)=>{
   return {count,normalHitKo:'PASS',noGetUp:'PASS',velocities:'PASS',zeroLifeFallback:'PASS'};
  })()`);
  console.log(JSON.stringify({koChecks}));
+ const airChecks=await run(`(()=>{
+  let cases=0;
+  if(battleDat.recoveryEntryEnabled!==false||!battleDat.noAirGuardControllers.length)throw Error('Source recovery / NoAirGuard');
+  resetPlayerInput();p1Reaction=null;posX=0;posY=-200;p1Facing=1;runtimeMoveType='A';p2.x=300;p2.y=0;p2.type='S';if(!inGuardDistanceM1(p2))throw Error('Air attack proximity guard');p2.type='A';p2.y=-200;if(inGuardDistanceM1(p2))throw Error('NoAirGuard proximity');
+  for(const attack of [600,610,630,640])for(const facing of [-1,1])for(const speed of [0,8]){
+   const source=battleDat.attackStates[String(attack)],controller=source.controllers.find(item=>item.type==='HitDef');
+   const fighter={state:attack,time:0,anim:attack,elem:1,elemTick:0,type:'A',moveType:'A',physics:'A',ctrl:0,facing,x:0,y:-150,vx:speed*facing,vy:0,life:1000};
+   const params={...controller.params,damage:splitExpressionPairM1(controller.params.damage).map(expression=>Number(evalM1(expression,fighterExpressionContext(fighter,{type:'A'})))).join(',')};
+   const damage=attack===600?30:attack===630?40:attack===610?(speed?100:90):(speed?80:70);
+   for(const type of ['S','C','A'])for(const mode of ['none','stand','crouch']){
+    const result=resolveGroundHitM1({id:1,facing},{type,y:type==='A'?-150:0,ctrl:1,moveType:'I',state:type==='C'?11:0,life:1000},params,mode);
+    const guarded=type!=='A'&&mode!=='none';
+    if(result.guarded!==guarded||result.life!==1000-(guarded?0:damage))throw Error('Air attack guard / damage '+attack);
+    if(type==='A'&&(result.state!==5020||result.getHit.xvel!==8*facing||result.getHit.yvel!==-28||result.getHit.hittime!==20||result.getHit.airtype!==1))throw Error('Air GetHit defaults');
+    if(!guarded&&result.getHit.animtype!==([610,640].includes(attack)?1:0))throw Error('Med / Light');
+    cases++;
+   }
+  }
+  for(const player of [1,2])for(const facing of [-1,1])for(const attack of [600,610,630,640])for(const aerial of [false,true]){
+   const distance=attack===630?80:140;
+   resetPlayerInput();setP2ControlMode('dummy');simPaused=false;p1Reaction=null;p1HitPause=0;p1InvulnerableUntil=0;p1LastHitKey=null;p1Life=1000;cornerPushVelocity=0;posX=player===1?0:facing*distance;posY=player===1?-80:aerial?-80:0;p1Facing=player===1?facing:-facing;vx=0;vy=0;
+   p2.x=player===2?0:facing*distance;p2.y=player===2?-80:aerial?-80:0;p2.facing=player===2?facing:-facing;p2.vx=0;p2.vy=0;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;p2.hitShake=0;p2.attackPause=0;p2.invulnerableUntil=0;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';
+   enterIRState(player===1?attack:aerial?50:0);enterP2State(player===2?attack:aerial?50:0);
+   let hit=false;const visited=new Set();
+   for(let tick=0;tick<180;tick++){simStep();const receiver=player===1?p2:liveP1();visited.add(receiver.state);if(receiver.life<1000)hit=true}
+   const expected=attack===600?30:attack===630?40:attack===610?90:70;
+   if(!hit||(player===1?p2.life:p1Life)!==1000-expected)throw Error('Live air attack '+JSON.stringify({player,facing,attack,aerial,state,p2,life:p1Life}));
+   if(aerial&&!visited.has(5020))throw Error('Live 5020 missing');
+   if(runtimeFailed)throw Error('Air runtime failed');cases++;
+  }
+  for(const animtype of [0,1]){
+   const fighter={state:50,time:0,anim:41,elem:1,elemTick:0,type:'A',physics:'A',moveType:'I',ctrl:1,facing:1,x:0,y:-200,vx:0,vy:0,life:1000,hitShake:0,hitTime:20,getHit:{animtype,airtype:1,xvel:8,yvel:-28,yaccel:1.4,fall:0}};
+   enterGroundReactionState(fighter,5020);if(fighter.anim!==5000+animtype)throw Error('5020 initial anim');
+   const visited=new Set();for(let tick=0;tick<110&&fighter.state!==52;tick++){visited.add(fighter.state);stepSourceFallM1(fighter)}
+   for(const required of [5020,5030,5035,5040])if(!visited.has(required))throw Error('Air reaction missing '+required);
+   if(fighter.state!==52||fighter.y!==0)throw Error('Air landing');cases++;
+  }
+  for(const facing of [-1,1]){
+   const params=battleDat.attackStates['200'].controllers.find(controller=>controller.type==='HitDef').params;
+   const result=resolveGroundHitM1({id:1,facing},{type:'A',y:-200,ctrl:1,moveType:'I',state:50,life:1},params,'stand');
+   const fighter={state:50,time:0,anim:41,elem:1,elemTick:0,type:'A',physics:'A',moveType:'I',ctrl:1,facing:-facing,x:0,y:-200,vx:0,vy:0,life:result.life,hitShake:0,hitTime:result.getHit.hittime,getHit:result.getHit};
+   enterGroundReactionState(fighter,result.state);const visited=new Set();
+   for(let tick=0;tick<230&&fighter.state!==5150;tick++){visited.add(fighter.state);stepSourceFallM1(fighter)}
+   if(fighter.state!==5150||visited.has(5120)||!visited.has(5050))throw Error('Air KO / fall');cases++;
+  }
+  for(const facing of [-1,1]){
+   const fighter={state:5050,time:0,anim:5050,elem:1,elemTick:0,type:'A',physics:'N',moveType:'H',ctrl:0,facing,x:0,y:constVal('movement.air.gethit.groundrecover.groundlevel')+5,vx:8*facing,vy:5,life:1000,hitTime:-1,getHit:{yaccel:1.4,fall:1}};
+   enterGroundReactionState(fighter,5200);stepSourceFallM1(fighter);if(fighter.state!==5201)throw Error('5200 SelfState');
+   stepSourceFallM1(fighter);if(fighter.anim!==5200||fighter.vy!==-14+1.76||fighter.y!==-14||Math.abs(fighter.vx)!==.6)throw Error('5201 source launch');
+   for(let tick=0;tick<30&&fighter.state!==52;tick++)stepSourceFallM1(fighter);if(fighter.state!==52)throw Error('5201 Physics A landing');
+   fighter.x=0;fighter.y=-200;fighter.vx=8*facing;fighter.vy=5;fighter.facing=facing;enterGroundReactionState(fighter,5210);
+   for(let tick=0;tick<4;tick++)stepSourceFallM1(fighter);if(fighter.y!==-200||fighter.x!==0)throw Error('5210 PosFreeze');
+   stepSourceFallM1(fighter);if(Math.abs(fighter.vx)!==4||Math.abs(fighter.vy-(-15.6))>.001)throw Error('5210 source velocity');
+   for(let tick=5;tick<=20;tick++)stepSourceFallM1(fighter);if(fighter.ctrl!==1||fighter.moveType!=='I')throw Error('5210 Ctrl');cases++;
+  }
+  for(const player of [1,2])for(const [attack,button] of [[600,'x'],[610,'y'],[630,'a'],[640,'b']]){
+   const fighter={state:50,time:8,anim:41,elem:1,type:'A',physics:'A',moveType:'I',ctrl:1,facing:1,x:0,y:-200,vx:0,vy:0,life:1000};
+   const entry=battleDat.attackCommands.find(controller=>Number(controller.params.value)===attack),context=fighterExpressionContext(fighter,{type:'S'},{[button]:true});
+   if(!controllerTriggered(entry,context))throw Error('Air CMD '+attack);
+   fighter.ctrl=0;if(controllerTriggered(entry,context))throw Error('Invented air cancel');
+  }
+  for(const [direction,expectedX,expectedY] of [['up',4,-23.6],['down',4,-9.6],['left',0,-15.6],['right',4,-15.6]]){
+   resetPlayerInput();p2.x=0;p2.y=-200;p2.facing=1;p2.vx=8;p2.vy=5;p2.life=1000;p2.hitTime=-1;p2.getHit={yaccel:1.4,fall:1};enterGroundReactionState(p2,5210);p2.time=4;p2Input[direction]=true;stepSourceFallM1(p2);
+   if(Math.abs(p2.vx-expectedX)>.001||Math.abs(p2.vy-expectedY)>.001)throw Error('5210 direction '+direction);
+  }
+  p1Reaction={state:5210,time:30,anim:5210,elem:1,elemTick:0,type:'A',physics:'N',moveType:'I',ctrl:1,facing:1,x:0,y:1,vx:4,vy:2,life:1000,hitTime:-1,getHit:{yaccel:1.4,fall:1},fallExecuted:new Set(),vars:[],sysvars:[]};
+  stepSourceFallM1(p1Reaction);syncP1Reaction();if(state!==52||runtimeCtrl!==1||prevState!==5210)throw Error('P1 recovery landing ctrl');
+  resetPlayerInput();p1Reaction=null;p1Life=1000;p2.life=1000;p1HitPause=0;p2.hitShake=0;posX=0;posY=-250;p1Facing=1;vx=8;vy=-2;p2.x=500;p2.y=0;enterIRState(610);enterP2State(0);
+  sourceExplods.length=0;for(let tick=0;tick<4;tick++)simStep();
+  const effect=sourceExplods.find(item=>item.id===900);if(!effect||effect.bindtime!==-1||effect.x!==posX||effect.y!==posY)throw Error('610 bound Explod900');
+  if(activeHitDef.params.damage!=='100,0')throw Error('610 damage expression snapshot');
+  applyP1HitM1({facing:-1,hitDef:{hitKey:'air-effects-hit',params:battleDat.attackStates['200'].controllers.find(controller=>controller.type==='HitDef').params}});
+  if(sourceExplods.some(item=>item.player===1&&item.id===900))throw Error('900 removeongethit');
+  return {cases,noAirGuard:'PASS',recoveryEntry:'SOURCE DISABLED',liveAttacks:'PASS',commonAir:'PASS',recoveryFixtures:'PASS',cmd:'PASS',explod900:'PASS'};
+ })()`);console.log(JSON.stringify({airChecks}));
+ for(const player of [1,2])for(const [attack,key1,key2] of [[600,'KeyZ','Numpad0'],[610,'KeyX','NumpadDecimal'],[630,'KeyA','Numpad1'],[640,'KeyS','Numpad2']]){
+  await run("resetPlayerInput();setP2ControlMode('keyboard');simPaused=false;p1Reaction=null;p1HitPause=0;p1Life=1000;p1LastHitKey=null;p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.lastHitKey=null;posX=-300;posY=-200;p1Facing=1;vx=0;vy=0;p2.x=300;p2.y=-200;p2.vx=0;p2.vy=0;p2.facing=-1;enterIRState(50);enterP2State(50)");
+  await page.keyboard.down(player===1?key1:key2);await step();await page.keyboard.up(player===1?key1:key2);
+  assert.equal(await run(player===1?'state':'p2.state'),attack);
+ }
+ console.log(JSON.stringify({airKeyboard:8}));
  await run("resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1Life=1000;p2.life=1000;p1HitPause=0;p2.hitShake=0;posX=-300;posY=0;vx=0;vy=0;p2.x=300;p2.y=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);simPaused=false;stepRequested=false;document.activeElement?.blur()");
  await page.keyboard.press('ScrollLock');assert.equal(await run('simPaused&&!stepRequested'),true);
  const stopped=await run('combatTraceTick');await run('loop()');assert.equal(await run('combatTraceTick'),stopped);

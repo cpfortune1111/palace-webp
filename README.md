@@ -2,7 +2,22 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.29 — Trip Travel / Debug Keys M1
+## 最新版本：0.23.30 — Air Attacks / Air GetHit M1
+
+BUILD `air-attacks-air-gethit-m1-20261002-01`。使用者 0.23.29 PASS；本版待人工驗收。保持鎖定鏡頭、440 速度 override、hitshake x2 與雙人自訂鍵位。
+
+- 按原 CNS／CMD／AIR／SFF 接入 600 跳輕拳、610 跳重拳、630 跳輕腳、640 跳重腳；保留入招速度、Physics=A 重力／著地 52、Ctrl=0 與原 MoveType 收招時間，沒有新增空中取消。P1 跳起後 Z／X／A／S；P2 Num8 跳起後 Num0／Num.／Num1／Num2。Settings 自訂鍵位優先。
+- 傷害依來源：600=30、630=40；610 原 `cond(Vel X=0,90,100)`、640 原 `cond(Vel X=0,70,80)`，HitDef 建立時固定計算，不能改成命中時重算。610／640 的 `Med` 正確選 Medium GetHit，600／630 為 Light。四招原 air.velocity=-8,-28；air.hittime 未設定，採 IKEMEN 預設 20，ground／guard 時間及速度分別保持原值。
+- 空中碰撞依原 hitflag=A 接入雙向命中、NoAirGuard 對手不可擋；地面對手可按原 guardflag=M 站／蹲防。地面預防禦亦可被空中攻擊威脅，仍使用原 attack.dist=640，不把跳起攻擊者誤排除。保留 132／154／155 原來源資料，不建立可玩 air guard。
+- Common 5020 shaking →5030 上升 →5035 transition →5040 空中恢復；fall／KO 進既有 5050／落地彈地／5150。原 HitVelSet XY、GetHitVar(airtype/yaccel)、HitOver／HitShakeOver、range、CtrlSet／StateTypeSet 共用來源 controller；恢復控制後可依原 CMD 再出空中技，HP0 不恢復控制。
+- 完成 5200→5201 ground recovery 與 5210 air recovery：原 Turn／PosFreeze／VelMul／VelAdd、方向修正、NotHitBy、Time20 CtrlSet、原 A5200／5210 與 F60。依使用者確認，5050 內註解的 recovery 入口保持停用；三個 states 以自動 fixture 驗證，不能在正常 gameplay 用 x+y 觸發，亦不宣稱人工 PASS。
+- 610 原 Explod900 綁定角色、原 AIR 時間與層級、hitpause 凍結及 removeongethit 已接；新增原 S900,5／6 聲音。新增獨立 air atlas，原 atlas／原始來源不改；不啟用未完成 645。
+
+人工請測：雙人／兩面向，原地跳及移動跳四招；空對地站防／蹲防、空對空不能防、Light／Medium 動畫、hitpause 後 XY travel、著地 52 聲音；空中受擊致死應落到 5150、不起身。630 原 AIR 攻擊盒較短，需靠近測，不能為方便命中擴大 Clsn。用 Scroll Lock 逐 tick 檢查受擊／transition 無倒跳，Pause/Break 繼續。
+
+自動驗證：雙向四招／兩面向空對地及空對空實際碰撞、速度條件傷害／站蹲 guard／NoAirGuard 矩陣、空中 Common 鏈及 KO fall、recovery 來源 fixture、CMD Ctrl 限制、900 綁定與受擊移除；保留全部舊版回歸。接觸計時仍未人工 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 維持初步 TEST、待深測，不以自動結果代替人工驗收。
+
+## 0.23.29 實作紀錄（使用者 PASS）
 
 BUILD `trip-travel-debug-keys-m1-20261002-01`。使用者 0.23.28 其餘動畫修正 PASS；回報 5071→5110 的入口 tick 座標停住，本版修正並待人工驗收。
 
@@ -149,9 +164,9 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 
 ## 控制與驗收
 
-- P1：方向鍵／WASD 移動，X 出拳。P2：J／L 移動、U 單次出拳；按 J／L 自動切 Keyboard，可切回 Dummy 防禦測試。
+- P1：方向鍵移動，x=Z、y=X、a=A、b=S、l=Q、r=W；WASD 不移動。P2：Num8／5／4／6 移動，x=Num0、y=Num.、a=Num1、b=Num2、l=Num/、r=Num*；不再使用 J／L／U。Settings 可自訂，亦可切回 Dummy。
 - Input 可選 Auto／Keyboard／Touch；失焦清除 held input。右上 □ 顯示 CLSN，Ⅱ 暫停／逐 tick，↓ 匯出最近 600 ticks 診斷 JSON（非 replay save）。
-- 更新後確認 Prototype、BUILD、READY 都是 0.23.19。測試命中／連續站防／揮空、兩個 facing、同時 X／U、角落推退與受擊恢復。
+- 更新後確認 Prototype／READY=0.23.30、BUILD=`air-attacks-air-gethit-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick。
 - 自動回歸使用 `tools/check-runtime.cjs`；Node、Playwright／Edge、遊戲資料與既有 Three.js CDN 需要可用。本次新增 range 邊界、hit timers、HitVelSet facing／axis masks、接觸計時及 pause／reset 檢查。
 - 本版自動測試 PASS：40 組 range 邊界、兩個 facing 的 GetHit／HitVelSet／未知欄位拒絕、接觸 pause／reset，以及既有 448 組 expression parity、雙向 hit／guard／corner、同時 X／U／互中、鍵盤／CLSN／Turn／30-60-120 Hz 回歸；browserErrors=[]。瀏覽器人工驗收待使用者測試。
 
@@ -198,8 +213,10 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] 0.23.26：440／Trip、普通 falling／bounce、倒地／起身／KO 與 HitFall controllers 已接入，待人工驗收；完整空中攻擊與空中命中另列後續。
 - [ ] 0.23.27：依回報調低 440 速度，補普通命中致死／HP0 強制 KO 跌倒；待人工驗收，不把 0.23.26 問題標 PASS。
 - [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
-- [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
+- [x] 0.23.29 使用者 PASS：Trip 動畫連續性／ChangeState tick travel、普通 KO 跌倒、Pause／Scroll Lock debug。
+- [ ] 0.23.30：600／610／630／640、5020／5030／5035／5040／5050 已接入，待人工驗收；5200／5201／5210 已完成來源 fixture，recovery 入口按原註解停用。
+- [ ] 其他普通技與各種 HitDef priority，按來源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
-下個切片：補共同 Common runner 及 P2 蹲下／站蹲切換，沿用已 PASS 的地面攻擊／防禦／角落／互中，不跳過 source 驗收。
+下個切片：先驗收本版空中四招／受擊，之後按來源相依順序處理尚未接入招式與 Helper／Projectile；未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
