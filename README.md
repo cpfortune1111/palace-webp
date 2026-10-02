@@ -2,7 +2,15 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.20 — Guard Distance / Start-End M1
+## 最新版本：0.23.21 — Guard Transition End Frame M1
+
+BUILD `guard-transition-end-frame-m1-20261002-01`。修正 Action 120／121／140／141 在最後一個 tick 跳回第一格、下一 tick 才轉 state 的畫面抖動；一次性防禦 transition 保持最後格直到原 state 完成條件生效，不改 AIR ticks／素材／鏡頭或其他循環動畫。新增逐 tick element 序列檢查，不再只驗收最終 state。
+
+重新核對 sources/venus/original/venus.cns 與作者本機角色檔案：Size attack.dist 都是 640，DEF localcoord=1280,720。使用者確認保留原 CNS 640；不自行缩成拳頭 Clsn 距離。圖中約 562／623 軸心距離在原 pre-guard 範圍內，拳頭未接觸仍會預防禦；實際命中另由 AIR Clsn 判定。
+
+本版人工驗收待測：左右 facing 的站／蹲起防與收防，留意最後一格不再倒跳第一格；原範圍 640 不變。接觸計時未 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 初步 TEST、待深測的紀錄保留。
+
+## 0.23.20 實作紀錄
 
 BUILD `guard-distance-start-end-m1-20261002-01`。修正 Dummy 防禦選單把無攻擊的 P2 永久放入 guard 動作：站防未受威脅留 State 0；蹲防未受威脅留 State 11。只有對手 MoveType=A、同在地面且在攻擊者 facing-relative 前方 0 < 距離 < 640（原 Venus attack.dist）才進 State 120，站／蹲分別用原 Action 120／121；不是另創 State 121。
 
