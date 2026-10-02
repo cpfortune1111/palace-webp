@@ -2,7 +2,19 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.38 — Source Globals / Helpers M1
+## 最新版本：0.23.39 — KO Push / Stage Visuals M1
+
+BUILD `ko-push-stage-visuals-m1-20261003-01`。本版待人工驗收，不將 0.23.38 整體標 PASS。
+
+- KO 推擠：HP0 的角色不再参与 PlayerPush 配對；雙方對称適用，活角色原推擠及 Space 回 HP 後的推擠仍保留。此為使用者明確 override：IKEMEN 原引擎有 `alive || NumPartner=0` 的 1v1 相容例外，Web 不再因 1v1 而讓屍體擋路。抽出每個角色的推擠資格判定供未來多人配對共用，不宣稱已開啟 4P。
+- 原 Web 額外加了 HemisphereLight（2.2）與 DirectionalLight（2.4），原 StageTraining.glb 沒有定義燈光。現移除兩盞額外燈，保留 GLB 原材質／emissive／貼圖，不用 CSS brightness 硬壓亮度、不改原 GLB。鏡頭位置、投影、zoom、角色比例不改。
+- 通用 foreground filter：直接抽出 StageTraining.def `[BG Filter]` 的 SFF `1,0`，按 layerno=1／delta=0／trans=none 的來源設定，在舞台、角色及特效之上、HUD 之下繪製。原圖 3840×2160、axis 1920,1080、alpha=8；只匯出固定 1280×720 遊戲視窗實際可見的原像素區域，以無損 WebP 節省下載，解碼後逐像素一致。不是自行加灰色遮罩或更改濾鏡透明度。共用 render layer 可供往後其他舞台使用，其他舞台尚未逐一比較。
+- 角色倒影：按原 `[Reflection] intensity=50`，以當前 AIR sprite、面向／offset／空中高度鏡像至地面下方，alpha=50/255，置於角色之下並剪裁在遊戲視窗；角色 KO、跳躍、轉身及動畫更新同步。保留原 sprite 像素，不另生成假倒影素材。
+- 修正匯出器遇到 3840px 大 sprite 超過原 atlas 寬度而被截斷的問題；既有 Venus 圖集及所有來源檔不重寫。stage_visuals.json 記錄原 DEF／SFF／GLB hash 與裁切位置。只更新本 README，不新增說明文件。
+
+人工請測：雙方分別 KO 後，由左右走過屍體，屍體不能被推走／阻擋；Space 回 HP 起身後正常推擠。對照原 IKEMEN 舞台較暗的顏色、濾鏡顆粒與腳下倒影；跳躍、蹲下、轉身、KO、上下鏡頭移動及手機比例亦請試。自動檢查涵蓋雙向 KO 推擠、活角色推擠、無額外燈、來源 alpha／倒影强度、濾鏡 screen-fixed、圖像 lossless 比對及舊 runtime 回歸；已檢視含實際 GLB 的預覽，不宣稱跨瀏覽器顏色完全相同。
+
+## 0.23.38 — Source Globals / Helpers M1
 
 BUILD `source-globals-helpers-m1-20261003-01`。本版待人工驗收，只更新此 README，不新增版本文件。
 

@@ -22,6 +22,30 @@ const server=http.createServer((request,response)=>{
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
+ if(process.argv.includes('--stage-visuals')){
+  await page.waitForFunction(()=>window.specialTest.run('!!stageVisuals&&!!stageFilterImage'),null,{timeout:30000});
+  const result=await run(`(()=>{
+   let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+   resetPlayerInput();p1Reaction=null;specialRuntime.reset();sourceExplods.length=0;cameraX=0;cameraY=0;posY=0;p2.y=0;enterIRState(0);enterP2State(0);
+   for(const dead of [1,2])for(const direction of [-1,1]){
+    p1Life=dead===1?0:1000;p2.life=dead===2?0:1000;posX=0;p2.x=direction*30;const before=[posX,p2.x];playerPushM1();expect(posX===before[0]&&p2.x===before[1],'KO excluded from both-direction push '+dead);
+   }
+   p1Life=1000;p2.life=1000;posX=0;p2.x=30;playerPushM1();expect(p2.x-posX>=80,'Alive push remains enabled');
+   expect(!canPlayerPushM1({life:1000,playerPush:false}),'Explicit no-push respected');
+   expect(!s.children.some(child=>child.isLight),'No added stage lights');
+   expect(stageVisuals.reflection.intensity===50,'Original reflection intensity');
+   posX=-200;p2.x=200;posY=0;p2.y=0;drawStageVisuals();
+   const reflected=reflectionCanvas.getContext('2d').getImageData(0,0,reflectionCanvas.width,reflectionCanvas.height).data;
+   expect(reflected.some((value,index)=>index%4===3&&value>0),'Both character reflections drawn');
+   expect(Math.max(...Array.from(reflected).filter((value,index)=>index%4===3&&value>0))<=50,'Reflection alpha follows source intensity');
+   const filter=filterCanvas.getContext('2d').getImageData(0,0,filterCanvas.width,filterCanvas.height).data;
+   expect(filter.some((value,index)=>index%4===3&&value===8),'Original SFF filter alpha retained');
+   expect(stageVisuals.filter.delta.every(value=>value===0),'Filter screen-fixed');
+   return checks;
+  })()`);console.log(JSON.stringify({stageVisualChecks:result}));
+  if(process.argv.includes('--preview')){await page.waitForFunction(()=>window.specialTest.run('s.children.some(child=>child.isGroup)'),null,{timeout:60000});await run('hud.classList.add("collapsed");resize();r.render(s,c);draw();drawMars();drawSourceExplods()');await page.screenshot({path:'work/stage-visuals-preview.png'})}
+  return;
+ }
  if(process.argv.includes('--lifecycle')){
   const result=await run(`(()=>{
    let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};

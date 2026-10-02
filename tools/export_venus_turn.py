@@ -125,6 +125,12 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
             if key in sprites:
                 continue
             image, axis_x, axis_y = decode(sprite_index[(frame['group'], frame['item'])])
+            if image.width + 4 > atlas.width:
+                if paged:
+                    raise ValueError('Sprite exceeds configured atlas page width: ' + key)
+                expanded = Image.new('RGBA', (image.width + 4, atlas.height))
+                expanded.paste(atlas, (0, 0))
+                atlas = expanded
             if cursor_x + image.width + 2 > atlas.width:
                 cursor_x, cursor_y, row_height = 2, cursor_y + row_height + 4, 0
             if cursor_y + image.height + 2 > atlas.height:
