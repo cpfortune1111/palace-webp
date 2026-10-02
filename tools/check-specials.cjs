@@ -23,6 +23,9 @@ const server=http.createServer((request,response)=>{
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
  await page.waitForFunction(()=>window.specialTest.run('!gameShell.isHome()'),null,{timeout:30000});
+ if(process.argv.includes('--p2-jump')){
+  await page.keyboard.press('Numpad8');await run('setP2ControlMode("keyboard")');await page.keyboard.down('Numpad8');const result=await run('simStep();({state:p2.state,up:p2Commands().holdup})');await page.keyboard.up('Numpad8');assert.equal(result.state,40);console.log(JSON.stringify(result));return;
+ }
  if(process.argv.includes('--menu')){
   await run('gameShell.ready');await run('gameShell.showHome()');await page.screenshot({path:'work/title-menu-preview.png'});
   await run('gameShell.start("watch")');const result=await run(`(()=>{let moves=[new Set(),new Set()];for(let index=0;index<1200;index++){simStep();moves[0].add(state);moves[1].add(p2.state)}fightHud.reset();fightHud.step(true,[500,1000]);const samples=[fightHud.displayLife()[0]];for(let index=1;index<10;index++){fightHud.step(true,[500,1000]);samples.push(fightHud.displayLife()[0])}if(samples.at(-1)!==.5||samples[0]===.5)throw Error('10 tick HP easing');return {aiStates:moves.map(set=>Array.from(set)),samples};})()`);console.log(JSON.stringify(result));assert.deepEqual(errors,[]);return;

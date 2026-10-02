@@ -8,7 +8,7 @@ source = Path(r'F:\Ikemen_GO-dev-windows\Moon Palace\data')
 scratch = Path('work/title-source')
 scratch.mkdir(exist_ok=True)
 shutil.copyfile(source / 'system.sff', scratch / 'system.sff')
-layers = [(10, 0), (20, 0), (21, 0), (25, 0), (30, 0), (1, 0), (0, 0)]
+layers = [(10, 0), (20, 0), (21, 0), (25, 0), (30, 0), (1, 0), (0, 0), (10, 1)]
 (scratch / 'system.air').write_text('\n'.join(f'[Begin Action {index}]\n{group},{item},0,0,-1' for index, (group, item) in enumerate(layers)), encoding='utf-8')
 export(scratch, scratch, tuple(str(index) for index in range(len(layers))), 'title', 'system')
 data = json.loads((scratch / 'title.json').read_text())

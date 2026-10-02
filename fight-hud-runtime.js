@@ -2,7 +2,7 @@ export function createFightHud(){
  const canvas=document.createElement('canvas');canvas.id='fightHud';canvas.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none';document.body.appendChild(canvas);
  const backdrop=document.createElement('canvas');backdrop.id='portraitBackdrop';backdrop.style.cssText='position:fixed;inset:0;z-index:3;pointer-events:none';document.body.appendChild(backdrop);const backdropContext=backdrop.getContext('2d');
  const context=canvas.getContext('2d');let fight,timer,fightAtlas,timerAtlas,elapsed=0,mode='infinite',ticks=0;const trails=[{value:1,start:1,target:1,age:10},{value:1,start:1,target:1,age:10}];
- const load=async prefix=>{const data=await fetch('./'+prefix+'.json?v=02342').then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./'+prefix+'_atlas.png?v=02342'});return {data,atlas}};
+ const load=async prefix=>{const data=await fetch('./'+prefix+'.json?v=02343').then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./'+prefix+'_atlas.png?v=02343'});return {data,atlas}};
  const ready=Promise.all([load('fight_hud'),load('timer_hud')]).then(([first,second])=>{fight=first.data;fightAtlas=first.atlas;timer=second.data;timerAtlas=second.atlas});
  function reset(){elapsed=0;ticks=0;for(const trail of trails){trail.value=1;trail.start=1;trail.target=1;trail.age=10}}
  function setMode(value){mode=value;reset()}
@@ -18,11 +18,11 @@ export function createFightHud(){
    const facing=player===1?1:-1,anchor=player===1?0:1278,ratio=Math.max(0,Math.min(1,life/max));
    context.save();context.globalAlpha=224/255;sprite(fight,fightAtlas,fight.actions['1001'][0],anchor,0,facing);context.restore();
    sprite(fight,fightAtlas,fight.actions['11'][0],anchor,0,facing);
-   for(const [amount,animation] of [[trails[player-1].value,'12'],[trails[player-1].value,'1311']]){context.save();const edge=player===1?619-458*amount:1278-619;context.beginPath();context.rect(edge,0,458*amount,720);context.clip();sprite(fight,fightAtlas,fight.actions[animation][animation==='1311'?Math.floor(ticks/4)%60:0],anchor,0,facing);context.restore();}
+   for(const [amount,animation] of [[trails[player-1].value,'12'],[ratio,'1311']]){context.save();const edge=player===1?619-458*amount:1278-619;context.beginPath();context.rect(edge,0,458*amount,720);context.clip();sprite(fight,fightAtlas,fight.actions[animation][animation==='1311'?Math.floor(ticks/4)%60:0],anchor,0,facing);context.restore();}
    const background=fight.sprites['51,0'];backdropContext.save();backdropContext.translate(player===1?0:1280,0);backdropContext.scale(facing,1);backdropContext.drawImage(fightAtlas,background.x,background.y,background.w,background.h,-background.axisX,-background.axisY,background.w,background.h);backdropContext.restore();
   }
   sprite(fight,fightAtlas,fight.actions['60'][0],0,0);
-  const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?612:642,42)}
+  const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?614:642,42)}
   if(value===0){context.fillStyle='#ffffff';context.font='bold 30px serif';context.textAlign='center';context.fillText(first.life===second.life?'TIME OVER · DRAW':first.life>second.life?'TIME OVER · P1 WIN':'TIME OVER · P2 WIN',640,180)}
  }
  return {ready,render,step,reset,setMode,remaining,displayLife:()=>trails.map(trail=>trail.value)};

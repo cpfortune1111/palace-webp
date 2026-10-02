@@ -114,7 +114,7 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
     atlas = Image.new('RGBA', (1024, 1024) if action_ids == ('5', '6') else (2048, atlas_height))
     sprites = {}
     atlas_files = []
-    paged = prefix in ('venus_special', 'venus_lifecycle')
+    paged = prefix in ('venus_special', 'venus_lifecycle', 'title_animation')
     cursor_x, cursor_y, row_height = 2, 2, 0
     for frames in actions.values():
         for frame in frames:

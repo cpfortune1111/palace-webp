@@ -2,7 +2,17 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.42 — Title Menu / Options M1
+## 最新版本：0.23.43 — Title Animation / HUD Fix M1
+
+BUILD `title-animation-hud-fix-m1-20261003-01`。待人工驗收。
+
+- Timer 十位 612→614（右移 2 個 logical pixels），個位 642 不變。
+- 使用者確認保留 1v1 的 12,1，而非 team 的 12,2。中層保留 10 tick ease-out，前景用即時實際 HP，重新露出兩層之間的扣血區域；實際 damage／KO 邏輯不改。
+- 主頁全 TitleBG 動態：原 A0 Logo 16 個 1 tick 位移／最後停留、A21 雲 150 格、A30 海 137 格，原 AIR frame duration／循環；兩組流星按 start 330,-120／1220,90、velocity -24,10、tile 1,1、addalpha 50,256。Logo 使用既有 WebP 原 sprite 的來源位移；雲／海用動畫 WebP（quality 90），避免載入逐格 atlas。原素材／axis／順序不變，WebP 顏色有高品質壓縮，不宣稱逐像素無損。
+- P2 Keyboard/Numpad 的 holdup 在可控制地面 0／11／20／52 接 S40，保留受擊、空中、KO 禁止跳躍；按原 Common runner 進 50／52，不依賴 P2 出拳測試按鈕。
+- 驗收：Timer 十位／個位、兩邊中層扣血區域；Logo 入場後停住、雲／海持續循環、流星移動／平鋪；Numpad8 的垂直／斜跳、著地續跳與受擊時不能跳。Menu bitmap 字型仍待補，沒有混稱為動畫完成。
+
+## 0.23.42 — Title Menu / Options M1
 
 BUILD `title-menu-options-m1-20261003-01`。待人工驗收。
 
