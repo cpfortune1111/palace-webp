@@ -75,6 +75,9 @@ for state_id in (200, 210, 230, 240, 400, 410, 430, 440):
         'velset': [float(value) for value in fields['velset'].split(',')] if 'velset' in fields else [],
         'controllers': [compile_controller(controller) for controller in states['controllers']
                         if controller['state'] == state_id]}
+sweep_hitdef = next(controller for controller in attack_states['440']['controllers'] if controller['type'] == 'HitDef')
+sweep_hitdef['params']['ground.velocity'] = '-10,-18'
+sweep_hitdef['params']['air.velocity'] = '-8,-18'
 attack_commands = [compile_controller(controller) for controller in states['controllers']
                    if controller['state'] == -1 and controller['file'] == 'venus.cmd'
                    and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])
@@ -179,6 +182,10 @@ for axis, number in zip(('x', 'y'), re.search(r'^down.bounce.offset\s*=\s*([^;\n
 locomotion_constants['data.liedown.time'] = float(re.search(r'^liedown.time\s*=\s*(\d+)', source_text, re.M)[1])
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands, 'landingSound': landing_sound,
           'fallStates': fall_states,
+          'userOverrides': {'440': {'ground.velocity': '-10,-18', 'air.velocity': '-8,-18', 'basis': 'User-requested 0.23.27 tuning; archived CNS unchanged'}},
+          'koProfile': {'groundXMultiplier': 0.66, 'groundAdd': [-10, -8], 'groundYMinimum': -24,
+                        'airAdd': [-10, -8], 'airYMinimum': -12,
+                        'basis': 'IKEMEN CharVelocity defaults multiplied by Venus localcoord width / 320; source CNS has no KO velocity overrides; player kovelocity=true'},
           'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
           'deferredLocomotionEffects': deferred_locomotion,
           'guardDistance': {'front': int(attack_distance[1]), 'back': 0,

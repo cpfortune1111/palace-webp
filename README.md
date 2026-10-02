@@ -2,7 +2,20 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.26 — Sweep / Fall / Recovery M1
+## 最新版本：0.23.27 — Sweep Tuning / KO Fall M1
+
+BUILD `sweep-tuning-ko-fall-m1-20261002-01`。修正使用者 0.23.26 回報：440 飛起過高、200 打至 HP0 仍返回 S0。保留鏡頭及原資產。
+
+- 只對 440 採使用者指定調整：`ground.velocity=-10,-18`、`air.velocity=-8,-18`。編譯器與 battle JSON 記錄 userOverrides；原 CNS 來源封存保持不改，其他招的 air.velocity 不受影響。未完成的空中命中路徑仍不標為已可人工測試。
+- 普通命中致死按 IKEMEN 設 fall flag、fall animtype=Back。原 5000 選 5030 動畫、StateType=A，HitShakeOver 後走 `5000 → 5030 → 5035（視動畫時機）→ 5050 → 5100 → 5101 → 5110 → 5150`，不得回 S0／S11 或進 5120。440 仍保持 Trip 路徑，並非強迫改為普通 bounce。
+- 補 player 預設 kovelocity：Venus CNS 沒有另設 KO velocity，所以採 IKEMEN 預設按 localcoord width=1280 放大。ground xmul=.66、add=(-10,-8)、ymin=-24；air add=(-10,-8)、ymin=-12（空中命中仍待接）。world X 按受擊方向加成；非零原 Y 保留並依引擎加成／鉗制，不能把所有招改成同一速度。原 200 ground.velocity=-16，致死 VX 為 ±20.56、VY=-24。
+- 非受擊狀態發現 HP0 時按引擎 actionFinish 強制 5030、Time=1、ctrl=0，避免既有 S0／收招或起身狀態繼續操作。HitDef kill=0 保留 1 HP，不製造假 KO。5110 判斷不存活後留在 5150，完整 MatchOver／勝負回合流程仍未完成。
+
+人工請測：200／210／230／240／400／410／430 打至 HP0 均跌倒且不再起身；P1、P2 與兩面向；440 非致死高度變低、蹲防仍可擋；440 致死依引擎另有 KO velocity，不等於非致死 -18。本版待人工驗收；前版問題不標 PASS。
+
+自動回歸通過：雙玩家×雙 facing×八招共 32 組實際碰撞致死，檢查 HP0→5150、Y=0、不經 5120；200 KO 原速度計算、kill=0 留 1 HP、雙方 S0／HP0 的引擎強制 KO fallback；440 速度 override、原 Trip／bounce／HitFall 測試及既有完整回歸。無瀏覽器錯誤；並非人工 PASS。
+
+## 0.23.26 實作紀錄
 
 BUILD `sweep-fall-recovery-m1-20261002-01`。使用者 0.23.25 全 PASS；本版待人工驗收。按原 Venus CNS／CMD／AIR／SFF 加 440 蹲重腳，並接 Common 5070／5071、5030／5035、5050、5100／5101、5110、5120、5150。沿用鎖定鏡頭、attack.dist=640、hitshake x2、自訂鍵位及雙人共用 controller。
 
@@ -165,6 +178,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [x] 0.23.24 使用者全 PASS：210／230／240／241、52 著地聲；完整空中受擊仍未支援。
 - [x] 0.23.25：400／410／430、High／Low guard 及蹲姿 Light／Medium GetHit，使用者全 PASS。
 - [ ] 0.23.26：440／Trip、普通 falling／bounce、倒地／起身／KO 與 HitFall controllers 已接入，待人工驗收；完整空中攻擊與空中命中另列後續。
+- [ ] 0.23.27：依回報調低 440 速度，補普通命中致死／HP0 強制 KO 跌倒；待人工驗收，不把 0.23.26 問題標 PASS。
 - [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
 - [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。

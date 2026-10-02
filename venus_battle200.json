@@ -1282,9 +1282,9 @@
             "ground.hittime": "27",
             "guard.slidetime": "24",
             "guard.hittime": "34",
-            "ground.velocity": "-10,-35",
+            "ground.velocity": "-10,-18",
             "guard.velocity": "-32",
-            "air.velocity": "-8,-28",
+            "air.velocity": "-8,-18",
             "ground.cornerpush.veloff": "-28",
             "guard.cornerpush.veloff": "-52",
             "fall": "1",
@@ -3012,6 +3012,27 @@
         }
       ]
     }
+  },
+  "userOverrides": {
+    "440": {
+      "ground.velocity": "-10,-18",
+      "air.velocity": "-8,-18",
+      "basis": "User-requested 0.23.27 tuning; archived CNS unchanged"
+    }
+  },
+  "koProfile": {
+    "groundXMultiplier": 0.66,
+    "groundAdd": [
+      -10,
+      -8
+    ],
+    "groundYMinimum": -24,
+    "airAdd": [
+      -10,
+      -8
+    ],
+    "airYMinimum": -12,
+    "basis": "IKEMEN CharVelocity defaults multiplied by Venus localcoord width / 320; source CNS has no KO velocity overrides; player kovelocity=true"
   },
   "locomotionStates": {
     "100": {

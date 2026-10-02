@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.26');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.27');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.26-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.27-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -705,6 +705,7 @@ const server=http.createServer((request,response)=>{
   let checks=0;
   const params=battleDat.attackStates['440'].controllers.find(controller=>controller.type==='HitDef').params;
   if(params.damage!=='70,0'||params['ground.type']!=='Trip'||params.guardflag!=='L')throw Error('440 source');
+  if(params['ground.velocity']!=='-10,-18'||params['air.velocity']!=='-8,-18')throw Error('440 user velocity override');
   for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
    const result=resolveGroundHitM1({id:1,facing},{type:'S',state:0,y:0,ctrl:1,moveType:'I',life:1000},params,mode);
    if(result.guarded!==(mode==='crouch')||result.state!==(mode==='crouch'?152:5070))throw Error('440 guard');checks++;
@@ -745,6 +746,32 @@ const server=http.createServer((request,response)=>{
   return {checks,trip:'PASS',bounce:'PASS',ko:'PASS',fallControllers:'PASS'};
  })()`));
  console.log(JSON.stringify({fallChecks}));
+ const koChecks=await run(`(()=>{
+  let count=0;
+  for(const player of [1,2])for(const facing of [-1,1])for(const attack of [200,210,230,240,400,410,430,440]){
+   resetPlayerInput();setP2ControlMode('dummy');simPaused=false;p1Reaction=null;p1InvulnerableUntil=0;p1HitPause=0;cornerPushVelocity=0;posX=player===1?0:facing*140;posY=0;p1Facing=player===1?facing:-facing;vx=0;vy=0;p1Life=player===1?1000:1;p1LastHitKey=null;
+   p2.x=player===2?0:facing*140;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=player===2?facing:-facing;p2.life=player===2?1000:1;p2.hitShake=0;p2.attackPause=0;p2.lastHitKey=null;p2.getHit=null;p2.invulnerableUntil=0;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';
+   enterIRState(player===1?attack:0);enterP2State(player===2?attack:0);const visited=new Set();
+   for(let tick=0;tick<220;tick++){simStep();visited.add(player===1?p2.state:state)}
+   const receiver=player===1?p2:liveP1();
+   if(receiver.life!==0||receiver.state!==5150||receiver.y!==0)throw Error('KO terminal '+JSON.stringify({player,facing,attack,receiver}));
+   if(visited.has(5120)||!visited.has(5110))throw Error('KO recovery forbidden');
+   if(attack!==440)for(const required of [5000,5030,5050,5100,5101])if(!visited.has(required))throw Error('KO missing '+required+' attack '+attack);
+   count++;
+  }
+  const params=battleDat.attackStates['200'].controllers.find(controller=>controller.type==='HitDef').params;
+  for(const facing of [-1,1]){
+   const result=resolveGroundHitM1({id:1,facing},{type:'S',y:0,ctrl:1,moveType:'I',state:0,life:20},params,'none');
+   if(!result.getHit.fall||result.getHit.animtype!==3||Math.abs(result.getHit.xvel-20.56*facing)>.001||result.getHit.yvel!==-24)throw Error('IKEMEN KO velocity');
+   const survive=resolveGroundHitM1({id:1,facing},{type:'S',y:0,ctrl:1,moveType:'I',state:0,life:20},{...params,kill:'0'},'none');
+   if(survive.life!==1||survive.getHit.fall)throw Error('kill=0');
+  }
+  resetPlayerInput();p1Reaction=null;p1HitPause=0;p1Life=0;p2.life=0;posX=-300;posY=0;vx=0;vy=0;p2.x=300;p2.y=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);
+  for(let tick=0;tick<220;tick++)simStep();
+  if(state!==5150||p2.state!==5150||runtimeCtrl||p2.ctrl)throw Error('HP0 outside hit state');
+  return {count,normalHitKo:'PASS',noGetUp:'PASS',velocities:'PASS',zeroLifeFallback:'PASS'};
+ })()`);
+ console.log(JSON.stringify({koChecks}));
  assert.deepEqual(errors,[]);
 console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,locomotion,dashSourceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});
