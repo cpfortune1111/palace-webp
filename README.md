@@ -2,7 +2,19 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.30 — Air Attacks / Air GetHit M1
+## 最新版本：0.23.31 — Air LoopStart / HP Restore M1
+
+BUILD `air-loopstart-hp-restore-m1-20261002-01`。修正使用者回報 600／630 空中倒跳抽搐；0.23.30 不標全 PASS，本版待人工驗收。
+
+- 根因：AIR 匯出器只保留影格、漏掉 LoopStart，P1／P2 播放到尾格都重返第一格。現按原 AIR 保留零基準 loop index；600／630 原 LoopStart 在 E4，startup E1→E2→E3 只播一次，其後 E4→E5→E6→E4 循環。同步更新動畫時鐘，AnimElemTime 不因循環繼續偏離影格，也不把 State Time 重置。原影格 ticks、sprite、Clsn、招式速度及鏡頭不改。
+- 右上新增 HP 按鈕，Space 同效：回復 P1／P2 全部 HP，不重置位置、不取消普通攻擊或受擊、不更改播放／暫停狀態。已在 S5150 的 KO 角色以訓練功能進原 S5120 起身，再依原 CNS 恢復；這是明確 debug override，不杜撰原 S5150 的 recovery controller，也不啟用 5050 的註解 recovery 入口。
+- Space 保留為回血快捷鍵，不可設成戰鬥鍵；按住不重複觸發，Settings／文字輸入／修飾鍵不回血。暫停時亦即時更新 HUD 與畫面，起身動畫等待播放或單步推進。Pause/Break 與 Scroll Lock 保持原作用。
+
+人工請測：原地／移動跳 600、630，暫停逐 tick 核對 E6 後回 E4，不能回 E1；P1／P2、兩面向均測。扣血後用右上 HP／Space，兩邊滿血但位置不重置；雙方 KO 到 S5150 後回血，應經 S5120 起身，可繼續操作。暫停回血不自行播放。
+
+自動驗證涵蓋來源 LoopStart／跨三輪循環／雙人 element 與動畫時鐘、按鈕／Space／repeat／Settings 隔離、雙方 S5150→5120→可操作及暫停刷新，並保留空中四招與全部舊版回歸。人工待測；接觸計時及 GetHit 深測狀態不變。
+
+## 0.23.30 實作紀錄
 
 BUILD `air-attacks-air-gethit-m1-20261002-01`。使用者 0.23.29 PASS；本版待人工驗收。保持鎖定鏡頭、440 速度 override、hitshake x2 與雙人自訂鍵位。
 
@@ -166,7 +178,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 
 - P1：方向鍵移動，x=Z、y=X、a=A、b=S、l=Q、r=W；WASD 不移動。P2：Num8／5／4／6 移動，x=Num0、y=Num.、a=Num1、b=Num2、l=Num/、r=Num*；不再使用 J／L／U。Settings 可自訂，亦可切回 Dummy。
 - Input 可選 Auto／Keyboard／Touch；失焦清除 held input。右上 □ 顯示 CLSN，Ⅱ 暫停／逐 tick，↓ 匯出最近 600 ticks 診斷 JSON（非 replay save）。
-- 更新後確認 Prototype／READY=0.23.30、BUILD=`air-attacks-air-gethit-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick。
+- 更新後確認 Prototype／READY=0.23.31、BUILD=`air-loopstart-hp-restore-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick，Space 回復雙方 HP／KO 起身。
 - 自動回歸使用 `tools/check-runtime.cjs`；Node、Playwright／Edge、遊戲資料與既有 Three.js CDN 需要可用。本次新增 range 邊界、hit timers、HitVelSet facing／axis masks、接觸計時及 pause／reset 檢查。
 - 本版自動測試 PASS：40 組 range 邊界、兩個 facing 的 GetHit／HitVelSet／未知欄位拒絕、接觸 pause／reset，以及既有 448 組 expression parity、雙向 hit／guard／corner、同時 X／U／互中、鍵盤／CLSN／Turn／30-60-120 Hz 回歸；browserErrors=[]。瀏覽器人工驗收待使用者測試。
 

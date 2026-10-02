@@ -48,6 +48,7 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
         return image, axis_x, axis_y
 
     actions = {}
+    loop_starts = {}
     action = None
     for raw in air.decode('utf-8-sig', errors='replace').splitlines():
         line = raw.split(';', 1)[0].strip()
@@ -56,6 +57,8 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
             action = begin[1] if begin[1] in action_ids else None
             if action:
                 actions[action] = []
+        elif action and line.lower() == 'loopstart':
+            loop_starts[action] = len(actions[action])
         elif action and re.match(r'^-?\d+\s*,', line):
             fields = [part.strip() for part in line.split(',')]
             group, item, ox, oy, time = map(int, fields[:5])
@@ -85,7 +88,7 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
             row_height = max(row_height, image.height)
     atlas = atlas.crop((0, 0, atlas.width, cursor_y + row_height + 2))
     atlas.save(output_dir / (prefix + '_atlas.png'))
-    data = dict(sprites=sprites, actions=actions, source=dict(sffSHA256=hashlib.sha256(sff).hexdigest(), airSHA256=hashlib.sha256(air).hexdigest()))
+    data = dict(sprites=sprites, actions=actions, loopStarts=loop_starts, source=dict(sffSHA256=hashlib.sha256(sff).hexdigest(), airSHA256=hashlib.sha256(air).hexdigest()))
     (output_dir / (prefix + '.json')).write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Exported AIR:', {action: [frame['time'] for frame in frames] for action, frames in actions.items()})
     previous = output_dir / 'venus_runtime_atlas.png'

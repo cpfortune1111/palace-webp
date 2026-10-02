@@ -38,6 +38,14 @@ for controller in states['controllers']:
     controllers.append({'type': controller['type'], 'params': params, 'triggers': triggers,
                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
 actions = {}
+loop_starts = {}
+for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
+    element = 0
+    for entry in action['entries']:
+        if entry['text'].lower() == 'loopstart':
+            loop_starts[str(action['id'])] = element
+        elif re.match(r'^-?\d+\s*,', entry['text']):
+            element += 1
 def compile_controller(controller):
     params, triggers, triggerall = {}, {}, []
     for entry in controller['entries']:
@@ -191,7 +199,7 @@ for axis, number in zip(('x', 'y'), re.search(r'^down.bounce.offset\s*=\s*([^;\n
     locomotion_constants['movement.down.bounce.offset.' + axis] = float(number)
 locomotion_constants['data.liedown.time'] = float(re.search(r'^liedown.time\s*=\s*(\d+)', source_text, re.M)[1])
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands, 'landingSound': landing_sound,
-          'fallStates': fall_states,
+          'fallStates': fall_states, 'loopStarts': loop_starts,
           'recoveryEntryEnabled': False,
           'noAirGuardControllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == -2 and controller['type'] == 'AssertSpecial' and any('NoAirGuard' in entry['text'] for entry in controller['entries'])],
           'userOverrides': {'440': {'ground.velocity': '-10,-18', 'air.velocity': '-8,-18', 'basis': 'User-requested 0.23.27 tuning; archived CNS unchanged'}},

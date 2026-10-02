@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.30');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.31');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.30-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.31-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -861,6 +861,32 @@ const server=http.createServer((request,response)=>{
   assert.equal(await run(player===1?'state':'p2.state'),attack);
  }
  console.log(JSON.stringify({airKeyboard:8}));
+ const loopChecks=await run(`(()=>{
+  let checks=0;
+  for(const anim of [600,630])for(const facing of [-1,1]){
+   const loop=battleDat.loopStarts[String(anim)];if(loop!==3||airDat.loopStarts[String(anim)]!==3)throw Error('AIR LoopStart import');
+   resetPlayerInput();p1Reaction=null;p1Facing=facing;enterIRState(anim);p2.facing=facing;enterP2State(anim);
+   const frames=framesFor(anim),duration=actionDuration(anim),loopDuration=frames.slice(loop).reduce((total,frame)=>total+frame.time,0);
+   for(let tick=1;tick<=duration+loopDuration*3;tick++){
+    stateTicks++;advanceAirOneTick();p2.time++;advanceFighterAirOneTick(p2);
+    if(fi+1!==p2.elem||ticks!==p2.elemTick)throw Error('Loop player parity');
+    if(tick>=duration&&(fi<loop||p2.elem<=loop))throw Error('Startup repeated');
+    if((tick-duration)%loopDuration===0&&tick>=duration){if(fi!==loop||ticks!==0||animElemTime(loop+1)!==0||fighterElemTime(p2,loop+1)!==0)throw Error('Loop clock mismatch')}
+    checks++;
+   }
+  }
+  return checks;
+ })()`);console.log(JSON.stringify({loopChecks}));
+ await run("resetPlayerInput();p1Reaction=null;p1Life=100;p2.life=200;p1HitPause=0;p2.hitShake=0;enterIRState(0);enterP2State(0);simPaused=true;stepRequested=false");
+ await page.keyboard.press('Space');assert.equal(await run('p1Life===1000&&p2.life===p2.lifeMax&&simPaused&&!stepRequested'),true);
+ await run("p1Life=101;p2.life=201;window.dispatchEvent(new KeyboardEvent('keydown',{code:'Space',repeat:true}))");assert.equal(await run('p1Life'),101);
+ await page.locator('#dbgHeal').dispatchEvent('pointerdown');assert.equal(await run('p1Life===1000&&p2.life===1000'),true);
+ await run("p1Life=0;p2.life=0;posX=-300;posY=0;vx=0;vy=0;p2.x=300;p2.y=0;p2.vx=0;p2.vy=0;simPaused=false;enterIRState(0);enterP2State(0);for(let tick=0;tick<220;tick++)simStep();simPaused=true;stepRequested=false");
+ assert.equal(await run('state===5150&&p2.state===5150'),true);
+ await page.keyboard.press('Space');assert.equal(await run('state===5120&&p2.state===5120&&p1Life===1000&&p2.life===1000&&simPaused&&!stepRequested'),true);
+ await run("for(let tick=0;tick<100;tick++)simStep()");assert.equal(await run('p1Life===1000&&p2.life===1000&&![5150,5120].includes(state)&&![5150,5120].includes(p2.state)'),true);
+ await page.locator('#openSettings').click();await run('p1Life=50;p2.life=60');await page.keyboard.press('Space');assert.equal(await run('p1Life'),50);assert.equal(await run("validBindings({...structuredClone(defaultBindings),p1:{...defaultBindings.p1,x:'Space'}})"),false);await page.locator('#cancelBindings').click();
+ console.log(JSON.stringify({healButton:'PASS',spaceHotkey:'PASS',koSourceGetUp:'PASS',pausedRefresh:'PASS',settingsIsolation:'PASS'}));
  await run("resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1Life=1000;p2.life=1000;p1HitPause=0;p2.hitShake=0;posX=-300;posY=0;vx=0;vy=0;p2.x=300;p2.y=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);simPaused=false;stepRequested=false;document.activeElement?.blur()");
  await page.keyboard.press('ScrollLock');assert.equal(await run('simPaused&&!stepRequested'),true);
  const stopped=await run('combatTraceTick');await run('loop()');assert.equal(await run('combatTraceTick'),stopped);

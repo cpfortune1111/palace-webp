@@ -4290,6 +4290,14 @@
       "ctrl": 0
     }
   },
+  "loopStarts": {
+    "600": 3,
+    "630": 3,
+    "902": 4,
+    "904": 2,
+    "5700": 4,
+    "5800": 4
+  },
   "recoveryEntryEnabled": false,
   "noAirGuardControllers": [
     {

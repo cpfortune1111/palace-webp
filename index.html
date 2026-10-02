@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.30 Air Attacks / Air GetHit M1</title>
+<title>Prototype 0.23.31 Air LoopStart / HP Restore M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.30 · Air Attacks / Air GetHit M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD air-attacks-air-gethit-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.31 · Air LoopStart / HP Restore M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD air-loopstart-hp-restore-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -58,6 +58,14 @@ function stepDebug(){
  else stepRequested=true;
 }
 debugPress(dbgPlay,playDebug);debugPress(dbgPause,stepDebug);
+function restorePlayerHealth(){
+ if(!battleDat||!dat)return;
+ p1Life=1000;p2.life=p2.lifeMax;
+ if(p1Reaction){p1Reaction.life=p1Life;if(p1Reaction.state===5150){p1Reaction.hitShake=0;p1Reaction.hitTime=-1;p1Reaction.getHit.fall=0;enterGroundReactionState(p1Reaction,5120);syncP1Reaction()}}
+ if(p2.state===5150){p2.hitShake=0;p2.hitTime=-1;p2.getHit.fall=0;enterP2State(5120)}
+ logicFrame={...liveP1(),p2:{...p2}};updateDebugHud();draw();drawMars();drawCollision();
+}
+const dbgHeal=document.createElement('button');dbgHeal.id='dbgHeal';dbgHeal.textContent='HP';dbgHeal.title='回復雙方 HP／KO 起身 · Space';dbgHeal.setAttribute('aria-label','Restore both players health');document.querySelector('#debugBtns').appendChild(dbgHeal);debugPress(dbgHeal,restorePlayerHealth);
 dbgPlay.title='Play · Pause/Break';dbgPause.title='Pause / Step · Scroll Lock';
 
 hud.addEventListener('click',()=>{hudCollapsed=!hudCollapsed;hud.classList.toggle('collapsed',hudCollapsed)});
@@ -85,7 +93,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.30 · Air Attacks / Air GetHit M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.31 · Air LoopStart / HP Restore M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -128,21 +136,21 @@ function playSourceSound(value,channel=0){
  const sound=new Audio('./battle-sounds/'+match[1]+'-'+match[2]+'.wav');soundChannels.set(key,sound);sound.play().catch(()=>{});
 }
 Promise.all([
- fetch('./venus_battle200.json?v=02330',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
- fetch('./venus_guard.json?v=02330',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02330'})
+ fetch('./venus_battle200.json?v=02331',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=02331',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02331'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_fall.json?v=02330').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02330'})
+ fetch('./venus_fall.json?v=02331').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02331'})
 ]).then(results=>{fallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_air.json?v=02330').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02330'})
+ fetch('./venus_air.json?v=02331').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02331'})
 ]).then(results=>{airDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./common_fall.json?v=02330').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02330'})
+ fetch('./common_fall.json?v=02331').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02331'})
 ]).then(results=>{commonFallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
@@ -282,7 +290,7 @@ const defaultBindings={p1:{left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down
 const keyboardActions=Object.keys(defaultBindings.p1);
 function validBindings(bindings){
  const codes=[];
- for(const player of ['p1','p2'])for(const action of keyboardActions){const code=bindings?.[player]?.[action];if(typeof code!=='string'||!(/^(Key[A-Z]|Digit[0-9]|Numpad[0-9]|NumpadDecimal|NumpadDivide|NumpadMultiply|NumpadAdd|NumpadSubtract|ArrowLeft|ArrowRight|ArrowUp|ArrowDown|Space)$/.test(code)))return false;codes.push(code)}
+ for(const player of ['p1','p2'])for(const action of keyboardActions){const code=bindings?.[player]?.[action];if(typeof code!=='string'||!(/^(Key[A-Z]|Digit[0-9]|Numpad[0-9]|NumpadDecimal|NumpadDivide|NumpadMultiply|NumpadAdd|NumpadSubtract|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)$/.test(code)))return false;codes.push(code)}
  return new Set(codes).size===codes.length;
 }
 function loadKeyboardBindings(){try{const saved=JSON.parse(localStorage.getItem('palace-keyboard-bindings-v1'));if(validBindings(saved))return saved}catch{}return structuredClone(defaultBindings)}
@@ -349,9 +357,9 @@ addEventListener('keydown',event=>{
   if(!validBindings(candidate)){settings.querySelector('#bindingMessage').textContent='按鍵重複或不支援，請選另一個按鍵';return}
   draftBindings=candidate;bindingCapture=null;renderBindings();settings.querySelector('#bindingMessage').textContent='按儲存套用新鍵位';return;
  }
- if(event.code==='Pause'||event.code==='ScrollLock'){
+ if(event.code==='Pause'||event.code==='ScrollLock'||event.code==='Space'){
   if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||event.target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;
-  event.preventDefault();if(event.code==='Pause')playDebug();else stepDebug();return;
+  event.preventDefault();if(event.code==='Space')restorePlayerHealth();else if(event.code==='Pause')playDebug();else stepDebug();return;
  }
  if(p2Keymap[event.code]){
   if(editableTarget(event.target)||event.ctrlKey||event.metaKey||event.altKey||inputPreference==='touch')return;
@@ -678,7 +686,7 @@ function advanceAirOneTick(){
  if(ticks>=dur){
    ticks=0;
    if(fi<frames.length-1)fi++;
-   else fi=0; // IKEMEN Animation.Action(): end -> loopstart; default loopstart=0.
+   else {const loop=battleDat.loopStarts?.[String(current)]??0;fi=loop;if(loop>0)p1AnimStartTime+=actionDuration(current)-frames.slice(0,loop).reduce((total,frame)=>total+Math.max(1,frame.time),0)}
  }
 }
 
@@ -708,7 +716,7 @@ function advanceFighterAirOneTick(f){
  if(f.elemTick>=Math.max(1,Number(el.time)||1)){
    f.elemTick=0;
    if(f.elem<frames.length)f.elem++;
-   else if(!battleDat?.fallStates?.[String(f.state)]&&![120,121,140,141,5000,5001,5010,5011,5020,5021].includes(f.anim))f.elem=1;
+   else if(!battleDat?.fallStates?.[String(f.state)]&&![120,121,140,141,5000,5001,5010,5011,5020,5021].includes(f.anim)){const loop=battleDat.loopStarts?.[String(f.anim)]??0;f.elem=loop+1;if(loop>0)f.animStartTime=(f.animStartTime||0)+actionDuration(f.anim)-frames.slice(0,loop).reduce((total,frame)=>total+Math.max(1,frame.time),0)}
  }
 }
 function enterGroundReactionState(fighter,n){
@@ -1204,14 +1212,14 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.30',build:'air-attacks-air-gethit-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.31',build:'air-loopstart-hp-restore-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.30-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.31-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
