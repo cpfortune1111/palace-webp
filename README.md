@@ -2,7 +2,17 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.40 — Portrait Facing / Low Life Idle M1
+## 最新版本：0.23.41 — Camera Bounds / Fight HUD M1
+
+BUILD `camera-bounds-fight-hud-m1-20261003-01`。0.23.40 使用者 PASS。本版待驗收。
+
+- 畫面左右／底部按 StageTraining 1280×720 letterbox 可視框裁切玩家、Helper／Projectile／Explod、CLSN；頂部不裁，保留跳躍出上框效果。只裁繪製，角色世界位置、camera follow、zoom、比例及戰鬥碰撞不變。
+- 匯入原 data/fight.def、fight.sff 的 1v1 血條 bg0 A1001、bg1 11,1、mid 12,1、front A1311（60 格，每格 4 ticks）、Timer 心形框 60,0；P1 anchor 0，P2 anchor 1278／反向，range 619↔161，實際 HP 剪裁。扣血延遲條採 30 ticks 後每 tick 1% 的 Web 暫定值，非已驗證來源 mid timing。
+- Timer 預設 ∞，Input 內可切 99 秒；來源 framespercount=60、font6 bank3 的 timer.sff 數字。模擬 pause／step 跟隨 sim tick；命中停止／SuperPause／KO 停倒數，Space 補血亦重置時間。99 到 0 顯示剩餘 HP 勝負，仍維持 training 操作，不自動轉 Win／Lose states 或開新回合。
+- 原版對比盤點：仍未完成真正 5900→190/191 intro→對戰→KO/TimeOver→Win/Lose→新回合；AI 正式選項／決策驗收；完整共同 Common runner 與 -1 尚未支援路徑；音效 helper 深測；4P 真正同場（目前只 partner 查詢）；Powerbar、姓名來源字型、回合勝利圖示、Combo／宣告；完整 HUD AS224D32 blending 與 mid timing（本版 bg0 alpha 224/255 暫代）；選角頁 Normal/Auto、主頁 settings；逐招與 IKEMEN 並排深測。投技／645／175／5500 原作者未完成，保留參考，不列引擎 bug；recovery 入口按來源停用。
+- 驗收：窄畫面跳躍仍可越上框，地面 P2 腳／倒影不可穿下框；寬畫面左右不可漏出角色／特效；P1/P2 受擊／KO／Space 的 HP；∞ 不倒數、99 每 60 有效 ticks 減 1、Pause/Step、時間到判定。只更新本 README，不新增說明文件。
+
+## 0.23.40 — Portrait Facing / Low Life Idle M1
 
 BUILD `portrait-low-life-idle-m1-20261003-01`。待人工驗收。
 
@@ -352,4 +362,4 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
-下個切片：先驗收本版 command／來源取消窗口；再處理必殺技所需 Projectile／Helper 與尚未接入的玩家 -1 分支。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
+下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。

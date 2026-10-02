@@ -22,6 +22,13 @@ const server=http.createServer((request,response)=>{
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
+ if(process.argv.includes('--camera-hud')){
+  await run('fightHud.ready');
+  for(const viewport of [{width:1161,height:754},{width:1398,height:598}]){
+   await page.setViewportSize(viewport);const result=await run(`(()=>{resize();draw();const expect=(condition,label)=>{if(!condition)throw Error(label)};const fit=Math.min(innerWidth/1280,innerHeight/720),side=(innerWidth-1280*fit)/2,bottom=(innerHeight-720*fit)/2;expect(cv.style.clipPath.startsWith('inset(0px'),'Top spill retained');expect(cv.style.clipPath===mcv.style.clipPath&&cv.style.clipPath===effectCanvas.style.clipPath,'All gameplay layers clipped');expect(side>0||bottom>0,'Letterbox present');fightHud.setMode('99');for(let index=0;index<60;index++)fightHud.step(true);expect(fightHud.remaining()===98,'60 active ticks per second');for(let index=0;index<60;index++)fightHud.step(false);expect(fightHud.remaining()===98,'Pause clock retained');fightHud.reset();expect(fightHud.remaining()===99,'Timer reset');fightHud.setMode('infinite');expect(fightHud.remaining()===null,'Infinite default');fightHud.render({life:250},{life:750,lifeMax:1000});return {side,bottom};})()`);console.log(JSON.stringify(result));
+  }
+  await page.waitForFunction(()=>window.specialTest.run('s.children.some(child=>child.isGroup)'),null,{timeout:60000});await run('p1Life=1000;p2.life=500;posX=-300;p2.x=300;cameraY=-100;posY=-350;updateCamera();resize();r.render(s,c);draw();drawMars();drawSourceExplods();updateDebugHud()');await page.screenshot({path:'work/camera-hud-preview.png'});assert.deepEqual(errors,[]);return;
+ }
  if(process.argv.includes('--portrait-idle')){
   const result=await run(`(()=>{
    let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
