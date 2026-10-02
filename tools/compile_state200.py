@@ -44,9 +44,7 @@ for state_id in (100, 105, 106):
     for controller in states['controllers']:
         if controller['state'] != state_id:
             continue
-        sound_entry = next((entry['text'] for entry in controller['entries']
-                            if entry['text'].lower().startswith('value')), '')
-        if controller['type'] in ('Explod', 'MakeDust') or (controller['type'] == 'PlaySnd' and not re.search(r'=\s*s', sound_entry, re.I)):
+        if controller['type'] == 'MakeDust':
             deferred_locomotion.append(controller)
             continue
         params, triggers, triggerall = {}, {}, []

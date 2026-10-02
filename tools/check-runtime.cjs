@@ -12,7 +12,7 @@ const server=http.createServer((request,response)=>{
  let content=fs.readFileSync(file);
  if(filename==='index.html'){
   let html=content.toString().replaceAll('requestAnimationFrame(loop);','');
-  html=html.replace('</script></body>',"window.runtimeTest={run:source=>eval(source),step:()=>{simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawCollision()},snapshot:()=>({state,fi,current,p1Facing,posX,posY,vx,vy,cameraX,stateTicks,p1TurnTime,p2:{...p2},runtimeFailed})};</script></body>");
+  html=html.replace('</script></body>',"window.runtimeTest={run:source=>eval(source),step:()=>{simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods();drawCollision()},snapshot:()=>({state,fi,current,p1Facing,posX,posY,vx,vy,cameraX,stateTicks,p1TurnTime,p2:{...p2},runtimeFailed})};</script></body>");
   content=Buffer.from(html);
  }
  const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.png':'image/png','.glb':'model/gltf-binary'};
@@ -74,7 +74,7 @@ const server=http.createServer((request,response)=>{
  }
  await run("resetPlayerInput();cameraX=0;posX=-200;posY=0;p1Facing=1;enterIRState(0);enterP2State(0);p2.x=200;p2.facing=-1;");
  await page.keyboard.down('ArrowRight');await step();await step();assert.ok((await step()).posX>-200);await page.keyboard.up('ArrowRight');
- await page.keyboard.down('KeyX');const attack=await step();assert.equal(attack.state,200);await page.keyboard.up('KeyX');
+ await page.keyboard.down('KeyZ');const attack=await step();assert.equal(attack.state,200);await page.keyboard.up('KeyZ');
  const combat=[];
  for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
   await run(`resetPlayerInput();p1HitPause=0;cameraX=0;posX=0;posY=0;p1Facing=${facing};p2.x=${facing*140};p2.y=0;p2.facing=${-facing};p2.life=1000;p2.lastHitKey=null;p2.getHit=null;enterP2State(0);document.querySelector('#p2Guard').value='${mode}';enterIRState(200);`);
@@ -133,7 +133,7 @@ const server=http.createServer((request,response)=>{
  const changes=sprites.filter((value,index)=>index===0||value!==sprites[index-1]);
  assert.deepEqual(changes,[0,10,0]);
  assert.ok(hitFrames.some(frame=>frame[0]===5005));
- await run("simPaused=true;logicFrame={state:200,time:3,anim:200,elem:4,facing:1,x:0,y:0,vx:0,vy:0,life:1000,sprPriority:2,p2:{...p2,state:5001,time:4,anim:5000,elem:2,x:100,y:0,facing:-1,vx:16,vy:0,life:980,sprPriority:0}};updateDebugHud();draw();drawMars();drawCollision()");
+ await run("simPaused=true;logicFrame={state:200,time:3,anim:200,elem:4,facing:1,x:0,y:0,vx:0,vy:0,life:1000,sprPriority:2,p2:{...p2,state:5001,time:4,anim:5000,elem:2,x:100,y:0,facing:-1,vx:16,vy:0,life:980,sprPriority:0}};updateDebugHud();draw();drawMars();drawSourceExplods();drawCollision()");
  const hudText=await page.locator('#act').innerText();
  assert.match(hudText,/P1_S200_T3_A200_E4_F\+1_X\+0\.0_Y\+0\.0_VX\+0\.0_VY\+0\.0_HP1000/);
  assert.match(hudText,/P2_S5001_T4_A5000_E2_F-1_X\+100\.0_Y\+0\.0_VX-16\.0_VY\+0\.0_HP980/);
@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.22');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.23');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,10 +178,10 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.22-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.23-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
- const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
+ const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
  assert.equal(await run('combatTraceTick'),pausedCount);await run('simPaused=false');
  await run('for(let tick=0;tick<605;tick++)simStep()');
  const bounded=await run('combatTraceExport()');
@@ -299,20 +299,20 @@ const server=http.createServer((request,response)=>{
  assert.equal(contextChecks,true);
  await page.locator('#inputMode').selectOption('keyboard');
  await run("simPaused=false;resetPlayerInput();p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=140;posY=0;p1Facing=-1;p2.x=0;p2.y=0;p2.facing=1;p2.attackPause=0;p2.cornerPushVelocity=0;p2.hitShake=0;enterIRState(0);enterP2State(0)");
- await page.keyboard.down('u');assert.equal(await run('p2PunchRequested'),true);
+ await page.keyboard.down('Numpad0');assert.equal(await run('p2PunchRequested'),true);
  await step();assert.equal(await run('combatTraceExport().frames.at(-1).physicalInput.p2Punch'),true);
  for(let tick=0;tick<4;tick++)await step();assert.equal(await run('p1Life'),980);
  for(let tick=0;tick<45;tick++)await step();
- assert.equal(await run('p2.state'),0);await page.keyboard.down('u');
- assert.equal(await run('p2PunchRequested'),false);await page.keyboard.up('u');
- await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),true);
+ assert.equal(await run('p2.state'),0);await page.keyboard.down('Numpad0');
+ assert.equal(await run('p2PunchRequested'),false);await page.keyboard.up('Numpad0');
+ await page.keyboard.press('Numpad0');assert.equal(await run('p2PunchRequested'),true);
  await run('resetPlayerInput()');assert.equal(await run('p2PunchRequested'),false);
- await page.locator('#p2Guard').focus();await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),false);
+ await page.locator('#inputMode').focus();await page.keyboard.press('Numpad0');assert.equal(await run('p2PunchRequested'),false);
  await run('document.activeElement.blur()');
- await page.evaluate(()=>window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyU',ctrlKey:true,cancelable:true})));
+ await page.evaluate(()=>window.dispatchEvent(new KeyboardEvent('keydown',{code:'Numpad0',ctrlKey:true,cancelable:true})));
  assert.equal(await run('p2PunchRequested'),false);
- await page.locator('#inputMode').selectOption('touch');await page.keyboard.press('u');assert.equal(await run('p2PunchRequested'),false);
- await page.locator('#inputMode').selectOption('auto');await run("setInputMode('touch')");await page.keyboard.press('u');
+ await page.locator('#inputMode').selectOption('touch');await page.keyboard.press('Numpad0');assert.equal(await run('p2PunchRequested'),false);
+ await page.locator('#inputMode').selectOption('auto');await run("setInputMode('touch')");await page.keyboard.press('Numpad0');
  assert.equal(await run('activeInputMode'),'keyboard');assert.equal(await run('p2PunchRequested'),true);
  await page.evaluate(()=>window.dispatchEvent(new Event('blur')));assert.equal(await run('p2PunchRequested'),false);
  const sharedControllers=await run(`(()=>{
@@ -343,7 +343,7 @@ const server=http.createServer((request,response)=>{
  const p2Walking=[];
  for(const facing of [-1,1])for(const backwards of [false,true]){
   await run(`simPaused=false;resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=${facing*400};posY=0;p1Facing=${-facing};vx=0;vy=0;p2.x=0;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${facing};p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;enterIRState(0);enterP2State(0)`);
-  const direction=facing*(backwards?-1:1),key=direction>0?'l':'j';
+  const direction=facing*(backwards?-1:1),key=direction>0?'Numpad6':'Numpad4';
   await page.keyboard.down(key);assert.equal(await run('p2ControlMode'),'keyboard');
   for(let tick=0;tick<3;tick++)await step();
   const expected=await run(`constVal('velocity.walk.${backwards?'back':'fwd'}.x')*${facing}`);
@@ -356,31 +356,31 @@ const server=http.createServer((request,response)=>{
   p2Walking.push({facing,backwards,velocity:expected});
  }
  await run("resetPlayerInput();p2.x=0;posX=400;p2.facing=1;enterP2State(0)");
- await page.keyboard.down('j');await page.keyboard.down('l');for(let tick=0;tick<4;tick++)await step();
+ await page.keyboard.down('Numpad4');await page.keyboard.down('Numpad6');for(let tick=0;tick<4;tick++)await step();
  assert.equal(await run('p2.x'),0);assert.equal(await run('p2.state'),0);
- await page.keyboard.up('j');await page.keyboard.up('l');
- await page.keyboard.down('l');for(let tick=0;tick<3;tick++)await step();
+ await page.keyboard.up('Numpad4');await page.keyboard.up('Numpad6');
+ await page.keyboard.down('Numpad6');for(let tick=0;tick<3;tick++)await step();
  await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await step();
- assert.equal(await run('p2.vx'),0);assert.deepEqual(await run('p2Input'),{left:false,right:false});await page.keyboard.up('l');
+ assert.equal(await run('p2.vx'),0);assert.equal(await run('p2Input.left||p2Input.right'),false);await page.keyboard.up('Numpad6');
  for(const facing of [-1,1]){
   await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=${facing};p2.x=${facing*140};p2.y=0;p2.vx=0;p2.facing=${-facing};p2.life=1000;p2.getHit=null;p2.lastHitKey=null;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;enterIRState(200);enterP2State(0)`);
-  await page.keyboard.down(facing>0?'l':'j');
+  await page.keyboard.down(facing>0?'Numpad6':'Numpad4');
   for(let tick=0;tick<4;tick++)await step();
   assert.equal(await run('p2.life'),1000);assert.equal(await run('p2.getHit.guarded'),true);
-  await page.keyboard.up(facing>0?'l':'j');
+  await page.keyboard.up(facing>0?'Numpad6':'Numpad4');
   for(let tick=0;tick<45;tick++)await step();
  }
  await run("resetPlayerInput();setP2ControlMode('keyboard');p2.x=0;posX=400;p2.facing=-1;enterIRState(0);enterP2State(0);p2.time=99");
- await page.keyboard.down('l');await step();
+ await page.keyboard.down('Numpad6');await step();
  assert.equal(await run('p2.anim'),5);assert.equal(await run('p2.turnTime'),0);
  await step();assert.equal(await run('p2.anim'),5);assert.equal(await run('p2.turnTime'),1);
- await page.keyboard.up('l');
+ await page.keyboard.up('Numpad6');
  await page.locator('#p2Control').selectOption('dummy');assert.equal(await run('p2ControlMode'),'dummy');
  assert.equal(await page.locator('#p2Guard').isDisabled(),false);
- await page.locator('#inputMode').selectOption('touch');await page.keyboard.down('j');
- assert.equal(await run('p2ControlMode'),'dummy');assert.equal(await run('p2Input.left'),false);await page.keyboard.up('j');
+ await page.locator('#inputMode').selectOption('touch');await page.keyboard.down('Numpad4');
+ assert.equal(await run('p2ControlMode'),'dummy');assert.equal(await run('p2Input.left'),false);await page.keyboard.up('Numpad4');
  await page.locator('#inputMode').selectOption('keyboard');
- await page.locator('#p2Guard').focus();await page.keyboard.press('j');assert.equal(await run('p2ControlMode'),'dummy');
+ await page.locator('#p2Guard').focus();await page.keyboard.press('Numpad4');assert.equal(await run('p2ControlMode'),'dummy');
  await run('document.activeElement.blur()');
  const p2FrameRates=[];
  for(const rate of [30,60,120]){
@@ -396,7 +396,7 @@ const server=http.createServer((request,response)=>{
  }
  await run("resetPlayerInput();setP2ControlMode('dummy')");
  const simultaneous=[];
- for(const facing of [-1,1])for(const order of [['x','u'],['u','x']]){
+ for(const facing of [-1,1])for(const order of [['z','Numpad0'],['Numpad0','z']]){
   await run(`simPaused=false;resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=${-facing*250};posY=0;p1Facing=${facing};vx=0;vy=0;p2.x=${facing*250};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${-facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;p2.lastHitKey=null;enterIRState(0);enterP2State(0)`);
   for(const key of order)await page.keyboard.down(key);
   await step();assert.equal(await run('state'),200);assert.equal(await run('p2.state'),200);
@@ -408,11 +408,11 @@ const server=http.createServer((request,response)=>{
   simultaneous.push({facing,order:order.join('+'),result:'both-start'});
  }
  await run("resetPlayerInput();p1Reaction=null;p1HitPause=0;cameraX=0;posX=-250;posY=0;p1Facing=1;p2.x=250;p2.y=0;p2.facing=-1;p2.hitShake=0;p2.attackPause=0;enterIRState(0);enterP2State(0)");
- await page.keyboard.down('x');await step();assert.equal(await run('runtimeCtrl'),0);
- await page.keyboard.down('u');await step();assert.equal(await run('p2.state'),200);assert.equal(await run('state'),200);
- await page.keyboard.up('x');await page.keyboard.up('u');
+ await page.keyboard.down('z');await step();assert.equal(await run('runtimeCtrl'),0);
+ await page.keyboard.down('Numpad0');await step();assert.equal(await run('p2.state'),200);assert.equal(await run('state'),200);
+ await page.keyboard.up('z');await page.keyboard.up('Numpad0');
  const punchTrades=[];
- for(const facing of [-1,1])for(const order of [['x','u'],['u','x']]){
+ for(const facing of [-1,1])for(const order of [['z','Numpad0'],['Numpad0','z']]){
   await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1LastHitKey=null;p1HitPause=0;p1Life=1000;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=${facing};vx=0;vy=0;p2.x=${facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${-facing};p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.cornerPushVelocity=0;p2.getHit=null;p2.lastHitKey=null;enterIRState(0);enterP2State(0)`);
   for(const key of order)await page.keyboard.down(key);
   for(let tick=0;tick<5;tick++)await step();
@@ -511,8 +511,8 @@ const server=http.createServer((request,response)=>{
  for(const player of [1,2])for(const facing of [-1,1]){
   const setup=()=>run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*400};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p2.x=${player===2?0:facing*400};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0)`);
   await setup();
-  const forward=player===1?(facing===1?'ArrowRight':'ArrowLeft'):(facing===1?'l':'j');
-  const back=player===1?(facing===1?'ArrowLeft':'ArrowRight'):(facing===1?'j':'l');
+  const forward=player===1?(facing===1?'ArrowRight':'ArrowLeft'):(facing===1?'Numpad6':'Numpad4');
+  const back=player===1?(facing===1?'ArrowLeft':'ArrowRight'):(facing===1?'Numpad4':'Numpad6');
   await page.keyboard.down(forward);await step();await page.keyboard.up(forward);await step();await page.keyboard.down(forward);await step();
   assert.equal(await run(player===1?'state':'p2.state'),100);
   const start=await run(player===1?'posX':'p2.x');await step();
@@ -556,6 +556,56 @@ const server=http.createServer((request,response)=>{
    assert.equal(await run(player===1?'posY':'p2.y'),0);assert.equal(await run(player===1?'state':'p2.state'),0);
   }
  }
+ await run("resetPlayerInput();setP2ControlMode('dummy');enterIRState(0);enterP2State(0)");
+ for(const [player,bindings] of Object.entries(await run('defaultBindings')))for(const [action,code] of Object.entries(bindings)){
+  await page.keyboard.down(code);assert.equal(await run((player==='p1'?'input':'p2Input')+'.'+action),true);
+  if(player==='p1'&&['KeyA','KeyS','KeyQ','KeyW'].includes(code))assert.equal(await run('input.left||input.right||input.up||input.down'),false);
+  await page.keyboard.up(code);assert.equal(await run((player==='p1'?'input':'p2Input')+'.'+action),false);
+ }
+ await run("resetPlayerInput();setP2ControlMode('dummy')");
+ for(const code of ['KeyJ','KeyL','KeyU','KeyD']){await page.keyboard.press(code);assert.equal(await run('p2PunchRequested||p2Input.left||p2Input.right||input.right'),false)}
+ await page.locator('#openSettings').click();assert.equal(await run('simPaused'),true);
+ await page.locator('[data-player="p1"][data-action="x"]').click();await page.keyboard.press('Numpad0');assert.equal(await run("draftBindings.p1.x"),'KeyZ');
+ await page.keyboard.press('KeyC');await page.locator('#saveBindings').click();assert.equal(await run('keyboardBindings.p1.x'),'KeyC');
+ await page.locator('#openSettings').click();await page.locator('[data-player="p2"][data-action="y"]').click();await page.keyboard.press('KeyV');await page.locator('#cancelBindings').click();assert.equal(await run('keyboardBindings.p2.y'),'NumpadDecimal');
+ assert.equal(await run('loadKeyboardBindings().p1.x'),'KeyC');
+ await page.locator('#openSettings').click();await page.locator('#defaultBindings').click();await page.locator('#saveBindings').click();assert.deepEqual(await run('keyboardBindings'),await run('defaultBindings'));
+ const sourceEffects=await run(`(()=>{
+  const soundLog=[],originalPlay=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){soundLog.push(this.src.split('/').pop());return Promise.resolve()};
+  try{
+   for(const player of [1,2]){
+    for(const time of [6,24,42,60]){
+     if(player===1){current=100;stateTicks=time;runController(battleDat.locomotionStates['100'].controllers.find(controller=>controller.type==='PlaySnd'))}
+     else{p2.anim=100;p2.time=time;runP2ControllerM1(battleDat.locomotionStates['100'].controllers.find(controller=>controller.type==='PlaySnd'))}
+    }
+   }
+   if(soundLog.filter(sound=>sound==='100-0.wav').length!==8)throw Error('Footsteps did not repeat across both loops');
+   p1HitPause=0;p2.attackPause=0;cameraX=0;cameraY=0;
+   for(const player of [1,2])for(const facing of [-1,1]){
+    sourceExplods.length=0;posX=0;posY=-10;p1Facing=facing;current=105;stateTicks=4;p2.x=0;p2.y=-10;p2.facing=facing;p2.anim=105;p2.time=4;
+    const controller=battleDat.locomotionStates['105'].controllers.find(controller=>controller.type==='Explod');
+    if(player===1)runController(controller);else runP2ControllerM1(controller);
+    if(sourceExplods.length!==1)throw Error('909 missing');const effect=sourceExplods[0];
+    if(effect.x!==0||effect.y!==-10||effect.age!==0||effect.sprpriority!==3||effect.facing!==facing)throw Error('909 spawn');
+    drawSourceExplods();const pixels=effectContext.getImageData(0,0,effectCanvas.width,effectCanvas.height).data;
+    if(!pixels.some((value,index)=>index%4===3&&value>0))throw Error('909 invisible');
+    p1HitPause=1;stepSourceExplods();if(effect.age!==0)throw Error('909 hitpause');p1HitPause=0;
+    for(let tick=1;tick<8;tick++){stepSourceExplods();if(effect.age!==tick||effect.x!==tick*10*facing||effect.y!==-10-tick*5)throw Error('909 velocity/age')}
+    stepSourceExplods();if(sourceExplods.length)throw Error('909 did not expire');
+   }
+   for(const player of [1,2])for(const facing of [-1,1]){
+    resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=player===1?0:facing*1000;posY=0;p1Facing=player===1?facing:-facing;vx=0;vy=0;p2.x=player===2?0:facing*1000;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=player===2?facing:-facing;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';sourceExplods.length=0;enterIRState(player===1?105:0);enterP2State(player===2?105:0);
+    let spawns=0,landed=false;
+    for(let tick=0;tick<30;tick++){simStep();if(sourceExplods.some(effect=>effect.age===0)){spawns++;const effect=sourceExplods[0],owner=player===1?liveP1():p2;if(effect.x!==owner.x||effect.y!==owner.y)throw Error('909 first tick binding')}
+     if((player===1?state:p2.state)===106)landed=true;
+    }
+    if(spawns!==1||sourceExplods.length||!landed)throw Error('909 state lifecycle');
+   }
+   if(soundLog.filter(sound=>sound==='52-0.wav').length!==4)throw Error('Landing sound missing');
+   return {footsteps:soundLog.filter(sound=>sound==='100-0.wav').length,landingSounds:4,explod909:'PASS',bindings:'PASS',settings:'PASS'};
+  }finally{HTMLMediaElement.prototype.play=originalPlay}
+ })()`);
+ console.log(JSON.stringify(sourceEffects));
  assert.deepEqual(errors,[]);
 console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,locomotion,dashSourceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

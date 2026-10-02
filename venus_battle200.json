@@ -23,6 +23,25 @@
           }
         },
         {
+          "type": "PlaySnd",
+          "params": {
+            "value": "100,0"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 3"
+            ],
+            "2": [
+              "AnimElem = 9"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 444
+          }
+        },
+        {
           "type": "VelSet",
           "params": {
             "x": "const(velocity.run.fwd.x)"
@@ -226,6 +245,29 @@
           }
         },
         {
+          "type": "Explod",
+          "params": {
+            "anim": "909",
+            "id": "909",
+            "pos": "0,0",
+            "vel": "10,-5",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 527
+          }
+        },
+        {
           "type": "ChangeState",
           "params": {
             "value": "106"
@@ -252,6 +294,22 @@
       "moveType": "I",
       "anim": 106,
       "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "52,0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 551
+          }
+        },
         {
           "type": "VelSet",
           "params": {
@@ -313,101 +371,6 @@
     "velocity.run.back.y": -5.0
   },
   "deferredLocomotionEffects": [
-    {
-      "state": 100,
-      "file": "venus_Common.cns",
-      "section": "State 100, PlaySnd",
-      "line": 444,
-      "entries": [
-        {
-          "line": 445,
-          "text": "type = PlaySnd"
-        },
-        {
-          "line": 446,
-          "text": "trigger1 = AnimElem = 3"
-        },
-        {
-          "line": 447,
-          "text": "trigger2 = AnimElem = 9"
-        },
-        {
-          "line": 448,
-          "text": "value = 100,0"
-        }
-      ],
-      "type": "PlaySnd"
-    },
-    {
-      "state": 105,
-      "file": "venus_Common.cns",
-      "section": "State 105, Explod",
-      "line": 527,
-      "entries": [
-        {
-          "line": 528,
-          "text": "type = Explod"
-        },
-        {
-          "line": 529,
-          "text": "trigger1 = AnimElemTime(5) = 0"
-        },
-        {
-          "line": 530,
-          "text": "anim = 909"
-        },
-        {
-          "line": 531,
-          "text": "id = 909"
-        },
-        {
-          "line": 532,
-          "text": "pos = 0,0"
-        },
-        {
-          "line": 533,
-          "text": "vel = 10,-5"
-        },
-        {
-          "line": 534,
-          "text": "postype = P1"
-        },
-        {
-          "line": 535,
-          "text": "sprpriority = 3"
-        },
-        {
-          "line": 536,
-          "text": "ownpal = 1"
-        },
-        {
-          "line": 537,
-          "text": "persistent = 1"
-        }
-      ],
-      "type": "Explod"
-    },
-    {
-      "state": 106,
-      "file": "venus_Common.cns",
-      "section": "State 54, PlaySnd",
-      "line": 551,
-      "entries": [
-        {
-          "line": 552,
-          "text": "type = PlaySnd"
-        },
-        {
-          "line": 553,
-          "text": "trigger1 = Time = 0"
-        },
-        {
-          "line": 554,
-          "text": "value = 52,0"
-        }
-      ],
-      "type": "PlaySnd"
-    },
     {
       "state": 106,
       "file": "venus_Common.cns",

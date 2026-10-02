@@ -2,7 +2,20 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.22 — Run / Backdash / Land M1
+## 最新版本：0.23.23 — Keyboard Settings / Run FX M1
+
+BUILD `keyboard-settings-run-fx-m1-20261002-01`。補 State 100 腳步聲、105 原 Explod 909，重設雙人鍵位並加入 Settings → Keyboard。鏡頭、guard distance=640、hitshake x2、移動／命中規則不改。
+
+- State 100 原 PlaySnd `100,0` 在 AnimElem 3／9 播放，每次 Action 100 循環都再觸發；雙方聲道分開。106 原 PlaySnd `52,0` 同步補上。兩個 WAV 都直接來自 Venus SND，沒有合成或代用聲音。更正上版分類：PlaySnd 未加 S 前綴不代表共用 SND，這兩項是角色音效。
+- State 105 在原 `AnimElemTime(5)=0` 建立 Explod 909；原 AIR 四格各 2 ticks、原 SFF／palette／axis、P1-relative facing、vel=10,-5、sprpriority=3、ownpal=1。按 IKEMEN 預設 bindtime=1、removetime=-2；首 tick 綁 owner，之後獨立移動，8 ticks 完成移除，owner hitpause 暫停。只接此來源切片，不宣稱完整通用 Explod；106 MakeDust 仍未接。
+- P1 移動：↑↓←→；x=Z、y=X、a=A、b=S、l=Q、r=W。WASD 不再作移動。
+- P2 移動：Num8／Num5／Num4／Num6（上／下／左／右）；x=Num0、y=Num.、a=Num1、b=Num2、l=Num/、r=Num*。舊 J／L／U 不再控制角色，使用 physical event.code，不靠 NumLock 字元。
+- 遊戲右上 Settings 開啟 Keyboard 設定：點鍵位再按新鍵、儲存／取消／恢復預設，保存在該瀏覽器。兩位玩家不可分配同一按鍵；開啟時暫停並清除 held input，關閉恢復原暫停狀態。現有原型主頁提供入口，未另造完整主選單。
+- 鍵位已全部可設定及接收，不代表所有招式已完成：目前出拳仍是 x→State 200；P2 上／下及其他攻擊鍵的完整 CMD／招式 runner、l/r 來源命令映射仍待接入，不自行把 l/r 當 c/z。
+
+自動驗證：雙人預設鍵位、取消舊移動键、重複鍵拒絕、設定儲存讀回／取消／預設；兩位玩家跑步第二圈音效及雙 facing 的 909 位置／速度／8-tick 壽命／hitpause／可見畫面，並跑完整既有回歸。人工待測：FF 持續跑時腳步聲、BB 的 909、106 著地聲，雙人 x 同時出拳及自訂鍵位重開仍保留。接觸計時仍未 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 初步 TEST、待深測；range 待實際 state 接入驗收。
+
+## 0.23.22 實作紀錄
 
 BUILD `run-backdash-land-m1-20261002-01`。0.23.21 防禦 transition 倒跳修正由使用者 PASS。按原 Common／CMD／AIR／SFF 接入雙方 State 100／105／106 動作切片，與既有 shared controller handlers 共用；controller 保留來源行號，AI 分支保留但 AILevel=0 不執行。
 
@@ -11,7 +24,7 @@ BUILD `run-backdash-land-m1-20261002-01`。0.23.21 防禦 transition 倒跳修�
 - 105 facing 鎖定、ctrl=0、原每 tick NotHitBy SCA；現有 hit collision 不命中此 state。Action 105 四個 1-tick 影格後停在最後無限影格；Pos Y>2 轉 106，不改成一般 jump 的 State 52。
 - 106 原 Action 106 為一個 3-tick 影格；原入口 VelSet／PosSet 令 X/Y 速度=0、Y=0，動畫完成回 0／ctrl=1。不借用原 Turn 或 guard 動畫。
 - P1 使用方向鍵／WASD，P2 Keyboard 使用 J／L；全部前後方向相對 facing。兩次點按之間須鬆開；Keyboard repeat 不當第二次按鍵，失焦清除歷史。P2 這是 FF／BB 最小來源命令映射，不是完整 CMD buffer／redirect runner。
-- S105,0 使用已匯出的 Venus 原 WAV。100 腳步／106 著地的 non-S 共用音效、105 Explod 909、106 MakeDust 明確列入 deferredLocomotionEffects；本版不自行以 Venus 同號音效或 Web 粒子代替，不能稱所有視聽 controllers 完成。
+- S105,0 使用已匯出的 Venus 原 WAV。當時 100 腳步／106 著地音效、105 Explod 909、106 MakeDust 列入 deferredLocomotionEffects；前兩項當時誤判為共用音效，已於 0.23.23 核對及更正。
 
 人工驗收待測：兩個 facing／兩位玩家分別 FF 持續跑／鬆鍵停止、BB→105→106→0、舞台左右邊界後跳、後跳中換位不翻身、106 著地無向前彈跳。保留 640 guard distance、hitshake x2、角落、互中與既有鏡頭。接觸計時未 CHECK；GetHit 系列初步 TEST、待深測的狀態不變。
 
