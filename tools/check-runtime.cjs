@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.25');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.26');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.25-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.26-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -684,6 +684,67 @@ const server=http.createServer((request,response)=>{
   }finally{HTMLMediaElement.prototype.play=originalPlay}
  })()`);
  console.log(JSON.stringify(sourceEffects));
+ await page.waitForFunction(()=>window.runtimeTest.run('!!fallDat&&!!commonFallDat'));
+ const sweepLive=[];
+ await run("document.activeElement?.blur();inputPreference='keyboard';setInputMode('keyboard')");
+ for(const player of [1,2])for(const facing of [-1,1])for(const guarded of [false,true]){
+  await run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');simPaused=false;p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*140};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p1Life=1000;p1LastHitKey=null;p2.x=${player===2?0:facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.lastHitKey=null;p2.life=1000;p2.invulnerableUntil=0;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='${guarded?'crouch':'none'}';enterIRState(0);enterP2State(0);${player===2&&guarded?`input.${facing===1?'right':'left'}=true;input.down=true;`:''}`);
+  const down=await run(`keyboardBindings.${player===1?'p1':'p2'}.down`),kick=await run(`keyboardBindings.${player===1?'p1':'p2'}.b`);
+  await page.keyboard.down(down);for(let tick=0;tick<6;tick++)await step();await page.keyboard.down(kick);await step();await page.keyboard.up(kick);
+  assert.equal(await run(player===1?'state':'p2.state'),440);
+  const visited=new Set();
+  for(let tick=0;tick<140;tick++){await step();visited.add(await run(player===1?'p2.state':'state'))}
+  await page.keyboard.up(down);
+  assert.equal(await run(player===1?'p2.life':'p1Life'),guarded?1000:930);
+  if(!guarded)for(const state of [5070,5071,5110,5120])assert.ok(visited.has(state),'live chain '+state);
+  sweepLive.push({player,facing,guarded});
+ }
+ console.log(JSON.stringify({sweepLive}));
+ const fallChecks=await page.evaluate(()=>window.runtimeTest.run(`
+ (()=>{
+  let checks=0;
+  const params=battleDat.attackStates['440'].controllers.find(controller=>controller.type==='HitDef').params;
+  if(params.damage!=='70,0'||params['ground.type']!=='Trip'||params.guardflag!=='L')throw Error('440 source');
+  for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
+   const result=resolveGroundHitM1({id:1,facing},{type:'S',state:0,y:0,ctrl:1,moveType:'I',life:1000},params,mode);
+   if(result.guarded!==(mode==='crouch')||result.state!==(mode==='crouch'?152:5070))throw Error('440 guard');checks++;
+  }
+  for(const facing of [-1,1])for(const dead of [false,true]){
+   const result=resolveGroundHitM1({id:1,facing},{type:'S',state:0,y:0,ctrl:1,moveType:'I',life:dead?50:1000},params,'none');
+   const fighter={state:0,anim:0,time:0,elem:1,elemTick:0,x:0,y:0,vx:0,vy:0,facing:-facing,life:result.life,getHit:result.getHit,hitShake:0,hitTime:27,vars:[],sysvars:[]};
+   enterGroundReactionState(fighter,5070);const visited=new Set();
+   for(let tick=0;tick<180;tick++){visited.add(fighter.state);stepGroundReactionM1(fighter,'none');if(fighter.state===11||fighter.state===5150)break}
+   for(const state of [5070,5071,5110])if(!visited.has(state))throw Error('Trip chain missing '+state);
+   if(fighter.state!==(dead?5150:11))throw Error('Trip terminal '+fighter.state);
+   if(!dead&&!visited.has(5120))throw Error('No recovery');
+   if(fighter.y!==0)throw Error('Trip ground');checks++;
+  }
+  for(const facing of [-1,1]){
+   const result=resolveGroundHitM1({id:1,facing},{type:'S',state:0,y:0,ctrl:1,moveType:'I',life:1000},params,'none');
+   const fighter={state:0,anim:5050,time:0,elem:1,elemTick:0,x:0,y:-200,vx:8*facing,vy:10,facing,life:930,getHit:result.getHit,hitTime:27,hitShake:0,vars:[],sysvars:[]};
+   fighter.getHit['fall.damage']=20;enterGroundReactionState(fighter,5050);const visited=new Set();
+   for(let tick=0;tick<200;tick++){visited.add(fighter.state);stepGroundReactionM1(fighter,'none');if(fighter.state===11)break}
+   for(const state of [5050,5100,5101,5110,5120])if(!visited.has(state))throw Error('Bounce chain missing '+state);
+   if(fighter.state!==11||fighter.life!==910||fighter.getHit['fall.damage']!==0)throw Error('Bounce damage/recovery');checks++;
+  }
+  const result=resolveGroundHitM1({id:1,facing:1},{type:'S',state:0,y:0,ctrl:1,moveType:'I',life:1000},{...params,'fall.envshake.time':'6','fall.envshake.phase':'90','fall.envshake.ampl':'-8'},'none');
+  const fighter={state:0,anim:5050,time:0,elem:1,elemTick:0,x:0,y:100,vx:12,vy:24,facing:1,life:930,getHit:result.getHit,hitShake:0,hitTime:27,vars:[],sysvars:[]};
+  enterGroundReactionState(fighter,5100);stepSourceFallM1(fighter);
+  if(!fallShake||fighter.getHit['fall.envshake.time']!==0)throw Error('FallEnvShake consume');
+  const calibration=cameraX;simPaused=false;stepFallShake();
+  if(document.querySelector('#venus').style.translate==='0 0px'||cameraX!==calibration)throw Error('FallEnvShake visual/calibration');
+  for(let tick=0;tick<8;tick++)stepFallShake();if(fallShake||document.querySelector('#venus').style.translate)throw Error('FallEnvShake expiry');
+  const before=fighter.vx;enterGroundReactionState(fighter,5101);stepSourceFallM1(fighter);
+  if(fighter.vx!==before||Math.abs(fighter.vy-(-18+1.6))>.001)throw Error('HitFallVel default preserve X');
+  fighter.getHit['fall.xvel']=-32;fighter.getHit['fall.yvel']=-40;enterGroundReactionState(fighter,5101);stepSourceFallM1(fighter);
+  if(fighter.vx!==-32||Math.abs(fighter.vy-(-40+1.6))>.001)throw Error('HitFallVel explicit');
+  enterGroundReactionState(fighter,5120);stepSourceFallM1(fighter);fighter.time=actionDuration(fighter.anim);fighter.getHit.fall=0;stepSourceFallM1(fighter);
+  if(fighter.state!==11||fighter.getHit.fall!==1)throw Error('Source HitFallSet');
+  fighter.life=0;enterGroundReactionState(fighter,5150);for(let tick=0;tick<100;tick++)stepSourceFallM1(fighter);
+  if(fighter.state!==5150||fighter.ctrl||fighter.sprPriority!==-3)throw Error('KO must remain');
+  return {checks,trip:'PASS',bounce:'PASS',ko:'PASS',fallControllers:'PASS'};
+ })()`));
+ console.log(JSON.stringify({fallChecks}));
  assert.deepEqual(errors,[]);
 console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,locomotion,dashSourceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

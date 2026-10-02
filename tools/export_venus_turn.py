@@ -8,11 +8,11 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 
-def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn'):
+def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', source_prefix='venus'):
     source_dir, output_dir = Path(source_dir), Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    sff = (source_dir / 'venus.sff').read_bytes()
-    air = (source_dir / 'venus.air').read_bytes()
+    sff = (source_dir / (source_prefix + '.sff')).read_bytes()
+    air = (source_dir / (source_prefix + '.air')).read_bytes()
     assert sff[:12] == b'ElecbyteSpr\x00' and sff[15] == 2
     sprite_offset, count, palette_offset, palette_count, ldata, _, tdata = struct.unpack_from('<7I', sff, 36)
     headers = [struct.unpack_from('<HHHHhhHBBIIHH', sff, sprite_offset + index * 28) for index in range(count)]
@@ -59,7 +59,7 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn'):
         elif action and re.match(r'^-?\d+\s*,', line):
             fields = [part.strip() for part in line.split(',')]
             group, item, ox, oy, time = map(int, fields[:5])
-            actions[action].append(dict(group=group, item=item, ox=ox, oy=oy, time=time, flip=fields[5] if len(fields)>5 else ''))
+            actions[action].append(dict(group=group, item=item, ox=ox, oy=oy, time=time, flip=fields[5] if len(fields)>5 else '', blend=fields[6] if len(fields)>6 else ''))
     assert set(actions) == set(action_ids)
     atlas = Image.new('RGBA', (1024, 1024) if action_ids == ('5', '6') else (2048, 4096))
     sprites = {}
@@ -90,7 +90,7 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn'):
     print('Exported AIR:', {action: [frame['time'] for frame in frames] for action, frames in actions.items()})
     previous = output_dir / 'venus_runtime_atlas.png'
     runtime = output_dir / 'venus_runtime.json'
-    if previous.exists() and runtime.exists():
+    if source_prefix == 'venus' and previous.exists() and runtime.exists():
         packed = Image.open(previous).convert('RGBA')
         metadata = json.loads(runtime.read_text(encoding='utf-8'))
         for key in ('20,4', '20,3'):
@@ -107,5 +107,6 @@ if __name__ == '__main__':
     parser.add_argument('output_dir')
     parser.add_argument('--actions', default='5,6')
     parser.add_argument('--prefix', default='venus_turn')
+    parser.add_argument('--source-prefix', default='venus')
     arguments = parser.parse_args()
-    export(arguments.source_dir, arguments.output_dir, tuple(arguments.actions.split(',')), arguments.prefix)
+    export(arguments.source_dir, arguments.output_dir, tuple(arguments.actions.split(',')), arguments.prefix, arguments.source_prefix)

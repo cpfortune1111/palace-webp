@@ -1215,6 +1215,145 @@
           }
         }
       ]
+    },
+    "440": {
+      "type": "C",
+      "physics": "C",
+      "moveType": "A",
+      "anim": 440,
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 7,
+      "poweradd": 0,
+      "velset": [],
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200, 3",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Random < 250"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(4) = 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 788
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1, 1",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(3) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 795
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "C, NA",
+            "damage": "70,0",
+            "hitflag": "MA",
+            "guardflag": "L",
+            "priority": "1, Hit",
+            "pausetime": "8,8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60,-80",
+            "hitsound": "S5, 2",
+            "guardsound": "S6, 0",
+            "ground.type": "Trip",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-10,-35",
+            "guard.velocity": "-32",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-28",
+            "guard.cornerpush.veloff": "-52",
+            "fall": "1",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 801
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 828
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(8) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 836
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "11",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 841
+          }
+        }
+      ]
     }
   },
   "attackCommands": [
@@ -1392,6 +1531,31 @@
         "file": "venus.cmd",
         "line": 907
       }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "440"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"b\"",
+        "command = \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 920
+      }
     }
   ],
   "landingSound": {
@@ -1408,6 +1572,1445 @@
     "source": {
       "file": "venus_Common.cns",
       "line": 374
+    }
+  },
+  "fallStates": {
+    "5030": {
+      "type": "A",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5030"
+          },
+          "triggers": {
+            "1": [
+              "Anim != [5000, 5199]",
+              "SelfAnimExist(5030)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1309
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "GetHitVar(yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1315
+          }
+        },
+        {
+          "type": "HitVelSet",
+          "params": {
+            "x": "1",
+            "y": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1320
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5040"
+          },
+          "triggers": {
+            "1": [
+              "HitOver"
+            ],
+            "2": [
+              "Vel Y > 0",
+              "Pos Y >= 10"
+            ]
+          },
+          "triggerall": [
+            "!HitFall"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1326
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5050"
+          },
+          "triggers": {
+            "1": [
+              "HitOver"
+            ],
+            "2": [
+              "Vel Y > 0",
+              "Pos Y >= Const(movement.air.gethit.groundlevel)"
+            ]
+          },
+          "triggerall": [
+            "HitFall"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1334
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5035"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1342
+          }
+        }
+      ]
+    },
+    "5035": {
+      "type": "A",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5035"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "SelfAnimExist(5035)",
+              "Anim != [5051,5059]",
+              "Anim != 5090"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1352
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "GetHitVar(yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1360
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5040"
+          },
+          "triggers": {
+            "1": [
+              "HitOver"
+            ],
+            "2": [
+              "AnimTime = 0"
+            ],
+            "3": [
+              "Vel Y > 0",
+              "Pos Y >= Const(movement.air.gethit.groundlevel)"
+            ],
+            "4": [
+              "Time = 0",
+              "Anim != 5035"
+            ]
+          },
+          "triggerall": [
+            "!HitFall"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1365
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5050"
+          },
+          "triggers": {
+            "1": [
+              "HitOver"
+            ],
+            "2": [
+              "AnimTime = 0"
+            ],
+            "3": [
+              "Vel Y > 0",
+              "Pos Y >= Const(movement.air.gethit.groundlevel)"
+            ],
+            "4": [
+              "Time = 0",
+              "Anim != 5035"
+            ]
+          },
+          "triggerall": [
+            "HitFall"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1376
+          }
+        }
+      ]
+    },
+    "5050": {
+      "type": "A",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5050"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0",
+              "Anim = 5035"
+            ],
+            "2": [
+              "Time = 0",
+              "Anim != 5035",
+              "(Anim != [5051, 5059]) && (Anim != [5061, 5069])",
+              "Anim != 5090"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1431
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "anim+10",
+            "persistent": "0"
+          },
+          "triggers": {
+            "1": [
+              "anim = [5050,5059]",
+              "Vel Y >= ifelse(anim = 5050, Const720p(4), Const720p(-8))",
+              "SelfAnimExist(anim+10)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1441
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "GetHitVar(yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1449
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5100"
+          },
+          "triggers": {
+            "1": [
+              "Vel Y > 0",
+              "Pos Y >= ifelse((anim = [5051,5059]) || (anim = [5061,5069]), 0, Const(movement.air.gethit.groundlevel))"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1471
+          }
+        }
+      ]
+    },
+    "5070": {
+      "type": "A",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5070"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1483
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5071"
+          },
+          "triggers": {
+            "1": [
+              "HitShakeOver"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1488
+          }
+        },
+        {
+          "type": "ForceFeedback",
+          "params": {
+            "time": "12",
+            "waveform": "sinesquare",
+            "ampl": "140"
+          },
+          "triggers": {
+            "1": [
+              "time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1493
+          }
+        }
+      ],
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "5071": {
+      "type": "A",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "HitVelSet",
+          "params": {
+            "x": "1",
+            "y": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1505
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "GetHitVar(yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1511
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5110"
+          },
+          "triggers": {
+            "1": [
+              "Vel Y > 0",
+              "Pos Y >= Const(movement.air.gethit.trip.groundlevel)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1516
+          }
+        }
+      ]
+    },
+    "5100": {
+      "type": "L",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "VelSet",
+          "params": {
+            "x": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "GetHitVar(fall.yvel) = 0",
+              "vel x > 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1594
+          }
+        },
+        {
+          "type": "FallEnvShake",
+          "params": {},
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1601
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "target": "sysvar(1)",
+            "value": "floor(vel y)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1605
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5100"
+          },
+          "triggers": {
+            "1": [
+              "(anim != [5051,5059]) && (anim != [5061,5069])"
+            ],
+            "2": [
+              "!SelfAnimExist(5100 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "time = 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1610
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5100 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "time = 0",
+              "(anim = [5051,5059]) || (anim = [5061,5069])",
+              "SelfAnimExist(5100 + (anim % 10))"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1617
+          }
+        },
+        {
+          "type": "PosSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1624
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1629
+          }
+        },
+        {
+          "type": "VelMul",
+          "params": {
+            "x": "0.75"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1634
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5110"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "GetHitVar(fall.yvel) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1639
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "F(60 + (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56)))",
+            "pos": "0, 0",
+            "sprpriority": "ifelse (sysvar(1) <= Const720p(56), -10, 10)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1645
+          }
+        },
+        {
+          "type": "HitFallDamage",
+          "params": {},
+          "triggers": {
+            "1": [
+              "Time = 3"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1652
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "F7, (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56))"
+          },
+          "triggers": {
+            "1": [
+              "Time = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1656
+          }
+        },
+        {
+          "type": "PosFreeze",
+          "params": {},
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1661
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5101"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1665
+          }
+        },
+        {
+          "type": "ForceFeedback",
+          "params": {
+            "waveform": "sinesquare",
+            "ampl": "128,-3,-.2,.005",
+            "time": "20"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1670
+          }
+        }
+      ]
+    },
+    "5101": {
+      "type": "L",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5160"
+          },
+          "triggers": {
+            "1": [
+              "anim != [5101,5109]"
+            ],
+            "2": [
+              "!SelfAnimExist(5160 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "Time = 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1682
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5160 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "anim = [5101,5109]",
+              "SelfAnimExist(5160 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "Time = 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1689
+          }
+        },
+        {
+          "type": "HitFallVel",
+          "params": {},
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1696
+          }
+        },
+        {
+          "type": "PosSet",
+          "params": {
+            "y": "Const(movement.down.bounce.offset.y)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1700
+          }
+        },
+        {
+          "type": "PosAdd",
+          "params": {
+            "x": "Const(movement.down.bounce.offset.x)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1705
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "Const(movement.down.bounce.yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1710
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5110"
+          },
+          "triggers": {
+            "1": [
+              "Vel Y > 0",
+              "Pos Y >= Const(movement.down.bounce.groundlevel)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1715
+          }
+        }
+      ]
+    },
+    "5110": {
+      "type": "L",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "FallEnvShake",
+          "params": {},
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1726
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "persistent": "0",
+            "value": "5110 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "SelfAnimExist(5110 + (anim % 10))",
+              "anim = [5081,5089]"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1730
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5170"
+          },
+          "triggers": {
+            "1": [
+              "anim != [5161,5169]"
+            ],
+            "2": [
+              "!SelfAnimExist(5170 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "time = 0",
+            "anim != [5110,5119]"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1737
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5170 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "anim = [5161,5169]",
+              "SelfAnimExist(5170 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "time = 0",
+            "anim != [5110,5119]"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1745
+          }
+        },
+        {
+          "type": "HitFallDamage",
+          "params": {},
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1753
+          }
+        },
+        {
+          "type": "PosSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1757
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "target": "sysvar(1)",
+            "value": "floor(vel y)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "GetHitVar(fall.yvel) != 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1762
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "F7, (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56))"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "!SysVar(0)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1768
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "F(60 + (sysvar(1) > Const720p(20)) + (sysvar(1) > Const720p(56)))",
+            "pos": "0, 0",
+            "sprpriority": "ifelse (sysvar(1) <= Const720p(56), -10, 10)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "!SysVar(0)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1774
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1782
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "persistent": "0",
+            "value": "5110 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ],
+            "2": [
+              "SysVar(0)"
+            ]
+          },
+          "triggerall": [
+            "anim = [5171,5179]",
+            "SelfAnimExist(5110 + (anim % 10))"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1787
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "persistent": "0",
+            "value": "5110"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ],
+            "2": [
+              "SysVar(0)"
+            ]
+          },
+          "triggerall": [
+            "Anim != [5111,5119]"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1796
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "5150"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ],
+            "2": [
+              "SysVar(0)"
+            ],
+            "3": [
+              "Anim = [5110,5119]"
+            ]
+          },
+          "triggerall": [
+            "!alive"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1804
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "target": "sysvar(0)",
+            "value": "0"
+          },
+          "triggers": {
+            "1": [
+              "SysVar(0)",
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1812
+          }
+        },
+        {
+          "type": "VelMul",
+          "params": {
+            "x": "0.85"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1818
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "persistent": "0",
+            "x": "0"
+          },
+          "triggers": {
+            "1": [
+              "abs(Vel x) < Const(movement.down.friction.threshold)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1823
+          }
+        },
+        {
+          "type": "ForceFeedback",
+          "params": {
+            "time": "8",
+            "ampl": "240",
+            "waveform": "sine"
+          },
+          "triggers": {
+            "1": [
+              "alive",
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1829
+          }
+        },
+        {
+          "type": "ForceFeedback",
+          "params": {
+            "ampl": "200, 7, -.467",
+            "time": "30",
+            "waveform": "sine"
+          },
+          "triggers": {
+            "1": [
+              "!alive",
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1837
+          }
+        }
+      ]
+    },
+    "5120": {
+      "type": "L",
+      "moveType": "I",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5120"
+          },
+          "triggers": {
+            "1": [
+              "anim != [5111,5119]"
+            ],
+            "2": [
+              "!SelfAnimExist(5120 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "time = 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1851
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5120 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "anim = [5111,5119]",
+              "SelfAnimExist(5120 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "time = 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1858
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "x": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1865
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": "SCA",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1870
+          }
+        },
+        {
+          "type": "HitFallSet",
+          "params": {
+            "value": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1876
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": ", NT,ST,HT",
+            "time": "12"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1881
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value2": "SCA",
+            "time": "3"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1887
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "11",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1893
+          }
+        }
+      ]
+    },
+    "5150": {
+      "type": "L",
+      "moveType": "H",
+      "physics": "N",
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5140"
+          },
+          "triggers": {
+            "1": [
+              "(anim != [5111,5119]) && (anim != [5171,5179])"
+            ],
+            "2": [
+              "!SelfAnimExist(5140 + (anim % 10))"
+            ]
+          },
+          "triggerall": [
+            "Time = 0",
+            "SelfAnimExist(5140)"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1906
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5140 + (anim % 10)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "(anim = [5111,5119]) || (anim = [5171,5179])",
+              "SelfAnimExist(5140 + (anim % 10))"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1914
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "persistent": "0",
+            "value": "anim+10"
+          },
+          "triggers": {
+            "1": [
+              "MatchOver = 1",
+              "Anim = [5140,5149]",
+              "SelfAnimExist(anim+10)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1921
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "5110"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "Anim != [5140,5159]",
+              "Anim != [5110,5119]"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1930
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "9999"
+          },
+          "triggers": {
+            "1": [
+              "PrevStateNo = 5605"
+            ]
+          },
+          "triggerall": [
+            "!Time"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1937
+          }
+        },
+        {
+          "type": "VelMul",
+          "params": {
+            "x": "0.85"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1943
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "persistent": "0",
+            "x": "0"
+          },
+          "triggers": {
+            "1": [
+              "abs(Vel x) < Const(movement.down.friction.threshold)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1948
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": "SCA",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 1954
+          }
+        }
+      ]
     }
   },
   "locomotionStates": {
@@ -1779,7 +3382,15 @@
     "velocity.run.fwd.x": 18.0,
     "velocity.run.fwd.y": 0.0,
     "velocity.run.back.x": -30.0,
-    "velocity.run.back.y": -5.0
+    "velocity.run.back.y": -5.0,
+    "movement.air.gethit.groundlevel": 100.0,
+    "movement.air.gethit.trip.groundlevel": 60.0,
+    "movement.down.bounce.yaccel": 1.6,
+    "movement.down.bounce.groundlevel": 48.0,
+    "movement.down.friction.threshold": 0.2,
+    "movement.down.bounce.offset.x": 0.0,
+    "movement.down.bounce.offset.y": 0.0,
+    "data.liedown.time": 20.0
   },
   "deferredLocomotionEffects": [
     {
@@ -7408,6 +9019,296 @@
         ]
       }
     ],
+    "440": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            69,
+            -242,
+            123,
+            -177
+          ],
+          [
+            12,
+            -190,
+            104,
+            0
+          ],
+          [
+            104,
+            -112,
+            135,
+            -69
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            92,
+            -233,
+            146,
+            -171
+          ],
+          [
+            39,
+            -187,
+            117,
+            0
+          ],
+          [
+            117,
+            -95,
+            177,
+            -55
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            89,
+            -226,
+            143,
+            -164
+          ],
+          [
+            58,
+            -181,
+            134,
+            0
+          ],
+          [
+            134,
+            -70,
+            183,
+            -30
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            70,
+            -101,
+            331,
+            -33
+          ]
+        ],
+        "c2": [
+          [
+            70,
+            -212,
+            124,
+            -150
+          ],
+          [
+            59,
+            -175,
+            135,
+            0
+          ],
+          [
+            135,
+            -40,
+            169,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            70,
+            -101,
+            331,
+            -33
+          ]
+        ],
+        "c2": [
+          [
+            70,
+            -212,
+            124,
+            -150
+          ],
+          [
+            59,
+            -175,
+            135,
+            0
+          ],
+          [
+            135,
+            -40,
+            169,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            70,
+            -101,
+            331,
+            -33
+          ]
+        ],
+        "c2": [
+          [
+            70,
+            -212,
+            124,
+            -150
+          ],
+          [
+            59,
+            -175,
+            135,
+            0
+          ],
+          [
+            135,
+            -40,
+            169,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            70,
+            -101,
+            331,
+            -33
+          ]
+        ],
+        "c2": [
+          [
+            70,
+            -212,
+            124,
+            -150
+          ],
+          [
+            59,
+            -175,
+            135,
+            0
+          ],
+          [
+            135,
+            -40,
+            169,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            70,
+            -101,
+            331,
+            -33
+          ]
+        ],
+        "c2": [
+          [
+            70,
+            -212,
+            124,
+            -150
+          ],
+          [
+            59,
+            -175,
+            135,
+            0
+          ],
+          [
+            135,
+            -40,
+            169,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            89,
+            -226,
+            143,
+            -164
+          ],
+          [
+            58,
+            -181,
+            134,
+            0
+          ],
+          [
+            134,
+            -70,
+            183,
+            -30
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            92,
+            -233,
+            146,
+            -171
+          ],
+          [
+            39,
+            -187,
+            117,
+            0
+          ],
+          [
+            117,
+            -95,
+            177,
+            -55
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            69,
+            -242,
+            123,
+            -177
+          ],
+          [
+            12,
+            -190,
+            104,
+            0
+          ],
+          [
+            104,
+            -112,
+            135,
+            -69
+          ]
+        ]
+      }
+    ],
     "5000": [
       {
         "c1": [],
@@ -8060,6 +9961,590 @@
             -118,
             86,
             1
+          ]
+        ]
+      }
+    ],
+    "5030": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -51,
+            -409,
+            1,
+            -342
+          ],
+          [
+            -49,
+            -345,
+            31,
+            -227
+          ],
+          [
+            31,
+            -254,
+            98,
+            -93
+          ]
+        ]
+      }
+    ],
+    "5035": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -56,
+            -404,
+            -2,
+            -339
+          ],
+          [
+            -55,
+            -340,
+            25,
+            -232
+          ],
+          [
+            25,
+            -287,
+            108,
+            -225
+          ],
+          [
+            73,
+            -225,
+            124,
+            -162
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -69,
+            -390,
+            -15,
+            -325
+          ],
+          [
+            -61,
+            -329,
+            15,
+            -276
+          ],
+          [
+            -22,
+            -315,
+            106,
+            -236
+          ],
+          [
+            106,
+            -276,
+            142,
+            -223
+          ]
+        ]
+      }
+    ],
+    "5050": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -68,
+            -324,
+            54,
+            -238
+          ],
+          [
+            -78,
+            -375,
+            -27,
+            -318
+          ],
+          [
+            48,
+            -336,
+            138,
+            -285
+          ]
+        ]
+      }
+    ],
+    "5070": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -51,
+            -409,
+            1,
+            -342
+          ],
+          [
+            -49,
+            -345,
+            31,
+            -227
+          ],
+          [
+            31,
+            -254,
+            98,
+            -93
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -56,
+            -404,
+            -2,
+            -339
+          ],
+          [
+            -55,
+            -340,
+            25,
+            -232
+          ],
+          [
+            25,
+            -287,
+            108,
+            -225
+          ],
+          [
+            73,
+            -225,
+            124,
+            -162
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -69,
+            -390,
+            -15,
+            -325
+          ],
+          [
+            -61,
+            -329,
+            15,
+            -276
+          ],
+          [
+            -22,
+            -315,
+            106,
+            -236
+          ],
+          [
+            106,
+            -276,
+            142,
+            -223
+          ]
+        ]
+      }
+    ],
+    "5100": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -69,
+            -100,
+            43,
+            -19
+          ],
+          [
+            -87,
+            -135,
+            -36,
+            -84
+          ],
+          [
+            37,
+            -131,
+            94,
+            -46
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -73,
+            -89,
+            53,
+            -19
+          ],
+          [
+            -97,
+            -103,
+            -46,
+            -52
+          ],
+          [
+            40,
+            -120,
+            108,
+            -29
+          ]
+        ]
+      }
+    ],
+    "5110": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      }
+    ],
+    "5120": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -94,
+            -119,
+            -41,
+            -65
+          ],
+          [
+            -69,
+            -93,
+            85,
+            -2
+          ],
+          [
+            85,
+            -72,
+            128,
+            -2
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -74,
+            -159,
+            -21,
+            -102
+          ],
+          [
+            -69,
+            -106,
+            85,
+            -2
+          ],
+          [
+            85,
+            -73,
+            128,
+            -2
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -48,
+            -180,
+            5,
+            -116
+          ],
+          [
+            -50,
+            -119,
+            31,
+            -2
+          ],
+          [
+            31,
+            -97,
+            129,
+            -2
+          ]
+        ]
+      }
+    ],
+    "5150": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -72,
+            49,
+            -10
+          ],
+          [
+            -105,
+            -69,
+            -45,
+            -14
+          ],
+          [
+            36,
+            -102,
+            111,
+            -9
+          ]
+        ]
+      }
+    ],
+    "5160": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -70,
+            -105,
+            118,
+            -21
+          ],
+          [
+            -97,
+            -120,
+            -37,
+            -65
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -75,
+            -92,
+            132,
+            -3
+          ],
+          [
+            -99,
+            -73,
+            -39,
+            -18
+          ]
+        ]
+      }
+    ],
+    "5170": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -69,
+            -100,
+            43,
+            -19
+          ],
+          [
+            -87,
+            -135,
+            -36,
+            -84
+          ],
+          [
+            37,
+            -131,
+            94,
+            -46
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -73,
+            -89,
+            53,
+            -19
+          ],
+          [
+            -97,
+            -103,
+            -46,
+            -52
+          ],
+          [
+            40,
+            -120,
+            108,
+            -29
           ]
         ]
       }

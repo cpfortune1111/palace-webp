@@ -2,7 +2,24 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.25 — Crouch Attacks / Guard Levels M1
+## 最新版本：0.23.26 — Sweep / Fall / Recovery M1
+
+BUILD `sweep-fall-recovery-m1-20261002-01`。使用者 0.23.25 全 PASS；本版待人工驗收。按原 Venus CNS／CMD／AIR／SFF 加 440 蹲重腳，並接 Common 5070／5071、5030／5035、5050、5100／5101、5110、5120、5150。沿用鎖定鏡頭、attack.dist=640、hitshake x2、自訂鍵位及雙人共用 controller。
+
+- 440：原 damage=70,0、guardflag=L、ground.type=Trip、pause=8/8、ground velocity=-10,-35、guard velocity=-32、air velocity=-8,-28、fall=1；hit 滑行／硬直 23／27、guard 24／34；cornerpush -28／-52。原 StateDef 無 velset，不強制清零；動畫、音效、收招與 CMD 完全採原來源。P1 下＋S；P2 Num5＋Num2（自訂按鍵以 Settings 為準）。站防會中，蹲防可擋。
+- 必須分清兩條來源路徑：440 的 Trip 是 `5070 → 5071 → 5110 → 5120 → 11`；普通 falling 是 `5050 → 5100 → 5101 → 5110 → 5120 → 11`。不能把 Trip 強行改成普通彈地。KO 由 5110 進 5150，不起身。5150 原 priority=-3；MatchOver 尚無完整回合系統，保持 false，不假報比賽結束。
+- 5070 原 ChangeAnim 每 tick 凍結動畫；5071 原 HitVelSet／GetHitVar(yaccel)，Trip groundlevel=60。5050 groundlevel=100；5100 保存 SysVar(1)、Y 歸零、PosFreeze／x*.75；5101 原 HitFallVel、bounce yaccel=1.6／groundlevel=48。5110 原 x*.85／friction threshold=.2；alive 的 liedown.time=20 計時依 IKEMEN 引擎規則進 5120，而非杜撰 CNS ChangeState。
+- HitFallSet 更新 fall flag／指定速度；HitFallVel 只在 MoveType=H 套用，未指定 fall.xvelocity 保留 X，原引擎 default fall.yvelocity=-18；HitFallDamage 只消耗一次，fall.kill=0 不致死。FallEnvShake 只於來源 fall.envshake.time>0 啟動並消耗，保留引擎 freq／phase／mul／decay 的垂直震動，不改鏡頭校準。440 原未設定 fall.envshake.time，因此不擅自加畫面震。
+- 5120／5150 的 SCA NotHitBy 保護；起身完成回 11，倒地不得當成站姿重新被 MA 命中。普通投技保護參數保留，但投技仍未實作。ForceFeedback 是實體控制器震動，本版未接硬件，不能誤當角色前後 hitshake。
+- 原安裝 `data/common.snd` 的 F7,0／1／2 落地聲、`data/fightfx.sff`／`fightfx.air` 的 F60／61／62 地面衝擊已匯出；保持 F/common 與 S/Venus 命名空間分離，採原動畫時間、軸點、additive blend 及前後層級，無替代素材。新增獨立 fall atlas，既有角色 atlas 不改。
+
+測試方向：P1／P2、兩面向、站防／蹲防；440 命中 70、擋住不扣血、Trip 落地起身；低血量再受 440 到 5150 不起身；角落左右測位移。5050／5100／5101 普通 falling 用來源參數自動 fixture 驗證，並非宣稱已能用尚未接入的空中攻擊觸發。完整空中命中／recoverable air reaction、spark S905、回合流程／MatchOver、硬件 ForceFeedback 仍未完成。
+
+自動回歸通過：8 組雙玩家×雙 facing×命中／蹲防實際鍵盤 440；12 組 Trip／站蹲 guard／普通 bounce／KO；HitFallDamage 單次消耗、HitFallVel 默認保留 X／指定 XY、HitFallSet、非零 FallEnvShake 消耗／顯示／到期且不改鏡頭；原完整轉身、輸入、雙人 trade、guard、跑步後跳、站蹲攻擊回歸無瀏覽器錯誤。普通 bounce fixture 不是人工 PASS。
+
+接觸計時仍未人工 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 維持「初步 TEST，待深測」。只更新本 README，不另建版本說明文件。
+
+## 0.23.25 實作紀錄
 
 BUILD `crouch-attacks-guard-levels-m1-20261002-01`。使用者 0.23.24 全 PASS。按原 CNS／CMD／AIR／SFF 加 400 蹲輕拳、410 蹲強拳、430 蹲輕踢，共用既有雙人 controller／命中 runner。原 StateDef 沒有 velset，不擅自清零入招速度；400 重複 priority 依最後有效值 `1, Hit`，不是前一行 3。
 
@@ -146,7 +163,8 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] P1／P2 完整共同 fighter／Common runner；source controllers 逐條移除近似實作、timer／動畫 clock 與順序驗證。
 - [x] 0.23.23 使用者 PASS：雙方 100／105／106、原跑步／著地聲、909 與鍵位設定；106 MakeDust 仍待接入。
 - [x] 0.23.24 使用者全 PASS：210／230／240／241、52 著地聲；完整空中受擊仍未支援。
-- [ ] 0.23.25：400／410／430、High／Low guard 及蹲姿 Light／Medium GetHit 已接入，自動回歸通過，待人工驗收。
+- [x] 0.23.25：400／410／430、High／Low guard 及蹲姿 Light／Medium GetHit，使用者全 PASS。
+- [ ] 0.23.26：440／Trip、普通 falling／bounce、倒地／起身／KO 與 HitFall controllers 已接入，待人工驗收；完整空中攻擊與空中命中另列後續。
 - [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
 - [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。

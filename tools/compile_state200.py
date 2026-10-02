@@ -28,7 +28,11 @@ for controller in states['controllers']:
         else:
             params[key] = value
     if controller['type'].lower() == 'varset':
-        params['target'] = 'var(' + params.pop('v') + ')'
+        if 'v' in params:
+            params['target'] = 'var(' + params.pop('v') + ')'
+        else:
+            target = next(key for key in params if key.startswith('sysvar('))
+            params['target'], params['value'] = target, params.pop(target)
     if 'movetype' in params:
         params['moveType'] = params.pop('movetype')
     controllers.append({'type': controller['type'], 'params': params, 'triggers': triggers,
@@ -48,14 +52,18 @@ def compile_controller(controller):
         else:
             params[key] = value
     if controller['type'].lower() == 'varset':
-        params['target'] = 'var(' + params.pop('v') + ')'
+        if 'v' in params:
+            params['target'] = 'var(' + params.pop('v') + ')'
+        else:
+            target = next(key for key in params if key.startswith('sysvar('))
+            params['target'], params['value'] = target, params.pop(target)
     if 'movetype' in params:
         params['moveType'] = params.pop('movetype')
     return {'type': controller['type'], 'params': params, 'triggers': triggers,
             'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}}
 
 attack_states = {}
-for state_id in (200, 210, 230, 240, 400, 410, 430):
+for state_id in (200, 210, 230, 240, 400, 410, 430, 440):
     state_definition = next(item for item in states['states'] if item['id'] == state_id)
     fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
               for entry in state_definition['entries']}
@@ -70,7 +78,7 @@ for state_id in (200, 210, 230, 240, 400, 410, 430):
 attack_commands = [compile_controller(controller) for controller in states['controllers']
                    if controller['state'] == -1 and controller['file'] == 'venus.cmd'
                    and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])
-                   and any(entry['text'] in ('value = 200', 'value = 210', 'value = 230', 'value = 240', 'value = 400', 'value = 410', 'value = 430')
+                   and any(entry['text'] in ('value = 200', 'value = 210', 'value = 230', 'value = 240', 'value = 400', 'value = 410', 'value = 430', 'value = 440')
                            for entry in controller['entries'])]
 landing_sound = next(compile_controller(controller) for controller in states['controllers']
                      if controller['state'] == 52 and controller['type'] == 'PlaySnd')
@@ -112,7 +120,7 @@ for name in ('run.fwd', 'run.back'):
     for axis, value in zip(('x', 'y'), values):
         locomotion_constants['velocity.' + name + '.' + axis] = value
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 47, 52, 100, 105, 106, 200, 210, 230, 240, 241, 400, 410, 430, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5001, 5005, 5006, 5010, 5011, 5015, 5016, 5020, 5021, 5025, 5026):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 47, 52, 100, 105, 106, 200, 210, 230, 240, 241, 400, 410, 430, 440, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5001, 5005, 5006, 5010, 5011, 5015, 5016, 5020, 5021, 5025, 5026, 5030, 5035, 5050, 5060, 5070, 5100, 5110, 5120, 5140, 5150, 5160, 5170):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:
@@ -155,7 +163,22 @@ attack_distance = re.search(r'^attack\.dist\s*=\s*(\d+)', (source / 'venus.cns')
 if attack_distance is None:
     raise ValueError('Missing source attack.dist')
 power_maximum = int(re.search(r'^power\s*=\s*(\d+)', source_text, re.M)[1])
+fall_states = {}
+for state_id in (5030, 5035, 5050, 5070, 5071, 5100, 5101, 5110, 5120, 5150):
+    state_definition = next(item for item in states['states'] if item['id'] == state_id)
+    fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
+              for entry in state_definition['entries']}
+    fall_states[str(state_id)] = {'type': fields['type'], 'moveType': fields['movetype'], 'physics': fields['physics'],
+                                 'controllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == state_id]}
+    if 'velset' in fields:
+        fall_states[str(state_id)]['velset'] = [float(value) for value in fields['velset'].split(',')]
+for name in ('air.gethit.groundlevel', 'air.gethit.trip.groundlevel', 'down.bounce.yaccel', 'down.bounce.groundlevel', 'down.friction.threshold'):
+    locomotion_constants['movement.' + name] = float(re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)[1])
+for axis, number in zip(('x', 'y'), re.search(r'^down.bounce.offset\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):
+    locomotion_constants['movement.down.bounce.offset.' + axis] = float(number)
+locomotion_constants['data.liedown.time'] = float(re.search(r'^liedown.time\s*=\s*(\d+)', source_text, re.M)[1])
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands, 'landingSound': landing_sound,
+          'fallStates': fall_states,
           'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
           'deferredLocomotionEffects': deferred_locomotion,
           'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
