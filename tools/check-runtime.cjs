@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.27');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.28');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.27-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.28-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -190,6 +190,13 @@ const server=http.createServer((request,response)=>{
  const sharedHitChecks=await run(`(()=>{
   const params=battleDat.state200.controllers.find(controller=>controller.type==='HitDef').params;
   let checks=0;
+  for(const facing of [-1,1]){
+   const fighter={state:5071,anim:5070,time:20,animStartTime:0,elem:4,elemTick:0,x:0,y:60,vx:10,vy:20,facing,life:500,hitTime:-1,getHit:{fall:1,yaccel:1.4,'fall.yvel':-18,'fall.damage':0,'fall.kill':1},vars:[],sysvars:[],fallExecuted:new Set()};
+   stepSourceFallM1(fighter);
+   if(fighter.state!==5110||fighter.anim!==5070||fighter.elem!==4||fighter.animStartTime!==-20)throw Error('Trip inherited E4/clock');
+   const sequence=[];for(let tick=0;tick<6;tick++){stepSourceFallM1(fighter);sequence.push([fighter.anim,fighter.elem])}
+   if(JSON.stringify(sequence)!==JSON.stringify([[5170,1],[5170,2],[5170,2],[5170,2],[5110,2],[5110,3]]))throw Error('Trip terminal frames '+JSON.stringify(sequence));
+  }
   for(const id of [1,2])for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
    const attacker={id,facing},defender={id:3-id,life:1000,ctrl:1,moveType:'I',state:0,type:'S',y:0,anim:0,elem:1,x:facing*140,facing:-facing};
    const original=JSON.stringify({attacker,defender});

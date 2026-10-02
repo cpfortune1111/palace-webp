@@ -2,7 +2,15 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.27 — Sweep Tuning / KO Fall M1
+## 最新版本：0.23.28 — Trip Animation Continuity M1
+
+BUILD `trip-animation-continuity-m1-20261002-01`。修正 Trip 受身中多出的 A5070 E1／A5170 E1：ChangeState 進 fall states 保留原動畫 element、element tick 與 elapsed clock；只有原 ChangeAnim controller 才重置動畫。fall 動畫完成後保留尾格等待下一 tick 原 CNS AnimTime 切換，不先自動 loop 回第一格。原 AIR 時間不改，沒有插入新影格。
+
+5071→5110 的入口維持 A5070 E4；5170 的尾格 E2 完成時仍維持 E2，下一 tick 原 controller 才改 5110。保留 440 velocity=-10,-18／-8,-18、KO、鏡頭及全部資產。本版待人工驗收，0.23.27 的 Trip 抽搐不標 PASS。
+
+自動驗證：雙 facing 的 5071→5110 繼承 E4／動畫時鐘與 5170 尾格逐 tick 序列；原 8 組雙人掃腳、32 組 KO、HitFall、輸入／guard／跑跳／既有攻擊完整回歸通過，無瀏覽器錯誤。未改原 AIR 或 atlas，只更新本 README。
+
+## 0.23.27 實作紀錄
 
 BUILD `sweep-tuning-ko-fall-m1-20261002-01`。修正使用者 0.23.26 回報：440 飛起過高、200 打至 HP0 仍返回 S0。保留鏡頭及原資產。
 
