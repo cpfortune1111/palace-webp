@@ -107,6 +107,21 @@ const server=http.createServer((request,response)=>{
   }
   resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;posX=-200;p2.x=200;p1Facing=1;p2.facing=-1;vx=0;vy=0;p2.vx=0;p2.vy=0;p1TurnTime=0;p2TurnTime=0;enterIRState(0);enterP2State(0);return checks;
  })()`);assert.equal(liveCancelChecks,64);console.log(JSON.stringify({liveCancelChecks}));
+ const crouchExitChecks=await run(`(()=>{
+  let checks=0;
+  const frames=framesFor(12);if(JSON.stringify(frames.map(frame=>[frame.group,frame.item,frame.time]))!==JSON.stringify([[40,1,1],[40,0,2]]))throw Error('Original A12 durations changed');
+  for(const facing of [-1,1]){
+   resetPlayerInput();setP2ControlMode('keyboard');p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;p2.getHit=null;cornerPushVelocity=0;p2.cornerPushVelocity=0;posX=-facing*400;p2.x=facing*400;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=facing;p2.facing=-facing;enterIRState(11);enterP2State(11);
+   const rows=[];
+   for(let tick=0;tick<5;tick++){simStep();rows.push([[state,current,fi+1,stateTicks],[p2.state,p2.anim,p2.elem,p2.time]]);checks++}
+   for(const player of [0,1]){
+    const sequence=rows.map(row=>row[player]);
+    const expected=[[12,12,1,0],[12,12,2,1],[12,12,2,2],[12,12,2,3],[0,0,1,0]];
+    if(JSON.stringify(sequence)!==JSON.stringify(expected))throw Error('A12 boundary / player parity '+player+' '+JSON.stringify(sequence));
+   }
+  }
+  resetPlayerInput();setP2ControlMode('dummy');enterIRState(0);enterP2State(0);return checks;
+ })()`);assert.equal(crouchExitChecks,10);console.log(JSON.stringify({crouchExitChecks}));
  await page.locator('#dbgBoxes').dispatchEvent('pointerdown');
  assert.equal(await run('showCollision'),true);
  for(const facing of [-1,1]){
@@ -227,7 +242,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.32');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.33');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -238,7 +253,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.32-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.33-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');

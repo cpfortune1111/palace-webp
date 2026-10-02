@@ -2,7 +2,17 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.32 — Command Buffer / Normal Cancels M1
+## 最新版本：0.23.33 — Crouch Exit End Frame M1
+
+BUILD `crouch-exit-end-frame-m1-20261002-01`。使用者確認 0.23.32 其餘項目暫時 PASS；A12 結尾倒跳單獨修正，本版待人工驗收。
+
+- 原 AIR A12 沒有改 ticks：`40,1,0,0,1` → `40,0,0,0,2`。根因不是 E2 被改成 1，而是動畫 age 到總長度 3 後、原 Common `AnimTime=0` ChangeState 在下一次 controller 評估前，通用播放器先回圈到 E1，產生 S12/T3/A12/E1 的錯誤邊界畫面。
+- P1／P2 A12 播完時保留最後 E2，等待原 Common 的 S12→S0，不重播 E1、不延長 AIR 的 E2 duration、不改 CtrlSet(Time=1)／取消條件。邊界 HUD S12/T3 仍在 E2，下一 tick 依來源回 S0；這是顯示來源 state transition 前的尾格，不是新增第三個 AIR element。600／630 的原 LoopStart、guard／fall 特例及其他循環不改。
+- 新增雙人／兩面向由 S11 放開 ↓ 的完整逐 tick fixture，核對 S12/T0/E1、T1/E2、T2/E2、T3 邊界保持 E2，然後 S0；同時檢查原 sprite pairs／ticks，以及全部 command／取消與舊版回歸。原始 AIR、atlas、鏡頭、鍵位和音效不改。
+
+人工請測：P1 ↓／P2 Num5 蹲下後放開，用 Scroll Lock 查 A12 結尾不能再回 E1；T3 邊界需保持站起來的 E2，接著回 A0。兩面向及再蹲／收招取消仍可用。0.23.32 接觸計時與深測狀態保留，不將「其餘暫時 PASS」改標全部深測完成。
+
+## 0.23.32 實作紀錄（除 A12 外，使用者暫時 PASS）
 
 BUILD `command-buffer-normal-cancels-m1-20261002-01`。使用者 0.23.31 PASS；本版待人工驗收。只更新此 README，所有 atlas、原始 CNS／CMD／AIR／SFF、鏡頭及已驗收調整保持不變。
 
@@ -195,7 +205,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 
 - P1：方向鍵移動，x=Z、y=X、a=A、b=S、l=Q、r=W；WASD 不移動。P2：Num8／5／4／6 移動，x=Num0、y=Num.、a=Num1、b=Num2、l=Num/、r=Num*；不再使用 J／L／U。Settings 可自訂，亦可切回 Dummy。
 - Input 可選 Auto／Keyboard／Touch；失焦清除 held input。右上 □ 顯示 CLSN，Ⅱ 暫停／逐 tick，↓ 匯出最近 600 ticks 診斷 JSON（非 replay save）。
-- 更新後確認 Prototype／READY=0.23.32、BUILD=`command-buffer-normal-cancels-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick，Space 回復雙方 HP／KO 起身。
+- 更新後確認 Prototype／READY=0.23.33、BUILD=`crouch-exit-end-frame-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick，Space 回復雙方 HP／KO 起身。
 - 自動回歸使用 `tools/check-runtime.cjs`；Node、Playwright／Edge、遊戲資料與既有 Three.js CDN 需要可用。本次新增 range 邊界、hit timers、HitVelSet facing／axis masks、接觸計時及 pause／reset 檢查。
 - 本版自動測試 PASS：40 組 range 邊界、兩個 facing 的 GetHit／HitVelSet／未知欄位拒絕、接觸 pause／reset，以及既有 448 組 expression parity、雙向 hit／guard／corner、同時 X／U／互中、鍵盤／CLSN／Turn／30-60-120 Hz 回歸；browserErrors=[]。瀏覽器人工驗收待使用者測試。
 
@@ -244,6 +254,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] P1 跑跳 State 40 額外來源分支、全量 -1 未接入必殺／超必殺、-2／-3、可重播 input／state trace；P2 蹲／跳已接。
 - [x] 0.23.31 使用者 PASS：600／630 LoopStart、雙方回血／Space 與 KO 起身。
 - [ ] 0.23.32：雙人 command time／buffer、MoveHit／MoveContact／MoveGuarded、來源普通技重入／取消與可用玩家 -1 已接入，待人工驗收；必殺／投技來源 controller 保留 deferred。
+- [ ] 0.23.33：A12 結尾誤回圈修正，雙人兩面向逐 tick 自動驗證，待人工驗收；0.23.32 其他項目使用者暫時 PASS，深測標記不變。
 - [x] 0.23.29 使用者 PASS：Trip 動畫連續性／ChangeState tick travel、普通 KO 跌倒、Pause／Scroll Lock debug。
 - [ ] 0.23.30：600／610／630／640、5020／5030／5035／5040／5050 已接入，待人工驗收；5200／5201／5210 已完成來源 fixture，recovery 入口按原註解停用。
 - [ ] 其他普通技與各種 HitDef priority，按來源相依順序接入。
