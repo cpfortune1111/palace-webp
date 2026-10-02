@@ -22,6 +22,23 @@ const server=http.createServer((request,response)=>{
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
+ if(process.argv.includes('--portrait-idle')){
+  const result=await run(`(()=>{
+   let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+   resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;
+   for(const life of [251,250,1,1000]){p1Life=life;p2.life=life;enterIRState(0);enterP2State(0);syncLowLifeIdle();expect(current===(life<=250?5300:0),'P1 threshold '+life);expect(p2.anim===(life<=250?5300:0),'P2 threshold '+life);}
+   p1Life=100;p2.life=100;enterIRState(200);enterP2State(200);syncLowLifeIdle();expect(current===200&&p2.anim===200,'Attacks not replaced');
+   enterIRState(0);enterP2State(0);current=5;p2.anim=5;syncLowLifeIdle();expect(current===5&&p2.anim===5,'Turn preserved');
+   current=0;p2.anim=0;p1Life=0;p2.life=0;syncLowLifeIdle();expect(current===0&&p2.anim===0,'KO not replaced with low idle');
+   expect(framesFor(5300).map(frame=>frame.time).join(',')==='18,4,4,4,4,4,12,4,4,4,4,4','Original A5300 timing');
+   p1Life=100;p2.life=100;p1Reaction=null;posX=-200;p2.x=200;p1Facing=1;p2.facing=-1;enterIRState(0);enterP2State(0);document.querySelector('#p2Guard').value='none';setP2ControlMode('dummy');
+   for(let index=0;index<60;index++)simStep();expect(current===5300&&p2.anim===5300,'Low idle survives real simulation');expect(fi>0&&p2.elem>1,'Low idle animation advances');
+   restorePlayerHealth();simStep();expect(current===0&&p2.anim===0,'HP restore returns both to A0');
+   const scales=[],originalScale=effectContext.scale;effectContext.scale=function(horizontal,vertical){scales.push(horizontal);return originalScale.call(this,horizontal,vertical)};
+   try{for(const animation of [915,916,917,918,919,925,926,927,928,929]){sourceExplods.length=0;sourceExplods.push({anim:animation,screen:true,x:0,y:200,scale:[1,1],age:0,sprpriority:100});drawSourceExplods();expect(Math.sign(scales.pop())===(animation>=925?-1:1),'AIR portrait flip '+animation);}}finally{effectContext.scale=originalScale;sourceExplods.length=0;}
+   return {portraitIdleChecks:checks};
+  })()`);console.log(JSON.stringify(result));assert.deepEqual(errors,[]);return;
+ }
  if(process.argv.includes('--stage-visuals')){
   await page.waitForFunction(()=>window.specialTest.run('!!stageVisuals&&!!stageFilterImage'),null,{timeout:30000});
   const result=await run(`(()=>{

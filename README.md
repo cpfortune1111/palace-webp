@@ -2,7 +2,16 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.39 — KO Push / Stage Visuals M1
+## 最新版本：0.23.40 — Portrait Facing / Low Life Idle M1
+
+BUILD `portrait-low-life-idle-m1-20261003-01`。待人工驗收。
+
+- 修正 Explod 渲染漏讀 AIR 的 H／V 翻轉；P2 頭像 A925–929 使用原 H，P1 A915–919 保持原方向。頭像不隨角色轉身反轉，位置、來源 AIR 及圖像不改。
+- 按原 Common S0：HP ≤ LifeMax/4 時播放 A5300（不是進入 S5300），高於門檻恢復 A0；保留 A5 轉身直至完成，不覆蓋攻擊、受擊或 KO。P1／P2 同步適用；原 A5300 的 12 個影格與時間完整匯入。
+- 測試：P1／P2 血量 251、250、1、1000；低血站立、轉身、攻擊及 KO；A915–919／925–929 全部頭像翻轉。人工請測 250 HP 站立喘氣，Space 補血回 A0，再測 P2 正常、受擊、倒地、勝負頭像。
+- 本版只更新 README 作版本說明；維持 Venus 1v1、來源 recovery 入口停用、鏡頭校準及 0.23.39 舞台呈現。
+
+## 0.23.39 — KO Push / Stage Visuals M1
 
 BUILD `ko-push-stage-visuals-m1-20261003-01`。本版待人工驗收，不將 0.23.38 整體標 PASS。
 
