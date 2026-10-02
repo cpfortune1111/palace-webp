@@ -16,10 +16,10 @@ for line in definition.splitlines():
         active = line.lower().startswith('[begin action 1001]') or line.lower().startswith('[begin action 1311]')
     if active:
         actions.append(line)
-for animation, group, item in [(11, 11, 1), (12, 12, 1), (60, 60, 0)]:
+for animation, group, item in [(11, 11, 1), (12, 12, 1), (60, 60, 0), (51, 51, 0)]:
     actions.extend([f'[Begin Action {animation}]', f'{group},{item},0,0,-1'])
 (scratch / 'fight.air').write_text('\n'.join(actions), encoding='utf-8')
-export(scratch, output, ('1001', '1311', '11', '12', '60'), 'fight_hud', 'fight')
+export(scratch, output, ('1001', '1311', '11', '12', '60', '51'), 'fight_hud', 'fight')
 shutil.copyfile(source / 'font/timer.sff', scratch / 'timer.sff')
 (scratch / 'timer.air').write_text('\n'.join(f'[Begin Action {digit}]\n3,{48+digit},0,0,-1' for digit in range(10)), encoding='utf-8')
 export(scratch, output, tuple(str(digit) for digit in range(10)), 'timer_hud', 'timer')

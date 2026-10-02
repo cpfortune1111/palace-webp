@@ -9141,6 +9141,708 @@
       }
     }
   ],
+  "aiCommands": [
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "3000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl",
+          "P2BodyDist X = [120,300]"
+        ],
+        "2": [
+          "StateNo = 210 || StateNo = 240 || StateNo = 410",
+          "MoveHit"
+        ],
+        "3": [
+          "ctrl",
+          "P2StateType = A",
+          "P2BodyDist X = [0,240]"
+        ],
+        "4": [
+          "P2BodyDist X = [0,300]",
+          "P2StateNo = 5110",
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "AILevel",
+        "RoundState = 2",
+        "Life <= LifeMax/4",
+        "MoveType != H",
+        "StateType != A",
+        "P2StateType != L || P2StateNo = 5120",
+        "P2StateNo != [120,155]",
+        "P2BodyDist Y = [-360,0]"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 226
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "P2StateType = A"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 210 || StateNo = 240 || StateNo = 400 || StateNo = 410 || StateNo = 430",
+          "MoveHit",
+          "P2BodyDist X < 200"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "AILevel",
+        "RoundState = 2",
+        "random < 22*AIlevel",
+        "MoveType != H",
+        "StateType != A",
+        "StateNo != [800,4999]",
+        "P2StateNo!= [120,159]",
+        "P2StateType != L",
+        "P2BodyDist X = [0,300]",
+        "P2BodyDist Y = [-280,0]",
+        "var(3) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 255
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1100"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "P2StateType = A || P2StateNo = 5120"
+        ],
+        "2": [
+          "StateNo = 210 || StateNo = 240 || StateNo = 410 || StateNo = 430",
+          "MoveContact"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "AILevel",
+        "RoundState = 2",
+        "random < 35*AIlevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "MoveType != H",
+        "StateType != A",
+        "StateNo != [800,4999]",
+        "P2StateType != L || p2stateno=5120",
+        "P2StateNo != [120,159]",
+        "(P2BodyDist X = [0,240]) || (MoveContact && P2BodyDist X < 200)",
+        "P2BodyDist Y =[-440,0]",
+        "var(16) > 40",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 278
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "Helper(9999),var(20) || Helper(9999),var(21)"
+        ],
+        "2": [
+          "StateNo = 210 || StateNo = 240 || StateNo = 410 || StateNo = 430",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "AILevel",
+        "RoundState = 2",
+        "random < AIlevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "StateType != A",
+        "MoveType != H",
+        "StateNo != [800,4999]",
+        "P2StateType != A",
+        "P2StateNo != [120,159]",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 303
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "120"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = 20"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 113*AIlevel",
+        "StateType != A",
+        "MoveType != H",
+        "StateNo != 105",
+        "StateNo != [120,159]",
+        "StateNo != [200,3999]",
+        "InGuardDist || EnemyNear,HitDefAttr = SCA,NP,SP,HP || EnemyNear,HitDefAttr = SCA,AA",
+        "((EnemyNear, MoveType = A && EnemyNear,HitDefAttr!=SCA,AA) || (EnemyNear,HitDefAttr=SCA,NP,SP,HP || EnemyNear,HitDefAttr = SCA,AA)) || Enemy,NumProj"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 328
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "105"
+      },
+      "triggers": {
+        "1": [
+          "P2StateType = L || P2MoveType = A",
+          "BackEdgeDist > 160",
+          "P2BodyDist X = [-396,180]",
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveGuarded",
+          "BackEdgeDist > 240"
+        ],
+        "3": [
+          "StateNo = 151 || StateNo = 153"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 22*AIlevel",
+        "StateType != A",
+        "StateNo != 105"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 364
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo =[10,20]",
+          "Helper(9999),var(10) > 0 || Helper(9999),var(11) > 0",
+          "P2BodyDist X < 120"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 63*AIlevel",
+        "StateType != A",
+        "StateNo != [800,3999]",
+        "P2StateType != C",
+        "P2StateType != L",
+        "P2BodyDist X = [0,140]",
+        "P2BodyDist Y = 0",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0",
+        "Helper(9999),var(14) = 1"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 384
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "210"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo =[10,20]",
+          "Helper(9999),var(11) > 0"
+        ],
+        "2": [
+          "random < 199",
+          "ctrl || StateNo = [10,20]",
+          "P2BodyDist X = [260,400]",
+          "P2StateType = S",
+          "P2MoveType = I"
+        ],
+        "3": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 70*AIlevel",
+        "StateType != A",
+        "StateNo != [800,3999]",
+        "P2StateType != C",
+        "P2StateType != L",
+        "P2BodyDist X = [0,400]",
+        "P2BodyDist Y = [0,-140]",
+        "Enemy,Vel Y >= 0",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0",
+        "Helper(9999),var(14) = 1"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 407
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "230"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo =[10,20]",
+          "Helper(9999),var(10) > 0"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 45*AIlevel",
+        "StateType != A",
+        "(StateNo != [800,3999]) || var(5) = 1",
+        "P2StateType != C",
+        "P2StateType != L",
+        "P2BodyDist X = [0,100]",
+        "P2BodyDist Y = 0",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 436
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "240"
+      },
+      "triggers": {
+        "1": [
+          "random < 199",
+          "ctrl || StateNo =[10,20]",
+          "P2StateType = A",
+          "P2BodyDist X = [220,280]",
+          "Helper(9999),var(10) > 0"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 40*AIlevel",
+        "StateType != A",
+        "StateNo != [800,3999]",
+        "P2StateType != C",
+        "P2StateType != L",
+        "P2BodyDist X = [0,260]",
+        "P2BodyDist Y = [0,-200]",
+        "Enemy,Vel Y >= 0",
+        "var(3) = 0",
+        "var(4) = 0",
+        "Helper(9999),var(8) = 0 || (P2StateType = A && P2BodyDist X > 140)",
+        "Helper(9999),var(14) = 1"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 457
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "400"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo =[10,20]",
+          "Helper(9999),var(10) > 0 || Helper(9999),var(11) > 0",
+          "P2BodyDist X < 120"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 70*AILevel",
+        "StateType != A",
+        "MoveType != H",
+        "(StateNo != [800,3999]) || var(5) = 1",
+        "P2StateType != L",
+        "P2BodyDist X = [0,160]",
+        "P2BodyDist Y = 0",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 484
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "410"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "Helper(9999),var(11) > 0"
+        ],
+        "2": [
+          "random < 199",
+          "ctrl || StateNo = [10,20]",
+          "P2StateType = S",
+          "P2BodyDist X >= 260",
+          "Helper(9999),var(11) > 0"
+        ],
+        "3": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 70*AILevel",
+        "StateType != A",
+        "MoveType != H",
+        "StateNo != [800,3999]",
+        "P2StateType != A",
+        "P2StateType != L",
+        "P2BodyDist X = [132,400]",
+        "P2BodyDist Y = 0",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 506
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "430"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "Helper(9999),var(10) > 0 || Helper(9999),var(11) > 0",
+          "P2BodyDist X < 180"
+        ],
+        "2": [
+          "P2StateType = S",
+          "ctrl"
+        ],
+        "3": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ],
+        "4": [
+          "P2MoveType = H",
+          "ctrl"
+        ],
+        "5": [
+          "var(4) = 1",
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 70*AILevel",
+        "StateType != A",
+        "MoveType != H || P2StateType = S",
+        "StateNo != [800,3999]",
+        "P2StateType != L",
+        "P2StateType != A",
+        "P2BodyDist X = [0,220]",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 534
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "440"
+      },
+      "triggers": {
+        "1": [
+          "random < 199",
+          "ctrl || StateNo = [10,20]",
+          "P2BodyDist X >= 180",
+          "P2StateType = S",
+          "P2MoveType = I"
+        ],
+        "2": [
+          "ctrl",
+          "P2StateType = S",
+          "Helper(9999),var(10) = 0",
+          "Helper(9999),var(11) = 0"
+        ],
+        "3": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 53*AILevel",
+        "StateType != A",
+        "MoveType != H",
+        "StateNo != [800,3999]",
+        "P2StateType != A",
+        "P2StateType != L",
+        "P2BodyDist X = [0,260]",
+        "var(3) = 0",
+        "Helper(9999),var(8) = 0 || (P2StateType = S && P2BodyDist X > 120)"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 565
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "600"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random <= 50*AILevel",
+        "StateType = A",
+        "Movetype != H",
+        "StateNo!= [100,105]",
+        "Vel Y <= 0 || P2StateType = A",
+        "P2BodyDist X = [-40,200]",
+        "P2BodyDist Y = [-80,200]"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 594
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "610"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random <= 35*AILevel",
+        "StateType = A",
+        "Movetype != H",
+        "StateNo!= [100,105]",
+        "Vel Y >= 0",
+        "P2BodyDist X = [-40,200]",
+        "P2BodyDist Y = [-80,320]"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 609
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "630"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random <= 70*AILevel",
+        "StateType = A",
+        "Movetype != H",
+        "StateNo!= [100,105]",
+        "Vel Y >= 0",
+        "P2BodyDist X = [-80,280]",
+        "P2BodyDist y = [-80,240]"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 624
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "640"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random <= 70*AILevel",
+        "StateType = A",
+        "Movetype != H",
+        "StateNo!= [100,105]",
+        "Vel Y >= 0",
+        "P2BodyDist X = [-56,360]",
+        "P2BodyDist Y = [-80,320]"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 639
+      }
+    },
+    {
+      "type": "changestate",
+      "params": {
+        "value": "40"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = [10,20]",
+          "var(30) = 1"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "StateType != A",
+        "P2StateType != L || P2StateNo = 5120",
+        "P2StateNo != [5090,5119]",
+        "P2StateNo != [5121,5899]",
+        "var(30) = 1"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 654
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "100"
+      },
+      "triggers": {
+        "1": [
+          "(EnemyNear(0),MoveType != A) && !InGuardDist",
+          "P2BodyDist x >= 160",
+          "random <= AILevel"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "StateType = S",
+        "RoundState = 2",
+        "StateNo != 100",
+        "cond(EnemyNear(0),NumProj,0,1)",
+        "ctrl || StateNo = 20"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 667
+      }
+    },
+    {
+      "type": "changestate",
+      "params": {
+        "value": "20"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "AILevel",
+        "RoundState = 2",
+        "random < 30*AILevel",
+        "StateType != A",
+        "StateNo != [20,105]",
+        "P2Movetype != A",
+        "P2BodyDist X >= 80"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 681
+      }
+    }
+  ],
   "deferredPlayerCommands": [
     {
       "type": "ChangeState",

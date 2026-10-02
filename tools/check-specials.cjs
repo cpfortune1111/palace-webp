@@ -18,10 +18,15 @@ const server=http.createServer((request,response)=>{
  browser=await chromium.launch({headless:true,channel:'msedge'});
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
  page.on('pageerror',error=>errors.push(error.message));page.on('requestfailed',request=>console.log('Request failed: '+request.url()+' '+request.failure()?.errorText));
- await page.goto('http://127.0.0.1:8766');
+ await page.goto('http://127.0.0.1:8766/?mode=training');
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
+ await page.waitForFunction(()=>window.specialTest.run('!gameShell.isHome()'),null,{timeout:30000});
+ if(process.argv.includes('--menu')){
+  await run('gameShell.ready');await run('gameShell.showHome()');await page.screenshot({path:'work/title-menu-preview.png'});
+  await run('gameShell.start("watch")');const result=await run(`(()=>{let moves=[new Set(),new Set()];for(let index=0;index<1200;index++){simStep();moves[0].add(state);moves[1].add(p2.state)}fightHud.reset();fightHud.step(true,[500,1000]);const samples=[fightHud.displayLife()[0]];for(let index=1;index<10;index++){fightHud.step(true,[500,1000]);samples.push(fightHud.displayLife()[0])}if(samples.at(-1)!==.5||samples[0]===.5)throw Error('10 tick HP easing');return {aiStates:moves.map(set=>Array.from(set)),samples};})()`);console.log(JSON.stringify(result));assert.deepEqual(errors,[]);return;
+ }
  if(process.argv.includes('--camera-hud')){
   await run('fightHud.ready');
   for(const viewport of [{width:1161,height:754},{width:1398,height:598}]){

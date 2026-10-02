@@ -2,7 +2,19 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.41 — Camera Bounds / Fight HUD M1
+## 最新版本：0.23.42 — Title Menu / Options M1
+
+BUILD `title-menu-options-m1-20261003-01`。待人工驗收。
+
+- Timer 個位原位置 642 保留，只將十位由 584 改至 612；無限模式不畫符號。匯入 fight.sff 51,0 作兩方頭像背景，置於頭像下方，按原 P1 0／P2 1280 anchor 及面向繪製。
+- 血條前景改為 10 個 simulation ticks 的 cubic ease-out（首 tick 扣最多，逐 tick 遞減，第 10 tick 精確到目標）；多段攻擊從目前顯示值重新收縮。實際 HP／damage／KO 即時處理，不延遲戰鬥判定，Space 補血立即回滿。
+- 主頁取原 system.def TitleBG 順序：10,0 星空／20,0 地球／21,0 雲／25,0 宮殿／30,0 海／1,0 作者標誌／0,0 Logo；原 SFF 像素、axis，1280×720 fit。今版使用動畫首格／Logo 最後靜止姿勢，流星、雲／海動畫及原 bitmap Menu 字型仍待補，不宣稱 TitleBG 完全復刻。
+- Menu：VS（雙人 keyboard，預設 99 秒，Options 可改時間）、Training（無限）、Watch（雙 AI，使用原 CMD 已支援 AI 招式／移動分支，非每隔固定時間亂出拳）、Options；遊戲 Input 的 Menu 可返回主頁。仍保持 Venus 1v1，未加選角／多人／完整新回合流程。
+- Options 本機儲存：Difficulty 1–8、Timer None／15–99、Master／BGM／SFX 0–100%，Key Config 連既有雙人自訂鍵位。來源 title.bgm BGM.mp3 循環；Master×分類音量作用於主頁 BGM、角色／Common 音效。瀏覽器首次播放仍需使用者點擊。難度供 Watch 的 AILevel 來源機率使用，無人類模式 AI。
+- AI 補 Helper(9999),var(n)、EnemyNear(0) 與不等 HitDefAttr redirect 的表達式路徑；原未完成 throw 不啟用。來源 AI 及對戰平衡仍需深測；沒有假稱 Round flow 已完成。
+- 驗收：99→98 的十位／個位、無限空白；雙邊 51,0、各傷害 10 tick 減速收縮、連續命中／KO／Space；主頁四選項、VS 鍵盤／Training 無限／Watch 雙方攻擊；Difficulty／Timer／音量 reload 保留；Key Config 返回／儲存。原 TODO 待深測項目不自動 PASS。
+
+## 0.23.41 — Camera Bounds / Fight HUD M1
 
 BUILD `camera-bounds-fight-hud-m1-20261003-01`。0.23.40 使用者 PASS。本版待驗收。
 

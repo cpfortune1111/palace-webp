@@ -255,6 +255,10 @@ human_commands = [compile_controller(controller) for controller in sorted(states
                   if controller['state'] == -1 and controller['file'] == 'venus.cmd'
                   and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])]
 enabled_targets = set(attack_states) | {'100', '105'}
+ai_commands = [compile_controller(controller) for controller in sorted(states['controllers'], key=lambda controller: controller['line'])
+               if controller['state'] == -1 and controller['file'] == 'venus.cmd'
+               and any(entry['text'] == 'triggerall = AILevel' for entry in controller['entries'])]
+ai_commands = [controller for controller in ai_commands if controller['params'].get('value') in enabled_targets | {'20', '40', '120'}]
 player_commands = [controller for controller in human_commands if controller['params'].get('value') in enabled_targets]
 deferred_commands = [controller for controller in human_commands if controller['params'].get('value') not in enabled_targets]
 command_definitions = []
@@ -289,7 +293,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
           'lifecycleHelpers': lifecycle_helpers,
           'sizeConstants': size_constants,
           'helperStates': helper_states, 'chargeControllers': charge_controllers,
-          'playerCommands': player_commands, 'deferredPlayerCommands': deferred_commands, 'landingSound': landing_sound,
+          'playerCommands': player_commands, 'aiCommands': ai_commands, 'deferredPlayerCommands': deferred_commands, 'landingSound': landing_sound,
           'fallStates': fall_states, 'loopStarts': loop_starts,
           'recoveryEntryEnabled': False,
           'noAirGuardControllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == -2 and controller['type'] == 'AssertSpecial' and any('NoAirGuard' in entry['text'] for entry in controller['entries'])],
