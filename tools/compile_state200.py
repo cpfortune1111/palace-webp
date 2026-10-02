@@ -49,6 +49,10 @@ for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8'
 def compile_controller(controller):
     params, triggers, triggerall = {}, {}, []
     for entry in controller['entries']:
+        if '=' not in entry['text']:
+            if re.fullmatch(r'\*+', entry['text']):
+                continue
+            raise ValueError('Invalid source controller entry: ' + repr(entry))
         key, value = (part.strip() for part in entry['text'].split('=', 1))
         key = key.lower()
         if key == 'type':
@@ -69,6 +73,32 @@ def compile_controller(controller):
         params['moveType'] = params.pop('movetype')
     return {'type': controller['type'], 'params': params, 'triggers': triggers,
             'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}}
+
+def compile_lifecycle_state(state_id):
+    definition = next(item for item in states['states'] if item['id'] == state_id)
+    fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
+              for entry in definition['entries']}
+    compiled = {'controllers': [compile_controller(controller) for controller in states['controllers']
+                                 if controller['state'] == state_id],
+                'source': {'file': definition['file'], 'line': definition['line']}}
+    for field, target in (('type', 'type'), ('physics', 'physics'), ('movetype', 'moveType')):
+        if field in fields:
+            compiled[target] = fields[field]
+    for field in ('ctrl', 'sprpriority', 'juggle', 'poweradd'):
+        if field in fields:
+            compiled[field] = int(fields[field])
+    if 'anim' in fields:
+        compiled['anim'] = fields['anim']
+    if 'velset' in fields:
+        compiled['velset'] = [float(value) for value in fields['velset'].split(',')]
+    return compiled
+
+lifecycle_states = {str(state_id): compile_lifecycle_state(state_id)
+                    for state_id in (5900, 190, 191, 1990, 1991, 170, 175, 180, 181)}
+global_controllers = {str(state_id): [compile_controller(controller) for controller in states['controllers']
+                                     if controller['state'] == state_id] for state_id in (-3, -2)}
+lifecycle_helpers = {str(state_id): compile_lifecycle_state(state_id)
+                     for state_id in (9999, 915, 925, 950)}
 
 attack_states = {}
 for state_id in (200, 210, 230, 240, 400, 410, 430, 440, 600, 610, 630, 640):
@@ -143,6 +173,11 @@ for state_id in (100, 105, 106):
         locomotion_states[str(state_id)]['ctrl'] = int(fields['ctrl'])
 locomotion_constants = {}
 source_text = (source / 'venus.cns').read_text(encoding='utf-8-sig')
+size_constants = {}
+for name in ('ground.front', 'ground.back', 'air.front', 'air.back', 'height'):
+    size_constants['size.' + name] = float(re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)[1])
+for axis, value in zip(('x', 'y'), re.search(r'^head\.pos\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):
+    size_constants['size.head.pos.' + axis] = float(value)
 for name in ('run.fwd', 'run.back'):
     match = re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)
     values = [float(value.strip()) for value in match[1].split(',')]
@@ -246,10 +281,13 @@ for section in json.loads((root / 'command_sections.json').read_text(encoding='u
                                 'time': int(fields.get('time', default_time)), 'bufferTime': int(fields.get('buffer.time', default_buffer)),
                                 'steps': steps, 'supportedM2': True, 'source': {'file': section['file'], 'line': section['line']}})
 (arguments.output.parent / 'venus_cmd_runtime.json').write_text(json.dumps({
-    'version': '0.23.36', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
+    'version': '0.23.38', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
     'sourceSha256': hashlib.sha256((source / 'venus.cmd').read_bytes()).hexdigest()
 }, ensure_ascii=False, indent=2), encoding='utf-8')
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands,
+          'lifecycleStates': lifecycle_states, 'globalControllers': global_controllers,
+          'lifecycleHelpers': lifecycle_helpers,
+          'sizeConstants': size_constants,
           'helperStates': helper_states, 'chargeControllers': charge_controllers,
           'playerCommands': player_commands, 'deferredPlayerCommands': deferred_commands, 'landingSound': landing_sound,
           'fallStates': fall_states, 'loopStarts': loop_starts,
@@ -273,7 +311,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
                        'juggle': 1, 'velset': [0, 0], 'controllers': controllers}, 'collision': actions,
           'source': {'definitionLine': definition['line'], 'baseline': 'source-import-v1',
                      'sha256': {name: hashlib.sha256((source / name).read_bytes()).hexdigest()
-                                for name in ('venus.cns', 'venus_Common.cns', 'venus.cmd', 'venus.air')}},
+                                for name in ('venus.cns', 'venus_Common.cns', 'venus_Helper.st', 'venus.cmd', 'venus.air')}},
           'intentionalBlankPairs': [[122, 0], [951, 99]], 'unfinishedActions': [645], 'airGuard': False}
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

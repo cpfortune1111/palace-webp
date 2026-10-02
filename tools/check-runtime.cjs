@@ -46,6 +46,7 @@ const server=http.createServer((request,response)=>{
   })()
  `));assert.equal(orientationChecks,24);
  const run=source=>page.evaluate(source=>window.runtimeTest.run(source),source);
+ await page.waitForFunction(()=>window.runtimeTest.run('!!lifecycleDat'),null,{timeout:30000});
  const step=()=>page.evaluate(()=>{window.runtimeTest.step();return window.runtimeTest.snapshot()});
  const commandChecks=await run(`(()=>{
   let checks=0;
@@ -242,7 +243,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.37');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.38');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -253,7 +254,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.37-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.38-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -764,10 +765,10 @@ const server=http.createServer((request,response)=>{
    for(const player of [1,2])for(const facing of [-1,1]){
     resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=player===1?0:facing*1000;posY=0;p1Facing=player===1?facing:-facing;vx=0;vy=0;p2.x=player===2?0:facing*1000;p2.y=0;p2.vx=0;p2.vy=0;p2.facing=player===2?facing:-facing;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';sourceExplods.length=0;enterIRState(player===1?105:0);enterP2State(player===2?105:0);
     let spawns=0,landed=false;
-    for(let tick=0;tick<30;tick++){simStep();if(sourceExplods.some(effect=>effect.age===0)){spawns++;const effect=sourceExplods[0],owner=player===1?liveP1():p2;if(effect.x!==owner.x||effect.y!==owner.y)throw Error('909 first tick binding')}
+    for(let tick=0;tick<30;tick++){simStep();const effect=sourceExplods.find(effect=>effect.id===909&&effect.age===0);if(effect){spawns++;const owner=player===1?liveP1():p2;if(effect.x!==owner.x||effect.y!==owner.y)throw Error('909 first tick binding')}
      if((player===1?state:p2.state)===106)landed=true;
     }
-    if(spawns!==1||sourceExplods.length||!landed)throw Error('909 state lifecycle');
+    if(spawns!==1||sourceExplods.some(effect=>effect.id===909)||!landed)throw Error('909 state lifecycle');
    }
    if(soundLog.filter(sound=>sound==='52-0.wav').length!==4)throw Error('Landing sound missing');
    return {footsteps:soundLog.filter(sound=>sound==='100-0.wav').length,landingSounds:4,explod909:'PASS',bindings:'PASS',settings:'PASS'};

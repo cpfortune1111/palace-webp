@@ -2,7 +2,20 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.37 — Guard KO Transition M1
+## 最新版本：0.23.38 — Source Globals / Helpers M1
+
+BUILD `source-globals-helpers-m1-20261003-01`。本版待人工驗收，只更新此 README，不新增版本文件。
+
+- 全部 -3（20 個）／-2（44 個）來源 controller 依序加入雙方每 tick 執行，hitpause 只執行原 ignorehitpause=1；蓄力不再由舊 chargeControllers 重複跑。保留來源 Var3／4／5／6／15／40／41、NoAirGuard、PowerSet 等條件；pause／superpause 仍停用受暫停本體的全域執行。
+- 原 Helper 9999 每位玩家只建立一個，Invisible、Root／Enemy／EnemyNear 查詢、ParentVarSet、41 個原決策 controller、RoundState!=2 的 DestroySelf 已接入。包含原本看似相反的 RoundState!=2 判定，沒有自行修正原 AI。**這是決策資料基礎，不是啟用 AILevel／AI -1 自動出招。**
+- 原 915／925 頭像 Helper 及 915..919／925..929 AIR／SFF 已匯出並接入：正常、受擊、低 HP、KO；原左右畫面定位、0.75 scale、removetime=-1、LoopStart／末格 -1 保留。原 950 partner helper 資料保留，NumPartner=0 時不建立。Win 圖示及 TeamMode=Simul 分支保留來源，但因尚未實作勝負／多人流程，不標為已可玩。
+- -3 四組受擊人聲 10,0..3 直接抽取原 SND，依原 Time／Alive／Random 條件播放；沿用雙方獨立聲音頻道。IKEMEN 的攻擊者 hitPauseTime 與防守者 gethit shaking 分開，不能因防守者 shaking 而略過來源 Time=1 的人聲。本角色來源沒有獨立 PlaySnd 音效 Helper，不能把全域人聲誤稱為新增音效 Helper。
+- 初始化模組及原 5900／190／191／1990／1991／WinLose 已編譯保留；5900 首／後回合與 var／fvar 測試通過。**目前仍用已驗收的 training 啟動：5900→Intro、自訂控制模式 F930..937、完整 round flow 尚未接上，不聲稱完成初始化 gameplay。** Draw175／Continue5500 將依使用者要求用 Lose 動畫；停用 recovery 入口及未完成投技維持原樣。
+- 1v1 Partner／NumPartner／NumEnemy／TeamMode 查詢、Helper 個數及 instance ID 分離、Root／Enemy redirect、HitDefAttr、來源尺寸的 P2BodyDist／edge 距離供決策使用；不增加四人對戰。鎖定鏡頭、普通技、CMD、空中不可防禦及所有已驗收 override 不改。
+
+自動驗證：348 項雙人 Helper／來源表達式／低 HP／KO／持續動畫／原決策觸發與清除／雙方 shaking 中受擊人聲，初始化／查詢／排程單元測試，以及舊普通技、四招必殺、聲音、取消、guard、fall、鍵盤、同時輸入回歸。未把未測分支標 PASS。人工請測兩邊頭像正常／受擊／低於 250 HP／KO／Space 回復切換；再測普通連招、Sword 蓄力與 3000 暫停，確認新全域邏輯沒有改已驗收手感。
+
+## 0.23.37 — Guard KO Transition M1
 
 BUILD `guard-ko-transition-m1-20261003-01`。0.23.36 使用者 PASS；本版修正致命防禦傷害，待人工驗收。
 

@@ -110,11 +110,11 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
             group, item, ox, oy, time = map(int, fields[:5])
             actions[action].append(dict(group=group, item=item, ox=ox, oy=oy, time=time, flip=fields[5] if len(fields)>5 else '', blend=fields[6] if len(fields)>6 else ''))
     assert set(actions) == set(action_ids)
-    atlas_height = 2048 if prefix == 'venus_special' else 4096
+    atlas_height = 2048 if prefix in ('venus_special', 'venus_lifecycle') else 4096
     atlas = Image.new('RGBA', (1024, 1024) if action_ids == ('5', '6') else (2048, atlas_height))
     sprites = {}
     atlas_files = []
-    paged = prefix == 'venus_special'
+    paged = prefix in ('venus_special', 'venus_lifecycle')
     cursor_x, cursor_y, row_height = 2, 2, 0
     for frames in actions.values():
         for frame in frames:

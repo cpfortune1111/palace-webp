@@ -4,7 +4,7 @@ from pathlib import Path
 
 source = Path('outputs/venus/original/venus.snd').read_bytes()
 directory = json.loads(Path('outputs/venus/snd_directory.json').read_text(encoding='utf-8'))
-required = {(1000, 0), (1100, 0), (1200, 0), (3000, 0), (3000, 1), (5, 0), (200, 2)} | {(900, number) for number in range(9)}
+required = {(1000, 0), (1100, 0), (1200, 0), (3000, 0), (3000, 1), (5, 0), (200, 2)} | {(900, number) for number in range(9)} | {(10, number) for number in range(4)}
 for sound in directory:
     key = (sound['group'], sound['number'])
     if key not in required:

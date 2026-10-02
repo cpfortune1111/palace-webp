@@ -21,6 +21,45 @@ const server=http.createServer((request,response)=>{
  await page.goto('http://127.0.0.1:8766');
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
+ await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
+ if(process.argv.includes('--lifecycle')){
+  const result=await run(`(()=>{
+   let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+   resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;p2.attackPause=0;p2.hitShake=0;p1Life=1000;p2.life=1000;posX=-200;p2.x=200;posY=0;p2.y=0;runtimeVar.fill(0);specialRoot(2).vars.fill(0);enterIRState(0);enterP2State(0);
+   for(let tick=0;tick<5;tick++)simStep();
+   for(const player of [1,2]){
+    const helper=specialRuntime.entities.find(entity=>entity.player===player&&entity.id===9999);
+    expect(!!helper&&helper.invisible,'Source 9999 spawned and invisible '+player);
+    expect(specialRuntime.context(helper).numHelper(9999)===1,'Helper owner isolation '+player);
+    const ctx=specialRuntime.context(helper);
+    expect(evalM1('root,StateNo = 0',ctx),'Root state redirect '+player);
+    expect(evalM1('Enemy,MoveType = I',ctx),'Enemy redirect '+player);
+    expect(evalM1('NumPartner = 0 && NumEnemy = 1 && TeamMode != Simul',ctx),'1v1 source team queries '+player);
+    expect(sourceExplods.some(effect=>effect.player===player&&effect.id===(player===1?915:925)),'Source normal portrait '+player);
+    expect(evalM1('PlayerIDExist('+helper.instanceId+')',ctx),'Helper instance ID exists '+player);
+    for(const controller of battleDat.lifecycleHelpers['9999'].controllers)for(const expression of [...controller.triggerall,...Object.values(controller.triggers).flat()]){evalM1(expression,ctx);checks++}
+   }
+   const helper=specialRuntime.entities.find(entity=>entity.player===1&&entity.id===9999);
+   enterIRState(600);posY=-200;moveContact=1;moveHit=0;p2.state=50;p2.type='A';p2.moveType='H';p2.y=-200;specialRuntime.step();expect(helper.vars[10]===1,'Source airborne contact decision');
+   p2.moveType='I';specialRuntime.step();expect(helper.vars[10]===0,'Source contact decision clears when enemy leaves gethit');
+   enterIRState(0);posY=0;enterP2State(0);p2.y=0;
+   const OriginalAudio=window.Audio,voices=[];window.Audio=class extends EventTarget{constructor(url){super();this.src=url;voices.push(this)}play(){return Promise.resolve()}pause(){}};
+   try{
+    randomValue=0;p1Reaction={...specialRoot(1),state:5071,time:1,anim:5070,type:'A',moveType:'H',hitShake:8,hitTime:20};p1HitPause=8;
+    Object.assign(p2,{state:5071,time:1,anim:5070,type:'A',moveType:'H',hitShake:8,attackPause:0,randomValue:0});
+    stepLifecycleGlobals();expect(voices.filter(voice=>voice.src.endsWith('/10-2.wav')).length===2,'Both source voices run during defender shaking');expect(soundChannels.get(0)!==soundChannels.get(4),'GetHit voice channels isolated');
+   }finally{window.Audio=OriginalAudio;p1Reaction=null;p1HitPause=0;p2.hitShake=0;enterIRState(0);enterP2State(0)}
+   p1Life=200;p2.life=200;for(let tick=0;tick<3;tick++)simStep();
+   expect(sourceExplods.some(effect=>effect.id===918)&&sourceExplods.some(effect=>effect.id===928),'Source low HP portraits');
+   expect(!sourceExplods.some(effect=>effect.id===915||effect.id===925),'Normal portraits removed');
+   for(const effect of sourceExplods.filter(effect=>[918,928].includes(effect.id))){effect.age=1000;expect(!!lifecycleEffectFrame(effect),'Persistent portrait AIR loops')}
+   p1Life=0;p2.life=0;for(let tick=0;tick<3;tick++)simStep();
+   expect(sourceExplods.some(effect=>effect.id===919)&&sourceExplods.some(effect=>effect.id===929),'Source KO portraits');
+   for(const effect of sourceExplods.filter(effect=>[919,929].includes(effect.id))){effect.age=1000;expect(lifecycleEffectFrame(effect).time===-1,'Portrait final -1 frame holds')}
+   lifecycleRuntime.rounds.state=3;specialRuntime.step();expect(!specialRuntime.entities.some(entity=>entity.id===9999),'Source 9999 destroys outside active round');lifecycleRuntime.rounds.state=2;
+   p1Life=1000;p2.life=1000;p1Reaction=null;specialRuntime.reset();sourceExplods.length=0;enterIRState(0);enterP2State(0);return checks;
+  })()`);console.log(JSON.stringify({lifecycleChecks:result}));return;
+ }
  const guardKOChecks=await run(`(()=>{
   let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
   const params={damage:'40,10',guardflag:'HL',animtype:'light','ground.type':'high','ground.velocity':'-6,0','guard.velocity':'-2','ground.hittime':20,'guard.hittime':30,pausetime:'8,8','guard.pausetime':'4,4'};

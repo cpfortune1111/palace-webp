@@ -21,8 +21,9 @@ export function createSpecialRuntime(api){
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:base.query(name)};
  }
  function enter(entity,state){
-  const definition=api.data().helperStates[String(state)];if(!definition)throw Error('Unknown helper state '+state);
-  Object.assign(entity,{state,time:0,type:definition.type,physics:definition.physics,moveType:definition.moveType,ctrl:definition.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  const definition=api.data().helperStates[String(state)]||api.data().lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
+  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  entity.sprPriority=definition.sprpriority??entity.sprPriority;
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
  }
  function spawn(params,owner,player,kind){
@@ -31,6 +32,7 @@ export function createSpecialRuntime(api){
   const entity={kind,key:'entity'+(++serial),player,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
+  entity.instanceId=1000+serial;
   if(kind==='projectile'){entity.activeHitDef={hitKey:entity.key,params:values};entity.removetime=Number(params.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
   entities.push(entity);return entity;
@@ -54,6 +56,8 @@ export function createSpecialRuntime(api){
   }
  }
  function helperController(entity,controller,index){
+  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet'};
+  controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ctx=context(entity);if(!api.trigger(controller,ctx)||Number(controller.params.persistent)===0&&entity.once.has(index))return;
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
@@ -65,7 +69,7 @@ export function createSpecialRuntime(api){
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
-   case 'AssertSpecial':if(params.flag!=='NoShadow')throw Error('Unsupported helper assertion');break;
+   case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(params.flag!=='NoShadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
    default:api.controller(controller,entity,ctx,{changeState:state=>enter(entity,state)});
   }
@@ -97,7 +101,8 @@ export function createSpecialRuntime(api){
    if(entity.hitPause>0){entity.hitPause--;continue}
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
-    const previous=entity.state,controllers=api.data().helperStates[String(previous)].controllers;
+    entity.randomValue=Math.floor(Math.random()*1000);
+    const previous=entity.state,controllers=(api.data().helperStates[String(previous)]||api.data().lifecycleHelpers[String(previous)]).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
     if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}

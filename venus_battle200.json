@@ -3455,6 +3455,4541 @@
       }
     }
   ],
+  "lifecycleStates": {
+    "5900": {
+      "controllers": [
+        {
+          "type": "VarRangeSet",
+          "params": {
+            "value": "0",
+            "first": "0",
+            "last": "48"
+          },
+          "triggers": {
+            "1": [
+              "RoundsExisted = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 2137
+          }
+        },
+        {
+          "type": "VarRangeSet",
+          "params": {
+            "fvalue": "0"
+          },
+          "triggers": {
+            "1": [
+              "RoundsExisted = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 2144
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "190"
+          },
+          "triggers": {
+            "1": [
+              "RoundNo = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 2149
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 2154
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 2134
+      },
+      "type": "S"
+    },
+    "190": {
+      "controllers": [
+        {
+          "type": "AssertSpecial",
+          "params": {
+            "flag": "Intro"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 974
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "191"
+          },
+          "triggers": {
+            "1": [
+              "TeamMode != Simul",
+              "facing = -1"
+            ],
+            "2": [
+              "TeamMode != Simul",
+              "facing = 1",
+              "enemy,StateNo != [190,199]"
+            ],
+            "3": [
+              "var(49) = 8"
+            ],
+            "4": [
+              "var(49) = 6",
+              "(PlayerIDExist(ID+1) && PlayerID(ID+1), stateno = 1990) || (PlayerIDExist(ID+2) && PlayerID(ID+2), stateno = 1990)"
+            ],
+            "5": [
+              "var(49) = 4",
+              "((PlayerIDExist(ID+1) && PlayerID(ID+1), stateno = 1990) && (PlayerIDExist(ID+2) && PlayerID(ID+2), stateno = 1990)) || (!PlayerIDExist(ID+1) && (PlayerIDExist(ID+2) && PlayerID(ID+2), stateno = 1990))"
+            ],
+            "6": [
+              "var(49) = 2",
+              "partner,StateNo = 1990"
+            ],
+            "7": [
+              "enemy,StateNo != [190,199]",
+              "var(49) = 7"
+            ],
+            "8": [
+              "enemy,StateNo != [190,199]",
+              "var(49) = 5",
+              "((PlayerIDExist(ID+1) && (PlayerID(ID+1), stateno = 1990 || PlayerID(ID+1), stateno = 0)) && (PlayerIDExist(ID+2) && (PlayerID(ID+2), stateno = 1990 || PlayerID(ID+2), stateno = 0))) || (!PlayerIDExist(ID+1) && (PlayerIDExist(ID+2) && (PlayerID(ID+2), stateno = 1990 || PlayerID(ID+2), stateno = 0)))"
+            ],
+            "9": [
+              "enemy,StateNo != [190,199]",
+              "var(49) = 3",
+              "((PlayerIDExist(ID+1) && (PlayerID(ID+1), stateno = 1990 || PlayerID(ID+1), stateno = 0)) && (PlayerIDExist(ID+2) && (PlayerID(ID+2), stateno = 1990 || PlayerID(ID+2), stateno = 0))) || (!PlayerIDExist(ID+1) && (PlayerIDExist(ID+2) && (PlayerID(ID+2), stateno = 1990 || PlayerID(ID+2), stateno = 0)))"
+            ],
+            "10": [
+              "enemy,StateNo != [190,199]",
+              "var(49) = 1",
+              "partner,StateNo = 1990"
+            ]
+          },
+          "triggerall": [
+            "RoundState != 0"
+          ],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 979
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 968
+      },
+      "type": "S",
+      "ctrl": 0,
+      "anim": "190",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "191": {
+      "controllers": [
+        {
+          "type": "AssertSpecial",
+          "params": {
+            "flag": "Intro"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 139
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "190, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 191",
+              "AnimElemTime(9) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 144
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "190, 1",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 191",
+              "AnimElemTime(29) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 151
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "1990"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 158
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0"
+          },
+          "triggers": {
+            "1": [
+              "RoundState = 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 163
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 132
+      },
+      "type": "S",
+      "ctrl": 0,
+      "sprpriority": 2,
+      "anim": "191",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "1990": {
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "1991"
+          },
+          "triggers": {
+            "1": [
+              "var(49) = [1,2]"
+            ],
+            "2": [
+              "Partner,StateNo = 1991"
+            ],
+            "3": [
+              "RoundState > 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 175
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 182
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 168
+      },
+      "type": "S",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "anim": "(PrevStateNo * 10)",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "1991": {
+      "controllers": [
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "Anim + 1"
+          },
+          "triggers": {
+            "1": [
+              "SelfAnimExist(Anim + 1)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 193
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ],
+            "2": [
+              "RoundState = 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 198
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 187
+      },
+      "type": "S",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "170": {
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "S170, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 80
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": "SCA",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 86
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 74
+      },
+      "type": "S",
+      "ctrl": 0,
+      "anim": "170",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "175": {
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "170"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "!SelfAnimExist(175)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 951
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "175"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 957
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": "SCA",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Common.cns",
+            "line": 962
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 946
+      },
+      "type": "S",
+      "ctrl": 0,
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "180": {
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "181"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 95
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 92
+      },
+      "type": "S"
+    },
+    "181": {
+      "controllers": [
+        {
+          "type": "VarRandom",
+          "params": {
+            "v": "44",
+            "range": "1,4"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 106
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "S180,0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "var(44) <= 2",
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 112
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "S180,1",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "var(44) >= 3",
+              "AnimElemTime(6) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 119
+          }
+        },
+        {
+          "type": "NotHitBy",
+          "params": {
+            "value": "SCA",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 126
+          }
+        }
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 100
+      },
+      "type": "S",
+      "ctrl": 0,
+      "anim": "181",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "globalControllers": {
+    "-3": [
+      {
+        "type": "PlaySnd",
+        "params": {
+          "channel": "0",
+          "value": "10,3"
+        },
+        "triggers": {
+          "1": [
+            "stateno = 5100 && anim = 5101",
+            "random <= 400"
+          ],
+          "2": [
+            "stateno = 5101 && anim = 5160",
+            "random <= 150"
+          ]
+        },
+        "triggerall": [
+          "Time = 1",
+          "alive"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2600
+        }
+      },
+      {
+        "type": "PlaySnd",
+        "params": {
+          "channel": "0",
+          "value": "10,0"
+        },
+        "triggers": {
+          "1": [
+            "stateno = 5000 && anim = 5011",
+            "random <= 350"
+          ],
+          "2": [
+            "stateno = 5000 && anim = 5001",
+            "random <= 250"
+          ],
+          "3": [
+            "stateno = 5000 && anim = 5010",
+            "random <= 400"
+          ],
+          "4": [
+            "stateno = 5000 && anim = 5030",
+            "random <= 200"
+          ],
+          "5": [
+            "stateno = 5081 && anim = 5080",
+            "random <= 350"
+          ],
+          "6": [
+            "stateno = 5020 && anim = 5001",
+            "random <= 350"
+          ],
+          "7": [
+            "stateno = 5011 && anim = 5020",
+            "random <= 350"
+          ],
+          "8": [
+            "stateno = 5101 && anim = 5160"
+          ]
+        },
+        "triggerall": [
+          "Time = 1",
+          "alive"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2611
+        }
+      },
+      {
+        "type": "PlaySnd",
+        "params": {
+          "channel": "0",
+          "value": "10,1"
+        },
+        "triggers": {
+          "1": [
+            "stateno = 5001 && anim = 5000",
+            "random <= 350"
+          ],
+          "2": [
+            "stateno = 5016 && anim = 5001",
+            "random <= 250"
+          ],
+          "3": [
+            "stateno = 5000 && anim = 5010",
+            "random <= 400"
+          ],
+          "4": [
+            "stateno = 5081 && anim = 5080",
+            "random <= 250"
+          ],
+          "5": [
+            "stateno = 5020 && anim = 5030",
+            "random <= 250"
+          ],
+          "6": [
+            "stateno = 5011 && anim = 5021",
+            "random <= 350"
+          ]
+        },
+        "triggerall": [
+          "Time = 1",
+          "alive"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2633
+        }
+      },
+      {
+        "type": "PlaySnd",
+        "params": {
+          "channel": "0",
+          "value": "10,2"
+        },
+        "triggers": {
+          "1": [
+            "stateno = 5001 && anim = 5002",
+            "random <= 250"
+          ],
+          "2": [
+            "stateno = 5001 && anim = 5012",
+            "random <= 250"
+          ],
+          "3": [
+            "stateno = 5030 && anim = 5051",
+            "random <= 350"
+          ],
+          "4": [
+            "stateno = 5071 && anim = 5070",
+            "random <= 450"
+          ],
+          "5": [
+            "stateno = 5000 && anim = 5030",
+            "random <= 450"
+          ],
+          "6": [
+            "stateno = 5011 && anim = 5022",
+            "random <= 350"
+          ]
+        },
+        "triggerall": [
+          "Time = 1",
+          "alive"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2652
+        }
+      },
+      {
+        "type": "Helper",
+        "params": {
+          "stateno": "915",
+          "id": "915",
+          "owmpal": "0",
+          "supermovetime": "9999999999",
+          "pausemovetime": "9999999999"
+        },
+        "triggers": {
+          "1": [
+            "!NumPartner"
+          ],
+          "2": [
+            "NumPartner",
+            "ID < Partner,ID"
+          ]
+        },
+        "triggerall": [
+          "!NumHelper(915)",
+          "!NumHelper(925)",
+          "!NumHelper(935)",
+          "!NumHelper(945)",
+          "facing = 1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2671
+        }
+      },
+      {
+        "type": "Helper",
+        "params": {
+          "stateno": "925",
+          "id": "925",
+          "owmpal": "0",
+          "supermovetime": "9999999999",
+          "pausemovetime": "9999999999"
+        },
+        "triggers": {
+          "1": [
+            "!NumPartner"
+          ],
+          "2": [
+            "NumPartner",
+            "ID < Partner,ID"
+          ]
+        },
+        "triggerall": [
+          "!NumHelper(915)",
+          "!NumHelper(925)",
+          "!NumHelper(935)",
+          "!NumHelper(945)",
+          "facing = -1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2688
+        }
+      },
+      {
+        "type": "Helper",
+        "params": {
+          "stateno": "950",
+          "id": "950",
+          "owmpal": "0",
+          "supermovetime": "9999999999",
+          "pausemovetime": "9999999999"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner"
+          ]
+        },
+        "triggerall": [
+          "!NumHelper(950)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2705
+        }
+      },
+      {
+        "type": "StateTypeSet",
+        "params": {
+          "moveType": "I"
+        },
+        "triggers": {
+          "1": [
+            "P2StateNo = [5200,5210]"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2715
+        }
+      },
+      {
+        "type": "StateTypeSet",
+        "params": {
+          "moveType": "I"
+        },
+        "triggers": {
+          "1": [
+            "P2StateNo = [5200,5210]"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2720
+        }
+      },
+      {
+        "type": "Varset",
+        "params": {
+          "value": "1",
+          "ignorehitpause": "1",
+          "target": "var(40)"
+        },
+        "triggers": {
+          "1": [
+            "StateType = A && MoveType != H"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2725
+        }
+      },
+      {
+        "type": "Varset",
+        "params": {
+          "value": "2",
+          "ignorehitpause": "1",
+          "target": "var(40)"
+        },
+        "triggers": {
+          "1": [
+            "StateType = A && MoveType = H"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2732
+        }
+      },
+      {
+        "type": "Varset",
+        "params": {
+          "value": "0",
+          "ignorehitpause": "1",
+          "target": "var(40)"
+        },
+        "triggers": {
+          "1": [
+            "StateType != A"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2739
+        }
+      },
+      {
+        "type": "Varset",
+        "params": {
+          "value": "1",
+          "ignorehitpause": "1",
+          "target": "var(41)"
+        },
+        "triggers": {
+          "1": [
+            "var(40) = 2"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2746
+        }
+      },
+      {
+        "type": "Varset",
+        "params": {
+          "value": "0",
+          "ignorehitpause": "1",
+          "target": "var(41)"
+        },
+        "triggers": {
+          "1": [
+            "MoveHit"
+          ],
+          "2": [
+            "var(15)"
+          ],
+          "3": [
+            "AILevel",
+            "GameTime%(10*AIlevel) = 0"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2753
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(15)"
+        },
+        "triggers": {
+          "1": [
+            "!NumProjID(1050)",
+            "!NumProjID(1150)"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2763
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "ignorehitpause": "1",
+          "target": "var(16)"
+        },
+        "triggers": {
+          "1": [
+            "var(17) = 1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2772
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "10",
+          "ignorehitpause": "1",
+          "target": "var(17)"
+        },
+        "triggers": {
+          "1": [
+            "!AILevel",
+            "command != \"holddown\""
+          ],
+          "2": [
+            "AILevel",
+            "StateType = S",
+            "MoveType = I",
+            "ctrl || (StateType = S || (Vel X > 0 && StateType != A && MoveType != A) || StateNo = [800,899])"
+          ]
+        },
+        "triggerall": [
+          "var(16)",
+          "!var(17)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2779
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "1",
+          "ignorehitpause": "1",
+          "target": "var(16)"
+        },
+        "triggers": {
+          "1": [
+            "!AILevel",
+            "command = \"holddown\"",
+            "StateNo != [800,899]"
+          ],
+          "2": [
+            "AILevel",
+            "StateNo != [800,899]",
+            "StateType = A || StateType = C || StateType = L || MoveType = A || StateNo = 105"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2796
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(17)"
+        },
+        "triggers": {
+          "1": [
+            "!AILevel",
+            "command = \"holddown\""
+          ],
+          "2": [
+            "AILevel",
+            "StateNo != [800,899]",
+            "StateType = A || StateType = C || StateType = L || MoveType = A"
+          ]
+        },
+        "triggerall": [
+          "var(16)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2809
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "-1",
+          "target": "var(17)"
+        },
+        "triggers": {
+          "1": [
+            "!AILevel",
+            "command != \"holddown\""
+          ],
+          "2": [
+            "AILevel",
+            "StateType = S",
+            "MoveType = I",
+            "ctrl || ((Vel X > 0 && StateType != A && MoveType != A) || StateNo = [800,899])"
+          ]
+        },
+        "triggerall": [
+          "var(17)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2821
+        }
+      }
+    ],
+    "-2": [
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "1",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "TeamMode != Simul",
+            "facing = 1"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-281,-279]"
+          ],
+          "3": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-331,-329]"
+          ],
+          "4": [
+            "NumPartner = 1",
+            "NumEnemy = 4",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-381,-379]"
+          ],
+          "5": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-231,-229]"
+          ],
+          "6": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-281,-279]"
+          ],
+          "7": [
+            "NumPartner = 1",
+            "NumEnemy = 3",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-321,-319]"
+          ],
+          "8": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-181,-179]"
+          ],
+          "9": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-241,-239]"
+          ],
+          "10": [
+            "NumPartner = 1",
+            "NumEnemy = 2",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-281,-279]"
+          ],
+          "11": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-141,-139]"
+          ],
+          "12": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-241,-239]"
+          ],
+          "13": [
+            "NumPartner = 1",
+            "NumEnemy = 1",
+            "facing = 1",
+            "ID < Partner,ID",
+            "Pos X = [-281,-279]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 1773
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "3",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-381,-379]"
+          ],
+          "2": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-431,-429]"
+          ],
+          "3": [
+            "NumPartner = 1",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-481,-479]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-331,-329]"
+          ],
+          "5": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-381,-379]"
+          ],
+          "6": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-281,-279]"
+          ],
+          "7": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-341,-339]"
+          ],
+          "8": [
+            "NumPartner = 1",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-381,-379]"
+          ],
+          "9": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-241,-239]"
+          ],
+          "10": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-341,-339]"
+          ],
+          "11": [
+            "NumPartner = 1",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-381,-379]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 1856
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "5",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-481,-479]"
+          ],
+          "2": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-531,-529]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-431,-429]"
+          ],
+          "4": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-481,-479]"
+          ],
+          "5": [
+            "NumPartner = 1",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-421,-419]"
+          ],
+          "6": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-381,-379]"
+          ],
+          "7": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-441,-439]"
+          ],
+          "8": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-341,-339]"
+          ],
+          "9": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-441,-439]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 1919
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "7",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = 1",
+            "Pos X = [-581,-579]"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = 1",
+            "Pos X = [-531,-529]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = 1",
+            "Pos X = [-481,-479]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = 1",
+            "Pos X = [-441,-439]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 1972
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "2",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "TeamMode != Simul",
+            "facing = -1"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [279,281]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [229,231]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [179,181]"
+          ],
+          "5": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [139,141]"
+          ],
+          "6": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [329,331]"
+          ],
+          "7": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [279,281]"
+          ],
+          "8": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [239,241]"
+          ],
+          "9": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [239,241]"
+          ],
+          "10": [
+            "NumPartner = 1",
+            "NumEnemy = 4",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [379,381]"
+          ],
+          "11": [
+            "NumPartner = 1",
+            "NumEnemy = 3",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [319,321]"
+          ],
+          "12": [
+            "NumPartner = 1",
+            "NumEnemy = 2",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [279,281]"
+          ],
+          "13": [
+            "NumPartner = 1",
+            "NumEnemy = 1",
+            "facing = -1",
+            "ID < Partner,ID",
+            "Pos X = [279,281]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2000
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "4",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [329,331]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [279,281]"
+          ],
+          "5": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [239,241]"
+          ],
+          "6": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [429,431]"
+          ],
+          "7": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ],
+          "8": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [339,341]"
+          ],
+          "9": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [339,341]"
+          ],
+          "10": [
+            "NumPartner = 1",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [479,481]"
+          ],
+          "11": [
+            "NumPartner = 1",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [419,421]"
+          ],
+          "12": [
+            "NumPartner = 1",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ],
+          "13": [
+            "NumPartner = 1",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2083
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "6",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [479,481]"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [429,431]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [379,381]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [339,341]"
+          ],
+          "5": [
+            "NumPartner = 2",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [529,531]"
+          ],
+          "6": [
+            "NumPartner = 2",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [479,481]"
+          ],
+          "7": [
+            "NumPartner = 2",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [439,441]"
+          ],
+          "8": [
+            "NumPartner = 2",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [439,441]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2156
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "8",
+          "target": "var(49)"
+        },
+        "triggers": {
+          "1": [
+            "NumPartner = 3",
+            "NumEnemy = 4",
+            "facing = -1",
+            "Pos X = [579,581]"
+          ],
+          "2": [
+            "NumPartner = 3",
+            "NumEnemy = 3",
+            "facing = -1",
+            "Pos X = [529,531]"
+          ],
+          "3": [
+            "NumPartner = 3",
+            "NumEnemy = 2",
+            "facing = -1",
+            "Pos X = [479,481]"
+          ],
+          "4": [
+            "NumPartner = 3",
+            "NumEnemy = 1",
+            "facing = -1",
+            "Pos X = [439,441]"
+          ]
+        },
+        "triggerall": [
+          "RoundState != 0",
+          "StateNo = 190"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2204
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(50)"
+        },
+        "triggers": {
+          "1": [
+            "StateNo = 190",
+            "!Time"
+          ],
+          "2": [
+            "StateNo = [190,199]",
+            "var(50) > 0"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2232
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(50)"
+        },
+        "triggers": {
+          "1": [
+            "StateNo = [190,199]",
+            "var(50) < 0"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2245
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "-1",
+          "target": "var(50)"
+        },
+        "triggers": {
+          "1": [
+            "MatchNo = 1",
+            "StateNo = [190,199]",
+            "command = \"up\""
+          ]
+        },
+        "triggerall": [
+          "!AILevel"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2263
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "1",
+          "target": "var(50)"
+        },
+        "triggers": {
+          "1": [
+            "MatchNo = 1",
+            "StateNo = [190,199]",
+            "command = \"down\""
+          ]
+        },
+        "triggerall": [
+          "!AILevel"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2272
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "10",
+          "target": "var(51)"
+        },
+        "triggers": {
+          "1": [
+            "StateNo = 190",
+            "!Time"
+          ],
+          "2": [
+            "StateNo = [190,199]",
+            "var(51) < 0"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2281
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(51)"
+        },
+        "triggers": {
+          "1": [
+            "StateNo = [190,199]",
+            "var(51) >= 20"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2293
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "-10",
+          "target": "var(51)"
+        },
+        "triggers": {
+          "1": [
+            "facing = 1",
+            "command = \"back\""
+          ],
+          "2": [
+            "facing = -1",
+            "command = \"fwd\""
+          ]
+        },
+        "triggerall": [
+          "!AILevel",
+          "MatchNo = 1",
+          "StateNo = [190,199]"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2302
+        }
+      },
+      {
+        "type": "VarAdd",
+        "params": {
+          "value": "10",
+          "target": "var(51)"
+        },
+        "triggers": {
+          "1": [
+            "facing = 1",
+            "command = \"fwd\""
+          ],
+          "2": [
+            "facing = -1",
+            "command = \"back\""
+          ]
+        },
+        "triggerall": [
+          "!AILevel",
+          "MatchNo = 1",
+          "StateNo = [190,199]"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2317
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "var(50) + var(51)",
+          "target": "var(52)"
+        },
+        "triggers": {
+          "1": [
+            "MatchNo = 1",
+            "StateNo = [190,199]"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2332
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "930",
+          "anim": "F930",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 0"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(930)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2339
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "931",
+          "anim": "F931",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 10"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(931)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2355
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "932",
+          "anim": "F932",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 1"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(932)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2371
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "933",
+          "anim": "F933",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 11"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(933)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2387
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "934",
+          "anim": "F934",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 2"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(934)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2403
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "935",
+          "anim": "F935",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 12"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(935)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2419
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "936",
+          "anim": "F936",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 3"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(936)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2435
+        }
+      },
+      {
+        "type": "Explod",
+        "params": {
+          "id": "937",
+          "anim": "F937",
+          "postype": "p1",
+          "facing": "cond(facing = 1, 1, -1)",
+          "pos": "0,0",
+          "ownpal": "0",
+          "ignorehitpause": "1",
+          "scale": "1,1",
+          "removetime": "-1"
+        },
+        "triggers": {
+          "1": [
+            "var(52) = 13"
+          ]
+        },
+        "triggerall": [
+          "MatchNo = 1",
+          "StateNo = [190,199]",
+          "!NumExplod(937)"
+        ],
+        "source": {
+          "file": "venus.cns",
+          "line": 2451
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "930"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]",
+            "StateNo != [1990,1999]"
+          ],
+          "2": [
+            "var(52) != 0"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2467
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "931"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 10"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2474
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "932"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2480
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "933"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 11"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2486
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "934"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 2"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2492
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "935"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 12"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2498
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "936"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 3"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2504
+        }
+      },
+      {
+        "type": "RemoveExplod",
+        "params": {
+          "id": "937"
+        },
+        "triggers": {
+          "1": [
+            "StateNo != [190,199]"
+          ],
+          "2": [
+            "var(52) != 13"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2510
+        }
+      },
+      {
+        "type": "AssertSpecial",
+        "params": {
+          "flag": "NoAirGuard",
+          "ignorehitpause": "1",
+          "persistent": "1"
+        },
+        "triggers": {
+          "1": [
+            "1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2516
+        }
+      },
+      {
+        "type": "StateTypeSet",
+        "params": {
+          "moveType": "I"
+        },
+        "triggers": {
+          "1": [
+            "var(3) = 1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2523
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(3)"
+        },
+        "triggers": {
+          "1": [
+            "P2StateType != A"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2528
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(1)"
+        },
+        "triggers": {
+          "1": [
+            "movetype != H"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2534
+        }
+      },
+      {
+        "type": "DisplayToClipboard",
+        "params": {
+          "text": "\"Anim = %d vel x = %f var(44)=%d\"",
+          "params": "anim, Pos Y, var(44)"
+        },
+        "triggers": {
+          "1": [
+            "1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2540
+        }
+      },
+      {
+        "type": "Helper",
+        "params": {
+          "helpertype": "normal",
+          "name": "\"AI\"",
+          "id": "9999",
+          "stateno": "9999",
+          "pos": "240,-160",
+          "postype": "P1",
+          "facing": "1",
+          "keyctrl": "0",
+          "ownpal": "1",
+          "size.xscale": "1",
+          "size.yscale": "1",
+          "ignorehitpause": "1"
+        },
+        "triggers": {
+          "1": [
+            "!NumHelper(9999)",
+            "RoundState = 2"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2546
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(4)"
+        },
+        "triggers": {
+          "1": [
+            "P2MoveType != H"
+          ],
+          "2": [
+            "StateType != A"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2563
+        }
+      },
+      {
+        "type": "PowerSet",
+        "params": {
+          "value": "0",
+          "ignorehitpause": "1",
+          "persistent": "1"
+        },
+        "triggers": {
+          "1": [
+            "1"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2570
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(6)"
+        },
+        "triggers": {
+          "1": [
+            "P2MoveType != A && StateNo != [800,899]"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2577
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "0",
+          "target": "var(5)"
+        },
+        "triggers": {
+          "1": [
+            "StateType != A"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2583
+        }
+      },
+      {
+        "type": "VarSet",
+        "params": {
+          "value": "anim",
+          "target": "var(5)"
+        },
+        "triggers": {
+          "1": [
+            "StateType = A"
+          ]
+        },
+        "triggerall": [],
+        "source": {
+          "file": "venus.cns",
+          "line": 2589
+        }
+      }
+    ]
+  },
+  "lifecycleHelpers": {
+    "9999": {
+      "controllers": [
+        {
+          "type": "parentVarSet",
+          "params": {
+            "value": "0",
+            "target": "var(1)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveType = I"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 807
+          }
+        },
+        {
+          "type": "AssertSpecial",
+          "params": {
+            "flag": "invisible"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 813
+          }
+        },
+        {
+          "type": "DisplayToClipboard",
+          "params": {
+            "text": "\"var(2) = %d var(3) = %d Vel X = %d MoveHit = %d\"",
+            "params": "var(0),var(20),var(21),(root,MoveHit = 1)",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 818
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "var(10) >= 0"
+            ],
+            "2": [
+              "var(11) >= 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 825
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "var(10) >= 0"
+            ],
+            "2": [
+              "var(11) >= 0"
+            ],
+            "3": [
+              "var(12) >= 0"
+            ],
+            "4": [
+              "var(13) >= 0"
+            ],
+            "5": [
+              "var(20) >= 0"
+            ],
+            "6": [
+              "var(21) >= 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 833
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "var(10) = 0",
+              "var(11) = 0",
+              "var(12) = 0",
+              "var(13) = 0",
+              "var(20) = 0",
+              "var(21) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 845
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "var(10) = 0",
+              "var(11) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 857
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "1",
+            "target": "var(10)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveContact = 1 && (root,StateNo = 600 || (root,StateNo = 630 && root,Anim = 630)) && root,Pos Y = [-260,-160]"
+            ],
+            "2": [
+              "root,MoveContact = 1 && root,StateNo = 610 && root,Pos Y = [-200,-160]"
+            ],
+            "3": [
+              "root,MoveContact = 1 && root,StateNo = 640 && root,Pos Y = [-240,-180]"
+            ]
+          },
+          "triggerall": [
+            "var(10) = 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 865
+          }
+        },
+        {
+          "type": "Varset",
+          "params": {
+            "value": "1",
+            "target": "var(11)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveHit = 1 && (root,StateNo = 600 || root,StateNo = 630) && root,Pos Y > -160"
+            ],
+            "2": [
+              "root,MoveHit = 1 && root,StateNo = 610 && root,Pos Y > -160"
+            ],
+            "3": [
+              "root,MoveHit = 1 && root,StateNo = 640 && root,Pos Y > -180"
+            ]
+          },
+          "triggerall": [
+            "var(10) = 0",
+            "var(11) = 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 874
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(14)"
+          },
+          "triggers": {
+            "1": [
+              "Enemy,const(size.head.pos.y) <= -280"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 884
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "target": "var(12)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveGuarded = 1 && root,StateNo = 200"
+            ],
+            "2": [
+              "root,MoveGuarded = 1 && root,StateNo = 230"
+            ],
+            "3": [
+              "root,MoveGuarded = 1 && root,StateNo = 400"
+            ],
+            "4": [
+              "root,MoveGuarded = 1 && root,StateNo = 430"
+            ]
+          },
+          "triggerall": [
+            "var(10) = 0",
+            "var(11) = 0",
+            "var(12) = 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 891
+          }
+        },
+        {
+          "type": "Varadd",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "0",
+            "target": "var(1)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveGuarded = 1"
+            ]
+          },
+          "triggerall": [
+            "Enemy,HitShakeOver"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 903
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "target": "var(1)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveHit"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 911
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(4)"
+          },
+          "triggers": {
+            "1": [
+              "root,StateType = A && root,MoveType != H"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 917
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "2",
+            "ignorehitpause": "1",
+            "target": "var(4)"
+          },
+          "triggers": {
+            "1": [
+              "root,StateType = A && root,MoveType = H"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 924
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(4)"
+          },
+          "triggers": {
+            "1": [
+              "var(6) = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 931
+          }
+        },
+        {
+          "type": "Varadd",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(5)"
+          },
+          "triggers": {
+            "1": [
+              "var(4) = 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 938
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(5)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveHit"
+            ],
+            "2": [
+              "root,var(15)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 945
+          }
+        },
+        {
+          "type": "ParentVarSet",
+          "params": {
+            "value": "0",
+            "target": "var(15)"
+          },
+          "triggers": {
+            "1": [
+              "!var(5)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 953
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "P2StateNo",
+            "ignorehitpause": "1",
+            "target": "var(6)"
+          },
+          "triggers": {
+            "1": [
+              "(root,StateNo = [5000,5200]) && root,PrevStateNo = [120,155]"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 959
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(7)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateNo = var(6)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 966
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(7)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateNo != var(6)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 973
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "10",
+            "target": "var(8)"
+          },
+          "triggers": {
+            "1": [
+              "root,StateNo = 5120"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 980
+          }
+        },
+        {
+          "type": "Varadd",
+          "params": {
+            "value": "-1",
+            "target": "var(8)"
+          },
+          "triggers": {
+            "1": [
+              "root,StateNo != 5120 && var(8) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 986
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "target": "var(8)"
+          },
+          "triggers": {
+            "1": [
+              "var(8) < 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 992
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "target": "var(13)"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveGuarded = 1 && root,StateNo = 200"
+            ],
+            "2": [
+              "root,MoveGuarded = 1 && root,StateNo = 230"
+            ],
+            "3": [
+              "root,MoveGuarded = 1 && root,StateNo = 400"
+            ],
+            "4": [
+              "root,MoveGuarded = 1 && root,StateNo = 430"
+            ]
+          },
+          "triggerall": [
+            "var(10) = 0",
+            "var(11) = 0",
+            "var(13) = 0",
+            "var(1) > 3"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 998
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(20)"
+          },
+          "triggers": {
+            "1": [
+              "root,P2BodyDist X - 140 >= var(0)",
+              "Enemy, Pos Y >= 0",
+              "var(0) > -1"
+            ],
+            "2": [
+              "P2StateType != L",
+              "P2StateNo != 5070",
+              "random < 45",
+              "root, P2BodyDist Y > -60",
+              "root, P2BodyDist X = [160,480]"
+            ]
+          },
+          "triggerall": [
+            "!var(20)",
+            "root,NumProjID(1050) = 0",
+            "root,MoveType != H",
+            "P2StateNo != 4999",
+            "root, P2BodyDist X > 160"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1011
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(21)"
+          },
+          "triggers": {
+            "1": [
+              "root,P2BodyDist X - 160 >= var(0)",
+              "Enemy, Pos Y >= 0",
+              "var(0) > -1"
+            ],
+            "2": [
+              "P2StateType != L",
+              "P2StateNo != 5070",
+              "random < 45",
+              "root, P2BodyDist Y > -60"
+            ]
+          },
+          "triggerall": [
+            "!var(20)",
+            "root,NumProjID(1050) = 0",
+            "root,MoveType != H",
+            "P2StateNo != 4999",
+            "root, P2BodyDist X > 480"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1032
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "target": "var(25)"
+          },
+          "triggers": {
+            "1": [
+              "Enemy,MoveType = A"
+            ],
+            "2": [
+              "P2StateType != L",
+              "root,P2BodyDist X < 120",
+              "P2StateNo != 4999"
+            ],
+            "3": [
+              "root,P2BodyDist X < 80",
+              "P2StateNo != 4999"
+            ],
+            "4": [
+              "P2StateType = A",
+              "P2MoveType != H"
+            ]
+          },
+          "triggerall": [
+            "root,BackEdgeBodyDist > 80"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1052
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "target": "var(25)"
+          },
+          "triggers": {
+            "1": [
+              "Enemy,MoveType !=A"
+            ],
+            "2": [
+              "root,P2BodyDist X > 120"
+            ],
+            "3": [
+              "P2StateType = L",
+              "root,P2BodyDist X > 360"
+            ],
+            "4": [
+              "var(12) || var(13)"
+            ],
+            "5": [
+              "root,P2BodyDist X >= 120",
+              "P2StateNo = 4999"
+            ],
+            "6": [
+              "root,BackEdgeBodyDist < 80",
+              "P2MoveType = A"
+            ],
+            "7": [
+              "root,P2BodyDist X < 40",
+              "P2StateType = A",
+              "root,BackEdgeBodyDist < 60"
+            ]
+          },
+          "triggerall": [
+            "random < 249",
+            "P2StateType != A || P2MoveType = H"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1070
+          }
+        },
+        {
+          "type": "parentVarSet",
+          "params": {
+            "value": "0",
+            "target": "var(30)"
+          },
+          "triggers": {
+            "1": [
+              "root,StateType = A"
+            ],
+            "2": [
+              "root,P2BodyDist X = [0,160]",
+              "P2StateType != A",
+              "P2StateType != A"
+            ],
+            "3": [
+              "root,P2BodyDist X = [440,676]"
+            ],
+            "4": [
+              "EnemyNear,HitDefAttr = SA,NA,SA,HA"
+            ],
+            "5": [
+              "root,PrevStateNo = 52",
+              "P2StateType = A"
+            ],
+            "6": [
+              "root,P2BodyDist X < 180",
+              "root,FrontEdgeBodyDist > 200",
+              "P2StateType != A"
+            ],
+            "7": [
+              "P2StateNo = [5090,5119]"
+            ],
+            "8": [
+              "P2StateNo = [5121,5899]"
+            ],
+            "9": [
+              "RoundState != 2"
+            ],
+            "10": [
+              "var(8) > 0 && root,P2BodyDist X < 240"
+            ],
+            "11": [
+              "var(10) > 0 || var(11) > 0"
+            ],
+            "12": [
+              "root,var(41) > 0"
+            ]
+          },
+          "triggerall": [
+            "P2StateType != L"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1096
+          }
+        },
+        {
+          "type": "parentVarSet",
+          "params": {
+            "value": "1",
+            "target": "var(30)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = C"
+            ],
+            "2": [
+              "Enemy,HitDefAttr = SC,AT",
+              "(root,StateNo = 130 || root,StateNo = 120)"
+            ],
+            "3": [
+              "root,P2BodyDist X > 680",
+              "AIlevel < 49"
+            ],
+            "4": [
+              "root,NumProjID(1050) && P2BodyDist X > 480"
+            ],
+            "5": [
+              "P2StateNo = 5120",
+              "root,P2BodyDist X = [220,480]",
+              "root, ctrl"
+            ],
+            "6": [
+              "P2StateNo = 5120",
+              "root,FrontEdgeDist < 240",
+              "root,ctrl"
+            ],
+            "7": [
+              "P2StateNo = 5120",
+              "(root,P2BodyDist X < 120 || root,FrontEdgeDist < 240)",
+              "root,ctrl"
+            ],
+            "8": [
+              "BackEdgeBodyDist < 80",
+              "ctrl",
+              "P2StateType = A"
+            ]
+          },
+          "triggerall": [
+            "RoundState != 2",
+            "root,StateType != A",
+            "root,var(41) = 0",
+            "var(8) = 0 || root,P2BodyDist X < 240"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1131
+          }
+        },
+        {
+          "type": "VarAdd",
+          "params": {
+            "value": "1",
+            "target": "var(0)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = L"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1167
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "-1",
+            "target": "var(0)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType != L"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1173
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(10)"
+          },
+          "triggers": {
+            "1": [
+              "P2MoveType != H || P2StateNo = 4999"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1179
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(11)"
+          },
+          "triggers": {
+            "1": [
+              "P2MoveType != H || P2StateNo = 4999"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1186
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(12)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateNo = 4999 || P2MoveType = H && P2StateNo != [120,155]"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1193
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(13)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateNo = 4999 || root,MoveHit = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1200
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(20)"
+          },
+          "triggers": {
+            "1": [
+              "root,NumProjID(1050) > 0 || P2StateNo = 4999 || root,MoveType = H"
+            ],
+            "2": [
+              "root,P2BodyDist X < 160"
+            ],
+            "3": [
+              "P2StateNo = 5070 && P2StateType = A"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1208
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1",
+            "target": "var(21)"
+          },
+          "triggers": {
+            "1": [
+              "root,NumProjID(1050) > 0 || P2StateNo = 4999 || root,MoveType = H"
+            ],
+            "2": [
+              "root,P2BodyDist X < 480"
+            ],
+            "3": [
+              "P2StateNo = 5070 && P2StateType = A"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1218
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "RoundState != 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 1227
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 797
+      },
+      "type": "A",
+      "physics": "N",
+      "moveType": "H",
+      "ctrl": 0,
+      "sprpriority": 9,
+      "juggle": 8,
+      "anim": "9999",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "915": {
+      "controllers": [
+        {
+          "type": "Explod",
+          "params": {
+            "id": "916",
+            "anim": "916",
+            "postype": "left",
+            "pos": "78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "win"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(916)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 11
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "919",
+            "id": "919",
+            "postype": "left",
+            "pos": "78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "lose"
+            ],
+            "2": [
+              "root,Life <= 0"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(919)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 26
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "917",
+            "id": "917",
+            "postype": "left",
+            "pos": "78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,StateNo != [120,159]",
+              "root,MoveType = H"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(917)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 40
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "918",
+            "id": "918",
+            "postype": "left",
+            "pos": "78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveType != H"
+            ],
+            "2": [
+              "root,StateNo = [120,159]"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(918)",
+            "root,Life <= root,LifeMax/4"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 54
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "915",
+            "id": "915",
+            "postype": "left",
+            "pos": "78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveType != H"
+            ],
+            "2": [
+              "root,StateNo = [120,159]"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(915)",
+            "root,Life > root,LifeMax/4"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 69
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "915"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType = H",
+              "root,StateNo != [120,159]"
+            ],
+            "3": [
+              "root,Life <= root,LifeMax/4"
+            ],
+            "4": [
+              "!root,Alive"
+            ],
+            "5": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 84
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "917"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType != H"
+            ],
+            "3": [
+              "!root,Alive"
+            ],
+            "4": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 94
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "918"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType = H",
+              "root,StateNo != [120,159]"
+            ],
+            "3": [
+              "root,Life > root,LifeMax/4"
+            ],
+            "4": [
+              "!root,Alive"
+            ],
+            "5": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 102
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "919"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0"
+            ],
+            "2": [
+              "root,Alive"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 112
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 4
+      },
+      "physics": "N",
+      "ctrl": 0,
+      "sprpriority": 1,
+      "anim": "999",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "925": {
+      "controllers": [
+        {
+          "type": "Explod",
+          "params": {
+            "id": "926",
+            "anim": "926",
+            "postype": "right",
+            "pos": "-78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "win"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(926)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 125
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "929",
+            "id": "929",
+            "postype": "right",
+            "pos": "-78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "lose"
+            ],
+            "2": [
+              "root,Life <= 0"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(929)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 140
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "927",
+            "id": "927",
+            "postype": "right",
+            "pos": "-78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,StateNo != [120,159]",
+              "root,MoveType = H"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(927)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 154
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "928",
+            "id": "928",
+            "postype": "right",
+            "pos": "-78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveType != H"
+            ],
+            "2": [
+              "root,StateNo = [120,159]"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(928)",
+            "root,Life <= root,LifeMax/4"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 168
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "925",
+            "id": "925",
+            "postype": "right",
+            "pos": "-78,123",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "scale": "0.75,0.75",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,MoveType != H"
+            ],
+            "2": [
+              "root,StateNo = [120,159]"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(925)",
+            "root,Life > root,LifeMax/4"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 183
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "925"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType = H",
+              "root,StateNo != [120,159]"
+            ],
+            "3": [
+              "root,Life <= root,LifeMax/4"
+            ],
+            "4": [
+              "!root,Alive"
+            ],
+            "5": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 198
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "927"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType != H"
+            ],
+            "3": [
+              "!root,Alive"
+            ],
+            "4": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 208
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "928"
+          },
+          "triggers": {
+            "1": [
+              "win"
+            ],
+            "2": [
+              "root,MoveType = H",
+              "root,StateNo != [120,159]"
+            ],
+            "3": [
+              "root,Life > root,LifeMax/4"
+            ],
+            "4": [
+              "!root,Alive"
+            ],
+            "5": [
+              "Lose"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 216
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "929"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0"
+            ],
+            "2": [
+              "root,Alive"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 226
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 118
+      },
+      "physics": "N",
+      "ctrl": 0,
+      "sprpriority": 1,
+      "anim": "999",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "950": {
+      "controllers": [
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 139, cond(root,var(49) = 3, 145, cond(root,var(49) = 5, 152, 159))),cond(root,var(49) = 1, 24, cond(root,var(49) = 3, 46, cond(root,var(49) = 5, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 242
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 139, cond(root,var(49) = 3, 145, cond(root,var(49) = 5, 152, 159))),cond(root,var(49) = 1, 24, cond(root,var(49) = 3, 46, cond(root,var(49) = 5, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 1",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 258
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 139, cond(root,var(49) = 3, 145, cond(root,var(49) = 5, 152, 159))),cond(root,var(49) = 1, 24, cond(root,var(49) = 3, 46, cond(root,var(49) = 5, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 272
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 141, cond(root,var(49) = 3, 147, 152)),cond(root,var(49) = 1, 32, cond(root,var(49) = 3, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 286
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 141, cond(root,var(49) = 3, 147, 152)),cond(root,var(49) = 1, 32, cond(root,var(49) = 3, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 1",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 302
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 141, cond(root,var(49) = 3, 147, 152)),cond(root,var(49) = 1, 32, cond(root,var(49) = 3, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 316
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 147, 149),cond(root,var(49) = 1, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 330
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 147, 149),cond(root,var(49) = 1, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 1",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 346
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 1, 147, 149),cond(root,var(49) = 1, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 1",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 360
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1141, cond(root,var(49) = 4, 1135, cond(root,var(49) = 6, 1128, 1121))),cond(root,var(49) = 2, 24, cond(root,var(49) = 4, 46, cond(root,var(49) = 6, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 375
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1141, cond(root,var(49) = 4, 1135, cond(root,var(49) = 6, 1128, 1121))),cond(root,var(49) = 2, 24, cond(root,var(49) = 4, 46, cond(root,var(49) = 6, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 2",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 391
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1141, cond(root,var(49) = 4, 1135, cond(root,var(49) = 6, 1128, 1121))),cond(root,var(49) = 2, 24, cond(root,var(49) = 4, 46, cond(root,var(49) = 6, 67, 88)))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 3"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 405
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1139, cond(root,var(49) = 4, 1133, 1128)),cond(root,var(49) = 2, 32, cond(root,var(49) = 4, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 420
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1139, cond(root,var(49) = 4, 1133, 1128)),cond(root,var(49) = 2, 32, cond(root,var(49) = 4, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 2",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 436
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1139, cond(root,var(49) = 4, 1133, 1128)),cond(root,var(49) = 2, 32, cond(root,var(49) = 4, 55, 79))",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 2"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 450
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "950",
+            "anim": "950",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1133, 1131),cond(root,var(49) = 2, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1",
+            "sprpriority": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life > 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(950)",
+            "root,var(49) != 0"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 465
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "951",
+            "anim": "951",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1133, 1131),cond(root,var(49) = 2, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= root,LifeMax/4",
+              "root,TeamSide = 2",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(951)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 481
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "id": "952",
+            "anim": "952",
+            "postype": "left",
+            "pos": "cond(root,var(49) = 2, 1133, 1131),cond(root,var(49) = 2, 50, 75)",
+            "ownpal": "0",
+            "ignorehitpause": "1",
+            "removetime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "root,Life <= 0",
+              "root,TeamSide = 2",
+              "root,NumPartner = 1"
+            ]
+          },
+          "triggerall": [
+            "!NumExplod(952)"
+          ],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 495
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "950"
+          },
+          "triggers": {
+            "1": [
+              "root,var(49) = 0"
+            ],
+            "2": [
+              "root,Life <= 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 509
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "951"
+          },
+          "triggers": {
+            "1": [
+              "root,var(49) = 0"
+            ],
+            "2": [
+              "root,Life > root,LifeMax/4"
+            ],
+            "3": [
+              "root,Life <= 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 515
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "952"
+          },
+          "triggers": {
+            "1": [
+              "root,var(49) = 0"
+            ],
+            "2": [
+              "root,Life > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 522
+          }
+        }
+      ],
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 235
+      },
+      "physics": "N",
+      "ctrl": 0,
+      "sprpriority": 1,
+      "anim": "999",
+      "velset": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "sizeConstants": {
+    "size.ground.front": 40.0,
+    "size.ground.back": 40.0,
+    "size.air.front": 60.0,
+    "size.air.back": 30.0,
+    "size.height": 396.0,
+    "size.head.pos.x": 0.0,
+    "size.head.pos.y": -360.0
+  },
   "helperStates": {
     "3050": {
       "type": "A",
@@ -19317,6 +23852,7 @@
     "sha256": {
       "venus.cns": "b3fd7ab0db5d267dd3a822fc8be5c76a0e8585b685be2f20f3c89aa2881f9068",
       "venus_Common.cns": "600108c8f796d74373167510ff30d758751325c8c6f92a1c522c1ca1ef22c867",
+      "venus_Helper.st": "3794c538b85c8e250751d90dd967a0ce7b99ddcba75a20797a03cacf9b468f63",
       "venus.cmd": "4d01cf633e7a23c3723aa65b105385b70b57defc7c601029ba9d1c93b4df23a7",
       "venus.air": "33d6e309ffcf2c19471f1a067f706131ebb40258ca38e192011402f4c32d329e"
     }
