@@ -21,7 +21,25 @@ const server=http.createServer((request,response)=>{
  await page.goto('http://127.0.0.1:8766');
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
- if(process.argv.includes('--preview')){await run("p1Life=250;posX=-200;p2.x=200;enterIRState(3000);for(let tick=0;tick<50;tick++)simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()");await page.screenshot({path:'work/specials-preview-02335.png',timeout:60000});return}
+ const soundChecks=await run(`(()=>{
+  const OriginalAudio=window.Audio,clips=[];let checks=0;
+  const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+  window.Audio=class extends EventTarget{constructor(url){super();this.src=url;this.stops=0;clips.push(this)}play(){return Promise.resolve()}pause(){this.stops++}};
+  try{
+   for(const sound of soundChannels.values())sound.pause();soundChannels.clear();automaticSounds.clear();
+   for(const player of [1,2])for(const stateNo of [1000,1100,1200]){
+    resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;p2.attackPause=0;p2.hitShake=0;p1Life=1000;p2.life=1000;posX=-500;p2.x=500;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;runtimeVar.fill(0);specialRoot(2).vars.fill(0);setP2ControlMode(player===2?'keyboard':'dummy');enterIRState(player===1?stateNo:0);enterP2State(player===2?stateNo:0);
+    const start=clips.length;for(let tick=0;tick<140;tick++)simStep();const created=clips.slice(start),voice=created.find(clip=>clip.src.endsWith('/'+stateNo+'-0.wav'));
+    expect(!!voice,'Original voice starts '+[player,stateNo]);expect(created.some(clip=>/900-[0-4]\\.wav$/.test(clip.src)),'Later source SFX starts '+[player,stateNo]);expect(voice.stops===0,'Voice not interrupted by unchannelled SFX '+[player,stateNo]);
+   }
+   for(const channel of [0,4]){
+    const voice=playSourceSound('1000,0',channel),effect=playSourceSound('900,0'),second=playSourceSound('900,2',-1);expect(voice.stops===0&&effect.stops===0,'Automatic sounds overlap voice and each other');expect(!soundChannels.has(-1),'Negative channel not mapped to shared channel');
+    const replacement=playSourceSound('1100,0',channel);expect(voice.stops===1&&soundChannels.get(channel)===replacement,'Explicit channel still replaces previous voice');voice.dispatchEvent(new Event('ended'));expect(soundChannels.get(channel)===replacement,'Old sound cleanup cannot delete replacement');effect.dispatchEvent(new Event('ended'));second.dispatchEvent(new Event('error'));expect(!automaticSounds.has(effect)&&!automaticSounds.has(second),'Automatic sounds cleaned on end/error');
+   }
+   const first=playSourceSound('1000,0',0),second=playSourceSound('1100,0',4);expect(first.stops===0&&second.stops===0,'Player voice channels isolated');return checks;
+  }finally{for(const sound of soundChannels.values())sound.pause();soundChannels.clear();automaticSounds.clear();window.Audio=OriginalAudio;resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;enterIRState(0);enterP2State(0)}
+ })()`);console.log(JSON.stringify({soundChecks}));
+ if(process.argv.includes('--preview')){await run("p1Life=250;posX=-200;p2.x=200;enterIRState(3000);for(let tick=0;tick<50;tick++)simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()");await page.screenshot({path:'work/specials-preview-02336.png',timeout:60000});return}
  const fixes=await run(`(()=>{
   let checks=0;
   const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
@@ -87,7 +105,7 @@ const server=http.createServer((request,response)=>{
   reset();sampleCommandList(1,{x:true},false);commandModeButton.click();expect(runtimeVar[52]===10&&p2.vars[52]===10,'UI enables AUTO on both players');expect(!commandActive('x',1),'Mode change clears old command buffer');expect(commandModeButton.closest('#inputPanel'),'Command button inside input panel');commandModeButton.click();expect(runtimeVar[52]===0&&p2.vars[52]===0,'UI returns both players to NORMAL');
   reset();return checks;
  })()`);console.log(JSON.stringify({specialFixChecks:fixes}));
- if(process.argv.includes('--ui-preview')){await run('updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()');await page.screenshot({path:'work/special-fixes-ui-02335.png'});return}
+ if(process.argv.includes('--ui-preview')){await run('updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()');await page.screenshot({path:'work/special-fixes-ui-02336.png'});return}
  if(process.argv.includes('--focused'))return;
  const results=await run(`(()=>{
   const results=[];

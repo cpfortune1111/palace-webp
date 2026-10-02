@@ -246,7 +246,7 @@ for section in json.loads((root / 'command_sections.json').read_text(encoding='u
                                 'time': int(fields.get('time', default_time)), 'bufferTime': int(fields.get('buffer.time', default_buffer)),
                                 'steps': steps, 'supportedM2': True, 'source': {'file': section['file'], 'line': section['line']}})
 (arguments.output.parent / 'venus_cmd_runtime.json').write_text(json.dumps({
-    'version': '0.23.35', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
+    'version': '0.23.36', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
     'sourceSha256': hashlib.sha256((source / 'venus.cmd').read_bytes()).hexdigest()
 }, ensure_ascii=False, indent=2), encoding='utf-8')
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands,
