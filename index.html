@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.19 GetHit / Contact Semantics M1</title>
+<title>Prototype 0.23.20 Guard Distance / Start-End M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,7 +37,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.19 · GetHit / Contact Semantics M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD gethit-contact-semantics-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.20 · Guard Distance / Start-End M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD guard-distance-start-end-m1-20261002-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / J-L-U</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="U / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -83,7 +83,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.19 · GetHit / Contact Semantics M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.20 · Guard Distance / Start-End M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0;
@@ -95,9 +95,9 @@ function playSourceSound(value,channel=0){
  const sound=new Audio('./battle-sounds/'+match[1]+'-'+match[2]+'.wav');soundChannels.set(key,sound);sound.play().catch(()=>{});
 }
 Promise.all([
- fetch('./venus_battle200.json?v=02319',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
- fetch('./venus_guard.json?v=0238',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=0238'})
+ fetch('./venus_battle200.json?v=02320',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=02320',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02320'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
@@ -334,7 +334,7 @@ function enterIRState(st,animOverride){
  if(battleDat?.statePriorities?.[String(st)]!==undefined)p1SprPriority=battleDat.statePriorities[String(st)];
  prevState=state;state=st;stateTicks=0;activeHitDef=null;stateEntrySerial++;
  const incoming=stateIR.states[String(st)];runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
- if(incoming&&incoming.moveType!==undefined)runtimeMoveType=String(incoming.moveType).toUpperCase();
+ runtimeMoveType=String(incoming?.moveType??'I').toUpperCase();
  const def=incoming;
  if(st===40&&posX!==p2.x)setP1Facing(posX<p2.x?1:-1);
  // CNS StateDef velset is an entry-time property. Apply it generically when the
@@ -612,6 +612,8 @@ function enterGroundReactionState(fighter,n){
  if(battleDat?.statePriorities?.[String(n)]!==undefined)fighter.sprPriority=battleDat.statePriorities[String(n)];
  fighter.state=n;fighter.time=0;fighter.elem=1;fighter.elemTick=0;
  if(n===0){fighter.type='S';fighter.moveType='I';fighter.physics='S';fighter.ctrl=1;fighter.anim=0}
+ if(n===11){fighter.type='C';fighter.moveType='I';fighter.physics='C';fighter.ctrl=1;fighter.anim=11;fighter.vx=0}
+ if(n===120||n===140){fighter.moveType='I';fighter.ctrl=1;fighter.physics=fighter.type;fighter.anim=n+(fighter.type==='C'?1:0);fighter.vx=0}
  if(n===5000){fighter.type='S';fighter.moveType='H';fighter.physics='N';fighter.vx=0;fighter.vy=0;fighter.ctrl=0;fighter.anim=5000}
  if(n===5001){fighter.type='S';fighter.moveType='H';fighter.physics='S';fighter.ctrl=0}
  if(n===130||n===131){fighter.type=n===131?'C':'S';fighter.physics=fighter.type;fighter.moveType='I';fighter.ctrl=1;fighter.anim=n;fighter.vx=0}
@@ -750,9 +752,25 @@ function resolveP2PunchM1(resolveHit=true){
  p2.time++;advanceFighterAirOneTick(p2);
 }
 function stepGroundReactionM1(fighter,guarding){
- if([0,130,131].includes(fighter.state)&&fighter.ctrl&&fighter.type!=='A'&&fighter.y===0){
-  const desired=guarding==='stand'?130:guarding==='crouch'?131:0;
-  if(fighter.state!==desired)enterGroundReactionState(fighter,desired);
+ const guardDistance=inGuardDistanceM1(fighter);
+ if([0,11,20].includes(fighter.state)&&fighter.ctrl&&fighter.type!=='A'&&fighter.y===0){
+  if(guarding!=='none'&&guardDistance){fighter.type=guarding==='crouch'?'C':'S';enterGroundReactionState(fighter,120)}
+  else if(fighter===p2&&p2ControlMode==='dummy'){
+   const desired=guarding==='crouch'?11:0;if(fighter.state!==desired)enterGroundReactionState(fighter,desired);
+  }
+ }
+ if([120,130,131].includes(fighter.state)){
+  if(guarding==='none'||!guardDistance)enterGroundReactionState(fighter,140);
+  else {
+   fighter.type=guarding==='crouch'?'C':'S';fighter.physics=fighter.type;
+   if(fighter.state===120){
+    const animation=120+(fighter.type==='C'?1:0);if(fighter.anim!==animation){fighter.anim=animation;fighter.elem=1;fighter.elemTick=0}
+    if(fighter.time>=actionDuration(fighter.anim))enterGroundReactionState(fighter,fighter.type==='C'?131:130);
+   }else if(fighter.state!==(fighter.type==='C'?131:130))enterGroundReactionState(fighter,fighter.type==='C'?131:130);
+  }
+ }
+ if(fighter.state===140&&fighter.time>=actionDuration(fighter.anim)){
+  enterGroundReactionState(fighter,guarding==='crouch'?11:0);return;
  }
  if([150,152].includes(fighter.state)){
   if(!evalFighterExpr('HitShakeOver',fighter,{type:'S'})){fighter.hitShake--;return}
@@ -783,7 +801,7 @@ function stepGroundReactionM1(fighter,guarding){
 function stepP2M1(){
  if(p2PunchRequested){p2PunchRequested=false;const ready=p2.ctrl||([200,230].includes(p2.state)&&p2.moveType==='I');if(ready&&p2.y===0&&posY===0){if(p2.x!==posX)p2.facing=p2.x<posX?1:-1;enterP2State(200);return}}
  if(p2.state===200){stepP2AttackM1();return}
- if(p2ControlMode==='keyboard'&&p2.ctrl&&[0,20,130,131].includes(p2.state)){stepP2WalkM1();return}
+ if(p2ControlMode==='keyboard'&&p2.ctrl&&[0,11,20].includes(p2.state)&&!(p2GuardMode()!=='none'&&inGuardDistanceM1(p2))){stepP2WalkM1();return}
  stepGroundReactionM1(p2,p2GuardMode());
 }
 function syncP2KeyboardInput(){p2Input.left=p2HeldKeys.has('KeyJ');p2Input.right=p2HeldKeys.has('KeyL')}
@@ -794,6 +812,13 @@ function setP2ControlMode(mode){
 }
 document.querySelector('#p2Control').addEventListener('change',event=>{setP2ControlMode(event.target.value);event.target.blur()});
 function p2GuardMode(){return p2ControlMode==='keyboard'?(p2Commands().holdback?'stand':'none'):document.querySelector('#p2Guard').value}
+function inGuardDistanceM1(defender){
+ const attacker=defender===p2?{x:posX,y:posY,facing:p1Facing,moveType:runtimeMoveType}:p2;
+ if(defender.type==='A'||defender.y!==0||attacker.y!==0||attacker.moveType!=='A')return false;
+ const distance=(defender.x-attacker.x)*attacker.facing,profile=battleDat.guardDistance;
+ if(!profile)throw Error('Missing source guard distance');
+ return distance<profile.front&&distance>-profile.back;
+}
 function stepP2WalkM1(){
  const previous=p2.state,commands=p2Commands();
  p2.x+=p2.vx;p2.vx*=constVal('movement.stand.friction');
@@ -920,14 +945,14 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.19',build:'gethit-contact-semantics-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.20',build:'guard-distance-start-end-m1-20261002-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.19-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.20-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

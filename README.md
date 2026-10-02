@@ -2,7 +2,19 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.19 — GetHit / Contact Semantics M1
+## 最新版本：0.23.20 — Guard Distance / Start-End M1
+
+BUILD `guard-distance-start-end-m1-20261002-01`。修正 Dummy 防禦選單把無攻擊的 P2 永久放入 guard 動作：站防未受威脅留 State 0；蹲防未受威脅留 State 11。只有對手 MoveType=A、同在地面且在攻擊者 facing-relative 前方 0 < 距離 < 640（原 Venus attack.dist）才進 State 120，站／蹲分別用原 Action 120／121；不是另創 State 121。
+
+按原 AIR／SFF 匯入起防 120／121、收防 140／141。起防完進 130／131；對手停止攻擊、離開範圍或鬆開後防則進 140 收防，再回 0／11。Keyboard 後防亦使用此入口；hit／guard stun 不因失去距離而立即取消。640 是預防禦距離，不是拳頭 Clsn 實際命中距離；守備可在 HitDef 活躍之前的 startup 觸發。本切片僅地面 State 200，未宣稱空中／projectile／Helper GuardDist 完整支援。
+
+人工驗收（本版待測）：Dummy 站防／蹲防下，雙方不攻擊應 S0／S11；遠距 X 應不擺防；進前方 640 範圍內 X 應起防；攻擊結束應收防；近距站防仍不扣 HP；兩邊換位置再測。接觸計時未 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 已初步 TEST、待深測；range 仍待實際 state 接入驗收，以上都未標為最終 PASS。
+
+同時修正進入未指定 moveType 的 idle／普通 state 時錯誤繼承上一招 A 的問題，採用 StateDef 預設 I，避免停手後仍被視為攻擊。guard 起防／收防保留原 AIR ticks（6／5）。
+
+本版自動測試 PASS：48 組雙 facing／站蹲／無攻擊或 startup／0、400、639、640、641、後方距離條件；原起防→維持→收防→idle 鏈及既有完整回歸通過，browserErrors=[]。這不是本版人工 PASS。
+
+## 0.23.19 實作紀錄
 
 BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS。
 
@@ -24,17 +36,17 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - 自動回歸使用 `tools/check-runtime.cjs`；Node、Playwright／Edge、遊戲資料與既有 Three.js CDN 需要可用。本次新增 range 邊界、hit timers、HitVelSet facing／axis masks、接觸計時及 pause／reset 檢查。
 - 本版自動測試 PASS：40 組 range 邊界、兩個 facing 的 GetHit／HitVelSet／未知欄位拒絕、接觸 pause／reset，以及既有 448 組 expression parity、雙向 hit／guard／corner、同時 X／U／互中、鍵盤／CLSN／Turn／30-60-120 Hz 回歸；browserErrors=[]。瀏覽器人工驗收待使用者測試。
 
-## 0.23.19 待驗收清單（全部未經使用者實測）
+## 0.23.19 驗收清單
 
-以下全部標記「未測試／未 PASS」指使用者人工驗收；保留上方已完成的自動測試紀錄，不把自動測試當作使用者 PASS。部分只有底層 evaluator 測試，不能靠目前出拳畫面驗收完整語義。
+使用者更新：接觸計時未 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 已初步 TEST，待深測；range 尚未人工驗收。保留上方自動測試紀錄，不把自動測試或初步 TEST 當作最終 PASS。部分只有底層 evaluator 測試，不能靠目前出拳畫面驗收完整語義。
 
 | 項目 | 目前接線／限制 | 人工驗收方法與預期 | 狀態 |
 |---|---|---|---|
 | 接觸計時 MoveContact／MoveGuarded | State 200 有接觸記錄與 query；HUD 未直接顯示這兩個 counter。 | P2 Dummy 不防禦：近距離 X 命中；站防再 X；拉遠 X 揮空。命中 contact=1、guarded=0；防禦兩者=1；8 ticks hitpause 不增長，之後增長，轉 state 清零。精確 counter 要用 ↓ trace 的 moveContact／moveGuarded 核對，單看 HP 不足。另需 P2→P1 對稱驗收。 | 未測試／未 PASS |
-| GetHitVar 查詢 | ground slide 用 slidetime／ctrltime；HitVelSet 用 xvel。部分欄位只提供查詢，未由可玩 state 消費；現有 trace 的 getHit 是記錄，不是每個 GetHitVar 呼叫的回傳值。 | X 打 P2，再用 U 打 P1，雙方換邊各做 hit／stand guard；↓ 核對 attackerId、世界 xvel（hit ±16／guard ±24）、slidetime（11／16）、初始 hittime（15／22）。live hittime／hitshaketime 及其他欄位需 evaluator 診斷，不能以 getHit.hittime 靜態值驗收倒數。 | 未測試／未 PASS |
-| HitOver／HitShakeOver | 目前 ground reaction handler 已呼叫 evaluator；尚不是全量 Common controller runner。 | 用 Ⅱ 暫停／逐 tick：命中後 shake 結束才進 slide（5000→5001；站防 150→151），slide 結束後恢復。精確邊界：shake=0 為真，hittime=0 的 HitOver 仍是假、-1 才真；HUD 沒有 timer，邊界仍需診斷／自動測試，肉眼只能驗收動作鏈。 | 未測試／未 PASS |
+| GetHitVar 查詢 | ground slide 用 slidetime／ctrltime；HitVelSet 用 xvel。部分欄位只提供查詢，未由可玩 state 消費；現有 trace 的 getHit 是記錄，不是每個 GetHitVar 呼叫的回傳值。 | X 打 P2，再用 U 打 P1，雙方換邊各做 hit／stand guard；↓ 核對 attackerId、世界 xvel（hit ±16／guard ±24）、slidetime（11／16）、初始 hittime（15／22）。live hittime／hitshaketime 及其他欄位需 evaluator 診斷，不能以 getHit.hittime 靜態值驗收倒數。 | 初步 TEST／待深測，未最終 PASS |
+| HitOver／HitShakeOver | 目前 ground reaction handler 已呼叫 evaluator；尚不是全量 Common controller runner。 | 用 Ⅱ 暫停／逐 tick：命中後 shake 結束才進 slide（5000→5001；站防 150→151），slide 結束後恢復。精確邊界：shake=0 為真，hittime=0 的 HitOver 仍是假、-1 才真；HUD 沒有 timer，邊界仍需診斷／自動測試，肉眼只能驗收動作鏈。 | 初步 TEST／待深測，未最終 PASS |
 | range expressions | AST 支援四種端點；原 Common range controllers 尚未接入完整 runner。現有可玩 State 200 不足以驗收所有 range。 | 暫無完整玩家操作測法，保留未驗收。底層測試在 0／2 邊界與區間內外核對 []、[)、(]、() 及 !=；待含 range 的原始 controller 真正接入後再做遊戲驗收，不為測試新增猜測 state。 | 未測試／未 PASS；待實際 state 接入 |
-| 來源 HitVelSet | 原 State 151／153／5001 的 Time=0、x=1 controller 已接入；Y／axis mask 只做底層測試，空中受擊未接入。 | 雙方換邊測 X／U 命中與站防：slide 只在入口套速度，受擊者向遠離攻擊者方向退，不每 tick 重設、不突然前移。角落另測 attacker cornerpush。153 可用 P2 Dummy 蹲防作條件測試，但若原 AIR Clsn 令拳揮空，不能聲稱測到該 state，保留待測；Y／空中分支待可用原 state。 | 未測試／未 PASS |
+| 來源 HitVelSet | 原 State 151／153／5001 的 Time=0、x=1 controller 已接入；Y／axis mask 只做底層測試，空中受擊未接入。 | 雙方換邊測 X／U 命中與站防：slide 只在入口套速度，受擊者向遠離攻擊者方向退，不每 tick 重設、不突然前移。角落另測 attacker cornerpush。153 可用 P2 Dummy 蹲防作條件測試，但若原 AIR Clsn 令拳揮空，不能聲稱測到該 state，保留待測；Y／空中分支待可用原 state。 | 初步 TEST／待深測，未最終 PASS |
 
 建議順序：先雙向 hit／stand guard／whiff → 左右換邊 → 暫停逐 tick 的受擊鏈 → 角落 → ↓ 匯出異常 trace。看不到的 counter／timer／range 端點留待診斷頁或原 state 接入，不能因「打拳正常」就把全部項目 PASS。
 
@@ -57,7 +69,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [x] 原始來源盤點／SHA-256、133 AIR actions、SFF／SND directory、來源缺口及作者確認；67 個 WAV 原樣匯出（未全量接入播放）。
 - [x] State 200 地面 hit／guard／hitpause／恢復、cornerpush、CLSN／HUD、turn／facing、input／diagnostic trace。
 - [x] 兩邊共用 AST／controller handlers，P2 地面行走／後防／U 出拳，同 tick equal-priority 地面拳互中。
-- [ ] 本版 GetHit／contact queries、HitOver／HitShakeOver、range AST、source HitVelSet：已有地面接線／底層自動測試；全部未經使用者實測，未 PASS，逐項按上表驗收。
+- [ ] GetHit／HitOver／HitShakeOver／source HitVelSet 已初步 TEST、待深測；接觸計時未 CHECK；range 待實際 state 接入。均未最終 PASS，逐項按上表驗收。
 - [ ] 全量 SFF 分批 atlas／metadata：linked sprites／palettes／透明度／axis／AIR flips／Clsn default。
 - [ ] 動態／外部 source references 追至 Helper／CMD；全量未知 controller／trigger／expression 報告。
 - [ ] P1／P2 完整共同 fighter／Common runner；source controllers 逐條移除近似實作、timer／動畫 clock 與順序驗證。

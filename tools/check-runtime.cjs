@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.19');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.20');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.19-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.20-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -470,6 +470,32 @@ const server=http.createServer((request,response)=>{
   await step();assert.equal(await run('moveContact'),2);assert.equal(await run('moveGuarded'),guarded?2:0);
   await run('enterIRState(0)');assert.equal(await run('moveContact'),0);assert.equal(await run('moveGuarded'),0);
  }
+ const guardDistanceChecks=await run(`(()=>{
+  let checks=0;
+  for(const facing of [-1,1])for(const mode of ['stand','crouch'])for(const distance of [0,400,639,640,641,-10])for(const attacking of [false,true]){
+   resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;posX=0;posY=0;p1Facing=facing;
+   p2.x=facing*distance;p2.y=0;p2.facing=-facing;p2.vx=0;p2.hitShake=0;p2.getHit=null;p2.life=1000;
+   enterIRState(attacking?200:0);enterP2State(mode==='crouch'?11:0);
+   document.querySelector('#p2Guard').value=mode;
+   const expected=attacking&&distance>0&&distance<640;
+   if(inGuardDistanceM1(p2)!==expected)throw Error('Strict source guard distance '+JSON.stringify({facing,mode,distance,attacking,type:p2.type,moveType:runtimeMoveType,profile:battleDat.guardDistance}));
+   stepGroundReactionM1(p2,mode);
+   if(p2.state!==(expected?120:mode==='crouch'?11:0))throw Error('Guard entry without attack/range '+[facing,mode,distance,attacking,p2.state]);
+   if(expected&&p2.anim!==(mode==='crouch'?121:120))throw Error('Original guard start animation');
+   checks++;
+  }
+  for(const mode of ['stand','crouch']){
+   posX=0;posY=0;p1Facing=1;p2.x=400;p2.y=0;p2.facing=-1;enterIRState(200);enterP2State(mode==='crouch'?11:0);
+   stepGroundReactionM1(p2,mode);if(p2.state!==120)throw Error('No start state');
+   for(let tick=0;tick<6;tick++)stepGroundReactionM1(p2,mode);
+   if(p2.state!==(mode==='crouch'?131:130))throw Error('Guard start clock');
+   enterIRState(0);stepGroundReactionM1(p2,mode);
+   if(p2.state!==140||p2.anim!==(mode==='crouch'?141:140))throw Error('No guard end');
+   for(let tick=0;tick<6;tick++)stepGroundReactionM1(p2,mode);
+   if(p2.state!==(mode==='crouch'?11:0))throw Error('Guard did not return to idle');
+  }
+  return checks;
+ })()`);assert.equal(guardDistanceChecks,48);
  assert.deepEqual(errors,[]);
- console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
+console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

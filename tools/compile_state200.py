@@ -35,7 +35,7 @@ for controller in states['controllers']:
                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
 actions = {}
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 200, 130, 131, 150, 151, 5000, 5005):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 200, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5005):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:
@@ -74,7 +74,12 @@ for state in states['states']:
         match = re.fullmatch(r'sprpriority\s*=\s*(-?\d+)', entry['text'], re.I)
         if match:
             priorities[str(state['id'])] = int(match[1])
-bundle = {'statePriorities': priorities, 'hitVelocityControllers': hit_velocity_controllers,
+attack_distance = re.search(r'^attack\.dist\s*=\s*(\d+)', (source / 'venus.cns').read_text(encoding='utf-8-sig'), re.M)
+if attack_distance is None:
+    raise ValueError('Missing source attack.dist')
+bundle = {'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
+                           'basis': 'Venus Size attack.dist; IKEMEN default rear distance 0; strict axis-position range'},
+          'statePriorities': priorities, 'hitVelocityControllers': hit_velocity_controllers,
           'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
           'cornerpushProfile': {'legacy': True, 'defaultMultiplier': 0.7, 'stopThreshold': 4,
                                 'basis': 'Venus DEF has no ikemenversion; IKEMEN legacyCornerpush defaults and 1280 localcoord originLs=0.25'},
