@@ -2,7 +2,27 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.24 — Stand Attacks / Jump Land M1
+## 最新版本：0.23.25 — Crouch Attacks / Guard Levels M1
+
+BUILD `crouch-attacks-guard-levels-m1-20261002-01`。使用者 0.23.24 全 PASS。按原 CNS／CMD／AIR／SFF 加 400 蹲輕拳、410 蹲強拳、430 蹲輕踢，共用既有雙人 controller／命中 runner。原 StateDef 沒有 velset，不擅自清零入招速度；400 重複 priority 依最後有效值 `1, Hit`，不是前一行 3。
+
+| State | Damage | GetHit | Hit 滑行／硬直 | Guard 滑行／硬直 | Hit／Guard VX | Pause |
+|---|---:|---|---|---|---|---|
+| 400 | 20,0 | Light／Low | 11／15 | 16／22 | -14／-14 | 8／8 |
+| 410 | 100,0 | Medium／Low | 23／27 | 24／34 | -42／-42 | 8／8 |
+| 430 | 30,0 | Light／Low | 11／15 | 16／22 | -16／-14 | 10／10 |
+
+- 原 guardflag=L：站防會被這三招命中，蹲防可擋；H 只站防、L 只蹲防、M 兩者皆可。防禦分類來自 guardflag，並非 ground.type 的 High／Low；現有 200 等 M 招不能誤當只能站防。H 尚未有本切片原招使用，只以參數矩陣自動測試，不標人工 PASS。
+- 站姿遭 Low／Light 選原 A5010→5015，Low／Medium 選 A5011→5016；蹲姿受擊按 IKEMEN 進 S5010／S5011，以 Common 選 A5020／5021→5025／5026、原 HitVelSet、crouch friction，最後回 S11。StateNo 與 AnimNo 不混用。新增原 S11 人類 CtrlSet 的入口評估，避免 10→11 同 tick 出現人工 ctrl=0 漏防。
+- 原 CMD：按住下方向＋x／y／a →400／410／430；P1 下＋Z／X／A，P2 Num5＋Num0／Num.／Num1。原 Ctrl 或 400／430 的 MoveType=I 可蹲技重入；200／230 的 MoveType=I 只開原站技入口，不擅自讓它們接蹲技。410 收招 MoveType=I 不等於 Ctrl=1，因此不能任意重入。
+- 入口依原 command 順序／holddown／StateType 判斷，不增造 MoveContact／MoveGuarded 的連招門檻：有無接觸都可以使用原指定的收招取消窗。命中 MoveContact=1、MoveGuarded=0；擋住兩者=1，hitpause 計時與切 state reset 沿用既有來源邏輯。
+- 400／430 原 `AnimElem=5,2`／`4,2` 的鬆下提早回 S11 條件已支援（不是只判第一 tick）；410 原 AnimTime 完成回 S11。按住下保持蹲姿，P2 鬆下亦用 12 起身而非直接跳 0。音效沿用已匯出原 Venus WAV，無代用素材。
+
+自動回歸：198 組來源數值／H-L-M guard／CMD 起招與重入門檻；雙玩家×雙 facing×三招×不防／站防／蹲防 36 組實際鍵盤命中，檢查 damage、GetHit 動畫、MoveContact／MoveGuarded；蹲受擊兩種動畫與 HitVelSet／回 S11、AIR element offset／鬆下提早收招；完整 0.23.24 回歸通過。人工待測：三招左右邊界／站蹲防、Light／Medium、400／430 收招接技及 200／230 原站技重入。接觸計時仍未人工 CHECK；GetHit 等初步 TEST、待深測的總體狀態保留。空中受擊／spark S905／完整 P2 CMD buffer 仍未完成；440 未接。
+
+鏡頭、原 attack.dist=640、hitshake x2、既有鍵位 Settings 不變。Atlas 匯出器容量改為按需要擴展，不裁掉新動作或改 sprite axis／palette。
+
+## 0.23.24 實作紀錄
 
 BUILD `stand-attacks-jump-land-m1-20261002-01`。使用者 0.23.23 PASS。按原 CNS／CMD／AIR／SFF 接入 State 210／230／240 與相依 Action 241；State 52 原 Time=0 PlaySnd `52,0` 補回，不改 106。
 
@@ -125,7 +145,8 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] 動態／外部 source references 追至 Helper／CMD；全量未知 controller／trigger／expression 報告。
 - [ ] P1／P2 完整共同 fighter／Common runner；source controllers 逐條移除近似實作、timer／動畫 clock 與順序驗證。
 - [x] 0.23.23 使用者 PASS：雙方 100／105／106、原跑步／著地聲、909 與鍵位設定；106 MakeDust 仍待接入。
-- [ ] 0.23.24：210／230／240／241、52 著地聲已接入，地面回歸通過，待使用者人工验收；完整空中受擊仍未支援。
+- [x] 0.23.24 使用者全 PASS：210／230／240／241、52 著地聲；完整空中受擊仍未支援。
+- [ ] 0.23.25：400／410／430、High／Low guard 及蹲姿 Light／Medium GetHit 已接入，自動回歸通過，待人工驗收。
 - [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
 - [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。

@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.24');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.25');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.24-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.25-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -556,6 +556,60 @@ const server=http.createServer((request,response)=>{
    assert.equal(await run(player===1?'posY':'p2.y'),0);assert.equal(await run(player===1?'state':'p2.state'),0);
   }
  }
+ const crouchSemantics=await run(`(()=>{
+  let cases=0;
+  for(const [state,damage,hitTime,slideTime,hitVX,guardVX,pause] of [[400,20,15,11,-14,-14,8],[410,100,27,23,-42,-42,8],[430,30,15,11,-16,-14,10]]){
+   const params=battleDat.attackStates[state].controllers.find(controller=>controller.type==='HitDef').params;
+   for(const facing of [-1,1])for(const type of ['S','C'])for(const mode of ['none','stand','crouch']){
+    const result=resolveGroundHitM1({id:1,facing},{type,y:0,ctrl:1,moveType:'I',life:1000,state:type==='C'?11:0},params,mode),guarded=mode==='crouch';
+    if(result.guarded!==guarded||result.life!==1000-(guarded?0:damage))throw Error('Low guard/damage '+state);
+    if(result.getHit.hittime!==(guarded?(state===410?34:22):hitTime)||result.getHit.slidetime!==(guarded?(state===410?24:16):slideTime))throw Error('Hit/slide time '+state);
+    if(result.getHit.xvel!==-(guarded?guardVX:hitVX)*facing||result.attackerPause!==pause||result.defenderPause!==pause)throw Error('Velocity/pause '+state);
+    if(result.getHit.animtype!==(state===410?1:0)||result.getHit.groundtype!==2||result.state!==(guarded?152:type==='C'?5010:5000))throw Error('GetHit selection '+state);
+    cases++;
+   }
+   for(const flag of ['H','M','L'])for(const mode of ['stand','crouch']){
+    const result=resolveGroundHitM1({id:1,facing:1},{type:mode==='crouch'?'C':'S',y:0,ctrl:1,moveType:'I',life:1000,state:0},{...params,guardflag:flag},mode);
+    if(result.guarded!==(flag==='M'||flag===(mode==='stand'?'H':'L')))throw Error('High/Low guard matrix');cases++;
+   }
+  }
+  for(const state of [200,230,400,430,210,410])for(const moveType of ['A','I'])for(const down of [false,true])for(const control of [0,1]){
+   const fighter={state,time:10,type:state>=400?'C':'S',ctrl:control,moveType,anim:state,facing:1,vars:[],sysvars:[]};
+   for(const [button,target] of [['x',down?400:200],['y',down?410:210],['a',down?430:230]]){
+    const controller=battleDat.attackCommands.find(controller=>Number(controller.params.value)===target),context=fighterExpressionContext(fighter,{type:'S'},{[button]:true,holddown:down});
+    const expected=!!control||((down?[400,430]:[200,230]).includes(state)&&moveType==='I');
+    if(controllerTriggered(controller,context)!==expected)throw Error('Source chain gate '+state+' -> '+target);cases++;
+   }
+  }
+  return cases;
+ })()`);assert.equal(crouchSemantics,198);
+ const crouchAttacks=[];
+ for(const player of [1,2])for(const facing of [-1,1])for(const [attack,action,damage] of [[400,'x',20],[410,'y',100],[430,'a',30]])for(const mode of ['none','stand','crouch']){
+  await run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');simPaused=false;p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*140};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p1Life=1000;p1LastHitKey=null;p2.x=${player===2?0:facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.lastHitKey=null;p2.life=1000;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='${mode}';enterIRState(0);enterP2State(0);${player===2&&mode!=='none'?`input.${facing===1?'right':'left'}=true;input.down=${mode==='crouch'};`:''}`);
+  const down=await run(`keyboardBindings.${player===1?'p1':'p2'}.down`),code=await run(`keyboardBindings.${player===1?'p1':'p2'}.${action}`);
+  await page.keyboard.down(down);await page.keyboard.down(code);await step();await page.keyboard.up(code);assert.equal(await run(player===1?'state':'p2.state'),attack);
+  let contact=null;
+  for(let tick=0;tick<100;tick++){await step();const hit=await run(player===1?'p2.getHit':'p1Reaction?.getHit||null');if(!contact&&hit)contact={hit,before:await run('combatTraceExport().frames.at(-1).before.p1'),held:await run('canonicalNow()'),anim:await run(player===1?'p2.anim':'current'),counter:await run(player===1?'({contact:moveContact,guarded:moveGuarded})':'({contact:p2.moveContact,guarded:p2.moveGuarded})')};}
+  await page.keyboard.up(down);assert.ok(contact);assert.equal(contact.hit.guarded,mode==='crouch',JSON.stringify({player,facing,attack,mode,contact}));assert.equal(contact.counter.contact,1);assert.equal(contact.counter.guarded,mode==='crouch'?1:0);
+  if(mode!=='crouch')assert.equal(contact.anim,attack===410?5011:5010);
+  assert.equal(await run(player===1?'p2.life':'p1Life'),mode==='crouch'?1000:1000-damage);
+  crouchAttacks.push({player,facing,attack,mode});
+ }
+ const crouchRecovery=await run(`(()=>{
+  for(const animtype of [0,1]){
+   const fighter={state:11,time:0,type:'C',life:1000,lifeMax:1000,facing:-1,x:0,y:0,vx:0,vy:0,ctrl:0,moveType:'H',hitShake:0,hitTime:27,getHit:{animtype,groundtype:2,xvel:42,yvel:0,fall:0,hittime:27,slidetime:23,ctrltime:24}};
+   enterGroundReactionState(fighter,5010);if(fighter.anim!==5020+animtype)throw Error('Crouch shake anim');
+   stepGroundReactionM1(fighter,'none');if(fighter.state!==5011||fighter.vx!==42)throw Error('Crouch HitVelSet');
+   for(let tick=0;tick<18;tick++)stepGroundReactionM1(fighter,'none');
+   if(fighter.anim!==5025+animtype)throw Error('Crouch recover anim');
+   for(let tick=0;tick<30;tick++)stepGroundReactionM1(fighter,'none');if(fighter.state!==11||fighter.y!==0)throw Error('Crouch return');
+  }
+  resetPlayerInput();p1Reaction=null;p1HitPause=0;enterIRState(400);stateTicks=10;p1AnimStartTime=0;
+  if(!evalM1('AnimElem = 5,2')||evalM1('AnimElem = 5,1'))throw Error('AIR element offset');
+  for(const [state,time] of [[400,10],[430,10]]){enterIRState(state);stateTicks=time;p1AnimStartTime=0;const controller=sourceState(state).controllers.find(item=>item.type==='ChangeState');runController(controller);if(state!==400&&state!==430)throw Error('bad fixture');if(![11].includes(window.runtimeTest.run('state')))throw Error('Release-down source return')}
+  return true;
+ })()`);assert.equal(crouchRecovery,true);
+ console.log(JSON.stringify({crouchSemantics,crouchAttacks,crouchRecovery}));
  const newAttacks=[];
  for(const player of [1,2])for(const facing of [-1,1])for(const [attack,action,damage] of [[210,'y',100],[230,'a',30],[240,'b',100]])for(const guarded of [false,true]){
   await run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');simPaused=false;p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*140};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p1Life=1000;p1LastHitKey=null;p2.x=${player===2?0:facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.lastHitKey=null;p2.life=1000;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='${guarded?'stand':'none'}';enterIRState(0);enterP2State(0);${player===2&&guarded?`input.${facing===1?'right':'left'}=true;`:''}`);

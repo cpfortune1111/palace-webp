@@ -55,7 +55,7 @@ def compile_controller(controller):
             'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}}
 
 attack_states = {}
-for state_id in (200, 210, 230, 240):
+for state_id in (200, 210, 230, 240, 400, 410, 430):
     state_definition = next(item for item in states['states'] if item['id'] == state_id)
     fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
               for entry in state_definition['entries']}
@@ -64,13 +64,13 @@ for state_id in (200, 210, 230, 240):
         'anim': int(fields['anim']), 'ctrl': int(fields['ctrl']),
         'sprpriority': int(fields['sprpriority']), 'juggle': int(fields['juggle']),
         'poweradd': int(fields.get('poweradd', 0)),
-        'velset': [float(value) for value in fields['velset'].split(',')],
+        'velset': [float(value) for value in fields['velset'].split(',')] if 'velset' in fields else [],
         'controllers': [compile_controller(controller) for controller in states['controllers']
                         if controller['state'] == state_id]}
 attack_commands = [compile_controller(controller) for controller in states['controllers']
                    if controller['state'] == -1 and controller['file'] == 'venus.cmd'
                    and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])
-                   and any(entry['text'] in ('value = 200', 'value = 210', 'value = 230', 'value = 240')
+                   and any(entry['text'] in ('value = 200', 'value = 210', 'value = 230', 'value = 240', 'value = 400', 'value = 410', 'value = 430')
                            for entry in controller['entries'])]
 landing_sound = next(compile_controller(controller) for controller in states['controllers']
                      if controller['state'] == 52 and controller['type'] == 'PlaySnd')
@@ -112,7 +112,7 @@ for name in ('run.fwd', 'run.back'):
     for axis, value in zip(('x', 'y'), values):
         locomotion_constants['velocity.' + name + '.' + axis] = value
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 47, 52, 100, 105, 106, 200, 210, 230, 240, 241, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5001, 5005, 5006, 5010, 5011, 5015, 5016):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 47, 52, 100, 105, 106, 200, 210, 230, 240, 241, 400, 410, 430, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5001, 5005, 5006, 5010, 5011, 5015, 5016, 5020, 5021, 5025, 5026):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:
@@ -132,7 +132,7 @@ for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8'
 priorities = {}
 hit_velocity_controllers = {}
 for controller in states['controllers']:
-    if controller['state'] not in (151, 153, 5001) or controller['type'].lower() != 'hitvelset':
+    if controller['state'] not in (151, 153, 5001, 5011) or controller['type'].lower() != 'hitvelset':
         continue
     params, triggers = {}, {}
     for entry in controller['entries']:
