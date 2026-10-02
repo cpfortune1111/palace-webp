@@ -2119,6 +2119,522 @@
       }
     }
   ],
+  "playerCommands": [
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "100"
+      },
+      "triggers": {
+        "1": [
+          "StateType != A",
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"FF\""
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 770
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "105"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ],
+        "4": [
+          "StateNo = 151 || StateNo = 153"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"BB\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 778
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"x\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 829
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "210"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"y\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 842
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "230"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"a\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 855
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "240"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"b\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 868
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "400"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"x\"",
+        "command = \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 881
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "410"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"y\"",
+        "command = \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 894
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "430"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"a\"",
+        "command = \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 907
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "440"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 400 || StateNo = 430",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"b\"",
+        "command = \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 920
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "600"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"x\"",
+        "StateType = A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 933
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "610"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"y\"",
+        "StateType = A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 942
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "630"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"a\"",
+        "StateType = A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 951
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "640"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"b\"",
+        "StateType = A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 960
+      }
+    }
+  ],
+  "deferredPlayerCommands": [
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "3000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && ((command = \"S_SNES_AUTO_ChainExplosive\") || (command = \"holdd\" && command = \"w\")  || (command = \"holdw\" && command = \"d\"))) || ((var(52) = 0) && (command = \"S_SNES_NRML_ChainExplosive\"))",
+        "!AILevel",
+        "Life <= LifeMax*.25",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 697
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Chain_l\" || command = \"SNES_AUTO_Chain_h\" || (command = \"holdd\" && command = \"a\")  || (command = \"holdw\" && command = \"a\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Chain_l\" || command = \"SNES_NRML_Chain_h\"))",
+        "!AILevel",
+        "StateType!= A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 715
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1100"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = 40 || StateNo = 52"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Sword_l\" || command = \"SNES_AUTO_Sword_h\" || (command = \"holdd\" && command = \"y\")  || (command = \"holdw\" && command = \"y\"))) || ((var(52) = 0) && (var(16) > 40) && (command = \"SNES_NRML_Sword_l\" || command = \"SNES_NRML_Sword_h\"))",
+        "!AILevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 732
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Beam_l\" || command = \"SNES_AUTO_Beam_h\" || (command = \"holdd\" && command = \"x\")  || (command = \"holdw\" && command = \"x\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Beam_l\" || command = \"SNES_NRML_Beam_h\"))",
+        "!AILevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 751
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "801"
+      },
+      "triggers": {
+        "1": [
+          "P2BodyDist X < 100",
+          "P2BodyDist Y = [-100,100]",
+          "P2StateType != A",
+          "P2MoveType != H"
+        ]
+      },
+      "triggerall": [
+        "StateNo = 999",
+        "!AILevel",
+        "command = \"b\"",
+        "command = \"holdfwd\" || command = \"holdback\"",
+        "command !=\"holddown\"",
+        "StateType != A",
+        "StateNo != 100",
+        "ctrl"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 796
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "800"
+      },
+      "triggers": {
+        "1": [
+          "P2BodyDist X < 100",
+          "P2StateType = S || P2StateType = C",
+          "P2MoveType != H"
+        ]
+      },
+      "triggerall": [
+        "StateNo = 999",
+        "!AILevel",
+        "command = \"y\"",
+        "command = \"holdfwd\" || command = \"holdback\"",
+        "command !=\"holddown\"",
+        "StateType != A",
+        "StateNo != 100",
+        "ctrl"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 813
+      }
+    }
+  ],
   "landingSound": {
     "type": "PlaySnd",
     "params": {

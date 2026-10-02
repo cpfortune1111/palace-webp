@@ -198,7 +198,41 @@ for name in ('air.gethit.groundlevel', 'air.gethit.trip.groundlevel', 'down.boun
 for axis, number in zip(('x', 'y'), re.search(r'^down.bounce.offset\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):
     locomotion_constants['movement.down.bounce.offset.' + axis] = float(number)
 locomotion_constants['data.liedown.time'] = float(re.search(r'^liedown.time\s*=\s*(\d+)', source_text, re.M)[1])
-bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands, 'landingSound': landing_sound,
+human_commands = [compile_controller(controller) for controller in states['controllers']
+                  if controller['state'] == -1 and controller['file'] == 'venus.cmd'
+                  and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])]
+enabled_targets = set(attack_states) | {'100', '105'}
+player_commands = [controller for controller in human_commands if controller['params'].get('value') in enabled_targets]
+deferred_commands = [controller for controller in human_commands if controller['params'].get('value') not in enabled_targets]
+command_definitions = []
+cmd_source = (source / 'venus.cmd').read_text(encoding='utf-8')
+default_time = int(re.search(r'^command\.Time\s*=\s*(\d+)', cmd_source, re.M | re.I)[1])
+default_buffer = int(re.search(r'^command\.buffer\.Time\s*=\s*(\d+)', cmd_source, re.M | re.I)[1])
+for section in json.loads((root / 'command_sections.json').read_text(encoding='utf-8')):
+    if section['section'].lower() != 'command':
+        continue
+    fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
+              for entry in section['entries']}
+    steps = []
+    for step in fields['command'].split(','):
+        tokens = []
+        for token in step.strip().split('+'):
+            match = re.fullmatch(r'([~/$>]*)([A-Za-z]+)', token.strip())
+            if not match:
+                raise ValueError('Unsupported original command token: ' + token)
+            prefix, key = match.groups()
+            tokens.append({'key': key, 'release': '~' in prefix, 'hold': '/' in prefix,
+                           'fourway': '$' in prefix, 'greater': '>' in prefix})
+        steps.append(tokens)
+    command_definitions.append({'name': fields['name'].strip('"'), 'command': fields['command'],
+                                'time': int(fields.get('time', default_time)), 'bufferTime': int(fields.get('buffer.time', default_buffer)),
+                                'steps': steps, 'supportedM2': True, 'source': {'file': section['file'], 'line': section['line']}})
+(arguments.output.parent / 'venus_cmd_runtime.json').write_text(json.dumps({
+    'version': '0.23.32', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
+    'sourceSha256': hashlib.sha256((source / 'venus.cmd').read_bytes()).hexdigest()
+}, ensure_ascii=False, indent=2), encoding='utf-8')
+bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands,
+          'playerCommands': player_commands, 'deferredPlayerCommands': deferred_commands, 'landingSound': landing_sound,
           'fallStates': fall_states, 'loopStarts': loop_starts,
           'recoveryEntryEnabled': False,
           'noAirGuardControllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == -2 and controller['type'] == 'AssertSpecial' and any('NoAirGuard' in entry['text'] for entry in controller['entries'])],

@@ -2,7 +2,24 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.31 — Air LoopStart / HP Restore M1
+## 最新版本：0.23.32 — Command Buffer / Normal Cancels M1
+
+BUILD `command-buffer-normal-cancels-m1-20261002-01`。使用者 0.23.31 PASS；本版待人工驗收。只更新此 README，所有 atlas、原始 CNS／CMD／AIR／SFF、鏡頭及已驗收調整保持不變。
+
+- 重新由原 Venus CMD 匯出 command 定義，保留重名 command 的全部變體與來源行號，修正舊 runtime 中過時的招式名稱。Defaults time=15／buffer.time=1；FF／BB time=10，普通按鍵 time=1／buffer=3，特殊 command 依原個別設定（含 time=30）。所有時間以 60Hz simulation tick 計，不依鍵盤 repeat 或螢幕刷新率。
+- P1／P2 各自獨立但共用同一個 command runner，按 IKEMEN `src/input.go` 的 signed input、step 順序、同 tick 方向→按鍵、嚴格方向與 `$` 四方向、release／hold／AND、同方向 auto-greater、整段 time window、buffer 與 hitpause 延長／凍結處理。按住普通技不自動連發；查詢不消耗 buffer。鍵位 l／r 對原 CMD d／w；模式切換／失焦／Settings 清空輸入及 buffer，兩人不互相污染。
+- `MoveContact`＝最近 hit／guard 接觸計時；`MoveHit` 僅最近命中，`MoveGuarded` 僅最近防禦，另一種為 0。接觸當 tick=1，hitpause 凍結，恢復後遞增，ChangeState（包含同 State 重入）清零。兩邊 AST、HUD 的 MC／MH／MG 與匯出 trace 均可檢查，trace 同時記錄仍有效的 command buffer。
+- 已接入 states 的玩家 `-1` 使用原 controller 順序／triggerall／trigger groups：100／105 加十二個普通技。移除 State200 額外的一次按鍵 latch，P2 不再獨立猜測 dash／普通技入口；雙方正常技在原 MoveType=I 恢復窗口可以接受預先 3 tick 的按鍵。
+- **原 CMD 並非任意普通技互取消**：站立 200／230 收招 MoveType=I 可重入 200／230，或接 210／240；蹲下 400／430 收招可重入 400／430，或接 410／440。需原站／蹲方向，不能在 MoveType=A 時因命中而任意串普通技，210／240／410／440 沒有額外收招取消入口；空中四招仍需 Ctrl，沒有新增空中取消。BB 依原命中／防禦與 State 範圍取消，440 另需 P2StateNo=5070。
+- 3000／1200／1100／1000／801／800 的玩家 `-1` 保存為 deferred 來源 controller，不啟用尚未有完整 runtime 的必殺／超必殺／未完成投技；motion command 已可辨識，但不聲稱這些招式已可玩。AI `-1`／全量 `-2/-3`、Projectile／Helper 仍列後續。5050 註解 recovery 入口仍停用。
+
+人工請測（P1／P2、兩面向）：200／230 收招前輕按同鍵或另一普通技鍵，應按原窗口重入／接招；按太早且 buffer 已過期不可出招，按住不連發。蹲下 400／430 接 400／410／430／440；放開 ↓ 不可當蹲技輸入；活動攻擊影格不能任意取消。FF／BB 雙擊、命中後 BB、防禦中 BB、440 命中 Trip 後 BB；whiff 不應開啟命中取消。用 Scroll Lock 查命中 MH>0／MG=0、防禦 MH=0／MG>0、hitpause 不增加、重入全歸零；兩人同 tick 按鍵仍應獨立出招。Space／LoopStart／NoAirGuard 保持舊版結果。
+
+自動驗證新增 command 時限／buffer／hitpause／hold／duplicate／same-frame／雙人隔離及來源取消矩陣，64 組 live 收招前預輸入／同 State 重入與雙向取消，並保留全部舊版回歸。接觸計時仍未人工 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 維持初步 TEST、待深測，不以自動結果代替人工 PASS。
+
+來源：[IKEMEN command runner](https://github.com/ikemen-engine/Ikemen-GO/blob/develop/src/input.go)、[Char 接觸計時與 input.pauseonhitpause 預設](https://github.com/ikemen-engine/Ikemen-GO/blob/develop/src/char.go)，及 repo `sources/venus/original/venus.cmd`；無新增 Web-only 取消規則。
+
+## 0.23.31 實作紀錄（使用者 PASS）
 
 BUILD `air-loopstart-hp-restore-m1-20261002-01`。修正使用者回報 600／630 空中倒跳抽搐；0.23.30 不標全 PASS，本版待人工驗收。
 
@@ -178,7 +195,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 
 - P1：方向鍵移動，x=Z、y=X、a=A、b=S、l=Q、r=W；WASD 不移動。P2：Num8／5／4／6 移動，x=Num0、y=Num.、a=Num1、b=Num2、l=Num/、r=Num*；不再使用 J／L／U。Settings 可自訂，亦可切回 Dummy。
 - Input 可選 Auto／Keyboard／Touch；失焦清除 held input。右上 □ 顯示 CLSN，Ⅱ 暫停／逐 tick，↓ 匯出最近 600 ticks 診斷 JSON（非 replay save）。
-- 更新後確認 Prototype／READY=0.23.31、BUILD=`air-loopstart-hp-restore-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick，Space 回復雙方 HP／KO 起身。
+- 更新後確認 Prototype／READY=0.23.32、BUILD=`command-buffer-normal-cancels-m1-20261002-01`。本版測試方向見最上方；Pause/Break 播放，Scroll Lock 暫停／逐 tick，Space 回復雙方 HP／KO 起身。
 - 自動回歸使用 `tools/check-runtime.cjs`；Node、Playwright／Edge、遊戲資料與既有 Three.js CDN 需要可用。本次新增 range 邊界、hit timers、HitVelSet facing／axis masks、接觸計時及 pause／reset 檢查。
 - 本版自動測試 PASS：40 組 range 邊界、兩個 facing 的 GetHit／HitVelSet／未知欄位拒絕、接觸 pause／reset，以及既有 448 組 expression parity、雙向 hit／guard／corner、同時 X／U／互中、鍵盤／CLSN／Turn／30-60-120 Hz 回歸；browserErrors=[]。瀏覽器人工驗收待使用者測試。
 
@@ -224,11 +241,13 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [x] 0.23.25：400／410／430、High／Low guard 及蹲姿 Light／Medium GetHit，使用者全 PASS。
 - [ ] 0.23.26：440／Trip、普通 falling／bounce、倒地／起身／KO 與 HitFall controllers 已接入，待人工驗收；完整空中攻擊與空中命中另列後續。
 - [ ] 0.23.27：依回報調低 440 速度，補普通命中致死／HP0 強制 KO 跌倒；待人工驗收，不把 0.23.26 問題標 PASS。
-- [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
+- [ ] P1 跑跳 State 40 額外來源分支、全量 -1 未接入必殺／超必殺、-2／-3、可重播 input／state trace；P2 蹲／跳已接。
+- [x] 0.23.31 使用者 PASS：600／630 LoopStart、雙方回血／Space 與 KO 起身。
+- [ ] 0.23.32：雙人 command time／buffer、MoveHit／MoveContact／MoveGuarded、來源普通技重入／取消與可用玩家 -1 已接入，待人工驗收；必殺／投技來源 controller 保留 deferred。
 - [x] 0.23.29 使用者 PASS：Trip 動畫連續性／ChangeState tick travel、普通 KO 跌倒、Pause／Scroll Lock debug。
 - [ ] 0.23.30：600／610／630／640、5020／5030／5035／5040／5050 已接入，待人工驗收；5200／5201／5210 已完成來源 fixture，recovery 入口按原註解停用。
 - [ ] 其他普通技與各種 HitDef priority，按來源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
-下個切片：先驗收本版空中四招／受擊，之後按來源相依順序處理尚未接入招式與 Helper／Projectile；未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
+下個切片：先驗收本版 command／來源取消窗口；再處理必殺技所需 Projectile／Helper 與尚未接入的玩家 -1 分支。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。

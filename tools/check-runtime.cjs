@@ -47,13 +47,73 @@ const server=http.createServer((request,response)=>{
  `));assert.equal(orientationChecks,24);
  const run=source=>page.evaluate(source=>window.runtimeTest.run(source),source);
  const step=()=>page.evaluate(()=>{window.runtimeTest.step();return window.runtimeTest.snapshot()});
+ const commandChecks=await run(`(()=>{
+  let checks=0;
+  const expect=(condition,label)=>{if(!condition)throw Error('Command regression: '+label);checks++};
+  for(const player of [1,2]){
+   const sample=(now={},paused=false)=>sampleCommandList(player,now,paused);
+   resetCommandList(player);sample({x:true});
+   expect(commandActive('x',player),'button completion');sample({});expect(commandActive('x',player),'buffer tick 2');sample({});expect(commandActive('x',player),'buffer tick 3');sample({});expect(!commandActive('x',player),'buffer expired');
+   resetCommandList(player);for(let tick=0;tick<8;tick++)sample({x:true});expect(!commandActive('x',player),'held button does not autorepeat');
+   resetCommandList(player);sample({x:true},true);for(let tick=0;tick<20;tick++)sample({},true);expect(commandActive('x',player),'hitpause buffering');
+   for(let tick=0;tick<4;tick++)sample({});expect(!commandActive('x',player),'post-hitpause expiry');
+   for(const delay of [9,10]){
+    resetCommandList(player);sample({F:true});sample({});for(let tick=1;tick<delay;tick++)sample({});sample({F:true});expect(commandActive('FF',player)===(delay===9),'FF time boundary '+delay);
+   }
+   resetCommandList(player);sample({F:true});sample({});sample({x:true});sample({F:true});expect(!commandActive('FF',player),'FF greater invalidation');
+   resetCommandList(player);sample({F:true,D:true});expect(!commandActive('fwd',player)&&commandActive('holdfwd',player),'cardinal versus dollar');
+   resetCommandList(player);sample({D:true,a:true});expect(commandActive('down_a',player),'same-frame direction/button');
+   resetCommandList(player);sample({x:true,y:true});expect(commandActive('recovery',player),'AND buttons');expect(!battleDat.recoveryEntryEnabled,'recovery entry remains disabled');
+   for(const [first,last] of [['d','w'],['w','d']]){
+    resetCommandList(player);sample({[first]:true});sample({});sample({[last]:true});expect(commandActive('S_SNES_AUTO_ChainExplosive',player),'duplicate name '+first);
+   }
+   resetCommandList(player);sample({F:true});sample({D:true});sample({D:true,F:true,x:true});expect(commandActive('SNES_NRML_Chain_l',player),'dragon punch same-frame final button');
+   resetCommandList(player);sample({x:true});expect(!commandActive('x',player===1?2:1),'player isolation');resetCommandList(player);
+  }
+  for(const controller of battleDat.attackCommands){
+   const target=Number(controller.params.value),button=({200:'x',210:'y',230:'a',240:'b',400:'x',410:'y',430:'a',440:'b',600:'x',610:'y',630:'a',640:'b'})[target];
+   for(const previous of [200,210,230,240,400,410,430,440])for(const moveType of ['A','I']){
+    const crouch=target>=400&&target<=440,air=target>=600;
+    const fighter={state:previous,time:12,anim:previous,elem:1,type:'S',ctrl:0,moveType,facing:1,x:0,y:0,vx:0,vy:0,moveHit:2,moveContact:2,moveGuarded:0};
+    const commands={[button]:true,holddown:crouch};
+    const allowed=!air&&moveType==='I'&&(crouch?[400,430]:[200,230]).includes(previous);
+    expect(controllerTriggered(controller,fighterExpressionContext(fighter,{state:0,type:'S'},commands))===allowed,'source cancel '+previous+'->'+target+' '+moveType);
+   }
+  }
+  const backdash=battleDat.playerCommands.find(controller=>Number(controller.params.value)===105);
+  for(const [stateNo,opponentState,contact,allowed] of [[200,0,1,true],[200,0,0,false],[440,5070,1,true],[440,5000,1,false],[441,5070,1,false]]){
+   const fighter={state:stateNo,type:'S',ctrl:0,moveType:'A',moveContact:contact,moveGuarded:0};
+   expect(controllerTriggered(backdash,fighterExpressionContext(fighter,{state:opponentState,type:'A'},{BB:true}))===allowed,'source backdash cancel');
+  }
+  resetPlayerInput();return checks;
+ })()`);console.log(JSON.stringify({commandChecks}));
+ const liveCancelChecks=await run(`(()=>{
+  let checks=0;
+  for(const player of [1,2])for(const facing of [-1,1])for(const previous of [200,230,400,430])for(const [target,button] of (previous<400?[[200,'x'],[210,'y'],[230,'a'],[240,'b']]:[[400,'x'],[410,'y'],[430,'a'],[440,'b']])){
+   resetPlayerInput();setP2ControlMode(player===2?'keyboard':'dummy');p1Reaction=null;p1HitPause=0;p1Life=1000;p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;cornerPushVelocity=0;p2.cornerPushVelocity=0;
+   posX=player===1?0:facing*1200;p2.x=player===2?0:facing*1200;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=player===1?facing:-facing;p2.facing=player===2?facing:-facing;
+   enterIRState(player===1?previous:0);enterP2State(player===2?previous:0);
+   const recovery=sourceState(previous).controllers.find(controller=>controller.type==='StateTypeSet'&&controller.params.moveType==='I');
+   const fighter={state:previous,time:0,anim:previous,elem:1,type:previous<400?'S':'C',moveType:'A',ctrl:0,facing,x:0,y:0,vx:0,vy:0};
+   while(!controllerTriggered(recovery,fighterExpressionContext(fighter,{state:0,type:'S'}))&&fighter.time<actionDuration(previous))fighter.time++;
+   if(fighter.time>=actionDuration(previous))throw Error('No source normal recovery');
+   const age=fighter.time-1;let element=0,offset=age;const frames=framesFor(previous);while(offset>=frames[element].time){offset-=frames[element].time;element++}
+   if(player===1){stateTicks=age;fi=element;ticks=offset;input.down=previous>=400;input[button]=true}
+   else {p2.time=age;p2.elem=element+1;p2.elemTick=offset;p2Input.down=previous>=400;p2Input[button]=true}
+   simStep();if((player===1?state:p2.state)!==previous)throw Error('Early normal cancel');
+   if(player===1)input[button]=false;else p2Input[button]=false;
+   simStep();if((player===1?state:p2.state)!==target||(player===1?stateTicks:p2.time)!==0)throw Error('Buffered recovery cancel '+[player,previous,target]);
+   checks++;
+  }
+  resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;posX=-200;p2.x=200;p1Facing=1;p2.facing=-1;vx=0;vy=0;p2.vx=0;p2.vy=0;p1TurnTime=0;p2TurnTime=0;enterIRState(0);enterP2State(0);return checks;
+ })()`);assert.equal(liveCancelChecks,64);console.log(JSON.stringify({liveCancelChecks}));
  await page.locator('#dbgBoxes').dispatchEvent('pointerdown');
  assert.equal(await run('showCollision'),true);
  for(const facing of [-1,1]){
   await run(`simPaused=false;resetPlayerInput();p1Facing=${facing};p2.facing=${-facing};enterIRState(0);enterP2State(0);`);
   await step();assert.equal(await run('runtimeFailed'),false);
  }
- await run("resetPlayerInput();posX=200;p2.x=-200;p1Facing=1;vx=0;enterIRState(0);stateTicks=100;p2.ctrl=0");
+ await run("resetPlayerInput();posX=200;p2.x=-200;p1Facing=1;vx=0;current=0;p1TurnTime=0;enterIRState(0);stateTicks=100;p2.ctrl=0");
  const standing=[];for(let tick=0;tick<7;tick++){const frame=await step();standing.push([frame.current,frame.fi])}
  assert.deepEqual(standing,[[5,0],[5,1],[5,1],[5,1],[5,1],[5,2],[0,0]]);
  await run("resetPlayerInput();input.down=true;posX=200;p2.x=-200;p1Facing=1;vx=0;enterIRState(11);runtimeCtrl=1;stateTicks=100;p2.ctrl=0");
@@ -167,7 +227,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.31');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.32');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +238,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.31-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.32-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -239,14 +299,18 @@ const server=http.createServer((request,response)=>{
   assert.equal(await run('p2.sprPriority'),2);assert.equal(await run('p1SprPriority'),0);
   assert.equal(await run('p2Frames()[0].group'),200);
   const attackTime=await run('p2.time'),firstX=await run('posX'),secondX=await run('p2.x'),offsets=[];
+  assert.equal(await run('p2.moveContact'),1);assert.equal(await run('p2.moveHit'),guarded?0:1);assert.equal(await run('p2.moveGuarded'),guarded?1:0);
+  assert.equal(await run("evalM1('MoveHit',fighterExpressionContext(p2,p1ExpressionFighter()))"),guarded?0:1);
   for(let tick=0;tick<8;tick++){
    await step();assert.equal(await run('p2.time'),attackTime);assert.equal(await run('posX'),firstX);assert.equal(await run('p2.x'),secondX);
    offsets.push(await run('hitShakeOffset(liveP1())'));
+   assert.equal(await run('p2.moveContact'),1);assert.equal(await run('p2.moveHit'),guarded?0:1);assert.equal(await run('p2.moveGuarded'),guarded?1:0);
   }
   assert.ok(offsets.includes(0));assert.ok(offsets.includes(facing*2));
   for(let tick=0;tick<45;tick++)await step();
   assert.equal(await run('p1Reaction'),null);assert.equal(await run('p1Life'),guarded?1000:980);
   assert.equal(await run('p2.state'),0);assert.equal(await run('runtimeFailed'),false);
+  assert.equal(await run('p2.moveContact+p2.moveHit+p2.moveGuarded'),0);
   reverseCases.push({facing,guarded,life:await run('p1Life')});
  }
  for(const facing of [-1,1])for(const guarded of [false,true]){
@@ -474,9 +538,12 @@ const server=http.createServer((request,response)=>{
   await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.lastHitKey=null;p2.getHit=null;p2.hitShake=0;p2.attackPause=0;document.querySelector('#p2Guard').value='${guarded?'stand':'none'}';enterIRState(200);enterP2State(0)`);
   for(let tick=0;tick<4;tick++)await step();
   assert.equal(await run('moveContact'),1);assert.equal(await run('moveGuarded'),guarded?1:0);
+  assert.equal(await run('moveHit'),guarded?0:1);assert.equal(await run("evalM1('MoveHit')"),guarded?0:1);
   for(let tick=0;tick<8;tick++){await step();assert.equal(await run('moveContact'),1)}
   await step();assert.equal(await run('moveContact'),2);assert.equal(await run('moveGuarded'),guarded?2:0);
+  assert.equal(await run('moveHit'),guarded?0:2);
   await run('enterIRState(0)');assert.equal(await run('moveContact'),0);assert.equal(await run('moveGuarded'),0);
+  assert.equal(await run('moveHit'),0);
  }
  const guardDistanceChecks=await run(`(()=>{
   let checks=0;
@@ -842,7 +909,7 @@ const server=http.createServer((request,response)=>{
    fighter.ctrl=0;if(controllerTriggered(entry,context))throw Error('Invented air cancel');
   }
   for(const [direction,expectedX,expectedY] of [['up',4,-23.6],['down',4,-9.6],['left',0,-15.6],['right',4,-15.6]]){
-   resetPlayerInput();p2.x=0;p2.y=-200;p2.facing=1;p2.vx=8;p2.vy=5;p2.life=1000;p2.hitTime=-1;p2.getHit={yaccel:1.4,fall:1};enterGroundReactionState(p2,5210);p2.time=4;p2Input[direction]=true;stepSourceFallM1(p2);
+   resetPlayerInput();p2.x=0;p2.y=-200;p2.facing=1;p2.vx=8;p2.vy=5;p2.life=1000;p2.hitTime=-1;p2.getHit={yaccel:1.4,fall:1};enterGroundReactionState(p2,5210);p2.time=4;p2Input[direction]=true;sampleInputHistory();stepSourceFallM1(p2);
    if(Math.abs(p2.vx-expectedX)>.001||Math.abs(p2.vy-expectedY)>.001)throw Error('5210 direction '+direction);
   }
   p1Reaction={state:5210,time:30,anim:5210,elem:1,elemTick:0,type:'A',physics:'N',moveType:'I',ctrl:1,facing:1,x:0,y:1,vx:4,vy:2,life:1000,hitTime:-1,getHit:{yaccel:1.4,fall:1},fallExecuted:new Set(),vars:[],sysvars:[]};
