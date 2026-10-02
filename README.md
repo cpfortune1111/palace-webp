@@ -2,7 +2,26 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.34 — Venus Specials M1
+## 最新版本：0.23.35 — Special Fixes / Command Modes M1
+
+BUILD `special-fixes-command-modes-m1-20261002-01`。0.23.34 四項回報已修正，本版待人工驗收；只更新此 README，不新增版本文件。
+
+- **全部 A905 不受 hitpause 凍結**：第一格仍為原 AIR 的 4 tick，不再加上命中的 8 tick；後續影格同樣依原 AIR 推進。沒有改 sprite／AIR 時間，也沒有讓一般 Explod 忽略 Pause／SuperPause。
+- **1000 根因不是普通拳排在前面**：原 -1 次序已是 3000→1200→1100→1000→100→105→普通技。本次明確按來源行號排序並測試全部啟用 controller／command 定義；未完成投技仍留參考、不啟用。真正失敗是久站後下→斜前下時，`~D,$D` 同 tick 的兩個來源步驟被當成同一方向鍵、反序處理，漏掉 `$D`；按 [IKEMEN v0.99.0 的不同 release／dollar command keys 與 IsDToB](https://github.com/ikemen-engine/Ikemen-GO/blob/v0.99.0/src/input.go) 保留此 legacy 組合的同 tick 辨識。沒有改原 CMD 指令、time=15／buffer=3，也沒有讓未完成 motion 延遲普通拳。
+- **1100 輕／重 Projectile 1150 到可見鏡頭頂邊才收尾**：使用當前鏡頭 Y 和原 sprite axis／AIR offset 計可見頂部，過邊時截在頂邊、VY=0，轉原 `projhitanim=9041`；播完整段（包括來源空影格）再移除，期間 NumProjID 仍存在。普通命中／防禦仍先走命中收尾。**這是使用者要求的明確 override**：原 CNS `projremovetime=30`、世界上界 -720 不再提前終止此子彈；其他子彈期限／碰撞／移除不變，原 CNS 及鎖定鏡頭校準不改。
+- Input box 新增 **Command: NORMAL／AUTO** 按鈕，目前同時切 P1／P2；與原 Input Auto（自動選鍵盤／觸控）是兩回事。直接切原 `var(52)=0／10`、套原 CMD，不另造短指令。內部支援分別設定每位玩家，方便之後放入選角頁；切換清除舊輸入／buffer，不偷偷取消進行中的招式。
+- 同時修正 AUTO 輕重選擇：來源 buffer=1 的短指令不應因本版 runner 下一 tick 才執行 Time=0 Var2 而失效、變成重招。只為 1000／1100／1200 的來源 Time=0 Var2 保留入 State 當 tick 的 command 查詢快照；不延長 buffer，不影響之後的 command／取消查詢。
+
+人工請測（兩位玩家、兩面向）：
+
+1. 1200／普通命中或防禦，用 Scroll Lock 查 A905 第一個 sprite 只留 4 tick，命中定格期間特效繼續播。
+2. **NORMAL**：站定一會後下→斜前下→前＋x／y，多次輸入 1000；最後前＋按鍵同 tick 或相隔 1–2 tick 都測，不能誤出 200／210。未完成方向指令的普通拳仍照原規則出。
+3. 1100 輕重空振：兩種都上升至畫面頂邊，轉 A9041、VY=0，播完消失；跳高令鏡頭 Y 改變時亦測，命中及防禦仍可正常收尾。
+4. **AUTO**：按住 L＋x／y／a＝輕 Beam／Sword／Chain；按住 R＋x／y／a＝重 Beam／Sword／Chain。L＋R（或 R＋L）＝Chain Explosive，仍需 HP≤250。原 `~d`／`~w` 釋放後短接鍵也保留；AUTO Sword 按來源不需 NORMAL 的 >40 tick 蓄力。P1 L=Q、R=W、x=Z、y=X、a=A；P2 L=Num/、R=Num*、x=Num0、y=Num.、a=Num1。切回 NORMAL，短指令不得再代替長指令。
+
+自動測試新增：A905／一般特效 hitpause 及 Pause 區分、久站後雙人雙向輕重 Beam、1150 兩種鏡頭高度與輕重頂邊收尾、八組原 AUTO 短指令／輕重選擇、模式按鈕與來源次序；保留全部普通技／取消／guard／fall／輸入／必殺回歸。人工接觸計時未 CHECK，GetHit／HitOver／HitShakeOver／HitVelSet 仍初步 TEST、待深測，不標為全 PASS。
+
+## 0.23.34 — Venus Specials M1（收到四項修正回報）
 
 BUILD `venus-specials-m1-20261002-01`。0.23.33 使用者 PASS；四招同版接入，本版待人工驗收，不標為 PASS。
 

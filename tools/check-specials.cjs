@@ -17,11 +17,78 @@ const server=http.createServer((request,response)=>{
  await new Promise(resolve=>server.listen(8766,'127.0.0.1',resolve));
  browser=await chromium.launch({headless:true,channel:'msedge'});
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
- page.on('pageerror',error=>errors.push(error.message));
+ page.on('pageerror',error=>errors.push(error.message));page.on('requestfailed',request=>console.log('Request failed: '+request.url()+' '+request.failure()?.errorText));
  await page.goto('http://127.0.0.1:8766');
- await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000});
+ await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
- if(process.argv.includes('--preview')){await run("p1Life=250;posX=-200;p2.x=200;enterIRState(3000);for(let tick=0;tick<50;tick++)simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()");await page.screenshot({path:'work/specials-preview-02334.png',timeout:60000});return}
+ if(process.argv.includes('--preview')){await run("p1Life=250;posX=-200;p2.x=200;enterIRState(3000);for(let tick=0;tick<50;tick++)simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()");await page.screenshot({path:'work/specials-preview-02335.png',timeout:60000});return}
+ const fixes=await run(`(()=>{
+  let checks=0;
+  const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};
+  const reset=(player=1,facing=1)=>{
+   resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;p1Life=1000;p2.life=1000;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;cornerPushVelocity=0;p2.cornerPushVelocity=0;posX=player===1?0:1000*facing;p2.x=player===2?0:1000*facing;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=player===1?facing:-facing;p2.facing=player===2?facing:-facing;cameraX=0;cameraY=0;runtimeVar.fill(0);specialRoot(2).vars.fill(0);setP2ControlMode(player===2?'keyboard':'dummy');enterIRState(0);enterP2State(0);setCommandMode('normal');
+  };
+  const sample=(player,facing,now={})=>{
+   const target=player===1?input:p2Input;for(const action of keyboardActions)target[action]=false;
+   Object.assign(target,{down:!!now.D,up:!!now.U,left:!!(facing===1?now.B:now.F),right:!!(facing===1?now.F:now.B),x:!!now.x,y:!!now.y,a:!!now.a,l:!!now.d,r:!!now.w});
+   if(player===1){input.jump=input.up;input.neutralVertical=false}simStep();
+  };
+  const sourceLines=battleDat.playerCommands.map(controller=>controller.source.line);
+  expect(sourceLines.every((line,index)=>index===0||line>sourceLines[index-1]),'All active -1 controllers retain original CMD order');
+  expect(cmdDat.commands.every((command,index)=>index===0||command.source.line>cmdDat.commands[index-1].source.line),'All definitions retain original CMD order');
+  for(const player of [1,2]){
+   reset(player);spawnSourceExplod({anim:'905',id:'905'},specialRoot(player),player);const spark=sourceExplods[0];p1HitPause=8;p2.attackPause=8;
+   expect(framesFor(905)[0].time===4,'Source spark first frame is four ticks');
+   for(let tick=0;tick<4;tick++){expect(spark.age===tick,'Spark first frame age '+tick);stepSourceExplods()}
+   expect(spark.age===4,'A905 advances during eight-tick hitpause');
+   for(let tick=4;tick<actionDuration(905);tick++)stepSourceExplods();expect(!sourceExplods.includes(spark),'A905 finishes on AIR clock');
+   const other={...spark,anim:904,age:0};sourceExplods.push(other);stepSourceExplods();expect(other.age===0,'Other effects retain hitpause');
+   reset(player);spawnSourceExplod({anim:'905',id:'905'},specialRoot(player),player);specialRuntime.dispatch({type:'Pause',params:{time:'8'}},{},null,{},specialRoot(1),1);combatTraceTick++;stepSourceExplods();expect(sourceExplods[0].age===0,'A905 does not bypass explicit Pause');
+   reset(player);spawnSourceHitSpark({sparkno:'S905',sparkxy:'0,0'},false,specialRoot(player),specialRoot(player===1?2:1));const hitSpark=sourceExplods[0];p1HitPause=8;p2.attackPause=8;for(let tick=0;tick<4;tick++)stepSourceExplods();expect(hitSpark.age===4,'Actual S905 hitspark ignores hitpause');
+  }
+  for(const player of [1,2])for(const facing of [-1,1])for(const button of ['x','y'])for(const delay of [0,1,2]){
+   reset(player,facing);for(let tick=0;tick<30;tick++)sample(player,facing);
+   for(let tick=0;tick<3;tick++)sample(player,facing,{D:true});
+   for(let tick=0;tick<3;tick++)sample(player,facing,{D:true,F:true});
+   for(let tick=0;tick<delay;tick++)sample(player,facing,{F:true});
+   sample(player,facing,{F:true,[button]:true});let entered=(player===1?state:p2.state)===1000;
+   for(let tick=0;tick<3&&!entered;tick++){sample(player,facing,{F:true});entered=(player===1?state:p2.state)===1000}
+   expect(entered,'Live Beam beats normal after idle '+[player,facing,button,delay]);
+  }
+  for(const player of [1,2])for(const facing of [-1,1])for(const variant of [0,1])for(const topCamera of [0,-180]){
+   reset(player,facing);cameraY=topCamera;specialRoot(player).vars[2]=variant;
+   const controller=battleDat.attackStates['1100'].controllers.find(item=>item.type==='Projectile');specialRuntime.dispatch(controller,{},null,{},specialRoot(player),player);
+   const sword=specialRuntime.entities[0];sword.created=-1;let ticks=0;
+   for(;ticks<200&&!sword.removing;ticks++){specialRuntime.step();if(!sword.removing)expect(sword.y-spriteFor(framesFor(904)[sword.elem-1]).axisY+framesFor(904)[sword.elem-1].oy>cameraY-660,'Sword stays below camera top before ending')}
+   expect(sword.anim===9041&&sword.removing&&sword.vy===0,'Both sword variants end in A9041/VY0');
+   expect(Math.abs(sword.y-spriteFor(framesFor(9041)[0]).axisY-(cameraY-660))<0.01,'Sword ending touches camera top');
+   expect(specialRuntime.numProj(player,1150)===1,'Sword retained during ending');
+   if(variant===0)expect(ticks>30,'Light sword does not expire at source thirty-tick timer');
+   for(let tick=0;tick<actionDuration(9041)+1;tick++)specialRuntime.step();expect(specialRuntime.numProj(player,1150)===0,'Sword removes after full A9041');
+  }
+  for(const player of [1,2])for(const facing of [-1,1])for(const button of ['x','y']){
+   reset(player,facing);setInputMode('keyboard');for(let tick=0;tick<30;tick++)simStep();
+   const binding=keyboardBindings[player===1?'p1':'p2'],forward=binding[facing===1?'right':'left'];
+   const key=(type,code)=>dispatchEvent(new KeyboardEvent(type,{code,bubbles:true,cancelable:true}));
+   key('keydown',binding.down);for(let tick=0;tick<3;tick++)simStep();key('keydown',forward);for(let tick=0;tick<3;tick++)simStep();key('keyup',binding.down);key('keydown',binding[button]);
+   let entered=false;for(let tick=0;tick<4;tick++){simStep();entered||=(player===1?state:p2.state)===1000}expect(entered,'Beam through real keyboard handlers '+[player,facing,button]);key('keyup',forward);key('keyup',binding[button]);
+  }
+  for(const player of [1,2])for(const facing of [-1,1])for(const [shouldEnter,modifier,button] of [[1000,'d','x'],[1000,'w','x'],[1100,'d','y'],[1100,'w','y'],[1200,'d','a'],[1200,'w','a'],[3000,'d','w'],[3000,'w','d']]){
+   reset(player,facing);setCommandMode('auto',player);if(player===1)p1Life=250;else p2.life=250;
+   for(let tick=0;tick<30;tick++)sample(player,facing);
+   sample(player,facing,{[modifier]:true});sample(player,facing,{[modifier]:true,[button]:true});
+   expect((player===1?state:p2.state)===shouldEnter,'Source AUTO short command '+[player,facing,shouldEnter,modifier]);
+   sample(player,facing);if(shouldEnter!==3000)expect(specialRoot(player).vars[2]===(modifier==='w'?1:0),'AUTO light/heavy source variant');
+  }
+  reset();sample(1,1,{d:true});sample(1,1,{d:true,x:true});expect(state!==1000,'NORMAL does not enable short special');
+  for(const player of [1,2])for(const [target,button] of [[1000,'x'],[1100,'y'],[1200,'a']]){
+   reset(player);setCommandMode('auto',player);for(let tick=0;tick<30;tick++)sample(player,1);sample(player,1,{d:true});sample(player,1);sample(player,1,{[button]:true});expect((player===1?state:p2.state)===target,'Released L short command enters special');sample(player,1);expect(specialRoot(player).vars[2]===0,'One-tick AUTO command retains light selector at entry');
+  }
+  reset();sampleCommandList(1,{x:true},false);commandModeButton.click();expect(runtimeVar[52]===10&&p2.vars[52]===10,'UI enables AUTO on both players');expect(!commandActive('x',1),'Mode change clears old command buffer');expect(commandModeButton.closest('#inputPanel'),'Command button inside input panel');commandModeButton.click();expect(runtimeVar[52]===0&&p2.vars[52]===0,'UI returns both players to NORMAL');
+  reset();return checks;
+ })()`);console.log(JSON.stringify({specialFixChecks:fixes}));
+ if(process.argv.includes('--ui-preview')){await run('updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods()');await page.screenshot({path:'work/special-fixes-ui-02335.png'});return}
+ if(process.argv.includes('--focused'))return;
  const results=await run(`(()=>{
   const results=[];
   for(const player of [1,2])for(const facing of [-1,1])for(const attack of [1200,1000,1100,3000])for(const distance of [100,400]){

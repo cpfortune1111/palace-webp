@@ -216,7 +216,7 @@ for name in ('air.gethit.groundlevel', 'air.gethit.trip.groundlevel', 'down.boun
 for axis, number in zip(('x', 'y'), re.search(r'^down.bounce.offset\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):
     locomotion_constants['movement.down.bounce.offset.' + axis] = float(number)
 locomotion_constants['data.liedown.time'] = float(re.search(r'^liedown.time\s*=\s*(\d+)', source_text, re.M)[1])
-human_commands = [compile_controller(controller) for controller in states['controllers']
+human_commands = [compile_controller(controller) for controller in sorted(states['controllers'], key=lambda controller: controller['line'])
                   if controller['state'] == -1 and controller['file'] == 'venus.cmd'
                   and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])]
 enabled_targets = set(attack_states) | {'100', '105'}
@@ -246,7 +246,7 @@ for section in json.loads((root / 'command_sections.json').read_text(encoding='u
                                 'time': int(fields.get('time', default_time)), 'bufferTime': int(fields.get('buffer.time', default_buffer)),
                                 'steps': steps, 'supportedM2': True, 'source': {'file': section['file'], 'line': section['line']}})
 (arguments.output.parent / 'venus_cmd_runtime.json').write_text(json.dumps({
-    'version': '0.23.34', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
+    'version': '0.23.35', 'defaults': {'time': default_time, 'buffer.time': default_buffer}, 'commands': command_definitions,
     'sourceSha256': hashlib.sha256((source / 'venus.cmd').read_bytes()).hexdigest()
 }, ensure_ascii=False, indent=2), encoding='utf-8')
 bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands,
@@ -255,7 +255,8 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
           'fallStates': fall_states, 'loopStarts': loop_starts,
           'recoveryEntryEnabled': False,
           'noAirGuardControllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == -2 and controller['type'] == 'AssertSpecial' and any('NoAirGuard' in entry['text'] for entry in controller['entries'])],
-          'userOverrides': {'440': {'ground.velocity': '-10,-18', 'air.velocity': '-8,-18', 'basis': 'User-requested 0.23.27 tuning; archived CNS unchanged'}},
+          'userOverrides': {'440': {'ground.velocity': '-10,-18', 'air.velocity': '-8,-18', 'basis': 'User-requested 0.23.27 tuning; archived CNS unchanged'},
+                            '1150': {'cameraTopEnding': True, 'basis': 'User-requested 0.23.35: reach visible camera top, then source projhitanim/VY=0; overrides original thirty-tick expiry and upper world height bound; archived CNS unchanged'}},
           'koProfile': {'groundXMultiplier': 0.66, 'groundAdd': [-10, -8], 'groundYMinimum': -24,
                         'airAdd': [-10, -8], 'airYMinimum': -12,
                         'basis': 'IKEMEN CharVelocity defaults multiplied by Venus localcoord width / 320; source CNS has no KO velocity overrides; player kovelocity=true'},

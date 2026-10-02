@@ -6868,6 +6868,10 @@
       "ground.velocity": "-10,-18",
       "air.velocity": "-8,-18",
       "basis": "User-requested 0.23.27 tuning; archived CNS unchanged"
+    },
+    "1150": {
+      "cameraTopEnding": true,
+      "basis": "User-requested 0.23.35: reach visible camera top, then source projhitanim/VY=0; overrides original thirty-tick expiry and upper world height bound; archived CNS unchanged"
     }
   },
   "koProfile": {
