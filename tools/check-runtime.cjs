@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.21');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.22');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.21-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.22-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawCollision()');
@@ -507,6 +507,55 @@ const server=http.createServer((request,response)=>{
   }
   return sequences;
  })()`);assert.deepEqual(Object.keys(guardEndFrames),['120','121','140','141']);
+ const locomotion=[];
+ for(const player of [1,2])for(const facing of [-1,1]){
+  const setup=()=>run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*400};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p2.x=${player===2?0:facing*400};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';enterIRState(0);enterP2State(0)`);
+  await setup();
+  const forward=player===1?(facing===1?'ArrowRight':'ArrowLeft'):(facing===1?'l':'j');
+  const back=player===1?(facing===1?'ArrowLeft':'ArrowRight'):(facing===1?'j':'l');
+  await page.keyboard.down(forward);await step();await page.keyboard.up(forward);await step();await page.keyboard.down(forward);await step();
+  assert.equal(await run(player===1?'state':'p2.state'),100);
+  const start=await run(player===1?'posX':'p2.x');await step();
+  assert.equal(await run(player===1?'posX':'p2.x'),start+18*facing);
+  for(let tick=0;tick<4;tick++)await step();assert.equal(await run(player===1?'state':'p2.state'),100);
+  await page.keyboard.up(forward);await step();assert.equal(await run(player===1?'state':'p2.state'),0);
+  await setup();await page.keyboard.down(back);await step();await page.keyboard.up(back);await step();await page.keyboard.down(back);await step();
+  assert.equal(await run(player===1?'state':'p2.state'),105);await step();
+  assert.equal(await run(player===1?'vy':'p2.vy'),-5);assert.equal(await run(player===1?'vx':'p2.vx'),player===1?-30:-30*facing);
+  assert.equal(await run(player===1?'posY':'p2.y'),-5);
+  await page.keyboard.up(back);
+  const states=[];for(let tick=0;tick<40;tick++){
+   await step();const state=await run(player===1?'state':'p2.state');states.push(state);
+   if(state===105)assert.equal(await run(player===1?'p1Facing':'p2.facing'),facing);
+   if(state===106){assert.equal(await run(player===1?'posY':'p2.y'),0);assert.equal(Math.abs(await run(player===1?'vx':'p2.vx')),0)}
+  }
+  assert.ok(states.includes(106));assert.equal(states.at(-1),0);assert.equal(await run(player===1?'runtimeCtrl':'p2.ctrl'),1);
+  locomotion.push({player,facing,run:'PASS',backdash:'PASS',land:'PASS'});
+ }
+ const dashSourceChecks=await run(`(()=>{
+  const definition=battleDat.locomotionStates['105'];
+  for(const previous of [199,200,430,440,441]){
+   const fighter={state:105,time:0,anim:105,elem:1,prevState:previous,type:'A',facing:1,vars:[],sysvars:[],vx:0,vy:0};
+   executeControllerM1(definition.controllers.find(item=>item.type==='VelSet'),fighter,fighterExpressionContext(fighter,{type:'S'}),{});
+   if(Math.abs(fighter.vx-(-30*(previous>=200&&previous<=440?1.02:1)))>1e-8||fighter.vy!==-5)throw Error('Source prevstate backdash boost');
+  }
+  if(resolveFighterCollisionM1({anim:200,elem:4,x:0,y:0,facing:1,hitDef:{}},{state:105,anim:0,elem:1,x:140,y:0,facing:-1}).contact)throw Error('105 source NotHitBy');
+  return true;
+ })()`);assert.equal(dashSourceChecks,true);
+ for(const player of [1,2]){
+  const results=[];
+  for(const rate of [30,60,120]){
+   await run(`resetPlayerInput();setP2ControlMode('dummy');simPaused=false;p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:400};posY=0;p1Facing=${player===1?1:-1};vx=0;vy=0;p2.x=${player===2?0:400};p2.y=0;p2.facing=${player===2?1:-1};p2.vx=0;p2.vy=0;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;enterIRState(${player===1?105:0});enterP2State(${player===2?105:0});simulationAccumulator=0`);
+   await run(`for(let frame=0;frame<${rate/2};frame++)advanceSimulation(1/${rate})`);
+   results.push(await run(player===1?'({state,time:stateTicks,x:posX,y:posY,vx,vy,anim:current,elem:fi+1})':'({state:p2.state,time:p2.time,x:p2.x,y:p2.y,vx:p2.vx,vy:p2.vy,anim:p2.anim,elem:p2.elem})'));
+  }
+  assert.deepEqual(results[0],results[1]);assert.deepEqual(results[1],results[2]);
+  for(const edge of [-1,1]){
+   await run(`resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=${edge*2850};posX=${edge*(player===1?3430:3000)};posY=0;p1Facing=${player===1?-edge:edge};vx=0;vy=0;p2.x=${edge*(player===2?3430:3000)};p2.y=0;p2.facing=${player===2?-edge:edge};p2.vx=0;p2.vy=0;p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;enterIRState(${player===1?105:0});enterP2State(${player===2?105:0})`);
+   for(let tick=0;tick<30;tick++){await step();assert.equal(await run(player===1?'posX':'p2.x'),edge*3430)}
+   assert.equal(await run(player===1?'posY':'p2.y'),0);assert.equal(await run(player===1?'state':'p2.state'),0);
+  }
+ }
  assert.deepEqual(errors,[]);
-console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
+console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,locomotion,dashSourceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

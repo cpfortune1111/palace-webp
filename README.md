@@ -2,7 +2,22 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.21 — Guard Transition End Frame M1
+## 最新版本：0.23.22 — Run / Backdash / Land M1
+
+BUILD `run-backdash-land-m1-20261002-01`。0.23.21 防禦 transition 倒跳修正由使用者 PASS。按原 Common／CMD／AIR／SFF 接入雙方 State 100／105／106 動作切片，與既有 shared controller handlers 共用；controller 保留來源行號，AI 分支保留但 AILevel=0 不執行。
+
+- 跑步：朝前快速點兩下（FF，原 CMD time=10）；第二下繼續按住，原 run.fwd.x=18 移動、Action 100 十二影格循環；鬆開前方向回 0，NoWalk／NoAutoTurn 保留，不會被普通行走覆蓋。
+- 後跳：朝後快速點兩下（BB，time=10）；原 run.back.x=-30、run.back.y=-5，Time>0 加 yaccel×.625；105 為 physics N，但仍按原引擎移動座標。PrevStateNo=[200,440] 保留 X×1.02；原 CMD ctrl／命中取消／guard-slide 入口保留可用切片，未接入的 440／5070 不假裝可測。
+- 105 facing 鎖定、ctrl=0、原每 tick NotHitBy SCA；現有 hit collision 不命中此 state。Action 105 四個 1-tick 影格後停在最後無限影格；Pos Y>2 轉 106，不改成一般 jump 的 State 52。
+- 106 原 Action 106 為一個 3-tick 影格；原入口 VelSet／PosSet 令 X/Y 速度=0、Y=0，動畫完成回 0／ctrl=1。不借用原 Turn 或 guard 動畫。
+- P1 使用方向鍵／WASD，P2 Keyboard 使用 J／L；全部前後方向相對 facing。兩次點按之間須鬆開；Keyboard repeat 不當第二次按鍵，失焦清除歷史。P2 這是 FF／BB 最小來源命令映射，不是完整 CMD buffer／redirect runner。
+- S105,0 使用已匯出的 Venus 原 WAV。100 腳步／106 著地的 non-S 共用音效、105 Explod 909、106 MakeDust 明確列入 deferredLocomotionEffects；本版不自行以 Venus 同號音效或 Web 粒子代替，不能稱所有視聽 controllers 完成。
+
+人工驗收待測：兩個 facing／兩位玩家分別 FF 持續跑／鬆鍵停止、BB→105→106→0、舞台左右邊界後跳、後跳中換位不翻身、106 著地無向前彈跳。保留 640 guard distance、hitshake x2、角落、互中與既有鏡頭。接觸計時未 CHECK；GetHit 系列初步 TEST、待深測的狀態不變。
+
+自動測試 PASS：雙玩家×雙 facing 的實際雙點按入口、跑速／持續／鬆鍵、後跳初速／facing lock／著地停速／恢復 ctrl；原 prevstate 區間的 1.02 加成、105 NotHitBy；兩位玩家的 30／60／120 Hz 一致與左右邊界後跳不前彈；完整既有回歸通過，browserErrors=[]。全量 Common、P1 跑跳的額外 State 40 分支及所有 CMD 時序仍待後續，沒有以這個切片聲稱全部完成。
+
+## 0.23.21 實作紀錄
 
 BUILD `guard-transition-end-frame-m1-20261002-01`。修正 Action 120／121／140／141 在最後一個 tick 跳回第一格、下一 tick 才轉 state 的畫面抖動；一次性防禦 transition 保持最後格直到原 state 完成條件生效，不改 AIR ticks／素材／鏡頭或其他循環動畫。新增逐 tick element 序列檢查，不再只驗收最終 state。
 
@@ -81,7 +96,8 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] 全量 SFF 分批 atlas／metadata：linked sprites／palettes／透明度／axis／AIR flips／Clsn default。
 - [ ] 動態／外部 source references 追至 Helper／CMD；全量未知 controller／trigger／expression 報告。
 - [ ] P1／P2 完整共同 fighter／Common runner；source controllers 逐條移除近似實作、timer／動畫 clock 與順序驗證。
-- [ ] P2 蹲／跳／跑、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
+- [ ] 0.23.22 雙方 100／105／106 動作已接入、自動回歸通過；使用者人工驗收待測。共用音效及煙塵特效待接入。
+- [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
 - [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。

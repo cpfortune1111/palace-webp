@@ -34,8 +34,47 @@ for controller in states['controllers']:
     controllers.append({'type': controller['type'], 'params': params, 'triggers': triggers,
                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
 actions = {}
+locomotion_states = {}
+deferred_locomotion = []
+for state_id in (100, 105, 106):
+    state_definition = next(item for item in states['states'] if item['id'] == state_id)
+    fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
+              for entry in state_definition['entries']}
+    compiled = []
+    for controller in states['controllers']:
+        if controller['state'] != state_id:
+            continue
+        sound_entry = next((entry['text'] for entry in controller['entries']
+                            if entry['text'].lower().startswith('value')), '')
+        if controller['type'] in ('Explod', 'MakeDust') or (controller['type'] == 'PlaySnd' and not re.search(r'=\s*s', sound_entry, re.I)):
+            deferred_locomotion.append(controller)
+            continue
+        params, triggers, triggerall = {}, {}, []
+        for entry in controller['entries']:
+            key, value = (part.strip() for part in entry['text'].split('=', 1))
+            if key.lower() == 'type':
+                continue
+            if key.lower() == 'triggerall':
+                triggerall.append(value)
+            elif re.fullmatch(r'trigger\d+', key, re.I):
+                triggers.setdefault(key[7:], []).append(value)
+            else:
+                params[key] = value
+        compiled.append({'type': controller['type'], 'params': params, 'triggers': triggers,
+                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
+    locomotion_states[str(state_id)] = {'type': fields['type'], 'physics': fields['physics'],
+        'moveType': fields.get('movetype', 'I'), 'anim': int(fields['anim']), 'controllers': compiled}
+    if 'ctrl' in fields:
+        locomotion_states[str(state_id)]['ctrl'] = int(fields['ctrl'])
+locomotion_constants = {}
+source_text = (source / 'venus.cns').read_text(encoding='utf-8-sig')
+for name in ('run.fwd', 'run.back'):
+    match = re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)
+    values = [float(value.strip()) for value in match[1].split(',')]
+    for axis, value in zip(('x', 'y'), values):
+        locomotion_constants['velocity.' + name + '.' + axis] = value
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 200, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5005):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 100, 105, 106, 200, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5005):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:
@@ -77,7 +116,9 @@ for state in states['states']:
 attack_distance = re.search(r'^attack\.dist\s*=\s*(\d+)', (source / 'venus.cns').read_text(encoding='utf-8-sig'), re.M)
 if attack_distance is None:
     raise ValueError('Missing source attack.dist')
-bundle = {'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
+bundle = {'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
+          'deferredLocomotionEffects': deferred_locomotion,
+          'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
                            'basis': 'Venus Size attack.dist; IKEMEN default rear distance 0; strict axis-position range'},
           'statePriorities': priorities, 'hitVelocityControllers': hit_velocity_controllers,
           'hitPriorityDefaults': {'attacker': 'keep', 'defender': 0},
