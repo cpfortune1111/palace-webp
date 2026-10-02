@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.28');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.29');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.28-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.29-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -194,6 +194,7 @@ const server=http.createServer((request,response)=>{
    const fighter={state:5071,anim:5070,time:20,animStartTime:0,elem:4,elemTick:0,x:0,y:60,vx:10,vy:20,facing,life:500,hitTime:-1,getHit:{fall:1,yaccel:1.4,'fall.yvel':-18,'fall.damage':0,'fall.kill':1},vars:[],sysvars:[],fallExecuted:new Set()};
    stepSourceFallM1(fighter);
    if(fighter.state!==5110||fighter.anim!==5070||fighter.elem!==4||fighter.animStartTime!==-20)throw Error('Trip inherited E4/clock');
+   if(fighter.x!==10||Math.abs(fighter.y-81.4)>.001||Math.abs(fighter.vy-21.4)>.001)throw Error('Trip transition skipped travel');
    const sequence=[];for(let tick=0;tick<6;tick++){stepSourceFallM1(fighter);sequence.push([fighter.anim,fighter.elem])}
    if(JSON.stringify(sequence)!==JSON.stringify([[5170,1],[5170,2],[5170,2],[5170,2],[5110,2],[5110,3]]))throw Error('Trip terminal frames '+JSON.stringify(sequence));
   }
@@ -779,6 +780,17 @@ const server=http.createServer((request,response)=>{
   return {count,normalHitKo:'PASS',noGetUp:'PASS',velocities:'PASS',zeroLifeFallback:'PASS'};
  })()`);
  console.log(JSON.stringify({koChecks}));
+ await run("resetPlayerInput();setP2ControlMode('dummy');p1Reaction=null;p1Life=1000;p2.life=1000;p1HitPause=0;p2.hitShake=0;posX=-300;posY=0;vx=0;vy=0;p2.x=300;p2.y=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);simPaused=false;stepRequested=false;document.activeElement?.blur()");
+ await page.keyboard.press('ScrollLock');assert.equal(await run('simPaused&&!stepRequested'),true);
+ const stopped=await run('combatTraceTick');await run('loop()');assert.equal(await run('combatTraceTick'),stopped);
+ await page.keyboard.press('ScrollLock');assert.equal(await run('simPaused&&stepRequested'),true);
+ await run('loop()');assert.equal(await run('combatTraceTick'),stopped+1);assert.equal(await run('stepRequested'),false);
+ await run('loop()');assert.equal(await run('combatTraceTick'),stopped+1);
+ await run("window.dispatchEvent(new KeyboardEvent('keydown',{code:'ScrollLock',repeat:true}))");assert.equal(await run('stepRequested'),false);
+ await page.keyboard.press('Pause');assert.equal(await run('!simPaused&&!stepRequested'),true);
+ await page.locator('#openSettings').click();await page.keyboard.press('Pause');assert.equal(await run('simPaused&&!stepRequested'),true);
+ await page.keyboard.press('ScrollLock');assert.equal(await run('stepRequested'),false);await page.locator('#cancelBindings').click();
+ console.log(JSON.stringify({debugKeyboard:'PASS',scrollLockSingleTick:'PASS',noRepeat:'PASS',settingsIsolation:'PASS'}));
  assert.deepEqual(errors,[]);
 console.log(JSON.stringify({orientationChecks,standing,crouching,edges,keyboard:'PASS',combat,reverseCases,reverseCornerpush:'PASS',reverseWhiff:'PASS',pausedReverse:'PASS',expressionParity,contextIsolation:'PASS',p2Keyboard:'PASS',sharedControllers:'PASS',p2Walking,p2ManualGuard:'PASS',p2TurnClock:'PASS',p2FrameRates:'PASS',p2StageEdges:'PASS',simultaneous,punchTrades,getHitSemantics,guardDistanceChecks,guardEndFrames,locomotion,dashSourceChecks,contactClocks:'PASS',whiff:'PASS',browserErrors:errors}));
 })().catch(error=>{console.error(error);process.exitCode=1}).finally(async()=>{if(browser)await browser.close();server.close()});

@@ -2,7 +2,17 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.28 — Trip Animation Continuity M1
+## 最新版本：0.23.29 — Trip Travel / Debug Keys M1
+
+BUILD `trip-travel-debug-keys-m1-20261002-01`。使用者 0.23.28 其餘動畫修正 PASS；回報 5071→5110 的入口 tick 座標停住，本版修正並待人工驗收。
+
+- 根因：fall controller 遇 ChangeState 提早 return，略過本 tick 最後的 X／Y velocity integration。改為停止舊 State controller 後仍完成一次位移；保留原 VelAdd 的重力結果，不再加第二次重力，PosFreeze 仍禁止移動。新 State 維持 Time=0／原尾格，下一 tick 才跑新 State controllers，因此不會重現 5070 E1／5170 E1，也不額外推進新 State 動畫。
+- 圖中的 5071 VX(local)=-10、F=-1 對應 world VX=+10；VY=21.2 經原 yaccel=1.4 變成 22.6。切入 5110 當 tick 應再向後 X+10、向下 Y+22.6，而不是只改 VY 卻停在舊位置。原 5110 下一 tick 的 PosSet／VelSet 才落地。未改 AIR、440 velocity、鏡頭或資產。
+- 新增 Debug 快捷鍵：Pause/Break（KeyboardEvent.code=Pause）等同 PLAY，恢復播放並清除待執行 STEP；Scroll Lock（code=ScrollLock）等同原 Pause／Step 按鈕，播放中先暫停，已暫停時再按只前進 1 tick。按住不 autorepeat；Settings 視窗／文字輸入／修飾鍵不觸發。Debug 鍵保留，不加入 P1／P2 自訂戰鬥按鍵。
+
+自動驗證：雙 facing 切 5110 的當 tick gravity／XY travel，並保留前版尾格序列；實際 Pause／ScrollLock 鍵盤事件、loop 單步恰好 1 tick／無重播、按住不 repeat、Settings 隔離；原雙人掃腳／32 組 KO／全部回歸通過，無瀏覽器錯誤。待人工驗收。
+
+## 0.23.28 實作紀錄
 
 BUILD `trip-animation-continuity-m1-20261002-01`。修正 Trip 受身中多出的 A5070 E1／A5170 E1：ChangeState 進 fall states 保留原動畫 element、element tick 與 elapsed clock；只有原 ChangeAnim controller 才重置動畫。fall 動畫完成後保留尾格等待下一 tick 原 CNS AnimTime 切換，不先自動 loop 回第一格。原 AIR 時間不改，沒有插入新影格。
 
