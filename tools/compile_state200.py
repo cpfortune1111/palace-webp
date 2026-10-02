@@ -34,6 +34,46 @@ for controller in states['controllers']:
     controllers.append({'type': controller['type'], 'params': params, 'triggers': triggers,
                         'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}})
 actions = {}
+def compile_controller(controller):
+    params, triggers, triggerall = {}, {}, []
+    for entry in controller['entries']:
+        key, value = (part.strip() for part in entry['text'].split('=', 1))
+        key = key.lower()
+        if key == 'type':
+            continue
+        if key == 'triggerall':
+            triggerall.append(value)
+        elif re.fullmatch(r'trigger\d+', key):
+            triggers.setdefault(key[7:], []).append(value)
+        else:
+            params[key] = value
+    if controller['type'].lower() == 'varset':
+        params['target'] = 'var(' + params.pop('v') + ')'
+    if 'movetype' in params:
+        params['moveType'] = params.pop('movetype')
+    return {'type': controller['type'], 'params': params, 'triggers': triggers,
+            'triggerall': triggerall, 'source': {'file': controller['file'], 'line': controller['line']}}
+
+attack_states = {}
+for state_id in (200, 210, 230, 240):
+    state_definition = next(item for item in states['states'] if item['id'] == state_id)
+    fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
+              for entry in state_definition['entries']}
+    attack_states[str(state_id)] = {
+        'type': fields['type'], 'physics': fields['physics'], 'moveType': fields['movetype'],
+        'anim': int(fields['anim']), 'ctrl': int(fields['ctrl']),
+        'sprpriority': int(fields['sprpriority']), 'juggle': int(fields['juggle']),
+        'poweradd': int(fields.get('poweradd', 0)),
+        'velset': [float(value) for value in fields['velset'].split(',')],
+        'controllers': [compile_controller(controller) for controller in states['controllers']
+                        if controller['state'] == state_id]}
+attack_commands = [compile_controller(controller) for controller in states['controllers']
+                   if controller['state'] == -1 and controller['file'] == 'venus.cmd'
+                   and any(entry['text'] == 'triggerall = !AILevel' for entry in controller['entries'])
+                   and any(entry['text'] in ('value = 200', 'value = 210', 'value = 230', 'value = 240')
+                           for entry in controller['entries'])]
+landing_sound = next(compile_controller(controller) for controller in states['controllers']
+                     if controller['state'] == 52 and controller['type'] == 'PlaySnd')
 locomotion_states = {}
 deferred_locomotion = []
 for state_id in (100, 105, 106):
@@ -72,7 +112,7 @@ for name in ('run.fwd', 'run.back'):
     for axis, value in zip(('x', 'y'), values):
         locomotion_constants['velocity.' + name + '.' + axis] = value
 for action in json.loads((root / 'air_sections.json').read_text(encoding='utf-8')):
-    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 52, 100, 105, 106, 200, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5005):
+    if action['id'] not in (0, 5, 6, 10, 11, 12, 20, 21, 40, 41, 42, 43, 47, 52, 100, 105, 106, 200, 210, 230, 240, 241, 120, 121, 130, 131, 140, 141, 150, 151, 5000, 5001, 5005, 5006, 5010, 5011, 5015, 5016):
         continue
     defaults, pending, boxes = {}, {}, []
     for entry in action['entries']:
@@ -114,7 +154,9 @@ for state in states['states']:
 attack_distance = re.search(r'^attack\.dist\s*=\s*(\d+)', (source / 'venus.cns').read_text(encoding='utf-8-sig'), re.M)
 if attack_distance is None:
     raise ValueError('Missing source attack.dist')
-bundle = {'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
+power_maximum = int(re.search(r'^power\s*=\s*(\d+)', source_text, re.M)[1])
+bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackCommands': attack_commands, 'landingSound': landing_sound,
+          'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
           'deferredLocomotionEffects': deferred_locomotion,
           'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
                            'basis': 'Venus Size attack.dist; IKEMEN default rear distance 0; strict axis-position range'},

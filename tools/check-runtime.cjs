@@ -167,7 +167,7 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.23');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ assert.equal(trace.version,'0.23.24');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -178,7 +178,7 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.23-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-0.23.24-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
  assert.deepEqual(downloaded,trace);
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
@@ -556,6 +556,30 @@ const server=http.createServer((request,response)=>{
    assert.equal(await run(player===1?'posY':'p2.y'),0);assert.equal(await run(player===1?'state':'p2.state'),0);
   }
  }
+ const newAttacks=[];
+ for(const player of [1,2])for(const facing of [-1,1])for(const [attack,action,damage] of [[210,'y',100],[230,'a',30],[240,'b',100]])for(const guarded of [false,true]){
+  await run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');simPaused=false;p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:facing*140};posY=0;p1Facing=${player===1?facing:-facing};vx=0;vy=0;p1Life=1000;p1LastHitKey=null;p2.x=${player===2?0:facing*140};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?facing:-facing};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.lastHitKey=null;p2.life=1000;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='${guarded?'stand':'none'}';enterIRState(0);enterP2State(0);${player===2&&guarded?`input.${facing===1?'right':'left'}=true;`:''}`);
+  const code=await run(`keyboardBindings.${player===1?'p1':'p2'}.${action}`);await page.keyboard.down(code);await step();await page.keyboard.up(code);
+  assert.equal(await run(player===1?'state':'p2.state'),attack);
+  let airborne=false,landing=false;
+  for(let tick=0;tick<100;tick++){await step();if(await run(player===1?'posY<0':'p2.y<0'))airborne=true;if(await run(player===1?'current===241':'p2.anim===241'))landing=true}
+  assert.equal(await run(player===1?'p2.life':'p1Life'),guarded?1000:1000-damage);
+  assert.equal(await run(player===1?'state':'p2.state'),0);assert.equal(await run(player===1?'posY':'p2.y'),0);
+  if(attack===240){assert.equal(airborne,true);assert.equal(landing,true)}
+  newAttacks.push({player,facing,attack,guarded});
+ }
+ for(const player of [1,2])for(const direction of ['up','down']){
+  await run(`resetPlayerInput();setP2ControlMode('${player===2?'keyboard':'dummy'}');p1Reaction=null;p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=${player===1?0:1000};posY=0;p1Facing=${player===1?1:-1};vx=0;vy=0;p2.x=${player===2?0:1000};p2.y=0;p2.vx=0;p2.vy=0;p2.facing=${player===2?1:-1};p2.hitShake=0;p2.attackPause=0;p2.getHit=null;p2.cornerPushVelocity=0;document.querySelector('#p2Guard').value='none';enterIRState(${player===1?230:0});enterP2State(${player===2?230:0});${player===1?'input':'p2Input'}.${direction}=true;input.jump=input.up`);
+  let cancelled=false,landed=false;
+  for(let tick=0;tick<100;tick++){
+   await step();if(await run(player===1?`state===${direction==='up'?40:10}`:`p2.state===${direction==='up'?40:10}`))cancelled=true;
+   if(cancelled)await run(`${player===1?'input':'p2Input'}.${direction}=false;input.jump=input.up`);
+   if(await run(player===1?'state===52':'p2.state===52'))landed=true;
+  }
+  assert.equal(cancelled,true);if(direction==='up')assert.equal(landed,true);
+ }
+ const jumpLandSound=await run(`(()=>{resetPlayerInput();p1HitPause=0;p1Reaction=null;enterIRState(52);const soundLog=[],originalPlay=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){soundLog.push(this.src.split('/').pop());return Promise.resolve()};try{for(let tick=0;tick<8;tick++)simStep();return soundLog.filter(sound=>sound==='52-0.wav').length}finally{HTMLMediaElement.prototype.play=originalPlay}})()`);assert.equal(jumpLandSound,1);
+ console.log(JSON.stringify({newAttacks,jumpLandSound,cancelBranches:'PASS'}));
  await run("resetPlayerInput();setP2ControlMode('dummy');enterIRState(0);enterP2State(0)");
  for(const [player,bindings] of Object.entries(await run('defaultBindings')))for(const [action,code] of Object.entries(bindings)){
   await page.keyboard.down(code);assert.equal(await run((player==='p1'?'input':'p2Input')+'.'+action),true);

@@ -2,7 +2,22 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.23 — Keyboard Settings / Run FX M1
+## 最新版本：0.23.24 — Stand Attacks / Jump Land M1
+
+BUILD `stand-attacks-jump-land-m1-20261002-01`。使用者 0.23.23 PASS。按原 CNS／CMD／AIR／SFF 接入 State 210／230／240 與相依 Action 241；State 52 原 Time=0 PlaySnd `52,0` 補回，不改 106。
+
+- 210 強拳：原 damage=100、Medium／High、pause=8/8、ground velocity=-28、cornerpush=-46；原 AnimElemTime(4) 的 900,4 揮擊聲及 25% 200,1 聲音。
+- 230 輕踢：原 damage=30、Medium／Low、ground velocity=-20、cornerpush=-32；原揮擊／機率語音。第 5 格後 MoveType=I，保留上方向→40、下方向→10 的來源取消條件。原 poweradd=11 留在 StateDef 並受原 Data power=0 上限約束，不自創能量條。
+- 240 強踢：原 damage=100、Medium／Low、ground／guard velocity=-24、cornerpush=-32。第 3 格 Vy=-17.5、逐 tick 加 yaccel、StateType=A／physics=N；下降至 Y>=-10 回 S／S、轉 Action 241，當格 Vy=0／Y=0、播放 52,0，241 完成回 0。不用 State 52 代替原 241。
+- StateType／physics 可由原 controller 動態改變；ChangeAnim 擁有獨立動畫起始時鐘，不把 241 誤當已播放整段 State 240。Medium／Low 依 Common 5000／5001 公式選原 5001／5006／5011／5016 等受擊動作，保留前版 Light／High 路徑。
+- 四招共同使用原 CMD 人類入口與次序：x→200、y→210、a→230、b→240；不可蹲按、不可從空中起招；Ctrl 或 200／230 的 MoveType=I 可起招。AI 分支未啟用。未寫 guard.cornerpush 時按 IKEMEN 預設沿用 ground.cornerpush；Hit priority 數值比較保留，不因新招 priority=1 與 200 的 3 不同而卡死。
+- 預設 P1：Z 輕拳、X 強拳、A 輕踢、S 強踢；P2：Num0／Num.／Num1／Num2。Settings 自訂鍵位繼續有效，l/r 暫留未接。
+
+本版支援地面目標接觸。完整空中受擊／倒地 runner 仍未接入；空中目標只顯示 Clsn overlap，不套用錯誤的地面受擊 state（這是未支援能力的限制，並非原 IKEMEN 免疫規則）。air HitDef／var(3) 等來源保留，待空中受擊切片驗收；命中 spark S905 及完整 P2 CMD buffer／所有 Common 邏輯亦未宣稱完成。
+
+自動測試：雙玩家×雙 facing×210／230／240×命中／站防，共 24 組；原傷害、240 離地／241 著地／回 0、230 上／下取消與跳後 52、52 聲音只播放一次，及完整前版回歸。人工待測：上述三招聲音／影格／Clsn、站防／蹲姿命中、角落推退、200／230 收招接強拳／踢與 240 著地。鏡頭、640 guard distance、hitshake x2 不變。接觸計時未 CHECK；GetHit／HitOver／HitShakeOver／HitVelSet 初步 TEST、待深測；range 待實際 state 接入驗收。
+
+## 0.23.23 實作紀錄
 
 BUILD `keyboard-settings-run-fx-m1-20261002-01`。補 State 100 腳步聲、105 原 Explod 909，重設雙人鍵位並加入 Settings → Keyboard。鏡頭、guard distance=640、hitshake x2、移動／命中規則不改。
 
@@ -109,7 +124,8 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] 全量 SFF 分批 atlas／metadata：linked sprites／palettes／透明度／axis／AIR flips／Clsn default。
 - [ ] 動態／外部 source references 追至 Helper／CMD；全量未知 controller／trigger／expression 報告。
 - [ ] P1／P2 完整共同 fighter／Common runner；source controllers 逐條移除近似實作、timer／動畫 clock 與順序驗證。
-- [ ] 0.23.22 雙方 100／105／106 動作已接入、自動回歸通過；使用者人工驗收待測。共用音效及煙塵特效待接入。
+- [x] 0.23.23 使用者 PASS：雙方 100／105／106、原跑步／著地聲、909 與鍵位設定；106 MakeDust 仍待接入。
+- [ ] 0.23.24：210／230／240／241、52 著地聲已接入，地面回歸通過，待使用者人工验收；完整空中受擊仍未支援。
 - [ ] P2 蹲／跳、P1 跑跳 State 40 額外來源分支、完整 CMD buffer／取消鏈／-1／-2／-3、可重播 input／state trace。
 - [ ] 普通技／空中受擊／倒地／起身與各種 HitDef priority，按来源相依順序接入。
 - [ ] Helper／Explod／Projectile／Pause／SuperPause、完整音效 channel／pause 語義、必殺技／能量／無敵／特效。

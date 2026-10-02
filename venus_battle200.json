@@ -1,4 +1,921 @@
 {
+  "powerMaximum": 0,
+  "attackStates": {
+    "200": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "anim": 200,
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 1,
+      "poweradd": 0,
+      "velset": [
+        0.0,
+        0.0
+      ],
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Random < 250"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(3) = 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 217
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1, 0",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(3) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 224
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, NA",
+            "damage": "20, 0",
+            "animtype": "Light",
+            "guardflag": "M",
+            "hitflag": "MA",
+            "priority": "1, Hit",
+            "pausetime": "8, 8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60, -355",
+            "hitsound": "S5, 1",
+            "guardsound": "S6, 0",
+            "ground.type": "High",
+            "air.type": "High",
+            "ground.slidetime": "11",
+            "ground.hittime": "15",
+            "guard.slidetime": "16",
+            "guard.hittime": "22",
+            "ground.velocity": "-16",
+            "guard.velocity": "-24",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-24",
+            "guard.cornerpush.veloff": "-28"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 4"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 230
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 257
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "40",
+            "ctrl": "0"
+          },
+          "triggers": {
+            "1": [
+              "command = \"holdup\""
+            ],
+            "2": [
+              "AIlevel > 6 && MoveGuarded"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(5) > 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 265
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "10",
+            "ctrl": "0"
+          },
+          "triggers": {
+            "1": [
+              "command = \"holddown\""
+            ],
+            "2": [
+              "AIlevel > 6 && MoveGuarded"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(5) > 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 275
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 285
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 290
+          }
+        }
+      ]
+    },
+    "210": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "anim": 210,
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 4,
+      "poweradd": 0,
+      "velset": [
+        0.0,
+        0.0
+      ],
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 4",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(4) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 306
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200, 1",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Random < 250"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(4) = 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 312
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, NA",
+            "animtype": "Medium",
+            "damage": "100,0",
+            "guardflag": "M",
+            "hitflag": "MA",
+            "priority": "1, Hit",
+            "pausetime": "8,8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60,-330",
+            "hitsound": "S900, 5",
+            "guardsound": "S900, 6",
+            "ground.type": "High",
+            "air.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-28",
+            "guard.velocity": "-28",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-46"
+          },
+          "triggers": {
+            "1": [
+              "!MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 319
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 345
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(9) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 353
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 358
+          }
+        }
+      ]
+    },
+    "230": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "anim": 230,
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 4,
+      "poweradd": 11,
+      "velset": [
+        0.0,
+        0.0
+      ],
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Random < 250"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(4) = 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 375
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1, 0",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(3) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 382
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, NA",
+            "animtype": "Medium",
+            "damage": "30, 0",
+            "hitflag": "MA",
+            "guardflag": "M",
+            "priority": "1, Hit",
+            "pausetime": "8,8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60,-230",
+            "hitsound": "S5, 1",
+            "guardsound": "S6, 0",
+            "ground.type": "Low",
+            "air.type": "High",
+            "ground.slidetime": "11",
+            "ground.hittime": "15",
+            "guard.slidetime": "16",
+            "guard.hittime": "22",
+            "ground.velocity": "-20",
+            "guard.velocity": "-28",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-32"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 388
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 414
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 422
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "40",
+            "ctrl": "0"
+          },
+          "triggers": {
+            "1": [
+              "command = \"holdup\""
+            ],
+            "2": [
+              "AIlevel > 6 && MoveGuarded"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(5) > 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 427
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "10",
+            "ctrl": "0"
+          },
+          "triggers": {
+            "1": [
+              "command = \"holddown\""
+            ],
+            "2": [
+              "AIlevel > 6 && MoveGuarded"
+            ]
+          },
+          "triggerall": [
+            "AnimElemTime(5) > 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 437
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 447
+          }
+        }
+      ]
+    },
+    "240": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "anim": 240,
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 5,
+      "poweradd": 0,
+      "velset": [
+        0.0,
+        0.0
+      ],
+      "controllers": [
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200, 3",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Random < 250"
+            ]
+          },
+          "triggerall": [
+            "Anim = 240",
+            "AnimElemTime(3) = 0"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 463
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1, 1",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "AnimElemTime(5) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 471
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "y": "-17.5"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "AnimElemTime(3) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 478
+          }
+        },
+        {
+          "type": "VelAdd",
+          "params": {
+            "y": "const(movement.yaccel)"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "AnimElemTime(3) >= 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 484
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, NA",
+            "animtype": "Medium",
+            "damage": "100,0",
+            "hitflag": "MA",
+            "guardflag": "M",
+            "priority": "1, Hit",
+            "pausetime": "8,8",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "sparkxy": "-60,-270",
+            "hitsound": "S5, 2",
+            "guardsound": "S6, 0",
+            "ground.type": "Low",
+            "air.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-24",
+            "guard.velocity": "-24",
+            "air.velocity": "-8,-28",
+            "ground.cornerpush.veloff": "-32"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 490
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 517
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "statetype": "A",
+            "physics": "N"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "AnimElemTime(3) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 525
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "AnimElemTime(8) > 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 532
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "statetype": "S",
+            "physics": "S"
+          },
+          "triggers": {
+            "1": [
+              "Vel Y > 0 && Pos Y >= -10",
+              "StateType = A"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 538
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "241"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 240",
+              "Vel Y > 0 && Pos Y >= -10"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 545
+          }
+        },
+        {
+          "type": "VelSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 241",
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 551
+          }
+        },
+        {
+          "type": "PosSet",
+          "params": {
+            "y": "0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 241",
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 557
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "52,0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 241",
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 563
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 241",
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 569
+          }
+        }
+      ]
+    }
+  },
+  "attackCommands": [
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"x\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 829
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "210"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"y\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 842
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "230"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"a\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 855
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "240"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = 200 || StateNo = 230",
+          "MoveType = I"
+        ]
+      },
+      "triggerall": [
+        "!AILevel",
+        "command = \"b\"",
+        "command != \"holddown\"",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 868
+      }
+    }
+  ],
+  "landingSound": {
+    "type": "PlaySnd",
+    "params": {
+      "value": "52, 0"
+    },
+    "triggers": {
+      "1": [
+        "Time = 0"
+      ]
+    },
+    "triggerall": [],
+    "source": {
+      "file": "venus_Common.cns",
+      "line": 374
+    }
+  },
   "locomotionStates": {
     "100": {
       "type": "S",
@@ -3808,6 +4725,42 @@
         ]
       }
     ],
+    "47": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -25,
+            -271,
+            75,
+            0
+          ],
+          [
+            18,
+            -325,
+            68,
+            -261
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -26,
+            -319,
+            64,
+            0
+          ],
+          [
+            -2,
+            -384,
+            50,
+            -319
+          ]
+        ]
+      }
+    ],
     "100": [
       {
         "c1": [],
@@ -4590,7 +5543,837 @@
         ]
       }
     ],
+    "210": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -21,
+            -430,
+            29,
+            -363
+          ],
+          [
+            -26,
+            -363,
+            47,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -10,
+            -431,
+            40,
+            -366
+          ],
+          [
+            -21,
+            -366,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -11,
+            -431,
+            39,
+            -367
+          ],
+          [
+            -21,
+            -370,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -8,
+            -368,
+            185,
+            -268
+          ]
+        ],
+        "c2": [
+          [
+            -16,
+            -430,
+            34,
+            -367
+          ],
+          [
+            -21,
+            -372,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -8,
+            -368,
+            240,
+            -276
+          ]
+        ],
+        "c2": [
+          [
+            -16,
+            -430,
+            34,
+            -367
+          ],
+          [
+            -21,
+            -372,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -8,
+            -386,
+            293,
+            -277
+          ]
+        ],
+        "c2": [
+          [
+            -15,
+            -430,
+            35,
+            -367
+          ],
+          [
+            -21,
+            -372,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -8,
+            -385,
+            315,
+            -312
+          ]
+        ],
+        "c2": [
+          [
+            -15,
+            -430,
+            35,
+            -367
+          ],
+          [
+            -21,
+            -369,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -81,
+            -382,
+            208,
+            -324
+          ]
+        ],
+        "c2": [
+          [
+            -14,
+            -430,
+            36,
+            -367
+          ],
+          [
+            -21,
+            -369,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -14,
+            -430,
+            36,
+            -362
+          ],
+          [
+            -21,
+            -362,
+            52,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -12,
+            -430,
+            38,
+            -360
+          ],
+          [
+            -21,
+            -360,
+            55,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -18,
+            -430,
+            32,
+            -360
+          ],
+          [
+            -26,
+            -360,
+            50,
+            0
+          ]
+        ]
+      }
+    ],
+    "230": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -18,
+            -431,
+            34,
+            -363
+          ],
+          [
+            -29,
+            -363,
+            55,
+            -227
+          ],
+          [
+            -32,
+            -242,
+            82,
+            -178
+          ],
+          [
+            -32,
+            -178,
+            4,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -18,
+            -431,
+            34,
+            -365
+          ],
+          [
+            -29,
+            -365,
+            55,
+            -266
+          ],
+          [
+            -29,
+            -266,
+            90,
+            -197
+          ],
+          [
+            -23,
+            -197,
+            6,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -22,
+            -430,
+            30,
+            -365
+          ],
+          [
+            -28,
+            -365,
+            49,
+            -277
+          ],
+          [
+            -27,
+            -277,
+            109,
+            -215
+          ],
+          [
+            -24,
+            -215,
+            8,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -28,
+            -311,
+            206,
+            -218
+          ]
+        ],
+        "c2": [
+          [
+            -23,
+            -428,
+            29,
+            -364
+          ],
+          [
+            -28,
+            -364,
+            35,
+            -291
+          ],
+          [
+            -27,
+            -291,
+            101,
+            -250
+          ],
+          [
+            -25,
+            -250,
+            8,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -19,
+            -429,
+            33,
+            -365
+          ],
+          [
+            -27,
+            -365,
+            43,
+            -286
+          ],
+          [
+            -30,
+            -286,
+            58,
+            -181
+          ],
+          [
+            -23,
+            -181,
+            5,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -19,
+            -430,
+            33,
+            -363
+          ],
+          [
+            -32,
+            -363,
+            52,
+            -181
+          ],
+          [
+            -26,
+            -181,
+            0,
+            0
+          ]
+        ]
+      }
+    ],
+    "240": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -399,
+            41,
+            -334
+          ],
+          [
+            -27,
+            -334,
+            57,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            0,
+            -363,
+            54,
+            -299
+          ],
+          [
+            -27,
+            -304,
+            65,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -81,
+            -356,
+            -26,
+            -295
+          ],
+          [
+            -62,
+            -320,
+            30,
+            -216
+          ],
+          [
+            -14,
+            -250,
+            93,
+            -178
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -102,
+            -311,
+            -49,
+            -252
+          ],
+          [
+            -64,
+            -332,
+            66,
+            -268
+          ],
+          [
+            21,
+            -268,
+            83,
+            -201
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -26,
+            -362,
+            155,
+            -239
+          ],
+          [
+            -26,
+            -239,
+            104,
+            -149
+          ]
+        ],
+        "c2": [
+          [
+            -94,
+            -268,
+            -41,
+            -209
+          ],
+          [
+            -61,
+            -317,
+            91,
+            -253
+          ],
+          [
+            -12,
+            -360,
+            54,
+            -317
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -29,
+            -496,
+            147,
+            -268
+          ]
+        ],
+        "c2": [
+          [
+            -74,
+            -230,
+            -21,
+            -171
+          ],
+          [
+            -59,
+            -286,
+            2,
+            -222
+          ],
+          [
+            -31,
+            -324,
+            90,
+            -275
+          ],
+          [
+            -18,
+            -385,
+            43,
+            -324
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -29,
+            -540,
+            134,
+            -269
+          ]
+        ],
+        "c2": [
+          [
+            -56,
+            -209,
+            -3,
+            -150
+          ],
+          [
+            -54,
+            -282,
+            15,
+            -209
+          ],
+          [
+            -33,
+            -361,
+            77,
+            -275
+          ],
+          [
+            -9,
+            -402,
+            33,
+            -361
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -39,
+            -200,
+            14,
+            -141
+          ],
+          [
+            -50,
+            -324,
+            36,
+            -200
+          ],
+          [
+            -26,
+            -410,
+            61,
+            -324
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -195,
+            34,
+            -131
+          ],
+          [
+            -42,
+            -319,
+            30,
+            -195
+          ],
+          [
+            -86,
+            -393,
+            14,
+            -305
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -9,
+            -192,
+            45,
+            -127
+          ],
+          [
+            -52,
+            -317,
+            35,
+            -192
+          ],
+          [
+            -91,
+            -261,
+            -52,
+            -198
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            40,
+            -237,
+            96,
+            -177
+          ],
+          [
+            -45,
+            -282,
+            76,
+            -213
+          ],
+          [
+            -44,
+            -213,
+            3,
+            -141
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            50,
+            -336,
+            106,
+            -276
+          ],
+          [
+            -30,
+            -315,
+            67,
+            -240
+          ],
+          [
+            -18,
+            -240,
+            46,
+            -143
+          ]
+        ]
+      }
+    ],
+    "241": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            45,
+            -319,
+            101,
+            -254
+          ],
+          [
+            -23,
+            -280,
+            72,
+            -106
+          ],
+          [
+            -28,
+            -106,
+            48,
+            -3
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            28,
+            -296,
+            81,
+            -231
+          ],
+          [
+            -24,
+            -254,
+            71,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            18,
+            -351,
+            68,
+            -288
+          ],
+          [
+            -24,
+            -294,
+            71,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -3,
+            -396,
+            47,
+            -330
+          ],
+          [
+            -24,
+            -200,
+            71,
+            0
+          ],
+          [
+            -29,
+            -331,
+            53,
+            -200
+          ]
+        ]
+      }
+    ],
     "5000": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -35,
+            -422,
+            18,
+            -354
+          ],
+          [
+            -34,
+            -354,
+            58,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      }
+    ],
+    "5001": [
       {
         "c1": [],
         "c2": [
@@ -4670,6 +6453,321 @@
             -354,
             58,
             1
+          ]
+        ]
+      }
+    ],
+    "5006": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -35,
+            -422,
+            18,
+            -354
+          ],
+          [
+            -34,
+            -354,
+            58,
+            1
+          ]
+        ]
+      }
+    ],
+    "5010": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -41,
+            -360,
+            34,
+            -225
+          ],
+          [
+            -17,
+            -423,
+            32,
+            -358
+          ],
+          [
+            -34,
+            -225,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      }
+    ],
+    "5011": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -41,
+            -360,
+            34,
+            -225
+          ],
+          [
+            -17,
+            -423,
+            32,
+            -358
+          ],
+          [
+            -34,
+            -225,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -340,
+            28,
+            -215
+          ],
+          [
+            -20,
+            -395,
+            29,
+            -330
+          ],
+          [
+            -30,
+            -162,
+            47,
+            0
+          ],
+          [
+            -56,
+            -215,
+            38,
+            -162
+          ]
+        ]
+      }
+    ],
+    "5015": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -41,
+            -360,
+            34,
+            -225
+          ],
+          [
+            -17,
+            -423,
+            32,
+            -358
+          ],
+          [
+            -34,
+            -225,
+            53,
+            0
+          ]
+        ]
+      }
+    ],
+    "5016": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -340,
+            28,
+            -215
+          ],
+          [
+            -20,
+            -395,
+            29,
+            -330
+          ],
+          [
+            -30,
+            -162,
+            47,
+            0
+          ],
+          [
+            -56,
+            -215,
+            38,
+            -162
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -41,
+            -360,
+            34,
+            -225
+          ],
+          [
+            -17,
+            -423,
+            32,
+            -358
+          ],
+          [
+            -34,
+            -225,
+            53,
+            0
           ]
         ]
       }
