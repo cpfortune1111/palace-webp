@@ -1835,6 +1835,1342 @@
           }
         }
       ]
+    },
+    "1000": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 4,
+      "poweradd": 55,
+      "controllers": [
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond(((command = \"SNES_NRML_Beam_l\") || (command = \"SNES_AUTO_Beam_l\") || (command = \"holdd\" && command = \"x\")), 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "!AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1112
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond((Helper(9999), var(20)), 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1119
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "1005"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "var(2) = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1126
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "901",
+            "id": "901",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "-1",
+            "removeongethit": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1132
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "901",
+            "id": "901",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "-1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1145
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9011",
+            "id": "9011",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "-1",
+            "removeongethit": "1"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 1000",
+              "AnimElemTime(6) = 0"
+            ],
+            "2": [
+              "Anim = 1005",
+              "AnimElemTime(7) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1157
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1000, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1173
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 0"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 1000",
+              "AnimElemTime(6) = 0"
+            ],
+            "2": [
+              "Anim = 1005",
+              "AnimElemTime(7) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1179
+          }
+        },
+        {
+          "type": "Projectile",
+          "params": {
+            "projid": "1050",
+            "projanim": "902",
+            "projhitanim": "9021",
+            "projscale": "1,1",
+            "projremove": "1",
+            "projremovetime": "-1",
+            "velocity": "cond(var(2) = 1, 32.5, 22.5), 0",
+            "projhits": "1",
+            "projpriority": "3",
+            "projsprpriority": "3",
+            "offset": "0,0",
+            "postype": "p1",
+            "attr": "S, SP",
+            "animtype": "hard",
+            "damage": "cond(var(2) = 1, 100, 80), 20",
+            "guardflag": "M",
+            "hitflag": "MAP",
+            "pausetime": "1,8",
+            "hitsound": "S900,1",
+            "sparkno": "-1",
+            "guardsound": "S5,1",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-14",
+            "air.velocity": "-10,-35",
+            "guard.velocity": "-14",
+            "ground.cornerpush.veloff": "0",
+            "guard.cornerpush.veloff": "0",
+            "air.cornerpush.veloff": "0",
+            "airguard.cornerpush.veloff": "0",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "Anim = 1000",
+              "AnimElemTime(6) = 0"
+            ],
+            "2": [
+              "Anim = 1005",
+              "AnimElemTime(7) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1187
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "cond(command=\"holddown\",11,0)",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1231
+          }
+        }
+      ],
+      "anim": 1000,
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "1100": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 4,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond(((command = \"SNES_NRML_Sword_l\") || (command = \"SNES_AUTO_Sword_l\") || (command = \"holdd\" && command = \"y\")), 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "!AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1248
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond(P2BodyDist X < 120, 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1255
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "1105"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "var(2) = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1262
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1100, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1268
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 2"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(4) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1274
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 3"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(8) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1279
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "903",
+            "id": "903",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(4) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1284
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9042",
+            "id": "9042",
+            "pos": "cond(var(2) = 1, 320, 160),0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(8) = -4",
+              "!NumExplod(9042)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1295
+          }
+        },
+        {
+          "type": "Projectile",
+          "params": {
+            "projid": "1150",
+            "projanim": "904",
+            "projhitanim": "9041",
+            "projscale": "1,1",
+            "projremove": "1",
+            "projremovetime": "30",
+            "velocity": "0, cond(var(2) = 1, -41.75, -10)",
+            "projhits": "1",
+            "projpriority": "3",
+            "projsprpriority": "3",
+            "projheightbound": "-720, 4",
+            "offset": "cond(var(2) = 1, 320, 160),0",
+            "postype": "p1",
+            "attr": "S, SP",
+            "animtype": "hard",
+            "damage": "cond(var(2) = 1, 120, 100), cond(var(2) = 1, 30, 20)",
+            "guardflag": "M",
+            "hitflag": "MAP",
+            "pausetime": "1,8",
+            "hitsound": "S900,1",
+            "sparkno": "-1",
+            "guardsound": "S900,6",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-14",
+            "air.velocity": "-10,-35",
+            "guard.velocity": "-14",
+            "ground.cornerpush.veloff": "0",
+            "guard.cornerpush.veloff": "0",
+            "air.cornerpush.veloff": "0",
+            "airguard.cornerpush.veloff": "0",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "!NumProjID(1150)",
+              "AnimElemTime(8) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1307
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1350
+          }
+        }
+      ],
+      "anim": 1100,
+      "velset": [
+        0.0
+      ]
+    },
+    "1200": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": 2,
+      "juggle": 4,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond(((command = \"SNES_NRML_Chain_l\") || (command = \"SNES_AUTO_Chain_l\") || (command = \"holdd\" && command = \"a\")), 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "!AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1366
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "cond((P2StateType = A), 0, 1)",
+            "target": "var(2)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [
+            "AILevel"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1373
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "1205"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0",
+              "var(2) = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1380
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "1200, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1386
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 4"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(4) = 0"
+            ],
+            "2": [
+              "AnimElemTime(9) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1392
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "target": "var(44)"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1398
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "cond(var(2) = 1, 9061, 906)",
+            "id": "906",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "-1",
+            "ignorehitpause": "0",
+            "removeongethit": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(2) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1404
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, SA",
+            "animtype": "Medium",
+            "damage": "cond(var(2) = 1, 80, 60), 10",
+            "priority": "2",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardflag": "M",
+            "pausetime": "8,8",
+            "sparkxy": "-60,-160",
+            "hitsound": "S900,5",
+            "guardsound": "S900, 6",
+            "ground.type": "Low",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "cond(var(2) = 1, -28, -14)",
+            "guard.velocity": "cond(var(2) = 1, -28, -14)",
+            "air.velocity": "-10,-35",
+            "ground.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "guard.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 3"
+            ],
+            "2": [
+              "AnimElem = 4"
+            ]
+          },
+          "triggerall": [
+            "HitCount < 2",
+            "HitCount + var(44) < 2"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1418
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, SA",
+            "animtype": "Medium",
+            "damage": "cond(var(2) = 1, 80, 60), 10",
+            "priority": "2",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardflag": "M",
+            "pausetime": "8,8",
+            "sparkxy": "-60,-355",
+            "hitsound": "S900,5",
+            "guardsound": "S900, 6",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "cond(var(2) = 1, -28, -14)",
+            "guard.velocity": "cond(var(2) = 1, -28, -14)",
+            "air.velocity": "-10,-35",
+            "ground.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "guard.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 5"
+            ],
+            "2": [
+              "AnimElem = 6"
+            ]
+          },
+          "triggerall": [
+            "HitCount < 2",
+            "HitCount + var(44) < 2"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1449
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, SA",
+            "animtype": "Medium",
+            "damage": "cond(var(2) = 1, 100, 80), 20",
+            "priority": "2",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardflag": "M",
+            "pausetime": "8,8",
+            "sparkxy": "-60,-160",
+            "hitsound": "S900,5",
+            "guardsound": "S900, 6",
+            "ground.type": "Low",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "cond(var(2) = 1, -28, -14)",
+            "guard.velocity": "cond(var(2) = 1, -28, -14)",
+            "air.velocity": "-10,-35",
+            "ground.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "guard.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 7"
+            ],
+            "2": [
+              "AnimElem = 8"
+            ]
+          },
+          "triggerall": [
+            "HitCount < 3",
+            "HitCount + var(44) < 5"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1480
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, SA",
+            "animtype": "Medium",
+            "damage": "cond(var(2) = 1, 100, 80), 20",
+            "priority": "2",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardflag": "M",
+            "pausetime": "8,8",
+            "sparkxy": "-60,-355",
+            "hitsound": "S900,5",
+            "guardsound": "S900, 6",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "cond(var(2) = 1, -28, -14)",
+            "guard.velocity": "cond(var(2) = 1, -28, -14)",
+            "air.velocity": "-10,-35",
+            "ground.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "guard.cornerpush.veloff": "cond(var(2) = 1, -42, -28)",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "id": "200"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 9"
+            ],
+            "2": [
+              "AnimElem = 10"
+            ]
+          },
+          "triggerall": [
+            "HitCount < 3",
+            "HitCount + var(44) < 5"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1511
+          }
+        },
+        {
+          "type": "VarAdd",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "0",
+            "persisent": "1",
+            "target": "var(44)"
+          },
+          "triggers": {
+            "1": [
+              "MoveGuarded = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1542
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(3)"
+          },
+          "triggers": {
+            "1": [
+              "P2StateType = A",
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1550
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1558
+          }
+        }
+      ],
+      "anim": 1200,
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "3000": {
+      "type": "S",
+      "physics": "N",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "juggle": 4,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "3005"
+          },
+          "triggers": {
+            "1": [
+              "!Time",
+              "var(45) = 1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1577
+          }
+        },
+        {
+          "type": "SuperPause",
+          "params": {
+            "time": "1",
+            "pos": "0, 0",
+            "anim": "-1",
+            "sound": "20, 0",
+            "ignorehitpause": "1",
+            "movetime": "1",
+            "p2defmul": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1583
+          }
+        },
+        {
+          "type": "Pause",
+          "params": {
+            "time": "298",
+            "movetime": "298",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1594
+          }
+        },
+        {
+          "type": "BGPalFX",
+          "params": {
+            "time": "1",
+            "mul": "85,85,85"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1601
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "4001",
+            "id": "4000",
+            "pos": "0,0",
+            "postype": "left",
+            "ontop": "1",
+            "supermovetime": "9999999999",
+            "pausemovetime": "9999999999"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1607
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "4000",
+            "id": "4000",
+            "pos": "0,0",
+            "postype": "left",
+            "ontop": "1",
+            "supermovetime": "9999999999",
+            "pausemovetime": "9999999999"
+          },
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1618
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900, 8",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(1) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1629
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "3000, 0",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(7) = 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1635
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "3000, 1",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(27) = 2"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1641
+          }
+        },
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "4000"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1647
+          }
+        },
+        {
+          "type": "StopSnd",
+          "params": {
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1652
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "3005"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1657
+          }
+        }
+      ],
+      "anim": 3000,
+      "velset": [
+        0.0,
+        0.0
+      ]
+    },
+    "3005": {
+      "type": "S",
+      "physics": "S",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "juggle": 4,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "VarSet",
+          "params": {
+            "value": "0",
+            "target": "var(47)"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1671
+          }
+        },
+        {
+          "type": "ChangeAnim",
+          "params": {
+            "value": "3001"
+          },
+          "triggers": {
+            "1": [
+              "!Time",
+              "!var(45)"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1677
+          }
+        },
+        {
+          "type": "VarSet",
+          "params": {
+            "target": "var(45)",
+            "value": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1683
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "200,2",
+            "channel": "0"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(2) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1688
+          }
+        },
+        {
+          "type": "PlaySnd",
+          "params": {
+            "value": "900,7",
+            "channel": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(6) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1694
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, HA",
+            "animtype": "hard",
+            "damage": "500,375",
+            "hitflag": "MAP",
+            "guardflag": "M",
+            "pausetime": "8,8",
+            "priority": "6",
+            "hitsound": "S5,0",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardsound": "S5,1",
+            "sparkxy": "-60,-240",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-10,-35",
+            "guard.velocity": "-17.5",
+            "air.velocity": "-10,-35",
+            "fall": "1",
+            "fall.recover": "0",
+            "id": "3000"
+          },
+          "triggers": {
+            "1": [
+              "AnimElem = 5"
+            ],
+            "2": [
+              "AnimElem = 6"
+            ],
+            "3": [
+              "AnimElem = 7"
+            ],
+            "4": [
+              "AnimElem = 8"
+            ]
+          },
+          "triggerall": [
+            "!MoveContact",
+            "MoveContact"
+          ],
+          "source": {
+            "file": "venus.cns",
+            "line": 1700
+          }
+        },
+        {
+          "type": "Helper",
+          "params": {
+            "helpertype": "normal",
+            "name": "\"ChainExplosiveChain\"",
+            "id": "3050",
+            "stateno": "3055",
+            "pos": "0,0",
+            "postype": "p1",
+            "facing": "1",
+            "keyctrl": "0",
+            "ownpal": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(5) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1732
+          }
+        },
+        {
+          "type": "Helper",
+          "params": {
+            "helpertype": "normal",
+            "name": "\"ChainExplosive\"",
+            "id": "3050",
+            "stateno": "3050",
+            "pos": "0,0",
+            "postype": "p1",
+            "facing": "1",
+            "keyctrl": "0",
+            "ownpal": "1"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(7) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1745
+          }
+        },
+        {
+          "type": "StateTypeSet",
+          "params": {
+            "moveType": "I"
+          },
+          "triggers": {
+            "1": [
+              "AnimElemTime(13) = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1758
+          }
+        },
+        {
+          "type": "ChangeState",
+          "params": {
+            "value": "11"
+          },
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus.cns",
+            "line": 1763
+          }
+        }
+      ],
+      "anim": 3005
     }
   },
   "attackCommands": [
@@ -2119,7 +3455,824 @@
       }
     }
   ],
+  "helperStates": {
+    "3050": {
+      "type": "A",
+      "physics": "N",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": -1,
+      "juggle": 8,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "AssertSpecial",
+          "params": {
+            "flag": "NoShadow"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 541
+          }
+        },
+        {
+          "type": "PlayerPush",
+          "params": {
+            "value": "0",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 546
+          }
+        },
+        {
+          "type": "HitOverride",
+          "params": {
+            "time": "-1",
+            "attr": "SCA,HA,HP",
+            "stateno": "3051",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time < 28"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 552
+          }
+        },
+        {
+          "type": "HitOverride",
+          "params": {
+            "time": "-1",
+            "attr": "SCA,HA,HP",
+            "stateno": "3052",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time >= 28"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 560
+          }
+        },
+        {
+          "type": "HitBy",
+          "params": {
+            "value": "SCA,HA,HP",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 568
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9080",
+            "id": "9080",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "bindtime": "0",
+            "removeongethit": "1"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 574
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9081",
+            "id": "9081",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "0",
+            "removeongethit": "0",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "Time = 28"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 586
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "C, HP",
+            "animtype": "DiagUp",
+            "hitflag": "MAP",
+            "guardflag": "M",
+            "damage": "500, cond(root,var(47) = 0, 375, 0)",
+            "pausetime": "0,8",
+            "priority": "6",
+            "sparkno": "-1",
+            "guard.sparkno": "-1",
+            "hitsound": "S5, 0",
+            "guardsound": "S6, 0",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-10,-35",
+            "guard.velocity": "-17.5",
+            "air.velocity": "-10,-35",
+            "ground.cornerpush.veloff": "0",
+            "air.cornerpush.veloff": "0",
+            "guard.cornerpush.veloff": "0",
+            "fall": "1",
+            "air.fall": "1",
+            "fall.recover": "0",
+            "nochainid": "3000"
+          },
+          "triggers": {
+            "1": [
+              "!MoveContact",
+              "root,var(47) < 10"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 600
+          }
+        },
+        {
+          "type": "ParentVarSet",
+          "params": {
+            "value": "1",
+            "ignorehitpause": "1",
+            "target": "var(47)"
+          },
+          "triggers": {
+            "1": [
+              "MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 631
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 638
+          }
+        }
+      ],
+      "anim": 9085
+    },
+    "3051": {
+      "type": "A",
+      "physics": "N",
+      "moveType": "H",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "juggle": 0,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "9080"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 647
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9081",
+            "id": "9081",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "0",
+            "removeongethit": "0"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 652
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 665
+          }
+        }
+      ]
+    },
+    "3052": {
+      "type": "A",
+      "physics": "N",
+      "moveType": "H",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "juggle": 0,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "RemoveExplod",
+          "params": {
+            "id": "9080"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 674
+          }
+        },
+        {
+          "type": "Explod",
+          "params": {
+            "anim": "9082",
+            "id": "9082",
+            "pos": "0,0",
+            "postype": "P1",
+            "sprpriority": "3",
+            "ownpal": "1",
+            "persistent": "1",
+            "bindtime": "0",
+            "removeongethit": "0"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 679
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 692
+          }
+        }
+      ]
+    },
+    "3055": {
+      "type": "S",
+      "physics": "N",
+      "moveType": "A",
+      "ctrl": 0,
+      "sprpriority": -1,
+      "juggle": 8,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "AssertSpecial",
+          "params": {
+            "flag": "NoShadow"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 706
+          }
+        },
+        {
+          "type": "BindtoRoot",
+          "params": {
+            "time": "12",
+            "pos": "0,0",
+            "facing": "1"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 711
+          }
+        },
+        {
+          "type": "HitOverride",
+          "params": {
+            "time": "-1",
+            "attr": "SCA,HA,HP",
+            "stateno": "3056",
+            "ignorehitpause": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 718
+          }
+        },
+        {
+          "type": "HitBy",
+          "params": {
+            "value": "SCA,HA,HP",
+            "time": "1"
+          },
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 726
+          }
+        },
+        {
+          "type": "HitDef",
+          "params": {
+            "attr": "S, HA",
+            "animtype": "hard",
+            "damage": "500,375",
+            "hitflag": "MAP",
+            "guardflag": "M",
+            "pausetime": "0,8",
+            "priority": "6",
+            "hitsound": "S5,0",
+            "sparkno": "S905",
+            "guard.sparkno": "S905",
+            "guardsound": "S5,1",
+            "sparkxy": "-60,-240",
+            "ground.type": "High",
+            "ground.slidetime": "23",
+            "ground.hittime": "27",
+            "guard.slidetime": "24",
+            "guard.hittime": "34",
+            "ground.velocity": "-10,-35",
+            "guard.velocity": "-17.5",
+            "air.velocity": "-10,-35",
+            "fall": "1",
+            "fall.recover": "0",
+            "id": "3000"
+          },
+          "triggers": {
+            "1": [
+              "!MoveContact"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 732
+          }
+        },
+        {
+          "type": "ParentVarSet",
+          "params": {
+            "value": "1",
+            "persistent": "0",
+            "ignorehitpause": "1",
+            "target": "var(47)"
+          },
+          "triggers": {
+            "1": [
+              "MoveGuarded"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 759
+          }
+        },
+        {
+          "type": "ParentVarSet",
+          "params": {
+            "value": "10",
+            "persistent": "0",
+            "ignorehitpause": "1",
+            "target": "var(47)"
+          },
+          "triggers": {
+            "1": [
+              "MoveHit"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 767
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 775
+          }
+        }
+      ],
+      "anim": 9086
+    },
+    "3056": {
+      "type": "A",
+      "physics": "N",
+      "moveType": "H",
+      "ctrl": 0,
+      "sprpriority": 0,
+      "juggle": 0,
+      "poweradd": 0,
+      "controllers": [
+        {
+          "type": "ParentVarSet",
+          "params": {
+            "value": "0",
+            "target": "var(47)"
+          },
+          "triggers": {
+            "1": [
+              "!Time"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 784
+          }
+        },
+        {
+          "type": "DestroySelf",
+          "params": {},
+          "triggers": {
+            "1": [
+              "1"
+            ]
+          },
+          "triggerall": [],
+          "source": {
+            "file": "venus_Helper.st",
+            "line": 790
+          }
+        }
+      ]
+    }
+  },
+  "chargeControllers": [
+    {
+      "type": "VarSet",
+      "params": {
+        "value": "0",
+        "ignorehitpause": "1",
+        "target": "var(16)"
+      },
+      "triggers": {
+        "1": [
+          "var(17) = 1"
+        ]
+      },
+      "triggerall": [],
+      "source": {
+        "file": "venus.cns",
+        "line": 2772
+      }
+    },
+    {
+      "type": "VarSet",
+      "params": {
+        "value": "10",
+        "ignorehitpause": "1",
+        "target": "var(17)"
+      },
+      "triggers": {
+        "1": [
+          "!AILevel",
+          "command != \"holddown\""
+        ],
+        "2": [
+          "AILevel",
+          "StateType = S",
+          "MoveType = I",
+          "ctrl || (StateType = S || (Vel X > 0 && StateType != A && MoveType != A) || StateNo = [800,899])"
+        ]
+      },
+      "triggerall": [
+        "var(16)",
+        "!var(17)"
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 2779
+      }
+    },
+    {
+      "type": "VarAdd",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(16)"
+      },
+      "triggers": {
+        "1": [
+          "!AILevel",
+          "command = \"holddown\"",
+          "StateNo != [800,899]"
+        ],
+        "2": [
+          "AILevel",
+          "StateNo != [800,899]",
+          "StateType = A || StateType = C || StateType = L || MoveType = A || StateNo = 105"
+        ]
+      },
+      "triggerall": [],
+      "source": {
+        "file": "venus.cns",
+        "line": 2796
+      }
+    },
+    {
+      "type": "VarSet",
+      "params": {
+        "value": "0",
+        "target": "var(17)"
+      },
+      "triggers": {
+        "1": [
+          "!AILevel",
+          "command = \"holddown\""
+        ],
+        "2": [
+          "AILevel",
+          "StateNo != [800,899]",
+          "StateType = A || StateType = C || StateType = L || MoveType = A"
+        ]
+      },
+      "triggerall": [
+        "var(16)"
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 2809
+      }
+    },
+    {
+      "type": "VarAdd",
+      "params": {
+        "value": "-1",
+        "target": "var(17)"
+      },
+      "triggers": {
+        "1": [
+          "!AILevel",
+          "command != \"holddown\""
+        ],
+        "2": [
+          "AILevel",
+          "StateType = S",
+          "MoveType = I",
+          "ctrl || ((Vel X > 0 && StateType != A && MoveType != A) || StateNo = [800,899])"
+        ]
+      },
+      "triggerall": [
+        "var(17)"
+      ],
+      "source": {
+        "file": "venus.cns",
+        "line": 2821
+      }
+    }
+  ],
   "playerCommands": [
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "3000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && ((command = \"S_SNES_AUTO_ChainExplosive\") || (command = \"holdd\" && command = \"w\")  || (command = \"holdw\" && command = \"d\"))) || ((var(52) = 0) && (command = \"S_SNES_NRML_ChainExplosive\"))",
+        "!AILevel",
+        "Life <= LifeMax*.25",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 697
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1200"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Chain_l\" || command = \"SNES_AUTO_Chain_h\" || (command = \"holdd\" && command = \"a\")  || (command = \"holdw\" && command = \"a\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Chain_l\" || command = \"SNES_NRML_Chain_h\"))",
+        "!AILevel",
+        "StateType!= A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 715
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1100"
+      },
+      "triggers": {
+        "1": [
+          "ctrl || StateNo = 40 || StateNo = 52"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Sword_l\" || command = \"SNES_AUTO_Sword_h\" || (command = \"holdd\" && command = \"y\")  || (command = \"holdw\" && command = \"y\"))) || ((var(52) = 0) && (var(16) > 40) && (command = \"SNES_NRML_Sword_l\" || command = \"SNES_NRML_Sword_h\"))",
+        "!AILevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 732
+      }
+    },
+    {
+      "type": "ChangeState",
+      "params": {
+        "value": "1000"
+      },
+      "triggers": {
+        "1": [
+          "ctrl"
+        ],
+        "2": [
+          "StateNo = [200,430]",
+          "MoveContact"
+        ],
+        "3": [
+          "StateNo = 440",
+          "P2StateNo = 5070",
+          "MoveContact || MoveGuarded"
+        ]
+      },
+      "triggerall": [
+        "var(50) = 0",
+        "((var(52) = 10) && (command = \"SNES_AUTO_Beam_l\" || command = \"SNES_AUTO_Beam_h\" || (command = \"holdd\" && command = \"x\")  || (command = \"holdw\" && command = \"x\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Beam_l\" || command = \"SNES_NRML_Beam_h\"))",
+        "!AILevel",
+        "!NumProjID(1050)",
+        "!NumProjID(1150)",
+        "StateType != A"
+      ],
+      "source": {
+        "file": "venus.cmd",
+        "line": 751
+      }
+    },
     {
       "type": "ChangeState",
       "params": {
@@ -2454,131 +4607,6 @@
     }
   ],
   "deferredPlayerCommands": [
-    {
-      "type": "ChangeState",
-      "params": {
-        "value": "3000"
-      },
-      "triggers": {
-        "1": [
-          "ctrl"
-        ],
-        "2": [
-          "StateNo = [200,430]",
-          "MoveContact"
-        ],
-        "3": [
-          "StateNo = 440",
-          "P2StateNo = 5070",
-          "MoveContact || MoveGuarded"
-        ]
-      },
-      "triggerall": [
-        "var(50) = 0",
-        "((var(52) = 10) && ((command = \"S_SNES_AUTO_ChainExplosive\") || (command = \"holdd\" && command = \"w\")  || (command = \"holdw\" && command = \"d\"))) || ((var(52) = 0) && (command = \"S_SNES_NRML_ChainExplosive\"))",
-        "!AILevel",
-        "Life <= LifeMax*.25",
-        "StateType != A"
-      ],
-      "source": {
-        "file": "venus.cmd",
-        "line": 697
-      }
-    },
-    {
-      "type": "ChangeState",
-      "params": {
-        "value": "1200"
-      },
-      "triggers": {
-        "1": [
-          "ctrl"
-        ],
-        "2": [
-          "StateNo = [200,430]",
-          "MoveContact"
-        ],
-        "3": [
-          "StateNo = 440",
-          "P2StateNo = 5070",
-          "MoveContact || MoveGuarded"
-        ]
-      },
-      "triggerall": [
-        "var(50) = 0",
-        "((var(52) = 10) && (command = \"SNES_AUTO_Chain_l\" || command = \"SNES_AUTO_Chain_h\" || (command = \"holdd\" && command = \"a\")  || (command = \"holdw\" && command = \"a\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Chain_l\" || command = \"SNES_NRML_Chain_h\"))",
-        "!AILevel",
-        "StateType!= A"
-      ],
-      "source": {
-        "file": "venus.cmd",
-        "line": 715
-      }
-    },
-    {
-      "type": "ChangeState",
-      "params": {
-        "value": "1100"
-      },
-      "triggers": {
-        "1": [
-          "ctrl || StateNo = 40 || StateNo = 52"
-        ],
-        "2": [
-          "StateNo = [200,430]",
-          "MoveContact"
-        ],
-        "3": [
-          "StateNo = 440",
-          "P2StateNo = 5070",
-          "MoveContact || MoveGuarded"
-        ]
-      },
-      "triggerall": [
-        "var(50) = 0",
-        "((var(52) = 10) && (command = \"SNES_AUTO_Sword_l\" || command = \"SNES_AUTO_Sword_h\" || (command = \"holdd\" && command = \"y\")  || (command = \"holdw\" && command = \"y\"))) || ((var(52) = 0) && (var(16) > 40) && (command = \"SNES_NRML_Sword_l\" || command = \"SNES_NRML_Sword_h\"))",
-        "!AILevel",
-        "!NumProjID(1050)",
-        "!NumProjID(1150)",
-        "StateType != A"
-      ],
-      "source": {
-        "file": "venus.cmd",
-        "line": 732
-      }
-    },
-    {
-      "type": "ChangeState",
-      "params": {
-        "value": "1000"
-      },
-      "triggers": {
-        "1": [
-          "ctrl"
-        ],
-        "2": [
-          "StateNo = [200,430]",
-          "MoveContact"
-        ],
-        "3": [
-          "StateNo = 440",
-          "P2StateNo = 5070",
-          "MoveContact || MoveGuarded"
-        ]
-      },
-      "triggerall": [
-        "var(50) = 0",
-        "((var(52) = 10) && (command = \"SNES_AUTO_Beam_l\" || command = \"SNES_AUTO_Beam_h\" || (command = \"holdd\" && command = \"x\")  || (command = \"holdw\" && command = \"x\"))) || ((var(52) = 0) && (command = \"SNES_NRML_Beam_l\" || command = \"SNES_NRML_Beam_h\"))",
-        "!AILevel",
-        "!NumProjID(1050)",
-        "!NumProjID(1150)",
-        "StateType != A"
-      ],
-      "source": {
-        "file": "venus.cmd",
-        "line": 751
-      }
-    },
     {
       "type": "ChangeState",
       "params": {
@@ -11930,6 +13958,3475 @@
         "c2": []
       }
     ],
+    "902": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            110,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            110,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            134,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            134,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            159,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            159,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ],
+        "c2": [
+          [
+            73,
+            -345,
+            184,
+            -316
+          ]
+        ]
+      }
+    ],
+    "9021": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      }
+    ],
+    "904": [
+      {
+        "c1": [
+          [
+            -23,
+            -106,
+            22,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -23,
+            -106,
+            22,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -30,
+            -139,
+            30,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -30,
+            -139,
+            30,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ],
+        "c2": [
+          [
+            -38,
+            -171,
+            38,
+            1
+          ]
+        ]
+      }
+    ],
+    "9041": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      }
+    ],
+    "9085": [
+      {
+        "c1": [
+          [
+            47,
+            -38,
+            322,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            47,
+            -38,
+            322,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            83,
+            -151,
+            287,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            83,
+            -151,
+            287,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            116,
+            -243,
+            255,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            116,
+            -243,
+            255,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            106,
+            -364,
+            264,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            106,
+            -364,
+            264,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            90,
+            -473,
+            279,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            119,
+            -473,
+            252,
+            6
+          ]
+        ],
+        "c2": [
+          [
+            119,
+            -473,
+            252,
+            6
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            152,
+            -473,
+            218,
+            -97
+          ]
+        ],
+        "c2": [
+          [
+            152,
+            -473,
+            218,
+            -97
+          ]
+        ]
+      }
+    ],
+    "9086": [
+      {
+        "c1": [
+          [
+            40,
+            -508,
+            209,
+            -179
+          ]
+        ],
+        "c2": [
+          [
+            40,
+            -508,
+            209,
+            -179
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            44,
+            -312,
+            238,
+            5
+          ]
+        ],
+        "c2": [
+          [
+            44,
+            -312,
+            238,
+            5
+          ]
+        ]
+      }
+    ],
+    "1000": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -31,
+            -429,
+            22,
+            -362
+          ],
+          [
+            -35,
+            -363,
+            37,
+            -229
+          ],
+          [
+            -29,
+            -229,
+            36,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            31,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -34,
+            -428,
+            19,
+            -361
+          ],
+          [
+            -33,
+            -368,
+            37,
+            -229
+          ],
+          [
+            -24,
+            -229,
+            29,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            16,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -39,
+            -426,
+            14,
+            -359
+          ],
+          [
+            -36,
+            -368,
+            34,
+            -229
+          ],
+          [
+            -22,
+            -229,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -29,
+            -430,
+            24,
+            -367
+          ],
+          [
+            -32,
+            -371,
+            38,
+            -227
+          ],
+          [
+            -22,
+            -227,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -25,
+            -430,
+            28,
+            -366
+          ],
+          [
+            -28,
+            -372,
+            38,
+            -225
+          ],
+          [
+            -22,
+            -225,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -24,
+            -430,
+            29,
+            -363
+          ],
+          [
+            -35,
+            -363,
+            37,
+            -229
+          ],
+          [
+            -29,
+            -229,
+            33,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            25,
+            0
+          ]
+        ]
+      }
+    ],
+    "1005": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -31,
+            -429,
+            22,
+            -362
+          ],
+          [
+            -35,
+            -363,
+            37,
+            -229
+          ],
+          [
+            -29,
+            -229,
+            36,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            31,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -34,
+            -428,
+            19,
+            -361
+          ],
+          [
+            -33,
+            -368,
+            37,
+            -229
+          ],
+          [
+            -24,
+            -229,
+            29,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            16,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -39,
+            -426,
+            14,
+            -359
+          ],
+          [
+            -36,
+            -368,
+            34,
+            -229
+          ],
+          [
+            -22,
+            -229,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -34,
+            -428,
+            19,
+            -365
+          ],
+          [
+            -33,
+            -370,
+            37,
+            -225
+          ],
+          [
+            -22,
+            -225,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -29,
+            -430,
+            24,
+            -367
+          ],
+          [
+            -32,
+            -371,
+            38,
+            -227
+          ],
+          [
+            -22,
+            -227,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -25,
+            -430,
+            28,
+            -366
+          ],
+          [
+            -28,
+            -372,
+            38,
+            -225
+          ],
+          [
+            -22,
+            -225,
+            21,
+            -136
+          ],
+          [
+            -28,
+            -136,
+            -1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -430,
+            33,
+            -365
+          ],
+          [
+            -30,
+            -370,
+            42,
+            -225
+          ],
+          [
+            -25,
+            -225,
+            24,
+            -143
+          ],
+          [
+            -28,
+            -143,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -24,
+            -430,
+            29,
+            -363
+          ],
+          [
+            -35,
+            -363,
+            37,
+            -229
+          ],
+          [
+            -29,
+            -229,
+            33,
+            -136
+          ],
+          [
+            -30,
+            -136,
+            25,
+            0
+          ]
+        ]
+      }
+    ],
+    "1100": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            5,
+            -402,
+            54,
+            -338
+          ],
+          [
+            -18,
+            -338,
+            67,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -8,
+            -368,
+            41,
+            -304
+          ],
+          [
+            -4,
+            -313,
+            71,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -8,
+            -388,
+            41,
+            -324
+          ],
+          [
+            -14,
+            -327,
+            61,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -408,
+            36,
+            -344
+          ],
+          [
+            -24,
+            -344,
+            51,
+            -138
+          ],
+          [
+            -21,
+            -138,
+            5,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -426,
+            29,
+            -362
+          ],
+          [
+            -31,
+            -366,
+            41,
+            -145
+          ],
+          [
+            -23,
+            -145,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -27,
+            -442,
+            22,
+            -378
+          ],
+          [
+            -42,
+            -386,
+            32,
+            -165
+          ],
+          [
+            -25,
+            -165,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -438,
+            26,
+            -374
+          ],
+          [
+            -40,
+            -378,
+            32,
+            -165
+          ],
+          [
+            -28,
+            -165,
+            -3,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -438,
+            26,
+            -374
+          ],
+          [
+            -40,
+            -378,
+            32,
+            -165
+          ],
+          [
+            -28,
+            -165,
+            -3,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -436,
+            26,
+            -372
+          ],
+          [
+            -40,
+            -374,
+            32,
+            -165
+          ],
+          [
+            -27,
+            -165,
+            -2,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -26,
+            -431,
+            23,
+            -367
+          ],
+          [
+            -38,
+            -367,
+            38,
+            -165
+          ],
+          [
+            -27,
+            -165,
+            40,
+            1
+          ]
+        ]
+      }
+    ],
+    "1105": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            5,
+            -402,
+            54,
+            -338
+          ],
+          [
+            -18,
+            -338,
+            67,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -8,
+            -368,
+            41,
+            -304
+          ],
+          [
+            -4,
+            -313,
+            71,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -8,
+            -388,
+            41,
+            -324
+          ],
+          [
+            -14,
+            -327,
+            61,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -408,
+            36,
+            -344
+          ],
+          [
+            -24,
+            -344,
+            51,
+            -138
+          ],
+          [
+            -21,
+            -138,
+            5,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -20,
+            -426,
+            29,
+            -362
+          ],
+          [
+            -31,
+            -366,
+            41,
+            -145
+          ],
+          [
+            -23,
+            -145,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -27,
+            -442,
+            22,
+            -378
+          ],
+          [
+            -42,
+            -386,
+            32,
+            -165
+          ],
+          [
+            -25,
+            -165,
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -438,
+            26,
+            -374
+          ],
+          [
+            -40,
+            -378,
+            32,
+            -165
+          ],
+          [
+            -28,
+            -165,
+            -3,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -438,
+            26,
+            -374
+          ],
+          [
+            -40,
+            -378,
+            32,
+            -165
+          ],
+          [
+            -28,
+            -165,
+            -3,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -23,
+            -436,
+            26,
+            -372
+          ],
+          [
+            -40,
+            -374,
+            32,
+            -165
+          ],
+          [
+            -27,
+            -165,
+            -2,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -26,
+            -431,
+            23,
+            -367
+          ],
+          [
+            -38,
+            -367,
+            38,
+            -165
+          ],
+          [
+            -27,
+            -165,
+            40,
+            1
+          ]
+        ]
+      }
+    ],
+    "1200": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [
+          [
+            25,
+            -386,
+            238,
+            -88
+          ]
+        ],
+        "c2": [
+          [
+            20,
+            -430,
+            70,
+            -362
+          ],
+          [
+            23,
+            -362,
+            84,
+            -155
+          ],
+          [
+            -7,
+            -155,
+            63,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            25,
+            -507,
+            238,
+            -88
+          ]
+        ],
+        "c2": [
+          [
+            33,
+            -429,
+            83,
+            -361
+          ],
+          [
+            31,
+            -361,
+            92,
+            -155
+          ],
+          [
+            2,
+            -155,
+            72,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -90,
+            -507,
+            238,
+            -202
+          ]
+        ],
+        "c2": [
+          [
+            44,
+            -430,
+            94,
+            -362
+          ],
+          [
+            31,
+            -365,
+            106,
+            -155
+          ],
+          [
+            48,
+            -155,
+            78,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            62,
+            -430,
+            112,
+            -362
+          ],
+          [
+            34,
+            -363,
+            109,
+            -155
+          ],
+          [
+            54,
+            -155,
+            87,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            58,
+            -432,
+            108,
+            -364
+          ],
+          [
+            44,
+            -370,
+            119,
+            -226
+          ],
+          [
+            54,
+            -226,
+            91,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            25,
+            -386,
+            238,
+            -88
+          ]
+        ],
+        "c2": [
+          [
+            48,
+            -432,
+            98,
+            -364
+          ],
+          [
+            48,
+            -364,
+            119,
+            -226
+          ],
+          [
+            54,
+            -226,
+            91,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            25,
+            -507,
+            238,
+            -88
+          ]
+        ],
+        "c2": [
+          [
+            41,
+            -430,
+            91,
+            -362
+          ],
+          [
+            37,
+            -364,
+            108,
+            -226
+          ],
+          [
+            42,
+            -226,
+            88,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -90,
+            -507,
+            238,
+            -202
+          ]
+        ],
+        "c2": [
+          [
+            38,
+            -430,
+            88,
+            -362
+          ],
+          [
+            28,
+            -364,
+            99,
+            -158
+          ],
+          [
+            53,
+            -158,
+            84,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            27,
+            -430,
+            77,
+            -362
+          ],
+          [
+            17,
+            -362,
+            88,
+            -156
+          ],
+          [
+            35,
+            -156,
+            75,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            15,
+            -430,
+            65,
+            -362
+          ],
+          [
+            9,
+            -362,
+            80,
+            -156
+          ],
+          [
+            10,
+            -156,
+            66,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            1,
+            -430,
+            51,
+            -362
+          ],
+          [
+            -6,
+            -362,
+            65,
+            -156
+          ],
+          [
+            -15,
+            -156,
+            57,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -14,
+            -429,
+            36,
+            -361
+          ],
+          [
+            -19,
+            -361,
+            52,
+            -156
+          ],
+          [
+            -22,
+            -156,
+            50,
+            0
+          ]
+        ]
+      }
+    ],
+    "1205": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -269,
+            223,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            20,
+            -430,
+            70,
+            -362
+          ],
+          [
+            23,
+            -362,
+            84,
+            -155
+          ],
+          [
+            -7,
+            -155,
+            63,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -388,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            33,
+            -429,
+            83,
+            -361
+          ],
+          [
+            31,
+            -361,
+            92,
+            -155
+          ],
+          [
+            2,
+            -155,
+            72,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -483,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            44,
+            -430,
+            94,
+            -362
+          ],
+          [
+            31,
+            -365,
+            106,
+            -155
+          ],
+          [
+            48,
+            -155,
+            78,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -508,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            62,
+            -430,
+            112,
+            -362
+          ],
+          [
+            34,
+            -363,
+            109,
+            -155
+          ],
+          [
+            54,
+            -155,
+            87,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            58,
+            -432,
+            108,
+            -364
+          ],
+          [
+            44,
+            -370,
+            119,
+            -226
+          ],
+          [
+            54,
+            -226,
+            91,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -269,
+            223,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            48,
+            -432,
+            98,
+            -364
+          ],
+          [
+            48,
+            -364,
+            119,
+            -226
+          ],
+          [
+            54,
+            -226,
+            91,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -388,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            41,
+            -430,
+            91,
+            -362
+          ],
+          [
+            37,
+            -364,
+            108,
+            -226
+          ],
+          [
+            42,
+            -226,
+            88,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -483,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            38,
+            -430,
+            88,
+            -362
+          ],
+          [
+            28,
+            -364,
+            99,
+            -158
+          ],
+          [
+            53,
+            -158,
+            84,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [
+          [
+            -3,
+            -508,
+            241,
+            -79
+          ]
+        ],
+        "c2": [
+          [
+            27,
+            -430,
+            77,
+            -362
+          ],
+          [
+            17,
+            -362,
+            88,
+            -156
+          ],
+          [
+            35,
+            -156,
+            75,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            15,
+            -430,
+            65,
+            -362
+          ],
+          [
+            9,
+            -362,
+            80,
+            -156
+          ],
+          [
+            10,
+            -156,
+            66,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            1,
+            -430,
+            51,
+            -362
+          ],
+          [
+            -6,
+            -362,
+            65,
+            -156
+          ],
+          [
+            -15,
+            -156,
+            57,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            1,
+            -430,
+            51,
+            -362
+          ],
+          [
+            -19,
+            -361,
+            52,
+            -156
+          ],
+          [
+            -22,
+            -156,
+            50,
+            0
+          ]
+        ]
+      }
+    ],
+    "3000": [
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      },
+      {
+        "c1": [],
+        "c2": []
+      }
+    ],
+    "3001": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -19,
+            -427,
+            33,
+            -363
+          ],
+          [
+            -28,
+            -367,
+            41,
+            -224
+          ],
+          [
+            -18,
+            -224,
+            35,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            2,
+            -426,
+            49,
+            -359
+          ],
+          [
+            -20,
+            -367,
+            56,
+            -157
+          ],
+          [
+            -10,
+            -157,
+            61,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            35,
+            -407,
+            84,
+            -340
+          ],
+          [
+            14,
+            -348,
+            95,
+            -152
+          ],
+          [
+            3,
+            -152,
+            94,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            81,
+            -385,
+            131,
+            -321
+          ],
+          [
+            49,
+            -325,
+            130,
+            -203
+          ],
+          [
+            3,
+            -125,
+            132,
+            0
+          ],
+          [
+            42,
+            -203,
+            143,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            79,
+            -350,
+            129,
+            -286
+          ],
+          [
+            62,
+            -290,
+            130,
+            -203
+          ],
+          [
+            3,
+            -100,
+            134,
+            0
+          ],
+          [
+            47,
+            -203,
+            148,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            71,
+            -316,
+            121,
+            -252
+          ],
+          [
+            57,
+            -255,
+            125,
+            -168
+          ],
+          [
+            3,
+            -100,
+            134,
+            0
+          ],
+          [
+            39,
+            -168,
+            136,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            43,
+            -283,
+            93,
+            -219
+          ],
+          [
+            28,
+            -222,
+            103,
+            -97
+          ],
+          [
+            -10,
+            -114,
+            103,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            6,
+            -251,
+            56,
+            -187
+          ],
+          [
+            -4,
+            -189,
+            71,
+            -121
+          ],
+          [
+            -44,
+            -121,
+            83,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            6,
+            -251,
+            56,
+            -187
+          ],
+          [
+            -8,
+            -189,
+            67,
+            -124
+          ],
+          [
+            -44,
+            -124,
+            93,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            9,
+            -251,
+            59,
+            -187
+          ],
+          [
+            -9,
+            -191,
+            66,
+            -120
+          ],
+          [
+            -44,
+            -120,
+            79,
+            0
+          ]
+        ]
+      }
+    ],
+    "3005": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -4,
+            -422,
+            48,
+            -358
+          ],
+          [
+            -18,
+            -358,
+            59,
+            -215
+          ],
+          [
+            -18,
+            -215,
+            66,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            15,
+            -415,
+            67,
+            -351
+          ],
+          [
+            -2,
+            -353,
+            79,
+            -210
+          ],
+          [
+            -6,
+            -210,
+            83,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            35,
+            -407,
+            84,
+            -340
+          ],
+          [
+            14,
+            -348,
+            95,
+            -152
+          ],
+          [
+            3,
+            -152,
+            94,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            81,
+            -385,
+            131,
+            -321
+          ],
+          [
+            49,
+            -325,
+            130,
+            -203
+          ],
+          [
+            3,
+            -125,
+            132,
+            0
+          ],
+          [
+            42,
+            -203,
+            143,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            79,
+            -350,
+            129,
+            -286
+          ],
+          [
+            62,
+            -290,
+            130,
+            -203
+          ],
+          [
+            3,
+            -100,
+            134,
+            0
+          ],
+          [
+            47,
+            -203,
+            148,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            71,
+            -316,
+            121,
+            -252
+          ],
+          [
+            57,
+            -255,
+            125,
+            -168
+          ],
+          [
+            3,
+            -100,
+            134,
+            0
+          ],
+          [
+            39,
+            -168,
+            136,
+            -100
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            43,
+            -283,
+            93,
+            -219
+          ],
+          [
+            28,
+            -222,
+            103,
+            -97
+          ],
+          [
+            -10,
+            -114,
+            103,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            14,
+            -250,
+            64,
+            -186
+          ],
+          [
+            4,
+            -190,
+            79,
+            -65
+          ],
+          [
+            -44,
+            -114,
+            77,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            6,
+            -251,
+            56,
+            -187
+          ],
+          [
+            -4,
+            -189,
+            71,
+            -121
+          ],
+          [
+            -44,
+            -121,
+            83,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            6,
+            -251,
+            56,
+            -187
+          ],
+          [
+            -8,
+            -189,
+            67,
+            -124
+          ],
+          [
+            -44,
+            -124,
+            93,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            9,
+            -251,
+            59,
+            -187
+          ],
+          [
+            -9,
+            -191,
+            66,
+            -120
+          ],
+          [
+            -44,
+            -120,
+            79,
+            0
+          ]
+        ]
+      }
+    ],
     "5000": [
       {
         "c1": [],
@@ -11973,6 +17470,48 @@
       }
     ],
     "5001": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -35,
+            -422,
+            18,
+            -354
+          ],
+          [
+            -34,
+            -354,
+            58,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      }
+    ],
+    "5002": [
       {
         "c1": [],
         "c2": [
@@ -12121,6 +17660,71 @@
         ]
       }
     ],
+    "5007": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -43,
+            -413,
+            10,
+            -345
+          ],
+          [
+            -34,
+            -348,
+            50,
+            -224
+          ],
+          [
+            -25,
+            -224,
+            59,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -35,
+            -422,
+            18,
+            -354
+          ],
+          [
+            -34,
+            -354,
+            58,
+            1
+          ]
+        ]
+      }
+    ],
     "5010": [
       {
         "c1": [],
@@ -12170,6 +17774,83 @@
       }
     ],
     "5011": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -41,
+            -360,
+            34,
+            -225
+          ],
+          [
+            -17,
+            -423,
+            32,
+            -358
+          ],
+          [
+            -34,
+            -225,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -340,
+            28,
+            -215
+          ],
+          [
+            -20,
+            -395,
+            29,
+            -330
+          ],
+          [
+            -30,
+            -162,
+            47,
+            0
+          ],
+          [
+            -56,
+            -215,
+            38,
+            -162
+          ]
+        ]
+      }
+    ],
+    "5012": [
       {
         "c1": [],
         "c2": [
@@ -12371,6 +18052,60 @@
         ]
       }
     ],
+    "5017": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -64,
+            -340,
+            28,
+            -215
+          ],
+          [
+            -20,
+            -395,
+            29,
+            -330
+          ],
+          [
+            -30,
+            -162,
+            47,
+            0
+          ],
+          [
+            -56,
+            -215,
+            38,
+            -162
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -50,
+            -356,
+            42,
+            -166
+          ],
+          [
+            -16,
+            -411,
+            33,
+            -346
+          ],
+          [
+            -34,
+            -166,
+            53,
+            0
+          ]
+        ]
+      }
+    ],
     "5020": [
       {
         "c1": [],
@@ -12467,6 +18202,54 @@
         ]
       }
     ],
+    "5022": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -264,
+            40,
+            -202
+          ],
+          [
+            -38,
+            -202,
+            48,
+            1
+          ],
+          [
+            48,
+            -118,
+            86,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -46,
+            -263,
+            7,
+            -201
+          ],
+          [
+            -45,
+            -202,
+            38,
+            1
+          ],
+          [
+            38,
+            -121,
+            86,
+            1
+          ]
+        ]
+      }
+    ],
     "5025": [
       {
         "c1": [],
@@ -12516,6 +18299,77 @@
       }
     ],
     "5026": [
+      {
+        "c1": [],
+        "c2": [
+          [
+            -46,
+            -263,
+            7,
+            -201
+          ],
+          [
+            -45,
+            -202,
+            38,
+            1
+          ],
+          [
+            38,
+            -121,
+            86,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -264,
+            40,
+            -202
+          ],
+          [
+            -38,
+            -202,
+            48,
+            1
+          ],
+          [
+            48,
+            -118,
+            86,
+            1
+          ]
+        ]
+      },
+      {
+        "c1": [],
+        "c2": [
+          [
+            -13,
+            -264,
+            40,
+            -202
+          ],
+          [
+            -38,
+            -202,
+            48,
+            1
+          ],
+          [
+            48,
+            -118,
+            86,
+            1
+          ]
+        ]
+      }
+    ],
+    "5027": [
       {
         "c1": [],
         "c2": [

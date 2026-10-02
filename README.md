@@ -2,7 +2,25 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.33 — Crouch Exit End Frame M1
+## 最新版本：0.23.34 — Venus Specials M1
+
+BUILD `venus-specials-m1-20261002-01`。0.23.33 使用者 PASS；四招同版接入，本版待人工驗收，不標為 PASS。
+
+- 原 CNS `1200` 多段 HitDef、HitCount／Var44／Var3、輕重動畫與 Explod；`1000`／`1100` 原 Projectile、NumProjID、命中動畫／移動／期限、輕重參數及聲音。Projectile 使用自身命中／hitpause，不把子彈的接觸計時寫到本體。Sword 保留原正常模式 Var16>40 蓄力條件。
+- 原 `3000→3005` 的 SuperPause／Pause、BGPalFX、左上定位的兩段全畫面 Explod、音效與 StopSnd、Var45 第二次略過開場；3055／3050／3051／3052／3056 Helper、ParentVar47、HitOverride、NoChainID、DestroySelf。**S3005 相反的兩條 MoveContact triggerall 原樣保留，傷害由 Helper 執行**，沒有偷偷解除來源條件。
+- 匯出原 SFF／AIR 必殺、特效、Hard GetHit 動畫；保留 ticks／LoopStart／空影格／軸點。使用有限尺寸無損 WebP 圖集而非超高單圖，每頁解碼後逐像素與來源匯出比對一致；聲音直接由原 SND 抽取並校驗，SuperPause 的 20,0 使用原 common.snd。首次下載會比上一版多；手機效能仍需人工實測。
+- 玩家 -1 依原 CMD 次序啟用四招，未完成投技仍停用；加入蓄力所需的原 -3 Var16／17 controller。保留鏡頭校準、440 使用者速度調整、NoAirGuard、停用的原 recovery 入口及所有已驗收鍵位。
+
+人工測試（方向皆相對角色朝向；P1 x=Z、y=X，P2 x=Num0、y=Num.）：
+
+- `1200`：前→下→斜前下＋x／y，分別輕／重。測近距離多段命中、站／蹲防禦、空振、命中取消與受擊中斷特效。
+- `1000`：下→斜前下→前＋x／y。測輕重速度／傷害、子彈獨立飛行、命中後消失、雙方子彈與 NumProjID 出招限制。
+- `1100`：按住下超過 40 tick，再上＋x／y。輕／重出現位置與上升速度不同，近距離不一定命中；測蓄力不足不能出、命中／防禦／到期消失。
+- `3000`：HP≤250 時後→下→前→下＋y（原 CMD 時限 30 tick）。測開場定格／背景／聲音、對手暫停、Helper 傷害及防禦、同一角色再次使用略過開場；Space 回 HP 會令超必殺入口暫時不可用。
+
+自動驗證：32 組雙人／左右朝向／近遠距離完整出招與返回，來源 command／蓄力／HP 入口、Hard／Medium 受擊與 NoAirGuard；保留上一版全套 command、普通技、取消、倒地、鍵盤與 A12 回歸。人工接觸計時未 CHECK，GetHit／HitOver／HitShakeOver／HitVelSet 仍初步 TEST、待深測。此 runner 針對上述 Venus 來源配置，並非宣稱完整通用 MUGEN 引擎；AI、未完成投技、其他 Helper／Projectile controller 尚未接入。
+
+## 0.23.33 — Crouch Exit End Frame M1（使用者 PASS）
 
 BUILD `crouch-exit-end-frame-m1-20261002-01`。使用者確認 0.23.32 其餘項目暫時 PASS；A12 結尾倒跳單獨修正，本版待人工驗收。
 
