@@ -299,7 +299,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
           'noAirGuardControllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == -2 and controller['type'] == 'AssertSpecial' and any('NoAirGuard' in entry['text'] for entry in controller['entries'])],
           'userOverrides': {'440': {'ground.velocity': '-10,-18', 'air.velocity': '-8,-18', 'basis': 'User-requested 0.23.27 tuning; archived CNS unchanged'},
                             '1150': {'cameraTopEnding': True, 'basis': 'User-requested 0.23.35: reach visible camera top, then source projhitanim/VY=0; overrides original thirty-tick expiry and upper world height bound; archived CNS unchanged'}},
-          'koProfile': {'groundXMultiplier': 0.66, 'groundAdd': [-10, -8], 'groundYMinimum': -24,
+          'koProfile': {'enabled': False, 'groundXMultiplier': 0.66, 'groundAdd': [-10, -8], 'groundYMinimum': -24,
                         'airAdd': [-10, -8], 'airYMinimum': -12,
                         'basis': 'IKEMEN CharVelocity defaults multiplied by Venus localcoord width / 320; source CNS has no KO velocity overrides; player kovelocity=true'},
           'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
