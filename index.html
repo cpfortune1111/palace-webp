@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.45 HP Front / Options Artwork M1</title>
+<title>Prototype 0.23.46 Complete Round Flow M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,20 +37,22 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.45 · HP Front / Options Artwork M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hp-front-options-artwork-m1-20261003-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.46 · Complete Round Flow M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD complete-round-flow-m1-20261003-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './fight-hud-runtime.js?v=02345';
-import {createPalaceMenu} from './palace-menu.js?v=02345';
+import {createFightHud} from './fight-hud-runtime.js?v=02346';
+import {createRoundFlow} from './round-flow-runtime.js?v=02346';
+import {createRoundView} from './round-flow-view.js?v=02346';
+import {createPalaceMenu} from './palace-menu.js?v=02346';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:()=>new Promise(resolve=>{const wait=setInterval(()=>{if(battleDat&&stateIR&&lifecycleDat){clearInterval(wait);resolve()}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer)=>{resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;p1Life=1000;p2.life=1000;posX=-280;p2.x=280;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=1;p2.facing=-1;runtimeVar.fill(0);runtimeSysVar.fill(0);p2.vars=Array(60).fill(0);p2.sysvars=Array(10).fill(0);enterIRState(0);enterP2State(0);setP2ControlMode(mode==='vs'?'keyboard':'dummy');fightHud.setMode(timer);timerMode.value=timer;updateCamera()}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:()=>new Promise(resolve=>{const wait=setInterval(()=>{if(battleDat&&stateIR&&lifecycleDat&&dat&&turnDat&&guardDat&&fallDat&&airDat&&specialDat&&roundConfig.matchWins&&roundCharDat&&roundFxDat){clearInterval(wait);resolve()}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -66,6 +68,7 @@ function stepDebug(){
 }
 debugPress(dbgPlay,playDebug);debugPress(dbgPause,stepDebug);
 function restorePlayerHealth(){
+ if(roundFlow.enabled()&&!roundFlow.canFight())return;
  fightHud.reset();
  if(!battleDat||!dat)return;
  p1Life=1000;p2.life=p2.lifeMax;
@@ -100,17 +103,17 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.45 · HP Front / Options Artwork M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.46 · Complete Round Flow M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './venus-special-runtime.js?v=02345';
-import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02345';
+import {createSpecialRuntime} from './venus-special-runtime.js?v=02346';
+import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02346';
 let lifecycleDat;
 const lifecycleAtlases=[];
-fetch('./venus_lifecycle.json?v=02345').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02345'})));lifecycleDat=data}).catch(showRuntimeError);
-fetch('./venus_special.json?v=02345').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02345'})));specialDat=data}).catch(showRuntimeError);
+fetch('./venus_lifecycle.json?v=02346').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02346'})));lifecycleDat=data}).catch(showRuntimeError);
+fetch('./venus_special.json?v=02346').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02346'})));specialDat=data}).catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -121,8 +124,8 @@ const groundEffectCanvas=document.createElement('canvas');groundEffectCanvas.id=
 const reflectionCanvas=document.createElement('canvas');reflectionCanvas.id='playerReflections';reflectionCanvas.style.cssText='position:fixed;inset:0;z-index:1;pointer-events:none';document.body.insertBefore(reflectionCanvas,groundEffectCanvas);
 const filterCanvas=document.createElement('canvas');filterCanvas.id='stageFilter';filterCanvas.style.cssText='position:fixed;inset:0;z-index:5;pointer-events:none';document.body.appendChild(filterCanvas);
 let stageVisuals,stageFilterImage;
-fetch('./stage_visuals.json?v=02345').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
- const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02345'});stageFilterImage=image;stageVisuals=config;
+fetch('./stage_visuals.json?v=02346').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
+ const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02346'});stageFilterImage=image;stageVisuals=config;
 }).catch(showRuntimeError);
 function drawStageVisuals(){
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
@@ -139,6 +142,11 @@ function drawStageVisuals(){
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
 function spawnSourceExplod(params,owner,player,context=null){
+ if(/^F\d+$/i.test(String(params.anim))){
+  const anim=Number(String(params.anim).slice(1));if(!roundFxDat?.actions[String(anim)])return;
+  const position=splitExpressionPairM1(params.pos||'0,0').map(value=>Number(evalM1(value,context)));
+  sourceExplods.push({roundFx:true,id:Number(params.id),anim,player,ownerKey:owner.key||'root'+player,x:owner.x+position[0]*owner.facing,y:owner.y+position[1],vx:0,vy:0,facing:Number(evalM1(params.facing??owner.facing,context)),age:0,removetime:Number(params.removetime??-2),ignorehitpause:Number(params.ignorehitpause||0),sprpriority:Number(params.sprpriority||0)});return;
+ }
  if(lifecycleDat?.actions?.[String(params.anim)]){
   const position=splitExpressionPairM1(params.pos||'0,0').map(value=>Number(evalM1(value,context))),scale=splitExpressionPairM1(params.scale||'1,1').map(value=>Number(evalM1(value,context))),side=String(params.postype||'p1').toLowerCase();
   sourceExplods.push({id:Number(params.id),anim:Number(params.anim),player,ownerKey:owner.key||'root'+player,x:position[0],y:position[1],vx:0,vy:0,facing:1,scale,age:0,screen:true,screenRight:side==='right',removetime:Number(params.removetime??-2),ignorehitpause:Number(params.ignorehitpause||0),sprpriority:Number(params.sprpriority||0),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0)});return;
@@ -173,9 +181,9 @@ function drawSourceExplods(){
  effectContext.clearRect(0,0,effectCanvas.width,effectCanvas.height);
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
  effectContext.imageSmoothingEnabled=true;
- for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods]){let elapsed=0;const frames=effect.common?commonFallDat.actions[String(effect.anim)]:framesFor(effect.anim),frame=effect.entity?frames[effect.elem-1]:lifecycleDat?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
-  const sprite=effect.common?commonFallDat.sprites[frame.group+','+frame.item]:spriteFor(frame);let source=effect.common?null:spriteCanvasFor(frame);if(!sprite)continue;
-  if(effect.common){source=document.createElement('canvas');source.width=sprite.w;source.height=sprite.h;source.getContext('2d').drawImage(commonFallAtlas,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h)}
+ for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods]){let elapsed=0;const frames=effect.roundFx?roundFxDat.actions[String(effect.anim)]:effect.common?commonFallDat.actions[String(effect.anim)]:framesFor(effect.anim),frame=effect.roundFx?frames[effect.age%frames.length]:effect.entity?frames[effect.elem-1]:lifecycleDat?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
+  const sprite=effect.roundFx?roundFxDat.sprites[frame.group+','+frame.item]:effect.common?commonFallDat.sprites[frame.group+','+frame.item]:spriteFor(frame);let source=effect.common||effect.roundFx?null:spriteCanvasFor(frame);if(!sprite)continue;
+  if(effect.common||effect.roundFx){source=document.createElement('canvas');source.width=sprite.w;source.height=sprite.h;source.getContext('2d').drawImage(effect.roundFx?roundFxAtlases[sprite.page]:commonFallAtlas,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h)}
   if(!source)continue;
   const drawing=effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
   const airFlip=String(frame.flip||'').toUpperCase();
@@ -191,28 +199,28 @@ function playSourceSound(value,channel=-1){
  sound.addEventListener('ended',release,{once:true});sound.addEventListener('error',release,{once:true});sound.play().catch(release);return sound;
 }
 Promise.all([
- fetch('./venus_battle200.json?v=02345',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
- fetch('./venus_guard.json?v=02345',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02345'})
+ fetch('./venus_battle200.json?v=02346',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=02346',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02346'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_fall.json?v=02345').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02345'})
+ fetch('./venus_fall.json?v=02346').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02346'})
 ]).then(results=>{fallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_air.json?v=02345').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02345'})
+ fetch('./venus_air.json?v=02346').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02346'})
 ]).then(results=>{airDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./common_fall.json?v=02345').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02345'})
+ fetch('./common_fall.json?v=02346').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02346'})
 ]).then(results=>{commonFallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
  fetch('./venus_turn.json?v=0236',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Turn data HTTP '+response.status);return response.json()})
 ]).then(results=>{turnDat=results[1]}).catch(error=>showRuntimeError(error));
 let cmdDat=null;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02345',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02346',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 let gethitAtlas,gethitDat;
 Promise.all([
  new Promise((ok,err)=>{gethitAtlas=new Image();gethitAtlas.onload=ok;gethitAtlas.onerror=err;gethitAtlas.src='./venus_gethit_atlas.png?v=0221'}),
@@ -444,9 +452,9 @@ modeSelect.addEventListener('change',()=>{
  modeSelect.blur();
 });
 coarsePointer.addEventListener('change',()=>{if(inputPreference==='auto')setInputMode(initialInputMode())});
-function framesFor(anim){return (lifecycleDat?.actions?.[String(anim)]||specialDat?.actions?.[String(anim)]||airDat?.actions?.[String(anim)]||fallDat?.actions?.[String(anim)]||guardDat?.actions?.[String(anim)]||gethitDat?.actions?.[String(anim)]||turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
-function spriteFor(frame){const k=frame.group+','+frame.item;return lifecycleDat?.sprites?.[k]||specialDat?.sprites?.[k]||airDat?.sprites?.[k]||fallDat?.sprites?.[k]||guardDat?.sprites?.[k]||turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
-function atlasFor(frame){const k=frame.group+','+frame.item;if(lifecycleDat?.sprites?.[k])return lifecycleAtlases[lifecycleDat.sprites[k].page];if(specialDat?.sprites?.[k])return specialAtlases[specialDat.sprites[k].page];if(airDat?.sprites?.[k])return airAtlas;if(fallDat?.sprites?.[k])return fallAtlas;if(guardDat?.sprites?.[k])return guardAtlas;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+function framesFor(anim){return (roundCharDat?.actions?.[String(anim)]||lifecycleDat?.actions?.[String(anim)]||specialDat?.actions?.[String(anim)]||airDat?.actions?.[String(anim)]||fallDat?.actions?.[String(anim)]||guardDat?.actions?.[String(anim)]||gethitDat?.actions?.[String(anim)]||turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
+function spriteFor(frame){const k=frame.group+','+frame.item;return roundCharDat?.sprites?.[k]||lifecycleDat?.sprites?.[k]||specialDat?.sprites?.[k]||airDat?.sprites?.[k]||fallDat?.sprites?.[k]||guardDat?.sprites?.[k]||turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
+function atlasFor(frame){const k=frame.group+','+frame.item;if(roundCharDat?.sprites?.[k])return roundCharAtlases[roundCharDat.sprites[k].page];if(lifecycleDat?.sprites?.[k])return lifecycleAtlases[lifecycleDat.sprites[k].page];if(specialDat?.sprites?.[k])return specialAtlases[specialDat.sprites[k].page];if(airDat?.sprites?.[k])return airAtlas;if(fallDat?.sprites?.[k])return fallAtlas;if(guardDat?.sprites?.[k])return guardAtlas;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
 const spriteCanvasCache=new WeakMap();
 function spriteCanvasFor(frame){
  const source=atlasFor(frame),sprite=spriteFor(frame);
@@ -479,14 +487,14 @@ function validateRuntime(){
 }
 let p1StateType='S',p1Physics='S',p1AnimStartTime=0,p1Power=0,p1InvulnerableUntil=0,p1EntryCommands=null;
 function isAttackState(number){return [200,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(number)}
-function sourceState(number){return battleDat?.attackStates?.[String(number)]||battleDat?.locomotionStates?.[String(number)]||battleDat?.fallStates?.[String(number)]||stateIR?.states?.[String(number)]}
+function sourceState(number){return battleDat?.attackStates?.[String(number)]||battleDat?.locomotionStates?.[String(number)]||battleDat?.fallStates?.[String(number)]||battleDat?.lifecycleStates?.[String(number)]||stateIR?.states?.[String(number)]}
 function stateDef(){const def=sourceState(state);return def?{...def,type:p1StateType,physics:p1Physics}:null}
 function animDone(){return (current===5||current===6?p1TurnTime:stateTicks-p1AnimStartTime)>=actionDuration(current)}
 function setAnimForState(def){
  if((state===0||state===20)&&current===5&&!animDone())return;
- if(def.anim==='Keep')return;
+ if(def.anim===undefined||def.anim==='Keep')return;
  if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
- current=Number(def.anim);fi=0;ticks=0;
+ current=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(1))));fi=0;ticks=0;
 }
 function enterIRState(st,animOverride){
  p1EntryCommands=[1000,1100,1200].includes(st)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,1)])):null;
@@ -701,7 +709,7 @@ function executeControllerM1(controller,binding,context,adapter){
   case 'CtrlSet':binding.ctrl=value(params.value);break;
   case 'StateTypeSet':if(params.moveType!==undefined)binding.moveType=String(params.moveType).toUpperCase();if(params.statetype!==undefined)binding.type=String(params.statetype).toUpperCase();if(params.physics!==undefined)binding.physics=String(params.physics).toUpperCase();break;
   case 'HitDef':adapter.hitDef(specialRuntime.numeric(params,context));break;
-  case 'AssertSpecial':if(!['NoWalk','NoAutoTurn','NoAirGuard'].includes(params.flag))throw Error('Unsupported locomotion assertion '+params.flag);break;
+  case 'AssertSpecial':if(!['NoWalk','NoAutoTurn','NoAirGuard','Intro'].includes(params.flag))throw Error('Unsupported locomotion assertion '+params.flag);break;
   case 'DisplayToClipboard':break;
   case 'NotHitBy':if(params.value!=='SCA'||Number(params.time)!==1)throw Error('Unsupported locomotion NotHitBy');break;
   case 'ChangeAnim':binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
@@ -853,6 +861,7 @@ function enterP2State(n){
  p2.hitCount=0;
  enterGroundReactionState(p2,n);p2.activeHitDef=null;p2.attackFrame=null;
  if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
+ if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';p2.ctrl=def.ctrl??0;if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}p2.sprPriority=def.sprpriority??0}
  if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(battleDat.powerMaximum,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;p2.anim=def.anim;if(def.velset?.[0]!==undefined)p2.vx=def.velset[0]*p2.facing;if(def.velset?.[1]!==undefined)p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveHit=0;p2.moveGuarded=0}
  if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim;if(def.ctrl!==undefined)p2.ctrl=def.ctrl}
  if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
@@ -928,7 +937,7 @@ function fighterExpressionContext(fighter,opponent,commands={}){
    const key=name.toLowerCase().replace(/\s+/g,' ');
    const values={time:fighter.time,anim:fighter.anim,animelem:fighter.elem,ctrl:fighter.ctrl,movetype:fighter.moveType,statetype:fighter.type,
     stateno:fighter.state,prevstateno:fighter.prevState||0,p2statetype:opponent.type,p2stateno:opponent.state,movehit:Math.abs(fighter.moveHit||0),movecontact:Math.abs(fighter.moveContact||0),moveguarded:Math.abs(fighter.moveGuarded||0),
-    life:fighter.life??1000,lifemax:fighter.lifeMax??1000,hitcount:fighter.hitCount||0,alive:fighter.life>0,hitfall:!!fighter.getHit?.fall,matchover:0,
+    life:fighter.life??1000,lifemax:fighter.lifeMax??1000,hitcount:fighter.hitCount||0,alive:fighter.life>0,hitfall:!!fighter.getHit?.fall,matchover:roundFlow.snapshot().phase==='match',
     hitshakeover:(fighter.hitShake||0)<=0,hitover:(fighter.hitTime??-1)<0,
     random:fighter.randomValue,ailevel:gameShell.isWatch()?gameShell.options.difficulty:0,animtime:!framesFor(fighter.anim).some(frame=>frame.time<0)&&([5,6].includes(fighter.anim)?fighter.turnTime||0:fighter.time-(fighter.animStartTime||0))>=actionDuration(fighter.anim)?0:-1,'pos x':fighter.x,'pos y':fighter.y,
     'vel x':fighter.vx*fighter.facing,'vel y':fighter.vy,'p2dist x':((opponent.x??fighter.x)-fighter.x)*fighter.facing};
@@ -939,7 +948,7 @@ function fighterExpressionContext(fighter,opponent,commands={}){
    if(key==='gametime')return combatTraceTick;
    if(key==='inguarddist')return inGuardDistanceM1(fighter.player===2?p2:p1ExpressionFighter());
    if(key==='numproj')return specialRuntime.entities.filter(entity=>entity.player===fighter.player&&entity.kind==='projectile').length;
-   if(key==='win'||key==='lose')return false;
+   if(['win','lose','drawgame'].includes(key))return roundFlow.result(fighter.player||1)[key==='drawgame'?'draw':key];
    if(!(key in values))throw Error('AST query '+name);return values[key];
   }};
 }
@@ -950,7 +959,7 @@ function spawnSourceHitSpark(params,guarded,attacker,defender){
  const offset=String(params.sparkxy||'0,0').split(',').map(Number),edge=attacker.facing!==defender.facing?VENUS_GROUND_FRONT:-VENUS_GROUND_BACK;
  sourceExplods.push({id:-1,anim:Number(match[1]),player:attacker.player,ownerKey:attacker.key,x:defender.x+edge*defender.facing-(offset[0]||0)*attacker.facing,y:attacker.y+(offset[1]||0),vx:0,vy:0,facing:attacker.facing,age:0,sprpriority:3,supermovetime:999999999,pausemovetime:999999999});
 }
-function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);return {...p2,player:2,key:'root2'}}return {...p1ExpressionFighter(),animStartTime:p1AnimStartTime,life:p1Life,lifeMax:1000,vars:runtimeVar,sysvars:runtimeSysVar,hitCount:p1HitCount,player:1,key:'root1'}}
+function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);return {...p2,player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:1000,vars:runtimeVar,sysvars:runtimeSysVar,hitCount:p1HitCount,player:1,key:'root1'}}
 function applyEntityHit(entity,defender,params){
  const held=canonicalNow(),guard=entity.player===1?p2GuardMode():held.B?(held.D?'crouch':'stand'):'none';
  const result=resolveGroundHitM1({id:entity.player,facing:entity.facing},defender,params,guard);result.getHit.hitid=Number(params.id??-1);
@@ -967,6 +976,50 @@ function runLifecycleController(controller,fighter,context){
 }
 const lifecycleRuntime=createLifecycleRuntime({data:()=>battleDat,root:specialRoot,eval:evalM1,trigger:controllerTriggered,controller:runLifecycleController});
 const p1LifecycleBinding={player:1,vars:runtimeVar,fvars:Array(40).fill(0),get state(){return state},set state(value){enterIRState(value)},get power(){return p1Power},set power(value){p1Power=value}};
+const roundConfig={};
+let roundCharDat,roundFxDat;const roundCharAtlases=[],roundFxAtlases=[];
+async function loadRoundSprites(prefix,atlases){const response=await fetch('./'+prefix+'.json?v=02346');if(!response.ok)throw Error(prefix+' HTTP '+response.status);const data=await response.json();await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;atlases[index]=image;image.src='./'+file+'?v=02346'})));return data}
+loadRoundSprites('venus_round',roundCharAtlases).then(data=>{roundCharDat=data}).catch(showRuntimeError);
+loadRoundSprites('round_fx',roundFxAtlases).then(data=>{roundFxDat=data}).catch(showRuntimeError);
+fetch('./round_flow.json?v=02346').then(response=>{if(!response.ok)throw Error('Round flow HTTP '+response.status);return response.json()}).then(config=>Object.assign(roundConfig,config)).catch(showRuntimeError);
+const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot();roundFlow.begin(snapshot.mode,timerMode.value)},menu:()=>{roundView.hideMatch();gameShell.showHome()},isHome:()=>gameShell.isHome(),tick:()=>combatTraceTick});
+roundView.ready.catch(showRuntimeError);
+const roundFlow=createRoundFlow({config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
+ reset:()=>{
+  resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=1000;p2.life=1000;
+  for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
+  for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
+  posX=-280;p2.x=280;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=1;p2.facing=-1;p1InvulnerableUntil=0;p1LastHitKey=null;p1EntryCommands=null;
+  Object.assign(p2,{getHit:null,hitShake:0,hitTime:-1,attackPause:0,activeHitDef:null,attackFrame:null,entryCommands:null,lastHitKey:null,invulnerableUntil:0,cornerPushVelocity:0,downRecovery:0});
+  if(lifecycleRuntime.rounds.existed===0){p1Power=0;p2.power=0;runtimeVar.fill(0);runtimeSysVar.fill(0);p2.vars=Array(60).fill(0);p2.sysvars=Array(10).fill(0);p2.fvars=Array(40).fill(0)}
+  fightHud.setMode(timerMode.value);roundView.hideMatch();updateCamera();
+ },
+ initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2])lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)))},
+ fight:()=>{p1Reaction=null;enterIRState(0);enterP2State(0);runtimeCtrl=1;p2.ctrl=1;resetPlayerInput()},
+ lock:()=>{runtimeCtrl=0;p2.ctrl=0},
+ stepPresentation:()=>{stepLifecycleGlobals();stepLifecycleState(1);stepLifecycleState(2)},
+ introComplete:()=>[0,1990,1991].includes(state)&&[0,1990,1991].includes(p2.state),
+ stopCombat:()=>{activeHitDef=null;p2.activeHitDef=null;p2.attackFrame=null;runtimeCtrl=0;p2.ctrl=0;resetPlayerInput()},
+ stepResult:()=>{stepLifecycleGlobals();enforceKoM1();stepRoundResultFighter(1);stepRoundResultFighter(2);p1HitPause=Math.max(0,p1HitPause-1);p2.attackPause=Math.max(0,p2.attackPause-1)},
+ settled:()=>posY===0&&p2.y===0&&(p1Life>0||state===5150)&&(p2.life>0||p2.state===5150),
+ pose:winner=>{for(const player of [1,2]){if((player===1?p1Life:p2.life)<=0)continue;const next=winner===player?180:175;if(player===1){p1Reaction=null;enterIRState(next)}else enterP2State(next)}},
+ message:roundView.message,
+ sound:value=>{const audio=new Audio('./round-sounds/'+value.replace(',','-')+'.wav');gameShell.sound(audio);audio.play().catch(()=>{})},
+ matchEnd:()=>roundView.showMatch()
+});
+function stepLifecycleState(player){
+ const initial=player===1?state:p2.state,definition=battleDat.lifecycleStates[String(initial)];
+ if(!definition){if(player===1){runtimeCtrl=0;stateTicks++;advanceAirOneTick()}else{p2.ctrl=0;p2.time++;advanceFighterAirOneTick(p2)}return}
+ const binding=player===1?p1LifecycleBinding:p2;
+ for(const controller of definition.controllers){lifecycleRuntime.execute(controller,binding,specialRuntime.context(specialRoot(player)));if((player===1?state:p2.state)!==initial)return}
+ if(player===1){stateTicks++;advanceAirOneTick()}else{p2.time++;advanceFighterAirOneTick(p2)}
+}
+function stepRoundResultFighter(player){
+ if(player===1&&p1Reaction){stepGroundReactionM1(p1Reaction,'none');syncP1Reaction();return}
+ if(player===2&&(p2.moveType==='H'||p2.life<=0)){stepGroundReactionM1(p2,'none');return}
+ if(player===1){if(posY<0){posX+=vx;posY+=vy;vy+=constVal('movement.yaccel');if(posY>=0){posY=0;vx=0;vy=0;enterIRState(0)}}stateTicks++;advanceAirOneTick();runtimeCtrl=0}
+ else{if(p2.y<0){p2.x+=p2.vx;p2.y+=p2.vy;p2.vy+=constVal('movement.yaccel');if(p2.y>=0){p2.y=0;p2.vx=0;p2.vy=0;enterP2State(0)}}p2.time++;advanceFighterAirOneTick(p2);p2.ctrl=0}
+}
 function stepLifecycleGlobals(){
  for(const player of [1,2]){
   if(specialRuntime.blocked(player))continue;
@@ -1196,6 +1249,7 @@ function stepGroundReactionM1(fighter,guarding){
  fighter.time++;if(![5000,5010].includes(fighter.state))advanceFighterAirOneTick(fighter);
 }
 function stepP2M1(){
+ if(battleDat.lifecycleStates[String(p2.state)]){stepLifecycleState(2);return}
  if(specialRuntime.blocked(2))return;
  const attackTick=isAttackState(p2.state);
  if(attackTick)stepP2AttackM1();
@@ -1257,6 +1311,7 @@ function resolveCollisionM1(frame){
  return resolveFighterCollisionM1(frame?{...frame,facing:p1Facing}:null,p2);
 }
 function resolveFighterCollisionM1(frame,defender){
+ if(roundFlow.enabled()&&!roundFlow.canFight())return {overlap:false,contact:false};
  if(!defender.kind&&specialRuntime.unhittable(defender.player||defender.id||1))return {overlap:false,contact:false};
  if((defender.invulnerableUntil||0)>combatTraceTick||defender.type==='L')return {overlap:false,contact:false};
  if(defender.state===105)return {overlap:false,contact:false};
@@ -1363,7 +1418,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.45',build:'hp-front-options-artwork-m1-20261003-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.46',build:'complete-round-flow-m1-20261003-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1371,13 +1426,15 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.45-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.46-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
- fightHud.step(p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life,p2.life]);
+ const roundActive=roundFlow.canFight();
+ fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life,p2.life]);
  stepFallShake();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat||!specialDat||!lifecycleDat)return;
+ if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
  stepSourceExplods();
  const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested,p2Left:p2Input.left,p2Right:p2Input.right},guardMode=p2GuardMode();
  simStepCore();
@@ -1385,6 +1442,7 @@ function simStep(){
  for(const effect of sourceExplods)if(effect.bindtime===1||effect.bindtime===-1){const owner=effect.player===1?liveP1():p2;effect.x=owner.x;effect.y=owner.y;effect.facing=owner.facing;if(effect.bindtime===1)effect.bindtime=0}
  combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,p2Control:p2ControlMode,
   randomValue:before.p1.hitPause>0?null:randomValue,before,after:combatTraceSnapshot()};
+ roundFlow.step();
  combatTraceTick++;combatTraceCount=Math.min(combatTraceCount+1,combatTraceCapacity);
 }
 function stepWatchAI(){
@@ -1411,6 +1469,7 @@ function simStepCore(){
   resolveP2PunchM1();logicFrame={...liveP1(),p2:{...p2}};return;
  }
  // Input must be sampled before any command query on this simulation tick.
+ if(battleDat.lifecycleStates[String(state)]){stepLifecycleState(1);logicFrame={...liveP1(),p2:{...p2}};return}
  const tickEntry=stateEntrySerial;
  const tickState=state;
  let def=stateDef();
@@ -1508,7 +1567,7 @@ function showRuntimeError(e){
  act.textContent='Simulation stopped — check runtime error above';
 }
 function updateDebugHud(){
- fightHud.render({...displayP1(),life:p1Life},p2);
+ fightHud.render({...displayP1(),life:p1Life},p2,{showTimeOver:!roundFlow.enabled()});roundView.render(roundFlow.snapshot());
  const signed=value=>(Number(value)<0?'':'+')+Number(value).toFixed(1);
  const row=(player,fighter,localVX)=>'P'+player+'_S'+fighter.state+'_T'+fighter.time+'_A'+fighter.anim+'_E'+fighter.elem+
   '_F'+(fighter.facing<0?'-1':'+1')+'_X'+signed(fighter.x)+'_Y'+signed(fighter.y)+

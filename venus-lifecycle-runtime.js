@@ -17,6 +17,7 @@ export function createLifecycleRuntime(api){
     break;
    }
    case 'PowerSet':fighter.power=number(params.value,context);break;
+   case 'VarRandom':{const bounds=String(params.range??'0,1000').split(',').map(value=>number(value,context));fighter.vars[number(params.v,context)]=bounds[0]+Math.floor(Math.random()*(bounds[1]-bounds[0]+1));break;}
    case 'DisplayToClipboard':api.debug?.(fighter,params,context);break;
    default:api.controller({...controller,type},fighter,context);
   }

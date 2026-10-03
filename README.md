@@ -2,7 +2,18 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.45 — HP Front / Options Artwork M1
+## 最新版本：0.23.46 — Complete Round Flow M1
+
+BUILD `complete-round-flow-m1-20261003-01`。待人工驗收。
+
+- Venus 1v1 VS／Watch：5900 初始化 → 原 190／191 入場 → 1990／1991 收尾 → Round／Fight → 實戰 → KO／Double KO／Time Over → 原 180→181 勝利、175→170（來源無 175 動畫）敗北 → 下一回合。
+- 按 fight.def 先勝 2 局、最多 2 局重賽和局；第三次和局結束比賽。保留分數、更新 RoundNo／RoundsExisted，每局重置 HP／座標／Timer／命令／hitpause／Projectile／Helper／Explod，來源 5900 只在首局清指定變數。
+- Timer 只在實戰有效 ticks 倒數；入場／勝負／debug pause 不扣秒。KO 優先於同 tick 到時；Time Over 按即時實際 HP 判勝負，HP 同值為和局。勝負決定後禁止新傷害／操作，等 KO 倒地才進 pose，RoundState／Win／Lose／MatchOver 查詢接通。
+- 比賽結束提供「再戰／主頁」。Training 維持自由練習，不自動判勝負或重开；Space 補血仍可從 5150 起身。VS／Watch 結算階段禁用補血。
+- 新增原 170／181／190／191／1910／1911 無損 WebP、Fight／KO AIR 與原回合 announcer／角色入場勝負人聲；fightfx 930–935 的原控制模式圖示接入。原不存在的 936／937 不造素材。
+- 仍是 Venus 1v1；非 Arcade／Continue／選角／4P。來源 slow.time 慢鏡與原 bitmap 勝負文字字型尚未實作，不混稱完整 IKEMEN 視覺移植。
+
+## 0.23.45 — HP Front / Options Artwork M1
 
 BUILD `hp-front-options-artwork-m1-20261003-01`。待人工驗收。
 
