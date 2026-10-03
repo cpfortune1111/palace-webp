@@ -27,5 +27,5 @@ export function createFightHud(){
   const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?614:642,42)}
   if(value===0&&showTimeOver){context.fillStyle='#ffffff';context.font='bold 30px serif';context.textAlign='center';context.fillText(first.life===second.life?'TIME OVER · DRAW':first.life>second.life?'TIME OVER · P1 WIN':'TIME OVER · P2 WIN',640,180)}
  }
- return {ready,render,step:(active,life=[1000,1000])=>{step(active,life);stepFront(life)},reset,setMode,remaining,remainingExact:()=>mode==='infinite'?null:Math.max(0,Number(mode)-elapsed/60),displayLife:()=>trails.map(trail=>trail.value),displayFront:()=>fronts.map(front=>front.value)};
+ return {ready,render,animate:()=>{ticks++},step:(active,life=[1000,1000])=>{step(active,life);stepFront(life)},reset,setMode,remaining,remainingExact:()=>mode==='infinite'?null:Math.max(0,Number(mode)-elapsed/60),displayLife:()=>trails.map(trail=>trail.value),displayFront:()=>fronts.map(front=>front.value)};
 }
