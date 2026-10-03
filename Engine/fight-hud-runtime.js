@@ -1,8 +1,9 @@
+import {assetUrl} from './asset-paths.js?v=02362';
 export function createFightHud(){
  const canvas=document.createElement('canvas');canvas.id='fightHud';canvas.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none';document.body.appendChild(canvas);
  const backdrop=document.createElement('canvas');backdrop.id='portraitBackdrop';backdrop.style.cssText='position:fixed;inset:0;z-index:3;pointer-events:none';document.body.appendChild(backdrop);const backdropContext=backdrop.getContext('2d');
  const context=canvas.getContext('2d');let fight,timer,fightAtlas,timerAtlas,elapsed=0,mode='infinite',ticks=0;const trails=[{value:1,start:1,target:1,age:10,hold:0},{value:1,start:1,target:1,age:10,hold:0}];
- const load=async prefix=>{const data=await fetch('./'+prefix+'.json?v=02346').then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./'+prefix+'_atlas.png?v=02346'});return {data,atlas}};
+ const load=async prefix=>{const data=await fetch(assetUrl('./'+prefix+'.json?v=02362')).then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src=assetUrl('./'+prefix+'_atlas.png?v=02362')});return {data,atlas}};
  const ready=Promise.all([load('fight_hud'),load('timer_hud')]).then(([first,second])=>{fight=first.data;fightAtlas=first.atlas;timer=second.data;timerAtlas=second.atlas});
  const fronts=[{value:1,start:1,target:1,age:10},{value:1,start:1,target:1,age:10}];
  function reset(){elapsed=0;ticks=0;for(const trail of [...trails,...fronts]){trail.value=1;trail.start=1;trail.target=1;trail.age=10;trail.hold=0}}

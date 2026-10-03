@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-const local=fs.existsSync('work/venus-lifecycle-runtime.js');
+const local=fs.existsSync('work/Char/Venus/venus-lifecycle-runtime.js');
 const {createLifecycleRuntime}=await import(local?'./venus-lifecycle-runtime.js':'../venus-lifecycle-runtime.js');
 
-const data=JSON.parse(fs.readFileSync(local?'work/venus_battle200.json':'venus_battle200.json','utf8'));
+const data=JSON.parse(fs.readFileSync(local?'work/Char/Venus/venus_battle200.json':'venus_battle200.json','utf8'));
 assert.equal(data.globalControllers['-2'].length,44);
 assert.equal(data.globalControllers['-3'].length,20);
 assert.equal(data.lifecycleHelpers['9999'].controllers.length,41);

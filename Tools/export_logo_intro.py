@@ -7,7 +7,7 @@ from PIL import Image
 
 
 def export():
-    destination = Path('work/logo-webp')
+    destination = Path('work/Data/Logo/Sprites')
     destination.mkdir(parents=True, exist_ok=True)
     image = Image.open(r'E:\3D 2022\LOGO\Letter_79.png').convert('RGBA')
     alpha = image.getchannel('A')
@@ -29,10 +29,10 @@ def export():
         cropped = image.crop((left, top, right, bottom))
         filename = f'letter-{index}.webp'
         cropped.save(destination / filename, lossless=True, exact=True)
-        letters.append(dict(file='logo-webp/' + filename, width=right-left, height=bottom-top, top=top))
+        letters.append(dict(file='Data/Logo/Sprites/' + filename, width=right-left, height=bottom-top, top=top))
         widths.append(right-left)
     scale = 0.6
-    gap = 0
+    gap = -8
     total = sum(widths) * scale + gap * 9
     cursor = (1280-total)/2
     for entry in letters:
@@ -54,7 +54,7 @@ def export():
         bounds = frame.getchannel('A').getbbox()
         filename = f'petals-{item}.webp'
         frame.crop(bounds).save(destination / filename, lossless=True, exact=True)
-        petals.append(dict(item=item, file='logo-webp/'+filename, x=640-axis_x+bounds[0], y=-axis_y+bounds[1]))
+        petals.append(dict(item=item, file='Data/Logo/Sprites/'+filename, x=640-axis_x+bounds[0], y=-axis_y+bounds[1]))
     frames = []
     action = definition.split('[Begin Action 10]')[1]
     tick = 0
@@ -66,9 +66,9 @@ def export():
             if group == 10:
                 frames.append(dict(start=tick, end=tick+time, item=item))
             tick += time
-    data = dict(duration=duration, letterStart=180, letterStagger=5, letterDuration=58, letters=letters, petals=petals, petalFrames=frames)
-    Path('work/logo-intro.json').write_text(json.dumps(data, separators=(',', ':')), encoding='utf-8')
-    print('Letters:', len(letters), 'petals:', len(petals), 'duration:', duration, 'bytes:', sum(file.stat().st_size for file in destination.glob('*.webp')))
+    data = dict(duration=415, letterStart=180, letterStagger=5, letterDuration=58, lettersStop=265, bufferTicks=120, fadeTicks=30, letters=letters, petals=petals, petalFrames=frames)
+    Path('work/Data/Logo/logo-intro.json').write_text(json.dumps(data, separators=(',', ':')), encoding='utf-8')
+    print('Letters:', len(letters), 'petals:', len(petals), 'duration:', data['duration'], 'bytes:', sum(file.stat().st_size for file in destination.glob('*.webp')))
 
 
 if __name__ == '__main__':
