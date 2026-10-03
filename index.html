@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.44 HP Trail Hold / BGM Start M1</title>
+<title>Prototype 0.23.45 HP Front / Options Artwork M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -37,13 +37,13 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.44 · HP Trail Hold / BGM Start M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hp-trail-hold-bgm-start-m1-20261003-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.45 · HP Front / Options Artwork M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hp-front-options-artwork-m1-20261003-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './fight-hud-runtime.js?v=02344';
-import {createPalaceMenu} from './palace-menu.js?v=02344';
+import {createFightHud} from './fight-hud-runtime.js?v=02345';
+import {createPalaceMenu} from './palace-menu.js?v=02345';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
@@ -100,17 +100,17 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.44 · HP Trail Hold / BGM Start M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.45 · HP Front / Options Artwork M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±3750 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './venus-special-runtime.js?v=02344';
-import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02344';
+import {createSpecialRuntime} from './venus-special-runtime.js?v=02345';
+import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02345';
 let lifecycleDat;
 const lifecycleAtlases=[];
-fetch('./venus_lifecycle.json?v=02344').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02344'})));lifecycleDat=data}).catch(showRuntimeError);
-fetch('./venus_special.json?v=02344').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02344'})));specialDat=data}).catch(showRuntimeError);
+fetch('./venus_lifecycle.json?v=02345').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02345'})));lifecycleDat=data}).catch(showRuntimeError);
+fetch('./venus_special.json?v=02345').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02345'})));specialDat=data}).catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -121,8 +121,8 @@ const groundEffectCanvas=document.createElement('canvas');groundEffectCanvas.id=
 const reflectionCanvas=document.createElement('canvas');reflectionCanvas.id='playerReflections';reflectionCanvas.style.cssText='position:fixed;inset:0;z-index:1;pointer-events:none';document.body.insertBefore(reflectionCanvas,groundEffectCanvas);
 const filterCanvas=document.createElement('canvas');filterCanvas.id='stageFilter';filterCanvas.style.cssText='position:fixed;inset:0;z-index:5;pointer-events:none';document.body.appendChild(filterCanvas);
 let stageVisuals,stageFilterImage;
-fetch('./stage_visuals.json?v=02344').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
- const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02344'});stageFilterImage=image;stageVisuals=config;
+fetch('./stage_visuals.json?v=02345').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
+ const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02345'});stageFilterImage=image;stageVisuals=config;
 }).catch(showRuntimeError);
 function drawStageVisuals(){
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
@@ -191,28 +191,28 @@ function playSourceSound(value,channel=-1){
  sound.addEventListener('ended',release,{once:true});sound.addEventListener('error',release,{once:true});sound.play().catch(release);return sound;
 }
 Promise.all([
- fetch('./venus_battle200.json?v=02344',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
- fetch('./venus_guard.json?v=02344',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02344'})
+ fetch('./venus_battle200.json?v=02345',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=02345',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02345'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_fall.json?v=02344').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02344'})
+ fetch('./venus_fall.json?v=02345').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02345'})
 ]).then(results=>{fallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_air.json?v=02344').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02344'})
+ fetch('./venus_air.json?v=02345').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02345'})
 ]).then(results=>{airDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./common_fall.json?v=02344').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02344'})
+ fetch('./common_fall.json?v=02345').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02345'})
 ]).then(results=>{commonFallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
  fetch('./venus_turn.json?v=0236',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Turn data HTTP '+response.status);return response.json()})
 ]).then(results=>{turnDat=results[1]}).catch(error=>showRuntimeError(error));
 let cmdDat=null;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02344',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02345',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 let gethitAtlas,gethitDat;
 Promise.all([
  new Promise((ok,err)=>{gethitAtlas=new Image();gethitAtlas.onload=ok;gethitAtlas.onerror=err;gethitAtlas.src='./venus_gethit_atlas.png?v=0221'}),
@@ -1363,7 +1363,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.44',build:'hp-trail-hold-bgm-start-m1-20261003-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.45',build:'hp-front-options-artwork-m1-20261003-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1371,7 +1371,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.44-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.45-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

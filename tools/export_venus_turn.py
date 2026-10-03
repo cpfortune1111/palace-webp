@@ -48,7 +48,7 @@ def decode_lz5(data, length):
     return bytes(output)
 
 
-def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', source_prefix='venus'):
+def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', source_prefix='venus', sprite_output_dir=None):
     source_dir, output_dir = Path(source_dir), Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     sff = (source_dir / (source_prefix + '.sff')).read_bytes()
@@ -92,6 +92,21 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
         else:
             image = png.convert('RGBA')
         return image, axis_x, axis_y
+
+    if sprite_output_dir is not None:
+        destination = Path(sprite_output_dir)
+        destination.mkdir(parents=True, exist_ok=True)
+        entries = {}
+        for index, header in enumerate(headers):
+            group, item = header[:2]
+            if group in (21, 30) or (group, item) in ((0, 0), (10, 0), (10, 1), (20, 0), (25, 0)):
+                continue
+            image, axis_x, axis_y = decode(index)
+            filename = f'system-{group}-{item}.webp'
+            image.save(destination / filename, lossless=True)
+            entries[f'{group},{item}'] = dict(file='system-webp/' + filename, axisX=axis_x, axisY=axis_y, w=image.width, h=image.height)
+        (output_dir / 'system_webp.json').write_text(json.dumps(dict(sprites=entries, sffSHA256=hashlib.sha256(sff).hexdigest()), separators=(',', ':')))
+        return
 
     actions = {}
     loop_starts = {}

@@ -2,7 +2,17 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.44 — HP Trail Hold / BGM Start M1
+## 最新版本：0.23.45 — HP Front / Options Artwork M1
+
+BUILD `hp-front-options-artwork-m1-20261003-01`。待人工驗收。
+
+- 表層恢復 10 tick ease-out（由快至慢），中層維持已 PASS 的 HOLD 60 tick／等速 10 tick。實際 HP／KO 不延遲。
+- 移除主頁 BGM 播放按鈕；保留自動播放嘗試與首次任意互動重試。
+- 主頁右下 TsukinoAi+ Logo 連往 https://tsukinoaiplus.com，另開分頁。
+- Options 轉獨立畫面，按 SYSTEM.DEF OptionBG 使用 200,1 背景及 1,0 Thankyou 層，保留設定功能與返回；原 bitmap 選單字型尚未接入。
+- SYSTEM.SFF 非主頁場景圖片共 159 張以 lossless WebP 匯出至 system-webp/，system_webp.json 保留尺寸／axis／來源 SHA256。雲／海／主頁場景不改。
+
+## 0.23.44 — HP Trail Hold / BGM Start M1
 
 BUILD `hp-trail-hold-bgm-start-m1-20261003-01`。待人工驗收。
 
