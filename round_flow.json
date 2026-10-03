@@ -1,1 +1,1 @@
-{"matchWins": 2, "maxDraws": 2, "startWait": 30, "controlWait": 30, "overWait": 45, "overTime": 210, "winTime": 60}
+{"matchWins":2,"maxDraws":2,"startWait":30,"controlWait":30,"overWait":45,"overTime":210,"winTime":60,"slowTime":60,"slowFade":45,"slowSpeed":0.25}

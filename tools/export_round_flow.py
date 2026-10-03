@@ -12,6 +12,9 @@ definition = (source / 'fight.def').read_text(encoding='utf-8-sig')
 section = definition.split('[Round]', 1)[1].split('[Begin Action', 1)[0]
 values = dict(re.findall(r'^([\w.]+)\s*=\s*(\d+)\s*$', section, re.M))
 config = {target: int(values[key]) for target, key in [('matchWins', 'match.wins'), ('maxDraws', 'match.maxdrawgames'), ('startWait', 'start.waittime'), ('controlWait', 'ctrl.time'), ('overWait', 'over.waittime'), ('overTime', 'over.time'), ('winTime', 'win.time')]}
+slow_time = int(values.get('slow.time', 60))
+slow_speed = re.search(r'^slow\.speed\s*=\s*([\d.]+)', section, re.M)
+config.update(slowTime=slow_time, slowFade=int(values.get('slow.fadetime', slow_time * .75)), slowSpeed=float(slow_speed.group(1)) if slow_speed else .25)
 Path('work/round_flow.json').write_text(json.dumps(config))
 lines = []
 active = False
