@@ -303,6 +303,9 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
                         'airAdd': [-10, -8], 'airYMinimum': -12,
                         'basis': 'IKEMEN CharVelocity defaults multiplied by Venus localcoord width / 320; source CNS has no KO velocity overrides; player kovelocity=true'},
           'locomotionStates': locomotion_states, 'locomotionConstants': locomotion_constants,
+          'aiWalkControllers': [compile_controller(controller) for controller in states['controllers']
+                                if controller['state'] == 20 and controller['file'] == 'venus_Common.cns'
+                                and any(entry['text'] == 'triggerall = AILevel' for entry in controller['entries'])],
           'deferredLocomotionEffects': deferred_locomotion,
           'guardDistance': {'front': int(attack_distance[1]), 'back': 0,
                            'basis': 'Venus Size attack.dist; IKEMEN default rear distance 0; strict axis-position range'},
