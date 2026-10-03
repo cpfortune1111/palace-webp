@@ -27,7 +27,7 @@ export function createTitleStage(parent){
  }
  function addOceanReflection(model){
   model.updateMatrixWorld(true);let ocean;model.traverse(node=>{if(node.isMesh&&/ocean/i.test(node.name))ocean=node});if(!ocean)throw Error('Title Ocean mesh not found');
-  for(const material of Array.isArray(ocean.material)?ocean.material:[ocean.material])material.side=THREE.FrontSide;
+  for(const material of Array.isArray(ocean.material)?ocean.material:[ocean.material]){material.side=THREE.FrontSide;material.depthWrite=false}
   const bounds=new THREE.Box3().setFromBufferAttribute(ocean.geometry.getAttribute('position')).applyMatrix4(ocean.matrixWorld),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   const waterPlane=new THREE.Plane(new THREE.Vector3(0,1,0),-center.y);model.traverse(node=>{if(!node.isMesh)return;for(const material of Array.isArray(node.material)?node.material:[node.material])if(/shooting.?star/i.test(material.name))material.clippingPlanes=[waterPlane]});oceanOcclusion=true;
   const shader={...Reflector.ReflectorShader,uniforms:{...Reflector.ReflectorShader.uniforms,time:{value:0}},fragmentShader:`uniform sampler2D tDiffuse;uniform float time;varying vec4 vUv;
@@ -40,7 +40,7 @@ export function createTitleStage(parent){
   const reflect=oceanReflection.onBeforeRender;oceanReflection.onBeforeRender=(renderer,scene,camera)=>{const visible=ocean.visible;ocean.visible=false;try{reflect.call(oceanReflection,renderer,scene,camera)}finally{ocean.visible=visible}};
  }
  function resize(){if(!camera)return;const fit=Math.min(innerWidth/settings.localcoord[0],innerHeight/settings.localcoord[1]),width=settings.localcoord[0]*fit,height=settings.localcoord[1]*fit;renderer.setSize(width,height,false);Object.assign(renderer.domElement.style,{width:width+'px',height:height+'px',left:(innerWidth-width)/2+'px',top:(innerHeight-height)/2+'px'});camera.aspect=width/height;camera.updateProjectionMatrix()}
- const ready=Promise.all([fetch('./title_stage.json?v=02357').then(response=>{if(!response.ok)throw Error('Title settings HTTP '+response.status);return response.json()}),fetch('./Title.glb.gz?v=02357').then(async response=>{if(!response.ok)throw Error('Title model HTTP '+response.status);return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()})]).then(async ([config,buffer])=>{
+ const ready=Promise.all([fetch('./title_stage.json?v=02358').then(response=>{if(!response.ok)throw Error('Title settings HTTP '+response.status);return response.json()}),fetch('./Title.glb.gz?v=02358').then(async response=>{if(!response.ok)throw Error('Title model HTTP '+response.status);return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()})]).then(async ([config,buffer])=>{
   settings=config;camera=new THREE.PerspectiveCamera(config.fov,config.localcoord[0]/config.localcoord[1],.01,500);camera.position.set(0,0,0);camera.lookAt(0,0,-1);
   const model=await new GLTFLoader().parseAsync(buffer,'./');model.scene.position.fromArray(config.offset);model.scene.scale.fromArray(config.scale);scene.add(model.scene);
   fixPlanetLayers(model.scene);mixer=new THREE.AnimationMixer(model.scene);for(const clip of model.animations)mixer.clipAction(clip).play();addOceanReflection(model.scene);resize();renderer.render(scene,camera);
