@@ -1,12 +1,12 @@
 export function createFightHud(){
  const canvas=document.createElement('canvas');canvas.id='fightHud';canvas.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none';document.body.appendChild(canvas);
  const backdrop=document.createElement('canvas');backdrop.id='portraitBackdrop';backdrop.style.cssText='position:fixed;inset:0;z-index:3;pointer-events:none';document.body.appendChild(backdrop);const backdropContext=backdrop.getContext('2d');
- const context=canvas.getContext('2d');let fight,timer,fightAtlas,timerAtlas,elapsed=0,mode='infinite',ticks=0;const trails=[{value:1,start:1,target:1,age:10},{value:1,start:1,target:1,age:10}];
- const load=async prefix=>{const data=await fetch('./'+prefix+'.json?v=02343').then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./'+prefix+'_atlas.png?v=02343'});return {data,atlas}};
+ const context=canvas.getContext('2d');let fight,timer,fightAtlas,timerAtlas,elapsed=0,mode='infinite',ticks=0;const trails=[{value:1,start:1,target:1,age:10,hold:0},{value:1,start:1,target:1,age:10,hold:0}];
+ const load=async prefix=>{const data=await fetch('./'+prefix+'.json?v=02344').then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./'+prefix+'_atlas.png?v=02344'});return {data,atlas}};
  const ready=Promise.all([load('fight_hud'),load('timer_hud')]).then(([first,second])=>{fight=first.data;fightAtlas=first.atlas;timer=second.data;timerAtlas=second.atlas});
- function reset(){elapsed=0;ticks=0;for(const trail of trails){trail.value=1;trail.start=1;trail.target=1;trail.age=10}}
+ function reset(){elapsed=0;ticks=0;for(const trail of trails){trail.value=1;trail.start=1;trail.target=1;trail.age=10;trail.hold=0}}
  function setMode(value){mode=value;reset()}
- function step(active,life=[1000,1000]){ticks++;for(let index=0;index<2;index++){const target=Math.max(0,Math.min(1,life[index]/1000)),trail=trails[index];if(target!==trail.target){trail.start=trail.value;trail.target=target;trail.age=target>=trail.value?10:0}trail.age=Math.min(10,trail.age+1);trail.value=trail.target+(trail.start-trail.target)*Math.pow(1-trail.age/10,3)}if(mode!=='infinite'&&active&&elapsed<Number(mode)*60)elapsed++}
+ function step(active,life=[1000,1000]){ticks++;for(let index=0;index<2;index++){const target=Math.max(0,Math.min(1,life[index]/1000)),trail=trails[index];if(target!==trail.target){const healing=target>trail.target;trail.start=trail.value;trail.target=target;trail.age=healing?10:0;trail.hold=healing?0:60;if(healing)trail.value=target}if(trail.hold>0){trail.hold--;continue}trail.age=Math.min(10,trail.age+1);trail.value=trail.start+(trail.target-trail.start)*trail.age/10}if(mode!=='infinite'&&active&&elapsed<Number(mode)*60)elapsed++}
  function remaining(){return mode!=='infinite'?Math.max(0,Number(mode)-Math.floor(elapsed/60)):null}
  function render(first,second){
   const width=visualViewport?.width||innerWidth,height=visualViewport?.height||innerHeight,fit=Math.min(width/1280,height/720),left=(width-1280*fit)/2,top=(height-720*fit)/2;

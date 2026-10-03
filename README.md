@@ -2,7 +2,15 @@
 
 [開啟遊戲](https://cpfortune1111.github.io/palace-webp/)
 
-## 最新版本：0.23.43 — Title Animation / HUD Fix M1
+## 最新版本：0.23.44 — HP Trail Hold / BGM Start M1
+
+BUILD `hp-trail-hold-bgm-start-m1-20261003-01`。待人工驗收。
+
+- 1v1 中層 12,1 每次受傷先 HOLD 60 simulation ticks，再以等速 10 ticks 扣至實際 HP；再次受傷重新計時。實際 damage／KO 仍即時，補血立即恢復顯示。
+- 主頁立即嘗試 BGM 自動播放；被瀏覽器阻擋時顯示播放按鈕，亦接受點擊／觸控／任意按鍵啟動，不再只靠 Arrow。音量設定保留。
+- 使用者回報雲／海仍未動；按要求暫緩，不視為驗收通過。主頁可改用 GLB 3D 場景，尚待提供主頁素材，今版未替換。
+
+## 0.23.43 — Title Animation / HUD Fix M1
 
 BUILD `title-animation-hud-fix-m1-20261003-01`。待人工驗收。
 
