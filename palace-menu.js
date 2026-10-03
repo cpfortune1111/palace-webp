@@ -1,5 +1,5 @@
 import {createTitleStage} from './title-stage.js?v=02358';
-import {createLogoIntro} from './logo-intro.js?v=02360';
+import {createLogoIntro} from './logo-intro.js?v=02361';
 
 export function createPalaceMenu(api){
  const defaults={difficulty:4,timer:'99',master:100,bgm:100,sfx:100};let options={...defaults};try{const saved=JSON.parse(localStorage.getItem('palace-options-v1'));for(const key of Object.keys(defaults))if(saved&&saved[key]!==undefined)options[key]=saved[key]}catch{}
@@ -29,7 +29,7 @@ export function createPalaceMenu(api){
  homeButton.addEventListener('click',showHome);window.addEventListener('resize',draw);
  document.addEventListener('keydown',event=>{if(overlay.hidden||document.querySelector('dialog[open]'))return;if(event.code==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(mode==='options')showHome();return}if(event.target.matches('input,select'))return;event.preventDefault();event.stopImmediatePropagation();if(mode==='home'){if(event.code==='ArrowDown'||event.code==='ArrowUp'){selected=(selected+(event.code==='ArrowDown'?1:3))%4;showHome()}else if(event.code==='Enter'){selected===3?showOptions():start(['vs','training','watch'][selected])}}else if(event.code==='Escape')showHome()},true);
  const requested=new URLSearchParams(location.search).get('mode');
- if(['vs','training','watch'].includes(requested)){showHome();start(requested)}else{mode='logo';overlay.hidden=true;api.pause(true);logoIntro=createLogoIntro();logoIntro.done.then(showHome);document.addEventListener('keydown',event=>{if(!logoIntro.finished){event.preventDefault();event.stopImmediatePropagation()}},true)}
+ mode='logo';overlay.hidden=true;api.pause(true);logoIntro=createLogoIntro();logoIntro.done.then(()=>{if(['vs','training','watch'].includes(requested))start(requested);else showHome()});document.addEventListener('keydown',event=>{if(!logoIntro.finished){event.preventDefault();event.stopImmediatePropagation()}},true);
  let lastTitleFrame=performance.now();function animate(){const now=performance.now(),dt=Math.min((now-lastTitleFrame)/1000,.05);lastTitleFrame=now;titleStage.setVisible(!overlay.hidden&&mode==='home');if(!overlay.hidden){draw();if(mode==='home')titleStage.render(dt)}requestAnimationFrame(animate)}requestAnimationFrame(animate);
  return {ready:Promise.all([ready,titleStage.ready]),titleStage,logoIntro,sound,options,start,showHome,isWatch:()=>mode==='watch',isHome:()=>mode==='logo'||!overlay.hidden};
 }

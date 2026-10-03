@@ -66,7 +66,7 @@ def export():
             if group == 10:
                 frames.append(dict(start=tick, end=tick+time, item=item))
             tick += time
-    data = dict(duration=duration, letterStart=180, letterStagger=11, letterDuration=27, letters=letters, petals=petals, petalFrames=frames)
+    data = dict(duration=duration, letterStart=180, letterStagger=5, letterDuration=58, letters=letters, petals=petals, petalFrames=frames)
     Path('work/logo-intro.json').write_text(json.dumps(data, separators=(',', ':')), encoding='utf-8')
     print('Letters:', len(letters), 'petals:', len(petals), 'duration:', duration, 'bytes:', sum(file.stat().st_size for file in destination.glob('*.webp')))
 
