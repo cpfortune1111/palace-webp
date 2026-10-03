@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.58 Title Opaque / UV Update M1</title>
+<title>Prototype 0.23.59 Touch ABXY / LR M1</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -20,11 +20,14 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #pfill{height:100%;width:0;background:white;transition:width .15s}
 
 #ctrl{position:fixed!important;z-index:4!important;left:34px!important;right:auto!important;bottom:max(28px,env(safe-area-inset-bottom))!important;transform:none!important;display:block!important}
-#ctrl button{display:none!important}
+#touchShoulders{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}
 #stick{width:150px;height:150px;border-radius:50%;background:#202126cc;border:2px solid #777;position:relative;touch-action:none;box-shadow:0 4px 18px #0008}
 #stick:before{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:#777;transform:translate(-50%,-50%)}
 #stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
-#atkX{position:fixed;right:48px;bottom:74px;width:82px;height:82px;border-radius:50%;border:2px solid #aaa;background:#333a;color:#fff;font:bold 28px system-ui;z-index:9;touch-action:none}#atkX.pressed{background:#777a}
+#touchAttacks{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:max(28px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(2,1fr);gap:12px;z-index:9}
+.touchButton{width:70px;height:70px;padding:0;border-radius:50%;border:2px solid #aaa;background:#333a;color:#fff;font:bold 26px system-ui;touch-action:none;user-select:none;-webkit-user-select:none}
+.touchButton.pressed{background:#777a}
+@media(max-width:500px){#ctrl{left:max(12px,env(safe-area-inset-left))!important}#stick{width:130px;height:130px}#touchAttacks{right:max(12px,env(safe-area-inset-right));gap:10px}.touchButton{width:60px;height:60px}}
 
 #debugBtns{position:fixed;right:8px;top:8px;display:flex;gap:6px;z-index:30}
 #debugBtns button{width:38px;height:32px;border:1px solid rgba(255,255,255,.35);border-radius:7px;background:rgba(0,0,0,.58);color:#fff;font:700 16px system-ui;touch-action:manipulation}
@@ -34,19 +37,19 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #inputPanel{position:fixed;right:8px;top:48px;z-index:30;background:#08080dcc;padding:6px 8px;border-radius:7px;font-size:11px;max-width:260px}
 #inputPanel select{background:#202126;color:white;border:1px solid #777;border-radius:4px;font-size:12px}
 #inputHint{margin-top:4px}
-body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #atkX{display:none!important}
+body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.58 · Title Opaque / UV Update M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD title-opaque-uv-m1-20261004-02</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
-<div id="ctrl"><div id="stick"><div id="stickKnob"></div></div></div><button id="atkX" aria-label="X attack">X</button>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.59 · Touch ABXY / LR M1</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD touch-abxy-lr-m1-20261004-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './fight-hud-runtime.js?v=02358';
-import {createScoreRuntime} from './score-runtime.js?v=02358';
-import {createRoundFlow} from './round-flow-runtime.js?v=02358';
-import {createRoundView} from './round-flow-view.js?v=02358';
-import {createPalaceMenu} from './palace-menu.js?v=02358';
+import {createFightHud} from './fight-hud-runtime.js?v=02359';
+import {createScoreRuntime} from './score-runtime.js?v=02359';
+import {createRoundFlow} from './round-flow-runtime.js?v=02359';
+import {createRoundView} from './round-flow-view.js?v=02359';
+import {createPalaceMenu} from './palace-menu.js?v=02359';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
@@ -101,17 +104,17 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch('./StageTraining.glb',{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.58 · Title Opaque / UV Update M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.59 · Touch ABXY / LR M1';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './venus-special-runtime.js?v=02358';
-import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02358';
+import {createSpecialRuntime} from './venus-special-runtime.js?v=02359';
+import {createLifecycleRuntime} from './venus-lifecycle-runtime.js?v=02359';
 let lifecycleDat;
 const lifecycleAtlases=[];
-fetch('./venus_lifecycle.json?v=02358').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02358'})));lifecycleDat=data}).catch(showRuntimeError);
-fetch('./venus_special.json?v=02358').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02358'})));specialDat=data}).catch(showRuntimeError);
+fetch('./venus_lifecycle.json?v=02359').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src='./'+file+'?v=02359'})));lifecycleDat=data}).catch(showRuntimeError);
+fetch('./venus_special.json?v=02359').then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src='./'+file+'?v=02359'})));specialDat=data}).catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -122,8 +125,8 @@ const groundEffectCanvas=document.createElement('canvas');groundEffectCanvas.id=
 const reflectionCanvas=document.createElement('canvas');reflectionCanvas.id='playerReflections';reflectionCanvas.style.cssText='position:fixed;inset:0;z-index:1;pointer-events:none';document.body.insertBefore(reflectionCanvas,groundEffectCanvas);
 const filterCanvas=document.createElement('canvas');filterCanvas.id='stageFilter';filterCanvas.style.cssText='position:fixed;inset:0;z-index:5;pointer-events:none';document.body.appendChild(filterCanvas);
 let stageVisuals,stageFilterImage;
-fetch('./stage_visuals.json?v=02358').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
- const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02358'});stageFilterImage=image;stageVisuals=config;
+fetch('./stage_visuals.json?v=02359').then(response=>{if(!response.ok)throw Error('Stage visuals HTTP '+response.status);return response.json()}).then(async config=>{
+ const image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src='./'+config.filter.file+'?v=02359'});stageFilterImage=image;stageVisuals=config;
 }).catch(showRuntimeError);
 function drawStageVisuals(){
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
@@ -199,28 +202,28 @@ function playSourceSound(value,channel=-1){
  sound.addEventListener('ended',release,{once:true});sound.addEventListener('error',release,{once:true});sound.play().catch(release);return sound;
 }
 Promise.all([
- fetch('./venus_battle200.json?v=02358',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
- fetch('./venus_guard.json?v=02358',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02358'})
+ fetch('./venus_battle200.json?v=02359',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Battle data HTTP '+response.status);return response.json()}),
+ fetch('./venus_guard.json?v=02359',{cache:'no-store'}).then(response=>{if(!response.ok)throw Error('Guard data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{guardAtlas=new Image();guardAtlas.onload=ok;guardAtlas.onerror=err;guardAtlas.src='./venus_guard_atlas.png?v=02359'})
 ]).then(results=>{battleDat=results[0];guardDat=results[1]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_fall.json?v=02358').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02358'})
+ fetch('./venus_fall.json?v=02359').then(response=>{if(!response.ok)throw Error('Fall data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{fallAtlas=new Image();fallAtlas.onload=ok;fallAtlas.onerror=err;fallAtlas.src='./venus_fall_atlas.png?v=02359'})
 ]).then(results=>{fallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./venus_air.json?v=02358').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02358'})
+ fetch('./venus_air.json?v=02359').then(response=>{if(!response.ok)throw Error('Air data HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{airAtlas=new Image();airAtlas.onload=ok;airAtlas.onerror=err;airAtlas.src='./venus_air_atlas.png?v=02359'})
 ]).then(results=>{airDat=results[0]}).catch(showRuntimeError);
 Promise.all([
- fetch('./common_fall.json?v=02358').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
- new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02358'})
+ fetch('./common_fall.json?v=02359').then(response=>{if(!response.ok)throw Error('Common fall HTTP '+response.status);return response.json()}),
+ new Promise((ok,err)=>{commonFallAtlas=new Image();commonFallAtlas.onload=ok;commonFallAtlas.onerror=err;commonFallAtlas.src='./common_fall_atlas.png?v=02359'})
 ]).then(results=>{commonFallDat=results[0]}).catch(showRuntimeError);
 Promise.all([
  new Promise((ok,err)=>{turnAtlas=new Image();turnAtlas.onload=ok;turnAtlas.onerror=err;turnAtlas.src='./venus_turn_atlas.png?v=0236'}),
  fetch('./venus_turn.json?v=0236',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Turn data HTTP '+response.status);return response.json()})
 ]).then(results=>{turnDat=results[1]}).catch(error=>showRuntimeError(error));
 let cmdDat=null;
-Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02358',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
+Promise.all([new Promise((ok,err)=>{atlas=new Image();atlas.onload=ok;atlas.onerror=err;atlas.src='./venus_runtime_atlas.png?v=0197d'}),fetch('./venus_runtime.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_runtime_states.json?v=0197d',{cache:'no-store'}).then(x=>x.json()),fetch('./venus_cmd_runtime.json?v=02359',{cache:'no-store'}).then(x=>x.json()),new Promise((ok,err)=>{attackAtlas=new Image();attackAtlas.onload=ok;attackAtlas.onerror=err;attackAtlas.src='./venus_attack200_atlas.png?v=0197d'}),fetch('./venus_attack200.json?v=0197d',{cache:'no-store'}).then(x=>x.json())]).then(x=>{dat=x[1];stateIR=x[2];cmdDat=x[3];attackDat=x[5];validateRuntime();validateAttackM1();resize()}).catch(e=>{console.error(e);status.textContent='RUNTIME ERROR · '+e.message});
 let gethitAtlas,gethitDat;
 Promise.all([
  new Promise((ok,err)=>{gethitAtlas=new Image();gethitAtlas.onload=ok;gethitAtlas.onerror=err;gethitAtlas.src='./venus_gethit_atlas.png?v=0221'}),
@@ -269,7 +272,7 @@ const BASE_CAMERA_POS={x:0,y:4.27,z:13.56};
 const BASE_LOOK_AT={x:0,y:2.2,z:-3.8};
 let cameraX=0,cameraY=0,cameraZoom=1;
 let stageCameraReady=false;const stageCameraConfig={};
-fetch('./stage_camera.json?v=02358').then(response=>response.json()).then(data=>{Object.assign(STAGE_CAMERA,data.camera);Object.assign(STAGE_PLAYER,{leftbound:data.player.leftbound,rightbound:data.player.rightbound,...data.bound});Object.assign(stageCameraConfig,data);stageCameraReady=true}).catch(showRuntimeError);
+fetch('./stage_camera.json?v=02359').then(response=>response.json()).then(data=>{Object.assign(STAGE_CAMERA,data.camera);Object.assign(STAGE_PLAYER,{leftbound:data.player.leftbound,rightbound:data.player.rightbound,...data.bound});Object.assign(stageCameraConfig,data);stageCameraReady=true}).catch(showRuntimeError);
 function resetCamera(){cameraX=STAGE_CAMERA.startx;cameraY=STAGE_CAMERA.starty;cameraZoom=STAGE_CAMERA.startzoom;applyCamera()}
 function worldScreenX(value){return 640+(value-cameraX)*cameraZoom}
 function worldScreenY(value){return 660+(value-cameraY)*cameraZoom}
@@ -410,14 +413,14 @@ function resetPlayerInput(){
  p2HeldKeys.clear();for(const action of keyboardActions)p2Input[action]=false;
  heldKeys.clear();stickPointer=null;clearStick();input.x=false;xHeld=false;consumedXPress=false;
  for(const action of keyboardActions)input[action]=false;
- atkX.classList.remove('pressed');inputHistory.length=0;
+ for(const button of touchButtons){touchPointers.get(button).clear();button.classList.remove('pressed')}inputHistory.length=0;
  resetCommandList(1);resetCommandList(2);
  for(const name of Object.keys(prevCanonical))prevCanonical[name]=false;
 }
 function setInputMode(mode){
  if(activeInputMode!==mode){resetPlayerInput();activeInputMode=mode}
  document.body.dataset.inputMode=mode;
- inputHint.textContent=inputOS+' · '+(mode==='keyboard'?['p1','p2'].map(player=>player.toUpperCase()+': '+keyboardActions.map(action=>action+'='+keyLabel(keyboardBindings[player][action])).join(' ')).join(' · '):'觸控：左搖桿 · X 攻擊');
+ inputHint.textContent=inputOS+' · '+(mode==='keyboard'?['p1','p2'].map(player=>player.toUpperCase()+': '+keyboardActions.map(action=>action+'='+keyLabel(keyboardBindings[player][action])).join(' ')).join(' · '):'觸控：左搖桿 · L / R · A B / X Y');
 }
 function useTouchInput(event){
  if(inputPreference==='keyboard')return false;
@@ -539,8 +542,16 @@ function latchJumpIntent(){
 }
 const atkX=document.querySelector('#atkX');let xHeld=false;
 if(!atkX)throw new Error('UI missing #atkX');
-atkX.addEventListener('pointerdown',e=>{if(!useTouchInput(e))return;e.preventDefault();xHeld=true;atkX.classList.add('pressed');atkX.setPointerCapture?.(e.pointerId)});
-function releaseX(){xHeld=false;if(!input.x)consumedXPress=false;atkX.classList.remove('pressed')}atkX.addEventListener('pointerup',releaseX);atkX.addEventListener('pointercancel',releaseX);atkX.addEventListener('lostpointercapture',releaseX);
+const touchButtons=Array.from(document.querySelectorAll('.touchButton'));
+const touchPointers=new Map(touchButtons.map(button=>[button,new Set()]));
+for(const button of touchButtons){
+ const pointers=touchPointers.get(button),action=button.dataset.action;
+ const sync=()=>{const held=pointers.size>0;input[action]=held;if(action==='x'){xHeld=held;if(!held)consumedXPress=false}button.classList.toggle('pressed',held)};
+ button.addEventListener('pointerdown',event=>{if(!useTouchInput(event))return;event.preventDefault();pointers.add(event.pointerId);sync();button.setPointerCapture?.(event.pointerId)});
+ const release=event=>{if(pointers.delete(event.pointerId)){event.preventDefault();sync()}};
+ for(const eventName of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(eventName,release);
+ button.addEventListener('contextmenu',event=>event.preventDefault());
+}
 const inputHistory=[];
 let inputTick=0;
 let consumedXPress=false;
@@ -1005,12 +1016,12 @@ const scoreRuntime=createScoreRuntime();
 const roundConfig={};
 let roundAudioReady=false,roundVoiceUntil=0,roundAnnouncerUntil=0;
 const roundAudioTicks={};
-fetch('./round_audio.json?v=02358').then(response=>response.json()).then(data=>{Object.assign(roundAudioTicks,data);roundAudioReady=true}).catch(showRuntimeError);
+fetch('./round_audio.json?v=02359').then(response=>response.json()).then(data=>{Object.assign(roundAudioTicks,data);roundAudioReady=true}).catch(showRuntimeError);
 let roundCharDat,roundFxDat;const roundCharAtlases=[],roundFxAtlases=[];
-async function loadRoundSprites(prefix,atlases){const response=await fetch('./'+prefix+'.json?v=02358');if(!response.ok)throw Error(prefix+' HTTP '+response.status);const data=await response.json();await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;atlases[index]=image;image.src='./'+file+'?v=02358'})));return data}
+async function loadRoundSprites(prefix,atlases){const response=await fetch('./'+prefix+'.json?v=02359');if(!response.ok)throw Error(prefix+' HTTP '+response.status);const data=await response.json();await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;atlases[index]=image;image.src='./'+file+'?v=02359'})));return data}
 loadRoundSprites('venus_round',roundCharAtlases).then(data=>{roundCharDat=data}).catch(showRuntimeError);
 loadRoundSprites('round_fx',roundFxAtlases).then(data=>{roundFxDat=data}).catch(showRuntimeError);
-fetch('./round_flow.json?v=02358').then(response=>{if(!response.ok)throw Error('Round flow HTTP '+response.status);return response.json()}).then(config=>Object.assign(roundConfig,config)).catch(showRuntimeError);
+fetch('./round_flow.json?v=02359').then(response=>{if(!response.ok)throw Error('Round flow HTTP '+response.status);return response.json()}).then(config=>Object.assign(roundConfig,config)).catch(showRuntimeError);
 const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot();roundFlow.begin(snapshot.mode,timerMode.value)},menu:()=>{roundView.hideMatch();gameShell.showHome()},isHome:()=>gameShell.isHome(),statistics:()=>scoreRuntime.snapshot(),tick:()=>combatTraceTick});
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
@@ -1463,7 +1474,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.58',build:'title-opaque-uv-m1-20261004-02',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.59',build:'touch-abxy-lr-m1-20261004-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1471,7 +1482,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.58-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.59-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

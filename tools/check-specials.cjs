@@ -22,6 +22,21 @@ const server=http.createServer((request,response)=>{
  await page.goto('http://127.0.0.1:8766/?mode=training');
  await page.waitForFunction(()=>window.specialTest?.run('!!specialDat&&!!battleDat&&!!dat&&!!turnDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; errors: '+JSON.stringify(errors)+'; status: '+String(error))});
  const run=source=>page.evaluate(source=>window.specialTest.run(source),source);
+ if(process.argv.includes('--touch-buttons')){
+  await page.locator('#inputMode').selectOption('touch');
+  const result=await run(`(()=>{let checks=0;const expect=(condition,label)=>{if(!condition)throw Error(label);checks++};const fire=(button,type,pointerId)=>button.dispatchEvent(new PointerEvent(type,{pointerId,pointerType:'touch',bubbles:true,cancelable:true}));for(const button of touchButtons)button.setPointerCapture=()=>{};for(const button of touchButtons){fire(button,'pointerdown',1);expect(input[button.dataset.action]&&button.classList.contains('pressed'),'Held '+button.dataset.action);fire(button,'pointercancel',1);expect(!input[button.dataset.action]&&!button.classList.contains('pressed'),'Cancel '+button.dataset.action)}fire(document.querySelector('#atkL'),'pointerdown',2);fire(atkX,'pointerdown',3);expect(canonicalNow().d&&canonicalNow().x,'L and X together');fire(atkX,'pointerdown',4);fire(atkX,'pointerup',3);expect(input.x,'Second finger remains held');fire(document.querySelector('#atkL'),'lostpointercapture',2);expect(!input.l&&input.x,'Independent release');resetPlayerInput();expect(touchButtons.every(button=>!input[button.dataset.action]&&!button.classList.contains('pressed')&&touchPointers.get(button).size===0),'Reset clears all');return {checks}})()`);
+  for(const viewport of [{width:1280,height:720},{width:844,height:390},{width:390,height:844}]){
+   await page.setViewportSize(viewport);
+   const bounds=await page.evaluate(()=>Object.fromEntries(['atkL','atkR','stick','atkA','atkB','atkX','atkY'].map(id=>{const rect=document.getElementById(id).getBoundingClientRect();return [id,{left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom}]})));
+   assert.ok(bounds.atkL.bottom<bounds.stick.top&&bounds.atkR.bottom<bounds.stick.top);
+   assert.ok(bounds.atkA.bottom<bounds.atkX.top&&bounds.atkB.bottom<bounds.atkY.top);
+   assert.ok(bounds.atkA.right<bounds.atkB.left&&bounds.atkX.right<bounds.atkY.left);
+   for(const rect of Object.values(bounds))assert.ok(rect.left>=0&&rect.right<=viewport.width&&rect.top>=0&&rect.bottom<=viewport.height);
+   assert.ok(bounds.stick.right<bounds.atkX.left);
+  }
+  await page.setViewportSize({width:844,height:390});await run('for(let tick=0;tick<2000&&roundFlow.snapshot().phase!=="training";tick++)simStep();r.render(s,c);draw();drawMars();drawSourceExplods()');await page.screenshot({path:'work/touch-buttons-02359.png'});
+  await page.locator('#inputMode').selectOption('keyboard');assert.equal(await page.locator('#ctrl').isVisible(),false);assert.equal(await page.locator('#touchAttacks').isVisible(),false);assert.deepEqual(errors,[]);console.log(JSON.stringify(result));return;
+ }
  await page.waitForFunction(()=>window.specialTest.run('!!lifecycleDat'),null,{timeout:30000});
  await page.waitForFunction(()=>window.specialTest.run('!gameShell.isHome()'),null,{timeout:30000});
  await run('for(let tick=0;tick<2000&&roundFlow.snapshot().phase!=="training";tick++)simStep();for(let tick=0;tick<60;tick++)simStep()');
