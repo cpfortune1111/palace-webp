@@ -5,7 +5,7 @@ export function createRoundFlow(api){
  function speed(){const base=config.slowSpeed??.25,fade=config.slowFade??45;return slowRemaining<=0?1:slowRemaining<fade?base+(1-base)*(fade-slowRemaining)/fade:base}
  function begin(next,timer){mode=next;api.setTimer(timer);wins=[0,0];draws=0;matchWinner=0;Object.assign(rounds,{number:1,existed:0,match:1});startRound()}
  function startRound(duration=30){winner=0;reason='';age=0;slowRemaining=0;fadeDuration=duration;rounds.state=0;phase='startFade';api.reset();api.initialize();api.message('');api.lock();api.fade(1)}
- function finish(kind){if(phase!=='fight')return;const life=api.life();reason=kind;winner=life[0]===life[1]?0:life[0]>life[1]?1:2;if(winner)wins[winner-1]++;else draws++;if(kind==='ko')triggerKoSlow();rounds.state=3;phase='result';age=0;api.stopCombat();api.message(kind==='ko'?(winner?'K.O.':'Double K.O.'):'Time Over');api.sound(kind==='ko'?(winner?'2,0':'2,1'):'2,2')}
+ function finish(kind){if(phase!=='fight')return;const life=api.life();reason=kind;winner=life[0]===life[1]?0:life[0]>life[1]?1:2;if(winner)wins[winner-1]++;else draws++;api.onFinish?.(winner,kind);if(kind==='ko')triggerKoSlow();rounds.state=3;phase='result';age=0;api.stopCombat();api.message(kind==='ko'?(winner?'K.O.':'Double K.O.'):'Time Over');api.sound(kind==='ko'?(winner?'2,0':'2,1'):'2,2')}
  function step(){
   age++;
   slowRemaining=Math.max(0,slowRemaining-1);
