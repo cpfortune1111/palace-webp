@@ -1,5 +1,5 @@
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362';
+import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362-camera2';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02362';
 import {createSelectScreen} from './select-screen.js?v=02362';
 
