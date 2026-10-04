@@ -42,7 +42,7 @@ export function createTitleStage(parent){
  }
  function resize(){if(!camera)return;const fit=Math.min(innerWidth/settings.localcoord[0],innerHeight/settings.localcoord[1]),width=settings.localcoord[0]*fit,height=settings.localcoord[1]*fit;renderer.setSize(width,height,false);Object.assign(renderer.domElement.style,{width:width+'px',height:height+'px',left:(innerWidth-width)/2+'px',top:(innerHeight-height)/2+'px'});camera.aspect=width/height;camera.updateProjectionMatrix()}
  const ready=Promise.all([fetch(assetUrl('./title_stage.json?v=02362')).then(response=>{if(!response.ok)throw Error('Title settings HTTP '+response.status);return response.json()}),fetch(assetUrl('./Title.glb.gz?v=02362')).then(async response=>{if(!response.ok)throw Error('Title model HTTP '+response.status);return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()})]).then(async ([config,buffer])=>{
-  settings=config;camera=new THREE.PerspectiveCamera(config.fov,config.localcoord[0]/config.localcoord[1],.01,500);camera.position.set(0,0,0);camera.lookAt(0,0,-1);
+  settings=config;camera=new THREE.PerspectiveCamera(config.fov,config.localcoord[0]/config.localcoord[1],.01,500);camera.position.set(0,-.825,0);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0);
   const model=await new GLTFLoader().parseAsync(buffer,'./');model.scene.position.fromArray(config.offset);model.scene.scale.fromArray(config.scale);scene.add(model.scene);
   fixPlanetLayers(model.scene);mixer=new THREE.AnimationMixer(model.scene);for(const clip of model.animations)mixer.clipAction(clip).play();addOceanReflection(model.scene);resize();renderer.render(scene,camera);
  });
