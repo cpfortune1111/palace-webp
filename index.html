@@ -50,14 +50,14 @@ import {createFightHud} from './Engine/fight-hud-runtime.js?v=02362';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02362-camera2';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=selection2';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:()=>new Promise(resolve=>{const wait=setInterval(()=>{if(battleDat&&stateIR&&lifecycleDat&&dat&&turnDat&&guardDat&&fallDat&&airDat&&specialDat&&roundConfig.matchWins&&roundCharDat&&roundFxDat&&stageCameraReady&&roundAudioReady&&stageModel){clearInterval(wait);resolve()}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:()=>new Promise(resolve=>{const wait=setInterval(()=>{if(battleDat&&stateIR&&lifecycleDat&&dat&&turnDat&&guardDat&&fallDat&&airDat&&specialDat&&roundConfig.matchWins&&roundCharDat&&roundFxDat&&stageCameraReady&&roundAudioReady&&stageModel){clearInterval(wait);resolve()}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -390,6 +390,7 @@ const heldKeys=new Set();
 const modeSelect=document.querySelector('#inputMode'),inputHint=document.querySelector('#inputHint');
 const commandModeButton=document.createElement('button');commandModeButton.id='commandMode';commandModeButton.textContent='Command: NORMAL';commandModeButton.style.cssText='font-size:11px;padding:3px 6px;border-radius:4px';commandModeButton.title='NORMAL：原方向指令；AUTO：L/R + x/y/a，L+R 超必殺（仍需 HP≤250）';document.querySelector('#inputPanel').appendChild(commandModeButton);
 const commandModes=['normal','normal'];
+const hardwareModes=['snes','snes'];
 function scoreProfile(player){const code=specialRoot(player).vars[52]||0;return {platform:['snes','3do','saturn'][code%10]||'snes',commandMode:commandModes[player-1],ai:gameShell.isWatch()}}
 function refreshModeLogo(player){
  const root=specialRoot(player),code=root.vars[52]||0,anim=930+(code%10)*2+(code>=10?1:0);
@@ -1035,6 +1036,7 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
   posX=stageCameraConfig.player.p1startx;p2.x=stageCameraConfig.player.p2startx;posY=stageCameraConfig.player.p1starty;p2.y=stageCameraConfig.player.p2starty;vx=0;vy=0;p2.vx=0;p2.vy=0;p1Facing=1;p2.facing=-1;p1InvulnerableUntil=0;p1LastHitKey=null;p1EntryCommands=null;
   Object.assign(p2,{getHit:null,hitShake:0,hitTime:-1,attackPause:0,activeHitDef:null,attackFrame:null,entryCommands:null,lastHitKey:null,invulnerableUntil:0,cornerPushVelocity:0,downRecovery:0});
   if(lifecycleRuntime.rounds.existed===0){p1Power=0;p2.power=0;runtimeVar.fill(0);runtimeSysVar.fill(0);p2.vars=Array(60).fill(0);p2.sysvars=Array(10).fill(0);p2.fvars=Array(40).fill(0)}
+  for(const player of [1,2]){const root=specialRoot(player);root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(commandModes[player-1],player)}
   fightHud.setMode(timerMode.value);roundView.hideMatch();document.querySelector('#roundAnnouncements').style.zIndex='7';resetCamera();
  },
  trainingDown:player=>player===1?p1Life<=0&&state===5150&&posY===0:p2.life<=0&&p2.state===5150&&p2.y===0,
