@@ -1,4 +1,4 @@
-import {createDeclarationScreen} from './declaration-screen.js?v=declaration1';
+import {createDeclarationScreen} from './declaration-screen.js?v=declaration2';
 import {abilityKeys,abilityBudget,abilityProfile,changeAbility} from './ability-system.js?v=acs1';
 export function createAcsScreen(parent,api){
  const view=document.createElement('section');view.id='abilityCustomize';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:4';parent.appendChild(view);

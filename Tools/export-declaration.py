@@ -20,6 +20,14 @@ for element, item in [(9, 0), (29, 1)]:
         duration = math.ceil(sound.getnframes() / sound.getframerate() * 60)
     cues.append(dict(tick=sum(frame['time'] for frame in frames[:element - 1]), duration=duration, file=filename))
 data = dict(characters={'SailorVenus': dict(variants=[dict(id='venus-0', image='Char/Venus/VS/declaration-0.webp', cues=cues)])})
+def result_variant(group, item, tick, identifier):
+    filename = f'Char/Venus/Sound/{group}-{item}.wav'
+    with wave.open(str(root / filename)) as sound:
+        duration = math.ceil(sound.getnframes() / sound.getframerate() * 60)
+    return dict(id=identifier, image='Char/Venus/VS/declaration-0.webp', cues=[dict(tick=tick, duration=duration, file=filename)])
+win_frames = json.loads((root / 'Char/Venus/venus_round.json').read_text())['actions']['181']
+data['characters']['SailorVenus']['winVariants'] = [result_variant(180, 0, 0, 'venus-win-0'), result_variant(180, 1, sum(frame['time'] for frame in win_frames[:5]), 'venus-win-1')]
+data['characters']['SailorVenus']['loseVariants'] = [result_variant(170, 0, 0, 'venus-lose-0')]
 (root / 'Data/VS').mkdir(exist_ok=True)
 (root / 'Data/VS/declarations.json').write_text(json.dumps(data, indent=2))
 print(data)

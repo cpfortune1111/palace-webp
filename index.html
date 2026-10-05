@@ -50,7 +50,7 @@ import {createFightHud} from './Engine/fight-hud-runtime.js?v=acs1';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=declaration1';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=declaration2';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -1061,7 +1061,7 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
  voiceReady:()=>combatTraceTick>=roundVoiceUntil,
  announcerReady:()=>combatTraceTick>=roundAnnouncerUntil,
  sound:value=>{roundAnnouncerUntil=combatTraceTick+(roundAudioTicks['round-sounds/'+value.replace(',','-')+'.wav']||0);const audio=new Audio(assetUrl('./round-sounds/'+value.replace(',','-')+'.wav'));gameShell.sound(audio);audio.play().catch(()=>{})},
- matchEnd:()=>{scoreRuntime.matchWin(roundFlow.snapshot().matchWinner,{homeTeam:1,opponentAI:gameShell.isWatch()});document.querySelector('#roundAnnouncements').style.zIndex='9';roundView.showMatch()}
+ matchEnd:()=>{scoreRuntime.matchWin(roundFlow.snapshot().matchWinner,{homeTeam:1,opponentAI:gameShell.isWatch()});roundView.hideMatch();gameShell.showResult(roundFlow.snapshot().matchWinner).catch(showRuntimeError)}
 });
 function stepLifecycleState(player){
  const initial=player===1?state:p2.state,definition=battleDat.lifecycleStates[String(initial)];

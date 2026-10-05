@@ -18,6 +18,43 @@
             }
           ]
         }
+      ],
+      "winVariants": [
+        {
+          "id": "venus-win-0",
+          "image": "Char/Venus/VS/declaration-0.webp",
+          "cues": [
+            {
+              "tick": 0,
+              "duration": 101,
+              "file": "Char/Venus/Sound/180-0.wav"
+            }
+          ]
+        },
+        {
+          "id": "venus-win-1",
+          "image": "Char/Venus/VS/declaration-0.webp",
+          "cues": [
+            {
+              "tick": 20,
+              "duration": 100,
+              "file": "Char/Venus/Sound/180-1.wav"
+            }
+          ]
+        }
+      ],
+      "loseVariants": [
+        {
+          "id": "venus-lose-0",
+          "image": "Char/Venus/VS/declaration-0.webp",
+          "cues": [
+            {
+              "tick": 0,
+              "duration": 101,
+              "file": "Char/Venus/Sound/170-0.wav"
+            }
+          ]
+        }
       ]
     }
   }
