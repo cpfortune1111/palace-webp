@@ -43,6 +43,9 @@ glb += struct.pack('<II', len(encoded), 0x4E4F534A)+encoded
 glb += struct.pack('<II', len(rebuilt), 0x004E4942)+rebuilt
 compressed = gzip.compress(glb, compresslevel=9, mtime=0)
 (destination / 'Select.glb.gz').write_bytes(compressed)
+background = Image.open('E:/3D 2022/Select/WEB/grok-image-35e1ec72-6a58-4122-9d1b-2f3af2636043.jpg').convert('RGB')
+background.save(destination / 'background.webp', format='WEBP', quality=88, method=4)
 settings = {'fov': 30, 'localcoord': [1280, 720], 'cameraPosition': [0, 1.6, 7.2], 'cameraBlender': {'name': 'Original IKEMEN Camera', 'location': [0, -7.2, 1.6], 'rotationDegrees': [90, 0, 0]}, 'animationFPS': 30, 'target': 'Sphere.004', 'animations': len(document.get('animations', [])), 'sourceSHA256': hashlib.sha256(original).hexdigest(), 'sourceBytes': len(original), 'downloadBytes': len(compressed), 'textureFormat': 'webp', 'textureMaxSize': 2048}
+settings['background'] = 'Stage/Select/background.webp'
 (destination / 'select-stage.json').write_text(json.dumps(settings, separators=(',', ':')), encoding='utf-8')
 print(json.dumps(settings))
