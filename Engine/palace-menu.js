@@ -2,7 +2,7 @@ import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362-camera2';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=loading1';
 import {createSelectScreen} from './select-screen.js?v=acs2';
-import {createAcsScreen} from './acs-screen.js?v=acs3';
+import {createAcsScreen} from './acs-screen.js?v=acs4';
 import {createLoadingScreen} from './loading-screen.js?v=loading1';
 
 export function createPalaceMenu(api){
