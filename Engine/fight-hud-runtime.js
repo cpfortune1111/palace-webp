@@ -1,10 +1,13 @@
 import {assetUrl} from './asset-paths.js?v=02362';
+import {hpEmblemLayers,hpEmblemFrame} from './hp-emblem.js?v=hp950';
 export function createFightHud(){
  const canvas=document.createElement('canvas');canvas.id='fightHud';canvas.style.cssText='position:fixed;inset:0;z-index:6;pointer-events:none';document.body.appendChild(canvas);
  const backdrop=document.createElement('canvas');backdrop.id='portraitBackdrop';backdrop.style.cssText='position:fixed;inset:0;z-index:3;pointer-events:none';document.body.appendChild(backdrop);const backdropContext=backdrop.getContext('2d');
  const context=canvas.getContext('2d');let fight,timer,fightAtlas,timerAtlas,elapsed=0,mode='infinite',ticks=0;const trails=[{value:1,start:1,target:1,age:10,hold:0},{value:1,start:1,target:1,age:10,hold:0}];
  const load=async prefix=>{const data=await fetch(assetUrl('./'+prefix+'.json?v=02362')).then(response=>response.json());const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src=assetUrl('./'+prefix+'_atlas.png?v=02362')});return {data,atlas}};
- const ready=Promise.all([load('fight_hud'),load('timer_hud')]).then(([first,second])=>{fight=first.data;fightAtlas=first.atlas;timer=second.data;timerAtlas=second.atlas});
+ let emblem,emblemAtlas;
+ const emblemReady=fetch('./Char/Venus/venus_hp.json?v=hp950').then(response=>{if(!response.ok)throw Error('HP emblem HTTP '+response.status);return response.json()}).then(async data=>{const atlas=new Image();await new Promise((resolve,reject)=>{atlas.onload=resolve;atlas.onerror=reject;atlas.src='./Char/Venus/venus_hp_atlas.webp?v=hp950'});emblem=data;emblemAtlas=atlas});
+ const ready=Promise.all([load('fight_hud'),load('timer_hud'),emblemReady]).then(([first,second])=>{fight=first.data;fightAtlas=first.atlas;timer=second.data;timerAtlas=second.atlas});
  const fronts=[{value:1,start:1,target:1,age:10},{value:1,start:1,target:1,age:10}];
  function reset(){elapsed=0;ticks=0;for(const trail of [...trails,...fronts]){trail.value=1;trail.start=1;trail.target=1;trail.age=10;trail.hold=0}}
  function setMode(value){mode=value;reset()}
@@ -23,6 +26,7 @@ export function createFightHud(){
    sprite(fight,fightAtlas,fight.actions['11'][0],anchor,0,facing);
    for(const [amount,animation] of [[trails[player-1].value,'12'],[fronts[player-1].value,'1311']]){context.save();const edge=player===1?619-458*amount:1278-619;context.beginPath();context.rect(edge,0,458*amount,720);context.clip();sprite(fight,fightAtlas,fight.actions[animation][animation==='1311'?Math.floor(ticks/4)%60:0],anchor,0,facing);context.restore();}
    const background=fight.sprites['51,0'];backdropContext.save();backdropContext.translate(player===1?0:1280,0);backdropContext.scale(facing,1);backdropContext.drawImage(fightAtlas,background.x,background.y,background.w,background.h,-background.axisX,-background.axisY,background.w,background.h);backdropContext.restore();
+   if(emblem)for(const animation of hpEmblemLayers(life,max)){const frame=hpEmblemFrame(emblem,animation,ticks);if(frame&&!frame.empty)sprite(emblem,emblemAtlas,frame,player===1?147:1133,75)}
   }
   sprite(fight,fightAtlas,fight.actions['60'][0],0,0);
   const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?614:642,42)}
@@ -30,3 +34,4 @@ export function createFightHud(){
  }
  return {ready,render,animate:()=>{ticks++},step:(active,life=[1000,1000])=>{step(active,life);stepFront(life)},reset,setMode,remaining,remainingExact:()=>mode==='infinite'?null:Math.max(0,Number(mode)-elapsed/60),displayLife:()=>trails.map(trail=>trail.value),displayFront:()=>fronts.map(front=>front.value)};
 }
+

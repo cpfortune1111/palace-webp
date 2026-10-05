@@ -46,7 +46,7 @@ body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAt
 <script type="module">
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02362';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=hp950';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
@@ -1662,3 +1662,4 @@ function resize(){effectCanvas.width=innerWidth*devicePixelRatio;effectCanvas.he
 mcv.width=Math.round(vw*devicePixelRatio);mcv.height=Math.round(vh*devicePixelRatio);mcv.style.width=vw+'px';mcv.style.height=vh+'px';mctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)}
 addEventListener('resize',resize);addEventListener('orientationchange',()=>{resize();setTimeout(resize,120);setTimeout(resize,400)});if(window.visualViewport)visualViewport.addEventListener('resize',resize);resize();
 </script></body></html>
+
