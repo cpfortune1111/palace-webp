@@ -1,0 +1,24 @@
+{
+  "characters": {
+    "SailorVenus": {
+      "variants": [
+        {
+          "id": "venus-0",
+          "image": "Char/Venus/VS/declaration-0.webp",
+          "cues": [
+            {
+              "tick": 41,
+              "duration": 67,
+              "file": "Char/Venus/Sound/190-0.wav"
+            },
+            {
+              "tick": 151,
+              "duration": 86,
+              "file": "Char/Venus/Sound/190-1.wav"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

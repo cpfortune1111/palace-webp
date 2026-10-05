@@ -2,7 +2,7 @@ import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362-camera2';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=loading1';
 import {createSelectScreen} from './select-screen.js?v=acs2';
-import {createAcsScreen} from './acs-screen.js?v=acs5';
+import {createAcsScreen} from './acs-screen.js?v=declaration1';
 import {createLoadingScreen} from './loading-screen.js?v=loading1';
 
 export function createPalaceMenu(api){
@@ -14,9 +14,9 @@ export function createPalaceMenu(api){
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';overlay.appendChild(canvas);const context=canvas.getContext('2d');
  const panel=document.createElement('div');panel.style.cssText='position:absolute;left:50%;top:72%;transform:translateX(-50%);text-align:center;min-width:260px';overlay.appendChild(panel);document.body.appendChild(overlay);
  const selection=createSelectScreen(overlay,{preloadACS:()=>acs.ready,confirm:async(next,choice)=>{if(next==='training')start(next,choice);else{await acs.show(next,choice);selection.hide();mode='acs'}},back:()=>{mode='home';showHome()}});selection.ready.catch(error=>console.error('Selection',error));
- const acs=createAcsScreen(overlay,{confirm:start,back:showSelect});acs.ready.catch(error=>console.error('ACS',error));
+ const acs=createAcsScreen(overlay,{confirm:start,back:showSelect,sound,declaration:()=>{mode='declaration';music.pause()}});acs.ready.catch(error=>console.error('ACS',error));
  const loading=createLoadingScreen(document.body,'battleLoading');let starting=false;
- function playMusic(){if(overlay.hidden)return;volume();music.play().then(()=>{if(overlay.hidden)music.pause()}).catch(()=>{})}
+ function playMusic(){if(overlay.hidden||mode==='declaration'||mode==='loading')return;volume();music.play().then(()=>{if(overlay.hidden)music.pause()}).catch(()=>{})}
  document.addEventListener('pointerdown',playMusic,true);document.addEventListener('keydown',playMusic,true);
  const logoLink=document.createElement('a');logoLink.id='tsukinoLink';logoLink.href='https://tsukinoaiplus.com';logoLink.target='_blank';logoLink.rel='noopener noreferrer';logoLink.setAttribute('aria-label','TsukinoAi+ 官方網站');logoLink.style.cssText='position:absolute;display:block';overlay.appendChild(logoLink);
  let optionLayers=[];const optionReady=fetch(assetUrl('./system_webp.json?v=02362')).then(response=>response.json()).then(async data=>{optionLayers=await Promise.all(['200,1','1,0'].map(async key=>{const entry=data.sprites[key],image=new Image();await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=assetUrl('./'+entry.file)});return {...entry,image}}));draw()});optionReady.catch(error=>console.error('Options artwork',error));
