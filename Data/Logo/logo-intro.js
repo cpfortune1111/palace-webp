@@ -21,7 +21,7 @@ export function createLogoIntro(onFadeIn){
  });
  function finish(){if(finished)return;finished=true;cancelAnimationFrame(animationFrame);document.removeEventListener('visibilitychange',resetFrame);for(const entry of [...config.letters,...config.petals])entry.image.close();overlay.remove();resolveFinished()}
  function render(atTick){if(!config||finished)return;const width=Math.round(innerWidth*devicePixelRatio),height=Math.round(innerHeight*devicePixelRatio);if(overlay.width!==width||overlay.height!==height){overlay.width=width;overlay.height=height}context.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);context.fillStyle='white';context.fillRect(0,0,innerWidth,innerHeight);const scale=Math.min(innerWidth/1280,innerHeight/720);context.translate((innerWidth-1280*scale)/2,(innerHeight-720*scale)/2);context.scale(scale,scale);
-  for(const [index,letter] of config.letters.entries()){const pose=logoLetterPose(atTick,index,config);if(!pose.alpha)continue;context.save();context.globalAlpha=pose.alpha;context.drawImage(letter.image,letter.x,letter.y+pose.y,letter.width*letter.scale,letter.height*letter.scale);context.restore()}
+  for(const [index,letter] of config.letters.entries()){const pose=logoLetterPose(atTick,index,config);if(!pose.alpha)continue;context.save();context.globalAlpha=pose.alpha;context.drawImage(letter.image,letter.x+(index===0?20:0),letter.y+pose.y,letter.width*letter.scale,letter.height*letter.scale);context.restore()}
   const frame=config.petalFrames.find(frame=>atTick>=frame.start&&atTick<frame.end);if(frame){const petals=config.petals.find(entry=>entry.item===frame.item);context.drawImage(petals.image,petals.x,petals.y)}
  }
  function resetFrame(){lastFrame=null}

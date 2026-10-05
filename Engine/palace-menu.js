@@ -1,7 +1,7 @@
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362-camera2';
-import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02362';
-import {createSelectScreen} from './select-screen.js?v=select3d4';
+import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=selection5';
+import {createSelectScreen} from './select-screen.js?v=selection5';
 
 export function createPalaceMenu(api){
  const defaults={difficulty:4,timer:'99',master:100,bgm:100,sfx:100};let options={...defaults};try{const saved=JSON.parse(localStorage.getItem('palace-options-v1'));for(const key of Object.keys(defaults))if(saved&&saved[key]!==undefined)options[key]=saved[key]}catch{}

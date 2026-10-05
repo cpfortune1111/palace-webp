@@ -5,7 +5,7 @@ from PIL import Image
 root = Path(__file__).resolve().parents[1]
 source = Path('E:/3D 2022/Select/WEB')
 control = Path('E:/3D 2022/Control Mode/WEB')
-manifest = {'characters': {}, 'modes': {}, 'stages': {}, 'controlExtras': {}}
+manifest = {'characters': {}, 'buttons': {}, 'stages': {}, 'controlExtras': {}}
 
 def export(path, destination):
     image = Image.open(path).convert('RGBA')
@@ -23,8 +23,8 @@ for name in ['Moon', 'CMoon', 'Mercury', 'Mars', 'Jupiter', 'Venus', 'Uranus', '
             entries[kind] = export(path, root / 'Char' / name / 'Select' / (kind+'.webp'))
     manifest['characters'][identifier] = entries
 
-for code, name in [('0930', 'snes'), ('0931', '3do'), ('0932', 'saturn'), ('0935', 'normal'), ('0936', 'auto')]:
-    manifest['modes'][name] = [export(control / (code+str(frame).zfill(2)+'.png'), root / 'Data/Select/Mode' / (name+'-'+str(frame)+'.webp')) for frame in range(2)]
+for filename, name in [('3DO', '3do'), ('SNES', 'snes'), ('SATURN', 'saturn'), ('Nrml', 'normal'), ('Auto', 'auto'), ('Confirm', 'confirm'), ('Next', 'next')]:
+    manifest['buttons'][name] = export(control / (filename+'.png'), root / 'Data/Select/Buttons' / (name+'.webp'))
 
 for path in control.glob('095*.png'):
     code, name = path.stem.split(' ', 1)
@@ -39,4 +39,4 @@ for path in source.glob('*.png'):
     manifest['stages'].setdefault(name, {})[index] = export(path, root / 'Stage' / name / 'Select' / ('title-'+index+'.webp'))
 
 (root / 'Data/Select/selection-assets.json').write_text(json.dumps(manifest, separators=(',', ':')), encoding='utf-8')
-print('Exported', len(manifest['characters']), 'characters,', len(manifest['modes']), 'modes,', len(manifest['stages']), 'stage titles')
+print('Exported', len(manifest['characters']), 'characters,', len(manifest['buttons']), 'buttons,', len(manifest['stages']), 'stage titles')
