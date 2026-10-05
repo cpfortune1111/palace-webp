@@ -50,14 +50,14 @@ import {createFightHud} from './Engine/fight-hud-runtime.js?v=02362';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=selection6';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=loading1';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:()=>new Promise(resolve=>{const wait=setInterval(()=>{if(battleDat&&stateIR&&lifecycleDat&&dat&&turnDat&&guardDat&&fallDat&&airDat&&specialDat&&roundConfig.matchWins&&roundCharDat&&roundFxDat&&stageCameraReady&&roundAudioReady&&stageModel){clearInterval(wait);resolve()}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
