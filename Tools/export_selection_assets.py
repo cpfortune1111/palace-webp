@@ -14,8 +14,8 @@ def export(path, destination):
     image.crop(bounds).save(destination, format='WEBP', quality=90, method=6)
     return {'file': destination.relative_to(root).as_posix(), 'x': bounds[0], 'y': bounds[1], 'w': bounds[2]-bounds[0], 'h': bounds[3]-bounds[1]}
 
-for name in ['Moon', 'CMoon', 'Mercury', 'Mars', 'Jupiter', 'Venus', 'Uranus', 'Neptune', 'Pluto', 'Saturn', 'Swatheshia']:
-    identifier = 'LadySwatheshia' if name == 'Swatheshia' else 'SailorChibiMoon' if name == 'CMoon' else 'Sailor'+name
+for name in ['Moon', 'CMoon', 'Mercury', 'Mars', 'Jupiter', 'Venus', 'Uranus', 'Neptune', 'Pluto', 'Saturn', 'Swatheshia', 'SMoon', 'TMask']:
+    identifier = {'Swatheshia': 'LadySwatheshia', 'CMoon': 'SailorChibiMoon', 'SMoon': 'SailorSuperMoon', 'TMask': 'TuxedoMask'}.get(name, 'Sailor'+name)
     entries = {}
     for kind, filename in [('portrait', 'Portrait '+('Nep' if name == 'Neptune' else name)+'.png'), ('name', 'Name '+name+'.png'), ('disc', name+'900000.png')]:
         path = source / filename

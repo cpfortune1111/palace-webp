@@ -8,7 +8,9 @@ Hardware/command buttons use 90% of their previous 0.75 display scale (0.675) an
 
 Keyboard order: P1 character → hardware → command, then P2 character → hardware → command in VS/Watch, then stage. Training proceeds from P1 command to stage. A/X (A/Z on the default keyboard; Numpad1/0 for P2) confirms; B/Y (S/X; Numpad2/Decimal) returns one step. Enter/Escape remain aliases. All arrows navigate characters; only up/down changes hardware/command. Both players' hardware and command choices carry into combat, scoring and subsequent round resets.
 
-All supplied character artwork is included, but only Venus and Training are playable until additional fighters and stages are implemented.
+All 13 supplied character names are included, including Super Moon and Tuxedo Mask. Only Venus and Training are playable until additional fighters and stages are implemented. Stage selection has no list: left/right changes available stages, touching the title cycles them, and A/X/Enter or Next confirms. B/Y/Escape consistently steps back.
+
+The portrait/name/disc canvas is clipped to the fitted 1280×720 camera frame, preserving black letterbox/pillarbox areas. Falling light horizontal positions use uniformly distributed screen coordinates rather than clamping out-of-view world positions onto the two sides. Their 20–60px camera-bottom landing inset remains unchanged.
 
 The selection background now uses Stage/Select/Select.glb.gz, converted from Select v1.glb with WEBP textures (maximum 2048 pixels). Its three original animation clips are preserved. Sphere.004 receives a cyan inner rim and soft outer halo; seven rear glare rays gently vary in intensity and direction. Ninety-six deterministic light particles descend and flare near the lower edge. Effects are additive shaders rather than full-screen bloom, so portraits and text are not blurred. Existing disc artwork remains a separate overlay. Animation stops while the selection page is hidden, and the static background remains the fallback if the 3D model cannot load.
 
