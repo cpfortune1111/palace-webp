@@ -1,8 +1,8 @@
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02362-camera2';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=loading1';
-import {createSelectScreen} from './select-screen.js?v=selection8';
-import {createAcsScreen} from './acs-screen.js?v=acs1';
+import {createSelectScreen} from './select-screen.js?v=acs2';
+import {createAcsScreen} from './acs-screen.js?v=acs2';
 import {createLoadingScreen} from './loading-screen.js?v=loading1';
 
 export function createPalaceMenu(api){
@@ -13,7 +13,7 @@ export function createPalaceMenu(api){
  const titleStage=createTitleStage(overlay);titleStage.ready.catch(error=>console.error('Title stage',error));
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';overlay.appendChild(canvas);const context=canvas.getContext('2d');
  const panel=document.createElement('div');panel.style.cssText='position:absolute;left:50%;top:72%;transform:translateX(-50%);text-align:center;min-width:260px';overlay.appendChild(panel);document.body.appendChild(overlay);
- const selection=createSelectScreen(overlay,{confirm:(next,choice)=>{if(next==='training')start(next,choice);else{selection.hide();mode='acs';acs.show(next,choice)}},back:()=>{mode='home';showHome()}});selection.ready.catch(error=>console.error('Selection',error));
+ const selection=createSelectScreen(overlay,{preloadACS:()=>acs.ready,confirm:async(next,choice)=>{if(next==='training')start(next,choice);else{await acs.show(next,choice);selection.hide();mode='acs'}},back:()=>{mode='home';showHome()}});selection.ready.catch(error=>console.error('Selection',error));
  const acs=createAcsScreen(overlay,{confirm:start,back:showSelect});acs.ready.catch(error=>console.error('ACS',error));
  const loading=createLoadingScreen(document.body,'battleLoading');let starting=false;
  function playMusic(){if(overlay.hidden)return;volume();music.play().then(()=>{if(overlay.hidden)music.pause()}).catch(()=>{})}

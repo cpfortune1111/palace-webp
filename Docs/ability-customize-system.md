@@ -1,5 +1,7 @@
 # Ability Customize System
 
+ACS presentation update: zero-point radar vertices now begin at radius 27.5, matching the previous one-point shape; levels 1–5 extend to radius 137.5 without changing the actual allocation or combat formulas. Confirm artwork retains its original uniform aspect ratio. Selected numbers glow white rather than using a selection ring. All available portrait/name assets, ACS art and the font are decoded before the selection loading screen completes; entering ACS does not display an intermediate black loading page. P1-to-P2 transitions keep the title fixed, move the board and numbers to the mirrored left position, crossfade the points/Confirm controls, and bring the P2 portrait/name in from the right. Returning to P1 reverses the transition and preserves allocations.
+
 VS / Watch: 15 points per player. Arcade / Story budget: 10 (reserved for the future mode). Training skips ACS and resets modifiers to baseline. Each skill accepts 0–5 points; unused points may be confirmed.
 
 | Ability | Per-point calculation | Level 5 example |
