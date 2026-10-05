@@ -46,18 +46,20 @@ body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAt
 <script type="module">
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=hp950';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=acs1';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=selection8';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=acs1';
+import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
+let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -76,7 +78,7 @@ function restorePlayerHealth(){
  if(roundFlow.enabled()&&!roundFlow.canFight())return;
  fightHud.reset();
  if(!battleDat||!dat)return;
- p1Life=1000;p2.life=p2.lifeMax;
+ p1Life=p1LifeMax;p2.life=p2.lifeMax;
  if(p1Reaction){p1Reaction.life=p1Life;if(p1Reaction.state===5150){p1Reaction.hitShake=0;p1Reaction.hitTime=-1;p1Reaction.getHit.fall=0;enterGroundReactionState(p1Reaction,5120);syncP1Reaction()}}
  if(p2.state===5150){p2.hitShake=0;p2.hitTime=-1;p2.getHit.fall=0;enterP2State(5120)}
  logicFrame={...liveP1(),p2:{...p2}};updateDebugHud();draw();drawMars();drawCollision();
@@ -110,7 +112,7 @@ new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScala
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02362';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=acs1';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02362';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -253,7 +255,7 @@ function drawMars(){
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,p1Facing=1,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0);
-let p1SprPriority=0,p1Life=1000;
+let p1SprPriority=0,p1Life=1000,p1LifeMax=1000;
 let p1Reaction=null,p2PunchRequested=false,p1LastHitKey=null;
 let p2ButtonCommands={};
 const p2Input={left:false,right:false},p2HeldKeys=new Set();
@@ -837,7 +839,7 @@ const p2={
  type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
 p2.sprPriority=0;
-function liveP1(){return p1Reaction?{...p1Reaction,vx:p1Reaction.vx*p1Reaction.facing}:{state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,sprPriority:p1SprPriority,invulnerableUntil:p1InvulnerableUntil}}
+function liveP1(){return p1Reaction?{...p1Reaction,vx:p1Reaction.vx*p1Reaction.facing}:{state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,lifeMax:p1LifeMax,sprPriority:p1SprPriority,invulnerableUntil:p1InvulnerableUntil}}
 function displayP1(){return simPaused?{facing:p1Facing,vx,vy,life:p1Life,sprPriority:p1SprPriority,...logicFrame}:liveP1()}
 function displayP2(){return simPaused&&logicFrame.p2?logicFrame.p2:p2}
 function hitShakeOffset(fighter){return fighter.hitShake>0&&(fighter.time&1)!==0?-fighter.facing*2:0}
@@ -903,7 +905,7 @@ function enterP2State(n){
 function applyP2HitM1(hitDef){
  if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
  const params=hitDef.params,guardMode=p2GuardMode();
- const result=resolveGroundHitM1({id:1,facing:p1Facing},p2,params,guardMode);
+ const result=resolveGroundHitM1({id:1,facing:p1Facing,state},p2,params,guardMode);
  scoreRuntime.hit(1,p2,params,result,scoreProfile(1));
  spawnSourceHitSpark(params,result.guarded,specialRoot(1),p2);
  p2.lastHitKey=hitDef.hitKey;
@@ -919,6 +921,7 @@ function applyP2HitM1(hitDef){
 }
 function splitExpressionPairM1(source){let depth=0,start=0;const values=[];for(let index=0;index<String(source).length;index++){const token=String(source)[index];if(token==='('||token==='[')depth++;if(token===')'||token===']')depth--;if(token===','&&depth===0){values.push(String(source).slice(start,index));start=index+1}}values.push(String(source).slice(start));return values}
 function resolveGroundHitM1(attacker,defender,params,guardMode){
+ const attacking=battleAbilities[attacker.id-1],defending=battleAbilities[attacker.id===1?1:0],modifiedDamage=String(params.damage).split(',').map(value=>abilityDamage(Number(value)||0,attacking,defending,attacker.state,params.attr));params={...params,damage:modifiedDamage.join(','),'fall.damage':abilityDamage(Number(params['fall.damage']||0),attacking,defending,attacker.state,params.attr)};
  const guardReady=(defender.ctrl&&defender.moveType==='I')||inGroundGuardState(defender);
  const guardAttempt=defender.type!=='A'&&defender.y===0&&guardReady&&guardMode!=='none'&&(String(params.guardflag).includes('M')||String(params.guardflag).includes(guardMode==='crouch'?'L':'H'));
  const pair=value=>String(value).split(',').map(Number);
@@ -988,17 +991,17 @@ function fighterExpressionContext(fighter,opponent,commands={}){
    if(!(key in values))throw Error('AST query '+name);return values[key];
   }};
 }
-function p1ExpressionFighter(){return p1Reaction||{state,time:stateTicks,anim:current,elem:fi+1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,facing:p1Facing,x:posX,y:posY,vx:vx*p1Facing,vy,moveContact,moveHit,moveGuarded,hitTime:-1,hitShake:0}}
+function p1ExpressionFighter(){return p1Reaction||{life:p1Life,lifeMax:p1LifeMax,state,time:stateTicks,anim:current,elem:fi+1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,facing:p1Facing,x:posX,y:posY,vx:vx*p1Facing,vy,moveContact,moveHit,moveGuarded,hitTime:-1,hitShake:0}}
 let p1HitCount=0,entityDefenderPause=false;
 function spawnSourceHitSpark(params,guarded,attacker,defender){
  const source=String(params[guarded?'guard.sparkno':'sparkno']||''),match=source.match(/^S(\d+)$/i);if(!match||!specialDat?.actions?.[match[1]])return;
  const offset=String(params.sparkxy||'0,0').split(',').map(Number),edge=attacker.facing!==defender.facing?VENUS_GROUND_FRONT:-VENUS_GROUND_BACK;
  sourceExplods.push({id:-1,anim:Number(match[1]),player:attacker.player,ownerKey:attacker.key,x:defender.x+edge*defender.facing-(offset[0]||0)*attacker.facing,y:attacker.y+(offset[1]||0),vx:0,vy:0,facing:attacker.facing,age:0,sprpriority:3,supermovetime:999999999,pausemovetime:999999999});
 }
-function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);return {...p2,player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:1000,vars:runtimeVar,sysvars:runtimeSysVar,hitCount:p1HitCount,player:1,key:'root1'}}
+function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);return {...p2,player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:p1LifeMax,vars:runtimeVar,sysvars:runtimeSysVar,hitCount:p1HitCount,player:1,key:'root1'}}
 function applyEntityHit(entity,defender,params){
  const held=canonicalNow(),guard=entity.player===1?p2GuardMode():held.B?(held.D?'crouch':'stand'):'none';
- const result=resolveGroundHitM1({id:entity.player,facing:entity.facing},defender,params,guard);result.getHit.hitid=Number(params.id??-1);
+ const result=resolveGroundHitM1({id:entity.player,facing:entity.facing,state:entity.abilityState??entity.state},defender,params,guard);result.getHit.hitid=Number(params.id??-1);
  scoreRuntime.hit(entity.player,defender,params,result,scoreProfile(entity.player));
  spawnSourceHitSpark(params,result.guarded,entity,defender);
  if(entity.player===1){p2.life=result.life;p2.getHit=result.getHit;p2.hitShake=result.defenderPause;p2.hitTime=result.getHit.hittime;p2.sprPriority=result.defenderPriority;enterP2State(result.state)}
@@ -1028,7 +1031,7 @@ const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot(
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
  reset:()=>{
-  resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=1000;p2.life=1000;
+  resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
   roundVoiceUntil=0;roundAnnouncerUntil=0;
   for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
   for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
@@ -1041,8 +1044,8 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
  },
  trainingDown:player=>player===1?p1Life<=0&&state===5150&&posY===0:p2.life<=0&&p2.state===5150&&p2.y===0,
  revive:player=>{
-  if(player===1){p1Life=1000;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;vx=0;vy=0;posY=0;activeHitDef=null;p1LastHitKey=null;cornerPushVelocity=0;enterIRState(0);runtimeCtrl=1}
-  else {Object.assign(p2,{life:1000,getHit:null,hitShake:0,hitTime:-1,attackPause:0,vx:0,vy:0,y:0,activeHitDef:null,attackFrame:null,lastHitKey:null,cornerPushVelocity:0,downRecovery:0});enterP2State(0);p2.ctrl=1}
+  if(player===1){p1Life=p1LifeMax;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;vx=0;vy=0;posY=0;activeHitDef=null;p1LastHitKey=null;cornerPushVelocity=0;enterIRState(0);runtimeCtrl=1}
+  else {Object.assign(p2,{life:p2.lifeMax,getHit:null,hitShake:0,hitTime:-1,attackPause:0,vx:0,vy:0,y:0,activeHitDef:null,attackFrame:null,lastHitKey:null,cornerPushVelocity:0,downRecovery:0});enterP2State(0);p2.ctrl=1}
   resetCommandList(player);
  },
  initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2])lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)))},
@@ -1168,7 +1171,7 @@ function applyP1HitM1(frame){
  if(p1LastHitKey===frame.hitDef.hitKey)return;
  const defender=p1Reaction||{...liveP1(),id:1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,elemTick:ticks,vx:vx*p1Facing};
  const held=canonicalNow(),guardMode=held.B?(held.D?'crouch':'stand'):'none';
- const result=resolveGroundHitM1({id:2,facing:frame.facing},defender,frame.hitDef.params,guardMode);
+ const result=resolveGroundHitM1({id:2,facing:frame.facing,state:p2.state},defender,frame.hitDef.params,guardMode);
  scoreRuntime.hit(2,defender,frame.hitDef.params,result,scoreProfile(2));
  spawnSourceHitSpark(frame.hitDef.params,result.guarded,specialRoot(2),defender);
  p1LastHitKey=frame.hitDef.hitKey;
@@ -1448,7 +1451,7 @@ function advanceTurnAnimations(){
  syncLowLifeIdle();
 }
 function syncLowLifeIdle(){
- if(state===0&&p1Life>0&&current!==5){const target=p1Life<=250?5300:0;if(current!==target){current=target;fi=0;ticks=0;p1AnimStartTime=stateTicks;if(p1Reaction){p1Reaction.anim=target;p1Reaction.animStartTime=p1Reaction.time;p1Reaction.elem=1;p1Reaction.elemTick=0}}}
+ if(state===0&&p1Life>0&&current!==5){const target=p1Life<=p1LifeMax/4?5300:0;if(current!==target){current=target;fi=0;ticks=0;p1AnimStartTime=stateTicks;if(p1Reaction){p1Reaction.anim=target;p1Reaction.animStartTime=p1Reaction.time;p1Reaction.elem=1;p1Reaction.elemTick=0}}}
  if(p2.state===0&&p2.life>0&&p2.anim!==5){const target=p2.life<=p2.lifeMax/4?5300:0;if(p2.anim!==target){p2.anim=target;p2.animStartTime=p2.time;p2.elem=1;p2.elemTick=0}}
 }
 function autoTurnM1(){
@@ -1490,7 +1493,7 @@ document.querySelector('#dbgTrace').addEventListener('click',()=>{
 });
 function simStep(){
  const roundActive=roundFlow.canFight();
- fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life,p2.life]);
+ fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life/p1LifeMax*1000,p2.life/p2.lifeMax*1000]);
  stepFallShake();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat||!specialDat||!lifecycleDat)return;
  if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
@@ -1628,7 +1631,7 @@ function showRuntimeError(e){
  act.textContent='Simulation stopped — check runtime error above';
 }
 function updateDebugHud(){
- fightHud.render({...displayP1(),life:p1Life},p2,{showTimeOver:!roundFlow.enabled()});roundView.render(roundFlow.snapshot());
+ fightHud.render({...displayP1(),life:p1Life,lifeMax:p1LifeMax},p2,{showTimeOver:!roundFlow.enabled()});roundView.render(roundFlow.snapshot());
  const signed=value=>(Number(value)<0?'':'+')+Number(value).toFixed(1);
  const row=(player,fighter,localVX)=>'P'+player+'_S'+fighter.state+'_T'+fighter.time+'_A'+fighter.anim+'_E'+fighter.elem+
   '_F'+(fighter.facing<0?'-1':'+1')+'_X'+signed(fighter.x)+'_Y'+signed(fighter.y)+
