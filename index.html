@@ -50,7 +50,7 @@ import {createFightHud} from './Engine/fight-hud-runtime.js?v=02362';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02362';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02362';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=selection7';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=selection8';
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
