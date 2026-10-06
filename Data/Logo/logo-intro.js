@@ -1,21 +1,17 @@
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
+import {letterBouncePose} from '../../Engine/letter-animation.js?v=02372';
 export function logoLetterPose(tick,index,config){
  const age=tick-config.letterStart-index*config.letterStagger;
- if(age<0)return {alpha:0,y:36};
- const duration=config.letterDuration-17*index/9,progress=Math.min(1,age/(duration-1));
- const anchors=[[0,36],[22/57,-30],[42/57,14],[1,0]];
- let offset=0;
- for(let segment=1;segment<anchors.length;segment++){const [start,startY]=anchors[segment-1],[end,endY]=anchors[segment];if(progress<=end){const ease=(1-Math.cos(Math.PI*(progress-start)/(end-start)))/2;offset=startY+(endY-startY)*ease;break}}
- return {alpha:Math.min(1,(age+1)/6),y:offset};
+ return letterBouncePose(age,config.letterDuration-17*index/9);
 }
 
-export function createLogoIntro(onFadeIn){
+export function createLogoIntro(onFadeIn,{preload=Promise.resolve()}={}){
  const overlay=document.createElement('canvas');overlay.id='logoIntro';overlay.setAttribute('aria-label','TsukinoAi+ logo animation');overlay.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:100;background:white;touch-action:none';document.body.appendChild(overlay);
  const context=overlay.getContext('2d');let config,lastFrame=null,tick=0,finished=false,animationFrame,phase='logo',fadeTick=0;let resolveFinished;
  const done=new Promise(resolve=>{resolveFinished=resolve});
  const load=async entry=>{const image=new Image();image.src=assetUrl('./'+entry.file);await image.decode();const bitmap=await createImageBitmap(image);return {...entry,image:bitmap}};
  const ready=fetch(assetUrl('./logo-intro.json?v=02362')).then(response=>{if(!response.ok)throw Error('Logo configuration');return response.json()}).then(async data=>{
-  const [letters,petals]=await Promise.all([Promise.all(data.letters.map(load)),Promise.all(data.petals.map(load))]);
+  const [letters,petals]=await Promise.all([Promise.all(data.letters.map(load)),Promise.all(data.petals.map(load)),preload]);
   const staging=document.createElement('canvas');staging.width=1280;staging.height=720;const stagingContext=staging.getContext('2d');for(const entry of [...letters,...petals]){stagingContext.clearRect(0,0,1280,720);stagingContext.drawImage(entry.image,0,0)}
   config={...data,letters,petals};return config;
  });
@@ -30,3 +26,4 @@ export function createLogoIntro(onFadeIn){
  ready.then(()=>{render(0);animationFrame=requestAnimationFrame(animateLogo)}).catch(error=>{console.error('Logo intro',error);overlay.setAttribute('aria-label','動畫載入失敗，請重新整理');overlay.width=innerWidth;overlay.height=innerHeight;context.fillStyle='white';context.fillRect(0,0,innerWidth,innerHeight);context.fillStyle='#444';context.font='18px system-ui';context.textAlign='center';context.fillText('動畫載入失敗，請重新整理',innerWidth/2,innerHeight/2)});
  return {ready,done,render,get tick(){return tick},get phase(){return phase},get finished(){return finished}};
 }
+

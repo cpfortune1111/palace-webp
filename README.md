@@ -1,4 +1,8 @@
-# 0.23.71 — SETTINGS 裝飾保留
+# 0.23.72 — LunaP Loading 測試頁
+
+19 圖合併 WebP 圖集、逐字 NOW LOADING、LunaP 6 TICK；與 LOGO 預載，新增重載／確定測試頁。
+
+## 0.23.71 — SETTINGS 裝飾保留
 
 設定按鈕直接置於原 OPTIONS 背景，四角縷花保持清晰。
 

@@ -1,5 +1,5 @@
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createLoadingScreen} from './loading-screen.js?v=selection8';
+import {createLoadingScreen} from './loading-screen.js?v=02372';
 export function createSelectScreen(parent,api){
  const view=document.createElement('section');view.id='palaceSelection';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:2';parent.appendChild(view);
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none';view.appendChild(canvas);const context=canvas.getContext('2d');

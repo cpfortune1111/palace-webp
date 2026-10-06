@@ -1,0 +1,23 @@
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
+const {chromium}=require('C:/Users/jeffy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const root=path.resolve(__dirname,'..');
+const server=http.createServer((request,response)=>{
+ const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname);
+ if(pathname==='/favicon.ico'){response.writeHead(204);response.end();return}
+ if(pathname==='/'){response.setHeader('Content-Type','text/html');response.end('<body style="margin:0"><div id="inputPanel"></div><script type="module">import {createPalaceMenu} from "./Engine/palace-menu.js";window.menu=createPalaceMenu({pause:()=>{},ready:async()=>{},start:()=>{},keyConfig:()=>{}});</script>');return}
+ const mocks={'/Stage/Title/title-stage.js':'export function createTitleStage(){return {ready:Promise.resolve(),setVisible(){},render(){},setTravel(){}}}',
+  '/Engine/select-screen.js':'export function createSelectScreen(){return {ready:Promise.resolve(),hide(){},show(){},progress:()=>1,handleKey:()=>false}}',
+  '/Engine/acs-screen.js':'export function createAcsScreen(){return {ready:Promise.resolve(),hide(){},handleKey:()=>false}}',
+  '/Engine/result-declaration-screen.js':'export function createResultDeclarationScreen(){return {ready:Promise.resolve(),hide(){}}}'};
+ if(mocks[pathname]){response.setHeader('Content-Type','text/javascript');response.end(mocks[pathname]);return}
+ const file=path.resolve(root,'.'+pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}
+ response.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.webp':'image/webp','.mp3':'audio/mpeg'})[path.extname(file)]||'application/octet-stream');response.end(fs.readFileSync(file));
+});
+(async()=>{let browser;try{
+ await new Promise(resolve=>server.listen(8786,'127.0.0.1',resolve));browser=await chromium.launch({headless:true,channel:'msedge'});const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(error.message));let release,atlasRequests=0;const gate=new Promise(resolve=>release=resolve);
+ await page.route('**/Data/Loading/loading-atlas.webp*',async route=>{atlasRequests++;await gate;await route.continue()});await page.goto('http://127.0.0.1:8786',{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>window.menu?.logoIntro);await page.waitForTimeout(700);assert.equal(atlasRequests,1);assert.equal(await page.evaluate(()=>menu.logoIntro.tick),0);release();await page.waitForFunction(()=>menu.logoIntro.finished,{timeout:30000});await page.locator('#battleLoadingConfirm').waitFor();assert.equal(await page.evaluate(()=>menu.loading.snapshot().test),true);assert.equal(await page.getByRole('button',{name:'VS',exact:true}).count(),0);
+ await page.waitForFunction(()=>menu.loading.snapshot().tick>=120);const early=await page.evaluate(()=>menu.loading.snapshot());assert.equal(early.letters[0].y,0);assert.equal(early.letters[3].alpha,0);assert.ok(early.progress>0&&early.progress<1);await page.waitForFunction(()=>menu.loading.snapshot().tick>=580,{timeout:20000});assert.equal((await page.evaluate(()=>menu.loading.snapshot())).letters.every(letter=>letter.alpha===1&&letter.y===0),true);
+ const pink=await page.locator('#battleLoading canvas').evaluate(canvas=>Array.from(canvas.getContext('2d').getImageData(400,480,1,1).data));assert.deepEqual(pink,[255,62,167,255]);await page.screenshot({path:path.resolve(root,'../outputs/loading-atlas-preview.png')});await page.waitForFunction(()=>menu.loading.progress===1,{timeout:10000});assert.equal(await page.locator('#battleLoading [role=progressbar]').getAttribute('aria-valuenow'),'100');
+ await page.locator('#battleLoadingReload').click();assert.ok(await page.evaluate(()=>menu.loading.progress<.02));assert.equal(await page.locator('#battleLoading [role=progressbar]').getAttribute('aria-valuenow'),'0');await page.setViewportSize({width:960,height:540});await page.waitForTimeout(100);assert.equal(await page.locator('#battleLoading > div').evaluate(element=>element.style.transform),'scale(0.75)');await page.setViewportSize({width:1280,height:720});await page.locator('#battleLoadingConfirm').click();await page.getByRole('button',{name:'VS',exact:true}).waitFor();assert.equal(await page.locator('#battleLoading').isVisible(),false);assert.equal(atlasRequests,1);assert.deepEqual(errors,[]);console.log('Real logo/loading preload, sequential letters, pink bar, test restart, resize and confirmation passed');
+ }finally{await browser?.close();server.close()}})().catch(error=>{console.error(error);process.exitCode=1});
+
