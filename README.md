@@ -1,4 +1,8 @@
-# 0.23.72 — LunaP Loading 測試頁
+# 0.23.73 — Loading 白底／高清字母
+
+百分比置中進度條、填滿 X257–1026；2x 字母半尺寸顯示，全字常駐逐字跳彈。
+
+## 0.23.72 — LunaP Loading 測試頁
 
 19 圖合併 WebP 圖集、逐字 NOW LOADING、LunaP 6 TICK；與 LOGO 預載，新增重載／確定測試頁。
 

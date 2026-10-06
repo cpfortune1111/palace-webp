@@ -36,11 +36,11 @@ letters = 'NOWLOADING'
 locations = [465.75, 530.9028, 604.5869, 692.832, 744.7988,
              805.0508, 867.6611, 910.6455, 955.6807, 1020.4033]
 config = {'atlas': 'loading-atlas.webp', 'size': [width, height], 'sprites': sprites,
-          'letters': [{'sprite': letter, 'x': position_x, 'y': 355.4456}
+          'letters': [{'sprite': letter, 'x': position_x, 'y': 355.4456, 'scale': .5}
                       for letter, position_x in zip(letters, locations)],
           'letterDuration': 58,
           'bar': {'sprite': 'LoadingBar', 'x': 640, 'y': 480, 'color': '#FF3EA7',
-                  'insetX': 23, 'insetY': 6},
+                  'startX': 257, 'endX': 1026, 'insetY': 4},
           'luna': {'frames': [f'00600{index}' for index in range(10)],
                    'x': 299, 'y': 340, 'height': 630, 'frameTicks': 6},
           'previewTicks': 720}
