@@ -1,4 +1,8 @@
-# 0.23.70 — SETTINGS 彈窗／模式流程
+# 0.23.71 — SETTINGS 裝飾保留
+
+設定按鈕直接置於原 OPTIONS 背景，四角縷花保持清晰。
+
+## 0.23.70 — SETTINGS 彈窗／模式流程
 
 提早白屏、主頁淡入；SNES 預設、TRAINING 雙人確認、ARCADE NEXT → ACS／對手專屬場景。
 
