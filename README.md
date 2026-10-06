@@ -1,4 +1,8 @@
-# 0.23.62 — Logo transitions / organized assets / static selection
+# 0.23.63 — 決戰／勝敗宣言
+
+頭像高 360px，P1 (280,360)／P2 (1000,360)；宣言間隔 60 TICK，完局自動進入勝敗宣言後返回主頁。
+
+## 0.23.62 — Logo transitions / organized assets / static selection
 
 Assets now follow `Stage/`, `Char/`, `Data/`, `Sound/`, `Engine/` and `Tools/`. See [repository layout](Docs/repository-layout.md) for current paths and selection controls. Historical release notes below may refer to previous root-level filenames.
 
@@ -422,4 +426,5 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
+
 
