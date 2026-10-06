@@ -1,0 +1,14 @@
+const fract=value=>value-Math.floor(value);
+const smooth=(start,end,value)=>{const amount=Math.max(0,Math.min(1,(value-start)/(end-start)));return amount*amount*(3-2*amount)};
+export function lightSeeds(count=96){return Array.from({length:count},(_,index)=>{const variation=fract(index*.41421356);return {x:fract(index*.61803398875)*11-5.5,phase:fract(index*.38196601125),z:fract(index*.754877666)*2-1,size:(3+variation*5)*(.55+fract(index*.73205081)*1.1),star:index%3!==0}})}
+export function lightSample(light,time,stopTime=-1,viewportHeight=720){
+ const speed=.085+light.size*.003,phase=stopTime<0?fract(light.phase+time*speed):fract(light.phase+stopTime*speed)+(time-stopTime)*speed;
+ if(phase>=1)return null;
+ const travel=Math.min(phase/.82,1),impact=smooth(.82,.89,phase),brightness=smooth(0,.06,phase)*(1-smooth(.90,1,phase));
+ const inset=20+40*fract(Math.sin(light.phase*127.1+light.x*311.7)*43758.5453),depth=7.2-(light.z+.4),start=360-(5.4-1.6)/depth*(360/Math.tan(Math.PI/12));
+ return {x:640+(light.x/5.5*.9+Math.sin(light.phase*Math.PI*2+travel*2)*.008)*640,y:start+(720-inset*720/viewportHeight-start)*travel,impact,brightness,size:light.size*2,star:light.star};
+}
+const textures=new Map();
+function texture(kind){if(textures.has(kind))return textures.get(kind);const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const context=canvas.getContext('2d'),image=context.createImageData(128,128);for(let row=0;row<128;row++)for(let column=0;column<128;column++){const horizontal=(column+.5)/128-.5,vertical=(row+.5)/128-.5,radius=Math.hypot(horizontal,vertical),angle=Math.atan2(vertical,horizontal),tip=.045+.43*Math.abs(Math.cos(angle*4))**24,glow=Math.exp(-radius*radius*18)*.3;let alpha;if(kind==='halo')alpha=Math.exp(-radius*radius*22)*(1-smooth(.35,.50,radius))*.32;else alpha=(kind==='star'?(1-smooth(tip*.5,tip,radius))*(1-smooth(.02,.49,radius))+glow*.3:Math.exp(-radius*radius*65)+glow)*.8;const offset=(row*128+column)*4,color=kind==='halo'?[.48,.83,1]:[.72,.94,1];for(let channel=0;channel<3;channel++)image.data[offset+channel]=color[channel]*255;image.data[offset+3]=Math.min(1,alpha)*255}context.putImageData(image,0,0);textures.set(kind,canvas);return canvas}
+export function drawFallingLights(context,lights,time,stopTime=-1,viewportHeight=720){context.save();context.globalCompositeOperation='lighter';for(const light of lights){const point=lightSample(light,time,stopTime,viewportHeight);if(!point)continue;const halo=point.size*2.4*(1+point.impact*2),core=point.size*(1+(point.star?0:point.impact*1.5));context.globalAlpha=Math.min(1,point.brightness*(1+point.impact*1.6));context.drawImage(texture('halo'),point.x-halo/2,point.y-halo/2,halo,halo);context.globalAlpha=point.brightness;context.drawImage(texture(point.star?'star':'circle'),point.x-core/2,point.y-core/2,core,core)}context.restore()}
+
