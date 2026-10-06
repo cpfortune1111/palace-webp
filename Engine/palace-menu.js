@@ -1,11 +1,11 @@
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02369';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02372';
-import {createSelectScreen} from './select-screen.js?v=02374';
+import {createSelectScreen} from './select-screen.js?v=02375';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=declaration5';
 import {createAcsScreen} from './acs-screen.js?v=02369';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
-import {createLoadingScreen} from './loading-screen.js?v=02374';
+import {createLoadingScreen} from './loading-screen.js?v=02375';
 
 import {createTitlePresentation} from './title-presentation.js?v=02370';
 
@@ -46,9 +46,9 @@ export function createPalaceMenu(api){
  }
  function closeSettings(){mode='settingsClosing';presentation.settings(0)}
  homeButton.addEventListener('click',showHome);window.addEventListener('resize',draw);
- document.addEventListener('keydown',event=>{if(mode==='loadingPreview'){if(event.code==='Tab')return;event.preventDefault();event.stopImmediatePropagation();if(event.target.matches('button')&&['Enter','Space'].includes(event.code)){event.target.click();return}if(['Enter','KeyZ','KeyA'].includes(event.code))loading.confirmTest();return}if(mode==='loading'){event.preventDefault();event.stopImmediatePropagation();return}if(homeFading)return;if(mode==='acs'&&acs.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='select'&&selection.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(overlay.hidden||document.querySelector('dialog[open]'))return;if(event.code==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(mode==='options')closeSettings();return}if(event.target.matches('input,select'))return;event.preventDefault();event.stopImmediatePropagation();if(mode==='home'){if(event.code==='ArrowDown'||event.code==='ArrowUp'){selected=(selected+(event.code==='ArrowDown'?1:4))%5;showHome()}else if(event.code==='Enter'){selected===4?showOptions():showSelect(['arcade','vs','training','watch'][selected])}}else if(event.code==='Escape')showHome()},true);
+ document.addEventListener('keydown',event=>{if(mode==='loading'){event.preventDefault();event.stopImmediatePropagation();return}if(homeFading)return;if(mode==='acs'&&acs.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='select'&&selection.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(overlay.hidden||document.querySelector('dialog[open]'))return;if(event.code==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(mode==='options')closeSettings();return}if(event.target.matches('input,select'))return;event.preventDefault();event.stopImmediatePropagation();if(mode==='home'){if(event.code==='ArrowDown'||event.code==='ArrowUp'){selected=(selected+(event.code==='ArrowDown'?1:4))%5;showHome()}else if(event.code==='Enter'){selected===4?showOptions():showSelect(['arcade','vs','training','watch'][selected])}}else if(event.code==='Escape')showHome()},true);
  const requested=new URLSearchParams(location.search).get('mode');
- mode='logo';overlay.hidden=true;api.pause(true);logoIntro=createLogoIntro(async()=>{homeFading=true;await Promise.all([ready,titleStage.ready,optionReady,loading.ready]);mode='loadingPreview';overlay.hidden=true;loading.show()},{preload:loading.ready});logoIntro.done.then(()=>{homeFading=false;loading.showTest(()=>{showHome(true);if(['vs','training','watch'].includes(requested))start(requested)})});document.addEventListener('keydown',event=>{if(!logoIntro.finished){event.preventDefault();event.stopImmediatePropagation()}},true);
+ mode='logo';overlay.hidden=true;api.pause(true);logoIntro=createLogoIntro(async()=>{homeFading=true;await Promise.all([ready,titleStage.ready,optionReady,loading.ready]);showHome(true)},{preload:loading.ready});logoIntro.done.then(()=>{homeFading=false;if(['vs','training','watch'].includes(requested))start(requested)});document.addEventListener('keydown',event=>{if(!logoIntro.finished){event.preventDefault();event.stopImmediatePropagation()}},true);
  let lastTitleFrame=performance.now();function animate(){const now=performance.now(),dt=Math.min((now-lastTitleFrame)/1000,.05);lastTitleFrame=now;presentation.step(dt);if(mode==='settingsClosing'&&presentation.snapshot().settings===0){mode='home';popup.hidden=true}titleStage.setVisible(!overlay.hidden&&(['home','options','settingsClosing','entrance'].includes(mode)));if(!overlay.hidden){draw();if(['home','options','settingsClosing','entrance'].includes(mode))titleStage.render(dt)}requestAnimationFrame(animate)}requestAnimationFrame(animate);
  return {ready:Promise.all([ready,titleStage.ready,loading.ready]),loading,titleStage,logoIntro,selection,acs,resultDeclarations,showResult,showSelect,showSettings:showOptions,closeSettings,presentation,sound,options,start,showHome,isWatch:()=>mode==='watch',isHome:()=>mode==='logo'||!overlay.hidden};
 }
