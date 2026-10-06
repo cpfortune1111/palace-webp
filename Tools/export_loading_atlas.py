@@ -39,7 +39,7 @@ config = {'atlas': 'loading-atlas.webp', 'size': [width, height], 'sprites': spr
           'letters': [{'sprite': letter, 'x': position_x, 'y': 355.4456, 'scale': .5}
                       for letter, position_x in zip(letters, locations)],
           'letterDuration': 58,
-          'bar': {'sprite': 'LoadingBar', 'x': 640, 'y': 480, 'color': '#FF3EA7',
+          'bar': {'sprite': 'LoadingBar', 'scale': .5, 'x': 640, 'y': 480, 'color': '#FF3EA7',
                   'startX': 257, 'endX': 1026, 'insetY': 4},
           'luna': {'frames': [f'00600{index}' for index in range(10)],
                    'x': 299, 'y': 340, 'height': 630, 'frameTicks': 6},

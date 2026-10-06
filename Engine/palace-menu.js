@@ -1,11 +1,11 @@
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02369';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02372';
-import {createSelectScreen} from './select-screen.js?v=02373';
+import {createSelectScreen} from './select-screen.js?v=02374';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=declaration5';
 import {createAcsScreen} from './acs-screen.js?v=02369';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
-import {createLoadingScreen} from './loading-screen.js?v=02373';
+import {createLoadingScreen} from './loading-screen.js?v=02374';
 
 import {createTitlePresentation} from './title-presentation.js?v=02370';
 
