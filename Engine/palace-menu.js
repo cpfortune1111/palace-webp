@@ -1,9 +1,9 @@
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createTitleStage} from '../Stage/Title/title-stage.js?v=02368';
+import {createTitleStage} from '../Stage/Title/title-stage.js?v=02369';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=loading1';
-import {createSelectScreen} from './select-screen.js?v=02368';
+import {createSelectScreen} from './select-screen.js?v=02369';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=declaration5';
-import {createAcsScreen} from './acs-screen.js?v=02368';
+import {createAcsScreen} from './acs-screen.js?v=02369';
 import {createMenuEntrance} from './menu-entrance.js?v=02368';
 import {createLoadingScreen} from './loading-screen.js?v=loading1';
 
@@ -11,7 +11,7 @@ export function createPalaceMenu(api){
  const defaults={difficulty:4,timer:'99',master:100,bgm:100,sfx:100};let options={...defaults};try{const saved=JSON.parse(localStorage.getItem('palace-options-v1'));for(const key of Object.keys(defaults))if(saved&&saved[key]!==undefined)options[key]=saved[key]}catch{}
  options.difficulty=Math.max(1,Math.min(8,Number(options.difficulty)||4));options.timer=options.timer==='infinite'?'infinite':String(Math.max(15,Math.min(99,Number(options.timer)||99)));for(const key of ['master','bgm','sfx'])options[key]=Math.max(0,Math.min(100,Number(options[key])||0));
  let battlePlayers=['SailorVenus','SailorVenus'];let mode='home',selected=0,logoIntro=null,homeFading=false;const sounds=new Set(),music=new Audio(assetUrl('./title-bgm.mp3'));music.loop=true;
- const overlay=document.createElement('div');overlay.id='palaceMenu';overlay.style.cssText='position:fixed;inset:0;z-index:40;background:#05050d';
+ const overlay=document.createElement('div');overlay.id='palaceMenu';overlay.style.cssText='position:fixed;inset:0;z-index:40;background:#05050d;overflow:hidden';
  const titleStage=createTitleStage(overlay);titleStage.ready.catch(error=>console.error('Title stage',error));
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';overlay.appendChild(canvas);const context=canvas.getContext('2d');
  const panel=document.createElement('div');panel.style.cssText='position:absolute;left:50%;top:72%;transform:translateX(-50%);text-align:center;min-width:260px';overlay.appendChild(panel);document.body.appendChild(overlay);
@@ -20,7 +20,7 @@ export function createPalaceMenu(api){
  const resultDeclarations=createResultDeclarationScreen(overlay,{sound,complete:showHome});resultDeclarations.ready.catch(error=>console.error('Result declarations',error));
  async function showResult(winner){mode='result';music.pause();api.pause(true);selection.hide();acs.hide();panel.replaceChildren();overlay.hidden=false;await resultDeclarations.ready;resultDeclarations.show(battlePlayers,winner)}
  const loading=createLoadingScreen(document.body,'battleLoading');let starting=false;
- const entrance=createMenuEntrance(overlay,{loading,ready:()=>Promise.all([selection.ready,titleStage.ready]),progress:()=>selection.progress(),onFrame:amount=>{panel.style.opacity=String(1-Math.min(1,amount*3));canvas.style.transform='scale('+(1+amount*2)+')';canvas.style.transformOrigin='50% 50%';titleStage.setTravel(amount)},show:next=>next?openSelection(next):showHome()});
+ const entrance=createMenuEntrance(overlay,{loading,ready:()=>Promise.all([selection.ready,titleStage.ready]),progress:()=>selection.progress(),onFrame:amount=>{panel.style.opacity=String(1-Math.min(1,amount*3));canvas.style.transform='scale('+(1+amount*14)+')';canvas.style.transformOrigin='50% 50%';canvas.style.opacity=String(Math.max(0,Math.min(1,(.45-amount)/.25)));titleStage.setTravel(amount)},show:next=>next?openSelection(next):showHome()});
  function showSelect(next){if(entrance.active||logoIntro&&!logoIntro.finished)return;if(mode==='home'){mode='entrance';api.pause(true);entrance.run(next)}else openSelection(next)}
  function playMusic(){if(overlay.hidden||mode==='declaration'||mode==='result'||mode==='loading')return;volume();music.play().then(()=>{if(overlay.hidden)music.pause()}).catch(()=>{})}
  document.addEventListener('pointerdown',playMusic,true);document.addEventListener('keydown',playMusic,true);

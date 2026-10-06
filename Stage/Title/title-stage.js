@@ -47,6 +47,6 @@ export function createTitleStage(parent){
   fixPlanetLayers(model.scene);mixer=new THREE.AnimationMixer(model.scene);for(const clip of model.animations)mixer.clipAction(clip).play();addOceanReflection(model.scene);resize();renderer.render(scene,camera);
  });
  window.addEventListener('resize',resize);
- return {ready,setTravel:amount=>{if(camera){camera.position.set(0,-.825+amount*.2,-amount*.65);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0)}},setVisible:value=>{visible=value;renderer.domElement.hidden=!value},render:dt=>{if(!visible||!camera)return;if(mixer){mixer.update(dt);animationTime+=dt}if(oceanReflection)oceanReflection.material.uniforms.time.value=animationTime;renderer.render(scene,camera)},snapshot:()=>({loaded:!!mixer,visible,animationTime,animations:settings?.animations,reflectiveOcean:!!oceanReflection,frontClouds,behindEarthMeteors,oceanOcclusion})};
+ return {ready,setTravel:amount=>{if(camera){camera.position.set(0,-.825+amount*.2,-amount*16);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0)}},setVisible:value=>{visible=value;renderer.domElement.hidden=!value},render:dt=>{if(!visible||!camera)return;if(mixer){mixer.update(dt);animationTime+=dt}if(oceanReflection)oceanReflection.material.uniforms.time.value=animationTime;renderer.render(scene,camera)},snapshot:()=>({loaded:!!mixer,visible,animationTime,animations:settings?.animations,reflectiveOcean:!!oceanReflection,frontClouds,behindEarthMeteors,oceanOcclusion})};
 }
 
