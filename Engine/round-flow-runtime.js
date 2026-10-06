@@ -16,7 +16,8 @@ export function createRoundFlow(api){
   if(phase==='endFade'){api.fade(Math.min(1,age/30));if(age>=30){phase='match';api.message(matchWinner?'P'+matchWinner+' Wins the Match':'Draw Match');api.matchEnd()}return}
   if(phase==='intro'){api.stepPresentation();if(api.introComplete()&&api.voiceReady()){phase='introBuffer';age=0}return}
   if(phase==='introBuffer'){api.stepPresentation();if(age>=config.startWait){age=0;if(mode==='training'){rounds.state=2;phase='fightBuffer';api.message('FIGHT');api.sound('1,0')}else{phase='ready';api.message('Round '+rounds.number);api.sound('0,'+Math.min(3,rounds.number))}}return}
-  if(phase==='ready'){api.stepPresentation();if(age>=config.startWait&&api.announcerReady()){rounds.state=2;phase='fightBuffer';age=0;api.message('FIGHT');api.sound('1,0')}return}
+  if(phase==='ready'){api.stepPresentation();if(age>=config.startWait&&api.announcerReady()){phase='roundVoiceBuffer';age=0}return}
+  if(phase==='roundVoiceBuffer'){api.stepPresentation();if(age>=30){rounds.state=2;phase='fightBuffer';age=0;api.message('FIGHT');api.sound('1,0')}return}
   if(phase==='fightBuffer'){api.stepPresentation();if(age>=config.controlWait&&api.announcerReady()){rounds.state=2;phase=mode==='training'?'training':'fight';age=0;api.fight();api.message('')}return}
   if(phase==='fight'){const life=api.life();if(life.some(value=>value<=0))finish('ko');else if(api.remaining()===0)finish('time');return}
   if(phase==='result'){api.stepResult();if(age>=config.overWait&&api.settled()&&api.announcerReady()){phase='resultBuffer';age=0}return}
@@ -25,3 +26,4 @@ export function createRoundFlow(api){
  }
  return {begin,step,finish,speed,triggerKoSlow,canFight:()=>phase==='fight'||phase==='training',enabled:()=>phase!=='training',result:player=>({win:winner===player,lose:winner!==0&&winner!==player,draw:winner===0&&['result','pose','match'].includes(phase)}),snapshot:()=>({mode,phase,age,winner,reason,wins:[...wins],draws,matchWinner,slowRemaining,round:{...rounds}})};
 }
+

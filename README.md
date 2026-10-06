@@ -1,4 +1,8 @@
-# 0.23.65 — KO 動作完成／KILL PLAYER 測試
+# 0.23.66 — 旁白留白／1HP 測試
+
+ROUND 旁白後留白 30 TICK；決戰／勝敗宣言留白 15 TICK。縮細 KILL PLAYER，新增 ALL 1HP。
+
+## 0.23.65 — KO 動作完成／KILL PLAYER 測試
 
 完局著地不再強制 S0；狀態循環兩次才救援，無限停格逾 1200 TICK 才重設。右上 KILL PLAYER 可選 RANDOM／P1／P2／ALL。
 
