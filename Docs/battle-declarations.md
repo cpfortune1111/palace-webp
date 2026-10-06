@@ -12,6 +12,8 @@ Declaration assets and voices are fetched in the selection/ACS preload path. Key
 
 ## Match results
 
+Pre-match portraits enter for 90 ticks, then hold for 15 ticks before starting the S191 declaration timeline. Results hold for 15 ticks after both entry and winner/loser vertical movement finish, then start the loser's declaration. Original voice cue offsets remain unchanged. Every numbered round waits 30 ticks after its announcer finishes before FIGHT; Training still skips the round announcement.
+
 Whole-match completion opens the same background and portraits without ACS controls or newly generated particles. The page fades in over 30 ticks, portraits enter over 90 ticks, then the winner moves up 60px and the loser down 60px over 30 ticks. The loser speaks first, followed by a 15-tick wait, the winner's line, another 15-tick wait, and a 30-tick loser-only fade before returning home. BGM stays paused throughout. Score/Continue screens are not implemented here.
 
 Venus defeat uses 170,0 at tick 0. Victory randomly selects 180,0 at tick 0 or 180,1 at tick 20, matching S181's animation triggers. Actual audio completion gates both waits. Draws use no fabricated winner/loser line and fade back home. Both pre-match and result assets preload with selection.
