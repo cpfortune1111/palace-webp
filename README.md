@@ -1,4 +1,6 @@
-# 0.23.82 — Smaller fireworks / Random particle fall
+# 0.23.83 — Important notice / Tap to start logo
+
+## 0.23.82 — Smaller fireworks / Random particle fall
 
 ## 0.23.81 — Six random fireworks / Wider launch / Symbol rotation
 
