@@ -33,14 +33,18 @@ for line in (source / 'venus.txt').read_text(encoding='utf-8-sig').splitlines():
         current['frames'].append(dict(sprite=f'{group}{item:02}', ticks=duration))
         tick += max(0, duration)
 frames = {}
+actions['9000']['frames'] = [dict(sprite='900000', ticks=12)] + [dict(sprite=f'9000{item:02}', ticks=3) for item in [1, 2, 3]] + [dict(sprite=f'9000{item:02}', ticks=4) for item in list(range(4, 14)) + list(range(12, 4, -1))]
+actions['9000']['loop'] = 21
+for identifier in ['9030', '9031']:
+    actions[identifier]['frames'] = [dict(sprite=f'9030{item:02}', ticks=4) for item in [0, 1, 2]] + actions[identifier]['frames']
+    for cue in actions[identifier]['cues']:
+        cue['tick'] += 12
 for group in ['9000', '9010', '9020', '9030']:
     paths = sorted((source / '1x').glob(group + '*.webp'))
     images = [Image.open(path).convert('RGBA') for path in paths]
-    bounds = [image.getchannel('A').getbbox() for image in images]
-    union = (min(bound[0] for bound in bounds), min(bound[1] for bound in bounds), max(bound[2] for bound in bounds), max(bound[3] for bound in bounds))
-    size = (round((union[2]-union[0])*720/(union[3]-union[1])), 720)
+    size = (1280, 720)
     for path, image in zip(paths, images):
-        image.crop(union).resize(size, Image.Resampling.LANCZOS).save(target / path.name, quality=92, method=6)
+        image.resize(size, Image.Resampling.LANCZOS).save(target / path.name, quality=92, method=6)
         frames[path.stem] = dict(file='Char/Venus/Quote/' + path.name, width=size[0], height=size[1])
 (root / 'Data/Quote').mkdir(parents=True, exist_ok=True)
 (root / 'Data/Quote/venus.json').write_text(json.dumps(dict(character='SailorVenus', actions=actions, frames=frames), indent=2), encoding='utf-8')

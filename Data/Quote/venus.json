@@ -9,91 +9,91 @@
         },
         {
           "sprite": "900001",
-          "ticks": 4
+          "ticks": 3
         },
         {
           "sprite": "900002",
-          "ticks": 4
+          "ticks": 3
         },
         {
           "sprite": "900003",
-          "ticks": 4
+          "ticks": 3
         },
         {
           "sprite": "900004",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900005",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900006",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900007",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900008",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900009",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900010",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900011",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900012",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900013",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900012",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900011",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900010",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900009",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900008",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900007",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900006",
-          "ticks": 2
+          "ticks": 4
         },
         {
           "sprite": "900005",
-          "ticks": 2
+          "ticks": 4
         }
       ],
       "cues": [],
-      "loop": 24
+      "loop": 21
     },
     "9010": {
       "frames": [
@@ -475,6 +475,18 @@
     "9030": {
       "frames": [
         {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
           "sprite": "903004",
           "ticks": 5
         },
@@ -541,7 +553,7 @@
       ],
       "cues": [
         {
-          "tick": 0,
+          "tick": 12,
           "duration": 198,
           "file": "Char/Venus/Quote/Lose V01.wav"
         }
@@ -550,6 +562,18 @@
     },
     "9031": {
       "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
         {
           "sprite": "903003",
           "ticks": 5
@@ -589,7 +613,7 @@
       ],
       "cues": [
         {
-          "tick": 0,
+          "tick": 12,
           "duration": 106,
           "file": "Char/Venus/Quote/Lose V02.wav"
         }
@@ -600,212 +624,212 @@
   "frames": {
     "900000": {
       "file": "Char/Venus/Quote/900000.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900001": {
       "file": "Char/Venus/Quote/900001.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900002": {
       "file": "Char/Venus/Quote/900002.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900003": {
       "file": "Char/Venus/Quote/900003.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900004": {
       "file": "Char/Venus/Quote/900004.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900005": {
       "file": "Char/Venus/Quote/900005.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900006": {
       "file": "Char/Venus/Quote/900006.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900007": {
       "file": "Char/Venus/Quote/900007.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900008": {
       "file": "Char/Venus/Quote/900008.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900009": {
       "file": "Char/Venus/Quote/900009.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900010": {
       "file": "Char/Venus/Quote/900010.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900011": {
       "file": "Char/Venus/Quote/900011.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900012": {
       "file": "Char/Venus/Quote/900012.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "900013": {
       "file": "Char/Venus/Quote/900013.webp",
-      "width": 817,
+      "width": 1280,
       "height": 720
     },
     "901000": {
       "file": "Char/Venus/Quote/901000.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901001": {
       "file": "Char/Venus/Quote/901001.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901002": {
       "file": "Char/Venus/Quote/901002.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901003": {
       "file": "Char/Venus/Quote/901003.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901004": {
       "file": "Char/Venus/Quote/901004.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901005": {
       "file": "Char/Venus/Quote/901005.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901006": {
       "file": "Char/Venus/Quote/901006.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901007": {
       "file": "Char/Venus/Quote/901007.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901008": {
       "file": "Char/Venus/Quote/901008.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901009": {
       "file": "Char/Venus/Quote/901009.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "901010": {
       "file": "Char/Venus/Quote/901010.webp",
-      "width": 653,
+      "width": 1280,
       "height": 720
     },
     "902000": {
       "file": "Char/Venus/Quote/902000.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902001": {
       "file": "Char/Venus/Quote/902001.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902002": {
       "file": "Char/Venus/Quote/902002.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902003": {
       "file": "Char/Venus/Quote/902003.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902004": {
       "file": "Char/Venus/Quote/902004.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902005": {
       "file": "Char/Venus/Quote/902005.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902006": {
       "file": "Char/Venus/Quote/902006.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902007": {
       "file": "Char/Venus/Quote/902007.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902008": {
       "file": "Char/Venus/Quote/902008.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902009": {
       "file": "Char/Venus/Quote/902009.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "902010": {
       "file": "Char/Venus/Quote/902010.webp",
-      "width": 603,
+      "width": 1280,
       "height": 720
     },
     "903000": {
       "file": "Char/Venus/Quote/903000.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     },
     "903001": {
       "file": "Char/Venus/Quote/903001.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     },
     "903002": {
       "file": "Char/Venus/Quote/903002.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     },
     "903003": {
       "file": "Char/Venus/Quote/903003.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     },
     "903004": {
       "file": "Char/Venus/Quote/903004.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     },
     "903005": {
       "file": "Char/Venus/Quote/903005.webp",
-      "width": 568,
+      "width": 1280,
       "height": 720
     }
   }

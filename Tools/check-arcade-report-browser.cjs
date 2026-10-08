@@ -1,0 +1,19 @@
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
+const {chromium}=require('C:/Users/jeffy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const root=path.resolve(__dirname,'..');
+const server=http.createServer((request,response)=>{
+ const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname);response.setHeader('Content-Type','text/javascript');
+ if(pathname==='/favicon.ico'){response.writeHead(204);response.end();return}
+ if(pathname==='/'){response.setHeader('Content-Type','text/html');response.end('<body style="margin:0"><div id="inputPanel"></div><script type="module">import {createPalaceMenu} from "./Engine/palace-menu.js";window.starts=0;window.menu=createPalaceMenu({pause:()=>{},ready:async()=>{},prepareStage:async()=>{},start:()=>window.starts++,keyConfig:()=>{}});await menu.ready;window.ready=true;</script></body>');return}
+ if(pathname==='/Data/Logo/logo-intro.js'){response.end('export function createLogoIntro(callback){return {finished:true,done:Promise.resolve().then(callback)}}');return}
+ if(pathname==='/Stage/Title/title-stage.js'){response.end('export function createTitleStage(){return {ready:Promise.resolve(),setVisible:()=>{},render:()=>{},setTravel:()=>{}}}');return}
+ if(pathname==='/Engine/select-screen.js'){response.end('export function createSelectScreen(){return {ready:Promise.resolve(),show:()=>{},hide:()=>{},handleKey:()=>false,progress:()=>1}}');return}
+ if(pathname==='/Engine/acs-screen.js'){response.end('export function createAcsScreen(){return {ready:Promise.resolve(),show:async()=>{},hide:()=>{},handleKey:()=>false}}');return}
+ if(pathname==='/Engine/result-declaration-screen.js'){response.end('export function createResultDeclarationScreen(parent,api){window.finishReport=api.complete;return {ready:Promise.resolve(),show:()=>{},hide:()=>{},handleKey:()=>false}}');return}
+ const file=path.resolve(root,'.'+pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}response.setHeader('Content-Type',({'.js':'text/javascript','.json':'application/json','.webp':'image/webp'})[path.extname(file)]||'application/octet-stream');response.end(fs.readFileSync(file));
+});
+(async()=>{let browser;try{
+ await new Promise(resolve=>server.listen(8792,'127.0.0.1',resolve));browser=await chromium.launch({headless:true,channel:'msedge'});const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',error=>errors.push(error.message));await page.goto('http://127.0.0.1:8792');await page.waitForFunction(()=>window.ready);await page.getByRole('button',{name:'Arcade',exact:true}).waitFor();
+ await page.evaluate(async()=>{await menu.start('arcade',{players:['SailorVenus','SailorVenus'],stage:'moon',hardware:['snes','snes'],command:['normal','normal'],acs:[Array(6).fill(0),Array(6).fill(0)],arcadeOpponents:[{id:'SailorVenus',stage:'moon'}]});await menu.showResult(1,{totals:[170000,0]});finishReport()});assert.equal(await page.evaluate(()=>window.starts),1);assert.deepEqual(await page.evaluate(()=>menu.arcade.snapshot()),{completed:1,total:1,remaining:[]});assert.equal(await page.getByRole('button',{name:'Arcade',exact:true}).isVisible(),true);assert.deepEqual(errors,[]);console.log('ARCADE report continuation: completed single-opponent campaign returns home without restarting the battle');
+ }finally{await browser?.close();server.close()}})().catch(error=>{console.error(error);process.exitCode=1});
+
