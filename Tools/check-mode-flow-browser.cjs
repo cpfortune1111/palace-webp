@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
 const {chromium}=require('C:/Users/jeffy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const root=path.resolve(__dirname,'..');
 const server=http.createServer((request,response)=>{
- const pathname=new URL(request.url,'http://localhost').pathname;
+ const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname);
  if(pathname==='/favicon.ico'){response.writeHead(204);response.end();return}
  if(pathname.startsWith('/vendor/')){const vendor=path.resolve(root,'../outputs/three-r180'),file=path.resolve(vendor,pathname.slice(8));if(!file.startsWith(vendor+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}response.setHeader('Content-Type','text/javascript');response.end(fs.readFileSync(file));return}
  if(pathname==='/'){response.setHeader('Content-Type','text/html');response.end('<script type="importmap">{"imports":{"three":"/vendor/build/three.module.js","three/addons/":"/vendor/examples/jsm/"}}</script><body style="margin:0"><script type="module">import {createSelectScreen} from "./Engine/select-screen.js";window.selection=createSelectScreen(document.body,{confirm:(mode,choice)=>window.choice=choice,back:()=>{}});selection.show("vs");await selection.ready;document.addEventListener("keydown",event=>selection.handleKey(event));</script>');return}

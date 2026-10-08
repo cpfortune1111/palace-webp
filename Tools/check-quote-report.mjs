@@ -1,0 +1,29 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {quoteFrame,quoteDuration} from '../Engine/quote-animation.js';
+import {createDeclarationFlow} from '../Engine/declaration-flow.js';
+import {reportRank,reportRecords} from '../Engine/report-card.js';
+import {createScoreRuntime} from '../Engine/score-runtime.js';
+const manifest=JSON.parse(fs.readFileSync(new URL('../Data/Quote/venus.json',import.meta.url)));
+assert.equal(Object.keys(manifest.frames).length,42);
+assert.equal(quoteFrame(manifest.actions['9000'],0),'900000');
+assert.equal(quoteFrame(manifest.actions['9000'],12),'900001');
+assert.equal(quoteFrame(manifest.actions['9000'],60),'900004');
+assert.equal(quoteFrame(manifest.actions['9000'],96),'900004');
+assert.deepEqual(manifest.actions['9012'].cues.map(cue=>cue.tick),[0,39]);
+assert.equal(manifest.actions['9020'].cues[0].tick,12);
+assert.equal(quoteFrame(manifest.actions['9030'],99999),'903003');
+assert.equal(quoteFrame(manifest.actions['9019'],99999),'902000');
+for(const action of Object.values(manifest.actions)){for(const frame of action.frames)assert.ok(manifest.frames[frame.sprite]);for(const cue of action.cues)assert.ok(fs.existsSync(new URL('../'+cue.file,import.meta.url)));assert.ok(quoteDuration(action)>=0)}
+let finished=0;const speakers=[];
+const flow=createDeclarationFlow({variant:()=>({cues:[],duration:10}),playing:()=>false,play:()=>{},startVoice:player=>speakers.push(player),complete:()=>finished++});
+flow.begin({result:true,winner:1});assert.equal(flow.snapshot().phase,'move');
+for(let tick=0;tick<30;tick++)flow.step();assert.equal(flow.snapshot().movement,1);
+for(let tick=0;tick<14;tick++)flow.step();assert.deepEqual(speakers,[]);flow.step();assert.deepEqual(speakers,[2]);
+for(let tick=0;tick<25;tick++)flow.step();assert.deepEqual(speakers,[2,1]);
+for(let tick=0;tick<55;tick++)flow.step();assert.equal(finished,1);assert.equal(flow.snapshot().loserOpacity,0);
+assert.deepEqual([160000,130000,110000,90000,70000,69999].map(reportRank),['SS','S','A','B','C','D']);
+const records=reportRecords({time:20,hits:12,score:170000},{time:30,hits:15,score:160000});assert.deepEqual(records.refreshed,{time:true,hits:false,score:true});
+const score=createScoreRuntime();score.hit(1,{moveType:'I'},{attr:'S, NA'},{guarded:false,getHit:{damage:4}});score.finish(1,'ko',[500,0],80,99);score.resetRound();score.hit(1,{moveType:'I'},{attr:'S, NA'},{guarded:false,getHit:{damage:4}});score.finish(1,'ko',[500,0],70,99);assert.equal(score.snapshot().hits[0],2);assert.equal(score.snapshot().koTime,48);score.resetMatch();assert.equal(score.snapshot().hits[0],0);assert.equal(score.snapshot().koTime,0);
+console.log('Quote frames, loops, audio cues, result movement/holds, rank, best records and all-round statistics passed');
+
