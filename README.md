@@ -1,4 +1,6 @@
-# 0.23.81 — Six random fireworks / Wider launch / Symbol rotation
+# 0.23.82 — Smaller fireworks / Random particle fall
+
+## 0.23.81 — Six random fireworks / Wider launch / Symbol rotation
 
 ## 0.23.80 — Correct firework symbols / Random size / Single-color trails
 
