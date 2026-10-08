@@ -1,4 +1,6 @@
-# 0.23.77 — 完整畫布／動畫接播
+# 0.23.78 — Report fixes / Portrait continuity / Compressed menu audio
+
+## 0.23.77 — 完整畫布／動畫接播
 
 Venus 動畫改完整 1280×720、更新 Select／Lose 時序，ACS 接播、宣言 P2 反向；更新 Report 圖。ARCADE 不重複已擊敗對手，目前 1 場（每場先贏 2 回合）完結。
 
