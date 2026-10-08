@@ -1,4 +1,6 @@
-# 0.23.79 — Winner fireworks / Selection BGM / Hardware 80%
+# 0.23.80 — Correct firework symbols / Random size / Single-color trails
+
+## 0.23.79 — Winner fireworks / Selection BGM / Hardware 80%
 
 ## 0.23.78 — Report fixes / Portrait continuity / Compressed menu audio
 
