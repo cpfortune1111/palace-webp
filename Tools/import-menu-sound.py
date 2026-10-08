@@ -5,7 +5,7 @@ source = Path(r'E:\3D 2022\SFX')
 target = Path(__file__).resolve().parents[1] / 'Data' / 'Sound'
 target.mkdir(parents=True, exist_ok=True)
 encoder = Path(r'C:\Users\jeffy\AppData\Local\Programs\BilibiliVideoDownload\resources\app.asar.unpacked\node_modules\ffmpeg-static\ffmpeg.exe')
-names = ['logo.wav', 'select-mode.wav', 'select-settings.wav', 'btn-click.wav', 'btn-back.wav', 'acs-add.wav', 'acs-minus.wav', 'select.wav', 'BGM-report.flac']
+names = ['logo.wav', 'select-mode.wav', 'select-settings.wav', 'btn-click.wav', 'btn-back.wav', 'acs-add.wav', 'acs-minus.wav', 'select.wav', 'BGM-report.flac', 'BGM-select.flac']
 for name in names:
     original = source / name
     output = target / (original.stem + '.mp3')

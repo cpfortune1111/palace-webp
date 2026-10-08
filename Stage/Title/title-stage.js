@@ -1,3 +1,4 @@
+import {createWinnerFireworks} from './winner-fireworks.js?v=02379';
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -9,6 +10,7 @@ export function createTitleStage(parent){
  renderer.localClippingEnabled=true;
  renderer.domElement.id='titleStage';renderer.domElement.style.cssText='position:absolute;pointer-events:none';parent.prepend(renderer.domElement);
  const scene=new THREE.Scene();scene.background=new THREE.Color(0x05050d);
+ const fireworks=createWinnerFireworks(scene);
  let camera,mixer,visible=true,settings,animationTime=0,oceanReflection;
  let frontClouds=false,behindEarthMeteors=false,oceanOcclusion=false;
  function fixPlanetLayers(model){
@@ -42,11 +44,12 @@ export function createTitleStage(parent){
  }
  function resize(){if(!camera)return;const fit=Math.min(innerWidth/settings.localcoord[0],innerHeight/settings.localcoord[1]),width=settings.localcoord[0]*fit,height=settings.localcoord[1]*fit;renderer.setSize(width,height,false);Object.assign(renderer.domElement.style,{width:width+'px',height:height+'px',left:(innerWidth-width)/2+'px',top:(innerHeight-height)/2+'px'});camera.aspect=width/height;camera.updateProjectionMatrix()}
  const ready=Promise.all([fetch(assetUrl('./title_stage.json?v=02362')).then(response=>{if(!response.ok)throw Error('Title settings HTTP '+response.status);return response.json()}),fetch(assetUrl('./Title.glb.gz?v=02362')).then(async response=>{if(!response.ok)throw Error('Title model HTTP '+response.status);return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()})]).then(async ([config,buffer])=>{
-  settings=config;camera=new THREE.PerspectiveCamera(config.fov,config.localcoord[0]/config.localcoord[1],.01,500);camera.position.set(0,-.825,0);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0);
+  await fireworks.ready;settings=config;camera=new THREE.PerspectiveCamera(config.fov,config.localcoord[0]/config.localcoord[1],.01,500);camera.position.set(0,-.825,0);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0);
   const model=await new GLTFLoader().parseAsync(buffer,'./');model.scene.position.fromArray(config.offset);model.scene.scale.fromArray(config.scale);scene.add(model.scene);
+  model.scene.updateMatrixWorld(true);const castleBounds=new THREE.Box3();model.scene.traverse(node=>{if(node.isMesh&&/^(Stage P|Column|Main Column|Forecourt)/i.test(node.name))castleBounds.union(new THREE.Box3().setFromObject(node))});if(!castleBounds.isEmpty())fireworks.setOrigin(castleBounds);
   fixPlanetLayers(model.scene);mixer=new THREE.AnimationMixer(model.scene);for(const clip of model.animations)mixer.clipAction(clip).play();addOceanReflection(model.scene);resize();renderer.render(scene,camera);
  });
  window.addEventListener('resize',resize);
- return {ready,setTravel:amount=>{if(camera){camera.position.set(0,-.825+amount*.2,-amount*16);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0)}},setVisible:value=>{visible=value;renderer.domElement.hidden=!value},render:dt=>{if(!visible||!camera)return;if(mixer){mixer.update(dt);animationTime+=dt}if(oceanReflection)oceanReflection.material.uniforms.time.value=animationTime;renderer.render(scene,camera)},snapshot:()=>({loaded:!!mixer,visible,animationTime,animations:settings?.animations,reflectiveOcean:!!oceanReflection,frontClouds,behindEarthMeteors,oceanOcclusion})};
+ return {ready,setWinner:fireworks.setWinner,setTravel:amount=>{if(camera){camera.position.set(0,-.825+amount*.2,-amount*16);camera.rotation.set(THREE.MathUtils.degToRad(2.5),0,0)}},setVisible:value=>{visible=value;renderer.domElement.hidden=!value},render:dt=>{if(!visible||!camera)return;if(mixer){mixer.update(dt);animationTime+=dt}fireworks.render(dt);if(oceanReflection)oceanReflection.material.uniforms.time.value=animationTime;renderer.render(scene,camera)},snapshot:()=>({loaded:!!mixer,visible,animationTime,animations:settings?.animations,reflectiveOcean:!!oceanReflection,frontClouds,behindEarthMeteors,oceanOcclusion,fireworks:fireworks.snapshot()})};
 }
 
