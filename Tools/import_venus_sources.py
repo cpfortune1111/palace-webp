@@ -13,13 +13,13 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def air_sprite_references(actions, sprite_keys):
+def air_sprite_references(actions, sprite_keys, blank_pairs=((122, 0), (951, 99))):
     empty_frames = []
     missing_sprites = []
     for action in actions:
         for frame in action['frames']:
             reference = {'action': action['id'], **frame}
-            if -1 in frame['sprite'] or tuple(frame['sprite']) in ((122, 0), (951, 99)):
+            if -1 in frame['sprite'] or tuple(frame['sprite']) in blank_pairs:
                 empty_frames.append(reference)
             elif tuple(value & 65535 for value in frame['sprite']) not in sprite_keys:
                 missing_sprites.append(reference)
@@ -38,11 +38,14 @@ def sections(data):
     return result
 
 
-def run(source, destination, runtime):
+def run(source, destination, runtime, definition_name='SailorVenus.def'):
     destination.mkdir(parents=True, exist_ok=True)
     original = destination / 'original'
     original.mkdir(exist_ok=True)
-    definition = source / 'SailorVenus.def'
+    definition = source / definition_name
+    character = next((entry['text'].split('=', 1)[1].strip().strip('"')
+                      for section in sections(definition.read_bytes()) if section['section'].lower() == 'info'
+                      for entry in section['entries'] if re.match(r'^name\\s*=', entry['text'], re.I)), definition.stem)
     definition_sections = sections(definition.read_bytes())
     dependencies = {}
     for section in definition_sections:
@@ -126,7 +129,8 @@ def run(source, destination, runtime):
                        'offset': offset + 16, 'riff': sample[:4] == b'RIFF'})
         offset = next_offset
     sprite_keys = {(sprite['group'], sprite['number']) for sprite in sprites}
-    empty_frames, missing_sprites = air_sprite_references(actions, sprite_keys)
+    blank_pairs = ((122, 0), (951, 99)) if definition_name == 'SailorVenus.def' else ()
+    empty_frames, missing_sprites = air_sprite_references(actions, sprite_keys, blank_pairs)
     source_types = Counter(controller['type'].lower() for controller in controllers)
     runtime_types = {value.lower() for value in re.findall(r"case '([^']+)':", runtime.read_text(encoding='utf-8'))}
     coverage = [{'type': kind, 'controllers': amount,
@@ -157,16 +161,16 @@ def run(source, destination, runtime):
                 targets = state_ids if kind in ('changestate', 'selfstate', 'helper') else action_ids
                 reference['status'] = 'present' if int(value) in targets else 'missing'
             references.append(reference)
-    manifest = {'schema': 1, 'character': 'Sailor Venus', 'baseline': '0.23.7',
+    manifest = {'schema': 1, 'character': character, 'baseline': '0.23.7',
                 'definition': definition.name, 'dependencies': dependencies, 'files': files,
                 'counts': {'files': len(files), 'states': len(states), 'controllers': len(controllers),
                            'commands': len(commands), 'actions': len(actions), 'sprites': len(sprites),
                            'palettes': len(palettes), 'sounds': len(sounds)},
                 'missingAIRSpriteReferences': missing_sprites, 'controllerCoverage': coverage,
                 'intentionalEmptyAIRFrames': empty_frames,
-                'authorClarifications': {'airGuard': False, 'intentionalBlankPairs': [[122, 0], [951, 99]],
+                'authorClarifications': ({'airGuard': False, 'intentionalBlankPairs': [[122, 0], [951, 99]],
                                          'unfinishedActions': [645], 'unfinishedThrows': [800, 801],
-                                         'drawContinueFallbacks': 'Keep source lose/default animation fallback'},
+                                         'drawContinueFallbacks': 'Keep source lose/default animation fallback'} if definition_name == 'SailorVenus.def' else {}),
                 'referenceChecks': references, 'runtimeSHA256': digest(runtime.read_bytes()),
                 'limits': ['Raw section entries are preserved; expressions are not compiled or semantically validated.',
                            'Dynamic and external references require review; static missing references may be unused source branches.',
@@ -178,11 +182,12 @@ def run(source, destination, runtime):
                'text_sections.json': parsed}
     for name, content in bundles.items():
         (destination / name).write_text(json.dumps(content, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    archive = destination.parent / 'venus-source-import-v1.zip'
+    archive = destination.parent / ('venus-source-import-v1.zip' if definition_name == 'SailorVenus.def'
+                                    else definition.stem.lower() + '-source-import-v1.zip')
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as output:
         for path in sorted(destination.rglob('*')):
             if path.is_file():
-                output.write(path, 'venus/' + path.relative_to(destination).as_posix())
+                output.write(path, destination.name + '/' + path.relative_to(destination).as_posix())
     print(json.dumps({'counts': manifest['counts'], 'missingSprites': len(missing_sprites),
                       'archiveBytes': archive.stat().st_size, 'archiveSHA256': digest(archive.read_bytes()),
                       'coverage': coverage}, ensure_ascii=False))
@@ -190,8 +195,9 @@ def run(source, destination, runtime):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument('--definition', default='SailorVenus.def')
     parser.add_argument('--source', type=Path, required=True)
     parser.add_argument('--destination', type=Path, required=True)
     parser.add_argument('--runtime', type=Path, required=True)
     arguments = parser.parse_args()
-    run(arguments.source, arguments.destination, arguments.runtime)
+    run(arguments.source, arguments.destination, arguments.runtime, arguments.definition)

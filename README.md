@@ -1,4 +1,6 @@
-# 0.23.84 — Rounded notice font / 48px line height
+# 0.23.85 — Compressed Moon assets / Battle integration pending
+
+## 0.23.84 — Rounded notice font / 48px line height
 
 ## 0.23.83 — Important notice / Tap to start logo
 
@@ -492,5 +494,4 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
-
 
