@@ -1,4 +1,6 @@
-# 0.23.83 — Important notice / Tap to start logo
+# 0.23.84 — Rounded notice font / 48px line height
+
+## 0.23.83 — Important notice / Tap to start logo
 
 ## 0.23.82 — Smaller fireworks / Random particle fall
 
