@@ -7,11 +7,12 @@ let browser;
 const server=http.createServer((request,response)=>{
  const filename=new URL(request.url,'http://localhost').pathname.replace(/^\//,'')||'index.html';
  if(filename.includes('..')){response.writeHead(400);response.end();return}
- const file=path.join('work',filename);
+ if(filename.startsWith('vendor/')){const base=path.resolve('outputs/three-r180'),file=path.resolve(base,filename.slice(7));if(!file.startsWith(base+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}response.setHeader('Content-Type','text/javascript');response.end(fs.readFileSync(file));return}
+ const file=path.join('work',decodeURIComponent(filename));
  if(!fs.existsSync(file)){response.writeHead(404);response.end();return}
  let content=fs.readFileSync(file);
  if(filename==='index.html'){
-  let html=content.toString().replaceAll('requestAnimationFrame(loop);','');
+  let html=content.toString().replaceAll('https://cdn.jsdelivr.net/npm/three@0.180.0/','/vendor/').replaceAll('requestAnimationFrame(loop);','');
   html=html.replace('</script></body>',"window.runtimeTest={run:source=>eval(source),step:()=>{simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods();drawCollision()},snapshot:()=>({state,fi,current,p1Facing,posX,posY,vx,vy,cameraX,stateTicks,p1TurnTime,p2:{...p2},runtimeFailed})};</script></body>");
   content=Buffer.from(html);
  }
@@ -25,7 +26,9 @@ const server=http.createServer((request,response)=>{
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('http://127.0.0.1:8765/?mode=training');
  await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!turnDat&&!!attackDat&&!!gethitDat&&!!battleDat&&!!guardDat&&!!fallDat&&!!airDat'),null,{timeout:90000}).catch(error=>{throw Error(error.message+'; browser errors: '+JSON.stringify(errors))});
+ await page.keyboard.press('Enter');
  await page.waitForFunction(()=>window.runtimeTest.run('!!lifecycleDat&&!gameShell.isHome()'),null,{timeout:30000});
+ await page.evaluate(()=>window.runtimeTest.run('for(let tick=0;tick<2000&&!roundFlow.canFight();tick++)simStep()'));
  const orientationChecks=await page.evaluate(()=>window.runtimeTest.run(`
   (()=>{
    let checked=0;

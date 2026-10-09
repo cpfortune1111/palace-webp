@@ -1,4 +1,4 @@
-import {createDeclarationScreen} from './declaration-screen.js?v=02378';
+import {createDeclarationScreen} from './declaration-screen.js?v=02386';
 import {createReportCard} from './report-card.js?v=02378';
 export function createResultDeclarationScreen(parent,api){
  const view=document.createElement('section');view.id='resultDeclarations';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:5';parent.appendChild(view);
@@ -15,4 +15,3 @@ export function createResultDeclarationScreen(parent,api){
  function animate(time){if(!view.hidden){if(lastTime!==undefined&&!document.hidden)accumulator+=Math.min((time-lastTime)/1000,.05)*60;lastTime=time;while(accumulator>=1&&!view.hidden){accumulator--;declaration.step();report.step(1)}draw()}requestAnimationFrame(animate)}requestAnimationFrame(animate);
  return {ready,show,hide,handleKey,snapshot:()=>({visible:!view.hidden,reportVisible,report:report.snapshot(),...declaration.snapshot()})};
 }
-

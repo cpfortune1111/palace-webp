@@ -1,4 +1,4 @@
-# Sailor Moon import — battle integration pending
+# Sailor Moon — S0–S999 battle integration
 
 Source: `SailorMoon.def`, `moon.cns`, `moon_Common.cns`, `moon_Helper.st`, `moon.cmd`, `moon.air`, `moon.sff`, `moon.snd`, `movelist.dat`.
 
@@ -9,6 +9,10 @@ Source: `SailorMoon.def`, `moon.cns`, `moon_Common.cns`, `moon_Helper.st`, `moon
 - Actions 122/132/142/152 and 951 reference missing sprites 122,0 / 951,99; exported as empty frames with original timing, never replaced with Venus artwork.
 - Duplicate source definitions 170 and 801 require source-order handling, not merging controllers by state number.
 
-Not playable yet. The live battle engine still shares Venus state, command, animation, sound and helper data between P1/P2. Moon must use independent per-player datasets before enabling its selection cell. TargetBind / TargetState / TargetLifeAdd / ChangeAnim2 and other Moon-specific controllers also need implementation and mixed-character battle tests. Do not enable Moon by removing the selection guard alone.
+Playable SNES/Saturn basic-state profile: `Battle/moon_runtime.json`. P1/P2 use separate state, command, collision, animation and sound data. Includes ordinary attacks, rabbit jump, back dash, headbutt throw, common get-hit states, round initialization and HP/portrait helpers. 3DO hardware and command branches remain disabled; specials above S999 are not part of this release.
 
-Full animation export is a source-preservation artifact, not a preload manifest. Loading every page together would use excessive decoded-image memory; build a reachable-action asset set or a bounded on-demand cache before runtime integration.
+Duplicate definitions use the first source definition, matching IKEMEN's compiler; controllers never merge across duplicate definitions. Unfinished 195/811/822/823 and Actions 612/614/830/3199 remain disabled. Declaration screens temporarily use Moon's static selection portrait and original 191/192/180/170 voices, not Venus quote animation/audio.
+
+Full animation export remains a source-preservation artifact. The battle profile preloads only the 12 pages needed by S0–S999 and common/round dependencies (about 180 MB decoded), not all 220 pages. Runtime readiness belongs to `moon_runtime.json`, not the full-archive manifest's `runtimeEnabled` flag.
+
+Validation: `Tools/test_moon_states.py`, `Tools/check-moon-runtime.cjs`, `Tools/check-mode-flow-browser.cjs`.

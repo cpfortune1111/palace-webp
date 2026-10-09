@@ -1,5 +1,5 @@
 import {createQuotePortrait} from './quote-animation.js?v=02378';
-import {createDeclarationScreen} from './declaration-screen.js?v=02378';
+import {createDeclarationScreen} from './declaration-screen.js?v=02386';
 import {abilityKeys,abilityBudget,abilityProfile,changeAbility} from './ability-system.js?v=acs1';
 import {lightSeeds,drawFallingLights} from './falling-lights.js?v=02368';
 export function createAcsScreen(parent,api){
@@ -40,4 +40,3 @@ export function createAcsScreen(parent,api){
  function animate(time){if(!view.hidden){if(lastTime!==undefined&&loaded){const elapsed=Math.min((time-lastTime)/1000,.05)*60;age+=elapsed;portraits.forEach(portrait=>portrait.step(elapsed));if(declaration.active()){declarationAccumulator+=elapsed;while(declarationAccumulator>=1&&declaration.active()){declarationAccumulator--;declaration.step()}}}lastTime=time;positionControls();if(declarationStart>=0){controls.style.opacity=String(declaration.opacity());controls.style.pointerEvents='none'}draw()}requestAnimationFrame(animate)}requestAnimationFrame(animate);window.addEventListener('resize',resize);
  return {ready:prepared,show,hide,handleKey,snapshot:()=>({visible:!view.hidden,loaded,declaration:declaration.snapshot(),lightGeneration:declarationStart<0,lightCount:lights.length,player,cursor,points:points.map(values=>[...values]),remaining:remaining(),portraitAnimations:portraits.map(portrait=>portrait.snapshot()),mirror:mirrorAmount(),layout:{portraitCenters:layout.portraitCenters,nameCenters:layout.nameCenters,groupCenter:860-440*mirrorAmount(),confirmSize:images.confirm?[images.confirm.naturalWidth,images.confirm.naturalHeight]:null},transitioning:transitioning(),titleY:-181+168*(1-(1-Math.min(1,age/30))**3),profiles:points.map(abilityProfile)})};
 }
-

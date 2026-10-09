@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.85 Moon Assets / Runtime Pending</title>
+<title>Prototype 0.23.86 Moon S0–S999 / No 3DO</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.85 · Moon Assets / Runtime Pending</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD quote-report-02385-20261009-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.86 · Moon S0–S999 / No 3DO</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD moon-basic-02386-20261009-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -48,7 +48,7 @@ import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=acs1';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02386';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -56,7 +56,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02385';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02386';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -65,7 +65,7 @@ for(let seconds=15;seconds<99;seconds++){const option=document.createElement('op
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){if(battleCharacters[player-1]==='SailorMoon'&&choice.hardware[player-1]==='3do')throw Error('Moon 3DO is disabled');const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -114,13 +114,13 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.85 · Moon Assets / Runtime Pending';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.86 · Moon S0–S999 / No 3DO';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=acs1';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02362';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02386';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02386';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
@@ -145,15 +145,15 @@ function drawStageVisuals(){
  for(const context of [reflected,filtered]){context.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);context.clearRect(0,0,vw,vh)}
  if(!stageVisuals||activeStage!=='training')return;
  reflected.save();reflected.beginPath();reflected.rect(viewX,viewY,1280*fit,720*fit);reflected.clip();reflected.globalAlpha=stageVisuals.reflection.intensity/255;
- for(const fighter of [displayP1(),displayP2()]){
-  const frame=framesFor(fighter.anim)[Math.max(0,fighter.elem-1)],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source||frame.empty)continue;
+ for(const [index,fighter] of [displayP1(),displayP2()].entries()){
+  const frame=framesFor(fighter.anim,index+1)[Math.max(0,fighter.elem-1)],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source||frame.empty)continue;
   const scale=fit*cameraZoom;
   const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,px=viewX+worldScreenX(fighter.x+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
   reflected.save();reflected.translate(px+(flip?sprite.axisX:-sprite.axisX)*scale+frame.ox*scale,ground-fighter.y*scale);reflected.scale((flip?-1:1)*scale,-stageVisuals.reflection.yscale*scale);reflected.drawImage(source,0,-sprite.axisY+frame.oy);reflected.restore();
  }
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
-function spawnSourceExplod(params,owner,player,context=null){
+function spawnSourceExplod(params,owner,player,context=null){if(profileFor(player)?.data&&!/^F/i.test(String(params.anim))){const value=expression=>Number(evalM1(expression,context||specialRuntime.context({...owner,player}))),anim=value(params.anim),position=splitExpressionPairM1(params.pos||'0,0').map(value),velocity=splitExpressionPairM1(params.vel||'0,0').map(value),side=String(params.postype||'p1').toLowerCase(),screen=['left','right'].includes(side);sourceExplods.push({id:value(params.id??0),anim,player,ownerKey:owner.key||'root'+player,x:screen?position[0]:owner.x+position[0]*owner.facing,y:screen?position[1]:owner.y+position[1],vx:velocity[0]*owner.facing,vy:velocity[1],facing:screen?1:owner.facing,scale:splitExpressionPairM1(params.scale||'1,1').map(value),screen,screenRight:side==='right',age:0,bindtime:value(params.bindtime??0),removetime:value(params.removetime??-2),ignorehitpause:value(params.ignorehitpause??0),sprpriority:value(params.sprpriority??0),removeongethit:value(params.removeongethit??0)});return}
  if(/^F\d+$/i.test(String(params.anim))){
   const anim=Number(String(params.anim).slice(1));if(!roundFxDat?.actions[String(anim)])return;
   const position=splitExpressionPairM1(params.pos||'0,0').map(value=>Number(evalM1(value,context)));
@@ -175,11 +175,11 @@ function stepSourceExplods(){
  for(let index=sourceExplods.length-1;index>=0;index--){const effect=sourceExplods[index];
   if(specialRuntime.blocked(effect.player,effect)||!effect.ignorehitpause&&effect.anim!==905&&(p1HitPause>0||effect.player===2&&p2.attackPause>0))continue;
   if(effect.bindtime!==-1){effect.bindtime=0;effect.x+=effect.vx;effect.y+=effect.vy}effect.age++;
-  if(effect.removetime!==-1&&effect.age>=(effect.common?commonFallDat.actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim)))sourceExplods.splice(index,1);
+  if(effect.removetime!==-1&&effect.age>=(effect.common?commonFallDat.actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player)))sourceExplods.splice(index,1);
  }
 }
 function lifecycleEffectFrame(effect){
- const frames=framesFor(effect.anim),loop=lifecycleDat.loopStarts[String(effect.anim)]??0,total=frames.reduce((sum,frame)=>sum+Math.max(0,frame.time),0),start=frames.slice(0,loop).reduce((sum,frame)=>sum+Math.max(0,frame.time),0);
+ const frames=framesFor(effect.anim,effect.player),loop=(profileFor(effect.player)?.battle||lifecycleDat).loopStarts[String(effect.anim)]??0,total=frames.reduce((sum,frame)=>sum+Math.max(0,frame.time),0),start=frames.slice(0,loop).reduce((sum,frame)=>sum+Math.max(0,frame.time),0);
  let age=effect.age;
  if(!frames.some(frame=>frame.time<0)&&age>=total)age=start+(age-total)%Math.max(1,total-start);
  for(const frame of frames){if(frame.time<0||age<frame.time)return frame;age-=frame.time}
@@ -193,7 +193,7 @@ function drawSourceExplods(){
  effectContext.clearRect(0,0,effectCanvas.width,effectCanvas.height);
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
  effectContext.imageSmoothingEnabled=true;
- for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods]){if(effect.roundFx&&effect.anim>=930&&effect.anim<=937){const root=specialRoot(effect.player);if(root.state>=190&&root.state<=199)hardwareIndicator.draw(effectContext,hardwareModes[effect.player-1],viewX+worldScreenX(effect.x)*fit,viewY+worldScreenY(effect.y)*fit,fit);continue}let elapsed=0;const frames=effect.roundFx?roundFxDat.actions[String(effect.anim)]:effect.common?commonFallDat.actions[String(effect.anim)]:framesFor(effect.anim),frame=effect.roundFx?frames[effect.age%frames.length]:effect.entity?frames[effect.elem-1]:lifecycleDat?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
+ for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods]){if(effect.roundFx&&effect.anim>=930&&effect.anim<=937){const root=specialRoot(effect.player);if(root.state>=190&&root.state<=199)hardwareIndicator.draw(effectContext,hardwareModes[effect.player-1],viewX+worldScreenX(effect.x)*fit,viewY+worldScreenY(effect.y)*fit,fit);continue}let elapsed=0;const frames=effect.roundFx?roundFxDat.actions[String(effect.anim)]:effect.common?commonFallDat.actions[String(effect.anim)]:framesFor(effect.anim,effect.player),frame=effect.roundFx?frames[effect.age%frames.length]:effect.entity?frames[effect.elem-1]:(profileFor(effect.player)?.data||lifecycleDat)?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
   const sprite=effect.roundFx?roundFxDat.sprites[frame.group+','+frame.item]:effect.common?commonFallDat.sprites[frame.group+','+frame.item]:spriteFor(frame);let source=effect.common||effect.roundFx?null:spriteCanvasFor(frame);if(!sprite)continue;
   if(effect.common||effect.roundFx){source=document.createElement('canvas');source.width=sprite.w;source.height=sprite.h;source.getContext('2d').drawImage(effect.roundFx?roundFxAtlases[sprite.page]:commonFallAtlas,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h)}
   if(!source)continue;
@@ -202,10 +202,11 @@ function drawSourceExplods(){
   drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
  }
 }
-function playSourceSound(value,channel=-1){
+function playSourceSound(value,channel=-1,player=characterScopePlayer){
  const match=String(value).match(/^S?(-?\d+)\s*,\s*(-?\d+)$/i);if(!match)throw Error('Unsupported sound '+value);
- if([170,180,190].includes(Number(match[1])))roundVoiceUntil=Math.max(roundVoiceUntil,combatTraceTick+(roundAudioTicks['battle-sounds/'+match[1]+'-'+match[2]+'.wav']||0));
- const key=Number(channel),sound=new Audio(assetUrl('./battle-sounds/'+match[1]+'-'+match[2]+'.wav'));
+ const profile=profileFor(player),moonSound=profile?.sounds?.[match[1]+'-'+match[2]];if(profile?.data&&!moonSound)return null;
+ if([170,180,190,191,192].includes(Number(match[1])))roundVoiceUntil=Math.max(roundVoiceUntil,combatTraceTick+(moonSound?.ticks||roundAudioTicks['battle-sounds/'+match[1]+'-'+match[2]+'.wav']||0));
+ const key=Number(channel),sound=new Audio(moonSound?'./Char/Moon/Sound/'+moonSound.file:assetUrl('./battle-sounds/'+match[1]+'-'+match[2]+'.wav'));
  gameShell.sound(sound);
  if(key>=0){soundChannels.get(key)?.pause();soundChannels.set(key,sound)}else automaticSounds.add(sound);
  const release=()=>{automaticSounds.delete(sound);if(key>=0&&soundChannels.get(key)===sound)soundChannels.delete(key)};
@@ -242,7 +243,10 @@ Promise.all([
 const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');
 function p2Data(){return dat}
 function p2AtlasFor(f){return atlasFor(f)}
-function drawMars(){
+function drawMars(){return withCharacter(2,()=>drawMarsForCharacter())}
+function drawAfterImages(context,player){const trail=afterImages[player-1];if(!trail)return;const fit=Math.min((visualViewport?.width||innerWidth)/1280,(visualViewport?.height||innerHeight)/720),left=((visualViewport?.width||innerWidth)-1280*fit)/2,top=((visualViewport?.height||innerHeight)-720*fit)/2;for(const [index,fighter] of trail.frames.entries()){const frame=framesFor(fighter.anim,player)[fighter.elem-1],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source)continue;context.save();context.globalAlpha=.5*(index+1)/Math.max(1,trail.length);context.translate(left+worldScreenX(fighter.x)*fit,top+worldScreenY(fighter.y)*fit);context.scale(fighter.facing*fit*cameraZoom,fit*cameraZoom);context.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy);context.restore()}}
+function stepAfterImages(){for(const player of [1,2]){const trail=afterImages[player-1];if(!trail)continue;if(trail.remaining>0&&combatTraceTick%trail.gap===0)trail.frames.push({...specialRoot(player)});if(trail.frames.length>trail.length||trail.remaining<=0)trail.frames.shift();trail.remaining--;if(!trail.frames.length&&trail.remaining<=0)afterImages[player-1]=null}}
+function drawMarsForCharacter(){
  mctx.clearRect(0,0,mcv.width,mcv.height);
  if(!dat||!atlas)return;
  const fighter=displayP2(),frames=framesFor(fighter.anim);if(!frames.length)return;
@@ -251,7 +255,7 @@ function drawMars(){
  const scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(fighter.x+hitShakeOffset(fighter))*fit;
  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+fighter.y*scale;
- mctx.clearRect(0,0,mcv.width,mcv.height);mctx.save();
+ mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();
  const src=spriteCanvasFor(f);
  if(src){
  if(flip){mctx.translate(dx+sp.w*scale,0);mctx.scale(-1,1);mctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale)}
@@ -478,9 +482,38 @@ modeSelect.addEventListener('change',()=>{
  modeSelect.blur();
 });
 coarsePointer.addEventListener('change',()=>{if(inputPreference==='auto')setInputMode(initialInputMode())});
-function framesFor(anim){return (roundCharDat?.actions?.[String(anim)]||lifecycleDat?.actions?.[String(anim)]||specialDat?.actions?.[String(anim)]||airDat?.actions?.[String(anim)]||fallDat?.actions?.[String(anim)]||guardDat?.actions?.[String(anim)]||gethitDat?.actions?.[String(anim)]||turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
-function spriteFor(frame){const k=frame.group+','+frame.item;return roundCharDat?.sprites?.[k]||lifecycleDat?.sprites?.[k]||specialDat?.sprites?.[k]||airDat?.sprites?.[k]||fallDat?.sprites?.[k]||guardDat?.sprites?.[k]||turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
-function atlasFor(frame){const k=frame.group+','+frame.item;if(roundCharDat?.sprites?.[k])return roundCharAtlases[roundCharDat.sprites[k].page];if(lifecycleDat?.sprites?.[k])return lifecycleAtlases[lifecycleDat.sprites[k].page];if(specialDat?.sprites?.[k])return specialAtlases[specialDat.sprites[k].page];if(airDat?.sprites?.[k])return airAtlas;if(fallDat?.sprites?.[k])return fallAtlas;if(guardDat?.sprites?.[k])return guardAtlas;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
+
+const characterProfiles=new Map(),battleCharacters=['SailorVenus','SailorVenus'],frameProfiles=new WeakMap();
+const customStateOwners=[null,null],throwTargets=[null,null],throwBindings=[null,null],throwHitData=[null,null];
+let characterScopePlayer=1;
+const defenceMultipliers=[1,1],afterImages=[null,null];
+function fighterPlayer(fighter){return fighter?.player||fighter?.id||1}
+function profileFor(player=characterScopePlayer){return characterProfiles.get(customStateOwners[player-1]||battleCharacters[player-1])}
+function withCharacter(player,callback){
+ const profile=profileFor(player),saved=[battleDat,stateIR,cmdDat,characterScopePlayer];
+ characterScopePlayer=player;
+ if(profile){battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands}
+ try{return callback()}finally{[battleDat,stateIR,cmdDat,characterScopePlayer]=saved}
+}
+async function prepareCharacters(players=['SailorVenus','SailorVenus']){
+ if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
+ if(players.includes('SailorMoon')&&!characterProfiles.has('SailorMoon')){
+  const base='./Char/Moon/Battle/',responses=await Promise.all([fetch(base+'moon_runtime.json?v=02386'),fetch(base+'moon_full.json?v=02385'),fetch('./Char/Moon/Sound/sounds.json?v=02385')]);
+  if(responses.some(response=>!response.ok))throw Error('Moon assets could not load');
+  const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
+  const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>Number(key)<1000||Number(key)>=5000&&Number(key)<=5999||[1910,1920,1990,1991,9999].includes(Number(key))));
+  const data={...all,actions},pages=new Set(),images=[];
+  for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,'SailorMoon');if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
+  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error('Moon atlas '+page));image.src=base+data.atlasFiles[page];images[page]=image})));
+  fightHud.setCharacterEmblem('SailorMoon',data,images);
+  characterProfiles.set('SailorMoon',{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds});
+ }
+ for(const [index,character] of players.entries()){if(!characterProfiles.has(character))throw Error('Unsupported character '+character);battleCharacters[index]=character;resetCommandList(index+1)}
+ const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;
+}
+function framesFor(anim,player=characterScopePlayer){const profile=profileFor(player);if(profile?.data)return profile.data.actions[String(anim)]||[];return (roundCharDat?.actions?.[String(anim)]||lifecycleDat?.actions?.[String(anim)]||specialDat?.actions?.[String(anim)]||airDat?.actions?.[String(anim)]||fallDat?.actions?.[String(anim)]||guardDat?.actions?.[String(anim)]||gethitDat?.actions?.[String(anim)]||turnDat?.actions?.[String(anim)]||attackDat?.actions?.[String(anim)]||dat?.actions?.[String(anim)]||[])}
+function spriteFor(frame){const profile=characterProfiles.get(frameProfiles.get(frame));if(profile?.data)return profile.data.sprites[frame.group+','+frame.item];const k=frame.group+','+frame.item;return roundCharDat?.sprites?.[k]||lifecycleDat?.sprites?.[k]||specialDat?.sprites?.[k]||airDat?.sprites?.[k]||fallDat?.sprites?.[k]||guardDat?.sprites?.[k]||turnDat?.sprites?.[k]||gethitDat?.sprites?.[k]||attackDat?.sprites?.[k]||dat?.sprites?.[k]}
+function atlasFor(frame){const profile=characterProfiles.get(frameProfiles.get(frame));if(profile?.data)return profile.images[profile.data.sprites[frame.group+','+frame.item]?.page];const k=frame.group+','+frame.item;if(roundCharDat?.sprites?.[k])return roundCharAtlases[roundCharDat.sprites[k].page];if(lifecycleDat?.sprites?.[k])return lifecycleAtlases[lifecycleDat.sprites[k].page];if(specialDat?.sprites?.[k])return specialAtlases[specialDat.sprites[k].page];if(airDat?.sprites?.[k])return airAtlas;if(fallDat?.sprites?.[k])return fallAtlas;if(guardDat?.sprites?.[k])return guardAtlas;if(turnDat?.sprites?.[k])return turnAtlas;if(gethitDat?.sprites?.[k])return gethitAtlas;return attackDat?.sprites?.[k]?attackAtlas:atlas}
 const spriteCanvasCache=new WeakMap();
 function spriteCanvasFor(frame){
  const source=atlasFor(frame),sprite=spriteFor(frame);
@@ -495,15 +528,15 @@ function spriteCanvasFor(frame){
  }
  return cache.get(key);
 }
-function actionDuration(anim){
- const fs=framesFor(anim);let total=0;
+function actionDuration(anim,player=characterScopePlayer){
+ const fs=framesFor(anim,player);let total=0;
  for(const q of fs) total+=q.time<0?0:Math.max(1,q.time);
  return Math.max(1,total);
 }
 const REQUIRED_CONSTS=['velocity.walk.fwd.x','velocity.walk.back.x','velocity.jump.neu.x','velocity.jump.y','velocity.jump.fwd.x','velocity.jump.back.x','movement.yaccel'];
-function constVal(name){
- const table=(stateIR&&stateIR.constants)||{};
- const v=battleDat?.sizeConstants?.[name]??battleDat?.locomotionConstants?.[name]??table[name];
+function constVal(name,player=characterScopePlayer){
+ const profile=profileFor(player),table=(profile?.states||stateIR)?.constants||{},battle=profile?.battle||battleDat;
+ const v=battle?.sizeConstants?.[name]??battle?.locomotionConstants?.[name]??table[name];
  if(typeof v!=='number'||!Number.isFinite(v)) throw new Error('Missing runtime const: '+name);
  return v;
 }
@@ -512,8 +545,8 @@ function validateRuntime(){
  if(missing.length){status.textContent='RUNTIME ERROR · missing const: '+missing.join(', ');throw new Error('Missing runtime constants: '+missing.join(', '));}
 }
 let p1StateType='S',p1Physics='S',p1AnimStartTime=0,p1Power=0,p1InvulnerableUntil=0,p1EntryCommands=null;
-function isAttackState(number){return [200,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(number)}
-function sourceState(number){return battleDat?.attackStates?.[String(number)]||battleDat?.locomotionStates?.[String(number)]||battleDat?.fallStates?.[String(number)]||battleDat?.lifecycleStates?.[String(number)]||stateIR?.states?.[String(number)]}
+function isAttackState(number,player=characterScopePlayer){const profile=profileFor(player);if(profile?.data)return !!profile.battle.attackStates[String(number)];return [200,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(number)}
+function sourceState(number){if(profileFor()?.data)return stateIR.states[String(number)];return battleDat?.attackStates?.[String(number)]||battleDat?.locomotionStates?.[String(number)]||battleDat?.fallStates?.[String(number)]||battleDat?.lifecycleStates?.[String(number)]||stateIR?.states?.[String(number)]}
 function stateDef(){const def=sourceState(state);return def?{...def,type:p1StateType,physics:p1Physics}:null}
 function animDone(){return (current===5||current===6?p1TurnTime:stateTicks-p1AnimStartTime)>=actionDuration(current)}
 function setAnimForState(def){
@@ -522,7 +555,8 @@ function setAnimForState(def){
  if(def.anim==='JumpByVelocity'){current=vx>0?42:(vx<0?43:41);fi=0;ticks=0;return}
  current=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(1))));fi=0;ticks=0;
 }
-function enterIRState(st,animOverride){
+function enterIRState(st,animOverride){return withCharacter(1,()=>enterIRStateForCharacter(st,animOverride))}
+function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=null;throwBindings[0]=null}
  p1EntryCommands=[1000,1100,1200].includes(st)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,1)])):null;
  p1HitCount=0;
  moveContact=0;moveHit=0;moveGuarded=0;
@@ -588,11 +622,12 @@ function sampleInputHistory(){
  p2PunchRequested=false;p2ButtonCommands={};
 }
 function resetCommandList(player){delete playerCommandLists[player]}
+function globalCommands(){return cmdDat}
 function directionStepPair(previous,next){
  const direction=token=>/^[UDBF]+$/.test(token.key);
  return !next.some(token=>token.hold)&&previous.every(direction)&&!previous.some(token=>next.some(other=>other.key===token.key&&other.fourway===token.fourway))&&(next.some(token=>!direction(token)&&!token.release)||previous.some(token=>token.release)&&next.some(token=>!token.release));
 }
-function createCommandList(){
+function createCommandList(player=characterScopePlayer){const cmdDat=profileFor(player)?.commands||globalCommands();
  return {signed:{},previous:{},commands:cmdDat.commands.map(definition=>{
   const steps=definition.steps.map(step=>step.map(token=>({...token})));
   for(let index=steps.length-1;index>0;index--)if(steps[index].length===1&&steps[index-1].length===1&&/^[UDBF]+$/.test(steps[index][0].key)&&JSON.stringify(steps[index])===JSON.stringify(steps[index-1])){
@@ -604,7 +639,7 @@ function createCommandList(){
  })};
 }
 function commandInputState(list,token){
- const key=token.key,signed=list.signed,previous=list.previous;
+ const key=token.key,signed=list.signed,previous=list.previous;if(token.releaseMinimum&&!(key.split('').every(axis=>previous[axis]>=token.releaseMinimum)))return 0;
  if(!/^[UDBF]+$/.test(key))return (token.release?-1:1)*(signed[key]||-1);
  const components=key.split(''),axes=['U','D','B','F'];
  if(token.fourway&&!token.release)return components.every(axis=>signed[axis]>0)?Math.min(...axes.map(axis=>Math.abs(signed[axis]))):0;
@@ -617,7 +652,7 @@ function commandInputState(list,token){
  return value;
 }
 function sampleCommandList(player,now,paused){
- const list=playerCommandLists[player]??=createCommandList();
+ const list=playerCommandLists[player]??=createCommandList(player);
  list.previous={...list.signed};
  for(const key of ['U','D','B','F','a','b','c','x','y','z','s','d','w','m']){
   const value=list.signed[key]||0,on=!!now[key];list.signed[key]=on?(value>0?value+1:1):(value<0?value-1:-1);
@@ -644,7 +679,7 @@ function sampleCommandList(player,now,paused){
  for(const command of list.commands)if(completedNames.has(command.definition.name)){command.done.fill(false);command.timers.fill(0);command.time=0}
 }
 function commandActive(name,player=1){return !!playerCommandLists[player]?.commands.some(command=>command.definition.name===name&&command.buffer>0)}
-function hasCommandDef(name){return !!cmdDat?.commands?.some(c=>String(c.name).toLowerCase()===String(name).toLowerCase())}
+function hasCommandDef(name,player=characterScopePlayer){return !!(profileFor(player)?.commands||cmdDat)?.commands?.some(c=>String(c.name).toLowerCase()===String(name).toLowerCase())}
 function tokenizeExpr(src){
  const t=[];let i=0;while(i<src.length){const c=src[i];if(/\s/.test(c)){i++;continue}
  if(c==='"'){let j=i+1,s='';while(j<src.length&&src[j]!=='"')s+=src[j++];if(j>=src.length)throw Error('AST string');t.push({k:'str',v:s});i=j+1;continue}
@@ -669,7 +704,8 @@ function parseExprAST(src){const t=tokenizeExpr(src);let p=0,peek=()=>t[p],take=
  }return l}let root=expr(0);if(peek().k!=='eof')throw Error('AST trailing '+peek().v);return root}
 function queryValue(name){const n=name.toLowerCase().replace(/\s+/g,' ');if(['hitshakeover','hitover','statetype'].includes(n))return fighterExpressionContext(p1ExpressionFighter(),p2).query(n);if(n==='p2statetype')return p2.type;if(n==='p2stateno')return p2.state;if(n==='movehit')return moveHit;if(n==='movecontact')return moveContact;if(n==='moveguarded')return moveGuarded;if(n==='random')return randomValue;if(n==='prevstateno')return prevState;if(n==='stateno')return state;if(n==='animtime')return animDone()?0:-1;if(n==='ailevel')return gameShell.isWatch()?gameShell.options.difficulty:0;if(n==='ctrl')return runtimeCtrl;if(n==='movetype')return runtimeMoveType;if(n==='time')return stateTicks;if(n==='anim')return current;if(n==='animelem')return fi+1;if(n==='pos x')return posX;if(n==='pos y')return posY;if(n==='vel x')return vx;if(n==='vel y')return vy;return fighterExpressionContext(specialRoot(1),specialRoot(2)).query(n)}
 function animElemStartTick(elem){const fs=framesFor(current);let t=0;for(let i=0;i<fs.length;i++){if(i+1===Number(elem))return t;t+=Math.max(0,Number(fs[i].time||0))}return Infinity}
-function animElemTime(elem){return (current===5||current===6?p1TurnTime:current===100?(stateTicks-p1AnimStartTime)%actionDuration(100):stateTicks-p1AnimStartTime)-animElemStartTick(elem)}
+function animElemTime(elem){return withCharacter(1,()=>animElemTimeForCharacter(elem))}
+function animElemTimeForCharacter(elem){return (current===5||current===6?p1TurnTime:current===100?(stateTicks-p1AnimStartTime)%actionDuration(100):stateTicks-p1AnimStartTime)-animElemStartTick(elem)}
 function evalAST(n,context=null){const elementTime=context?.elemTime||animElemTime;if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return /^[SCAIHL]$/i.test(n.name)?n.name.toUpperCase():(context?context.query(n.name):queryValue(n.name));if(n.t==='un'){let a=evalAST(n.a,context);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
  if(n.t==='redirect'){const target=context?.redirect?.(n.name);return target?evalAST(n.expr,target):NaN}
  if(n.t==='call'&&n.name.toLowerCase()==='redirectattr'){const target=context?.redirect?.(n.args[0].v);return target?.hitDefAttr?.(n.args.slice(1).map(argument=>argument.v))||false}
@@ -710,7 +746,7 @@ const p1ControllerBinding={
  vars:runtimeVar,sysvars:runtimeSysVar
 };
 const landingSoundEntries=[-1,-1];
-function executeControllerM1(controller,binding,context,adapter){
+function executeControllerM1(controller,binding,context,adapter){const player=adapter.player||binding.player||characterScopePlayer;
  const triggered=controllerTriggered(controller,context);if(triggered===false)return;
  if(triggered===null){
   if(controller.trigger==='AnimDone'&&!adapter.animDone())return;
@@ -746,6 +782,7 @@ function executeControllerM1(controller,binding,context,adapter){
   case 'PosSet':case 'PosAdd':
    for(const axis of ['x','y'])if(params[axis]!==undefined)binding[axis]=controller.type==='PosSet'?value(params[axis]):binding[axis]+value(params[axis]);
    break;
+  case 'DefenceMulSet':defenceMultipliers[player-1]=value(params.value);break;
   case 'CtrlSet':binding.ctrl=value(params.value);break;
   case 'StateTypeSet':if(params.moveType!==undefined)binding.moveType=String(params.moveType).toUpperCase();if(params.statetype!==undefined)binding.type=String(params.statetype).toUpperCase();if(params.physics!==undefined)binding.physics=String(params.physics).toUpperCase();break;
   case 'ScoreAdd':scoreRuntime.add(adapter.player||binding.player||1,value(params.value));break;
@@ -753,20 +790,32 @@ function executeControllerM1(controller,binding,context,adapter){
   case 'AssertSpecial':if(!['NoWalk','NoAutoTurn','NoAirGuard','Intro'].includes(params.flag))throw Error('Unsupported locomotion assertion '+params.flag);break;
   case 'DisplayToClipboard':break;
   case 'NotHitBy':if(params.value!=='SCA'||Number(params.time)!==1)throw Error('Unsupported locomotion NotHitBy');break;
+  case 'ChangeAnim2':binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
+  case 'TargetBind':{const target=throwTargets[player-1];if(target){const offset=splitExpressionPairM1(params.pos||'0,0').map(value);throwBindings[player-1]={target,offset,until:combatTraceTick+value(params.time??1)};bindThrowTarget(player)}break}
+  case 'TargetLifeAdd':{const target=throwTargets[player-1];if(target){const damage=abilityDamage(-value(params.value),battleAbilities[player-1],battleAbilities[target-1],adapter.owner.state,'S, NT');if(target===1)p1Life=Math.max(value(params.kill??1)?0:1,p1Life-damage);else p2.life=Math.max(value(params.kill??1)?0:1,p2.life-damage)}break}
+  case 'TargetState':{const target=throwTargets[player-1];if(target){if(target===1)enterIRState(value(params.value));else enterP2State(value(params.value))}break}
+  case 'Width':break;
   case 'ChangeAnim':binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
-  case 'ChangeState':case 'SelfState':adapter.changeState(value(params.value));if(params.ctrl!==undefined)binding.ctrl=value(params.ctrl);break;
-  case 'null':break;
+  case 'SelfState':{const next=value(params.value),wasCustom=customStateOwners[player-1];customStateOwners[player-1]=null;if(player===1&&wasCustom&&(profileFor(1)?.battle||battleDat).fallStates[String(next)]){p1Reaction={...specialRoot(1),getHit:throwHitData[0],vars:runtimeVar,sysvars:runtimeSysVar,hitTime:-1,hitShake:0};enterGroundReactionState(p1Reaction,next);syncP1Reaction()}else adapter.changeState(next);}if(params.ctrl!==undefined)binding.ctrl=value(params.ctrl);break;
+  case 'ChangeState':adapter.changeState(value(params.value));if(params.ctrl!==undefined)binding.ctrl=value(params.ctrl);break;
+  case 'Null':case 'null':break;
+  case 'HitBy':if(String(params.value)!=='SCA,NA,SA,HA,NP,SP,HP')throw Error('Unsupported HitBy '+params.value);break;
+  case 'ScreenBound':break;
+  case 'AfterImage':afterImages[player-1]={remaining:value(params.time),gap:value(params.timegap??1),length:value(params.length??1),frames:[]};break;
+  case 'MakeDust':{const root=adapter.owner||specialRoot(player),offset=splitExpressionPairM1(params.pos||'0,0').map(value);if(commonFallDat.actions['60'])sourceExplods.push({common:true,anim:60,player,x:root.x+offset[0]*root.facing,y:root.y+offset[1],vx:0,vy:0,facing:root.facing,age:0,bindtime:0,sprpriority:0});break}
   default:throw Error('M2 unsupported controller: '+controller.type);
  }
 }
-function runController(controller,sourceContext=null){
+function runController(controller,sourceContext=null){return withCharacter(1,()=>runControllerForCharacter(controller,sourceContext))}
+function runControllerForCharacter(controller,sourceContext=null){
  const context=sourceContext||(controller.type==='VarSet'&&controller.params.target==='var(2)'&&stateTicks===0&&p1EntryCommands?specialRuntime.context(specialRoot(1),p1EntryCommands):null);
  executeControllerM1(controller,p1ControllerBinding,context,{
   owner:specialRoot(1),player:1,animDone,playSound:playSourceSound,changeState:enterIRState,explod:params=>spawnSourceExplod(params,specialRoot(1),1),
   hitDef:params=>{activeHitDef={serial:++hitDefSerial,hitKey:stateEntrySerial+':'+state+':'+current+':'+(state===1200?hitDefSerial:0),state,anim:current,elem:fi+1,tick:inputTick,params:{...params}}}
  });
 }
-function applyPhysics(def){
+function applyPhysics(def){return withCharacter(1,()=>applyPhysicsForCharacter(def))}
+function applyPhysicsForCharacter(def){
  if(!def)return;
  // Controllers execute first. Physics then updates position. As in IKEMEN,
  // landing from physics=A is an engine transition to State 52, not a CNS adapter.
@@ -792,12 +841,14 @@ function validateAttackM1(){
  if(!d||d.type!=='S'||d.physics!=='S'||Number(d.anim)!==200)throw Error('State 200 IR invalid');
 }
 function runAttackReturnM1(){if(state===200&&animDone()){enterIRState(0);return true}return false}
-function runStateMinus1M1(){
+function runStateMinus1M1(){return withCharacter(1,()=>runStateMinus1M1ForCharacter())}
+function runStateMinus1M1ForCharacter(){
  if(gameShell.isWatch())return false;
  for(const controller of battleDat.playerCommands)if(controllerTriggered(controller)){runController(controller);return true}
  return false;
 }
-function runP1DashCommands(){
+function runP1DashCommands(){return withCharacter(1,()=>runP1DashCommandsForCharacter())}
+function runP1DashCommandsForCharacter(){
  for(const controller of battleDat.playerCommands.filter(controller=>[100,105].includes(Number(controller.params.value))))if(controllerTriggered(controller)){p1Reaction=null;runController(controller);return true}
  return false;
 }
@@ -826,7 +877,8 @@ function dispatchGroundCommands(){
  }
  vx=0;if(state!==0)enterIRState(0);
 }
-function advanceAirOneTick(){
+function advanceAirOneTick(){return withCharacter(1,()=>advanceAirOneTickForCharacter())}
+function advanceAirOneTickForCharacter(){
  if(current===5||current===6)return;
  const frames=framesFor(current);if(!frames.length)return;
  const f=frames[Math.min(fi,frames.length-1)];
@@ -841,12 +893,12 @@ function advanceAirOneTick(){
 }
 
 const p2={
- id:2,name:'Sailor Venus',x:280,y:0,vx:0,vy:0,facing:-1,
+ id:2,player:2,name:'Sailor Venus',x:280,y:0,vx:0,vy:0,facing:-1,
  state:0,time:0,anim:0,elem:1,elemTick:0,ctrl:1,
  type:'S',physics:'S',moveType:'I',life:1000,lifeMax:1000,hitShake:0,hitTime:0,getHit:null,lastHitKey:null
 };
 p2.sprPriority=0;
-function liveP1(){return p1Reaction?{...p1Reaction,vx:p1Reaction.vx*p1Reaction.facing}:{state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,lifeMax:p1LifeMax,sprPriority:p1SprPriority,invulnerableUntil:p1InvulnerableUntil}}
+function liveP1(){return p1Reaction?{...p1Reaction,vx:p1Reaction.vx*p1Reaction.facing}:{player:1,id:1,state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,lifeMax:p1LifeMax,sprPriority:p1SprPriority,invulnerableUntil:p1InvulnerableUntil}}
 function displayP1(){return simPaused?{facing:p1Facing,vx,vy,life:p1Life,sprPriority:p1SprPriority,...logicFrame}:liveP1()}
 function displayP2(){return simPaused&&logicFrame.p2?logicFrame.p2:p2}
 function hitShakeOffset(fighter){return fighter.hitShake>0&&(fighter.time&1)!==0?-fighter.facing*2:0}
@@ -855,9 +907,11 @@ function updateSpriteLayers(){
  const front=displayP1().sprPriority>displayP2().sprPriority;
  cv.style.zIndex=front?'3':'2';mcv.style.zIndex=front?'2':'3';
 }
-function p2Frames(){return framesFor(p2.anim)}
+function p2Frames(){return withCharacter(2,()=>p2FramesForCharacter())}
+function p2FramesForCharacter(){return framesFor(p2.anim)}
 function spriteFacingFor(anim,facing){return anim===5||anim===6?-facing:facing}
-function advanceFighterAirOneTick(f){
+function advanceFighterAirOneTick(f){return withCharacter(fighterPlayer(f),()=>advanceFighterAirOneTickForCharacter(f))}
+function advanceFighterAirOneTickForCharacter(f){
  if(f.anim===5||f.anim===6)return;
  const frames=framesFor(f.anim);if(!frames.length)return;
  const el=frames[Math.max(0,Math.min(frames.length-1,f.elem-1))];
@@ -869,7 +923,8 @@ function advanceFighterAirOneTick(f){
    else if(!(f.state===12&&f.anim===12)&&![1000,1100,1200,3000,3005].includes(f.state)&&!battleDat?.fallStates?.[String(f.state)]&&![120,121,140,141,5000,5001,5002,5010,5011,5012,5020,5021,5022].includes(f.anim)){const loop=battleDat.loopStarts?.[String(f.anim)]??0;f.elem=loop+1;if(loop>0)f.animStartTime=(f.animStartTime||0)+actionDuration(f.anim)-frames.slice(0,loop).reduce((total,frame)=>total+Math.max(1,frame.time),0)}
  }
 }
-function enterGroundReactionState(fighter,n){
+function enterGroundReactionState(fighter,n){return withCharacter(fighterPlayer(fighter),()=>enterGroundReactionStateForCharacter(fighter,n))}
+function enterGroundReactionStateForCharacter(fighter,n){
  const inheritedAnimAge=fighter.time-(fighter.animStartTime||0),fallEntry=!!battleDat?.fallStates?.[String(n)];
  fighter.prevState=fighter.state;
  fighter.moveContact=0;fighter.moveHit=0;fighter.moveGuarded=0;
@@ -897,21 +952,25 @@ function enterGroundReactionState(fighter,n){
  if(n===151||n===153){fighter.type=n===153?'C':'S';fighter.physics=fighter.type;fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===153?151:150}
  if([151,153,5001,5011].includes(n))applyGroundHitVelocityM1(fighter);
 }
-function enterP2State(n){
+function enterP2State(n){return withCharacter(2,()=>enterP2StateForCharacter(n))}
+function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBindings[1]=null}
  p2.entrySerial=(p2.entrySerial||0)+1;
  p2.entryCommands=[1000,1100,1200].includes(n)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,2)])):null;
  p2.hitCount=0;
  enterGroundReactionState(p2,n);p2.activeHitDef=null;p2.attackFrame=null;
+ if(profileFor()?.data){const def=sourceState(n);if(!def)throw Error('Moon unsupported state '+n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl??p2.ctrl;if(def.anim!==undefined)p2.anim=Number(def.anim);if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}}
  if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
  if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';p2.ctrl=def.ctrl??0;if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}p2.sprPriority=def.sprpriority??0}
  if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(battleDat.powerMaximum,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;p2.anim=def.anim;if(def.velset?.[0]!==undefined)p2.vx=def.velset[0]*p2.facing;if(def.velset?.[1]!==undefined)p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveHit=0;p2.moveGuarded=0}
  if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim;if(def.ctrl!==undefined)p2.ctrl=def.ctrl}
- if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
+ if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!==undefined&&def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
  if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
 }
+function bindThrowTarget(player){const binding=throwBindings[player-1];if(!binding||binding.until<combatTraceTick)return;const root=specialRoot(player),x=root.x+binding.offset[0]*root.facing,y=root.y+binding.offset[1];if(binding.target===1){posX=x;posY=y;vx=0;vy=0}else{p2.x=x;p2.y=y;p2.vx=0;p2.vy=0}}
+function applySourceThrow(player,params){const target=3-player,attacker=specialRoot(player),defender=specialRoot(target);if(defender.moveType==='H'||defender.type==='A'||defender.life<=0)return false;throwTargets[player-1]=target;throwHitData[target-1]={fall:1,xvel:0,yvel:0,animtype:0,groundtype:1,airtype:1,yaccel:1.4,slidetime:0,hittime:0,'fall.xvel':null,'fall.yvel':-18,'fall.damage':0,'fall.kill':1,'fall.envshake.time':0};if(target===2)p2.getHit=throwHitData[1];customStateOwners[target-1]=battleCharacters[player-1];const facing=attacker.facing*Number(params.p1facing??1);if(player===1){p1Reaction=null;runtimeCtrl=0;p1Facing=facing;enterIRState(Number(params.p1stateno))}else{p2.ctrl=0;p2.facing=facing;enterP2State(Number(params.p1stateno))}if(target===1){p1Reaction=null;runtimeCtrl=0;p1Facing=-facing;enterIRState(Number(params.p2stateno))}else{p2.ctrl=0;p2.facing=-facing;enterP2State(Number(params.p2stateno))}return true}
 function applyP2HitM1(hitDef){
  if(!hitDef||p2.lastHitKey===hitDef.hitKey)return;
- const params=hitDef.params,guardMode=p2GuardMode();
+ const params=hitDef.params,guardMode=p2GuardMode();if(params.p1stateno!==undefined&&params.p2stateno!==undefined){applySourceThrow(1,params);return}
  const result=resolveGroundHitM1({id:1,facing:p1Facing,state},p2,params,guardMode);
  scoreRuntime.hit(1,p2,params,result,scoreProfile(1));
  spawnSourceHitSpark(params,result.guarded,specialRoot(1),p2);
@@ -928,7 +987,7 @@ function applyP2HitM1(hitDef){
 }
 function splitExpressionPairM1(source){let depth=0,start=0;const values=[];for(let index=0;index<String(source).length;index++){const token=String(source)[index];if(token==='('||token==='[')depth++;if(token===')'||token===']')depth--;if(token===','&&depth===0){values.push(String(source).slice(start,index));start=index+1}}values.push(String(source).slice(start));return values}
 function resolveGroundHitM1(attacker,defender,params,guardMode){
- const attacking=battleAbilities[attacker.id-1],defending=battleAbilities[attacker.id===1?1:0],modifiedDamage=String(params.damage).split(',').map(value=>abilityDamage(Number(value)||0,attacking,defending,attacker.state,params.attr));params={...params,damage:modifiedDamage.join(','),'fall.damage':abilityDamage(Number(params['fall.damage']||0),attacking,defending,attacker.state,params.attr)};
+ const attacking=battleAbilities[attacker.id-1],defending=battleAbilities[attacker.id===1?1:0],modifiedDamage=String(params.damage).split(',').map(value=>abilityDamage(Number(value)||0,attacking,defending,attacker.state,params.attr)*defenceMultipliers[attacker.id===1?1:0]);params={...params,damage:modifiedDamage.join(','),'fall.damage':abilityDamage(Number(params['fall.damage']||0),attacking,defending,attacker.state,params.attr)};
  const guardReady=(defender.ctrl&&defender.moveType==='I')||inGroundGuardState(defender);
  const guardAttempt=defender.type!=='A'&&defender.y===0&&guardReady&&guardMode!=='none'&&(String(params.guardflag).includes('M')||String(params.guardflag).includes(guardMode==='crouch'?'L':'H'));
  const pair=value=>String(value).split(',').map(Number);
@@ -952,7 +1011,7 @@ function resolveGroundHitM1(attacker,defender,params,guardMode){
  const lethal=guardKO||dmg>=defender.life&&kill;
  if(lethal&&!guarded){
   getHit.fall=1;getHit.animtype=3;
-  const profile=battleDat.koProfile,aerial=defender.type==='A';
+  const profile=(profileFor(defender.player||defender.id||1)?.battle||battleDat).koProfile,aerial=defender.type==='A';
   if(profile.enabled!==false){
   if(!aerial&&getHit.yvel===0)getHit.xvel*=profile.groundXMultiplier;
   if(getHit.xvel!==0)getHit.xvel-= (aerial?profile.airAdd:profile.groundAdd)[0]*Math.sign(getHit.xvel);
@@ -965,12 +1024,14 @@ function resolveGroundHitM1(attacker,defender,params,guardMode){
   cornerPushVelocity:push,cornerPushMultiplier:multiplier,attackerPause:pause[0],defenderPause:pause[1],
   state:guarded?(getHit.crouch?152:150):(aerial?5020:String(params['ground.type']).toLowerCase()==='trip'?5070:(defender.type==='C'&&!lethal?5010:5000)),sound:guarded?params.guardsound:params.hitsound};
 }
-function fighterElemTime(fighter,element){
+function fighterElemTime(fighter,element){return withCharacter(fighterPlayer(fighter),()=>fighterElemTimeForCharacter(fighter,element))}
+function fighterElemTimeForCharacter(fighter,element){
  let elapsed=0;const frames=framesFor(fighter.anim);
  for(let index=0;index<frames.length;index++){if(index+1===Number(element))return (fighter.anim===100?(fighter.time-(fighter.animStartTime||0))%actionDuration(100):fighter.time-(fighter.animStartTime||0))-elapsed;elapsed+=Math.max(0,Number(frames[index].time)||0)}
  return -Infinity;
 }
-function fighterExpressionContext(fighter,opponent,commands={}){
+function fighterExpressionContext(fighter,opponent,commands={}){const player=fighterPlayer(fighter),base=withCharacter(player,()=>fighterExpressionContextForCharacter(fighter,opponent,commands));return Object.fromEntries(Object.entries(base).map(([key,value])=>[key,typeof value==='function'?(...args)=>withCharacter(player,()=>value(...args)):value]))}
+function fighterExpressionContextForCharacter(fighter,opponent,commands={}){
  const lifecycle=lifecycleRuntime.queries(fighter,opponent,specialRuntime.entities);
  return {vars:fighter.vars||[],sysvars:fighter.sysvars||[],elemTime:element=>fighterElemTime(fighter,element),command:name=>!!(commands[name]??commands[String(name).toLowerCase()]),
   numHelper:lifecycle.numHelper,playerIDExist:lifecycle.playerIDExist,
@@ -987,8 +1048,8 @@ function fighterExpressionContext(fighter,opponent,commands={}){
     hitshakeover:(fighter.hitShake||0)<=0,hitover:(fighter.hitTime??-1)<0,
     random:fighter.randomValue,ailevel:gameShell.isWatch()?gameShell.options.difficulty:0,animtime:!framesFor(fighter.anim).some(frame=>frame.time<0)&&([5,6].includes(fighter.anim)?fighter.turnTime||0:fighter.time-(fighter.animStartTime||0))>=actionDuration(fighter.anim)?0:-1,'pos x':fighter.x,'pos y':fighter.y,
     'vel x':fighter.vx*fighter.facing,'vel y':fighter.vy,'p2dist x':((opponent.x??fighter.x)-fighter.x)*fighter.facing};
-   if(key==='p2bodydist x'){const distance=(opponent.x-fighter.x)*fighter.facing,front=constVal('size.'+(fighter.type==='A'?'air':'ground')+'.front'),other=constVal('size.'+(opponent.type==='A'?'air':'ground')+'.'+((distance>=0)===(fighter.facing!==opponent.facing)?'front':'back'));return distance-front+(distance>=0?-other:other)}
-   if(key==='p2bodydist y'){const top=fighter.y-constVal('size.height'),otherTop=opponent.y-constVal('size.height');return fighter.y<otherTop?otherTop-fighter.y:top>opponent.y?opponent.y-top:0}
+   if(key==='p2bodydist x'){const distance=(opponent.x-fighter.x)*fighter.facing,front=constVal('size.'+(fighter.type==='A'?'air':'ground')+'.front'),other=constVal('size.'+(opponent.type==='A'?'air':'ground')+'.'+((distance>=0)===(fighter.facing!==opponent.facing)?'front':'back'),fighterPlayer(opponent));return distance-front+(distance>=0?-other:other)}
+   if(key==='p2bodydist y'){const top=fighter.y-constVal('size.height'),otherTop=opponent.y-constVal('size.height',fighterPlayer(opponent));return fighter.y<otherTop?otherTop-fighter.y:top>opponent.y?opponent.y-top:0}
    if(['frontedgedist','backedgedist','frontedgebodydist','backedgebodydist'].includes(key)){const front=key.startsWith('front'),direction=front?fighter.facing:-fighter.facing,width=key.includes('body')?constVal('size.'+(fighter.type==='A'?'air':'ground')+'.'+(front?'front':'back')):0;return 640+(cameraX-fighter.x)*direction-width}
    if(['roundstate','roundno','roundsexisted','matchno','numpartner','numenemy','teammode','teamside','id','facing','p2movetype','p2dist y'].includes(key))return lifecycle.query(key);
    if(key==='gametime')return combatTraceTick;
@@ -998,7 +1059,7 @@ function fighterExpressionContext(fighter,opponent,commands={}){
    if(!(key in values))throw Error('AST query '+name);return values[key];
   }};
 }
-function p1ExpressionFighter(){return p1Reaction||{life:p1Life,lifeMax:p1LifeMax,state,time:stateTicks,anim:current,elem:fi+1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,facing:p1Facing,x:posX,y:posY,vx:vx*p1Facing,vy,moveContact,moveHit,moveGuarded,hitTime:-1,hitShake:0}}
+function p1ExpressionFighter(){return p1Reaction||{player:1,id:1,getHit:throwHitData[0],life:p1Life,lifeMax:p1LifeMax,state,time:stateTicks,anim:current,elem:fi+1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,facing:p1Facing,x:posX,y:posY,vx:vx*p1Facing,vy,moveContact,moveHit,moveGuarded,hitTime:-1,hitShake:0}}
 let p1HitCount=0,entityDefenderPause=false;
 function spawnSourceHitSpark(params,guarded,attacker,defender){
  const source=String(params[guarded?'guard.sparkno':'sparkno']||''),match=source.match(/^S(\d+)$/i);if(!match||!specialDat?.actions?.[match[1]])return;
@@ -1014,14 +1075,14 @@ function applyEntityHit(entity,defender,params){
  if(entity.player===1){p2.life=result.life;p2.getHit=result.getHit;p2.hitShake=result.defenderPause;p2.hitTime=result.getHit.hittime;p2.sprPriority=result.defenderPriority;enterP2State(result.state)}
  else {p1Reaction={...defender,life:result.life,getHit:result.getHit,sprPriority:result.defenderPriority,hitShake:result.defenderPause,hitTime:result.getHit.hittime};activeHitDef=null;p1HitPause=result.defenderPause;entityDefenderPause=true;enterGroundReactionState(p1Reaction,result.state);syncP1Reaction()}
  for(let index=sourceExplods.length-1;index>=0;index--)if(sourceExplods[index].ownerKey==='root'+(entity.player===1?2:1)&&sourceExplods[index].removeongethit)sourceExplods.splice(index,1);
- if(result.sound)playSourceSound(result.sound,entity.player===1?2:6);return result;
+ if(result.sound)playSourceSound(result.sound,entity.player===1?2:6,entity.player);return result;
 }
-const specialRuntime=createSpecialRuntime({root:specialRoot,context:fighterExpressionContext,commands:player=>Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,player)])),eval:evalM1,pair:splitExpressionPairM1,effects:sourceExplods,data:()=>battleDat,tick:()=>combatTraceTick,sound:playSourceSound,commonSound:playCommonSound,stopSound:channel=>soundChannels.get(channel)?.pause(),background:mul=>{r.domElement.style.filter='brightness('+(mul[0]/256)+')'},controller:executeControllerM1,trigger:controllerTriggered,explod:spawnSourceExplod,advance:advanceFighterAirOneTick,duration:actionDuration,frames:framesFor,collision:resolveFighterCollisionM1,hit:applyEntityHit,camera:()=>cameraX,cameraTop:()=>cameraY-660/cameraZoom,projectileTop:entity=>{const frame=framesFor(entity.anim)[entity.elem-1],sprite=frame&&spriteFor(frame);return sprite?-sprite.axisY+frame.oy:0},attack:opponent=>opponent.player===2?p2.attackFrame:activeHitDef?{...specialRoot(1),hitDef:activeHitDef}:null});
+const specialRuntime=createSpecialRuntime({root:specialRoot,context:fighterExpressionContext,commands:player=>Object.fromEntries((profileFor(player)?.commands||cmdDat).commands.map(definition=>[definition.name,commandActive(definition.name,player)])),eval:evalM1,pair:splitExpressionPairM1,effects:sourceExplods,data:player=>profileFor(player)?.battle||battleDat,tick:()=>combatTraceTick,sound:playSourceSound,commonSound:playCommonSound,stopSound:channel=>soundChannels.get(channel)?.pause(),background:mul=>{r.domElement.style.filter='brightness('+(mul[0]/256)+')'},controller:executeControllerM1,trigger:controllerTriggered,explod:spawnSourceExplod,advance:advanceFighterAirOneTick,duration:actionDuration,frames:framesFor,collision:resolveFighterCollisionM1,hit:applyEntityHit,camera:()=>cameraX,cameraTop:()=>cameraY-660/cameraZoom,projectileTop:entity=>{const frame=framesFor(entity.anim,entity.player)[entity.elem-1],sprite=frame&&spriteFor(frame);return sprite?-sprite.axisY+frame.oy:0},attack:opponent=>opponent.player===2?p2.attackFrame:activeHitDef?{...specialRoot(1),hitDef:activeHitDef}:null});
 function runLifecycleController(controller,fighter,context){
  if(fighter.player===1&&p1Reaction&&controller.type==='StateTypeSet'){executeControllerM1(controller,p1Reaction,context,{});syncP1Reaction();return}
  if(fighter.player===1)runController(controller,context);else runP2ControllerM1(controller);
 }
-const lifecycleRuntime=createLifecycleRuntime({data:()=>battleDat,root:specialRoot,eval:evalM1,trigger:controllerTriggered,controller:runLifecycleController});
+const lifecycleRuntime=createLifecycleRuntime({data:player=>profileFor(player)?.battle||battleDat,root:specialRoot,eval:evalM1,trigger:controllerTriggered,controller:runLifecycleController});
 const p1LifecycleBinding={player:1,vars:runtimeVar,fvars:Array(40).fill(0),get state(){return state},set state(value){enterIRState(value)},get power(){return p1Power},set power(value){p1Power=value}};
 const roundTransition=document.createElement('div');roundTransition.id='roundTransition';roundTransition.style.cssText='position:fixed;inset:0;background:black;opacity:0;pointer-events:none;z-index:8';document.body.appendChild(roundTransition);
 const scoreRuntime=createScoreRuntime();
@@ -1038,7 +1099,7 @@ const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot(
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
  reset:()=>{
-  resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
+  resetPlayerInput();customStateOwners.fill(null);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);defenceMultipliers.fill(1);afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
   roundVoiceUntil=0;roundAnnouncerUntil=0;
   for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
   for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
@@ -1070,7 +1131,8 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
  sound:value=>{roundAnnouncerUntil=combatTraceTick+(roundAudioTicks['round-sounds/'+value.replace(',','-')+'.wav']||0);const audio=new Audio(assetUrl('./round-sounds/'+value.replace(',','-')+'.wav'));gameShell.sound(audio);audio.play().catch(()=>{})},
  matchEnd:()=>{scoreRuntime.matchWin(roundFlow.snapshot().matchWinner,{homeTeam:1,opponentAI:gameShell.isWatch()});roundView.hideMatch();gameShell.showResult(roundFlow.snapshot().matchWinner,scoreRuntime.snapshot()).catch(showRuntimeError)}
 });
-function stepLifecycleState(player){
+function stepLifecycleState(player){return withCharacter(player,()=>stepLifecycleStateForCharacter(player))}
+function stepLifecycleStateForCharacter(player){
  const initial=player===1?state:p2.state,definition=battleDat.lifecycleStates[String(initial)];
  if(!definition){if(player===1){runtimeCtrl=0;stateTicks++;advanceAirOneTick()}else{p2.ctrl=0;p2.time++;advanceFighterAirOneTick(p2)}return}
  const binding=player===1?p1LifecycleBinding:p2;
@@ -1079,11 +1141,12 @@ function stepLifecycleState(player){
  for(const controller of definition.controllers){if(controller.type!=='ChangeState'||!Object.values(controller.triggers).flat().some(trigger=>/animtime/i.test(trigger)))continue;lifecycleRuntime.execute(controller,binding,specialRuntime.context(specialRoot(player)));if((player===1?state:p2.state)!==initial)return}
  if(player===1)advanceAirOneTick();else advanceFighterAirOneTick(p2);
 }
-function stepRoundResultFighter(player){
+function stepRoundResultFighter(player){return withCharacter(player,()=>stepRoundResultFighterForCharacter(player))}
+function stepRoundResultFighterForCharacter(player){
  if(player===1&&p1Reaction){stepGroundReactionM1(p1Reaction,'none');syncP1Reaction();return}
  if(player===2&&(p2.moveType==='H'||p2.life<=0)){stepGroundReactionM1(p2,'none');return}
  const initial=player===1?state:p2.state;
- for(const controller of sourceState(initial)?.controllers||[]){if(!['ChangeState','SelfState','ChangeAnim','VelSet','VelAdd','CtrlSet'].includes(controller.type))continue;if(player===1)runController(controller);else runP2ControllerM1(controller);if((player===1?state:p2.state)!==initial)break}
+ for(const controller of (profileFor(player)?.states.states[String(initial)]||sourceState(initial))?.controllers||[]){if(!['ChangeState','SelfState','ChangeAnim','VelSet','VelAdd','CtrlSet'].includes(controller.type))continue;if(player===1)runController(controller);else runP2ControllerM1(controller);if((player===1?state:p2.state)!==initial)break}
  if(player===1){if(posY<0){posX+=vx;posY+=vy;vy+=constVal('movement.yaccel');if(posY>=0){posY=0;vx=0;vy=0}}stateTicks++;advanceAirOneTick();runtimeCtrl=0}
  else{if(p2.y<0){p2.x+=p2.vx;p2.y+=p2.vy;p2.vy+=constVal('movement.yaccel');if(p2.y>=0){p2.y=0;p2.vx=0;p2.vy=0}}p2.time++;advanceFighterAirOneTick(p2);p2.ctrl=0}
  const next=player===1?state:p2.state,anim=player===1?current:p2.anim,frame=player===1?fi:p2.elem-1,frames=framesFor(anim);
@@ -1108,7 +1171,8 @@ function getHitValueM1(fighter,name){
  if(!['airtype','animtype','groundtype','xvel','yvel','fall','slidetime','ctrltime','damage','guarded','yaccel','fall.xvel','fall.yvel','fall.damage','fall.kill','fall.envshake.time'].includes(key))throw Error('Unsupported GetHitVar '+name);
  return fighter.getHit?.[key]??0;
 }
-function applyGroundHitVelocityM1(fighter){
+function applyGroundHitVelocityM1(fighter){return withCharacter(fighterPlayer(fighter),()=>applyGroundHitVelocityM1ForCharacter(fighter))}
+function applyGroundHitVelocityM1ForCharacter(fighter){
  const controller=battleDat.hitVelocityControllers?.[String(fighter.state)];if(!controller)throw Error('Missing source HitVelSet '+fighter.state);
  const binding={get vx(){return fighter.vx*fighter.facing},set vx(value){fighter.vx=value*fighter.facing},get vy(){return fighter.vy},set vy(value){fighter.vy=value}};
  executeControllerM1(controller,binding,fighterExpressionContext(fighter,{type:'S'}),{});
@@ -1116,10 +1180,12 @@ function applyGroundHitVelocityM1(fighter){
 function evalFighterExpr(expression,fighter,opponent,commands={}){
  return evalM1(expression,fighterExpressionContext(fighter,opponent,commands));
 }
-function p2Commands(){
+function p2Commands(){return withCharacter(2,()=>p2CommandsForCharacter())}
+function p2CommandsForCharacter(){
  const commands=Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,2)]));if(gameShell.isWatch()&&p2.state===20)commands.holdfwd=Math.abs(p2.x-posX)>160;return commands;
 }
-function stepP2LocomotionM1(){
+function stepP2LocomotionM1(){return withCharacter(2,()=>stepP2LocomotionM1ForCharacter())}
+function stepP2LocomotionM1ForCharacter(){
  const previous=p2.state,definition=battleDat.locomotionStates[String(previous)];
  p2.randomValue=Math.floor(Math.random()*1000);
  for(const controller of definition.controllers){runP2ControllerM1(controller);if(p2.state!==previous)break}
@@ -1127,7 +1193,8 @@ function stepP2LocomotionM1(){
  if(p2.physics==='S')p2.vx*=constVal('movement.stand.friction');
  if(p2.state===previous){p2.time++;advanceFighterAirOneTick(p2)}
 }
-function runP2ControllerM1(controller,commands=p2Commands()){
+function runP2ControllerM1(controller,commands=p2Commands()){return withCharacter(2,()=>runP2ControllerM1ForCharacter(controller,commands))}
+function runP2ControllerM1ForCharacter(controller,commands=p2Commands()){
  p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);
  const binding={
   get x(){return p2.x},set x(value){p2.x=value},get y(){return p2.y},set y(value){p2.y=value},
@@ -1144,20 +1211,23 @@ changeState:next=>{if(!sourceState(next))throw Error('P2 lab unsupported state '
   hitDef:params=>{p2.activeHitDef={hitKey:'2:'+p2.attackSerial+(p2.state===1200?':'+(++hitDefSerial):''),params:{...params}}}
  });
 }
-function applyP2SourcePhysics(){
+function applyP2SourcePhysics(){return withCharacter(2,()=>applyP2SourcePhysicsForCharacter())}
+function applyP2SourcePhysicsForCharacter(){
  p2.x+=p2.vx;
  if(p2.physics==='A'||p2.physics==='N')p2.y+=p2.vy;
  if(p2.physics==='A'){p2.vy+=constVal('movement.yaccel');if(p2.vy>0&&p2.y>=0){p2.y=0;enterP2State(52)}}
  else if(p2.physics==='S'||p2.physics==='C')p2.vx*=constVal(p2.physics==='C'?'movement.crouch.friction':'movement.stand.friction');
 }
-function stepP2SourceState(){
+function stepP2SourceState(){return withCharacter(2,()=>stepP2SourceStateForCharacter())}
+function stepP2SourceStateForCharacter(){
  const previous=p2.state,def=sourceState(previous);
  for(const controller of (previous===52?[battleDat.landingSound,...def.controllers]:def.controllers||[])){runP2ControllerM1(controller);if(p2.state!==previous)return}
  applyP2SourcePhysics();if(p2.state!==previous)return;
  if(p2.ctrl&&p2.type!=='A'&&[10,12,52].includes(p2.state)){if(p2Input.up){enterP2State(40);return}if(p2Input.down&&p2.state!==10){enterP2State(10);return}if(!p2Input.down&&p2.state===10){enterP2State(12);return}}
  p2.time++;advanceFighterAirOneTick(p2);
 }
-function stepP2AttackM1(){
+function stepP2AttackM1(){return withCharacter(2,()=>stepP2AttackM1ForCharacter())}
+function stepP2AttackM1ForCharacter(){
  if(p2.state===200){p2.x+=p2.vx;p2.vx*=constVal('movement.stand.friction')}p2.randomValue=Math.floor(Math.random()*1000);
  const tickState=p2.state;
  for(const controller of battleDat.attackStates[String(tickState)].controllers){
@@ -1167,7 +1237,7 @@ function stepP2AttackM1(){
  if(tickState!==200)applyP2SourcePhysics();
  if(p2.state!==tickState)return;
  if(p2.moveContact>0)p2.moveContact++;if(p2.moveHit>0)p2.moveHit++;if(p2.moveGuarded>0)p2.moveGuarded++;
- p2.attackFrame={state:p2.state,time:p2.time,anim:p2.anim,elem:p2.elem,x:p2.x,y:p2.y,facing:p2.facing,hitDef:p2.activeHitDef};
+ p2.attackFrame={player:2,state:p2.state,time:p2.time,anim:p2.anim,elem:p2.elem,x:p2.x,y:p2.y,facing:p2.facing,hitDef:p2.activeHitDef};
 }
 function syncP1Reaction(){
  const fighter=p1Reaction;if(!fighter)return;
@@ -1180,6 +1250,7 @@ function syncP1Reaction(){
 function applyP1HitM1(frame){
  entityDefenderPause=false;
  if(!frame?.hitDef)return;
+ if(frame.hitDef.params.p1stateno!==undefined&&frame.hitDef.params.p2stateno!==undefined){applySourceThrow(2,frame.hitDef.params);return}
  if(p1LastHitKey===frame.hitDef.hitKey)return;
  const defender=p1Reaction||{...liveP1(),id:1,type:stateDef()?.type||'S',ctrl:runtimeCtrl,moveType:runtimeMoveType,elemTick:ticks,vx:vx*p1Facing};
  const held=canonicalNow(),guardMode=held.B?(held.D?'crouch':'stand'):'none';
@@ -1195,17 +1266,18 @@ function applyP1HitM1(frame){
  if(result.attackerPriority!==null)p2.sprPriority=result.attackerPriority;
  enterGroundReactionState(p1Reaction,result.state);syncP1Reaction();
  for(let index=sourceExplods.length-1;index>=0;index--)if(sourceExplods[index].player===1&&sourceExplods[index].removeongethit)sourceExplods.splice(index,1);
- playSourceSound(result.sound,6);
+ playSourceSound(result.sound,6,2);
 }
 function resolveP2PunchM1(resolveHit=true){
  if(specialRuntime.blocked(2))return;
- if(!isAttackState(p2.state)||!p2.attackFrame)return;
+ if(!isAttackState(p2.state,2)||!p2.attackFrame)return;
  const defender={...liveP1(),facing:p1Facing};
  if(resolveHit&&!p1Reaction&&['S','C','A'].includes(stateDef()?.type)&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
  else if(resolveHit&&p1Reaction&&resolveFighterCollisionM1(p2.attackFrame,defender).contact)applyP1HitM1(p2.attackFrame);
  p2.time++;advanceFighterAirOneTick(p2);
 }
-function stepSourceFallM1(fighter){
+function stepSourceFallM1(fighter){return withCharacter(fighterPlayer(fighter),()=>stepSourceFallM1ForCharacter(fighter))}
+function stepSourceFallM1ForCharacter(fighter){
  const previous=fighter.state,definition=battleDat.fallStates[String(previous)],commands=fighter===p2?p2Commands():Object.fromEntries(['holdup','holddown','holdfwd','holdback'].map(name=>[name,commandActive(name)])),context=fighterExpressionContext(fighter,fighter===p2?p1ExpressionFighter():p2,commands);
  let frozen=false;
  const binding={get x(){return fighter.x},set x(value){fighter.x=value},get y(){return fighter.y},set y(value){fighter.y=value},
@@ -1284,7 +1356,8 @@ function enforceKoM1(){
   prepare(p1Reaction);activeHitDef=null;syncP1Reaction();
  }
 }
-function stepGroundReactionM1(fighter,guarding){
+function stepGroundReactionM1(fighter,guarding){return withCharacter(fighterPlayer(fighter),()=>stepGroundReactionM1ForCharacter(fighter,guarding))}
+function stepGroundReactionM1ForCharacter(fighter,guarding){
  if(battleDat.fallStates[String(fighter.state)]){stepSourceFallM1(fighter);return}
  const guardDistance=inGuardDistanceM1(fighter);
  if([0,11,20].includes(fighter.state)&&fighter.ctrl&&fighter.type!=='A'&&fighter.y===0){
@@ -1333,19 +1406,22 @@ function stepGroundReactionM1(fighter,guarding){
  fighter.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,fighter.x));
  fighter.time++;if(![5000,5010].includes(fighter.state))advanceFighterAirOneTick(fighter);
 }
-function stepP2M1(){
+function stepP2M1(){return withCharacter(2,()=>stepP2M1ForCharacter())}
+function stepP2M1ForCharacter(){
  if(battleDat.lifecycleStates[String(p2.state)]){stepLifecycleState(2);return}
  if(specialRuntime.blocked(2))return;
- const attackTick=isAttackState(p2.state);
+ if(customStateOwners[1]){stepP2SourceState();return}
+ const attackTick=isAttackState(p2.state,2);
  if(attackTick)stepP2AttackM1();
  const commands=p2Commands();
  if(p2ControlMode==='keyboard'&&p2.ctrl&&commands.holdup&&[0,11,20,52].includes(p2.state)){enterP2State(40);return}
  for(const controller of battleDat.playerCommands)if(controllerTriggered(controller,fighterExpressionContext(p2,p1ExpressionFighter(),commands))){runP2ControllerM1(controller,commands);return}
  p2PunchRequested=false;p2ButtonCommands={};
  if(attackTick)return;
- if([10,12,40,50,52].includes(p2.state)){stepP2SourceState();return}
- if([100,105,106].includes(p2.state)){stepP2LocomotionM1();return}
+ if([10,12,40,50,52].includes(p2.state)||profileFor()?.data&&[45,51,53,54,57].includes(p2.state)){stepP2SourceState();return}
+ if(battleDat.locomotionStates[String(p2.state)]){stepP2LocomotionM1();return}
  if(gameShell.isWatch()&&p2.state===20||(p2ControlMode==='keyboard'||gameShell.isWatch())&&p2.ctrl&&[0,11,20].includes(p2.state)&&!(p2GuardMode()!=='none'&&inGuardDistanceM1(p2))){stepP2WalkM1();return}
+ if(profileFor()?.data&&p2.moveType!=='H'&&[0,11,20].includes(p2.state)){stepP2SourceState();return}
  stepGroundReactionM1(p2,p2GuardMode());
 }
 function syncP2KeyboardInput(){for(const action of keyboardActions)p2Input[action]=Array.from(p2HeldKeys).some(code=>p2Keymap[code]===action)}
@@ -1360,11 +1436,12 @@ function p2GuardMode(){return p2ControlMode==='keyboard'?(p2Commands().holdback?
 function inGuardDistanceM1(defender){
  const attacker=defender===p2?{x:posX,y:posY,facing:p1Facing,moveType:runtimeMoveType}:p2;
  if(defender.type==='A'||defender.y!==0||attacker.moveType!=='A')return false;
- const distance=(defender.x-attacker.x)*attacker.facing,profile=battleDat.guardDistance;
+ const distance=(defender.x-attacker.x)*attacker.facing,profile=(profileFor(defender===p2?1:2)?.battle||battleDat).guardDistance;
  if(!profile)throw Error('Missing source guard distance');
  return distance<profile.front&&distance>-profile.back;
 }
-function stepP2WalkM1(){
+function stepP2WalkM1(){return withCharacter(2,()=>stepP2WalkM1ForCharacter())}
+function stepP2WalkM1ForCharacter(){
  const previous=p2.state,commands=p2Commands();
  if(commands.holddown){if(p2.state!==11)enterP2State(10);return}
  if(p2.state===11){enterP2State(12);return}
@@ -1393,7 +1470,7 @@ function worldBoxes(localBoxes,x,y,facing=1){
  return localBoxes.map(b=>{const ax=x+(facing>=0?b[0]:-b[2]),bx=x+(facing>=0?b[2]:-b[0]),ay=y+b[1],by=y+b[3];return {l:Math.min(ax,bx),r:Math.max(ax,bx),t:Math.min(ay,by),b:Math.max(ay,by)}})
 }
 function rectOverlap(a,b){return a.l<=b.r&&a.r>=b.l&&a.t<=b.b&&a.b>=b.t}
-function resolveCollisionM1(frame){
+function resolveCollisionM1(frame){frame.player=1;
  return resolveFighterCollisionM1(frame?{...frame,facing:p1Facing}:null,p2);
 }
 function resolveFighterCollisionM1(frame,defender){
@@ -1402,9 +1479,9 @@ function resolveFighterCollisionM1(frame,defender){
  if((defender.invulnerableUntil||0)>combatTraceTick||defender.type==='L')return {overlap:false,contact:false};
  if(defender.state===105)return {overlap:false,contact:false};
  if(!frame?.hitDef)return {overlap:false,contact:false};
- const set=battleDat.collision[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
+ const set=(profileFor(frame.player||2)?.battle||battleDat).collision[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
  const atk=worldBoxes(set?.c1||[],frame.x,frame.y,frame.facing);
- const body=worldBoxes(battleDat.collision[String(defender.anim)]?.[Math.max(0,defender.elem-1)]?.c2||[],defender.x,defender.y,defender.facing);
+ const body=worldBoxes((profileFor(defender.player||1)?.battle||battleDat).collision[String(defender.anim)]?.[Math.max(0,defender.elem-1)]?.c2||[],defender.x,defender.y,defender.facing);
  const overlap=atk.some(a=>body.some(b=>rectOverlap(a,b)));
  const hitflag=String(frame.hitDef.params?.hitflag||'MAF'),eligible=(defender.type==='A'?hitflag.includes('A'):hitflag.includes('M')||hitflag.includes(defender.type==='C'?'L':'H'))&&(!defender.getHit?.fall||defender.moveType!=='H'||hitflag.includes('F'));
  return {overlap,contact:overlap&&eligible};
@@ -1456,8 +1533,8 @@ function playerPushM1(){
  if(rem>0){if(posX<=p2.x){p2.x+=rem}else{p2.x-=rem};clampFighterScreenM1()}
 }
 function setP1Facing(facing){if(p1Facing!==facing){p1Facing=facing;vx=-vx}}
-function turnElement(anim,time){
- const frames=framesFor(anim);let elapsed=0;
+function turnElement(anim,time,player=characterScopePlayer){
+ const frames=framesFor(anim,player);let elapsed=0;
  for(let index=0;index<frames.length;index++){elapsed+=Math.max(1,frames[index].time);if(time<elapsed)return index}
  return Math.max(0,frames.length-1);
 }
@@ -1469,8 +1546,8 @@ function advanceTurnAnimations(){
  if(p2.anim===5||p2.anim===6){
   p2TurnTime++;
   p2.turnTime=p2TurnTime;
-  if(p2TurnTime>=actionDuration(p2.anim)){p2.anim=p2.type==='C'?11:0;p2.elem=1;p2.elemTick=0}
-  else p2.elem=turnElement(p2.anim,p2TurnTime)+1;
+  if(p2TurnTime>=actionDuration(p2.anim,2)){p2.anim=p2.type==='C'?11:0;p2.elem=1;p2.elemTick=0}
+  else p2.elem=turnElement(p2.anim,p2TurnTime,2)+1;
  }
  syncLowLifeIdle();
 }
@@ -1504,7 +1581,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.85',build:'quote-report-02385-20261009-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.86',build:'moon-basic-02386-20261009-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1512,7 +1589,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.85-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.86-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1523,8 +1600,9 @@ function simStep(){
  if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
  stepSourceExplods();
  const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested,p2Left:p2Input.left,p2Right:p2Input.right},guardMode=p2GuardMode();
- simStepCore();
+ simStepCore();stepAfterImages();
  specialRuntime.step();specialRuntime.finishTick();
+ bindThrowTarget(1);bindThrowTarget(2);
  for(const effect of sourceExplods)if(effect.bindtime===1||effect.bindtime===-1){const owner=effect.player===1?liveP1():p2;effect.x=owner.x;effect.y=owner.y;effect.facing=owner.facing;if(effect.bindtime===1)effect.bindtime=0}
  combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,p2Control:p2ControlMode,
   randomValue:before.p1.hitPause>0?null:randomValue,before,after:combatTraceSnapshot()};
@@ -1536,11 +1614,12 @@ function simStep(){
 function stepWatchAI(){
  if(!gameShell.isWatch())return;
  const advancing1=[20,100].includes(state)&&Math.abs(p2.x-posX)>160,advancing2=[20,100].includes(p2.state)&&Math.abs(p2.x-posX)>160;input.left=advancing1&&p1Facing<0;input.right=advancing1&&p1Facing>0;p2Input.left=advancing2&&p2.facing<0;p2Input.right=advancing2&&p2.facing>0;
- for(const player of [1,2]){const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of battleDat.aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
+ for(const player of [1,2]){const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of (profileFor(player)?.battle||battleDat).aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
 }
-function simStepCore(){
+function simStepCore(){return withCharacter(1,()=>simStepCoreForCharacter())}
+function simStepCoreForCharacter(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat)return;
- if(p1HitPause>0){sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state))for(const controller of sourceState(p2.state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--;p1Reaction.time++}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
+ if(p1HitPause>0){sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state,2))for(const controller of (profileFor(2)?.states.states[String(p2.state)]||sourceState(p2.state)).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--;p1Reaction.time++}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
  sampleInputHistory();
@@ -1561,7 +1640,7 @@ function simStepCore(){
  const tickEntry=stateEntrySerial;
  const tickState=state;
  let def=stateDef();
-const locomotionTick=[100,105,106,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(state);
+const locomotionTick=[70,100,105,106,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(state);
  if(!locomotionTick)applyPhysics(def);
  posX+=cornerPush.distance;
  cornerPushVelocity*=cornerPush.multiplier;
@@ -1584,7 +1663,7 @@ const locomotionTick=[100,105,106,210,230,240,400,410,430,440,600,610,630,640,10
      physics:ld?.physics||'',type:ld?.type||'',moveType:runtimeMoveType,
      x:posX,y:posY,invulnerableUntil:p1InvulnerableUntil,hitDef:activeHitDef?{...activeHitDef}:null};
    const hit=resolveCollisionM1(frame);
-   const reverseFrame=isAttackState(p2.state)&&p2.attackFrame?.hitDef?{...p2.attackFrame,hitDef:{...p2.attackFrame.hitDef,params:{...p2.attackFrame.hitDef.params}}}:null;
+   const reverseFrame=isAttackState(p2.state,2)&&p2.attackFrame?.hitDef?{...p2.attackFrame,hitDef:{...p2.attackFrame.hitDef,params:{...p2.attackFrame.hitDef.params}}}:null;
    let reverseContact=!!reverseFrame&&['S','C','A'].includes(ld?.type)&&resolveFighterCollisionM1(reverseFrame,{...frame,facing:p1Facing}).contact&&p1LastHitKey!==reverseFrame.hitDef.hitKey;
    let forwardContact=hit.contact&&p2.lastHitKey!==frame.hitDef?.hitKey;
    if(forwardContact&&reverseContact){
@@ -1624,16 +1703,17 @@ function drawCollision(){
    colctx.fillRect(x,y,w,h);colctx.strokeRect(x,y,w,h);
   }
  }
- for(const fighter of [displayP1(),displayP2()]){
-  const set=battleDat.collision[String(fighter.anim)]?.[Math.max(0,fighter.elem-1)];
+ for(const [playerIndex,fighter] of [displayP1(),displayP2()].entries()){
+  const set=(profileFor(playerIndex+1)?.battle||battleDat).collision[String(fighter.anim)]?.[Math.max(0,fighter.elem-1)];
   boxes(set?.c2||[],fighter,'rgba(70,150,255,.95)','rgba(70,150,255,.18)');
   boxes(set?.c1||[],fighter,'rgba(255,60,60,.98)','rgba(255,60,60,.22)');
  }
 }
 
-function draw(){
+function draw(){return withCharacter(1,()=>drawForCharacter())}
+function drawForCharacter(){
  updateStageClipping();
- ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;
+ ctx.clearRect(0,0,cv.width,cv.height);if(!dat||!atlas)return;drawAfterImages(ctx,1);
  updateSpriteLayers();
  const drawAnim=simPaused?logicFrame.anim:current;
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
@@ -1655,7 +1735,7 @@ function showRuntimeError(e){
  act.textContent='Simulation stopped — check runtime error above';
 }
 function updateDebugHud(){
- fightHud.render({...displayP1(),life:p1Life,lifeMax:p1LifeMax},p2,{showTimeOver:!roundFlow.enabled()});roundView.render(roundFlow.snapshot());
+ fightHud.render({...displayP1(),character:battleCharacters[0],life:p1Life,lifeMax:p1LifeMax},{...p2,character:battleCharacters[1]},{showTimeOver:!roundFlow.enabled()});roundView.render(roundFlow.snapshot());
  const signed=value=>(Number(value)<0?'':'+')+Number(value).toFixed(1);
  const row=(player,fighter,localVX)=>'P'+player+'_S'+fighter.state+'_T'+fighter.time+'_A'+fighter.anim+'_E'+fighter.elem+
   '_F'+(fighter.facing<0?'-1':'+1')+'_X'+signed(fighter.x)+'_Y'+signed(fighter.y)+
