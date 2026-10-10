@@ -1,5 +1,5 @@
 import {createDeclarationScreen} from './declaration-screen.js?v=02386';
-import {createReportCard} from './report-card.js?v=02378';
+import {createReportCard} from './report-card.js?v=02394';
 export function createResultDeclarationScreen(parent,api){
  const view=document.createElement('section');view.id='resultDeclarations';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:5';parent.appendChild(view);
  const canvas=document.createElement('canvas');canvas.style.cssText='width:100%;height:100%';view.appendChild(canvas);const context=canvas.getContext('2d'),report=createReportCard();let background,lastTime,accumulator=0,reportVisible=false,reportStarted=false;
