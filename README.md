@@ -1,4 +1,6 @@
-# 0.23.95 — Keyboard ownership / Tiara cancellation / KO state completion
+# 0.23.96 — KO state physics / Moon 5150
+
+## 0.23.95 — Keyboard ownership / Tiara cancellation / KO state completion
 
 ## 0.23.94 — P2 Report Card / Moon throw effect / Selection input parity
 

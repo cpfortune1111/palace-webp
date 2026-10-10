@@ -35,7 +35,18 @@ const server=http.createServer((request,response)=>{
    const owner={...specialRoot(1),state:3001,y:-150};specialRuntime.reset();specialRuntime.dispatch({type:'Helper',params:{id:'3050',stateno:'3050',pos:'0,0'}},{},{},{},owner,1);const pillar=specialRuntime.entities.find(entity=>entity.id===3050);expect(pillar.y===0,'Pillar ground');sourceExplods.length=0;for(let index=0;index<30;index++)spawnSourceExplod({anim:'9031',pos:'-24,-830',random:'267,622'},pillar,1);const points=sourceExplods.map(effect=>effect.x);expect(Math.max(...points)-Math.min(...points)>100,'Particle random spread');expect(sourceExplods.every(effect=>effect.y>=-1141&&effect.y<=-519),'Particle anchor');return 'Moon source fixes passed';})()`);
   console.log(checks);
   await run(`(()=>{specialRuntime.reset();posX=-1000;p2.x=1000;enterIRState(0);enterP2State(0);for(const player of [1,2])specialRuntime.dispatch({type:'Helper',params:{id:'1050',stateno:'1050',pos:'0,0'}},{},{},{},specialRoot(player),player);const helpers=specialRuntime.entities.filter(entity=>entity.id===1050);for(const helper of helpers){helper.x=0;helper.y=-300;helper.created=-1}for(let tick=0;tick<5;tick++){specialRuntime.step();combatTraceTick++}if(helpers.some(helper=>helper.state!==1051&&!helper.destroyed))throw Error('Tiara pair failed cancellation');specialRuntime.reset();lifecycleRuntime.rounds.state=3;p1Life=1000;p2.life=1000;p1Reaction=null;customStateOwners.fill(null);posY=0;p2.y=0;enterIRState(0);enterP2State(0);applySourceThrow(1,{p1stateno:801,p2stateno:805});p2.life=0;for(let tick=0;tick<500;tick++){stepRoundResultFighter(1);stepRoundResultFighter(2);bindThrowTarget(1);bindThrowTarget(2)}if(p2.state===805||p2.y!==0)throw Error('KO throw did not finish');p1Reaction=null;customStateOwners.fill(null);p1Life=1000;posY=-150;enterIRState(3002);for(let tick=0;tick<400;tick++)stepRoundResultFighter(1);if(posY!==0||state!==0)throw Error('KO super did not land');roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();})()`);
-  console.log('Tiara helper pair cancellation and post-KO throw/super completion passed');
+  for(const character of ['SailorMoon','SailorVenus']){
+   await run(`prepareCharacters(['${character}','${character}'])`);
+   for(const player of [1,2]){
+    await run(`specialRuntime.reset();customStateOwners.fill(null);p1Reaction=null;p1Life=1000;p2.life=1000;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;posY=0;p2.y=0;enterIRState(0);enterP2State(0);lifecycleRuntime.rounds.state=3;${player===1?'enterIRState':'enterP2State'}(50);if(${player===1?'posY':'p2.y'}===0){${player===1?'vy':'p2.vy'}=-12;}for(let tick=0;tick<300;tick++)stepRoundResultFighter(${player});`);
+    assert.equal(await run(player===1?'posY':'p2.y'),0,character+' P'+player+' lands after KO');
+    assert.equal(await run(player===1?'state':'p2.state'),0,character+' P'+player+' finishes landing');
+   }
+  }
+  await run("prepareCharacters(['SailorMoon','SailorMoon'])");
+  assert.equal(await run("profileFor(1).states.states['5150'].controllers.find(controller=>controller.source.line===2008).params.value"),'5150');
+  await run("roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep()");
+  console.log('Tiara helper pair cancellation, post-KO jumps/throw/super and Moon 5150 passed');
 
   await run(`sourceExplods.length=0;spawnSourceExplod({anim:'905',id:'905',pos:'80,-350',bindtime:'1'},specialRoot(1),1);simStep();const throwEffect=sourceExplods.find(effect=>effect.id===905);if(!throwEffect||Math.abs(throwEffect.x-posX-80*p1Facing)>1||throwEffect.y!==posY-350)throw Error('Throw effect offset lost');`);
 

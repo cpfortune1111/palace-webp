@@ -56,6 +56,8 @@ def compile_runtime(imported, output):
                 continue
             if state_id == 190 and compiled['type'] == 'ChangeState':
                 compiled['triggers'] = {key: value for key, value in compiled['triggers'].items() if key in ('1', '2')}
+            if state_id == 5150 and compiled['type'] == 'ChangeAnim' and compiled['triggers'].get('1') == ['Time = 0', 'Anim != [5140,5159]', 'Anim != [5110,5119]']:
+                compiled['params']['value'] = '5150'
             state['controllers'].append(compiled)
         states[str(exported_id)] = state
     constants, section = {}, None
