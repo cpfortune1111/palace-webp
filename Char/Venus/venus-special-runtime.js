@@ -133,7 +133,7 @@ export function createSpecialRuntime(api){
   }
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   if(helper.hitBy&&attacks.some(attack=>attack&&/[SCA],\s*H[AP]/.test(attack.hitDef.params.attr)&&api.collision(attack,helper).contact)){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)}
+   if(helper.hitBy&&attacks.some(attack=>attack?.hitDef?.params&&/[SCA],\s*H[AP]/.test(attack.hitDef?.params.attr)&&api.collision(attack,helper).contact)){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)}
   }
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }
