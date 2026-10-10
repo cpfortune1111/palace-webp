@@ -1,4 +1,6 @@
-# 0.23.89 — Hit effects / Moon reaction frames / Crystal knockback
+# 0.23.90 — Moon all non-3DO states / Venus S1200 effects
+
+## 0.23.89 — Hit effects / Moon reaction frames / Crystal knockback
 
 ## 0.23.88 — Moon landing / Hit recovery / Skill effects fixes
 

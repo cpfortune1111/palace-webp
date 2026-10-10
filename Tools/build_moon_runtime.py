@@ -147,7 +147,7 @@ def compile_runtime(imported, output):
               'aiWalkControllers': [], 'guardDistance': {'front': constants['size.attack.dist'], 'back': 0},
               'koProfile': {'enabled': False}, 'hitPriorityDefaults': {'defender': 0},
               'cornerpushProfile': {'defaultMultiplier': .7, 'stopThreshold': 4},
-              'source': {'character': 'SailorMoon', 'scope': 'S0-S4999; non-3DO skills and common dependencies',
+              'source': {'character': 'SailorMoon', 'scope': 'All source states; non-3DO skills, recovery, KO and helpers',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')

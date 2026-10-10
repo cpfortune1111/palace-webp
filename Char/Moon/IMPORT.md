@@ -20,3 +20,6 @@ S0 resets Moon's intro pose immediately on entry, and presentation ticks execute
 Validation: `Tools/test_moon_states.py`, `Tools/check-moon-runtime.cjs`, `Tools/check-mode-flow-browser.cjs`.
 0.23.88: S1100 returns through S1110/A1110 (updated source name). Landing audio fires once per S52 entry. Moon Sonic Cry uses one HitDef contact key, helper hit shake expires, ground reactions apply source friction, and Silver Crystal effects anchor at ground level with source RANDOM offsets.
 
+0.23.90: All source high-number states are included, including S5000–5500, S5900 and Helper 9999. Recovery SelfState returns through the owning character reaction pipeline. 3DO and previously identified unfinished branches remain excluded. Venus/Moon Explod expressions use the owning actor context and available action data instead of a fixed effect whitelist.
+
+
