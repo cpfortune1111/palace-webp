@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.88 Moon S0–S4999 / No 3DO</title>
+<title>Prototype 0.23.89 Moon S0–S4999 / No 3DO</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.88 · Moon S0–S4999 / No 3DO</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD moon-fixes-02388-20261010-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.89 · Moon S0–S4999 / No 3DO</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD moon-reactions-02389-20261010-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -48,7 +48,7 @@ import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02388';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02389';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -56,7 +56,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02388';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02389';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -114,13 +114,13 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.88 · Moon S0–S4999 / No 3DO';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.89 · Moon S0–S4999 / No 3DO';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02388';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02388';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02389';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02389';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
@@ -153,7 +153,7 @@ function drawStageVisuals(){
  }
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
-function spawnSourceExplod(params,owner,player,context=null){if(profileFor(player)?.data&&!/^F/i.test(String(params.anim))){const value=expression=>Number(evalM1(expression,context||specialRuntime.context({...owner,player}))),anim=value(params.anim),position=splitExpressionPairM1(params.pos||'0,0').map(value),spread=splitExpressionPairM1(params.random||'0,0').map(value),velocity=splitExpressionPairM1(params.vel||'0,0').map(value),side=String(params.postype||'p1').toLowerCase(),screen=['left','right'].includes(side);sourceExplods.push({id:value(params.id??0),anim,player,ownerKey:owner.key||'root'+player,x:(screen?position[0]:owner.x+position[0]*owner.facing)+(Math.random()-.5)*spread[0],y:(screen?position[1]:owner.y+position[1])+(Math.random()-.5)*spread[1],vx:velocity[0]*owner.facing,vy:velocity[1],facing:screen?1:owner.facing,scale:splitExpressionPairM1(params.scale||'1,1').map(value),screen,screenRight:side==='right',age:0,bindtime:value(params.bindtime??0),removetime:value(params.removetime??-2),ignorehitpause:value(params.ignorehitpause??0),sprpriority:value(params.sprpriority??0),ontop:value(params.ontop??0),removeongethit:value(params.removeongethit??0),supermovetime:value(params.supermovetime??0),pausemovetime:value(params.pausemovetime??0),accel:splitExpressionPairM1(params.accel||'0,0').map(value)});return}
+function spawnSourceExplod(params,owner,player,context=null){if(/^F\(/i.test(String(params.anim))){const sourceContext=context||specialRuntime.context({...owner,player}),value=expression=>Number(evalM1(expression,sourceContext)),anim=value(String(params.anim).slice(1)),position=splitExpressionPairM1(params.pos||'0,0').map(value);if(!commonFallDat.actions[String(anim)])throw Error('Unknown common effect '+anim);sourceExplods.push({common:true,anim,player,x:owner.x+position[0]*owner.facing,y:owner.y+position[1],vx:0,vy:0,facing:owner.facing,age:0,bindtime:0,sprpriority:value(params.sprpriority||0)});return}if(profileFor(player)?.data&&!/^F/i.test(String(params.anim))){const value=expression=>Number(evalM1(expression,context||specialRuntime.context({...owner,player}))),anim=value(params.anim),position=splitExpressionPairM1(params.pos||'0,0').map(value),spread=splitExpressionPairM1(params.random||'0,0').map(value),velocity=splitExpressionPairM1(params.vel||'0,0').map(value),side=String(params.postype||'p1').toLowerCase(),screen=['left','right'].includes(side);sourceExplods.push({id:value(params.id??0),anim,player,ownerKey:owner.key||'root'+player,x:(screen?position[0]:owner.x+position[0]*owner.facing)+(Math.random()-.5)*spread[0],y:(screen?position[1]:owner.y+position[1])+(Math.random()-.5)*spread[1],vx:velocity[0]*owner.facing,vy:velocity[1],facing:screen?1:owner.facing,scale:splitExpressionPairM1(params.scale||'1,1').map(value),screen,screenRight:side==='right',age:0,bindtime:value(params.bindtime??0),removetime:value(params.removetime??-2),ignorehitpause:value(params.ignorehitpause??0),sprpriority:value(params.sprpriority??0),ontop:value(params.ontop??0),removeongethit:value(params.removeongethit??0),supermovetime:value(params.supermovetime??0),pausemovetime:value(params.pausemovetime??0),accel:splitExpressionPairM1(params.accel||'0,0').map(value)});return}
  if(/^F\d+$/i.test(String(params.anim))){
   const anim=Number(String(params.anim).slice(1));if(!roundFxDat?.actions[String(anim)])return;
   const position=splitExpressionPairM1(params.pos||'0,0').map(value=>Number(evalM1(value,context)));
@@ -498,7 +498,7 @@ function withCharacter(player,callback){
 async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  if(players.includes('SailorMoon')&&!characterProfiles.has('SailorMoon')){
-  const base='./Char/Moon/Battle/',responses=await Promise.all([fetch(base+'moon_runtime.json?v=02388'),fetch(base+'moon_full.json?v=02385'),fetch('./Char/Moon/Sound/sounds.json?v=02385')]);
+  const base='./Char/Moon/Battle/',responses=await Promise.all([fetch(base+'moon_runtime.json?v=02389'),fetch(base+'moon_full.json?v=02385'),fetch('./Char/Moon/Sound/sounds.json?v=02385')]);
   if(responses.some(response=>!response.ok))throw Error('Moon assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   const actionIds=new Set([0,5,6,5300,1910,1911,1920,1921,9999,1000,1005,1100,1105,1200,1205]);
@@ -948,8 +948,8 @@ function enterGroundReactionStateForCharacter(fighter,n){
  if(n===11){fighter.type='C';fighter.moveType='I';fighter.physics='C';fighter.ctrl=1;fighter.anim=11;fighter.vx=0}
  if(n===52){fighter.type='S';fighter.moveType='I';fighter.physics='S';fighter.ctrl=0;fighter.anim=52;fighter.y=0;fighter.vy=0;fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}
  if(n===120||n===140){fighter.moveType='I';fighter.ctrl=1;fighter.physics=fighter.type;fighter.anim=n+(fighter.type==='C'?1:0);fighter.vx=0}
- if(n===5000){fighter.type=fighter.getHit?.fall||fighter.getHit?.yvel?'A':'S';fighter.moveType='H';fighter.physics='N';fighter.vx=0;fighter.vy=0;fighter.ctrl=0;fighter.anim=fighter.getHit?.animtype>=3?5030:(fighter.getHit?.groundtype===2?5010:5000)+(fighter.getHit?.animtype||0)}
- if(n===5010){fighter.type='C';fighter.moveType='H';fighter.physics='N';fighter.vx=0;fighter.vy=0;fighter.ctrl=0;fighter.anim=5020+(fighter.getHit?.animtype||0)}
+ if(n===5000){fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0;fighter.type=fighter.getHit?.fall||fighter.getHit?.yvel?'A':'S';fighter.moveType='H';fighter.physics='N';fighter.vx=0;fighter.vy=0;fighter.ctrl=0;fighter.anim=fighter.getHit?.animtype>=3?5030:(fighter.getHit?.groundtype===2?5010:5000)+(fighter.getHit?.animtype||0)}
+ if(n===5010){fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0;fighter.type='C';fighter.moveType='H';fighter.physics='N';fighter.vx=0;fighter.vy=0;fighter.ctrl=0;fighter.anim=5020+(fighter.getHit?.animtype||0)}
  if(n===5001||n===5011){fighter.type=n===5011?'C':'S';fighter.moveType='H';fighter.physics=fighter.type;fighter.ctrl=0}
  if(n===130||n===131){fighter.type=n===131?'C':'S';fighter.physics=fighter.type;fighter.moveType='I';fighter.ctrl=1;fighter.anim=n;fighter.vx=0}
  if(n===150||n===152){fighter.type=n===152?'C':'S';fighter.physics='N';fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===152?151:150;fighter.vx=0;fighter.vy=0}
@@ -1073,7 +1073,8 @@ function spawnSourceHitSpark(params,guarded,attacker,defender){
 function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);return {...p2,player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:p1LifeMax,vars:runtimeVar,sysvars:runtimeSysVar,hitCount:p1HitCount,player:1,key:'root1'}}
 function applyEntityHit(entity,defender,params){
  const held=canonicalNow(),guard=entity.player===1?p2GuardMode():held.B?(held.D?'crouch':'stand'):'none';
- const result=resolveGroundHitM1({id:entity.player,facing:entity.facing,state:entity.abilityState??entity.state},defender,params,guard);result.getHit.hitid=Number(params.id??-1);
+ const hitFacing=profileFor(entity.player)?.battle.character==='SailorMoon'&&[3050,3051].includes(entity.state)?Math.sign(defender.x-entity.x)||entity.facing:entity.facing;
+ const result=resolveGroundHitM1({id:entity.player,facing:hitFacing,state:entity.abilityState??entity.state},defender,params,guard);result.getHit.hitid=Number(params.id??-1);
  scoreRuntime.hit(entity.player,defender,params,result,scoreProfile(entity.player));
  spawnSourceHitSpark(params,result.guarded,entity,defender);
  if(entity.player===1){p2.life=result.life;p2.getHit=result.getHit;p2.hitShake=result.defenderPause;p2.hitTime=result.getHit.hittime;p2.sprPriority=result.defenderPriority;enterP2State(result.state)}
@@ -1586,7 +1587,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.88',build:'moon-fixes-02388-20261010-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.89',build:'moon-fixes-02389-20261010-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1594,7 +1595,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.88-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.89-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

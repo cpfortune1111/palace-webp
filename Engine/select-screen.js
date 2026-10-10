@@ -1,5 +1,5 @@
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createLoadingScreen} from './loading-screen.js?v=02375';
+import {createLoadingScreen} from './loading-screen.js?v=02389';
 import {createQuotePortrait,preloadQuoteAssets} from './quote-animation.js?v=02378';
 export function createSelectScreen(parent,api){
  const view=document.createElement('section');view.id='palaceSelection';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:2';parent.appendChild(view);

@@ -1,4 +1,6 @@
-# 0.23.88 — Moon landing / Hit recovery / Skill effects fixes
+# 0.23.89 — Hit effects / Moon reaction frames / Crystal knockback
+
+## 0.23.88 — Moon landing / Hit recovery / Skill effects fixes
 
 ## 0.23.87 — Moon idle fix / Non-3DO specials
 
