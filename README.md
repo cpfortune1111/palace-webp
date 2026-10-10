@@ -1,4 +1,6 @@
-# 0.23.94 — P2 Report Card / Moon throw effect / Selection input parity
+# 0.23.95 — Keyboard ownership / Tiara cancellation / KO state completion
+
+## 0.23.94 — P2 Report Card / Moon throw effect / Selection input parity
 
 ## 0.23.93 — AI facing / Tiara helper collision / Moon intro pose
 

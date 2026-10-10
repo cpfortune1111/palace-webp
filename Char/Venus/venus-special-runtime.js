@@ -131,9 +131,12 @@ export function createSpecialRuntime(api){
    const left=projectiles[first],right=projectiles[second];if(left.player===right.player||!api.collision({...left,hitDef:left.activeHitDef},right).overlap)continue;
    if(left.priority<=right.priority)removeProjectile(left,'cancel');if(right.priority<=left.priority)removeProjectile(right,'cancel');
   }
+  const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   if(helper.hitBy&&attacks.some(attack=>attack?.hitDef?.params&&/[SCA],\s*H[AP]/.test(attack.hitDef?.params.attr)&&api.collision(attack,helper).contact)){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)}
+   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params)return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
+  }
+  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)
   }
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }
