@@ -37,6 +37,7 @@ export function createSpecialRuntime(api){
   entity.instanceId=1000+serial;
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(params.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
+  if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
  }
  function startPause(params,player,kind){

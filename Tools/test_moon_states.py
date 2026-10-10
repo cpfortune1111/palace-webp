@@ -64,7 +64,7 @@ class MoonStatesTest(unittest.TestCase):
             output = Path(directory) / 'runtime.json'
             compile_runtime(Path('outputs/moon'), output)
             runtime = json.loads(output.read_text(encoding='utf-8'))
-        for state_id in ('1000', '1100', '1101', '1200', '3000', '3001', '3002', '3005'):
+        for state_id in ('1000', '1100', '1110', '1200', '3000', '3001', '3002', '3005'):
             self.assertIn(state_id, runtime['states'])
         for state_id in ('1300', '1400', '3100', '3101', '3105', '3150', '3151', '3160'):
             self.assertNotIn(state_id, runtime['states'])

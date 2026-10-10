@@ -29,6 +29,7 @@ def compile_runtime(imported, output):
             continue
         if str(state_id) in states:
             continue
+        exported_id = 1110 if state_id == 1101 else state_id
         boundary = min((item['line'] for item in definitions if item['file'] == definition['file']
                         and item['line'] > definition['line']), default=float('inf'))
         values = fields(definition['entries'])
@@ -38,6 +39,8 @@ def compile_runtime(imported, output):
         for key in ('anim', 'ctrl', 'sprpriority', 'juggle', 'poweradd'):
             if key in values:
                 state[key] = int(values[key]) if re.fullmatch(r'-?\d+', values[key]) else values[key]
+        if state_id == 1101:
+            state['anim'] = 1110
         if 'velset' in values:
             state['velset'] = [float(value) for value in values['velset'].split(',')]
         for controller in raw['controllers']:
@@ -47,12 +50,14 @@ def compile_runtime(imported, output):
             if compiled is None:
                 continue
             compiled['type'] = canonical.get(compiled['type'].lower(), compiled['type'])
+            if compiled['type'] == 'ChangeState' and compiled['params'].get('value') == '1101':
+                compiled['params']['value'] = '1110'
             if compiled['type'] == 'ChangeAnim' and compiled['params'].get('value', '').isdigit() and int(compiled['params']['value']) in DISABLED_ACTIONS:
                 continue
             if state_id == 190 and compiled['type'] == 'ChangeState':
                 compiled['triggers'] = {key: value for key, value in compiled['triggers'].items() if key in ('1', '2')}
             state['controllers'].append(compiled)
-        states[str(state_id)] = state
+        states[str(exported_id)] = state
     constants, section = {}, None
     for line in (imported / 'original/moon.cns').read_text(encoding='utf-8-sig').splitlines():
         line = line.split(';', 1)[0].strip()

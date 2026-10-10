@@ -18,3 +18,5 @@ Full animation export remains a source-preservation artifact. The battle profile
 S0 resets Moon's intro pose immediately on entry, and presentation ticks execute Moon's own standing controllers. Missing Moon animations never fall back to Venus artwork. Helper velocities, sounds, floating variables, projectile contact and effects use the owning player's profile.
 
 Validation: `Tools/test_moon_states.py`, `Tools/check-moon-runtime.cjs`, `Tools/check-mode-flow-browser.cjs`.
+0.23.88: S1100 returns through S1110/A1110 (updated source name). Landing audio fires once per S52 entry. Moon Sonic Cry uses one HitDef contact key, helper hit shake expires, ground reactions apply source friction, and Silver Crystal effects anchor at ground level with source RANDOM offsets.
+

@@ -1,4 +1,6 @@
-# 0.23.87 — Moon idle fix / Non-3DO specials
+# 0.23.88 — Moon landing / Hit recovery / Skill effects fixes
+
+## 0.23.87 — Moon idle fix / Non-3DO specials
 
 ## 0.23.86 — Moon S0–S999 / Mixed battles / 3DO disabled
 

@@ -25,6 +25,15 @@ const server=http.createServer((request,response)=>{
   await page.goto('http://127.0.0.1:8786/');
   await page.waitForFunction(()=>window.runtimeTest?.run('!!dat&&!!stateIR&&!!battleDat&&!!lifecycleDat&&!!specialDat&&!!roundCharDat&&!!cmdDat&&!!airDat&&!!fallDat&&!!guardDat&&!!turnDat'),null,{timeout:90000});
   const run=source=>page.evaluate(source=>window.runtimeTest.run(source),source);
+  await run("prepareCharacters(['SailorMoon','SailorMoon'])");
+  await run(`simPaused=false;roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();`);
+  const checks=await run(`(()=>{const expect=(condition,label)=>{if(!condition)throw Error(label)};
+   expect(profileFor(1).battle.states['1110'].anim===1110,'Moon return anim');expect(framesFor(1110,1).length>0,'Moon A1110');
+   const originalSound=playSourceSound;let landings=0;playSourceSound=(...args)=>{if(args[0]==='52,0')landings++;return null};enterIRState(52);for(let tick=0;tick<30;tick++)simStep();expect(landings===1,'P1 landing '+landings);landings=0;enterP2State(52);for(let tick=0;tick<30;tick++)simStep();expect(landings===1,'P2 landing '+landings);playSourceSound=originalSound;
+   specialRuntime.reset();sourceExplods.length=0;posX=-100;p2.x=100;p1Reaction=null;p1HitPause=0;p2.hitShake=0;enterIRState(1200);p1EntryCommands={SNES_NRML_SonicCry_l:true};runtimeVar[2]=0;current=1200;fi=0;ticks=0;p2.life=1000;for(let tick=0;tick<200;tick++)simStep();expect(p2.life===940,'Sonic Cry light damage '+p2.life);
+   for(const player of [1,2]){const fighter={...specialRoot(player),state:5210,anim:5210,time:0,elem:1,elemTick:0,animStartTime:0,type:'A',physics:'N',moveType:'I',x:0,y:-200,vx:-20,vy:0,hitShake:0,hitTime:-1,getHit:{fall:0,yaccel:1.4},fallExecuted:new Set()};const start=fighter.x;for(let tick=0;tick<5;tick++)stepSourceFallM1(fighter);expect(fighter.vx===-10,'Recovery multiplier');expect(Math.abs(fighter.x-start)<=10,'Recovery freeze');for(let tick=0;tick<120;tick++)if(fighter.state===5210)stepSourceFallM1(fighter);expect(fighter.state!==5210,'Recovery completion');}
+   const owner={...specialRoot(1),state:3001,y:-150};specialRuntime.reset();specialRuntime.dispatch({type:'Helper',params:{id:'3050',stateno:'3050',pos:'0,0'}},{},{},{},owner,1);const pillar=specialRuntime.entities.find(entity=>entity.id===3050);expect(pillar.y===0,'Pillar ground');sourceExplods.length=0;for(let index=0;index<30;index++)spawnSourceExplod({anim:'9031',pos:'-24,-830',random:'267,622'},pillar,1);const points=sourceExplods.map(effect=>effect.x);expect(Math.max(...points)-Math.min(...points)>100,'Particle random spread');expect(sourceExplods.every(effect=>effect.y>=-1141&&effect.y<=-519),'Particle anchor');return 'Moon source fixes passed';})()`);
+  console.log(checks);
   for(const players of [['SailorMoon','SailorVenus'],['SailorVenus','SailorMoon'],['SailorMoon','SailorMoon'],['SailorVenus','SailorVenus']]){
    await run(`prepareCharacters(${JSON.stringify(players)})`);
    await run(`simPaused=false;p1Reaction=null;p1Life=1000;p2.life=1000;p2.hitShake=0;p2.attackPause=0;sourceExplods.length=0;specialRuntime.reset();lifecycleRuntime.rounds.state=2;resetPlayerInput();enterIRState(0);enterP2State(0);runtimeCtrl=1;p2.ctrl=1;posX=-250;p2.x=250;`);
@@ -58,7 +67,7 @@ const server=http.createServer((request,response)=>{
     await run(`roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1Life=1000;p2.life=1000;posX=${skill>=3000?-70:skill===1200?-100:-250};p2.x=${skill>=3000?70:skill===1200?100:250};posY=${skill===1100?-300:0};p2.y=${skill===1100?-300:0};${player===1?'enterIRState':'enterP2State'}(${skill});`);
     const trace=await run(`(()=>{const seen=new Set(),entities=new Set();let minimumLife=1000;for(let tick=0;tick<1000;tick++){simStep();minimumLife=Math.min(minimumLife,${player===1?'p2.life':'p1Life'});seen.add(${player===1?'state':'p2.state'});for(const entity of specialRuntime.entities)if(entity.player===${player})entities.add(entity.id);if(${player===1?'state':'p2.state'}===0&&tick>10&&specialRuntime.entities.every(entity=>entity.player!==${player}||[915,925,950,951,9999].includes(entity.id)))break;}return {state:${player===1?'state':'p2.state'},seen:[...seen],entities:[...entities],minimumLife}})()`);
     assert.equal(trace.state,0,JSON.stringify({player,skill,trace}));
-    if(skill===1000)assert.ok(trace.entities.includes(1050));
+    if(skill===1000){assert.ok(trace.entities.includes(1050));await run('for(let tick=0;tick<240;tick++)simStep()');assert.equal(await run(player===1?'p2.state':'state'),0,'Tiara target recovered');}
     if(skill===1100)assert.ok(trace.entities.includes(1150));
     if(skill===3000||skill===3005)assert.ok(trace.entities.includes(3050));
     if(skill===1000||skill===3000||skill===3005)assert.ok(trace.minimumLife<1000,JSON.stringify({player,skill,trace}));
