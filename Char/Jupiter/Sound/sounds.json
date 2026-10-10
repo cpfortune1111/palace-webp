@@ -1,0 +1,437 @@
+{
+  "0-10": {
+    "file": "0-10.mp3",
+    "ticks": 33,
+    "sourceSHA256": "aa7bd4dfbc2e31ef8bbd5b4471ad5064fb22285b57285d1b18c0e391603bff6f"
+  },
+  "0-11": {
+    "file": "0-11.mp3",
+    "ticks": 57,
+    "sourceSHA256": "89765490bf9cd2110593b400eee661d285b960c081b2ec09fff6537cd72a2d8a"
+  },
+  "0-12": {
+    "file": "0-12.mp3",
+    "ticks": 15,
+    "sourceSHA256": "b37e440cc310ddd1daa60ae67dd47e0a4b6bbe7fbcae5480238b640853c06e41"
+  },
+  "0-13": {
+    "file": "0-13.mp3",
+    "ticks": 40,
+    "sourceSHA256": "22b19246f537d4affaf854be72bbce064eb358278d7bea8ffbd3e0fa8cbe3702"
+  },
+  "0-14": {
+    "file": "0-14.mp3",
+    "ticks": 23,
+    "sourceSHA256": "fc0cd778a7df2fc20880255beef06f4bf815e347bb6f23dc4f95a10571dee5c8"
+  },
+  "0-21": {
+    "file": "0-21.mp3",
+    "ticks": 54,
+    "sourceSHA256": "fc9d51c41f4762a8600464d6b15e802f2d656bebb6fc297ebcec1f96d54fd5b7"
+  },
+  "0-22": {
+    "file": "0-22.mp3",
+    "ticks": 46,
+    "sourceSHA256": "41e8315c68a81354bd4236e8763085442ea7868318495632056d7554f1655a4b"
+  },
+  "0-25": {
+    "file": "0-25.mp3",
+    "ticks": 58,
+    "sourceSHA256": "f489feacdbcca41b8c9163411adc6556cbf9d9b5c424a49cb51493ca1fa25199"
+  },
+  "0-26": {
+    "file": "0-26.mp3",
+    "ticks": 26,
+    "sourceSHA256": "3edb5b807d964e81a8faa181084b40089512679cb5e77b3ce7e496e5661c6e4c"
+  },
+  "0-27": {
+    "file": "0-27.mp3",
+    "ticks": 25,
+    "sourceSHA256": "6ab9e1908d1ca5575e7b5001483fe31904f4b11153cb101b32bf78d0b591701d"
+  },
+  "0-28": {
+    "file": "0-28.mp3",
+    "ticks": 86,
+    "sourceSHA256": "1082ec8ad0c7b9969bb960948913f98ae4f7c31dfede70fa0af199d52cc559c5"
+  },
+  "0-29": {
+    "file": "0-29.mp3",
+    "ticks": 57,
+    "sourceSHA256": "f1c1da813e8e96e56998e32fb724b8de1e3565f0ddc189b38a1e46ed3f2a9bc1"
+  },
+  "1-0": {
+    "file": "1-0.mp3",
+    "ticks": 10,
+    "sourceSHA256": "702e09ff1d5bf47e1b0e8b6afe2c0ea414f30fb9203af8905168eb70c1c7b7d7"
+  },
+  "1-1": {
+    "file": "1-1.mp3",
+    "ticks": 19,
+    "sourceSHA256": "eb704d068b4ab671c97e595a3fdd822c6e1627595c70707669886c7aae2f17a8"
+  },
+  "5-0": {
+    "file": "5-0.mp3",
+    "ticks": 16,
+    "sourceSHA256": "e1bc208785303db5d620851c0ec102c7956233d2e8f842e00efb6c2919b7cf33"
+  },
+  "5-1": {
+    "file": "5-1.mp3",
+    "ticks": 15,
+    "sourceSHA256": "aa3e5943b8aace007c9889242d86f36277e849d3f511e66d6e3b830cbcfb0303"
+  },
+  "5-2": {
+    "file": "5-2.mp3",
+    "ticks": 14,
+    "sourceSHA256": "c8da8000245a9c2f6d45a951155b7c040dd55dc9da53e5c2e8b9d3fbcff8afeb"
+  },
+  "5-5": {
+    "file": "5-5.mp3",
+    "ticks": 11,
+    "sourceSHA256": "f42b42e6dcd36356c1f9abdb1bd07f31bed32ea71ad66d64e016f13f7f053def"
+  },
+  "5-10": {
+    "file": "5-10.mp3",
+    "ticks": 13,
+    "sourceSHA256": "5694735524f7fd176e0a9e556ba7c54e37ea2eeabc3cbcb2bf2b1dced9af4f96"
+  },
+  "5-11": {
+    "file": "5-11.mp3",
+    "ticks": 14,
+    "sourceSHA256": "9dc5fcfd402af31df95aa1dd78184a0faf43bbe91b734fc72f5b7bd5452634cd"
+  },
+  "5-12": {
+    "file": "5-12.mp3",
+    "ticks": 16,
+    "sourceSHA256": "8a60020841bf862fa18039d82679f7b0f672e8575900065c998e95de66c3c3c4"
+  },
+  "5-13": {
+    "file": "5-13.mp3",
+    "ticks": 19,
+    "sourceSHA256": "c45abd55f73d75ca78a08eca7e03cdc522561deb7775c2fc701f7702121c1b03"
+  },
+  "6-0": {
+    "file": "6-0.mp3",
+    "ticks": 9,
+    "sourceSHA256": "95a446c02f23d8f705a2cef3f967cc96fe5af2f0a438a28600b6d21415a32c02"
+  },
+  "10-0": {
+    "file": "10-0.mp3",
+    "ticks": 9,
+    "sourceSHA256": "c64deb6636c01c95a0da1bd98613199c1911db272a49ce8cd3faffb60b517e26"
+  },
+  "10-1": {
+    "file": "10-1.mp3",
+    "ticks": 15,
+    "sourceSHA256": "11a1702e1818701293a026a243a9f439c0d4c3dcec30fcf0633b82741182ec0c"
+  },
+  "10-2": {
+    "file": "10-2.mp3",
+    "ticks": 19,
+    "sourceSHA256": "9df9a78d6bb7171b2b958c7c05ae444f5ee057083da4d904dd884ea2ddea3152"
+  },
+  "10-3": {
+    "file": "10-3.mp3",
+    "ticks": 17,
+    "sourceSHA256": "ccf3af88187813f34de10dc3d1daabd72158846b404b01edc9d509b7f349038b"
+  },
+  "10-4": {
+    "file": "10-4.mp3",
+    "ticks": 41,
+    "sourceSHA256": "1e3ad8bca703dfb08742d98d0bde0395b417455e7fa6e3aee846cb8bdb1f2fd9"
+  },
+  "10-10": {
+    "file": "10-10.mp3",
+    "ticks": 9,
+    "sourceSHA256": "b77f8c5183034560d8bbbcf4bef3783ed6f51102780cc7590a2dd123a0fbb44b"
+  },
+  "11-0": {
+    "file": "11-0.mp3",
+    "ticks": 50,
+    "sourceSHA256": "53140a432b000967ae7de4990845623e35bf8434b9c2a618aa617d48565d3a6a"
+  },
+  "11-99": {
+    "file": "11-99.mp3",
+    "ticks": 64,
+    "sourceSHA256": "99b1d1b4c8ce701f384ed0556c0bd4a015b49cb93b45979b1d2be7a023011b31"
+  },
+  "40-0": {
+    "file": "40-0.mp3",
+    "ticks": 13,
+    "sourceSHA256": "525e06a143b9d35a3b64fabb04de55e2f177c1f7672ad5fc62e7fb3c89b0c72a"
+  },
+  "40-1": {
+    "file": "40-1.mp3",
+    "ticks": 28,
+    "sourceSHA256": "464a2670e6bfeb1339d18015bf73352d338a2707ebce51ff694a5955335dbef5"
+  },
+  "52-0": {
+    "file": "52-0.mp3",
+    "ticks": 17,
+    "sourceSHA256": "9d2107cfbf37ecef79e8539c68d5b050da48c5014ec56ea97d38444532765829"
+  },
+  "100-0": {
+    "file": "100-0.mp3",
+    "ticks": 8,
+    "sourceSHA256": "e3c4a4fae8c660da36e95052ba050b9c01fb67d56673db8b9e160c72f789d1fa"
+  },
+  "100-99": {
+    "file": "100-99.mp3",
+    "ticks": 29,
+    "sourceSHA256": "ea2c2a95db996c6a6e6a15f6ad767d6bbef05a642011fd2fd5cb6a576d609758"
+  },
+  "105-0": {
+    "file": "105-0.mp3",
+    "ticks": 16,
+    "sourceSHA256": "f7b3d5ae8b3edd3ab3bde488fe4fffb96a24515f80e528fb31ff02511c51c3b9"
+  },
+  "170-0": {
+    "file": "170-0.mp3",
+    "ticks": 81,
+    "sourceSHA256": "8592e224d34ef45c8fbc8474fd62d9e36dec5fda12aa43983d36facec4a12d34"
+  },
+  "170-1": {
+    "file": "170-1.mp3",
+    "ticks": 132,
+    "sourceSHA256": "b057906788f927966523710f7a5190310a99eef09c4a23f67582810d7dba669a"
+  },
+  "180-0": {
+    "file": "180-0.mp3",
+    "ticks": 75,
+    "sourceSHA256": "e883645f97709893c10f41c3a84047f0c63ebd388e06f6e57073f8b9db2201a7"
+  },
+  "180-1": {
+    "file": "180-1.mp3",
+    "ticks": 57,
+    "sourceSHA256": "09cf9ef4306e0c9bc9c274ac09d1dc80f2bc984fe038b021ee31c8ff2a534427"
+  },
+  "180-99": {
+    "file": "180-99.mp3",
+    "ticks": 26,
+    "sourceSHA256": "ed9ae33ef74fa8cdf51f6e2a35ebae3216b0b2d95874811d74536387c386774b"
+  },
+  "190-0": {
+    "file": "190-0.mp3",
+    "ticks": 62,
+    "sourceSHA256": "3dbe4ed1b2f8ac101825c82de2cd333a0881601f9ff2a407510cde7937f5b45b"
+  },
+  "190-1": {
+    "file": "190-1.mp3",
+    "ticks": 72,
+    "sourceSHA256": "22919bc2a9ea19087c7b1005ebf460c9e30233f2ce8a32080439551fac2ed649"
+  },
+  "190-2": {
+    "file": "190-2.mp3",
+    "ticks": 78,
+    "sourceSHA256": "aae1cdbc2f9c1e51f3ac30ebc1bf929d66d3263e2bf41b546d3f7e58d4a18ff0"
+  },
+  "190-3": {
+    "file": "190-3.mp3",
+    "ticks": 180,
+    "sourceSHA256": "28173ca25370b2454d7b357d8b07d4d78c3279a8770e65e669630fda2cacd041"
+  },
+  "192-0": {
+    "file": "192-0.mp3",
+    "ticks": 132,
+    "sourceSHA256": "f787cc58b435f41de8ffa2ba92ba0ab65e1d82453610fe1afef291dea6741284"
+  },
+  "200-0": {
+    "file": "200-0.mp3",
+    "ticks": 12,
+    "sourceSHA256": "f9675b4874bcaef8f6fa6c1393648a866260bac94fb78f6d60bdce346a97bced"
+  },
+  "200-1": {
+    "file": "200-1.mp3",
+    "ticks": 21,
+    "sourceSHA256": "8abbadece4e955d4fd983525a555b7f07bad0038fbe169ac4438a8e7e80be356"
+  },
+  "200-2": {
+    "file": "200-2.mp3",
+    "ticks": 25,
+    "sourceSHA256": "633163d722b8d259fbb90f33e435b167ff7a4b5899994bbe1f5cab5c3795c19c"
+  },
+  "200-3": {
+    "file": "200-3.mp3",
+    "ticks": 30,
+    "sourceSHA256": "c52d65e63ca7cdb398d6847568da1b755c94eacdeea65150122b75f4f59c411b"
+  },
+  "200-4": {
+    "file": "200-4.mp3",
+    "ticks": 47,
+    "sourceSHA256": "ee1dfbc349bb787b9c47948976d12f932354d9c1728c198bf9314200a7d0d0e1"
+  },
+  "200-5": {
+    "file": "200-5.mp3",
+    "ticks": 53,
+    "sourceSHA256": "76173cd8ce6d830b63c6dea32cc8ac48936e12c66c3a52914039c78157a3165f"
+  },
+  "200-6": {
+    "file": "200-6.mp3",
+    "ticks": 17,
+    "sourceSHA256": "885ac816379f5b040a0b3e8588fae4005bc1ad098c5bebec52acfe3eeb661ae1"
+  },
+  "800-0": {
+    "file": "800-0.mp3",
+    "ticks": 11,
+    "sourceSHA256": "28d51c5153cbdc27e34b5944ec4229bcbe6b3fce6333b142014bace07b3841b1"
+  },
+  "900-0": {
+    "file": "900-0.mp3",
+    "ticks": 34,
+    "sourceSHA256": "182ce9d2da38740342a05c29815dae7ae5d12ad41bbe32c309e322817c721259"
+  },
+  "900-1": {
+    "file": "900-1.mp3",
+    "ticks": 41,
+    "sourceSHA256": "34c5f17b923cb57a61061042dbeeb613ea43957b777aecfbadaa7e494bae11fa"
+  },
+  "900-2": {
+    "file": "900-2.mp3",
+    "ticks": 13,
+    "sourceSHA256": "8e80fa2ab75a557890ea39809390049b69da504b0ca6ac21542d83b87cd2117e"
+  },
+  "900-3": {
+    "file": "900-3.mp3",
+    "ticks": 62,
+    "sourceSHA256": "d3a14fb42b77debd7d31ff39d2c223bf8732ea6bc527b8d219854fd3f57a8077"
+  },
+  "900-5": {
+    "file": "900-5.mp3",
+    "ticks": 20,
+    "sourceSHA256": "c2015eb11d85a3edc8211f0b9115a6f88f0010b2db2dbc81bb48039052f345b9"
+  },
+  "900-6": {
+    "file": "900-6.mp3",
+    "ticks": 15,
+    "sourceSHA256": "0b1cf3aa2b937343037d2c5743f162f898c3e22cfeec1b3867d8b30ae0c045b5"
+  },
+  "900-7": {
+    "file": "900-7.mp3",
+    "ticks": 15,
+    "sourceSHA256": "1ab923672d357f785c6ad8b5be0e40372bfd6fe0d08ef8aa7c27642c64d91502"
+  },
+  "900-8": {
+    "file": "900-8.mp3",
+    "ticks": 303,
+    "sourceSHA256": "bf26c470558c4460b227250dcadad366a9cb80ddab2208664ff280ca18f0d5ed"
+  },
+  "900-9": {
+    "file": "900-9.mp3",
+    "ticks": 14,
+    "sourceSHA256": "28c07834f8517e2e1d91ddc611189909b88e533bf92486e0abfa758080800292"
+  },
+  "900-10": {
+    "file": "900-10.mp3",
+    "ticks": 50,
+    "sourceSHA256": "38cd9c6cf35ac59f3e940ceb43f1979c5a5f32c082016704c2198757738a8046"
+  },
+  "980-0": {
+    "file": "980-0.mp3",
+    "ticks": 111,
+    "sourceSHA256": "d3980f41774cb5fa8bebd902bb5a92149ac857d9450cf17054966b94d20bc214"
+  },
+  "1000-0": {
+    "file": "1000-0.mp3",
+    "ticks": 73,
+    "sourceSHA256": "d07cdb65a179801f7fa094b03a091ec785f93b32430cd0636aaab4643ff3705e"
+  },
+  "1000-1": {
+    "file": "1000-1.mp3",
+    "ticks": 71,
+    "sourceSHA256": "8a0c2e0e135f5d53f3aea5cf05b0f5202ef633e9059bc4b1f03f8500a34db6a6"
+  },
+  "900-11": {
+    "file": "900-11.mp3",
+    "ticks": 55,
+    "sourceSHA256": "4e51f4b2afc89f001be2e2c12c8b2dddb5247139801b4a6bde82545831121204"
+  },
+  "800-1": {
+    "file": "800-1.mp3",
+    "ticks": 21,
+    "sourceSHA256": "d561245bd747befd7e8dc141241d0ba885f55f1bd10b8d290f5dd942ba7db230"
+  },
+  "900-12": {
+    "file": "900-12.mp3",
+    "ticks": 70,
+    "sourceSHA256": "8282125d30ebb51ad0d73a30e0d7a47262e3f5838d87c60f6eab22a90c2736dd"
+  },
+  "900-14": {
+    "file": "900-14.mp3",
+    "ticks": 628,
+    "sourceSHA256": "53b596bb7a0cbb8a25b39668101ffe8b417ef52c417719e73bb080ddb4b3bec8"
+  },
+  "900-15": {
+    "file": "900-15.mp3",
+    "ticks": 50,
+    "sourceSHA256": "4f3ec6b43ea877071a24aaf582bfb2ffabe374f66d45d9817041ddf6bfe8f832"
+  },
+  "900-16": {
+    "file": "900-16.mp3",
+    "ticks": 103,
+    "sourceSHA256": "b438d6550798f64ecf1b1eea0c0b5d1a7faa1a6619f7ac09c20230a4a1f8ff79"
+  },
+  "1000-99": {
+    "file": "1000-99.mp3",
+    "ticks": 52,
+    "sourceSHA256": "bf3ccd5b0fad63d0b0f5aa2dff0a61fceca5fb073118a9414d9963610756f446"
+  },
+  "1100-0": {
+    "file": "1100-0.mp3",
+    "ticks": 53,
+    "sourceSHA256": "6296dc53b3797773ce202d9593404f2a0c1942b9636b6f11fea4dc94301df018"
+  },
+  "1100-99": {
+    "file": "1100-99.mp3",
+    "ticks": 82,
+    "sourceSHA256": "8710aa322d0ae617f2f5b7cea6f19abb0dde1a0f3e8315e7c93a2d98ff66c19d"
+  },
+  "1200-0": {
+    "file": "1200-0.mp3",
+    "ticks": 42,
+    "sourceSHA256": "85e438c30c2b29e57b911dd06525e4fbb2798c4c21665188aa3f7a78e6cadd11"
+  },
+  "1200-1": {
+    "file": "1200-1.mp3",
+    "ticks": 58,
+    "sourceSHA256": "0b15dd4408aed3ab25f0fd48a94785dc4140ad2cbfc3ff9e909c766414f46c1e"
+  },
+  "3000-0": {
+    "file": "3000-0.mp3",
+    "ticks": 75,
+    "sourceSHA256": "93ddba27355e96886d957e98fd41ff0b88d4e499276abfe6b462d003bb0bd75f"
+  },
+  "3000-1": {
+    "file": "3000-1.mp3",
+    "ticks": 78,
+    "sourceSHA256": "aae1cdbc2f9c1e51f3ac30ebc1bf929d66d3263e2bf41b546d3f7e58d4a18ff0"
+  },
+  "3100-0": {
+    "file": "3100-0.mp3",
+    "ticks": 79,
+    "sourceSHA256": "e9e914411592f3a438a89ade5e073705d318e2b4b2a760535db2daa031e2fb71"
+  },
+  "3100-1": {
+    "file": "3100-1.mp3",
+    "ticks": 214,
+    "sourceSHA256": "d2f69a0c250f7e9f0551de00a00d0674ac2b169f3d5719c30ad8ac045b79b710"
+  },
+  "3100-2": {
+    "file": "3100-2.mp3",
+    "ticks": 122,
+    "sourceSHA256": "882cb704c84a5149a3cec6ab32f52bd853646c9233c45497b7a8fd1ab8f753ed"
+  },
+  "5000-0": {
+    "file": "5000-0.mp3",
+    "ticks": 17,
+    "sourceSHA256": "92e77fd412b66816fd4f480a47f718857a95f5db31fc663a8ef974d211093cc5"
+  },
+  "5000-50": {
+    "file": "5000-50.mp3",
+    "ticks": 39,
+    "sourceSHA256": "fba4c6f564e404b8c716f195698cd51274315e6d24486fa93caf6753581d2fc5"
+  },
+  "5610-0": {
+    "file": "5610-0.mp3",
+    "ticks": 146,
+    "sourceSHA256": "4664c8bf2379a11eefbf5098fdde1c3cd158458a9952fd94783d8084d7034bc8"
+  }
+}

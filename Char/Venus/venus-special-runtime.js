@@ -13,7 +13,7 @@ export function createSpecialRuntime(api){
   const result={...params};
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['projanim','projhitanim','projremanim','projcancelanim'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
+  for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
  function context(entity,commands=api.commands(entity.player)){
@@ -59,20 +59,20 @@ export function createSpecialRuntime(api){
   }
  }
  function helperController(entity,controller,index){
-  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet'};
+  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ctx=context(entity);if(!api.trigger(controller,ctx)||Number(controller.params.persistent)===0&&entity.once.has(index))return;
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
    case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),params:numeric(params,ctx)};break;
-   case 'ParentVarSet':root(entity.player).vars[Number(params.target.match(/\d+/)[0])]=api.eval(params.value,ctx);break;
+   case 'ParentVarSet':case 'ParentVarAdd':{const index=Number(params.target.match(/\d+/)[0]),vars=root(entity.player).vars;vars[index]=(controller.type==='ParentVarAdd'?(vars[index]||0):0)+api.eval(params.value,ctx);break;}
    case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
-   case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(params.flag!=='NoShadow')throw Error('Unsupported helper assertion');break;
+   case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
    case 'VarRandom':{const bounds=api.pair(params.range||'0,1000').map(value=>api.eval(value,ctx));entity.vars[Number(params.v)]=bounds[0]+Math.floor(Math.random()*(bounds[1]-bounds[0]+1));break;}
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
@@ -80,15 +80,17 @@ export function createSpecialRuntime(api){
  }
  function hit(entity){
   const defender=root(entity.player===1?2:1);
-  if(entity.moveType!=='A'||entity.hitSpent||!entity.activeHitDef||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
+  if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
   if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
   const result=api.hit(entity,defender,entity.activeHitDef.params);
   if(!result)return;
-  entity.hitSpent=true;
+  entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
   entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:1;
   entity.hitPause=result.attackerPause;
   if(entity.kind==='projectile'){
-   projectileContacts.set(entity.player+':'+entity.id,api.tick());
+   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
+   entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
+   if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
    entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
    if(entity.anim<0)entity.destroyed=true;
   }
@@ -148,6 +150,7 @@ export function createSpecialRuntime(api){
  return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
-  projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id):-1,
+  projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
+  projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
   reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal=null;pauses.super=null;unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
 }

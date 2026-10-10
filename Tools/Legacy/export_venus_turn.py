@@ -48,7 +48,7 @@ def decode_lz5(data, length):
     return bytes(output)
 
 
-def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', source_prefix='venus', sprite_output_dir=None, webp_quality=None):
+def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', source_prefix='venus', sprite_output_dir=None, webp_quality=None, blank_pairs=((122, 0), (951, 99)), trim_transparent=False):
     source_dir, output_dir = Path(source_dir), Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     sff = (source_dir / (source_prefix + '.sff')).read_bytes()
@@ -134,13 +134,21 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
     used_height = 2
     for frames in actions.values():
         for frame in frames:
-            if frame['group'] == -1 or frame['item'] == -1 or (frame['group'], frame['item']) in ((122, 0), (951, 99)):
+            if frame['group'] == -1 or frame['item'] == -1 or (frame['group'], frame['item']) in blank_pairs:
                 frame['empty'] = True
                 continue
             key = f"{frame['group']},{frame['item']}"
             if key in sprites:
                 continue
             image, axis_x, axis_y = decode(sprite_index[(frame['group'], frame['item'])])
+            if trim_transparent:
+                bounds = image.getchannel('A').getbbox()
+                if bounds is None:
+                    frame['empty'] = True
+                    continue
+                image = image.crop(bounds)
+                axis_x -= bounds[0]
+                axis_y -= bounds[1]
             if image.width + 4 > atlas.width:
                 if paged:
                     raise ValueError('Sprite exceeds configured atlas page width: ' + key)

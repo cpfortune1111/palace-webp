@@ -33,7 +33,7 @@ def compile_controller(controller):
             triggers.setdefault(key[7:], []).append(value)
         else:
             params[key] = value
-    if controller['type'].lower() in ('varset', 'varadd', 'parentvarset'):
+    if controller['type'].lower() in ('varset', 'varadd', 'parentvarset', 'parentvaradd'):
         if 'v' in params:
             params['target'] = 'var(' + params.pop('v') + ')'
         elif 'fv' in params:
@@ -49,7 +49,8 @@ def compile_controller(controller):
             'source': {'file': controller['file'], 'line': controller['line']}}
 
 
-def build(imported):
+def build(imported, disabled_actions=None):
+    disabled_actions = DISABLED_ACTIONS if disabled_actions is None else disabled_actions
     raw = json.loads((imported / 'state_sections.json').read_text(encoding='utf-8'))
     definitions = raw['states']
     variants, excluded = {}, []
@@ -97,7 +98,7 @@ def build(imported):
             deferred.append({'target': target, 'file': controller['file'], 'line': controller['line']})
     collisions, loops = {}, {}
     for action in json.loads((imported / 'air_sections.json').read_text(encoding='utf-8')):
-        if action['id'] in DISABLED_ACTIONS:
+        if action['id'] in disabled_actions:
             continue
         defaults, pending, boxes, active = {}, {}, [], None
         for entry in action['entries']:

@@ -1,5 +1,5 @@
 import {createQuotePortrait} from './quote-animation.js?v=02378';
-import {createDeclarationScreen} from './declaration-screen.js?v=02386';
+import {createDeclarationScreen} from './declaration-screen.js?v=02397';
 import {abilityKeys,abilityBudget,abilityProfile,changeAbility} from './ability-system.js?v=acs1';
 import {lightSeeds,drawFallingLights} from './falling-lights.js?v=02368';
 export function createAcsScreen(parent,api){

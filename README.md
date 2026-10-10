@@ -1,4 +1,6 @@
-# 0.23.96 — KO state physics / Moon 5150
+# 0.23.97 — Jupiter S0–S4999 / SNES
+
+## 0.23.96 — KO state physics / Moon 5150
 
 ## 0.23.95 — Keyboard ownership / Tiara cancellation / KO state completion
 
