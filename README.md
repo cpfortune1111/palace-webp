@@ -1,4 +1,6 @@
-# 0.23.91 — Mixed-character hitpause controller ownership
+# 0.23.92 — Moon AI / Arcade opponent AI / Venus idle decision fix
+
+## 0.23.91 — Mixed-character hitpause controller ownership
 
 ## 0.23.90 — Moon all non-3DO states / Venus S1200 effects
 
