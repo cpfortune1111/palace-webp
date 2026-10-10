@@ -22,10 +22,10 @@ def compile_runtime(imported, output):
     raw = json.loads((imported / 'state_sections.json').read_text(encoding='utf-8'))
     definitions = raw['states']
     states = {}
-    canonical = {value.lower(): value for value in ('Null', 'VarSet', 'VarAdd', 'ParentVarSet')}
+    canonical = {value.lower(): value for value in ('Null', 'VarSet', 'VarAdd', 'ParentVarSet', 'StateTypeSet')}
     for definition in definitions:
         state_id = definition['id']
-        if state_id < 0 or state_id in (195, 811, 822, 823) or 1000 <= state_id < 5000 and state_id not in (1990, 1991):
+        if state_id < 0 or state_id in (195, 811, 822, 823, 1300, 1400, 3100, 3101, 3105, 3150, 3151, 3160):
             continue
         if str(state_id) in states:
             continue
@@ -81,7 +81,7 @@ def compile_runtime(imported, output):
             compiled = non_3do_controller(controller)
             if compiled is None:
                 continue
-            if re.search(r'ProjContact\d+|fvar\((?:10|11)\)', str(compiled), re.I):
+            if re.search(r'fvar\((?:10|11)\)', str(compiled), re.I):
                 continue
             compiled['type'] = canonical.get(compiled['type'].lower(), compiled['type'])
             if compiled['params'].get('target') in ('var(50)', 'var(51)'):
@@ -113,15 +113,24 @@ def compile_runtime(imported, output):
         commands.append({'name': values['name'].strip('"'), 'steps': steps,
                          'time': int(values.get('time', default_time)),
                          'bufferTime': int(values.get('buffer.time', default_buffer))})
-    player_commands = [item for item in audit['playerCommands'] if item['params'].get('value') in states]
-    ai_commands = [item for item in audit['aiCommands'] if item['params'].get('value') in states]
+    player_commands, ai_commands = [], []
+    for controller in raw['controllers']:
+        if controller['state'] != -1 or controller['type'].lower() != 'changestate':
+            continue
+        compiled = non_3do_controller(controller)
+        if compiled is None or compiled['params'].get('value') not in states:
+            continue
+        target = player_commands if any(re.search(r'!AILevel', expression, re.I)
+                                        for expression in compiled['triggerall']) else ai_commands
+        target.append(compiled)
     bundle = {'character': 'SailorMoon', 'runtimeEnabled': True, 'states': states, 'constants': constants,
               'attackStates': {key: value for key, value in states.items() if value['moveType'] == 'A'},
               'locomotionStates': {key: states[key] for key in ('70', '100', '105')},
               'lifecycleStates': {key: states[key] for key in ('5900', '190', '191', '192', '170', '175', '180', '181', '1990', '1991')},
               'fallStates': {key: value for key, value in states.items() if 5000 <= int(key) < 5900},
               'lifecycleHelpers': {key: states[key] for key in ('915', '925', '950', '951', '9999')},
-              'helperStates': {}, 'globalControllers': globals_data,
+              'helperStates': {key: value for key, value in states.items()
+                               if value['source']['file'] == 'moon_Helper.st'}, 'globalControllers': globals_data,
               'playerCommands': player_commands, 'attackCommands': player_commands, 'aiCommands': ai_commands,
               'commands': commands, 'collision': audit['collision'], 'loopStarts': audit['loopStarts'],
               'sizeConstants': constants, 'locomotionConstants': constants,
@@ -133,7 +142,7 @@ def compile_runtime(imported, output):
               'aiWalkControllers': [], 'guardDistance': {'front': constants['size.attack.dist'], 'back': 0},
               'koProfile': {'enabled': False}, 'hitPriorityDefaults': {'defender': 0},
               'cornerpushProfile': {'defaultMultiplier': .7, 'stopThreshold': 4},
-              'source': {'character': 'SailorMoon', 'scope': 'S0-S999; common get-hit and round dependencies',
+              'source': {'character': 'SailorMoon', 'scope': 'S0-S4999; non-3DO skills and common dependencies',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')

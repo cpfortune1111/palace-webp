@@ -36,6 +36,8 @@ def compile_controller(controller):
     if controller['type'].lower() in ('varset', 'varadd', 'parentvarset'):
         if 'v' in params:
             params['target'] = 'var(' + params.pop('v') + ')'
+        elif 'fv' in params:
+            params['target'] = 'fvar(' + params.pop('fv') + ')'
         else:
             target = next((key for key in params if key.startswith(('var(', 'sysvar('))), None)
             if target:

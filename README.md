@@ -1,4 +1,6 @@
-# 0.23.86 — Moon S0–S999 / Mixed battles / 3DO disabled
+# 0.23.87 — Moon idle fix / Non-3DO specials
+
+## 0.23.86 — Moon S0–S999 / Mixed battles / 3DO disabled
 
 ## 0.23.85 — Compressed Moon assets / Battle integration pending
 

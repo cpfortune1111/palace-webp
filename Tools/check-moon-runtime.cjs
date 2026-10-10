@@ -47,9 +47,24 @@ const server=http.createServer((request,response)=>{
     }
    }
    await run("roundFlow.begin('training','infinite')");
-   await run('for(let tick=0;tick<1800;tick++)simStep()');
+   await run(`for(let tick=0;tick<1800;tick++){simStep();if(battleCharacters[0]==='SailorMoon'&&state===0){if(current!==0&&current!==5&&current!==5300)throw Error('Moon idle retained intro animation '+current);if(frameProfiles.get(framesFor(current,1)[fi])!=='SailorMoon')throw Error('Moon idle used Venus artwork');}}`);
    assert.equal(await run('roundFlow.canFight()'),true);
    console.log('Mixed normals, throws, dashes and round intro passed:',players.join(' / '));
+  }
+  for(const players of [['SailorMoon','SailorVenus'],['SailorVenus','SailorMoon']]){
+   await run(`prepareCharacters(${JSON.stringify(players)})`);
+   const player=players[0]==='SailorMoon'?1:2;
+   for(const skill of [1000,1100,1200,3000,3005]){
+    await run(`roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1Life=1000;p2.life=1000;posX=${skill>=3000?-70:skill===1200?-100:-250};p2.x=${skill>=3000?70:skill===1200?100:250};posY=${skill===1100?-300:0};p2.y=${skill===1100?-300:0};${player===1?'enterIRState':'enterP2State'}(${skill});`);
+    const trace=await run(`(()=>{const seen=new Set(),entities=new Set();let minimumLife=1000;for(let tick=0;tick<1000;tick++){simStep();minimumLife=Math.min(minimumLife,${player===1?'p2.life':'p1Life'});seen.add(${player===1?'state':'p2.state'});for(const entity of specialRuntime.entities)if(entity.player===${player})entities.add(entity.id);if(${player===1?'state':'p2.state'}===0&&tick>10&&specialRuntime.entities.every(entity=>entity.player!==${player}||[915,925,950,951,9999].includes(entity.id)))break;}return {state:${player===1?'state':'p2.state'},seen:[...seen],entities:[...entities],minimumLife}})()`);
+    assert.equal(trace.state,0,JSON.stringify({player,skill,trace}));
+    if(skill===1000)assert.ok(trace.entities.includes(1050));
+    if(skill===1100)assert.ok(trace.entities.includes(1150));
+    if(skill===3000||skill===3005)assert.ok(trace.entities.includes(3050));
+    if(skill===1000||skill===3000||skill===3005)assert.ok(trace.minimumLife<1000,JSON.stringify({player,skill,trace}));
+    console.log('Moon skill passed:',player,skill,trace);
+   }
+   await run(`resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1Life=100;p2.life=100;posY=0;p2.y=0;enterIRState(0);enterP2State(0);runtimeCtrl=1;p2.ctrl=1;hardwareModes[${player-1}]='snes';setCommandMode('auto',${player});withCharacter(${player},()=>{const root=specialRoot(${player});root.vars[50]=0;root.vars[52]=10;const command=profileFor(${player}).battle.playerCommands.find(item=>item.params.value==='3000');const context=specialRuntime.context(root,{S_SNES_AUTO_SilverCrystal:true});if(!controllerTriggered(command,context))throw Error('Moon super command gate');const tiara=profileFor(${player}).battle.playerCommands.find(item=>item.params.value==='1000');if(!controllerTriggered(tiara,specialRuntime.context(root,{SNES_AUTO_MoonTiaraAction_l:true})))throw Error('Moon tiara helper gate');});`);
   }
   
   await page.evaluate(async()=>{const {createDeclarationScreen}=await import('./Engine/declaration-screen.js?v=02386');const declaration=createDeclarationScreen({sound:audio=>{audio.play=()=>Promise.resolve();return audio},complete:()=>{}});await declaration.ready;for(const options of [{},{result:true,winner:1},{result:true,winner:2}]){declaration.begin(['SailorMoon','SailorVenus'],options);for(let tick=0;tick<1600;tick++)declaration.step();if(declaration.snapshot().phase!=='done')throw Error('Mixed declaration did not finish');const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;declaration.draw(canvas.getContext('2d'))}});

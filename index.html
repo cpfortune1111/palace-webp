@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.23.86 Moon S0–S999 / No 3DO</title>
+<title>Prototype 0.23.87 Moon S0–S4999 / No 3DO</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.86 · Moon S0–S999 / No 3DO</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD moon-basic-02386-20261009-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.23.87 · Moon S0–S4999 / No 3DO</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD moon-special-02387-20261010-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -48,7 +48,7 @@ import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02386';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02387';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -56,7 +56,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02386';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02387';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -114,13 +114,13 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.86 · Moon S0–S999 / No 3DO';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.23.87 · Moon S0–S4999 / No 3DO';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02386';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02386';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02387';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02387';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
@@ -153,7 +153,7 @@ function drawStageVisuals(){
  }
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
-function spawnSourceExplod(params,owner,player,context=null){if(profileFor(player)?.data&&!/^F/i.test(String(params.anim))){const value=expression=>Number(evalM1(expression,context||specialRuntime.context({...owner,player}))),anim=value(params.anim),position=splitExpressionPairM1(params.pos||'0,0').map(value),velocity=splitExpressionPairM1(params.vel||'0,0').map(value),side=String(params.postype||'p1').toLowerCase(),screen=['left','right'].includes(side);sourceExplods.push({id:value(params.id??0),anim,player,ownerKey:owner.key||'root'+player,x:screen?position[0]:owner.x+position[0]*owner.facing,y:screen?position[1]:owner.y+position[1],vx:velocity[0]*owner.facing,vy:velocity[1],facing:screen?1:owner.facing,scale:splitExpressionPairM1(params.scale||'1,1').map(value),screen,screenRight:side==='right',age:0,bindtime:value(params.bindtime??0),removetime:value(params.removetime??-2),ignorehitpause:value(params.ignorehitpause??0),sprpriority:value(params.sprpriority??0),removeongethit:value(params.removeongethit??0)});return}
+function spawnSourceExplod(params,owner,player,context=null){if(profileFor(player)?.data&&!/^F/i.test(String(params.anim))){const value=expression=>Number(evalM1(expression,context||specialRuntime.context({...owner,player}))),anim=value(params.anim),position=splitExpressionPairM1(params.pos||'0,0').map(value),velocity=splitExpressionPairM1(params.vel||'0,0').map(value),side=String(params.postype||'p1').toLowerCase(),screen=['left','right'].includes(side);sourceExplods.push({id:value(params.id??0),anim,player,ownerKey:owner.key||'root'+player,x:screen?position[0]:owner.x+position[0]*owner.facing,y:screen?position[1]:owner.y+position[1],vx:velocity[0]*owner.facing,vy:velocity[1],facing:screen?1:owner.facing,scale:splitExpressionPairM1(params.scale||'1,1').map(value),screen,screenRight:side==='right',age:0,bindtime:value(params.bindtime??0),removetime:value(params.removetime??-2),ignorehitpause:value(params.ignorehitpause??0),sprpriority:value(params.sprpriority??0),ontop:value(params.ontop??0),removeongethit:value(params.removeongethit??0),supermovetime:value(params.supermovetime??0),pausemovetime:value(params.pausemovetime??0),accel:splitExpressionPairM1(params.accel||'0,0').map(value)});return}
  if(/^F\d+$/i.test(String(params.anim))){
   const anim=Number(String(params.anim).slice(1));if(!roundFxDat?.actions[String(anim)])return;
   const position=splitExpressionPairM1(params.pos||'0,0').map(value=>Number(evalM1(value,context)));
@@ -174,8 +174,8 @@ function spawnSourceExplod(params,owner,player,context=null){if(profileFor(playe
 function stepSourceExplods(){
  for(let index=sourceExplods.length-1;index>=0;index--){const effect=sourceExplods[index];
   if(specialRuntime.blocked(effect.player,effect)||!effect.ignorehitpause&&effect.anim!==905&&(p1HitPause>0||effect.player===2&&p2.attackPause>0))continue;
-  if(effect.bindtime!==-1){effect.bindtime=0;effect.x+=effect.vx;effect.y+=effect.vy}effect.age++;
-  if(effect.removetime!==-1&&effect.age>=(effect.common?commonFallDat.actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player)))sourceExplods.splice(index,1);
+  if(effect.bindtime!==-1){effect.bindtime=0;effect.x+=effect.vx;effect.y+=effect.vy;effect.vx+=(effect.accel?.[0]||0);effect.vy+=(effect.accel?.[1]||0)}effect.age++;
+  if(effect.removetime>0?effect.age>=effect.removetime:effect.removetime!==-1&&effect.age>=(effect.common?commonFallDat.actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player)))sourceExplods.splice(index,1);
  }
 }
 function lifecycleEffectFrame(effect){
@@ -197,7 +197,7 @@ function drawSourceExplods(){
   const sprite=effect.roundFx?roundFxDat.sprites[frame.group+','+frame.item]:effect.common?commonFallDat.sprites[frame.group+','+frame.item]:spriteFor(frame);let source=effect.common||effect.roundFx?null:spriteCanvasFor(frame);if(!sprite)continue;
   if(effect.common||effect.roundFx){source=document.createElement('canvas');source.width=sprite.w;source.height=sprite.h;source.getContext('2d').drawImage(effect.roundFx?roundFxAtlases[sprite.page]:commonFallAtlas,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h)}
   if(!source)continue;
-  const drawing=!effect.screen&&effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
+  const drawing=!effect.ontop&&!effect.screen&&effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
   const airFlip=String(frame.flip||'').toUpperCase();
   drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
  }
@@ -498,10 +498,13 @@ function withCharacter(player,callback){
 async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  if(players.includes('SailorMoon')&&!characterProfiles.has('SailorMoon')){
-  const base='./Char/Moon/Battle/',responses=await Promise.all([fetch(base+'moon_runtime.json?v=02386'),fetch(base+'moon_full.json?v=02385'),fetch('./Char/Moon/Sound/sounds.json?v=02385')]);
+  const base='./Char/Moon/Battle/',responses=await Promise.all([fetch(base+'moon_runtime.json?v=02387'),fetch(base+'moon_full.json?v=02385'),fetch('./Char/Moon/Sound/sounds.json?v=02385')]);
   if(responses.some(response=>!response.ok))throw Error('Moon assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
-  const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>Number(key)<1000||Number(key)>=5000&&Number(key)<=5999||[1910,1920,1990,1991,9999].includes(Number(key))));
+  const actionIds=new Set([0,5,6,5300,1910,1911,1920,1921,9999,1000,1005,1100,1105,1200,1205]);
+  for(const [key,frames] of Object.entries(all.actions))if(Number(key)<1000||Number(key)>=5000&&Number(key)<=5999)actionIds.add(Number(key));
+  for(const definition of Object.values(battle.states)){if(Number.isFinite(Number(definition.anim)))actionIds.add(Number(definition.anim));for(const controller of definition.controllers)for(const key of ['anim','projanim','projhitanim','projremanim','projcancelanim'])if(controller.params[key]!==undefined&&Number.isFinite(Number(controller.params[key])))actionIds.add(Number(controller.params[key]));}
+  const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,'SailorMoon');if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
   await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error('Moon atlas '+page));image.src=base+data.atlasFiles[page];images[page]=image})));
@@ -574,6 +577,7 @@ function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=nu
    if(def.velset[1]!==undefined&&def.velset[1]!==null)vy=Number(def.velset[1]);
  }
  if(animOverride!==undefined){current=animOverride;fi=0;ticks=0}else if(def)setAnimForState(def);
+ if(st===0&&profileFor()?.data&&current!==5){current=p1Life<=p1LifeMax/4?5300:0;fi=0;ticks=0}
  if(st===11)for(const controller of def.controllers.filter(item=>item.type==='CtrlSet'))runController(controller);
  if(st===106)for(const controller of def.controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runController(controller);
 }
@@ -690,7 +694,7 @@ function tokenizeExpr(src){
  t.push({k:'eof',v:''});return t}
 function parseExprAST(src){const t=tokenizeExpr(src);let p=0,peek=()=>t[p],take=()=>t[p++],prec={'||':1,'&&':2,'=':3,'==':3,'!=':3,'>':3,'<':3,'>=':3,'<=':3,'+':4,'-':4,'*':5,'/':5,'%':5};
  function atom(){let x=take();if(x.k==='num'||x.k==='str')return {t:x.k,v:x.v};if(x.v==='('){let n=expr(0);if(take().v!==')')throw Error('AST )');return n}if(x.v==='!'||x.v==='-'||x.v==='+')return {t:'un',op:x.v,a:atom()};
- if(x.k==='id'){let name=x.v;if(/^(Root|Parent|Enemy|EnemyNear|Partner)$/i.test(name)&&peek().v===','){take();return {t:'redirect',name,expr:atom()}}if(/^(Simul|Single|Turns)$/i.test(name))return {t:'str',v:name[0].toUpperCase()+name.slice(1).toLowerCase()};if(/^(Pos|Vel|P2Dist|P2BodyDist)$/i.test(name)&&peek().k==='id'&&/^[XY]$/i.test(peek().v))name+=' '+take().v;if(peek().v==='('){take();let args=[];if(peek().v!==')')while(true){args.push(expr(0));if(peek().v===','){take();continue}break}if(take().v!==')')throw Error('AST call )');return {t:'call',name,args}}return {t:'id',name}}throw Error('AST expression')}
+ if(x.k==='id'){let name=x.v;if(/^Helper$/i.test(name)&&peek().v==='('){take();const id=expr(0);if(take().v!==')'||take().v!==',')throw Error('AST helper redirect');return {t:'helperRedirect',id,expr:atom()}}if(/^(Root|Parent|Enemy|EnemyNear|Partner)$/i.test(name)&&peek().v===','){take();return {t:'redirect',name,expr:atom()}}if(/^(Simul|Single|Turns)$/i.test(name))return {t:'str',v:name[0].toUpperCase()+name.slice(1).toLowerCase()};if(/^(Pos|Vel|P2Dist|P2BodyDist)$/i.test(name)&&peek().k==='id'&&/^[XY]$/i.test(peek().v))name+=' '+take().v;if(peek().v==='('){take();let args=[];if(peek().v!==')')while(true){args.push(expr(0));if(peek().v===','){take();continue}break}if(take().v!==')')throw Error('AST call )');return {t:'call',name,args}}return {t:'id',name}}throw Error('AST expression')}
  function expr(min){let l=atom();while(prec[peek().v]!==undefined&&prec[peek().v]>=min){let op=take().v,pr=prec[op];
   if(['=','==','!='].includes(op)&&['[','('].includes(peek().v)){
    const saved=p,open=take().v,lower=expr(0);
@@ -707,7 +711,7 @@ function animElemStartTick(elem){const fs=framesFor(current);let t=0;for(let i=0
 function animElemTime(elem){return withCharacter(1,()=>animElemTimeForCharacter(elem))}
 function animElemTimeForCharacter(elem){return (current===5||current===6?p1TurnTime:current===100?(stateTicks-p1AnimStartTime)%actionDuration(100):stateTicks-p1AnimStartTime)-animElemStartTick(elem)}
 function evalAST(n,context=null){const elementTime=context?.elemTime||animElemTime;if(n.t==='num'||n.t==='str')return n.v;if(n.t==='id')return /^[SCAIHL]$/i.test(n.name)?n.name.toUpperCase():(context?context.query(n.name):queryValue(n.name));if(n.t==='un'){let a=evalAST(n.a,context);return n.op==='!'?!a:n.op==='-'?-Number(a):Number(a)}
- if(n.t==='redirect'){const target=context?.redirect?.(n.name);return target?evalAST(n.expr,target):NaN}
+ if(n.t==='helperRedirect'){const target=context?.helperContext?.(Number(evalAST(n.id,context)));return target?evalAST(n.expr,target):NaN}if(n.t==='redirect'){const target=context?.redirect?.(n.name);return target?evalAST(n.expr,target):NaN}
  if(n.t==='call'&&n.name.toLowerCase()==='redirectattr'){const target=context?.redirect?.(n.args[0].v);return target?.hitDefAttr?.(n.args.slice(1).map(argument=>argument.v))||false}
  if(n.t==='call'&&['numhelper','playeridexist'].includes(n.name.toLowerCase())){const ctx=context||specialRuntime.context(specialRoot(1));return n.name.toLowerCase()==='numhelper'?ctx.numHelper(n.args.length?Number(evalAST(n.args[0],ctx)):undefined):ctx.playerIDExist(Number(evalAST(n.args[0],ctx)))}
  if(n.t==='call'&&['numprojid','numexplod','rootvar'].includes(n.name.toLowerCase())){const ctx=context||specialRuntime.context(specialRoot(1)),argument=Number(evalAST(n.args[0],ctx));return ({numprojid:ctx.numProj,numexplod:ctx.numExplod,rootvar:ctx.rootVar})[n.name.toLowerCase()](argument)}
@@ -718,7 +722,7 @@ function evalAST(n,context=null){const elementTime=context?.elemTime||animElemTi
  }
  if(n.t==='bin'&&n.op==='='&&n.a.t==='id'&&n.a.name.toLowerCase()==='animelem')return elementTime(evalAST(n.b,context))===0;
  if(n.t==='bin'){if(n.op==='&&')return !!evalAST(n.a,context)&&!!evalAST(n.b,context);if(n.op==='||')return !!evalAST(n.a,context)||!!evalAST(n.b,context);let a=evalAST(n.a,context),b=evalAST(n.b,context);if(n.op==='='||n.op==='==')return a==b;if(n.op==='!=')return a!=b;if(n.op==='>')return a>b;if(n.op==='<')return a<b;if(n.op==='>=')return a>=b;if(n.op==='<=')return a<=b;if(n.op==='+')return +a + +b;if(n.op==='-')return a-b;if(n.op==='*')return a*b;if(n.op==='/')return a/b;if(n.op==='%')return a%b}
- if(n.t==='call'){let f=n.name.toLowerCase();if(f==='floor')return Math.floor(evalAST(n.args[0],context));if(f==='selfanimexist')return framesFor(evalAST(n.args[0],context)).length>0;if(f==='const720p')return evalAST(n.args[0],context);if(f==='animelemtime')return elementTime(evalAST(n.args[0],context));if(f==='abs')return Math.abs(evalAST(n.args[0],context));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context));if(f==='var')return (context?context.vars:runtimeVar)[+evalAST(n.args[0],context)]||0;if(f==='sysvar')return (context?context.sysvars:runtimeSysVar)[+evalAST(n.args[0],context)]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0],context)?evalAST(n.args[1],context):evalAST(n.args[2],context);throw Error('AST function '+n.name)}throw Error('AST node')}
+ if(n.t==='call'){let f=n.name.toLowerCase();if(f==='floor')return Math.floor(evalAST(n.args[0],context));if(f==='selfanimexist')return framesFor(evalAST(n.args[0],context)).length>0;if(f==='const720p')return evalAST(n.args[0],context);if(f==='animelemtime')return elementTime(evalAST(n.args[0],context));if(f==='abs')return Math.abs(evalAST(n.args[0],context));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context),context?.player||characterScopePlayer);if(f==='var')return (context?context.vars:runtimeVar)[+evalAST(n.args[0],context)]||0;if(f==='fvar')return context?.fvars?.[+evalAST(n.args[0],context)]||0;if(f==='sysvar')return (context?context.sysvars:runtimeSysVar)[+evalAST(n.args[0],context)]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0],context)?evalAST(n.args[1],context):evalAST(n.args[2],context);throw Error('AST function '+n.name)}throw Error('AST node')}
 const exprCache=new Map();
 function evalM1(expr,context=null){let src=String(expr).trim();
  src=src.replace(/\bHelper\s*\(\s*(\d+)\s*\)\s*,\s*var\s*\(\s*(\d+)\s*\)/gi,(_,id,index)=>String((context||fighterExpressionContext(specialRoot(1),specialRoot(2))).helperVar(Number(id),Number(index))));
@@ -760,12 +764,12 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  switch(controller.type){
   case 'PlaySnd':{
    if(controller===battleDat.landingSound){const player=adapter.player||1,entry=player===1?stateEntrySerial:p2.entrySerial;if(landingSoundEntries[player-1]===entry)break;landingSoundEntries[player-1]=entry}
-   adapter.playSound(params.value,Number(params.channel??-1));break;
+   adapter.playSound(splitExpressionPairM1(String(params.value).replace(/^S(?=[\d-])/i,'')).map(value).join(','),Number(params.channel??-1));break;
   }
   case 'Explod':adapter.explod(params);break;
   case 'VarSet':case 'VarAdd':{
-   const match=String(params.target||'').match(/^(sysvar|var)\((\d+)\)$/i);if(!match)throw Error('M2 VarSet target '+params.target);
-   const variables=match[1].toLowerCase()==='sysvar'?binding.sysvars:binding.vars;
+   const match=String(params.target||'').match(/^(sysvar|fvar|var)\((\d+)\)$/i);if(!match)throw Error('M2 VarSet target '+params.target);
+   const variables=match[1].toLowerCase()==='sysvar'?binding.sysvars:match[1].toLowerCase()==='fvar'?binding.fvars:binding.vars;
    variables[Number(match[2])]=(controller.type==='VarAdd'?(variables[Number(match[2])]||0):0)+value(params.value);
    if(match[1].toLowerCase()==='var'&&match[2]==='51')variables[51]=commandModes[(adapter.player||binding.player||1)-1]==='auto'?10:0;
    break;
@@ -961,10 +965,10 @@ function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBinding
  if(profileFor()?.data){const def=sourceState(n);if(!def)throw Error('Moon unsupported state '+n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl??p2.ctrl;if(def.anim!==undefined)p2.anim=Number(def.anim);if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}}
  if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
  if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';p2.ctrl=def.ctrl??0;if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}p2.sprPriority=def.sprpriority??0}
- if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(battleDat.powerMaximum,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;p2.anim=def.anim;if(def.velset?.[0]!==undefined)p2.vx=def.velset[0]*p2.facing;if(def.velset?.[1]!==undefined)p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveHit=0;p2.moveGuarded=0}
+ if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(battleDat.powerMaximum,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));if(def.velset?.[0]!==undefined)p2.vx=def.velset[0]*p2.facing;if(def.velset?.[1]!==undefined)p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveHit=0;p2.moveGuarded=0}
  if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim;if(def.ctrl!==undefined)p2.ctrl=def.ctrl}
  if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!==undefined&&def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
- if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
+ if(n===0&&profileFor()?.data&&p2.anim!==5){p2.anim=p2.life<=p2.lifeMax/4?5300:0;p2.elem=1;p2.elemTick=0}if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
 }
 function bindThrowTarget(player){const binding=throwBindings[player-1];if(!binding||binding.until<combatTraceTick)return;const root=specialRoot(player),x=root.x+binding.offset[0]*root.facing,y=root.y+binding.offset[1];if(binding.target===1){posX=x;posY=y;vx=0;vy=0}else{p2.x=x;p2.y=y;p2.vx=0;p2.vy=0}}
 function applySourceThrow(player,params){const target=3-player,attacker=specialRoot(player),defender=specialRoot(target);if(defender.moveType==='H'||defender.type==='A'||defender.life<=0)return false;throwTargets[player-1]=target;throwHitData[target-1]={fall:1,xvel:0,yvel:0,animtype:0,groundtype:1,airtype:1,yaccel:1.4,slidetime:0,hittime:0,'fall.xvel':null,'fall.yvel':-18,'fall.damage':0,'fall.kill':1,'fall.envshake.time':0};if(target===2)p2.getHit=throwHitData[1];customStateOwners[target-1]=battleCharacters[player-1];const facing=attacker.facing*Number(params.p1facing??1);if(player===1){p1Reaction=null;runtimeCtrl=0;p1Facing=facing;enterIRState(Number(params.p1stateno))}else{p2.ctrl=0;p2.facing=facing;enterP2State(Number(params.p1stateno))}if(target===1){p1Reaction=null;runtimeCtrl=0;p1Facing=-facing;enterIRState(Number(params.p2stateno))}else{p2.ctrl=0;p2.facing=-facing;enterP2State(Number(params.p2stateno))}return true}
@@ -1033,12 +1037,12 @@ function fighterElemTimeForCharacter(fighter,element){
 function fighterExpressionContext(fighter,opponent,commands={}){const player=fighterPlayer(fighter),base=withCharacter(player,()=>fighterExpressionContextForCharacter(fighter,opponent,commands));return Object.fromEntries(Object.entries(base).map(([key,value])=>[key,typeof value==='function'?(...args)=>withCharacter(player,()=>value(...args)):value]))}
 function fighterExpressionContextForCharacter(fighter,opponent,commands={}){
  const lifecycle=lifecycleRuntime.queries(fighter,opponent,specialRuntime.entities);
- return {vars:fighter.vars||[],sysvars:fighter.sysvars||[],elemTime:element=>fighterElemTime(fighter,element),command:name=>!!(commands[name]??commands[String(name).toLowerCase()]),
-  numHelper:lifecycle.numHelper,playerIDExist:lifecycle.playerIDExist,
+ return {player:fighterPlayer(fighter),vars:fighter.vars||[],fvars:fighter.fvars||[],sysvars:fighter.sysvars||[],elemTime:element=>fighterElemTime(fighter,element),command:name=>!!(commands[name]??commands[String(name).toLowerCase()]),
+  numHelper:lifecycle.numHelper,helperContext:id=>{const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&entity.player===fighter.player&&entity.id===id&&!entity.destroyed);return helper?fighterExpressionContext(helper,opponent,commands):null},playerIDExist:lifecycle.playerIDExist,
   helperVar:(id,index)=>specialRuntime.entities.find(entity=>entity.kind==='helper'&&entity.player===fighter.player&&entity.id===id)?.vars?.[index]??0,
   redirect:name=>{const target=lifecycle.redirect(name);return target?fighterExpressionContext(target,name.toLowerCase()==='enemy'||name.toLowerCase()==='enemynear'?specialRoot(fighter.player):opponent,commands):null},
   hitDefAttr:attributes=>{const params=fighter.player===1?activeHitDef?.params:p2.attackFrame?.hitDef?.params;const attr=String(params?.attr||'').toUpperCase().split(',').map(value=>value.trim());return !!attr[0]&&attributes[0].toUpperCase().includes(attr[0])&&attributes.slice(1).map(value=>value.toUpperCase()).includes(attr[1])},
-  numProj:id=>specialRuntime.numProj(fighter.player||fighter.id||2,id),numExplod:id=>sourceExplods.filter(effect=>effect.ownerKey===(fighter.key||'root'+(fighter.player||fighter.id||2))&&effect.id===id).length,rootVar:index=>specialRoot(fighter.player||fighter.id||2).vars[index]||0,
+  numTarget:()=>fighter.kind==='helper'?(fighter.moveContact&&specialRoot(3-fighter.player).moveType==='H'?1:0):(throwTargets[fighter.player-1]?1:0),numProj:id=>specialRuntime.numProj(fighter.player||fighter.id||2,id),numExplod:id=>sourceExplods.filter(effect=>effect.ownerKey===(fighter.key||'root'+(fighter.player||fighter.id||2))&&effect.id===id).length,rootVar:index=>specialRoot(fighter.player||fighter.id||2).vars[index]||0,
   getHitVar:name=>getHitValueM1(fighter,name),hitVelocity:axis=>getHitValueM1(fighter,axis+'vel')*(axis==='x'?fighter.facing:1),
   query:name=>{
    const key=name.toLowerCase().replace(/\s+/g,' ');
@@ -1052,7 +1056,7 @@ function fighterExpressionContextForCharacter(fighter,opponent,commands={}){
    if(key==='p2bodydist y'){const top=fighter.y-constVal('size.height'),otherTop=opponent.y-constVal('size.height',fighterPlayer(opponent));return fighter.y<otherTop?otherTop-fighter.y:top>opponent.y?opponent.y-top:0}
    if(['frontedgedist','backedgedist','frontedgebodydist','backedgebodydist'].includes(key)){const front=key.startsWith('front'),direction=front?fighter.facing:-fighter.facing,width=key.includes('body')?constVal('size.'+(fighter.type==='A'?'air':'ground')+'.'+(front?'front':'back')):0;return 640+(cameraX-fighter.x)*direction-width}
    if(['roundstate','roundno','roundsexisted','matchno','numpartner','numenemy','teammode','teamside','id','facing','p2movetype','p2dist y'].includes(key))return lifecycle.query(key);
-   if(key==='gametime')return combatTraceTick;
+   if(/^projcontact\d+$/.test(key))return specialRuntime.projectileContact(fighter.player,Number(key.slice(11)));if(key==='numtarget')return fighter.kind==='helper'?(fighter.moveContact&&opponent.moveType==='H'?1:0):(throwTargets[fighter.player-1]?1:0);if(key==='gametime')return combatTraceTick;
    if(key==='inguarddist')return inGuardDistanceM1(fighter.player===2?p2:p1ExpressionFighter());
    if(key==='numproj')return specialRuntime.entities.filter(entity=>entity.player===fighter.player&&entity.kind==='projectile').length;
    if(['win','lose','drawgame'].includes(key))return roundFlow.result(fighter.player||1)[key==='drawgame'?'draw':key];
@@ -1134,7 +1138,7 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
 function stepLifecycleState(player){return withCharacter(player,()=>stepLifecycleStateForCharacter(player))}
 function stepLifecycleStateForCharacter(player){
  const initial=player===1?state:p2.state,definition=battleDat.lifecycleStates[String(initial)];
- if(!definition){if(player===1){runtimeCtrl=0;stateTicks++;advanceAirOneTick()}else{p2.ctrl=0;p2.time++;advanceFighterAirOneTick(p2)}return}
+ if(!definition){const source=profileFor(player)?.data?sourceState(initial):null;for(const controller of source?.controllers||[]){if(player===1)runController(controller);else runP2ControllerM1(controller);if((player===1?state:p2.state)!==initial)return}if(player===1){runtimeCtrl=0;stateTicks++;advanceAirOneTick()}else{p2.ctrl=0;p2.time++;advanceFighterAirOneTick(p2)}return}
  const binding=player===1?p1LifecycleBinding:p2;
  for(const controller of definition.controllers){lifecycleRuntime.execute(controller,binding,specialRuntime.context(specialRoot(player)));if((player===1?state:p2.state)!==initial)return}
  if(player===1)stateTicks++;else p2.time++;
@@ -1418,7 +1422,7 @@ function stepP2M1ForCharacter(){
  for(const controller of battleDat.playerCommands)if(controllerTriggered(controller,fighterExpressionContext(p2,p1ExpressionFighter(),commands))){runP2ControllerM1(controller,commands);return}
  p2PunchRequested=false;p2ButtonCommands={};
  if(attackTick)return;
- if([10,12,40,50,52].includes(p2.state)||profileFor()?.data&&[45,51,53,54,57].includes(p2.state)){stepP2SourceState();return}
+ if([10,12,40,50,52].includes(p2.state)||profileFor()?.data&&[45,51,53,54,57,1101,3000,3002].includes(p2.state)){stepP2SourceState();return}
  if(battleDat.locomotionStates[String(p2.state)]){stepP2LocomotionM1();return}
  if(gameShell.isWatch()&&p2.state===20||(p2ControlMode==='keyboard'||gameShell.isWatch())&&p2.ctrl&&[0,11,20].includes(p2.state)&&!(p2GuardMode()!=='none'&&inGuardDistanceM1(p2))){stepP2WalkM1();return}
  if(profileFor()?.data&&p2.moveType!=='H'&&[0,11,20].includes(p2.state)){stepP2SourceState();return}
@@ -1581,7 +1585,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.23.86',build:'moon-basic-02386-20261009-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.23.87',build:'moon-special-02387-20261010-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1589,7 +1593,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.23.86-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.23.87-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1717,7 +1721,7 @@ function drawForCharacter(){
  updateSpriteLayers();
  const drawAnim=simPaused?logicFrame.anim:current;
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
- let frames=framesFor(drawAnim);if(!frames.length)frames=dat.actions[0]||[];if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
+ let frames=framesFor(drawAnim);if(!frames.length)frames=framesFor(0);if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(posX+hitShakeOffset(displayP1()))*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
  const src=spriteCanvasFor(f);if(!src)return;
  if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}

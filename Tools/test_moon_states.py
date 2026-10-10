@@ -1,7 +1,10 @@
 import unittest
+import json
+import tempfile
 from pathlib import Path
 
 from compile_moon_states import build, is_3do
+from build_moon_runtime import compile_runtime
 
 
 class MoonStatesTest(unittest.TestCase):
@@ -55,6 +58,22 @@ class MoonStatesTest(unittest.TestCase):
         self.assertGreater(len(self.bundle['aiCommands']), 0)
         for controller in self.bundle['playerCommands']:
             self.assertTrue(any('!AILevel' in expression for expression in controller['triggerall']))
+
+    def test_non_3do_special_runtime(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / 'runtime.json'
+            compile_runtime(Path('outputs/moon'), output)
+            runtime = json.loads(output.read_text(encoding='utf-8'))
+        for state_id in ('1000', '1100', '1101', '1200', '3000', '3001', '3002', '3005'):
+            self.assertIn(state_id, runtime['states'])
+        for state_id in ('1300', '1400', '3100', '3101', '3105', '3150', '3151', '3160'):
+            self.assertNotIn(state_id, runtime['states'])
+        for state_id in ('1050', '1051', '3050', '3051'):
+            self.assertIn(state_id, runtime['helperStates'])
+        for state in runtime['states'].values():
+            for controller in state['controllers']:
+                self.assertNotIn('3DO', str(controller).upper())
+        self.assertTrue(any(item['params']['value'] == '3000' for item in runtime['playerCommands']))
 
 
 if __name__ == '__main__':
