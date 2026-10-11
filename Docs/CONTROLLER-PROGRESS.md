@@ -2,6 +2,14 @@
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
 
+## 0.24.14 — Root scheduling
+
+P1/P2 generic dispatch now uses independent actor/state-entry schedules before trigger evaluation. Successful triggers reset each controller's counter; re-entering the same state resets counters via the entry serial. Source locations preserve identity across normalized controller copies; explicit lifecycle identity preserves controllers without source metadata. Ordinary hitpause skips do not consume persistence counters. Lifecycle -3/-2 forwarding marks the negative-state MUGEN persistence exception. Helper dispatch keeps its own scheduling rather than double-consuming root counters.
+
+Tests exercise independent actor counters, source-copy identity, state re-entry, negative-state exceptions, root execution intervals and the existing combat/variable/helper regression suite.
+
+Pending: -1 command-path origin tagging, positive lifecycle pre-trigger handling, specialized reaction controller paths, custom-state hitpause transition suppression and Ikemen nested blocks/RunState. Common parameter support is therefore not yet fully certified.
+
 ## 0.24.13 — Parent/root variable owners
 
 The four parent/root variable controllers now delegate to shared type/index/value conversion, including native `v`/`fv` and normalized target forms. Redirection selects the receiver first; parent/root selection then chooses the variable owner while expressions remain in caller context. ParentVar on nested helpers selects their direct parent. Missing/destroyed parents and non-helper receivers produce no write. RootVar selects the helper's owning root. Float and system-variable target forms use their corresponding storage.

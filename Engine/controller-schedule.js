@@ -16,3 +16,22 @@ export function createControllerSchedule(){
  }
  return {before,executed,reset:()=>counters.clear()};
 }
+
+export function createActorControllerSchedules(){
+ const actors=new Map(),identities=new WeakMap();
+ let serial=0;
+ function controllerKey(controller){
+  controller=controller.controllerSchedulingKey||controller;
+  if(controller.source?.file&&controller.source?.line!==undefined)return controller.source.file+':'+controller.source.line;
+  if(!identities.has(controller))identities.set(controller,++serial);
+  return identities.get(controller);
+ }
+ function prepare(actor,generation,controller,options={}){
+  if(options.global)return {eligible:!options.hitPause||!!Number(controller.params?.ignorehitpause??0),executed:()=>{}};
+  let entry=actors.get(actor);
+  if(!entry||entry.generation!==generation){entry={generation,schedule:createControllerSchedule()};actors.set(actor,entry)}
+  const key=controllerKey(controller),params=controller.params||controller;
+  return {eligible:entry.schedule.before(key,params,options),executed:()=>entry.schedule.executed(key,params)};
+ }
+ return {prepare,reset:()=>actors.clear()};
+}

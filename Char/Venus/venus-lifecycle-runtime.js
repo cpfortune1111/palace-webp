@@ -7,16 +7,16 @@ export function createLifecycleRuntime(api){
   if(!api.trigger(controller,context))return false;
   const params=controller.params,type=controllerType(controller);
   switch(type){
-   case 'VarRangeSet':case 'VarRandom':case 'PowerSet':api.controller({...controller,type},fighter,context);break;
+   case 'VarRangeSet':case 'VarRandom':case 'PowerSet':api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);break;
    case 'DisplayToClipboard':api.debug?.(fighter,params,context);break;
-   default:api.controller({...controller,type},fighter,context);
+   default:api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);
   }
   return true;
  }
  function globals(fighter,context,{hitPause=false}={}){
   for(const stateNo of [-3,-2])for(const controller of api.data(fighter.player).globalControllers[String(stateNo)]){
    if(hitPause&&Number(controller.params.ignorehitpause??0)!==1)continue;
-   execute(controller,fighter,context);
+   execute({...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},fighter,context);
   }
  }
  function initialize(fighter,context){

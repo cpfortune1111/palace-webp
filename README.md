@@ -1,4 +1,8 @@
-# 0.24.13 — Parent / Root variables
+# 0.24.14 — Root controller scheduling
+
+P1/P2 controller dispatch now maintains independent persistence counters per state entry, resets on re-entry, and skips ordinary controllers during hitpause. Lifecycle -3/-2 controllers retain the MUGEN negative-state persistence exception. Full compatibility remains in progress; reaction-specialized and other execution paths are tracked separately.
+
+## 0.24.13 — Parent / Root variables
 
 ParentVarSet/ParentVarAdd and RootVarSet/RootVarAdd now use the shared variable dispatcher. Nested helpers write their immediate parent rather than always writing the root; float variables, redirected helper IDs and destroyed/missing parents are handled. Full compatibility remains in progress.
 
