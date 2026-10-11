@@ -19,4 +19,11 @@ run('Turn',{});assert.equal(caller.facing,-1);assert.equal(caller.vx,-3);
 run('Turn',{redirectid:'7'});assert.equal(target.facing,1);assert.equal(target.vx,-5);
 run('Turn',{redirectid:'99'});assert.equal(caller.facing,-1);
 console.log('Turn target-facing and relative-velocity reversal passed');
+run('SprPriority',{value:'5.8'});assert.equal(caller.sprPriority,5);
+run('SprPriority',{redirectid:'7',value:'-3.9'});assert.equal(target.sprPriority,-3);
+run('SprPriority',{});assert.equal(caller.sprPriority,0);
+run('SprPriority',{redirectid:'99',value:'22'});assert.equal(caller.sprPriority,0);
+assert.throws(()=>run('SprPriority',{layerno:'1'}),/layerno rendering/);
+console.log('Sprite priority defaults, integer conversion, ownership and redirection passed');
+
 

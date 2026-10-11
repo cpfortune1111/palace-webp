@@ -1,3 +1,11 @@
+## 0.24.26 — Sprite priority ownership and redirection
+
+SprPriority now uses Engine/state-properties.js instead of a player-number-only write. Root/reaction/helper bindings expose actual priority setters; helper-local generic execution changes the helper rather than its root. Native signed integer conversion and omitted value=0 follow pinned bytecode.go. redirectid expressions select existing roots/helpers; missing IDs do not write.
+
+Unit checks verify defaults, truncation and missing targets. Browser checks verify P1/P2 redirects, nested-helper redirects, actual helper-local execution during hitpause and resulting root canvas z-order. Existing drawing, movement, reaction and Saturn simultaneous-super regressions passed.
+
+Not certified complete: nonzero Ikemen layerno (explicitly rejected, not ignored), unified helper/root/effect ordering between both root canvases, native equal-priority insertion order, stage layers and save-state parity. Default layer 0 is the current renderer path. Full controller/parameter compatibility remains incomplete.
+
 ## 0.24.25 — Turn ownership and velocity
 
 Turn now shares Engine/state-properties.js, resolves redirectid in caller context and reverses target facing plus relative X velocity. Mutable facing bindings were added to both roots, reaction fighters and helper generic forwarding. Helper-local Turn no longer changes its root; specialized reaction Turn no longer bypasses the unified dispatcher. Pinned bytecode.go Turn invokes char.go setFacing, which flips both facing and native relative velocity, preserving world motion.
