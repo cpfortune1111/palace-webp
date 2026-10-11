@@ -12,3 +12,11 @@ run('VelSet',{y:'0.1'});assert.equal(caller.vy,Math.fround(0.1));
 assert.equal(run('Null',{}),false);
 assert.throws(()=>run('VelSet',{z:'1'}),/Z physics/);
 console.log('Velocity caller evaluation, redirection, local scale, float32 and omitted axes passed');
+caller.facing=1;caller.getHit={xvel:9,yvel:-5};
+target.facing=-1;target.getHit={xvel:-7,yvel:4};target.moveType='I';
+run('HitVelSet',{redirectid:'7',x:'1',y:'-1'});assert.deepEqual([target.vx,target.vy],[7,4]);
+run('HitVelSet',{x:'1',y:'0'});assert.equal(caller.vx,9);
+const held=caller.vy;run('HitVelSet',{});assert.equal(caller.vy,held);
+run('HitVelSet',{redirectid:'99',x:'1'});assert.equal(caller.vx,9);
+console.log('HitVelSet reads target hit velocity, preserves omitted/disabled axes and requires no hit movetype');
+

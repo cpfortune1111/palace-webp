@@ -1,4 +1,8 @@
-# 0.24.26 — Sprite priority ownership
+# 0.24.27 — Hit velocity redirection
+
+HitVelSet now reads redirected target GetHit velocity, converts X by target facing and writes through shared root/reaction/helper bindings. Omitted/disabled axes remain unchanged; no MoveType H restriction is added. Actual browser target/local-helper checks cover the path. Full controller compatibility remains in progress.
+
+## 0.24.26 — Sprite priority ownership
 
 SprPriority now writes roots/reactions/helpers through the shared dispatcher, supports redirectid, native integer conversion and the zero default. Helper-local execution no longer changes root priority. Actual root canvas-order tests pass. Nonzero layerno and complete render ordering remain pending.
 

@@ -1,4 +1,4 @@
-const types=new Set(['velset','veladd','velmul']);
+const types=new Set(['velset','veladd','velmul','hitvelset']);
 
 export function applyVelocityController(controller,actor,api){
  const type=controller.type.toLowerCase();
@@ -7,6 +7,12 @@ export function applyVelocityController(controller,actor,api){
  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
  if(!target)return true;
  if(params.z!==undefined)throw Error('Velocity Z physics is not implemented');
+ if(type==='hitvelset'){
+  for(const axis of ['x','y'])if(params[axis]!==undefined&&Number(api.evaluate(params[axis]))!==0){
+   target['v'+axis]=Math.fround((target.getHit?.[axis+'vel']??0)*(axis==='x'?target.facing:1));
+  }
+  return true;
+ }
  const ratio=(actor.localScale??1)/(target.localScale??1);
  for(const axis of ['x','y'])if(params[axis]!==undefined){
   const field='v'+axis,input=Math.fround(Number(api.evaluate(params[axis])));

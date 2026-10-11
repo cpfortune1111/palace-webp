@@ -1,3 +1,11 @@
+## 0.24.27 — HitVelSet target velocity
+
+HitVelSet joins the shared velocity dispatcher rather than reading caller context hitVelocity in a separate switch. Flags and redirectid evaluate in caller context, but selected axes copy the target's own GetHit xvel/yvel. Relative X is target GetHit xvel*facing; mutable world adapters then retain correct world motion. Omitted/zero flags preserve velocity. No MoveType H gate is applied, matching pinned bytecode.go. Root, reaction and ground-reaction bindings expose actual GetHit storage.
+
+Unit tests distinguish caller and target data, disabled axes and missing targets. Browser fixtures verify both roots at different facings, a nested-helper redirect and actual helper-local HitVelSet during hitpause. Existing reaction, drawing and simultaneous Saturn super regressions remain required.
+
+Pending certification: Z physics/GetHit zvel, full native GetHit lifecycle/reset/version differences, coordinate import and save-state parity. Z is explicitly rejected rather than ignored. All-controller/parameter completeness remains unproven.
+
 ## 0.24.26 — Sprite priority ownership and redirection
 
 SprPriority now uses Engine/state-properties.js instead of a player-number-only write. Root/reaction/helper bindings expose actual priority setters; helper-local generic execution changes the helper rather than its root. Native signed integer conversion and omitted value=0 follow pinned bytecode.go. redirectid expressions select existing roots/helpers; missing IDs do not write.
