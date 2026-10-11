@@ -1,3 +1,11 @@
+## 0.24.24 — Control and state-type redirection
+
+CtrlSet/StateTypeSet share Engine/state-properties.js before specialized dispatch and write real binding/redirected actor properties. CtrlSet normalizes evaluated numeric values to 0/1. StateTypeSet accepts value as the native statetype alias, gives statetype precedence, supports imported moveType and native movetype spellings, validates state/move/physics categories and preserves omitted fields. Missing redirected IDs have no effect.
+
+Pinned compiler-functions.go establishes statetype/value precedence and accepted literal types; bytecode.go resolves redirects and evaluates CtrlSet in caller context. Unit checks verify boolean conversion, aliases, omitted fields and invalid inputs. Browser assertions verify P1/P2 and nested-helper properties while preserving caller state, alongside existing Saturn simultaneous-super regressions.
+
+Not full certification: native previous state/move-type history and downstream change detection, native control flags across all pause/round modes, alternate Ikemen syntax/compiler forms and save-state parity remain pending. All-controller certification remains incomplete.
+
 ## 0.24.23 — Position controller redirection and origins
 
 PosSet/Add now execute through Engine/position-controllers.js before specialized dispatch. Caller-context input is converted to float32; missing redirect IDs do not write, omitted axes remain unchanged. PosSet X starts at camera X in target coordinates rather than absolute world zero; Y starts at target ground/platform origin. PosAdd X uses target facing, not caller facing. Position and velocity redirected adapters share mutable root/reaction/helper accessors.

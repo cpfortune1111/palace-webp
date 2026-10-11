@@ -1,4 +1,8 @@
-# 0.24.23 — Position redirection
+# 0.24.24 — Control / state properties
+
+CtrlSet and StateTypeSet now share root/helper redirectid writes. CtrlSet normalizes boolean values; StateTypeSet supports value/statetype precedence and movetype aliases while retaining omitted fields. Actual browser property tests and combat regressions verify the changes. Full controller compatibility remains in progress.
+
+## 0.24.23 — Position redirection
 
 PosSet/Add now share caller-context evaluation and root/helper redirectid writes. PosSet uses the camera X origin and ground Y origin; PosAdd X follows target facing. Module and actual browser coordinate tests cover these paths. Full movement/controller compatibility remains in progress.
 
