@@ -1,4 +1,6 @@
-# 0.24.01 — Intro tails / Projectile cancellation / Independent pauses
+# 0.24.02 — Neptune S0–S999 / Electric hit animation
+
+## 0.24.01 — Intro tails / Projectile cancellation / Independent pauses
 
 ## 0.24.00 — Jupiter all states / No 3DO
 

@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.24.01 Intro / Projectile Cancel / Pause</title>
+<title>Prototype 0.24.02 Neptune S0–S999 / Electric Hit</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.01 · Intro / Projectile Cancel / Pause</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD intro-pause-02401-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.02 · Neptune S0–S999 / Electric Hit</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD neptune-02402-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -48,7 +48,7 @@ import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02401';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02402';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -56,7 +56,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02401';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02402';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -65,7 +65,7 @@ for(let seconds=15;seconds<99;seconds++){const option=document.createElement('op
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){if(['SailorMoon','SailorJupiter'].includes(battleCharacters[player-1])&&choice.hardware[player-1]==='3do')throw Error('Moon 3DO is disabled');const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){if(['SailorMoon','SailorJupiter','SailorNeptune'].includes(battleCharacters[player-1])&&choice.hardware[player-1]==='3do')throw Error('Moon 3DO is disabled');const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -114,21 +114,21 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.01 · Intro / Projectile Cancel / Pause';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.02 · Neptune S0–S999 / Electric Hit';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {electricHitStates} from './Engine/electric-hit-states.js?v=02401';
-import {excludesHit} from './Engine/hit-attribute-mask.js?v=02401';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02401';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02401';
+import {electricHitStates} from './Engine/electric-hit-states.js?v=02402';
+import {excludesHit} from './Engine/hit-attribute-mask.js?v=02402';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02402';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02402';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
 fetch(assetUrl('./venus_special.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));specialDat=data}).catch(showRuntimeError);
 let reactionDat,reactionAtlases=[];
-const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02401').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
+const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02402').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -503,16 +503,16 @@ function withCharacter(player,callback){
 async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!reactionDat)await reactionReady;
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
- for(const character of ['SailorMoon','SailorJupiter'])if(players.includes(character)&&!characterProfiles.has(character)){
-  const folder=character==='SailorMoon'?'Moon':'Jupiter',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02401'),fetch(base+prefix+'_full.json?v=02401'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02401')]);
+ for(const character of ['SailorMoon','SailorJupiter','SailorNeptune'])if(players.includes(character)&&!characterProfiles.has(character)){
+  const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':'Neptune',prefix=folder.toLowerCase();
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02402'),fetch(base+prefix+'_full.json?v=02402'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02402')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
   const actionIds=new Set([0,5,6,5300,1910,1911,1912,1920,1921,1922,9999,1000,1005,1100,1105,1200,1205]);
   for(const [key,frames] of Object.entries(all.actions))if(Number(key)<1000||Number(key)>=5000&&Number(key)<=5999)actionIds.add(Number(key));
   for(const definition of Object.values(battle.states)){if(Number.isFinite(Number(definition.anim)))actionIds.add(Number(definition.anim));for(const controller of definition.controllers)for(const key of ['anim','projanim','projhitanim','projremanim','projcancelanim'])if(controller.params[key]!==undefined&&Number.isFinite(Number(controller.params[key])))actionIds.add(Number(controller.params[key]));}
-  if(character==='SailorJupiter'){
+  if(['SailorJupiter','SailorNeptune'].includes(character)){
    for(const [stateNumber,definition] of Object.entries(battle.states)){
     const expressions=definition.controllers.flatMap(controller=>['anim','projanim','projhitanim','projremanim','projcancelanim'].filter(key=>controller.params[key]!==undefined).map(key=>controller.params[key]).concat(['ChangeAnim','ChangeAnim2'].includes(controller.type)?[controller.params.value]:[]));
     for(const hardware of [0,2])for(const strength of [0,1])for(const distance of [0,1000]){
@@ -585,7 +585,7 @@ function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=nu
  if(battleDat?.statePriorities?.[String(st)]!==undefined)p1SprPriority=battleDat.statePriorities[String(st)];
  prevState=state;state=st;stateTicks=0;p1AnimStartTime=0;activeHitDef=null;stateEntrySerial++;
  const incoming=sourceState(st);p1StateType=incoming?.type||'S';p1Physics=incoming?.physics||'S';runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
- runtimeMoveType=String(incoming?.moveType??'I').toUpperCase();if(st===190&&profileFor()?.data){runtimeVar[48]=191+Math.floor(Math.random()*2);current=runtimeVar[48];fi=0;ticks=0;}
+ runtimeMoveType=String(incoming?.moveType??'I').toUpperCase();if(st===190&&profileFor()?.data){runtimeVar[48]=battleCharacters[0]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);current=runtimeVar[48];fi=0;ticks=0;}
  const def=incoming;
  if(isAttackState(st))p1Power=Math.max(0,Math.min(battleDat.powerMaximum,p1Power+Number(def.poweradd||0)));
  if(st===40&&posX!==p2.x)setP1Facing(posX<p2.x?1:-1);
@@ -929,7 +929,7 @@ p2.sprPriority=0;
 function liveP1(){return p1Reaction?{...p1Reaction,vx:p1Reaction.vx*p1Reaction.facing}:{player:1,id:1,state,time:stateTicks,anim:current,elem:fi+1,facing:p1Facing,x:posX,y:posY,vx,vy,life:p1Life,lifeMax:p1LifeMax,sprPriority:p1SprPriority,invulnerableUntil:p1InvulnerableUntil}}
 function displayP1(){return simPaused?{facing:p1Facing,vx,vy,life:p1Life,sprPriority:p1SprPriority,...logicFrame}:liveP1()}
 function displayP2(){return simPaused&&logicFrame.p2?logicFrame.p2:p2}
-function hitShakeOffset(fighter){return fighter.hitShake>0&&(fighter.time&1)!==0?-fighter.facing*2:0}
+function hitShakeOffset(fighter){return fighter.hitShake>0&&(combatTraceTick&1)!==0?-fighter.facing*2:0}
 function inGroundGuardState(fighter){return [120,130,131,140,150,151,152,153].includes(fighter.state)}
 function updateSpriteLayers(){
  const front=displayP1().sprPriority>displayP2().sprPriority;
@@ -979,6 +979,7 @@ function enterGroundReactionStateForCharacter(fighter,n){
  if(n===150||n===152){fighter.type=n===152?'C':'S';fighter.physics='N';fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===152?151:150;fighter.vx=0;fighter.vy=0}
  if(n===151||n===153){fighter.type=n===153?'C':'S';fighter.physics=fighter.type;fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===153?151:150}
  if([151,153,5001,5011].includes(n))applyGroundHitVelocityM1(fighter);
+ if(fallEntry){const context=fighterExpressionContext(fighter,specialRoot(3-fighterPlayer(fighter)));for(const controller of battleDat.fallStates[String(n)].controllers)if(controller.type==='ChangeAnim'&&[...controller.triggerall,...Object.values(controller.triggers).flat()].some(trigger=>/\bTime\s*=\s*0\b/i.test(trigger))&&controllerTriggered(controller,context)){fighter.anim=Number(evalM1(controller.params.value,context));fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}}
 }
 function enterP2State(n){return withCharacter(2,()=>enterP2StateForCharacter(n))}
 function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBindings[1]=null}
@@ -987,7 +988,7 @@ function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBinding
  p2.hitCount=0;
  enterGroundReactionState(p2,n);p2.activeHitDef=null;p2.attackFrame=null;
  if(profileFor()?.data){const def=sourceState(n);if(!def)throw Error('Moon unsupported state '+n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl??p2.ctrl;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}}
- if(n===190&&profileFor()?.data){p2.vars[48]=191+Math.floor(Math.random()*2);p2.anim=p2.vars[48];p2.elem=1;p2.elemTick=0;}
+ if(n===190&&profileFor()?.data){p2.vars[48]=battleCharacters[1]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);p2.anim=p2.vars[48];p2.elem=1;p2.elemTick=0;}
  if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
  if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';p2.ctrl=def.ctrl??0;if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}if(def.velset){p2.vx=Number(def.velset[0])*p2.facing;p2.vy=Number(def.velset[1])}p2.sprPriority=def.sprpriority??0}
  if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(battleDat.powerMaximum,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));if(def.velset?.[0]!==undefined)p2.vx=def.velset[0]*p2.facing;if(def.velset?.[1]!==undefined)p2.vy=def.velset[1];p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1;p2.moveContact=0;p2.moveHit=0;p2.moveGuarded=0}
@@ -1148,11 +1149,11 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
   else {Object.assign(p2,{life:p2.lifeMax,getHit:null,hitShake:0,hitTime:-1,attackPause:0,vx:0,vy:0,y:0,activeHitDef:null,attackFrame:null,lastHitKey:null,cornerPushVelocity:0,downRecovery:0});enterP2State(0);p2.ctrl=1}
   resetCommandList(player);
  },
- initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2]){lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)));if(battleCharacters[player-1]==='SailorJupiter')specialRoot(player).vars[49]=player}},
+ initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2]){lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)));if(['SailorJupiter','SailorNeptune'].includes(battleCharacters[player-1]))specialRoot(player).vars[49]=player}},
  fight:()=>{p1Reaction=null;enterIRState(0);enterP2State(0);runtimeCtrl=1;p2.ctrl=1;resetPlayerInput()},
  lock:()=>{runtimeCtrl=0;p2.ctrl=0},
  stepPresentation:()=>{stepLifecycleGlobals();stepLifecycleState(1);stepLifecycleState(2)},
- introComplete:()=>[1,2].every(player=>battleCharacters[player-1]==='SailorJupiter'?(player===1?state:p2.state)===0:[0,1990,1991].includes(player===1?state:p2.state)),
+ introComplete:()=>[1,2].every(player=>['SailorJupiter','SailorNeptune'].includes(battleCharacters[player-1])?(player===1?state:p2.state)===0:[0,1990,1991].includes(player===1?state:p2.state)),
  stopCombat:()=>{resultStateWatchdog.reset();activeHitDef=null;p2.activeHitDef=null;p2.attackFrame=null;runtimeCtrl=0;p2.ctrl=0;resetPlayerInput()},
  stepResult:()=>{stepLifecycleGlobals();enforceKoM1();stepRoundResultFighter(1);stepRoundResultFighter(2);bindThrowTarget(1);bindThrowTarget(2);updateCamera();clampFighterScreenM1();if(p1Reaction)p1Reaction.x=posX;p1HitPause=Math.max(0,p1HitPause-1);p2.attackPause=Math.max(0,p2.attackPause-1)},
  settled:()=>posY===0&&p2.y===0&&(p1Life>0?[0,11].includes(state):state===5150)&&(p2.life>0?[0,11].includes(p2.state):p2.state===5150),
@@ -1626,7 +1627,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.01',build:'intro-pause-02401-20261011-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.02',build:'neptune-02402-20261011-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1634,7 +1635,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.01-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.02-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1666,7 +1667,7 @@ function stepWatchAI(){
 function simStepCore(){return withCharacter(1,()=>simStepCoreForCharacter())}
 function simStepCoreForCharacter(){
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat)return;
- if(p1HitPause>0){sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state,2))for(const controller of withCharacter(2,()=>sourceState(p2.state)).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--;p1Reaction.time++}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--;p2.time++}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
+ if(p1HitPause>0){sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state,2))for(const controller of withCharacter(2,()=>sourceState(p2.state)).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
  advanceTurnAnimations();autoTurnM1();
  sampleInputHistory();
