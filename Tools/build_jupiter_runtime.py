@@ -6,6 +6,7 @@ from pathlib import Path
 from compile_moon_states import build, compile_controller, fields
 
 DISABLED_ACTIONS = {60, 9050}
+DISABLED_STATES = {1400, 3100, 3101, 3105, 3160, 3161, 3150, 3155}
 
 
 def non_3do_controller(controller):
@@ -27,7 +28,7 @@ def compile_runtime(imported, output):
     canonical = {value.lower(): value for value in ('Null', 'VarSet', 'VarAdd', 'ParentVarSet', 'StateTypeSet')}
     for definition in definitions:
         state_id = definition['id']
-        if state_id < 0 or state_id in (1400, 3100, 3101, 3105, 3160, 3161, 3150, 3155):
+        if state_id < 0 or state_id in DISABLED_STATES:
             continue
         if str(state_id) in states:
             continue
@@ -60,6 +61,10 @@ def compile_runtime(imported, output):
                 continue
             state['controllers'].append(compiled)
         states[str(exported_id)] = state
+    expected_states = {str(definition['id']) for definition in definitions
+                       if definition['id'] >= 0 and definition['id'] not in DISABLED_STATES}
+    if set(states) != expected_states:
+        raise ValueError('Incomplete Jupiter non-3DO state coverage')
     constants, section = {}, None
     for line in (imported / 'original/jupiter.cns').read_text(encoding='utf-8-sig').splitlines():
         line = line.split(';', 1)[0].strip()
@@ -149,6 +154,9 @@ def compile_runtime(imported, output):
               'aiWalkControllers': [], 'guardDistance': {'front': constants['size.attack.dist'], 'back': 0},
               'koProfile': {'enabled': False}, 'hitPriorityDefaults': {'defender': 0},
               'cornerpushProfile': {'defaultMultiplier': .7, 'stopThreshold': 4},
+              'stateCoverage': {'included': sorted(map(int, states)),
+                                'hitRecoveryKO': sorted(int(key) for key in states if 5000 <= int(key) < 5900),
+                                'excluded3DO': sorted(DISABLED_STATES), 'globalStates': [-3, -2, -1]},
               'source': {'character': 'SailorJupiter', 'scope': 'All source states; non-3DO skills, recovery, KO and helpers',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,4 +1,6 @@
-# 0.23.99 — Jupiter effects / Projectiles / Electric recovery
+# 0.24.00 — Jupiter all states / No 3DO
+
+## 0.23.99 — Jupiter effects / Projectiles / Electric recovery
 
 ## 0.23.98 — Jupiter inputs / Helpers / Electric reactions
 
