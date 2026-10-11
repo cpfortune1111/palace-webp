@@ -16,7 +16,7 @@ export function createLifecycleRuntime(api){
     for(let index=first;index<=last;index++)variables[index]=value;
     break;
    }
-   case 'PowerSet':fighter.power=number(params.value,context);break;
+   case 'PowerSet':api.controller({...controller,type},fighter,context);break;
    case 'VarRandom':{
     const bounds=String(params.range??'0,1000').split(',').map(value=>Math.trunc(number(value,context)));
     if(bounds.length===1)bounds.unshift(0);

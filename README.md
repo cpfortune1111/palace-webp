@@ -1,4 +1,8 @@
-# 0.24.09 — Controller inventory / Variable storage
+# 0.24.10 — Life / Power controllers
+
+Unified LifeAdd/LifeSet/PowerAdd/PowerSet execution for roots, lifecycle states and helpers, with evaluated redirect IDs, native rounding/limits and helper ownership. Focused semantic and browser regression tests are provided. Full controller compatibility remains in progress; see `Docs/CONTROLLER-PROGRESS.md` for explicit remaining work.
+
+## 0.24.09 — Controller inventory / Variable storage
 
 Controller compatibility remains in progress. The pinned official registry contains 163 controllers; `Docs/CONTROLLER-AUDIT.md` lists parameter candidates and unresolved extraction work, not certified complete support.
 

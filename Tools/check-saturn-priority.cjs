@@ -30,6 +30,12 @@ const server=http.createServer((request,response)=>{
   await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
   const variableResults=await run(`(()=>{runController({type:'VarSet',params:{target:'fvar(2)',value:'3.75'}});runP2ControllerM1({type:'VarSet',params:{target:'fvar(2)',value:'8.25'}});runController({type:'VarAdd',params:{target:'fvar(2)',value:'0.5'}});return [evalM1('fvar(2)',specialRuntime.context(specialRoot(1))),evalM1('fvar(2)',specialRuntime.context(specialRoot(2))),p1LifecycleBinding.fvars===p1ControllerBinding.fvars]})()`);
   assert.deepEqual(variableResults,[4.25,8.25,true]);
+  const resourceResults=await run(`(()=>{lifecycleRuntime.rounds.state=2;p1Life=1000;p2.life=1000;p1Power=0;p2.power=0;runController({type:'LifeSet',params:{value:'500'}});runP2ControllerM1({type:'LifeAdd',params:{value:'-100',absolute:'1'}});runController({type:'PowerAdd',params:{value:'3500'}});runP2ControllerM1({type:'PowerSet',params:{value:'700'}});runController({type:'LifeSet',params:{redirectid:'2',value:'800'}});return [p1Life,p2.life,p1Power,p2.power,evalM1('power',specialRuntime.context(specialRoot(2)))]})()`);
+  assert.deepEqual(resourceResults,[500,800,3000,700,700]);
+  const helperResources=await run(`(()=>{specialRuntime.dispatch({type:'Helper',params:{stateno:'925',id:'987'}},p1ControllerBinding,specialRuntime.context(specialRoot(1)),{},specialRoot(1),1);const entity=specialRuntime.entities.at(-1),context=specialRuntime.context(entity);executeControllerM1({type:'LifeSet',params:{value:'321'}},entity,context,{owner:entity,player:1});executeControllerM1({type:'PowerSet',params:{value:'456'}},entity,context,{owner:entity,player:1});runP2ControllerM1({type:'LifeAdd',params:{redirectid:String(entity.instanceId),value:'-21',absolute:'1'}});return [entity.life,p1Life,p1Power,p2.life]})()`);
+  assert.deepEqual(helperResources,[300,500,456,800]);
+  console.log('Helper life isolation, shared root power and helper-ID redirection passed');
+  console.log('Root life/power controllers, redirected life and power expressions passed');
   console.log('Both root float-variable controllers and expression contexts share lifecycle storage');
   for(const delay of [0,1,5]){
    await run("roundFlow.begin('training','infinite');simPaused=false;for(let tick=0;tick<1800;tick++)simStep();");
