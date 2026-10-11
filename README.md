@@ -1,4 +1,8 @@
-# 0.24.24 — Control / state properties
+# 0.24.25 — Turn ownership / velocity
+
+Turn now redirects to roots/helpers and flips relative X velocity with facing, preserving world motion. Helper-local Turn writes the helper rather than its root; reaction Turn uses the same dispatcher. Browser tests cover redirected and real helper-local execution. Full controller compatibility remains in progress.
+
+## 0.24.24 — Control / state properties
 
 CtrlSet and StateTypeSet now share root/helper redirectid writes. CtrlSet normalizes boolean values; StateTypeSet supports value/statetype precedence and movetype aliases while retaining omitted fields. Actual browser property tests and combat regressions verify the changes. Full controller compatibility remains in progress.
 

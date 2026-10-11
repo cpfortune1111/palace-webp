@@ -1,3 +1,11 @@
+## 0.24.25 — Turn ownership and velocity
+
+Turn now shares Engine/state-properties.js, resolves redirectid in caller context and reverses target facing plus relative X velocity. Mutable facing bindings were added to both roots, reaction fighters and helper generic forwarding. Helper-local Turn no longer changes its root; specialized reaction Turn no longer bypasses the unified dispatcher. Pinned bytecode.go Turn invokes char.go setFacing, which flips both facing and native relative velocity, preserving world motion.
+
+Unit tests verify redirected/local target reversal and missing targets. Actual browser fixtures verify P1/P2 redirect writes, helper redirect writes and helper-controller execution during hitpause without changing root facing or world velocity. Existing reaction interval/hitpause tests and Saturn simultaneous-super regressions remain required.
+
+Pending certification: all native binding/autoturn/round interactions, zero-facing edge behavior, alternate Ikemen nested controller forms and save-state parity. The full controller/parameter objective remains incomplete.
+
 ## 0.24.24 — Control and state-type redirection
 
 CtrlSet/StateTypeSet share Engine/state-properties.js before specialized dispatch and write real binding/redirected actor properties. CtrlSet normalizes evaluated numeric values to 0/1. StateTypeSet accepts value as the native statetype alias, gives statetype precedence, supports imported moveType and native movetype spellings, validates state/move/physics categories and preserves omitted fields. Missing redirected IDs have no effect.

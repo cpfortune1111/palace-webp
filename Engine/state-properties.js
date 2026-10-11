@@ -1,9 +1,15 @@
 export function applyStatePropertyController(controller,actor,api){
  const type=controller.type.toLowerCase();
- if(!['ctrlset','statetypeset'].includes(type))return false;
+ if(!['ctrlset','statetypeset','turn'].includes(type))return false;
  const params=controller.params||controller;
  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
  if(!target)return true;
+ if(type==='turn'){
+  const velocity=target.vx;
+  target.facing=-target.facing;
+  target.vx=-velocity;
+  return true;
+ }
  if(type==='ctrlset'){
   if(params.value===undefined)throw Error('Missing CtrlSet value');
   target.ctrl=Number(api.evaluate(params.value))!==0?1:0;
