@@ -1,3 +1,11 @@
+## 0.24.35 — AssertSpecial damage suppression
+
+Five actor-local assertions now execute: NoHitDamage, NoGuardDamage, NoRedLifeDamage, NoDizzyPointsDamage and NoGuardPointsDamage. Their flags are case-insensitive literals; flag/flag2–flag8, enabled and caller-context redirectid follow pinned compiler-functions.go/bytecode.go. Root/helper storage is actor-owned. Actual HitDef resolution suppresses only the selected HP/red-life/dizzy/guard resource, while red-life GetHitVar absolute amounts remain calculated. IsAsserted reads these five real flags.
+
+Flags clear on active root simulation ticks and helper steps, including helper hitpause, matching the pinned MUGEN 1+/Ikemen reset rule. Unit tests cover multi-flags, redirects, explicit disabling, missing targets and unsupported mixtures. Browser tests verify redirected root immunity, HP re-enabling, guard/resource isolation, helper-local hitpause execution/reset and expression reads. Existing Saturn simultaneous-super regression remains required.
+
+Partial AssertSpecial support only: other actor/global flags, mixed damage/non-damage flag combinations, WinMugen reset exceptions, exact pause/round/global ordering, complete IsAsserted semantics and legacy flag behavior remain pending. Unsupported mixed families fail explicitly rather than silently dropping flags. Damage/resource timing and defaults remain pending as documented above. No complete assertion/controller certification is claimed.
+
 ## 0.24.34 — Explicit HitDef dizzy/guard point consumption
 
 HitDef now consumes explicit dizzypoints on hit and guardpoints on guard through the actual WEB contact resolver. Independent AttackMulSet slots, target defense, half-away rounding, minimum positive damage and no remaining-life cap follow the pinned computeDamage path. Point consumption clamps to resource bounds and respects internal enabled/round gates. Explicit red-life/dizzy/guard point expressions evaluate in caller context at HitDef/Projectile creation using native integer conversion.

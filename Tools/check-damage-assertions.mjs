@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {applyDamageAssertion} from '../Engine/damage-assertions.js';
+
+const actor={assertions:new Set()},other={assertions:new Set()};
+const api={evaluate:Number,findActor:id=>id===7?other:null};
+const run=params=>applyDamageAssertion({type:'AssertSpecial',params},actor,api);
+run({flag:'NoHitDamage',flag2:'NoRedLifeDamage',flag3:'NoDizzyPointsDamage'});
+assert.deepEqual([...actor.assertions],['nohitdamage','noredlifedamage','nodizzypointsdamage']);
+run({flag:'NoGuardDamage',flag8:'NoGuardPointsDamage',redirectid:'7'});
+assert.deepEqual([...other.assertions],['noguarddamage','noguardpointsdamage']);
+run({flag:'NoHitDamage',enabled:'0'});assert.equal(actor.assertions.has('nohitdamage'),false);
+run({flag:'NoGuardDamage',redirectid:'99'});assert.equal(actor.assertions.has('noguarddamage'),false);
+assert.throws(()=>run({flag2:'NoHitDamage'}),/flag not specified/);
+assert.throws(()=>run({flag:'NoHitDamage',flag2:'NoWalk'}),/Unsupported mixed/);
+assert.equal(run({flag:'Intro'}),false);
+actor.assertions.clear();assert.equal(actor.assertions.size,0);
+console.log('Damage assertion flags, multi-flag slots, enabled, redirects and explicit unsupported mixtures passed');

@@ -1,3 +1,7 @@
+# 0.24.35 — Damage assertions
+
+AssertSpecial NoHitDamage/NoGuardDamage/NoRedLifeDamage/NoDizzyPointsDamage/NoGuardPointsDamage now suppress actual incoming resources. Multi-flag slots, redirectid, enabled and IsAsserted reads have tests; helper hitpause reset is verified. Other assertions, mixed legacy combinations and full compatibility remain pending.
+
 # 0.24.34 — HitDef dizzy/guard damage
 
 Explicit HitDef dizzypoints/guardpoints now consume actual resources using independent attack multipliers and defense. Expressions evaluate at HitDef creation; projectiles retain spawn-time factors. Unit/browser tests cover hit/guard selection, bounds and snapshots. Native defaults, queued timing and automatic stun/guard-break remain pending.

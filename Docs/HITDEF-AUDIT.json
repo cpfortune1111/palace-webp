@@ -178,7 +178,7 @@
     "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and assertions remain pending."
+    "note": "Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and other assertion interactions remain pending."
   },
   {
     "parameter": "down.bounce",

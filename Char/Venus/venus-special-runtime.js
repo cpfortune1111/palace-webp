@@ -83,7 +83,7 @@ export function createSpecialRuntime(api){
    case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
    case 'PosFreeze':entity.positionFrozen=params.value===undefined||!!api.eval(params.value,ctx);break;
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
-   case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
+   case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
   }
@@ -116,6 +116,7 @@ export function createSpecialRuntime(api){
   for(const entity of [...entities]){
    if(entity.destroyed||blocked(entity.player,entity))continue;
    resetAngleDraw(entity.angleState);
+   entity.assertions?.clear();
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
      const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
