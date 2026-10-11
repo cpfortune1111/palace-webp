@@ -84,37 +84,37 @@
   },
   {
     "parameter": "airguard.cornerpush.velmul",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit values and existing default multiplier drive aerial guard cornerpush. Full native default/version parity remains pending."
   },
   {
     "parameter": "airguard.cornerpush.veloff",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Jupiter",
       "Moon",
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit values and ground fallback feed actual aerial guard cornerpush. Full native corner/scale conditions remain pending."
   },
   {
     "parameter": "airguard.ctrltime",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit caller integer expressions and guard.ctrltime fallback drive original aerial guard CtrlSet. Full command eligibility and version/default parity remain pending."
   },
   {
     "parameter": "airguard.velocity",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Jupiter"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit XY and native 1.5x/0.5x fallback air velocity execute in imported-character aerial guard reactions. Z, full native scale/default and helper collision parity remain pending."
   },
   {
     "parameter": "animtype",
@@ -640,7 +640,7 @@
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Ground X velocity exists; aerial guard velocity is not implemented."
+    "note": "Ground X velocity exists; optional Z is explicitly unsupported."
   },
   {
     "parameter": "guardflag",
@@ -652,7 +652,7 @@
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Ground H/L/M paths honor stand/crouch restrictions and source UnGuardable assertions, including live projectile owners; native aerial guarding and full SCF_guard/input ordering are incomplete."
+    "note": "Ground H/L/M and imported-character aerial A contacts honor stance assertions and source UnGuardable. Aerial reactions execute original states 154/155. Venus aerial guard assets/state import and full SCF_guard/input ordering remain pending."
   },
   {
     "parameter": "guardpoints",

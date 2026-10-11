@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.37
+# HitDef parameter audit — 0.24.38
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: airguard.cornerpush.veloff, airguard.velocity, down.velocity, fall.recover, forcestand, guard.dist, hitonce, numhits, p2facing, snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, forcestand, guard.dist, hitonce, numhits, p2facing, snap.
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -23,10 +23,10 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | air.juggle | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | air.type | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | High/Low/Trip are handled; None semantics are incomplete. |
 | air.velocity | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | 2D aerial velocity exists; optional Z component is not implemented. |
-| airguard.cornerpush.velmul | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| airguard.cornerpush.veloff | Not implemented | Jupiter, Moon, Saturn | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| airguard.ctrltime | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| airguard.velocity | Not implemented | Jupiter | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| airguard.cornerpush.velmul | Partial | — | Ikemen | Explicit values and existing default multiplier drive aerial guard cornerpush. Full native default/version parity remains pending. |
+| airguard.cornerpush.veloff | Partial | Jupiter, Moon, Saturn | MUGEN + Ikemen | Explicit values and ground fallback feed actual aerial guard cornerpush. Full native corner/scale conditions remain pending. |
+| airguard.ctrltime | Partial | — | MUGEN + Ikemen | Explicit caller integer expressions and guard.ctrltime fallback drive original aerial guard CtrlSet. Full command eligibility and version/default parity remain pending. |
+| airguard.velocity | Partial | Jupiter | MUGEN + Ikemen | Explicit XY and native 1.5x/0.5x fallback air velocity execute in imported-character aerial guard reactions. Z, full native scale/default and helper collision parity remain pending. |
 | animtype | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Light/Medium/Hard/DiagUp mappings exist; Back/Up and fallback parity are incomplete. |
 | attack.depth | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | attr | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Attack classification and attribute masks exist; team/override parity is incomplete. |
@@ -89,8 +89,8 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.sparkangle | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | guard.sparkno | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Character-owned S-prefixed sparks only; common fightfx sparks/defaults are not complete. |
 | guard.sparkscale | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| guard.velocity | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground X velocity exists; aerial guard velocity is not implemented. |
-| guardflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground H/L/M paths honor stand/crouch restrictions and source UnGuardable assertions, including live projectile owners; native aerial guarding and full SCF_guard/input ordering are incomplete. |
+| guard.velocity | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground X velocity exists; optional Z is explicitly unsupported. |
+| guardflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground H/L/M and imported-character aerial A contacts honor stance assertions and source UnGuardable. Aerial reactions execute original states 154/155. Venus aerial guard assets/state import and full SCF_guard/input ordering remain pending. |
 | guardpoints | Partial | — | Ikemen | Explicit guard point damage executes with its independent attack factor and target defense. Native defaults, air guarding, queued timing and assertions remain pending. |
 | guardsound | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Same ownership/default limitations as hitsound. |
 | guardsound.channel | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |

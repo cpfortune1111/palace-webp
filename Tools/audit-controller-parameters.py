@@ -9,6 +9,7 @@ REFERENCE = 'cb56d73badb322f3725257c2e8cfd157b2c3989d'
 
 def build_inventory(registry, compiler):
     functions = {}
+    compiler = registry + '\n' + compiler
     starts = list(re.finditer(r'func \(c \*CharCompiler\) (\w+)\(', compiler))
     for index, match in enumerate(starts):
         end = starts[index + 1].start() if index + 1 < len(starts) else len(compiler)
@@ -17,26 +18,34 @@ def build_inventory(registry, compiler):
     entries = re.findall(r'"([a-z0-9]+)"\s*:\s*c\.(\w+)', block)
     controllers = []
     for name, function in entries:
-        pending = [function]
+        pending = [(function, '')]
         visited = set()
         parameters = set()
         unresolved = set()
         while pending:
-            current = pending.pop()
-            if current in visited:
+            current, prefix = pending.pop()
+            context = (current, prefix)
+            if context in visited:
                 continue
-            visited.add(current)
+            visited.add(context)
             body = functions.get(current)
             if body is None:
                 unresolved.add(current)
                 continue
             parameters.update(re.findall(r'(?:stateParam|param\w*)\(is,\s*(?:sc,\s*)?"([^"]+)"', body))
             parameters.update(re.findall(r'is\["([^"]+)"\]', body))
+            parameters.update(prefix + suffix for suffix in re.findall(r'(?:stateParam\(is,\s*|param\w*\(is,\s*sc,\s*|is\[)prefix\s*\+\s*"([^"]+)"', body))
             if re.search(r'stateParam\(is,\s*[a-zA-Z_]\w*|param\w*\(is,\s*sc,\s*[a-zA-Z_]\w*', body):
-                unresolved.add(current + ': dynamic parameter names')
+                dynamic = re.findall(r'(?:stateParam\(is,\s*|param\w*\(is,\s*sc,\s*)([a-zA-Z_]\w*)', body)
+                if any(value != 'prefix' for value in dynamic):
+                    unresolved.add(current + ': dynamic parameter names')
             for called in re.findall(r'c\.(\w+)\(is,', body):
                 if called in functions:
-                    pending.append(called)
+                    calls = re.findall(r'c\.' + re.escape(called) + r'\(is,\s*sc,\s*("[^"]*"|prefix)\s*[,)]', body)
+                    if calls:
+                        pending.extend((called, prefix if value == 'prefix' else value[1:-1]) for value in calls)
+                    else:
+                        pending.append((called, prefix))
         if name == 'mapreset':
             parameters.update('exclude' + str(index) for index in range(2, 9))
         if name in {'mapset', 'mapadd', 'parentmapset', 'parentmapadd', 'rootmapset', 'rootmapadd', 'teammapset', 'teammapadd'}:
@@ -46,7 +55,8 @@ def build_inventory(registry, compiler):
             'compilerFunction': function,
             'parameterCandidates': sorted(parameters),
             'commonParameters': ['persistent', 'ignorehitpause'],
-            'compilerFunctionsInspected': sorted(visited),
+            'compilerFunctionsInspected': sorted({current for current, prefix in visited}),
+            'compilerContextsInspected': [{'function': current, 'prefix': prefix} for current, prefix in sorted(visited)],
             'unresolvedExtraction': sorted(unresolved),
             'coverageStatus': 'not semantically certified',
         })

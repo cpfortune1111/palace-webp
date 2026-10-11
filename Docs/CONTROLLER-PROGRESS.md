@@ -1,3 +1,17 @@
+## 0.24.38 — Aerial guard contact / source reaction execution
+
+Imported character guardflag A contacts now route to original state 154 and execute the character's original state 155 controllers, including HitVelSet, gravity, CtrlSet and grounded transitions. The reaction dispatcher and hitpause controller paths recognize these source states in both player slots. Explicit airguard.velocity/airguard.ctrltime expressions are evaluated at HitDef creation. XY velocities, native 1.5x/0.5x aerial fallback, guard hit/slide time and aerial control time feed GetHitVar; airguard cornerpush parameters reach actual contact results. NoAirGuard joins actor-local assertions and IsAsserted. Nonzero Z velocity fails explicitly.
+
+Unit tests cover stance isolation, source UnGuardable, NoAirGuard and default/explicit parameters. Browser tests execute both player-slot reaction paths through shake completion, original A152/HitVelSet, CtrlSet recovery and S52 landing, checking independent cornerpush values. Existing Saturn simultaneous supers and controller/resource/drawing regressions remain required.
+
+Still partial: legacy Venus lacks imported S154/S155 and A152, so its pre-existing hit behavior is preserved rather than inventing guard animation/state data. Full SCF_guard/default-key ordering, aerial proactive guard animation, command eligibility after CtrlSet, native MUGEN/Ikemen default selection, helper collisions and Z are pending. No complete guarding/AssertSpecial certification is claimed.
+
+## Parameter inventory — delegated compiler contexts
+
+The inventory now inspects compiler helpers from both pinned compiler source files, preserves each delegated prefix context, and expands literal prefix concatenations. Explod/Projectile palfx.* and afterimage.* parameters, standalone PalFX fields and delegated trans/alpha fields are no longer omitted by the extractor. Inspected function/prefix contexts are recorded in JSON. Unresolved arbitrary dynamic names remain explicitly pending.
+
+Synthetic tests verify multiple prefixes, nested delegation and unresolved names; pinned-source tests verify 163 controllers and representative previously omitted fields. This changes the inventory only, not runtime support. All semantic certifications remain pending; complete MUGEN/Ikemen compatibility has not been achieved.
+
 ## 0.24.37 — Guard stance / UnGuardable assertions
 
 NoStandGuard, NoCrouchGuard and UnGuardable now join the actor assertion dispatcher. Ground HitDef resolution checks the defender's current S/C stance assertion, including existing guard-state paths. It also rejects guarding when the attacker asserts UnGuardable. Helper attacks forward their own assertion set; projectile attacks resolve their live root/helper owner assertion set instead of copying spawn-time flags, matching pinned char.go's source-character check and projectile comment.

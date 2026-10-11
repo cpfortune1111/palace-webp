@@ -1,3 +1,7 @@
+## 0.24.38 — Aerial guard execution
+
+Imported character aerial guards now execute original states 154/155, airguard velocity/control/cornerpush and NoAirGuard. Unit and browser regressions cover both player slots through recovery and landing. Controller inventory now expands delegated compiler prefixes. This remains partial MUGEN/Ikemen support: Venus aerial guard data/assets, native input ordering, Z and further controllers/parameters are pending.
+
 # 0.24.37 — Guard assertions
 
 NoStandGuard/NoCrouchGuard now restrict the matching ground guard stance. UnGuardable prevents root/helper/projectile attacks from being guarded; projectiles use live owner assertions. Multi-flag mixing, redirects and expression reads have tests. Aerial guards and full native guard/input ordering remain pending.
