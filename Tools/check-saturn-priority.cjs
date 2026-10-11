@@ -28,6 +28,9 @@ const server=http.createServer((request,response)=>{
 
 
   await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
+  const variableResults=await run(`(()=>{runController({type:'VarSet',params:{target:'fvar(2)',value:'3.75'}});runP2ControllerM1({type:'VarSet',params:{target:'fvar(2)',value:'8.25'}});runController({type:'VarAdd',params:{target:'fvar(2)',value:'0.5'}});return [evalM1('fvar(2)',specialRuntime.context(specialRoot(1))),evalM1('fvar(2)',specialRuntime.context(specialRoot(2))),p1LifecycleBinding.fvars===p1ControllerBinding.fvars]})()`);
+  assert.deepEqual(variableResults,[4.25,8.25,true]);
+  console.log('Both root float-variable controllers and expression contexts share lifecycle storage');
   for(const delay of [0,1,5]){
    await run("roundFlow.begin('training','infinite');simPaused=false;for(let tick=0;tick<1800;tick++)simStep();");
    const trace=await run(`(()=>{resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;customStateOwners.fill(null);customAnimationOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;posY=0;p2.y=0;posX=-100;p2.x=100;vx=0;vy=0;p2.vx=0;p2.vy=0;runtimeVar.fill(0);p2.vars.fill(0);enterIRState(0);enterP2State(0);p1Facing=1;p2.facing=-1;p1LastHitKey=null;p2.lastHitKey=null;enterIRState(3000);const history=[new Set(),new Set()],ties=[];for(let tick=0;tick<1400;tick++){if(tick===${delay})enterP2State(3000);simStep();history[0].add(state);history[1].add(p2.state);if(state===3001&&p2.state===3001&&activeHitDef&&p2.activeHitDef)ties.push([p1Life,p2.life,moveContact,p2.moveContact||0,activeHitDef.params.priority,p2.activeHitDef.params.priority]);if(runtimeFailed)break;}return {runtimeFailed,history:history.map(states=>[...states]),ties,pauses:specialRuntime.pauses}})()`);

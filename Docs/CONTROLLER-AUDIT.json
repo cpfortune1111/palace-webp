@@ -1,0 +1,4433 @@
+{
+  "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "controllerCount": 163,
+  "controllers": [
+    {
+      "controller": "afterimage",
+      "compilerFunction": "afterImage",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImage",
+        "afterImageSub"
+      ],
+      "unresolvedExtraction": [
+        "afterImageSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "afterimagetime",
+      "compilerFunction": "afterImageTime",
+      "parameterCandidates": [
+        "redirectid",
+        "time",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImageTime"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "allpalfx",
+      "compilerFunction": "allPalFX",
+      "parameterCandidates": [],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "allPalFX",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "angleadd",
+      "compilerFunction": "angleAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "value",
+        "xangle",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "angleAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "angledraw",
+      "compilerFunction": "angleDraw",
+      "parameterCandidates": [
+        "pivot",
+        "redirectid",
+        "scale",
+        "value",
+        "xangle",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "angleDraw"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "anglemul",
+      "compilerFunction": "angleMul",
+      "parameterCandidates": [
+        "redirectid",
+        "value",
+        "xangle",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "angleMul"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "angleset",
+      "compilerFunction": "angleSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value",
+        "xangle",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "angleSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "appendtoclipboard",
+      "compilerFunction": "appendToClipboard",
+      "parameterCandidates": [
+        "params",
+        "redirectid",
+        "text"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "appendToClipboard",
+        "displayToClipboardSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertspecial",
+      "compilerFunction": "assertSpecial",
+      "parameterCandidates": [
+        "enabled",
+        "flag",
+        "flag2",
+        "flag3",
+        "flag4",
+        "flag5",
+        "flag6",
+        "flag7",
+        "flag8",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertSpecial"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "attackdist",
+      "compilerFunction": "attackDist",
+      "parameterCandidates": [
+        "depth",
+        "height",
+        "redirectid",
+        "value",
+        "width"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "attackDist"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "attackmulset",
+      "compilerFunction": "attackMulSet",
+      "parameterCandidates": [
+        "damage",
+        "dizzypoints",
+        "guardpoints",
+        "redirectid",
+        "redlife",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "attackMulSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "bgpalfx",
+      "compilerFunction": "bgPalFX",
+      "parameterCandidates": [
+        "id",
+        "index"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "bgPalFX",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "bindtoparent",
+      "compilerFunction": "bindToParent",
+      "parameterCandidates": [
+        "facing",
+        "pos",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "bindToParent",
+        "bindToParentSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "bindtoroot",
+      "compilerFunction": "bindToRoot",
+      "parameterCandidates": [
+        "facing",
+        "pos",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "bindToParentSub",
+        "bindToRoot"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "bindtotarget",
+      "compilerFunction": "bindToTarget",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "pos",
+        "posz",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "bindToTarget"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "changeanim",
+      "compilerFunction": "changeAnim",
+      "parameterCandidates": [
+        "animplayerno",
+        "elem",
+        "elemtime",
+        "readplayerid",
+        "redirectid",
+        "spriteplayerno",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeAnim",
+        "changeAnimSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "changeanim2",
+      "compilerFunction": "changeAnim2",
+      "parameterCandidates": [
+        "animplayerno",
+        "elem",
+        "elemtime",
+        "readplayerid",
+        "redirectid",
+        "spriteplayerno",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeAnim2",
+        "changeAnimSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "changestate",
+      "compilerFunction": "changeState",
+      "parameterCandidates": [
+        "anim",
+        "continue",
+        "ctrl",
+        "readplayerid",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeState",
+        "changeStateSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "clearclipboard",
+      "compilerFunction": "clearClipboard",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "clearClipboard"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "ctrlset",
+      "compilerFunction": "ctrlSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "ctrlSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "defencemulset",
+      "compilerFunction": "defenceMulSet",
+      "parameterCandidates": [
+        "multype"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "defenceMulSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "destroyself",
+      "compilerFunction": "destroySelf",
+      "parameterCandidates": [
+        "recursive",
+        "redirectid",
+        "removeexplods",
+        "removetexts"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "destroySelf"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "displaytoclipboard",
+      "compilerFunction": "displayToClipboard",
+      "parameterCandidates": [
+        "params",
+        "redirectid",
+        "text"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "displayToClipboard",
+        "displayToClipboardSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "envcolor",
+      "compilerFunction": "envColor",
+      "parameterCandidates": [
+        "time",
+        "under",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "envColor"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "envshake",
+      "compilerFunction": "envShake",
+      "parameterCandidates": [
+        "ampl",
+        "decay",
+        "dir",
+        "diradd",
+        "freq",
+        "mul",
+        "phase",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "envShake"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "explod",
+      "compilerFunction": "explod",
+      "parameterCandidates": [
+        "accel",
+        "angle",
+        "anim",
+        "animelem",
+        "animelemtime",
+        "animfreeze",
+        "animplayerno",
+        "bindid",
+        "bindtime",
+        "facing",
+        "focallength",
+        "friction",
+        "hidewithbars",
+        "id",
+        "ignorehitpause",
+        "interpolation.alpha",
+        "interpolation.angle",
+        "interpolation.animelem",
+        "interpolation.focallength",
+        "interpolation.offset",
+        "interpolation.palfx.add",
+        "interpolation.palfx.color",
+        "interpolation.palfx.hue",
+        "interpolation.palfx.mul",
+        "interpolation.scale",
+        "interpolation.time",
+        "interpolation.xangle",
+        "interpolation.xshear",
+        "interpolation.yangle",
+        "layerno",
+        "ontop",
+        "ownpal",
+        "pausemovetime",
+        "pos",
+        "projection",
+        "random",
+        "redirectid",
+        "reflection",
+        "remappal",
+        "removeonchangestate",
+        "removeongethit",
+        "removetime",
+        "scale",
+        "shader.playerno",
+        "shader.time",
+        "shadow",
+        "spriteplayerno",
+        "sprpriority",
+        "supermove",
+        "supermovetime",
+        "syncid",
+        "synclayer",
+        "syncparams",
+        "under",
+        "vel",
+        "velocity",
+        "vfacing",
+        "window",
+        "xangle",
+        "xshear",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImageSub",
+        "explod",
+        "explodInterpolate",
+        "explodSub",
+        "palFXSub",
+        "shaderSub"
+      ],
+      "unresolvedExtraction": [
+        "afterImageSub: dynamic parameter names",
+        "palFXSub: dynamic parameter names",
+        "shaderSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "explodbindtime",
+      "compilerFunction": "explodBindTime",
+      "parameterCandidates": [
+        "id",
+        "redirectid",
+        "time",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "explodBindTime"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "fallenvshake",
+      "compilerFunction": "fallEnvShake",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "fallEnvShake"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "forcefeedback",
+      "compilerFunction": "forceFeedback",
+      "parameterCandidates": [
+        "ampl",
+        "freq",
+        "hi",
+        "lo",
+        "redirectid",
+        "self",
+        "time",
+        "waveform"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "forceFeedback"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "gamemakeanim",
+      "compilerFunction": "gameMakeAnim",
+      "parameterCandidates": [
+        "pos",
+        "random",
+        "redirectid",
+        "under",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "gameMakeAnim"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "gravity",
+      "compilerFunction": "gravity",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "gravity"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "helper",
+      "compilerFunction": "helper",
+      "parameterCandidates": [
+        "clsnproxy",
+        "extendsmap",
+        "facing",
+        "helpertype",
+        "id",
+        "immortal",
+        "inheritchannels",
+        "inheritjuggle",
+        "keyctrl",
+        "kovelocity",
+        "name",
+        "ownclsnscale",
+        "ownpal",
+        "ownprojectile",
+        "pausemovetime",
+        "pos",
+        "preserve",
+        "redirectid",
+        "remappal",
+        "size.air.back",
+        "size.air.front",
+        "size.depth",
+        "size.ground.back",
+        "size.ground.front",
+        "size.head.pos",
+        "size.height",
+        "size.mid.pos",
+        "size.proj.doscale",
+        "size.pushfactor",
+        "size.shadowoffset",
+        "size.weight",
+        "size.xscale",
+        "size.yscale",
+        "standby",
+        "stateno",
+        "supermovetime"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "helper"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitadd",
+      "compilerFunction": "hitAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitby",
+      "compilerFunction": "hitBy",
+      "parameterCandidates": [
+        "attr",
+        "clsn.group",
+        "clsn.index",
+        "playerid",
+        "playerno",
+        "redirectid",
+        "slot",
+        "stack",
+        "time",
+        "value",
+        "value2"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitBy",
+        "hitBySub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitdef",
+      "compilerFunction": "hitDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDef",
+        "hitDefSub",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitfalldamage",
+      "compilerFunction": "hitFallDamage",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitFallDamage"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitfallset",
+      "compilerFunction": "hitFallSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value",
+        "xvel",
+        "yvel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitFallSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitfallvel",
+      "compilerFunction": "hitFallVel",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitFallVel"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitoverride",
+      "compilerFunction": "hitOverride",
+      "parameterCandidates": [
+        "attr",
+        "forceair",
+        "forceguard",
+        "guardflag",
+        "guardflag.not",
+        "keepstate",
+        "redirectid",
+        "slot",
+        "stateno",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitOverride"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "hitvelset",
+      "compilerFunction": "hitVelSet",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitVelSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "lifeadd",
+      "compilerFunction": "lifeAdd",
+      "parameterCandidates": [
+        "absolute",
+        "kill",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "lifeAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "lifeset",
+      "compilerFunction": "lifeSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "lifeSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "makedust",
+      "compilerFunction": "makeDust",
+      "parameterCandidates": [
+        "pos",
+        "pos2",
+        "redirectid",
+        "spacing"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "makeDust"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyexplod",
+      "compilerFunction": "modifyExplod",
+      "parameterCandidates": [
+        "accel",
+        "angle",
+        "anim",
+        "animelem",
+        "animelemtime",
+        "animfreeze",
+        "animplayerno",
+        "bindid",
+        "bindtime",
+        "facing",
+        "focallength",
+        "friction",
+        "hidewithbars",
+        "id",
+        "ignorehitpause",
+        "index",
+        "interpolation",
+        "interpolation.alpha",
+        "interpolation.angle",
+        "interpolation.animelem",
+        "interpolation.focallength",
+        "interpolation.offset",
+        "interpolation.palfx.add",
+        "interpolation.palfx.color",
+        "interpolation.palfx.hue",
+        "interpolation.palfx.mul",
+        "interpolation.scale",
+        "interpolation.time",
+        "interpolation.xangle",
+        "interpolation.xshear",
+        "interpolation.yangle",
+        "layerno",
+        "ontop",
+        "ownpal",
+        "pausemovetime",
+        "pos",
+        "projection",
+        "random",
+        "redirectid",
+        "reflection",
+        "remappal",
+        "removeonchangestate",
+        "removeongethit",
+        "removetime",
+        "scale",
+        "shader.playerno",
+        "shader.time",
+        "shadow",
+        "spriteplayerno",
+        "sprpriority",
+        "supermove",
+        "supermovetime",
+        "syncid",
+        "synclayer",
+        "syncparams",
+        "under",
+        "vel",
+        "velocity",
+        "vfacing",
+        "window",
+        "xangle",
+        "xshear",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImageSub",
+        "explodInterpolate",
+        "explodSub",
+        "modifyExplod",
+        "palFXSub",
+        "shaderSub"
+      ],
+      "unresolvedExtraction": [
+        "afterImageSub: dynamic parameter names",
+        "palFXSub: dynamic parameter names",
+        "shaderSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "movehitreset",
+      "compilerFunction": "moveHitReset",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "moveHitReset"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "nothitby",
+      "compilerFunction": "notHitBy",
+      "parameterCandidates": [
+        "attr",
+        "clsn.group",
+        "clsn.index",
+        "playerid",
+        "playerno",
+        "redirectid",
+        "slot",
+        "stack",
+        "time",
+        "value",
+        "value2"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitBySub",
+        "notHitBy"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "null",
+      "compilerFunction": "null",
+      "parameterCandidates": [],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "null"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "offset",
+      "compilerFunction": "offset",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "offset"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "palfx",
+      "compilerFunction": "palFX",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "palFX",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "parentvaradd",
+      "compilerFunction": "parentVarAdd",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "parentVarAdd",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "parentvarset",
+      "compilerFunction": "parentVarSet",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "parentVarSet",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "pause",
+      "compilerFunction": "pause",
+      "parameterCandidates": [
+        "endcmdbuftime",
+        "movetime",
+        "pausebg",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "pause"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "playerpush",
+      "compilerFunction": "playerPush",
+      "parameterCandidates": [
+        "affectteam",
+        "priority",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "playerPush"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "playsnd",
+      "compilerFunction": "playSnd",
+      "parameterCandidates": [
+        "abspan",
+        "channel",
+        "freqmul",
+        "loop",
+        "loopcount",
+        "loopend",
+        "loopstart",
+        "lowpriority",
+        "pan",
+        "priority",
+        "redirectid",
+        "startposition",
+        "stoponchangestate",
+        "stopongethit",
+        "value",
+        "volume",
+        "volumescale"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "playSnd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "posadd",
+      "compilerFunction": "posAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posAdd",
+        "posSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "posfreeze",
+      "compilerFunction": "posFreeze",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posFreeze"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "posset",
+      "compilerFunction": "posSet",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posSet",
+        "posSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "poweradd",
+      "compilerFunction": "powerAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "powerAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "powerset",
+      "compilerFunction": "powerSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "powerSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "projectile",
+      "compilerFunction": "projectile",
+      "parameterCandidates": [
+        "accel",
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "offset",
+        "ownpal",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausemovetime",
+        "pausetime",
+        "priority",
+        "projangle",
+        "projanim",
+        "projcancelanim",
+        "projclsnangle",
+        "projclsnscale",
+        "projdepthbound",
+        "projedgebound",
+        "projfocallength",
+        "projheightbound",
+        "projhitanim",
+        "projhits",
+        "projid",
+        "projlayerno",
+        "projmisstime",
+        "projpriority",
+        "projprojection",
+        "projreflection",
+        "projremanim",
+        "projremove",
+        "projremovetime",
+        "projscale",
+        "projshadow",
+        "projsprpriority",
+        "projstagebound",
+        "projwindow",
+        "projxangle",
+        "projxshear",
+        "projyangle",
+        "redirectid",
+        "redlife",
+        "remappal",
+        "remvelocity",
+        "score",
+        "shader.playerno",
+        "shader.time",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "supermovetime",
+        "teamside",
+        "unhittabletime",
+        "velmul",
+        "velocity",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImageSub",
+        "hitDefSub",
+        "palFXSub",
+        "projectile",
+        "projectileSub",
+        "shaderSub"
+      ],
+      "unresolvedExtraction": [
+        "afterImageSub: dynamic parameter names",
+        "palFXSub: dynamic parameter names",
+        "shaderSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "remappal",
+      "compilerFunction": "remapPal",
+      "parameterCandidates": [
+        "dest",
+        "redirectid",
+        "source"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "remapPal"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "removeexplod",
+      "compilerFunction": "removeExplod",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "removeExplod"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "removetext",
+      "compilerFunction": "removeText",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "removeText"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "reversaldef",
+      "compilerFunction": "reversalDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "reversal.attr",
+        "reversal.guardflag",
+        "reversal.guardflag.not",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDefSub",
+        "palFXSub",
+        "reversalDef"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "runstate",
+      "compilerFunction": "runState",
+      "parameterCandidates": [
+        "playerno",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "runState"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "screenbound",
+      "compilerFunction": "screenBound",
+      "parameterCandidates": [
+        "movecamera",
+        "redirectid",
+        "stagebound",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "screenBound"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "selfstate",
+      "compilerFunction": "selfState",
+      "parameterCandidates": [
+        "anim",
+        "continue",
+        "ctrl",
+        "readplayerid",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeStateSub",
+        "selfState"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "sndpan",
+      "compilerFunction": "sndPan",
+      "parameterCandidates": [
+        "abspan",
+        "channel",
+        "pan",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "sndPan"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "sprpriority",
+      "compilerFunction": "sprPriority",
+      "parameterCandidates": [
+        "layerno",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "sprPriority"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "statetypeset",
+      "compilerFunction": "stateTypeSet",
+      "parameterCandidates": [
+        "movetype",
+        "physics",
+        "redirectid",
+        "statetype",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "stateTypeSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "stopsnd",
+      "compilerFunction": "stopSnd",
+      "parameterCandidates": [
+        "channel",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "stopSnd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "superpause",
+      "compilerFunction": "superPause",
+      "parameterCandidates": [
+        "anim",
+        "brightness",
+        "darken",
+        "endcmdbuftime",
+        "movetime",
+        "p2defmul",
+        "pausebg",
+        "pos",
+        "poweradd",
+        "redirectid",
+        "sound",
+        "time",
+        "unhittable"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "superPause"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetbind",
+      "compilerFunction": "targetBind",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "pos",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetBind"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetdrop",
+      "compilerFunction": "targetDrop",
+      "parameterCandidates": [
+        "excludeid",
+        "keepone",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetDrop"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetfacing",
+      "compilerFunction": "targetFacing",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetFacing"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetlifeadd",
+      "compilerFunction": "targetLifeAdd",
+      "parameterCandidates": [
+        "absolute",
+        "dizzy",
+        "id",
+        "index",
+        "kill",
+        "redirectid",
+        "redlife",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetLifeAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetpoweradd",
+      "compilerFunction": "targetPowerAdd",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetPowerAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetstate",
+      "compilerFunction": "targetState",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetState"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetveladd",
+      "compilerFunction": "targetVelAdd",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetVelAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetvelset",
+      "compilerFunction": "targetVelSet",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetVelSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "trans",
+      "compilerFunction": "trans",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "trans"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "turn",
+      "compilerFunction": "turn",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "turn"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varadd",
+      "compilerFunction": "varAdd",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "varAdd",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varrandom",
+      "compilerFunction": "varRandom",
+      "parameterCandidates": [
+        "range",
+        "redirectid",
+        "v"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "varRandom"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varrangeset",
+      "compilerFunction": "varRangeSet",
+      "parameterCandidates": [
+        "first",
+        "fvalue",
+        "last",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "varRangeSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varset",
+      "compilerFunction": "varSet",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "varSet",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "veladd",
+      "compilerFunction": "velAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posSetSub",
+        "velAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "velmul",
+      "compilerFunction": "velMul",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posSetSub",
+        "velMul"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "velset",
+      "compilerFunction": "velSet",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "posSetSub",
+        "velSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "victoryquote",
+      "compilerFunction": "victoryQuote",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "victoryQuote"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "width",
+      "compilerFunction": "width",
+      "parameterCandidates": [
+        "edge",
+        "player",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "width"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "zoom",
+      "compilerFunction": "zoom",
+      "parameterCandidates": [
+        "camerabound",
+        "endlag",
+        "lag",
+        "pos",
+        "scale",
+        "stagebound",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "zoom"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertanalogvector",
+      "compilerFunction": "assertAnalogVector",
+      "parameterCandidates": [
+        "lefttrigger",
+        "leftx",
+        "lefty",
+        "redirectid",
+        "righttrigger",
+        "rightx",
+        "righty"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertAnalogVector"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertcommand",
+      "compilerFunction": "assertCommand",
+      "parameterCandidates": [
+        "buffer.time",
+        "name",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertCommand"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertinput",
+      "compilerFunction": "assertInput",
+      "parameterCandidates": [
+        "flag",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertInput"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "camera",
+      "compilerFunction": "cameraCtrl",
+      "parameterCandidates": [
+        "followid",
+        "pos",
+        "view"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "cameraCtrl"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "changemovelist",
+      "compilerFunction": "changeMovelist",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeMovelist"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "depth",
+      "compilerFunction": "depth",
+      "parameterCandidates": [
+        "edge",
+        "player",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "depth"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "depthbound",
+      "compilerFunction": "depthBound",
+      "parameterCandidates": [
+        "movecamera",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "depthBound"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dialogue",
+      "compilerFunction": "dialogue",
+      "parameterCandidates": [
+        "force",
+        "hidebars",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dialogue"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzypointsadd",
+      "compilerFunction": "dizzyPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzyPointsAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzypointsset",
+      "compilerFunction": "dizzyPointsSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzyPointsSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzyset",
+      "compilerFunction": "dizzySet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzySet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "gethitvarset",
+      "compilerFunction": "getHitVarSet",
+      "parameterCandidates": [
+        "airtype",
+        "animtype",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "ctrltime",
+        "damage",
+        "dizzypoints",
+        "down.recover",
+        "down.recovertime",
+        "fall",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.decay",
+        "fall.envshake.dir",
+        "fall.envshake.diradd",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvel",
+        "fall.yvel",
+        "fall.zvel",
+        "fallcount",
+        "groundtype",
+        "guardcount",
+        "guarded",
+        "guardpoints",
+        "hitcount",
+        "hitshaketime",
+        "hittime",
+        "playerid",
+        "playerno",
+        "projid",
+        "redirectid",
+        "redlife",
+        "slidetime",
+        "stand.friction",
+        "teamside",
+        "xaccel",
+        "xvel",
+        "yaccel",
+        "yvel",
+        "zaccel",
+        "zvel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "getHitVarSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "groundleveloffset",
+      "compilerFunction": "groundLevelOffset",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "groundLevelOffset"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardbreakset",
+      "compilerFunction": "guardBreakSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardBreakSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardpointsadd",
+      "compilerFunction": "guardPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardPointsAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardpointsset",
+      "compilerFunction": "guardPointsSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardPointsSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "height",
+      "compilerFunction": "height",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "height"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "lifebaraction",
+      "compilerFunction": "lifebarAction",
+      "parameterCandidates": [
+        "anim",
+        "font.align",
+        "font.bank",
+        "font.color",
+        "font.no",
+        "redirectid",
+        "refreshtype",
+        "snd",
+        "spr",
+        "text",
+        "time",
+        "timemul",
+        "top"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "lifebarAction",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "loadfile",
+      "compilerFunction": "loadFile",
+      "parameterCandidates": [
+        "maps",
+        "maps.include",
+        "path",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "loadFile",
+        "saveLoadFileSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "loadstate",
+      "compilerFunction": "loadState",
+      "parameterCandidates": [],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "loadState"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapadd",
+      "compilerFunction": "mapAdd",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapAdd",
+        "mapSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapreset",
+      "compilerFunction": "mapReset",
+      "parameterCandidates": [
+        "exclude",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapReset"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapset",
+      "compilerFunction": "mapSet",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSet",
+        "mapSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "matchrestart",
+      "compilerFunction": "matchRestart",
+      "parameterCandidates": [
+        "p1def",
+        "p1palette",
+        "p2def",
+        "p2palette",
+        "p3def",
+        "p3palette",
+        "p4def",
+        "p4palette",
+        "p5def",
+        "p5palette",
+        "p6def",
+        "p6palette",
+        "p7def",
+        "p7palette",
+        "p8def",
+        "p8palette",
+        "preservevars",
+        "reload",
+        "resetmatch",
+        "stagedef"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "matchRestart"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgctrl",
+      "compilerFunction": "modifyBGCtrl",
+      "parameterCandidates": [
+        "add",
+        "color",
+        "dest",
+        "hue",
+        "id",
+        "invertall",
+        "invertblend",
+        "mul",
+        "sinadd",
+        "sincolor",
+        "sinhue",
+        "sinmul",
+        "source",
+        "time",
+        "value",
+        "x",
+        "y"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBGCtrl"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgctrl3d",
+      "compilerFunction": "modifyBGCtrl3d",
+      "parameterCandidates": [
+        "id",
+        "time",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBGCtrl3d"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgm",
+      "compilerFunction": "modifyBgm",
+      "parameterCandidates": [
+        "freqmul",
+        "loopcount",
+        "loopend",
+        "loopstart",
+        "position",
+        "volume"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBgm"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyhitdef",
+      "compilerFunction": "modifyHitDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDefSub",
+        "modifyHitDef",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyplayer",
+      "compilerFunction": "modifyPlayer",
+      "parameterCandidates": [
+        "ailevel",
+        "alive",
+        "attack",
+        "defence",
+        "displayname",
+        "dizzypointsmax",
+        "guardpointsmax",
+        "helpername",
+        "helpervar.id",
+        "hitpausetime",
+        "lifebarname",
+        "lifemax",
+        "movecountered",
+        "moveguarded",
+        "movehit",
+        "movereversed",
+        "pausemovetime",
+        "powermax",
+        "redirectid",
+        "supermovetime",
+        "teamside",
+        "unhittabletime"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyPlayer"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyprojectile",
+      "compilerFunction": "modifyProjectile",
+      "parameterCandidates": [
+        "accel",
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "index",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "offset",
+        "ownpal",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausemovetime",
+        "pausetime",
+        "priority",
+        "projangle",
+        "projanim",
+        "projcancelanim",
+        "projclsnangle",
+        "projclsnscale",
+        "projdepthbound",
+        "projedgebound",
+        "projfocallength",
+        "projheightbound",
+        "projhitanim",
+        "projhits",
+        "projid",
+        "projlayerno",
+        "projmisstime",
+        "projpriority",
+        "projprojection",
+        "projreflection",
+        "projremanim",
+        "projremove",
+        "projremovetime",
+        "projscale",
+        "projshadow",
+        "projsprpriority",
+        "projstagebound",
+        "projwindow",
+        "projxangle",
+        "projxshear",
+        "projyangle",
+        "redirectid",
+        "redlife",
+        "remappal",
+        "remvelocity",
+        "score",
+        "shader.playerno",
+        "shader.time",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "supermovetime",
+        "teamside",
+        "unhittabletime",
+        "velmul",
+        "velocity",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "afterImageSub",
+        "hitDefSub",
+        "modifyProjectile",
+        "palFXSub",
+        "projectileSub",
+        "shaderSub"
+      ],
+      "unresolvedExtraction": [
+        "afterImageSub: dynamic parameter names",
+        "palFXSub: dynamic parameter names",
+        "shaderSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyreflection",
+      "compilerFunction": "modifyReflection",
+      "parameterCandidates": [
+        "angle",
+        "anim",
+        "animelem",
+        "animplayerno",
+        "color",
+        "focallength",
+        "intensity",
+        "keeptransform",
+        "offset",
+        "projection",
+        "redirectid",
+        "spriteplayerno",
+        "window",
+        "x",
+        "xangle",
+        "xscale",
+        "xshear",
+        "y",
+        "yangle",
+        "yscale",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyReflection",
+        "posSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyreversaldef",
+      "compilerFunction": "modifyReversalDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "reversal.attr",
+        "reversal.guardflag",
+        "reversal.guardflag.not",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDefSub",
+        "modifyReversalDef",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyshadow",
+      "compilerFunction": "modifyShadow",
+      "parameterCandidates": [
+        "angle",
+        "anim",
+        "animelem",
+        "animplayerno",
+        "color",
+        "focallength",
+        "intensity",
+        "keeptransform",
+        "offset",
+        "projection",
+        "redirectid",
+        "spriteplayerno",
+        "window",
+        "x",
+        "xangle",
+        "xscale",
+        "xshear",
+        "y",
+        "yangle",
+        "yscale",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyShadow",
+        "posSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifysnd",
+      "compilerFunction": "modifySnd",
+      "parameterCandidates": [
+        "abspan",
+        "channel",
+        "freqmul",
+        "loop",
+        "loopcount",
+        "loopend",
+        "loopstart",
+        "pan",
+        "position",
+        "priority",
+        "redirectid",
+        "stoponchangestate",
+        "stopongethit",
+        "volume",
+        "volumescale"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifySnd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifystagebg",
+      "compilerFunction": "modifyStageBG",
+      "parameterCandidates": [
+        "actionno",
+        "angle",
+        "delta.x",
+        "delta.y",
+        "focallength",
+        "id",
+        "index",
+        "layerno",
+        "pos.x",
+        "pos.y",
+        "projection",
+        "redirectid",
+        "scalestart",
+        "spriteno",
+        "start.x",
+        "start.y",
+        "trans",
+        "velocity.x",
+        "velocity.y",
+        "xangle",
+        "xshear",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyStageBG",
+        "palFXSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifystagevar",
+      "compilerFunction": "modifyStageVar",
+      "parameterCandidates": [
+        "bound.screenleft",
+        "bound.screenright",
+        "camera.autocenter",
+        "camera.boundhigh",
+        "camera.boundleft",
+        "camera.boundlow",
+        "camera.boundright",
+        "camera.cuthigh",
+        "camera.cutlow",
+        "camera.floortension",
+        "camera.lowestcap",
+        "camera.startzoom",
+        "camera.tension",
+        "camera.tensionhigh",
+        "camera.tensionlow",
+        "camera.tensionvel",
+        "camera.verticalfollow",
+        "camera.yscrollspeed",
+        "camera.ytension.enable",
+        "camera.zautocenter",
+        "camera.zboundbot",
+        "camera.zboundtop",
+        "camera.zoomin",
+        "camera.zoomindelay",
+        "camera.zoominspeed",
+        "camera.zoomout",
+        "camera.zoomoutspeed",
+        "camera.ztension",
+        "camera.ztensionvel",
+        "playerinfo.botbound",
+        "playerinfo.leftbound",
+        "playerinfo.p1facing",
+        "playerinfo.p1startx",
+        "playerinfo.p1starty",
+        "playerinfo.p1startz",
+        "playerinfo.p2facing",
+        "playerinfo.p2startx",
+        "playerinfo.p2starty",
+        "playerinfo.p2startz",
+        "playerinfo.rightbound",
+        "playerinfo.topbound",
+        "reflection.angle",
+        "reflection.color",
+        "reflection.fade.range",
+        "reflection.focallength",
+        "reflection.intensity",
+        "reflection.offset",
+        "reflection.projection",
+        "reflection.window",
+        "reflection.xangle",
+        "reflection.xshear",
+        "reflection.yangle",
+        "reflection.ydelta",
+        "reflection.yscale",
+        "scaling.botscale",
+        "scaling.botz",
+        "scaling.topscale",
+        "scaling.topz",
+        "shadow.angle",
+        "shadow.color",
+        "shadow.fade.range",
+        "shadow.focallength",
+        "shadow.intensity",
+        "shadow.offset",
+        "shadow.projection",
+        "shadow.window",
+        "shadow.xangle",
+        "shadow.xshear",
+        "shadow.yangle",
+        "shadow.ydelta",
+        "shadow.yscale",
+        "stageinfo.autoturn",
+        "stageinfo.resetbg",
+        "stageinfo.xscale",
+        "stageinfo.yscale",
+        "stageinfo.zoffset",
+        "stageinfo.zoffsetlink"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyStageVar"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifystoryboard",
+      "compilerFunction": "modifyStoryboard",
+      "parameterCandidates": [
+        "bindid",
+        "bindtime",
+        "facing",
+        "id",
+        "pos",
+        "redirectid",
+        "scale"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyStoryboard",
+        "storyboardSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifytext",
+      "compilerFunction": "modifyText",
+      "parameterCandidates": [
+        "accel",
+        "align",
+        "angle",
+        "bank",
+        "color",
+        "focallength",
+        "font",
+        "friction",
+        "hidewithbars",
+        "id",
+        "index",
+        "layerno",
+        "localcoord",
+        "maxdist",
+        "params",
+        "pos",
+        "projection",
+        "redirectid",
+        "removetime",
+        "scale",
+        "text",
+        "textdelay",
+        "textspacing",
+        "velocity",
+        "xangle",
+        "xshear",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyText",
+        "palFXSub",
+        "textSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "overrideclsn",
+      "compilerFunction": "overrideClsn",
+      "parameterCandidates": [
+        "group",
+        "index",
+        "rect",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "overrideClsn"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "parentmapadd",
+      "compilerFunction": "parentMapAdd",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "parentMapAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "parentmapset",
+      "compilerFunction": "parentMapSet",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "parentMapSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "playbgm",
+      "compilerFunction": "playBgm",
+      "parameterCandidates": [
+        "bgm",
+        "freqmul",
+        "loop",
+        "loopcount",
+        "loopend",
+        "loopstart",
+        "redirectid",
+        "source",
+        "startposition",
+        "volume"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "playBgm"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "printtoconsole",
+      "compilerFunction": "printToConsole",
+      "parameterCandidates": [
+        "params",
+        "redirectid",
+        "text"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "displayToClipboardSub",
+        "printToConsole"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "redlifeadd",
+      "compilerFunction": "redLifeAdd",
+      "parameterCandidates": [
+        "absolute",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "redLifeAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "redlifeset",
+      "compilerFunction": "redLifeSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "redLifeSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "remapsprite",
+      "compilerFunction": "remapSprite",
+      "parameterCandidates": [
+        "dest",
+        "preset",
+        "redirectid",
+        "reset",
+        "source"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "remapSprite"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "removestoryboard",
+      "compilerFunction": "removeStoryboard",
+      "parameterCandidates": [
+        "id",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "removeStoryboard"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "rootmapadd",
+      "compilerFunction": "rootMapAdd",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "rootMapAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "rootmapset",
+      "compilerFunction": "rootMapSet",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "rootMapSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "rootvaradd",
+      "compilerFunction": "rootVarAdd",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "rootVarAdd",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "rootvarset",
+      "compilerFunction": "rootVarSet",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "rootVarSet",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "roundtimeadd",
+      "compilerFunction": "roundTimeAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "roundTimeAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "roundtimeset",
+      "compilerFunction": "roundTimeSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "roundTimeSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "savefile",
+      "compilerFunction": "saveFile",
+      "parameterCandidates": [
+        "maps",
+        "maps.include",
+        "path",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "saveFile",
+        "saveLoadFileSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "savestate",
+      "compilerFunction": "saveState",
+      "parameterCandidates": [],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "saveState"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "scoreadd",
+      "compilerFunction": "scoreAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "scoreAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "shaderset",
+      "compilerFunction": "shaderSet",
+      "parameterCandidates": [
+        "playerno",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "shaderSet",
+        "shaderSub"
+      ],
+      "unresolvedExtraction": [
+        "shaderSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "shiftinput",
+      "compilerFunction": "shiftInput",
+      "parameterCandidates": [
+        "input",
+        "output",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "shiftInput"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "storyboard",
+      "compilerFunction": "storyboard",
+      "parameterCandidates": [
+        "bindid",
+        "bindtime",
+        "facing",
+        "id",
+        "path",
+        "pos",
+        "redirectid",
+        "scale"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "storyboard",
+        "storyboardSub"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "tagin",
+      "compilerFunction": "tagIn",
+      "parameterCandidates": [
+        "ctrl",
+        "leader",
+        "memberno",
+        "partner",
+        "partnerctrl",
+        "partnerstateno",
+        "redirectid",
+        "self",
+        "stateno"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "tagIn"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "tagout",
+      "compilerFunction": "tagOut",
+      "parameterCandidates": [
+        "memberno",
+        "partner",
+        "partnerstateno",
+        "redirectid",
+        "self",
+        "stateno"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "tagOut"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetadd",
+      "compilerFunction": "targetAdd",
+      "parameterCandidates": [
+        "playerid",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetdizzypointsadd",
+      "compilerFunction": "targetDizzyPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "id",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetDizzyPointsAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetguardpointsadd",
+      "compilerFunction": "targetGuardPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "id",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetGuardPointsAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetredlifeadd",
+      "compilerFunction": "targetRedLifeAdd",
+      "parameterCandidates": [
+        "absolute",
+        "id",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetRedLifeAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetscoreadd",
+      "compilerFunction": "targetScoreAdd",
+      "parameterCandidates": [
+        "id",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "targetScoreAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "teammapadd",
+      "compilerFunction": "teamMapAdd",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "teamMapAdd"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "teammapset",
+      "compilerFunction": "teamMapSet",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSetSub",
+        "teamMapSet"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "text",
+      "compilerFunction": "text",
+      "parameterCandidates": [
+        "accel",
+        "align",
+        "angle",
+        "bank",
+        "color",
+        "focallength",
+        "font",
+        "friction",
+        "hidewithbars",
+        "id",
+        "layerno",
+        "localcoord",
+        "maxdist",
+        "params",
+        "pos",
+        "projection",
+        "redirectid",
+        "removetime",
+        "scale",
+        "text",
+        "textdelay",
+        "textspacing",
+        "velocity",
+        "xangle",
+        "xshear",
+        "yangle"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "palFXSub",
+        "text",
+        "textSub"
+      ],
+      "unresolvedExtraction": [
+        "palFXSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "transformclsn",
+      "compilerFunction": "transformClsn",
+      "parameterCandidates": [
+        "angle",
+        "group",
+        "index",
+        "pivot",
+        "redirectid",
+        "scale"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "transformClsn"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "transformsprite",
+      "compilerFunction": "transformSprite",
+      "parameterCandidates": [
+        "focallength",
+        "projection",
+        "redirectid",
+        "window",
+        "xshear"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "transformSprite"
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    }
+  ]
+}

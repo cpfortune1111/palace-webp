@@ -1,0 +1,173 @@
+# Controller compatibility work ledger
+
+Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; 163 registered controllers.
+
+This is a source inventory, not a claim of full compatibility. Parameter candidates require semantic review; dynamic names and delegated parsing require manual verification. Existing execution paths are not automatically certified.
+
+Completion requires each controller and parameter to have native defaults, expression evaluation, ownership/redirection, pause/persistence semantics, executable tests, and game regression coverage. Unsupported features must not be silently ignored.
+
+| Controller | Parameter candidates | Extraction follow-up | Semantic certification |
+| --- | --- | --- | --- |
+| afterimage | redirectid | afterImageSub: dynamic parameter names | Pending |
+| afterimagetime | redirectid, time, value | Review delegated parser/defaults | Pending |
+| allpalfx | None extracted; verify reference | palFXSub: dynamic parameter names | Pending |
+| angleadd | redirectid, value, xangle, yangle | Review delegated parser/defaults | Pending |
+| angledraw | pivot, redirectid, scale, value, xangle, yangle | Review delegated parser/defaults | Pending |
+| anglemul | redirectid, value, xangle, yangle | Review delegated parser/defaults | Pending |
+| angleset | redirectid, value, xangle, yangle | Review delegated parser/defaults | Pending |
+| appendtoclipboard | params, redirectid, text | Review delegated parser/defaults | Pending |
+| assertspecial | enabled, flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, redirectid | Review delegated parser/defaults | Pending |
+| attackdist | depth, height, redirectid, value, width | Review delegated parser/defaults | Pending |
+| attackmulset | damage, dizzypoints, guardpoints, redirectid, redlife, value | Review delegated parser/defaults | Pending |
+| bgpalfx | id, index | palFXSub: dynamic parameter names | Pending |
+| bindtoparent | facing, pos, redirectid, time | Review delegated parser/defaults | Pending |
+| bindtoroot | facing, pos, redirectid, time | Review delegated parser/defaults | Pending |
+| bindtotarget | id, index, pos, posz, redirectid, time | Review delegated parser/defaults | Pending |
+| changeanim | animplayerno, elem, elemtime, readplayerid, redirectid, spriteplayerno, value | Review delegated parser/defaults | Pending |
+| changeanim2 | animplayerno, elem, elemtime, readplayerid, redirectid, spriteplayerno, value | Review delegated parser/defaults | Pending |
+| changestate | anim, continue, ctrl, readplayerid, redirectid, value | Review delegated parser/defaults | Pending |
+| clearclipboard | redirectid | Review delegated parser/defaults | Pending |
+| ctrlset | redirectid, value | Review delegated parser/defaults | Pending |
+| defencemulset | multype | Review delegated parser/defaults | Pending |
+| destroyself | recursive, redirectid, removeexplods, removetexts | Review delegated parser/defaults | Pending |
+| displaytoclipboard | params, redirectid, text | Review delegated parser/defaults | Pending |
+| envcolor | time, under, value | Review delegated parser/defaults | Pending |
+| envshake | ampl, decay, dir, diradd, freq, mul, phase, time | Review delegated parser/defaults | Pending |
+| explod | accel, angle, anim, animelem, animelemtime, animfreeze, animplayerno, bindid, bindtime, facing, focallength, friction, hidewithbars, id, ignorehitpause, interpolation.alpha, interpolation.angle, interpolation.animelem, interpolation.focallength, interpolation.offset, interpolation.palfx.add, interpolation.palfx.color, interpolation.palfx.hue, interpolation.palfx.mul, interpolation.scale, interpolation.time, interpolation.xangle, interpolation.xshear, interpolation.yangle, layerno, ontop, ownpal, pausemovetime, pos, projection, random, redirectid, reflection, remappal, removeonchangestate, removeongethit, removetime, scale, shader.playerno, shader.time, shadow, spriteplayerno, sprpriority, supermove, supermovetime, syncid, synclayer, syncparams, under, vel, velocity, vfacing, window, xangle, xshear, yangle | afterImageSub: dynamic parameter names, palFXSub: dynamic parameter names, shaderSub: dynamic parameter names | Pending |
+| explodbindtime | id, redirectid, time, value | Review delegated parser/defaults | Pending |
+| fallenvshake | redirectid | Review delegated parser/defaults | Pending |
+| forcefeedback | ampl, freq, hi, lo, redirectid, self, time, waveform | Review delegated parser/defaults | Pending |
+| gamemakeanim | pos, random, redirectid, under, value | Review delegated parser/defaults | Pending |
+| gravity | redirectid | Review delegated parser/defaults | Pending |
+| helper | clsnproxy, extendsmap, facing, helpertype, id, immortal, inheritchannels, inheritjuggle, keyctrl, kovelocity, name, ownclsnscale, ownpal, ownprojectile, pausemovetime, pos, preserve, redirectid, remappal, size.air.back, size.air.front, size.depth, size.ground.back, size.ground.front, size.head.pos, size.height, size.mid.pos, size.proj.doscale, size.pushfactor, size.shadowoffset, size.weight, size.xscale, size.yscale, standby, stateno, supermovetime | Review delegated parser/defaults | Pending |
+| hitadd | redirectid, value | Review delegated parser/defaults | Pending |
+| hitby | attr, clsn.group, clsn.index, playerid, playerno, redirectid, slot, stack, time, value, value2 | Review delegated parser/defaults | Pending |
+| hitdef | affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausetime, priority, redirectid, redlife, score, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, teamside, unhittabletime, xaccel, yaccel, zaccel | palFXSub: dynamic parameter names | Pending |
+| hitfalldamage | redirectid | Review delegated parser/defaults | Pending |
+| hitfallset | redirectid, value, xvel, yvel | Review delegated parser/defaults | Pending |
+| hitfallvel | redirectid | Review delegated parser/defaults | Pending |
+| hitoverride | attr, forceair, forceguard, guardflag, guardflag.not, keepstate, redirectid, slot, stateno, time | Review delegated parser/defaults | Pending |
+| hitvelset | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| lifeadd | absolute, kill, redirectid, value | Review delegated parser/defaults | Pending |
+| lifeset | redirectid, value | Review delegated parser/defaults | Pending |
+| makedust | pos, pos2, redirectid, spacing | Review delegated parser/defaults | Pending |
+| modifyexplod | accel, angle, anim, animelem, animelemtime, animfreeze, animplayerno, bindid, bindtime, facing, focallength, friction, hidewithbars, id, ignorehitpause, index, interpolation, interpolation.alpha, interpolation.angle, interpolation.animelem, interpolation.focallength, interpolation.offset, interpolation.palfx.add, interpolation.palfx.color, interpolation.palfx.hue, interpolation.palfx.mul, interpolation.scale, interpolation.time, interpolation.xangle, interpolation.xshear, interpolation.yangle, layerno, ontop, ownpal, pausemovetime, pos, projection, random, redirectid, reflection, remappal, removeonchangestate, removeongethit, removetime, scale, shader.playerno, shader.time, shadow, spriteplayerno, sprpriority, supermove, supermovetime, syncid, synclayer, syncparams, under, vel, velocity, vfacing, window, xangle, xshear, yangle | afterImageSub: dynamic parameter names, palFXSub: dynamic parameter names, shaderSub: dynamic parameter names | Pending |
+| movehitreset | redirectid | Review delegated parser/defaults | Pending |
+| nothitby | attr, clsn.group, clsn.index, playerid, playerno, redirectid, slot, stack, time, value, value2 | Review delegated parser/defaults | Pending |
+| null | None extracted; verify reference | Review delegated parser/defaults | Pending |
+| offset | redirectid, x, y | Review delegated parser/defaults | Pending |
+| palfx | redirectid | palFXSub: dynamic parameter names | Pending |
+| parentvaradd | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| parentvarset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| pause | endcmdbuftime, movetime, pausebg, redirectid, time | Review delegated parser/defaults | Pending |
+| playerpush | affectteam, priority, redirectid, value | Review delegated parser/defaults | Pending |
+| playsnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, lowpriority, pan, priority, redirectid, startposition, stoponchangestate, stopongethit, value, volume, volumescale | Review delegated parser/defaults | Pending |
+| posadd | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| posfreeze | redirectid, value | Review delegated parser/defaults | Pending |
+| posset | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| poweradd | redirectid, value | Review delegated parser/defaults | Pending |
+| powerset | redirectid, value | Review delegated parser/defaults | Pending |
+| projectile | accel, affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, offset, ownpal, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausemovetime, pausetime, priority, projangle, projanim, projcancelanim, projclsnangle, projclsnscale, projdepthbound, projedgebound, projfocallength, projheightbound, projhitanim, projhits, projid, projlayerno, projmisstime, projpriority, projprojection, projreflection, projremanim, projremove, projremovetime, projscale, projshadow, projsprpriority, projstagebound, projwindow, projxangle, projxshear, projyangle, redirectid, redlife, remappal, remvelocity, score, shader.playerno, shader.time, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, supermovetime, teamside, unhittabletime, velmul, velocity, xaccel, yaccel, zaccel | afterImageSub: dynamic parameter names, palFXSub: dynamic parameter names, shaderSub: dynamic parameter names | Pending |
+| remappal | dest, redirectid, source | Review delegated parser/defaults | Pending |
+| removeexplod | id, index, redirectid | Review delegated parser/defaults | Pending |
+| removetext | id, index, redirectid | Review delegated parser/defaults | Pending |
+| reversaldef | affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausetime, priority, redirectid, redlife, reversal.attr, reversal.guardflag, reversal.guardflag.not, score, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, teamside, unhittabletime, xaccel, yaccel, zaccel | palFXSub: dynamic parameter names | Pending |
+| runstate | playerno, redirectid, value | Review delegated parser/defaults | Pending |
+| screenbound | movecamera, redirectid, stagebound, value | Review delegated parser/defaults | Pending |
+| selfstate | anim, continue, ctrl, readplayerid, redirectid, value | Review delegated parser/defaults | Pending |
+| sndpan | abspan, channel, pan, redirectid | Review delegated parser/defaults | Pending |
+| sprpriority | layerno, redirectid, value | Review delegated parser/defaults | Pending |
+| statetypeset | movetype, physics, redirectid, statetype, value | Review delegated parser/defaults | Pending |
+| stopsnd | channel, redirectid | Review delegated parser/defaults | Pending |
+| superpause | anim, brightness, darken, endcmdbuftime, movetime, p2defmul, pausebg, pos, poweradd, redirectid, sound, time, unhittable | Review delegated parser/defaults | Pending |
+| targetbind | id, index, pos, redirectid, time | Review delegated parser/defaults | Pending |
+| targetdrop | excludeid, keepone, redirectid | Review delegated parser/defaults | Pending |
+| targetfacing | id, index, redirectid, value | Review delegated parser/defaults | Pending |
+| targetlifeadd | absolute, dizzy, id, index, kill, redirectid, redlife, value | Review delegated parser/defaults | Pending |
+| targetpoweradd | id, index, redirectid, value | Review delegated parser/defaults | Pending |
+| targetstate | id, index, redirectid, value | Review delegated parser/defaults | Pending |
+| targetveladd | id, index, redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| targetvelset | id, index, redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| trans | redirectid | Review delegated parser/defaults | Pending |
+| turn | redirectid | Review delegated parser/defaults | Pending |
+| varadd | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| varrandom | range, redirectid, v | Review delegated parser/defaults | Pending |
+| varrangeset | first, fvalue, last, redirectid, value | Review delegated parser/defaults | Pending |
+| varset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| veladd | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| velmul | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| velset | redirectid, x, y, z | Review delegated parser/defaults | Pending |
+| victoryquote | redirectid, value | Review delegated parser/defaults | Pending |
+| width | edge, player, redirectid, value | Review delegated parser/defaults | Pending |
+| zoom | camerabound, endlag, lag, pos, scale, stagebound, time | Review delegated parser/defaults | Pending |
+| assertanalogvector | lefttrigger, leftx, lefty, redirectid, righttrigger, rightx, righty | Review delegated parser/defaults | Pending |
+| assertcommand | buffer.time, name, redirectid | Review delegated parser/defaults | Pending |
+| assertinput | flag, redirectid | Review delegated parser/defaults | Pending |
+| camera | followid, pos, view | Review delegated parser/defaults | Pending |
+| changemovelist | redirectid, value | Review delegated parser/defaults | Pending |
+| depth | edge, player, redirectid, value | Review delegated parser/defaults | Pending |
+| depthbound | movecamera, redirectid, value | Review delegated parser/defaults | Pending |
+| dialogue | force, hidebars, redirectid | Review delegated parser/defaults | Pending |
+| dizzypointsadd | absolute, redirectid, value | Review delegated parser/defaults | Pending |
+| dizzypointsset | redirectid, value | Review delegated parser/defaults | Pending |
+| dizzyset | redirectid, value | Review delegated parser/defaults | Pending |
+| gethitvarset | airtype, animtype, attr, chainid, crouch.friction, ctrltime, damage, dizzypoints, down.recover, down.recovertime, fall, fall.damage, fall.envshake.ampl, fall.envshake.decay, fall.envshake.dir, fall.envshake.diradd, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvel, fall.yvel, fall.zvel, fallcount, groundtype, guardcount, guarded, guardpoints, hitcount, hitshaketime, hittime, playerid, playerno, projid, redirectid, redlife, slidetime, stand.friction, teamside, xaccel, xvel, yaccel, yvel, zaccel, zvel | Review delegated parser/defaults | Pending |
+| groundleveloffset | redirectid, value | Review delegated parser/defaults | Pending |
+| guardbreakset | redirectid, value | Review delegated parser/defaults | Pending |
+| guardpointsadd | absolute, redirectid, value | Review delegated parser/defaults | Pending |
+| guardpointsset | redirectid, value | Review delegated parser/defaults | Pending |
+| height | redirectid, value | Review delegated parser/defaults | Pending |
+| lifebaraction | anim, font.align, font.bank, font.color, font.no, redirectid, refreshtype, snd, spr, text, time, timemul, top | palFXSub: dynamic parameter names | Pending |
+| loadfile | maps, maps.include, path, redirectid | Review delegated parser/defaults | Pending |
+| loadstate | None extracted; verify reference | Review delegated parser/defaults | Pending |
+| mapadd | map, redirectid, value | Review delegated parser/defaults | Pending |
+| mapreset | exclude, redirectid | Review delegated parser/defaults | Pending |
+| mapset | map, redirectid, value | Review delegated parser/defaults | Pending |
+| matchrestart | p1def, p1palette, p2def, p2palette, p3def, p3palette, p4def, p4palette, p5def, p5palette, p6def, p6palette, p7def, p7palette, p8def, p8palette, preservevars, reload, resetmatch, stagedef | Review delegated parser/defaults | Pending |
+| modifybgctrl | add, color, dest, hue, id, invertall, invertblend, mul, sinadd, sincolor, sinhue, sinmul, source, time, value, x, y | Review delegated parser/defaults | Pending |
+| modifybgctrl3d | id, time, value | Review delegated parser/defaults | Pending |
+| modifybgm | freqmul, loopcount, loopend, loopstart, position, volume | Review delegated parser/defaults | Pending |
+| modifyhitdef | affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausetime, priority, redirectid, redlife, score, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, teamside, unhittabletime, xaccel, yaccel, zaccel | palFXSub: dynamic parameter names | Pending |
+| modifyplayer | ailevel, alive, attack, defence, displayname, dizzypointsmax, guardpointsmax, helpername, helpervar.id, hitpausetime, lifebarname, lifemax, movecountered, moveguarded, movehit, movereversed, pausemovetime, powermax, redirectid, supermovetime, teamside, unhittabletime | Review delegated parser/defaults | Pending |
+| modifyprojectile | accel, affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, index, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, offset, ownpal, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausemovetime, pausetime, priority, projangle, projanim, projcancelanim, projclsnangle, projclsnscale, projdepthbound, projedgebound, projfocallength, projheightbound, projhitanim, projhits, projid, projlayerno, projmisstime, projpriority, projprojection, projreflection, projremanim, projremove, projremovetime, projscale, projshadow, projsprpriority, projstagebound, projwindow, projxangle, projxshear, projyangle, redirectid, redlife, remappal, remvelocity, score, shader.playerno, shader.time, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, supermovetime, teamside, unhittabletime, velmul, velocity, xaccel, yaccel, zaccel | afterImageSub: dynamic parameter names, palFXSub: dynamic parameter names, shaderSub: dynamic parameter names | Pending |
+| modifyreflection | angle, anim, animelem, animplayerno, color, focallength, intensity, keeptransform, offset, projection, redirectid, spriteplayerno, window, x, xangle, xscale, xshear, y, yangle, yscale, z | Review delegated parser/defaults | Pending |
+| modifyreversaldef | affectteam, air.animtype, air.cornerpush.velmul, air.cornerpush.veloff, air.fall, air.hittime, air.juggle, air.type, air.velocity, airguard.cornerpush.velmul, airguard.cornerpush.veloff, airguard.ctrltime, airguard.velocity, animtype, attack.depth, attr, chainid, crouch.friction, damage, dizzypoints, down.bounce, down.cornerpush.velmul, down.cornerpush.veloff, down.hittime, down.recover, down.recovertime, down.velocity, envshake.ampl, envshake.decay, envshake.dir, envshake.diradd, envshake.freq, envshake.mul, envshake.phase, envshake.time, fall, fall.animtype, fall.damage, fall.envshake.ampl, fall.envshake.dir, fall.envshake.freq, fall.envshake.mul, fall.envshake.phase, fall.envshake.time, fall.kill, fall.recover, fall.recovertime, fall.xvelocity, fall.yvelocity, fall.zvelocity, forcecrouch, forcenofall, forcestand, getpower, givepower, ground.cornerpush.velmul, ground.cornerpush.veloff, ground.hittime, ground.slidetime, ground.type, ground.velocity, guard.cornerpush.velmul, guard.cornerpush.veloff, guard.ctrltime, guard.dist, guard.dist.depth, guard.dist.height, guard.dist.width, guard.hittime, guard.kill, guard.pausetime, guard.slidetime, guard.sparkangle, guard.sparkno, guard.sparkscale, guard.velocity, guardflag, guardpoints, guardsound, guardsound.channel, hitflag, hitonce, hitsound, hitsound.channel, id, ignorereversaldef, keepstate, kill, maxdist, mindist, missonoverride, nochainid, numhits, p1facing, p1getp2facing, p1sprpriority, p1stateno, p2clsncheck, p2clsnrequire, p2facing, p2getp1state, p2sprpriority, p2stateno, pausetime, priority, redirectid, redlife, reversal.attr, reversal.guardflag, reversal.guardflag.not, score, snap, sparkangle, sparkno, sparkscale, sparkxy, sprpriority, stand.friction, teamside, unhittabletime, xaccel, yaccel, zaccel | palFXSub: dynamic parameter names | Pending |
+| modifyshadow | angle, anim, animelem, animplayerno, color, focallength, intensity, keeptransform, offset, projection, redirectid, spriteplayerno, window, x, xangle, xscale, xshear, y, yangle, yscale, z | Review delegated parser/defaults | Pending |
+| modifysnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, pan, position, priority, redirectid, stoponchangestate, stopongethit, volume, volumescale | Review delegated parser/defaults | Pending |
+| modifystagebg | actionno, angle, delta.x, delta.y, focallength, id, index, layerno, pos.x, pos.y, projection, redirectid, scalestart, spriteno, start.x, start.y, trans, velocity.x, velocity.y, xangle, xshear, yangle | palFXSub: dynamic parameter names | Pending |
+| modifystagevar | bound.screenleft, bound.screenright, camera.autocenter, camera.boundhigh, camera.boundleft, camera.boundlow, camera.boundright, camera.cuthigh, camera.cutlow, camera.floortension, camera.lowestcap, camera.startzoom, camera.tension, camera.tensionhigh, camera.tensionlow, camera.tensionvel, camera.verticalfollow, camera.yscrollspeed, camera.ytension.enable, camera.zautocenter, camera.zboundbot, camera.zboundtop, camera.zoomin, camera.zoomindelay, camera.zoominspeed, camera.zoomout, camera.zoomoutspeed, camera.ztension, camera.ztensionvel, playerinfo.botbound, playerinfo.leftbound, playerinfo.p1facing, playerinfo.p1startx, playerinfo.p1starty, playerinfo.p1startz, playerinfo.p2facing, playerinfo.p2startx, playerinfo.p2starty, playerinfo.p2startz, playerinfo.rightbound, playerinfo.topbound, reflection.angle, reflection.color, reflection.fade.range, reflection.focallength, reflection.intensity, reflection.offset, reflection.projection, reflection.window, reflection.xangle, reflection.xshear, reflection.yangle, reflection.ydelta, reflection.yscale, scaling.botscale, scaling.botz, scaling.topscale, scaling.topz, shadow.angle, shadow.color, shadow.fade.range, shadow.focallength, shadow.intensity, shadow.offset, shadow.projection, shadow.window, shadow.xangle, shadow.xshear, shadow.yangle, shadow.ydelta, shadow.yscale, stageinfo.autoturn, stageinfo.resetbg, stageinfo.xscale, stageinfo.yscale, stageinfo.zoffset, stageinfo.zoffsetlink | Review delegated parser/defaults | Pending |
+| modifystoryboard | bindid, bindtime, facing, id, pos, redirectid, scale | Review delegated parser/defaults | Pending |
+| modifytext | accel, align, angle, bank, color, focallength, font, friction, hidewithbars, id, index, layerno, localcoord, maxdist, params, pos, projection, redirectid, removetime, scale, text, textdelay, textspacing, velocity, xangle, xshear, yangle | palFXSub: dynamic parameter names | Pending |
+| overrideclsn | group, index, rect, redirectid | Review delegated parser/defaults | Pending |
+| parentmapadd | map, redirectid, value | Review delegated parser/defaults | Pending |
+| parentmapset | map, redirectid, value | Review delegated parser/defaults | Pending |
+| playbgm | bgm, freqmul, loop, loopcount, loopend, loopstart, redirectid, source, startposition, volume | Review delegated parser/defaults | Pending |
+| printtoconsole | params, redirectid, text | Review delegated parser/defaults | Pending |
+| redlifeadd | absolute, redirectid, value | Review delegated parser/defaults | Pending |
+| redlifeset | redirectid, value | Review delegated parser/defaults | Pending |
+| remapsprite | dest, preset, redirectid, reset, source | Review delegated parser/defaults | Pending |
+| removestoryboard | id, redirectid | Review delegated parser/defaults | Pending |
+| rootmapadd | map, redirectid, value | Review delegated parser/defaults | Pending |
+| rootmapset | map, redirectid, value | Review delegated parser/defaults | Pending |
+| rootvaradd | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| rootvarset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
+| roundtimeadd | redirectid, value | Review delegated parser/defaults | Pending |
+| roundtimeset | redirectid, value | Review delegated parser/defaults | Pending |
+| savefile | maps, maps.include, path, redirectid | Review delegated parser/defaults | Pending |
+| savestate | None extracted; verify reference | Review delegated parser/defaults | Pending |
+| scoreadd | redirectid, value | Review delegated parser/defaults | Pending |
+| shaderset | playerno, redirectid, time | shaderSub: dynamic parameter names | Pending |
+| shiftinput | input, output, redirectid | Review delegated parser/defaults | Pending |
+| storyboard | bindid, bindtime, facing, id, path, pos, redirectid, scale | Review delegated parser/defaults | Pending |
+| tagin | ctrl, leader, memberno, partner, partnerctrl, partnerstateno, redirectid, self, stateno | Review delegated parser/defaults | Pending |
+| tagout | memberno, partner, partnerstateno, redirectid, self, stateno | Review delegated parser/defaults | Pending |
+| targetadd | playerid, redirectid | Review delegated parser/defaults | Pending |
+| targetdizzypointsadd | absolute, id, redirectid, value | Review delegated parser/defaults | Pending |
+| targetguardpointsadd | absolute, id, redirectid, value | Review delegated parser/defaults | Pending |
+| targetredlifeadd | absolute, id, redirectid, value | Review delegated parser/defaults | Pending |
+| targetscoreadd | id, redirectid, value | Review delegated parser/defaults | Pending |
+| teammapadd | map, redirectid, value | Review delegated parser/defaults | Pending |
+| teammapset | map, redirectid, value | Review delegated parser/defaults | Pending |
+| text | accel, align, angle, bank, color, focallength, font, friction, hidewithbars, id, layerno, localcoord, maxdist, params, pos, projection, redirectid, removetime, scale, text, textdelay, textspacing, velocity, xangle, xshear, yangle | palFXSub: dynamic parameter names | Pending |
+| transformclsn | angle, group, index, pivot, redirectid, scale | Review delegated parser/defaults | Pending |
+| transformsprite | focallength, projection, redirectid, window, xshear | Review delegated parser/defaults | Pending |

@@ -17,7 +17,14 @@ export function createLifecycleRuntime(api){
     break;
    }
    case 'PowerSet':fighter.power=number(params.value,context);break;
-   case 'VarRandom':{const bounds=String(params.range??'0,1000').split(',').map(value=>number(value,context));fighter.vars[number(params.v,context)]=bounds[0]+Math.floor(Math.random()*(bounds[1]-bounds[0]+1));break;}
+   case 'VarRandom':{
+    const bounds=String(params.range??'0,1000').split(',').map(value=>Math.trunc(number(value,context)));
+    if(bounds.length===1)bounds.unshift(0);
+    const first=Math.min(...bounds),last=Math.max(...bounds),index=Math.trunc(number(params.v,context));
+    if(bounds.length!==2||!Number.isFinite(first)||!Number.isFinite(last))throw Error('Invalid VarRandom range');
+    if(index>=0&&index<fighter.vars.length)fighter.vars[index]=first+Math.floor(Math.random()*(last-first+1));
+    break;
+   }
    case 'DisplayToClipboard':api.debug?.(fighter,params,context);break;
    default:api.controller({...controller,type},fighter,context);
   }

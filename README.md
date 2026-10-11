@@ -1,4 +1,10 @@
-# 0.24.08 — HitDef priority / parameter audit
+# 0.24.09 — Controller inventory / Variable storage
+
+Controller compatibility remains in progress. The pinned official registry contains 163 controllers; `Docs/CONTROLLER-AUDIT.md` lists parameter candidates and unresolved extraction work, not certified complete support.
+
+Root float/system-float variable storage is shared by state controllers, expression contexts and initialization. Variable setters/adders support native `v`/`fv` targets, expression indices and integer truncation. Lifecycle VarRandom supports single-value and reversed ranges. Focused variable tests and Saturn simultaneous-super regression are included.
+
+## 0.24.08 — HitDef priority / parameter audit
 
 ## 0.24.07 — Saturn super multi-hit
 
