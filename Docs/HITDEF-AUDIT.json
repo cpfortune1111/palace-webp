@@ -652,7 +652,7 @@
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Ground H/L/M guard paths only; native aerial guarding is not complete."
+    "note": "Ground H/L/M paths honor stand/crouch restrictions and source UnGuardable assertions, including live projectile owners; native aerial guarding and full SCF_guard/input ordering are incomplete."
   },
   {
     "parameter": "guardpoints",

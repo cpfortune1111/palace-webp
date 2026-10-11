@@ -1,3 +1,7 @@
+# 0.24.37 — Guard assertions
+
+NoStandGuard/NoCrouchGuard now restrict the matching ground guard stance. UnGuardable prevents root/helper/projectile attacks from being guarded; projectiles use live owner assertions. Multi-flag mixing, redirects and expression reads have tests. Aerial guards and full native guard/input ordering remain pending.
+
 # 0.24.36 — Locomotion assertions
 
 NoWalk/NoAutoTurn now affect actual default root walking/turning and mix with the five damage assertions. enabled/redirectid and expression reads share actor-owned storage. Explicit ChangeState remains allowed. Unit/browser checks pass; exact native input ordering and other assertions remain pending.

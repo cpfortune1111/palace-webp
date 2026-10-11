@@ -26,7 +26,7 @@ PARTIAL = {
     'attr': 'Attack classification and attribute masks exist; team/override parity is incomplete.',
     'priority': 'Root P1/P2 simultaneous attacks support all Hit/Miss/Dodge combinations and unequal priorities. Helper/projectile attack-class ties are not unified with this root resolver.',
     'hitflag': 'M/A/F and stance checks exist; complete D/H/L and +/- eligibility semantics are missing.',
-    'guardflag': 'Ground H/L/M guard paths only; native aerial guarding is not complete.',
+    'guardflag': 'Ground H/L/M paths honor stand/crouch restrictions and source UnGuardable assertions, including live projectile owners; native aerial guarding and full SCF_guard/input ordering are incomplete.',
     'animtype': 'Light/Medium/Hard/DiagUp mappings exist; Back/Up and fallback parity are incomplete.',
     'air.animtype': 'Same limited reaction mapping as animtype.',
     'ground.type': 'High/Low/Trip are handled; None does not suppress native reaction correctly.',
@@ -94,7 +94,7 @@ def main():
         rows.append({'parameter': parameter, 'status': status, 'usedBy': sorted(usage[parameter]), 'reference': 'MUGEN + Ikemen' if parameter in mugen and parameter in ikemen else 'MUGEN' if parameter in mugen else 'Ikemen', 'note': note})
     missing_used = [row['parameter'] for row in rows if row['status'] == 'Not implemented' and row['usedBy']]
     lines = [
-        '# HitDef parameter audit — 0.24.35', '',
+        '# HitDef parameter audit — 0.24.37', '',
         'This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.',
         'Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.', '',
         '[MUGEN reference](https://www.elecbyte.com/mugendocs-11b1/sctrls.html#hitdef)',

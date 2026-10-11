@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.35
+# HitDef parameter audit — 0.24.37
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -90,7 +90,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.sparkno | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Character-owned S-prefixed sparks only; common fightfx sparks/defaults are not complete. |
 | guard.sparkscale | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | guard.velocity | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground X velocity exists; aerial guard velocity is not implemented. |
-| guardflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground H/L/M guard paths only; native aerial guarding is not complete. |
+| guardflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground H/L/M paths honor stand/crouch restrictions and source UnGuardable assertions, including live projectile owners; native aerial guarding and full SCF_guard/input ordering are incomplete. |
 | guardpoints | Partial | — | Ikemen | Explicit guard point damage executes with its independent attack factor and target defense. Native defaults, air guarding, queued timing and assertions remain pending. |
 | guardsound | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Same ownership/default limitations as hitsound. |
 | guardsound.channel | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |

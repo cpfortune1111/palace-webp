@@ -1,3 +1,11 @@
+## 0.24.37 — Guard stance / UnGuardable assertions
+
+NoStandGuard, NoCrouchGuard and UnGuardable now join the actor assertion dispatcher. Ground HitDef resolution checks the defender's current S/C stance assertion, including existing guard-state paths. It also rejects guarding when the attacker asserts UnGuardable. Helper attacks forward their own assertion set; projectile attacks resolve their live root/helper owner assertion set instead of copying spawn-time flags, matching pinned char.go's source-character check and projectile comment.
+
+Unit checks verify these three additional mixed/redirected flags. Browser checks verify stand/crouch isolation, helper-local source ownership, root unguardable attacks, actual projectile creation with owner assertions changed after spawn, enabled=0 re-enabling guard, and IsAsserted on helper storage. Existing Saturn simultaneous-super regression remains required. The HitDef guardflag audit describes the expanded ground path without certifying full guarding.
+
+Still partial: native SCF_guard/default-input scheduling, forced debug guard modes versus native stance transitions, aerial guarding/NoAirGuard, auto-guard, reversals/HitOverride guardflag interactions, destroyed projectile-owner lifetimes, full helper key-control/collision semantics and other assertions remain pending. Unknown mixtures outside the ten implemented flag names fail explicitly. No full AssertSpecial/guard certification is claimed.
+
 ## 0.24.36 — NoWalk / NoAutoTurn execution
 
 NoWalk and NoAutoTurn now join the actor assertion dispatcher and can mix with the five damage flags in flag/flag2–flag8. NoWalk prevents default P1/P2 input from entering walk state, without suppressing explicit ChangeState or scripted AI transitions. NoAutoTurn suppresses actual root auto-turning; AI's additional orientation adjustment also honors current/prior flags. Helpers store/read these flags but, matching native root-only autoTurn, do not receive invented automatic turning behavior.
