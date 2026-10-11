@@ -1,4 +1,8 @@
-# 0.24.14 — Root controller scheduling
+# 0.24.15 — Ikemen Map controllers
+
+MapSet/Add, ParentMapSet/Add, RootMapSet/Add, TeamMapSet/Add and MapReset now execute in the WEB runtime. Map expression reads, lowercase keys, numeric/string storage, helper ownership, redirect IDs and reset exclusions are tested. Full compatibility remains in progress; team modes and typed-expression/compiler parity are tracked explicitly.
+
+## 0.24.14 — Root controller scheduling
 
 P1/P2 controller dispatch now maintains independent persistence counters per state entry, resets on re-entry, and skips ordinary controllers during hitpause. Lifecycle -3/-2 controllers retain the MUGEN negative-state persistence exception. Full compatibility remains in progress; reaction-specialized and other execution paths are tracked separately.
 

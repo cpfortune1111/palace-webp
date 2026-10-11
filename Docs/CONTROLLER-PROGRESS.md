@@ -2,6 +2,16 @@
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
 
+## 0.24.15 — Ikemen maps
+
+Nine map controllers now have execution paths: MapSet/Add, ParentMapSet/Add, RootMapSet/Add, TeamMapSet/Add and MapReset. Actor-owned Maps support case-insensitive Map expression reads, string values, numeric addition, root/parent/redirect ownership and reset to defaults. MapReset supports exclude and exclude2–8 as case-insensitive substring exclusions. Native string addition rejection warns without overwriting storage. Helpers receive separate map storage; extendsmap copies the spawning actor's maps when enabled.
+
+Tests cover all nine controller names, all eight exclusions, defaults, redirected reset, nested helper ownership, strings, integer wrapping and fractional addition. Browser assertions verify P1/P2 isolation, Map expression reads and actual nested helpers; Saturn simultaneous-super regressions pass.
+
+Pending certification: native typed expression promotion (including integral float values), all raw CNS assignment spellings, DEF map-default import and overrides, dynamic map-name compiler parity, team/simul/tag/neutral-character selection beyond the current Single teams, and serialization/save-state integration. Module team tests include two root teammates, but current WEB battles still have one root per team. No full Map family certification is claimed.
+
+Inventory extraction now flags variable-built parameter names and explicitly includes MapReset exclude2–8; other dynamic parameters still require manual review.
+
 ## 0.24.14 — Root scheduling
 
 P1/P2 generic dispatch now uses independent actor/state-entry schedules before trigger evaluation. Successful triggers reset each controller's counter; re-entering the same state resets counters via the entry serial. Source locations preserve identity across normalized controller copies; explicit lifecycle identity preserves controllers without source metadata. Ordinary hitpause skips do not consume persistence counters. Lifecycle -3/-2 forwarding marks the negative-state MUGEN persistence exception. Helper dispatch keeps its own scheduling rather than double-consuming root counters.

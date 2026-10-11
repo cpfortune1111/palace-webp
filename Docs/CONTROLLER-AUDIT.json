@@ -576,6 +576,7 @@
       ],
       "unresolvedExtraction": [
         "afterImageSub: dynamic parameter names",
+        "explodSub: dynamic parameter names",
         "palFXSub: dynamic parameter names",
         "shaderSub: dynamic parameter names"
       ],
@@ -723,7 +724,9 @@
       "compilerFunctionsInspected": [
         "helper"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "helper: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -1141,6 +1144,7 @@
       ],
       "unresolvedExtraction": [
         "afterImageSub: dynamic parameter names",
+        "explodSub: dynamic parameter names",
         "palFXSub: dynamic parameter names",
         "shaderSub: dynamic parameter names"
       ],
@@ -1627,6 +1631,7 @@
       "unresolvedExtraction": [
         "afterImageSub: dynamic parameter names",
         "palFXSub: dynamic parameter names",
+        "projectileSub: dynamic parameter names",
         "shaderSub: dynamic parameter names"
       ],
       "coverageStatus": "not semantically certified"
@@ -2436,7 +2441,9 @@
       "compilerFunctionsInspected": [
         "assertInput"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "assertInput: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -2526,7 +2533,9 @@
       "compilerFunctionsInspected": [
         "dialogue"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "dialogue: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -2778,7 +2787,9 @@
         "loadFile",
         "saveLoadFileSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "saveLoadFileSub: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -2811,7 +2822,9 @@
         "mapAdd",
         "mapSetSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -2819,6 +2832,13 @@
       "compilerFunction": "mapReset",
       "parameterCandidates": [
         "exclude",
+        "exclude2",
+        "exclude3",
+        "exclude4",
+        "exclude5",
+        "exclude6",
+        "exclude7",
+        "exclude8",
         "redirectid"
       ],
       "commonParameters": [
@@ -2828,7 +2848,9 @@
       "compilerFunctionsInspected": [
         "mapReset"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "mapReset: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -2847,7 +2869,9 @@
         "mapSet",
         "mapSetSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -3312,6 +3336,7 @@
       "unresolvedExtraction": [
         "afterImageSub: dynamic parameter names",
         "palFXSub: dynamic parameter names",
+        "projectileSub: dynamic parameter names",
         "shaderSub: dynamic parameter names"
       ],
       "coverageStatus": "not semantically certified"
@@ -3714,7 +3739,9 @@
         "modifyStoryboard",
         "storyboardSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "storyboardSub: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -3798,7 +3825,9 @@
         "mapSetSub",
         "parentMapAdd"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -3817,7 +3846,9 @@
         "mapSetSub",
         "parentMapSet"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -3952,7 +3983,9 @@
         "mapSetSub",
         "rootMapAdd"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -3971,7 +4004,9 @@
         "mapSetSub",
         "rootMapSet"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -4071,7 +4106,9 @@
         "saveFile",
         "saveLoadFileSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "saveLoadFileSub: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -4165,7 +4202,9 @@
         "storyboard",
         "storyboardSub"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "storyboardSub: dynamic parameter names"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -4321,7 +4360,9 @@
         "mapSetSub",
         "teamMapAdd"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {
@@ -4340,7 +4381,9 @@
         "mapSetSub",
         "teamMapSet"
       ],
-      "unresolvedExtraction": [],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing"
+      ],
       "coverageStatus": "not semantically certified"
     },
     {

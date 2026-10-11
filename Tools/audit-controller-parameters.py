@@ -32,11 +32,15 @@ def build_inventory(registry, compiler):
                 continue
             parameters.update(re.findall(r'(?:stateParam|param\w*)\(is,\s*(?:sc,\s*)?"([^"]+)"', body))
             parameters.update(re.findall(r'is\["([^"]+)"\]', body))
-            if re.search(r'(?:stateParam|param\w*)\(is,\s*(?:sc,\s*)?(?:prefix|[a-zA-Z_]\w*\s*\+)', body):
+            if re.search(r'stateParam\(is,\s*[a-zA-Z_]\w*|param\w*\(is,\s*sc,\s*[a-zA-Z_]\w*', body):
                 unresolved.add(current + ': dynamic parameter names')
             for called in re.findall(r'c\.(\w+)\(is,', body):
                 if called in functions:
                     pending.append(called)
+        if name == 'mapreset':
+            parameters.update('exclude' + str(index) for index in range(2, 9))
+        if name in {'mapset', 'mapadd', 'parentmapset', 'parentmapadd', 'rootmapset', 'rootmapadd', 'teammapset', 'teammapadd'}:
+            unresolved.add('map(KEY) assignment syntax requires semantic parsing')
         controllers.append({
             'controller': name,
             'compilerFunction': function,
