@@ -1,3 +1,13 @@
+## 0.24.40 — Native post-round damage window / life controller adapter
+
+Pinned system.go roundNoDamage checks a specific negative-intro interval: intro < 0, intro <= -over_hittime and intro >= -over_waittime. It does not simply reject all RoundState values outside 2. Round flow now keeps postRoundAge across result, resultBuffer and later presentation phases, resets it at new rounds, and exposes the inclusive native damage window. fight.def over.hittime=10 is imported into round configuration and its exporter.
+
+LifeAdd/LifeSet actual root/helper resource dispatch now supplies this gate; prior module-only tests did not prove the adapter was wired. Living targets retain HP and red life during the protected interval, while dead-target writes remain allowed by the existing module contract. Tests cover exact entry/exit boundaries, uninterrupted clock through phase changes, new-round reset, pre-fight permission and actual root/helper adapter writes. Existing announcer and combat/resource regression remains required.
+
+Still pending: native alive-state is separate from life>0, broader round intro timer/version modeling, score/win-type side effects, HitDef queued life consumption, and replacement of existing red-life/point-controller RoundState-based gates. This is an explicit adapter fix, not complete resource/round certification.
+
+Reference: https://github.com/ikemen-engine/Ikemen-GO/blob/cb56d73badb322f3725257c2e8cfd157b2c3989d/src/system.go (roundNoDamage), pinned char.go lifeSet.
+
 ## 0.24.39 — KO reaction / cornerpush actor assertions
 
 NoKOFall and NoKOVelocity join the actual actor assertion dispatcher, enabled/redirected multi-flag handling and IsAsserted. HitDef's lethal unguarded contact now respects each flag independently: NoKOFall skips forced KO fall/animation selection while preserving original fall; NoKOVelocity skips profile-added KO velocity. Neither flag suppresses HP damage or already-present HitDef velocity. This follows pinned char.go's separate checks at the KO reaction block.

@@ -1,3 +1,7 @@
+## 0.24.40 — Life controller post-round protection
+
+LifeAdd/LifeSet now honor the native post-round no-damage time window through their actual root/helper adapters. The round clock remains continuous across result/presentation phases; over.hittime is imported from fight.def (10 ticks for this screenpack). Boundary, round-announcer and resource tests verify the gate without blocking all intro or non-fight states. Complete alive-state, HitDef queued-damage and other resource timing parity remain pending.
+
 ## 0.24.39 — KO/cornerpush assertions
 
 NoKOFall and NoKOVelocity now independently suppress their HitDef KO reaction additions without suppressing HP damage. NoCornerPush suppresses actual root displacement while retaining and decaying stored cornerpush velocity. Unit and browser tests cover mixing, redirects, enabling/disabling and both player slots. This remains partial controller support; native alive/NoKO/global flags, complete hit reaction mappings and helper cornerpush are pending.
