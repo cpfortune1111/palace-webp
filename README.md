@@ -1,4 +1,8 @@
-# 0.24.12 — Variable controller unification
+# 0.24.13 — Parent / Root variables
+
+ParentVarSet/ParentVarAdd and RootVarSet/RootVarAdd now use the shared variable dispatcher. Nested helpers write their immediate parent rather than always writing the root; float variables, redirected helper IDs and destroyed/missing parents are handled. Full compatibility remains in progress.
+
+## 0.24.12 — Variable controller unification
 
 VarRangeSet and VarRandom now share the root/helper/lifecycle variable dispatcher with expression evaluation and redirected ownership. Native signed integer overflow and float32 storage are tested. A reusable Ikemen sparse-variable path covers extended indices and its 2500-iteration range cap; current character imports retain MUGEN mode. Full compatibility remains in progress.
 

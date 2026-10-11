@@ -63,7 +63,7 @@ export function createSpecialRuntime(api){
   }
  }
  function helperController(entity,controller,index){
-  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',bindtoroot:'BindtoRoot'};
+  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ctx=context(entity);
   if(!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0})||!api.trigger(controller,ctx))return;
@@ -72,7 +72,6 @@ export function createSpecialRuntime(api){
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
    case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),params:numeric(params,ctx)};break;
-   case 'ParentVarSet':case 'ParentVarAdd':{const index=Number(params.target.match(/\d+/)[0]),vars=root(entity.player).vars;vars[index]=(controller.type==='ParentVarAdd'?(vars[index]||0):0)+api.eval(params.value,ctx);break;}
    case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;

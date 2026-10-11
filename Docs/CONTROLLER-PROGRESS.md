@@ -2,6 +2,14 @@
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
 
+## 0.24.13 — Parent/root variable owners
+
+The four parent/root variable controllers now delegate to shared type/index/value conversion, including native `v`/`fv` and normalized target forms. Redirection selects the receiver first; parent/root selection then chooses the variable owner while expressions remain in caller context. ParentVar on nested helpers selects their direct parent. Missing/destroyed parents and non-helper receivers produce no write. RootVar selects the helper's owning root. Float and system-variable target forms use their corresponding storage.
+
+Module tests cover all four controller families, float values, redirected nested helpers and missing parents. Browser assertions verify distinct child/parent/root storage during a real runtime helper tree. Existing Saturn simultaneous-super regression remains included.
+
+Remaining compatibility work includes native assignment-expression syntax, redirected expression edge cases, Ikemen sparse storage integration, parent trigger redirection consistency and common root scheduling. These implementations are not a blanket certification of all variable controller parameters.
+
 ## 0.24.12 — Unified variable controllers
 
 VarSet/VarAdd/VarRangeSet/VarRandom use one dispatcher for roots and helper fallback, with lifecycle range/random handling delegated to it. Range defaults, integer/float distinction, signed 32-bit integer wrapping, float32 rounding, caller-context expression indices, redirected variable storage and invalid/empty ranges have tests. Random ranges support one upper bound, a pair or reversed bounds; runtime expression splitting preserves nested function commas.

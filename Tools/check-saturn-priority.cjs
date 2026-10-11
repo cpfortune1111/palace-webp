@@ -36,6 +36,9 @@ const server=http.createServer((request,response)=>{
   assert.deepEqual(resourceResults,[500,800,3000,700,700]);
   const helperResources=await run(`(()=>{specialRuntime.dispatch({type:'Helper',params:{stateno:'925',id:'987'}},p1ControllerBinding,specialRuntime.context(specialRoot(1)),{},specialRoot(1),1);const entity=specialRuntime.entities.at(-1),context=specialRuntime.context(entity);executeControllerM1({type:'LifeSet',params:{value:'321'}},entity,context,{owner:entity,player:1});executeControllerM1({type:'PowerSet',params:{value:'456'}},entity,context,{owner:entity,player:1});runP2ControllerM1({type:'LifeAdd',params:{redirectid:String(entity.instanceId),value:'-21',absolute:'1'}});return [entity.life,p1Life,p1Power,p2.life]})()`);
   assert.deepEqual(helperResources,[300,500,456,800]);
+  const parentVariables=await run(`(()=>{const parent=specialRuntime.entities.at(-1);specialRuntime.dispatch({type:'Helper',params:{stateno:'925',id:'988'}},parent,specialRuntime.context(parent),{},parent,1);const child=specialRuntime.entities.at(-1),context=specialRuntime.context(child);executeControllerM1({type:'ParentVarSet',params:{v:'7',value:'19'}},child,context,{owner:child,player:1});executeControllerM1({type:'RootVarSet',params:{fv:'7',value:'2.5'}},child,context,{owner:child,player:1});return [parent.vars[7],child.vars[7],runtimeVar[7],runtimeFVar[7]]})()`);
+  assert.deepEqual(parentVariables,[19,0,0,2.5]);
+  console.log('Nested helper parent and root variable ownership passed');
   console.log('Helper life isolation, shared root power and helper-ID redirection passed');
   console.log('Root life/power controllers, redirected life and power expressions passed');
   console.log('Both root float-variable controllers and expression contexts share lifecycle storage');

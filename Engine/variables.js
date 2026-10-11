@@ -1,5 +1,7 @@
 export function applyVariableController(controller, binding, evaluate, options={}){
- const type=controller.type.toLowerCase();
+ const originalType=controller.type.toLowerCase();
+ const ownership=originalType.startsWith('parentvar')?'parent':originalType.startsWith('rootvar')?'root':null;
+ const type=ownership?originalType.replace(ownership,''):originalType;
  if(!['varset','varadd','varrandom','varrangeset'].includes(type))return false;
  const params=controller.params||controller;
  if(params.redirectid!==undefined){binding=options.findActor?.(Math.trunc(Number(evaluate(params.redirectid))));if(!binding)return true}
@@ -38,11 +40,14 @@ export function applyVariableController(controller, binding, evaluate, options={
  else if(params.fv!==undefined){kind='fvar';indexExpression=params.fv}
  else if(params.v!==undefined){kind='var';indexExpression=params.v}
  else throw Error('Missing variable controller target');
+ const index=Math.trunc(Number(evaluate(indexExpression)));
+ if(params.value===undefined)throw Error('Missing variable controller value');
+ const result=Number(evaluate(params.value));
+ if(ownership)binding=ownership==='parent'?options.parentActor?.(binding):options.rootActor?.(binding);
+ if(!binding)return true;
  const variables=binding[{var:'vars',fvar:'fvars',sysvar:'sysvars',sysfvar:'sysfvars'}[kind]];
  if(!variables)throw Error('Missing '+kind+' storage');
- const index=Math.trunc(Number(evaluate(indexExpression)));
  if(!Number.isFinite(index)||index<0||!unlimited&&index>=variables.length)return true;
- const result=Number(evaluate(params.value));
  const floating=kind==='fvar'||kind==='sysfvar';
  const value=floating?Math.fround(result):Math.trunc(result)|0;
  const combined=type==='varadd'?(variables[index]||0)+value:value;
