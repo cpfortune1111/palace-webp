@@ -1,4 +1,8 @@
-# 0.24.17 — Angle X/Y orthographic
+# 0.24.18 — Angle trails / reflections
+
+Afterimages now retain independent recorded angle, scale and pivot snapshots; stage reflections apply actor AngleDraw transforms. Rotation arithmetic and actual browser trail bounds are tested. Full controller/parameter compatibility remains in progress.
+
+## 0.24.17 — Angle X/Y orthographic
 
 AngleDraw now projects X/Y/Z rotations using Ikemen's native default orthographic matrix order. Independent matrix tests and actual browser pixel bounds verify axis tilt, Z rotation and reset. Perspective projection modes and full controller compatibility remain in progress.
 

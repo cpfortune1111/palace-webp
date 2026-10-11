@@ -1,5 +1,7 @@
 export function createAngleState(){return {value:0,xangle:0,yangle:0,enabled:false,scale:[1,1],pivot:[0,0]}}
 
+export function snapshotAngleState(state){return {...state,scale:[...state.scale],pivot:[...state.pivot]}}
+
 export function resetAngleDraw(state){state.enabled=false;state.scale=[1,1];state.pivot=[0,0]}
 
 export function applyAngleController(controller,actor,api){

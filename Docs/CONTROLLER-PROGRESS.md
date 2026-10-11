@@ -1,3 +1,9 @@
+## 0.24.18 — Angle trails and reflections
+
+Afterimage capture now clones actor angle state, including scale/pivot arrays, instead of retaining mutable references. Trail rendering applies the recorded matrix and animation-facing convention. Stage reflections apply actor angle drawing under the existing mirrored floor transform. Pinned native char.go records charSD for afterimages and defaults reflection data to char sprite data.
+
+Checks: immutable snapshot unit tests, actual browser trail pixel bounds before/after root angle reset, and reflection renderer matrix interception. Existing Saturn simultaneous-super regression remains required. Not full certification: AfterImage palette/blending parameters, helper trails, alternative reflection overrides, projection modes, local-coordinate parity and paused/frozen drawing lifecycle remain pending.
+
 ## 0.24.17 — Angle X/Y orthographic
 
 Pinned Ikemen render.go uses orthographic projection by default. WEB AngleDraw now applies X(-x) × Y(y) × Z(z) with Canvas coordinate conversion, rather than rejecting X/Y angles or inventing perspective. Independent transformed-point tests cover combined axes; real browser pixel bounds verify 60-degree X/Y tilt, 90-degree Z rotation and tick reset. Saturn simultaneous supers at offsets 0/1/5 still pass.

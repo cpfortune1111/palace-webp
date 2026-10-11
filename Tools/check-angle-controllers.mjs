@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,orthographicAngleMatrix} from '../Engine/angle-controllers.js';
+import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,orthographicAngleMatrix,snapshotAngleState} from '../Engine/angle-controllers.js';
 
 const actor={angleState:createAngleState()},other={angleState:createAngleState()};
 const api={evaluate:Number,split:expression=>String(expression).split(','),findActor:id=>id===2?other:null};
@@ -31,3 +31,10 @@ for(const [xangle,yangle,value] of [[0,0,90],[60,0,0],[0,60,0],[20,35,70],[-40,6
  }
 }
 console.log('Native X(-x) × Y(y) × Z(z) orthographic matrix order passed');
+const saved=snapshotAngleState(other.angleState);
+const savedScale=[...saved.scale],savedPivot=[...saved.pivot],savedValue=saved.value;
+resetAngleDraw(other.angleState);
+other.angleState.scale[0]=7;other.angleState.pivot[1]=11;other.angleState.value=180;
+assert.deepEqual(saved.scale,savedScale);assert.deepEqual(saved.pivot,savedPivot);assert.equal(saved.value,savedValue);assert.equal(saved.enabled,true);
+console.log('Afterimage angle snapshots remain independent of later ticks');
+

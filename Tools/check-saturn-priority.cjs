@@ -66,6 +66,18 @@ const server=http.createServer((request,response)=>{
   assert.ok(Math.abs(angleResults.yTilt[0]-angleResults.before[0]*0.5)<=3,JSON.stringify(angleResults));
   assert.ok(Math.abs(angleResults.yTilt[1]-angleResults.before[1])<=3,JSON.stringify(angleResults));
   console.log('AngleDraw actual pixels verify Z rotation, X/Y orthographic tilt and reset');
+  const trailResults=await run(`(()=>{afterImages.fill(null);runController({type:'AngleDraw',params:{value:'90',xangle:'0',yangle:'0'}});runController({type:'AfterImage',params:{time:'10',timegap:'1',length:'2'}});stepAfterImages();const saved=afterImages[0].frames[0].angleState;const surface=document.createElement('canvas');surface.width=cv.width;surface.height=cv.height;const target=surface.getContext('2d');const bounds=()=>{target.clearRect(0,0,surface.width,surface.height);drawAfterImages(target,1);const pixels=target.getImageData(0,0,surface.width,surface.height).data;let left=surface.width,right=-1,top=surface.height,bottom=-1;for(let y=0;y<surface.height;y++)for(let x=0;x<surface.width;x++)if(pixels[(y*surface.width+x)*4+3]>16){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}return [right-left+1,bottom-top+1]};const before=bounds();resetAngleDraw(rootAngleStates[0]);rootAngleStates[0].value=15;const after=bounds();afterImages.fill(null);return {before,after,saved:{enabled:saved.enabled,value:saved.value}}})()`);
+  assert.deepEqual(trailResults.before,trailResults.after);
+  assert.deepEqual(trailResults.saved,{enabled:true,value:90});
+  assert.ok(Math.abs(trailResults.before[0]-angleResults.before[1])<=3,JSON.stringify(trailResults));
+  assert.ok(Math.abs(trailResults.before[1]-angleResults.before[0])<=3,JSON.stringify(trailResults));
+  console.log('Afterimage actual pixels retain recorded rotation after root reset');
+  await page.waitForFunction(()=>window.runtimeTest.run('!!stageVisuals && !!stageFilterImage'));
+  const reflectedResults=await run(`(()=>{const previousStage=activeStage;activeStage='training';runController({type:'AngleDraw',params:{value:'90',xangle:'0',yangle:'0'}});resetAngleDraw(rootAngleStates[1]);const target=reflectionCanvas.getContext('2d'),original=target.transform,calls=[];target.transform=function(...matrix){calls.push(matrix);return original.apply(this,matrix)};try{drawStageVisuals()}finally{target.transform=original;activeStage=previousStage;resetAngleDraw(rootAngleStates[0])}return calls})()`);
+  assert.equal(reflectedResults.length,1);
+  const expectedReflection=[0,-1,1,0,0,0];
+  reflectedResults[0].forEach((value,index)=>assert.ok(Math.abs(value-expectedReflection[index])<1e-8));
+  console.log('Stage reflection renderer applies actor angle matrix');
   console.log('Helper life isolation, shared root power and helper-ID redirection passed');
   console.log('Root life/power controllers, redirected life and power expressions passed');
   console.log('Both root float-variable controllers and expression contexts share lifecycle storage');
