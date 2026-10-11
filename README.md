@@ -1,4 +1,6 @@
-# 0.24.05 — Neptune projectile / Intro / Explod layers
+# 0.24.06 — Saturn all states / AI
+
+## 0.24.05 — Neptune projectile / Intro / Explod layers
 
 ## 0.24.04 — Neptune selection / ACS / Battle entry
 

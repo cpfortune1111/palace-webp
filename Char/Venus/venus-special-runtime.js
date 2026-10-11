@@ -1,3 +1,4 @@
+import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
  const projectileContacts=new Map();
@@ -72,6 +73,7 @@ export function createSpecialRuntime(api){
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
+   case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
    case 'PosFreeze':entity.positionFrozen=params.value===undefined||!!api.eval(params.value,ctx);break;
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
    case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
@@ -135,7 +137,7 @@ export function createSpecialRuntime(api){
   const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params)return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
+   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
   }
   for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)
   }

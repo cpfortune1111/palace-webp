@@ -39,7 +39,7 @@ def compile_controller(controller):
         elif 'fv' in params:
             params['target'] = 'fvar(' + params.pop('fv') + ')'
         else:
-            target = next((key for key in params if key.startswith(('var(', 'sysvar('))), None)
+            target = next((key for key in params if key.startswith(('var(', 'sysvar(', 'fvar('))), None)
             if target:
                 params['target'], params['value'] = target, params.pop(target)
     if 'movetype' in params:
