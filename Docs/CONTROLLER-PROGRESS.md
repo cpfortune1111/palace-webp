@@ -1,3 +1,11 @@
+## 0.24.36 — NoWalk / NoAutoTurn execution
+
+NoWalk and NoAutoTurn now join the actor assertion dispatcher and can mix with the five damage flags in flag/flag2–flag8. NoWalk prevents default P1/P2 input from entering walk state, without suppressing explicit ChangeState or scripted AI transitions. NoAutoTurn suppresses actual root auto-turning; AI's additional orientation adjustment also honors current/prior flags. Helpers store/read these flags but, matching native root-only autoTurn, do not receive invented automatic turning behavior.
+
+Auto-turn checks now read prior assertions before active-tick clearing; a prior snapshot prevents the later AI orientation path from bypassing the flag. Round reset clears both current/prior sets. IsAsserted supports these two additional actual flags. Unit checks verify mixing with damage assertions. Browser checks verify both roots hold facing, cannot enter default walking, resume when disabled, retain explicit state changes and carry prior assertions through reset. Existing combat regressions remain required.
+
+Partial support: native hardcoded-key ordering versus current post-controller command dispatch, StateDef/changeState auto-facing interactions, full AI/input parity, WinMugen/Ikemen version selection, exact pause/round ordering and other actor/global assertions remain pending. Mixed combinations outside these seven known flags still fail explicitly; no complete AssertSpecial certification is claimed.
+
 ## 0.24.35 — AssertSpecial damage suppression
 
 Five actor-local assertions now execute: NoHitDamage, NoGuardDamage, NoRedLifeDamage, NoDizzyPointsDamage and NoGuardPointsDamage. Their flags are case-insensitive literals; flag/flag2–flag8, enabled and caller-context redirectid follow pinned compiler-functions.go/bytecode.go. Root/helper storage is actor-owned. Actual HitDef resolution suppresses only the selected HP/red-life/dizzy/guard resource, while red-life GetHitVar absolute amounts remain calculated. IsAsserted reads these five real flags.

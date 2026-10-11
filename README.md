@@ -1,3 +1,7 @@
+# 0.24.36 — Locomotion assertions
+
+NoWalk/NoAutoTurn now affect actual default root walking/turning and mix with the five damage assertions. enabled/redirectid and expression reads share actor-owned storage. Explicit ChangeState remains allowed. Unit/browser checks pass; exact native input ordering and other assertions remain pending.
+
 # 0.24.35 — Damage assertions
 
 AssertSpecial NoHitDamage/NoGuardDamage/NoRedLifeDamage/NoDizzyPointsDamage/NoGuardPointsDamage now suppress actual incoming resources. Multi-flag slots, redirectid, enabled and IsAsserted reads have tests; helper hitpause reset is verified. Other assertions, mixed legacy combinations and full compatibility remain pending.

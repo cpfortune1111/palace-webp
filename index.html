@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.24.35 Controller Integration</title>
+<title>Prototype 0.24.36 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,28 +40,28 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.35 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD angle-controllers-02435-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.36 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD angle-controllers-02436-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02435';
-import {applyMapController} from './Engine/map-controllers.js?v=02435';
-import {applyResourceController} from './Engine/resource-controllers.js?v=02435';
-import {applyDamageAssertion,damageAssertionFlags} from './Engine/damage-assertions.js?v=02435';
-import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02435';
-import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02435';
-import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02435';
-import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02435';
-import {applyStatePropertyController} from './Engine/state-properties.js?v=02435';
-import {applyPositionController} from './Engine/position-controllers.js?v=02435';
-import {applyVelocityController} from './Engine/velocity-controllers.js?v=02435';
-import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02435';
-import {applyVariableController} from './Engine/variables.js?v=02435';
+import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02436';
+import {applyMapController} from './Engine/map-controllers.js?v=02436';
+import {applyResourceController} from './Engine/resource-controllers.js?v=02436';
+import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02436';
+import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02436';
+import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02436';
+import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02436';
+import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02436';
+import {applyStatePropertyController} from './Engine/state-properties.js?v=02436';
+import {applyPositionController} from './Engine/position-controllers.js?v=02436';
+import {applyVelocityController} from './Engine/velocity-controllers.js?v=02436';
+import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02436';
+import {applyVariableController} from './Engine/variables.js?v=02436';
 import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02435';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02436';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -69,7 +69,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02435';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02436';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -127,22 +127,22 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.35 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.36 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {electricHitStates} from './Engine/electric-hit-states.js?v=02435';
-import {resolveHitPriority} from './Engine/hit-priority.js?v=02435';
-import {excludesHit} from './Engine/hit-attribute-mask.js?v=02435';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02435';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02435';
+import {electricHitStates} from './Engine/electric-hit-states.js?v=02436';
+import {resolveHitPriority} from './Engine/hit-priority.js?v=02436';
+import {excludesHit} from './Engine/hit-attribute-mask.js?v=02436';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02436';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02436';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
 fetch(assetUrl('./venus_special.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));specialDat=data}).catch(showRuntimeError);
 let reactionDat,reactionAtlases=[];
-const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02435').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
+const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02436').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -524,7 +524,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02435'),fetch(base+prefix+'_full.json?v=02435'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02435')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02436'),fetch(base+prefix+'_full.json?v=02436'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02436')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -544,7 +544,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,character);if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
-  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02435';images[page]=image})));
+  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02436';images[page]=image})));
   fightHud.setCharacterEmblem(character,data,images);
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
@@ -761,7 +761,7 @@ function evalAST(n,context=null){const elementTime=context?.elemTime||animElemTi
  }
  if(n.t==='bin'&&n.op==='='&&n.a.t==='id'&&n.a.name.toLowerCase()==='animelem')return elementTime(evalAST(n.b,context))===0;
  if(n.t==='bin'){if(n.op==='&&')return !!evalAST(n.a,context)&&!!evalAST(n.b,context);if(n.op==='||')return !!evalAST(n.a,context)||!!evalAST(n.b,context);let a=evalAST(n.a,context),b=evalAST(n.b,context);if(n.op==='='||n.op==='==')return a==b;if(n.op==='!=')return a!=b;if(n.op==='>')return a>b;if(n.op==='<')return a<b;if(n.op==='>=')return a>=b;if(n.op==='<=')return a<=b;if(n.op==='+')return +a + +b;if(n.op==='-')return a-b;if(n.op==='*')return a*b;if(n.op==='/')return a/b;if(n.op==='%')return a%b}
- if(n.t==='call'){let f=n.name.toLowerCase();if(['projcontact','projhit','projguarded'].includes(f))return +specialRuntime.projectileEvent(context?.player||characterScopePlayer,Number(evalAST(n.args[0],context)),{projcontact:'contact',projhit:'hit',projguarded:'guarded'}[f]);if(f==='map'){const actorMaps=context?.maps||rootMaps[characterScopePlayer-1];return actorMaps.get(String(evalAST(n.args[0],context)).toLowerCase())??0}if(f==='isasserted'){const flag=String(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context)).toLowerCase();if(!damageAssertionFlags.has(flag))throw Error('Unsupported IsAsserted '+flag);return (context?.assertions||rootAssertions[characterScopePlayer-1]).has(flag)}if(f==='ln')return Math.log(evalAST(n.args[0],context));if(['sin','cos','tan','asin','acos','atan','exp'].includes(f))return Math[f](evalAST(n.args[0],context));if(f==='floor')return Math.floor(evalAST(n.args[0],context));if(f==='selfanimexist')return framesFor(evalAST(n.args[0],context)).length>0;if(f==='const720p')return evalAST(n.args[0],context);if(f==='animelemtime')return elementTime(evalAST(n.args[0],context));if(f==='abs')return Math.abs(evalAST(n.args[0],context));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context),context?.player||characterScopePlayer);if(f==='var')return (context?context.vars:runtimeVar)[+evalAST(n.args[0],context)]||0;if(f==='fvar')return (context?context.fvars:runtimeFVar)?.[+evalAST(n.args[0],context)]||0;if(f==='sysfvar')return (context?context.sysfvars:runtimeSysFVar)?.[+evalAST(n.args[0],context)]||0;if(f==='sysvar')return (context?context.sysvars:runtimeSysVar)[+evalAST(n.args[0],context)]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0],context)?evalAST(n.args[1],context):evalAST(n.args[2],context);throw Error('AST function '+n.name)}throw Error('AST node')}
+ if(n.t==='call'){let f=n.name.toLowerCase();if(['projcontact','projhit','projguarded'].includes(f))return +specialRuntime.projectileEvent(context?.player||characterScopePlayer,Number(evalAST(n.args[0],context)),{projcontact:'contact',projhit:'hit',projguarded:'guarded'}[f]);if(f==='map'){const actorMaps=context?.maps||rootMaps[characterScopePlayer-1];return actorMaps.get(String(evalAST(n.args[0],context)).toLowerCase())??0}if(f==='isasserted'){const flag=String(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context)).toLowerCase();if(!actorAssertionFlags.has(flag))throw Error('Unsupported IsAsserted '+flag);return (context?.assertions||rootAssertions[characterScopePlayer-1]).has(flag)}if(f==='ln')return Math.log(evalAST(n.args[0],context));if(['sin','cos','tan','asin','acos','atan','exp'].includes(f))return Math[f](evalAST(n.args[0],context));if(f==='floor')return Math.floor(evalAST(n.args[0],context));if(f==='selfanimexist')return framesFor(evalAST(n.args[0],context)).length>0;if(f==='const720p')return evalAST(n.args[0],context);if(f==='animelemtime')return elementTime(evalAST(n.args[0],context));if(f==='abs')return Math.abs(evalAST(n.args[0],context));if(f==='const')return constVal(n.args[0].t==='id'?n.args[0].name:evalAST(n.args[0],context),context?.player||characterScopePlayer);if(f==='var')return (context?context.vars:runtimeVar)[+evalAST(n.args[0],context)]||0;if(f==='fvar')return (context?context.fvars:runtimeFVar)?.[+evalAST(n.args[0],context)]||0;if(f==='sysfvar')return (context?context.sysfvars:runtimeSysFVar)?.[+evalAST(n.args[0],context)]||0;if(f==='sysvar')return (context?context.sysvars:runtimeSysVar)[+evalAST(n.args[0],context)]||0;if(f==='ifelse'||f==='cond')return evalAST(n.args[0],context)?evalAST(n.args[1],context):evalAST(n.args[2],context);throw Error('AST function '+n.name)}throw Error('AST node')}
 const exprCache=new Map();
 function evalM1(expr,context=null){let src=String(expr).trim();
  src=src.replace(/\bHelper\s*\(\s*(\d+)\s*\)\s*,\s*var\s*\(\s*(\d+)\s*\)/gi,(_,id,index)=>String((context||fighterExpressionContext(specialRoot(1),specialRoot(2))).helperVar(Number(id),Number(index))));
@@ -790,7 +790,8 @@ const p1ControllerBinding={
  vars:runtimeVar,sysvars:runtimeSysVar,fvars:runtimeFVar,sysfvars:runtimeSysFVar
 };
 const redLifeValues=[1000,1000],combatResourceFeatures={redLife:true,dizzyPoints:true,guardPoints:true};
-const rootAssertions=[new Set(),new Set()];
+const rootAssertions=[new Set(),new Set()],previousRootAssertions=[new Set(),new Set()];
+function resetRootAssertions(){for(const player of [1,2])if(!specialRuntime.blocked(player)){previousRootAssertions[player-1].clear();for(const flag of rootAssertions[player-1])previousRootAssertions[player-1].add(flag);rootAssertions[player-1].clear()}}
 function assertionActor(player,entity=null){if(entity?.kind==='helper'){entity.assertions??=new Set();return entity}return {assertions:rootAssertions[player-1]}}
 function runDamageAssertion(controller,entity,context,player=entity.player||1){return applyDamageAssertion(controller,assertionActor(player,entity),{evaluate:expression=>evalM1(expression,context),findActor:id=>{if(id===1||id===2)return assertionActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?assertionActor(helper.player,helper):null}})}
 const pointResources=[{dizzyPoints:1000,dizzyPointsMax:1000,guardPoints:1000,guardPointsMax:1000},{dizzyPoints:1000,dizzyPointsMax:1000,guardPoints:1000,guardPointsMax:1000}];
@@ -988,7 +989,7 @@ function dispatchGroundCommands(){
  if(state===11){enterIRState(12);return} // release hold-down: crouch-to-stand transition
  if(state===12)return; // State 12's AnimTime controller owns 12 -> 0.
  if(commandActive('holdback')||commandActive('holdfwd')){
-   if(state!==20)enterIRState(20);
+   if(!rootAssertions[0].has('nowalk')&&state!==20)enterIRState(20);
    return;
  }
  vx=0;if(state!==0)enterIRState(0);
@@ -1232,7 +1233,7 @@ const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot(
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
  reset:()=>{
-  resetPlayerInput();customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);for(const attack of attackStates)Object.assign(attack,createAttackState());for(const defense of defenseStates)Object.assign(defense,createDefenseState());rootAssertions.forEach(flags=>flags.clear());resetPointResources();resourceDamage.fill(0);for(let index=0;index<2;index++)Object.assign(rootAngleStates[index],createAngleState());rootControllerSchedules.reset();reactionControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
+  resetPlayerInput();customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);for(const attack of attackStates)Object.assign(attack,createAttackState());for(const defense of defenseStates)Object.assign(defense,createDefenseState());rootAssertions.forEach(flags=>flags.clear());previousRootAssertions.forEach(flags=>flags.clear());resetPointResources();resourceDamage.fill(0);for(let index=0;index<2;index++)Object.assign(rootAngleStates[index],createAngleState());rootControllerSchedules.reset();reactionControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
   roundVoiceUntil=0;roundAnnouncerUntil=0;roundNotOverUntil.fill(0);playerPushDisabledUntil.fill(0);
   for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
   for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
@@ -1588,7 +1589,7 @@ function stepP2WalkM1ForCharacter(){
  p2.x+=p2.vx;p2.vx*=constVal('movement.stand.friction');
  for(const controller of [...((profileFor(2)?.data?sourceState(p2.state):stateIR.states[String(p2.state)])?.controllers||[]),...(p2.state===20?battleDat.aiWalkControllers||[]:[])]){runP2ControllerM1(controller,commands);if(p2.state!==previous)break}
  if(aiControlled(2)){if(p2.state===previous){p2.time++;advanceFighterAirOneTick(p2)}return}
- if(commands.holdfwd||commands.holdback){if(p2.state!==20)enterP2State(20)}
+ if(commands.holdfwd||commands.holdback){if(!rootAssertions[1].has('nowalk')&&p2.state!==20)enterP2State(20)}
  else {p2.vx=0;if(p2.state!==0)enterP2State(0)}
  if(p2.state===previous){p2.time++;advanceFighterAirOneTick(p2)}
 }
@@ -1706,12 +1707,12 @@ function autoTurnM1(){
  if(!turnDat||posX===p2.x)return;
  const def=stateDef(),desired=posX<p2.x?1:-1;
  const eligible=runtimeCtrl&&(state===0||state===11||state===20||(state===52&&animDone()));
- if(eligible&&def?.type!=='A'&&p1Facing!==desired){
+ if(eligible&&!rootAssertions[0].has('noautoturn')&&!specialRuntime.blocked(1)&&def?.type!=='A'&&p1Facing!==desired){
   const anim=def?.type==='C'?6:5;
   if(current!==anim){current=anim;fi=0;ticks=0;p1TurnTime=0}
   setP1Facing(desired);
  }
- if(p2.ctrl&&(p2.state===0||p2.state===11||p2.state===20)&&p2.type!=='A'&&p2.facing!==-desired){
+ if(p2.ctrl&&!rootAssertions[1].has('noautoturn')&&!specialRuntime.blocked(2)&&(p2.state===0||p2.state===11||p2.state===20)&&p2.type!=='A'&&p2.facing!==-desired){
   const anim=p2.type==='C'?6:5;
   if(p2.anim!==anim){p2.anim=anim;p2.elem=1;p2.elemTick=0;p2TurnTime=0;p2.turnTime=0}
   p2.facing=-desired;
@@ -1728,7 +1729,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.35',build:'angle-controllers-02435-20261011-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.36',build:'angle-controllers-02436-20261011-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1736,7 +1737,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.35-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.36-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1764,15 +1765,14 @@ function stepWatchAI(){
  if(!roundFlow.canFight()||p1Life<=0||p2.life<=0||!aiControlled(1)&&!aiControlled(2))return;
  p2.randomValue=Math.floor(Math.random()*1000);
  const advancing1=[20,100].includes(state)&&Math.abs(p2.x-posX)>160,advancing2=[20,100].includes(p2.state)&&Math.abs(p2.x-posX)>160;if(aiControlled(1)){input.left=advancing1&&p1Facing<0;input.right=advancing1&&p1Facing>0;}p2Input.left=advancing2&&p2.facing<0;p2Input.right=advancing2&&p2.facing>0;
- for(const player of [1,2]){if(!aiControlled(player))continue;const actor=specialRoot(player);if(actor.ctrl&&actor.type!=='A'&&[0,11,20].includes(actor.state)){const facing=player===1?(p2.x>=posX?1:-1):(posX>=p2.x?1:-1);if(player===1)setP1Facing(facing);else if(p2.facing!==facing){p2.facing=facing;p2.vx=-p2.vx}}const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of (profileFor(player)?.battle||battleDat).aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
+ for(const player of [1,2]){if(!aiControlled(player))continue;const actor=specialRoot(player);if(actor.ctrl&&!rootAssertions[player-1].has('noautoturn')&&!previousRootAssertions[player-1].has('noautoturn')&&actor.type!=='A'&&[0,11,20].includes(actor.state)){const facing=player===1?(p2.x>=posX?1:-1):(posX>=p2.x?1:-1);if(player===1)setP1Facing(facing);else if(p2.facing!==facing){p2.facing=facing;p2.vx=-p2.vx}}const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of (profileFor(player)?.battle||battleDat).aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
 }
 function simStepCore(){return withCharacter(1,()=>simStepCoreForCharacter())}
 function simStepCoreForCharacter(){
- for(const player of [1,2])if(!specialRuntime.blocked(player))rootAssertions[player-1].clear();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat)return;
- if(p1HitPause>0){sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){if(p2.hitShake>0&&withCharacter(2,()=>!!battleDat.fallStates[String(p2.state)]))stepSourceFallM1(p2,{controllersOnly:true});else stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state,2))for(const controller of withCharacter(2,()=>sourceState(p2.state)).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);if(p1Reaction&&battleDat.fallStates[String(p1Reaction.state)])stepSourceFallM1(p1Reaction,{controllersOnly:true});if(!entityDefenderPause&&p2.hitShake>0&&withCharacter(2,()=>!!battleDat.fallStates[String(p2.state)]))stepSourceFallM1(p2,{controllersOnly:true});p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
+ if(p1HitPause>0){resetRootAssertions();sampleInputHistory();stepLifecycleGlobals();if(entityDefenderPause){if(p2.hitShake>0&&withCharacter(2,()=>!!battleDat.fallStates[String(p2.state)]))stepSourceFallM1(p2,{controllersOnly:true});else stepP2M1();resolveP2PunchM1(false)}if(isAttackState(state)&&!p1Reaction)for(const controller of sourceState(state).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runController(controller);if(isAttackState(p2.state,2))for(const controller of withCharacter(2,()=>sourceState(p2.state)).controllers.filter(controller=>Number(controller.params?.ignorehitpause)===1))runP2ControllerM1(controller);if(p1Reaction&&battleDat.fallStates[String(p1Reaction.state)])stepSourceFallM1(p1Reaction,{controllersOnly:true});if(!entityDefenderPause&&p2.hitShake>0&&withCharacter(2,()=>!!battleDat.fallStates[String(p2.state)]))stepSourceFallM1(p2,{controllersOnly:true});p1HitPause--;if(p1HitPause===0)entityDefenderPause=false;if(p1Reaction){if(p1Reaction.hitShake>0){p1Reaction.hitShake--}if(p2.attackPause>0)p2.attackPause--;syncP1Reaction()}if(p2.hitShake>0){p2.hitShake--}logicFrame={...logicFrame,...liveP1(),p2:{...p2}};return}
  randomValue=Math.floor(Math.random()*1000);
- advanceTurnAnimations();autoTurnM1();
+ advanceTurnAnimations();autoTurnM1();resetRootAssertions();
  sampleInputHistory();
  stepLifecycleGlobals();
  stepWatchAI();
