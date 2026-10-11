@@ -1,3 +1,11 @@
+## 0.24.21 — Reaction ignorehitpause execution
+
+Source reaction dispatch now gates controller scheduling with the actual hitpause state instead of returning before controllers. Opted-in persistent counters continue; ordinary counters are not consumed. Controllers-only forwarding allows the outer simulation pause to execute P1/P2 reaction controllers while retaining one timer decrement and frozen state time, AIR advancement, hit time and physics. Entity-defender pause forwards paused source reactions directly rather than decrementing hitshake once inside and again outside.
+
+Executable browser checks cover specialized one-shot Turn, interval VarAdd during three paused visits, unchanged position/time/AIR/hittime, resume behavior and P1/P2 outer simulation forwarding with entityDefenderPause both false and true. Existing scheduler, drawing, Map/resource/helper and Saturn simultaneous-super regressions are retained.
+
+Remaining common-parameter gaps include entry-time ChangeAnim shortcuts, native custom-state hitpause ChangeState suppression, non-source legacy reaction paths, pause-blocked helpers, debug/clipboard and Ikemen nested blocks/RunState. This is not certification of all common parameters.
+
 ## 0.24.20 — Reaction persistence and PosAdd facing
 
 Specialized fall/reaction dispatch now uses independent actor/state-entry schedules before trigger evaluation instead of only a persistent=0 executed set. Generic fallback controllers mark scheduling already applied, avoiding a second counter decrement. Reaction entry serials reset schedules even when re-entering the same state; round reset clears both root and reaction schedules.

@@ -1,4 +1,8 @@
-# 0.24.20 — Reaction controller scheduling
+# 0.24.21 — Reaction ignorehitpause
+
+Reaction controllers opted into ignorehitpause now execute during hitshake while ordinary controllers, state time, animation and physics remain frozen. P1/P2 outer pause forwarding avoids duplicate execution and timer decrements. Full controller compatibility remains in progress.
+
+## 0.24.20 — Reaction controller scheduling
 
 Reaction states now schedule both specialized and generic controllers with full persistent intervals and state re-entry reset, without double-consuming counters. PosAdd X follows actor facing. Browser fixtures verify conditional intervals, one-shot movement and re-entry; full controller compatibility remains in progress.
 
