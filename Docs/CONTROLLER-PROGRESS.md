@@ -1,3 +1,11 @@
+## 0.24.33 — Dizzy/guard point resource controllers
+
+DizzyPointsAdd/Set and GuardPointsAdd/Set now dispatch through Engine/point-controllers.js into root/helper-owned resources. Caller-context value/absolute/redirectid, signed integer inputs, half-away rounding, target defense, zero-Add behavior, resource bounds and enabled/round gates follow pinned bytecode.go and char.go. Root resources reset each round; optional imported data.dizzypoints/data.guardpoints are read from battle constants, otherwise native CharData's 1000 defaults apply. Helper resources currently initialize lazily using their root maximum.
+
+Expression queries dizzypoints/dizzypointsmax/guardpoints/guardpointsmax read actual actor storage. Unit checks cover all four controllers, limits, redirects, absolute, defense and gates. Browser checks verify both roots, helper-ID redirect, helper-local hitpause dispatch, helper defense rounding, expression reads and gated writes. Existing combat regressions remain required.
+
+Partial support only: actual HitDef point consumption/AttackMulSet point factors, automatic recovery, stun/guard-break states, HUD/fight.def bar configuration, native helper spawn-time inheritance, character constant import completeness, exact roundNoDamage semantics and nonfinite conversion remain pending. Neither full resource systems nor complete controller/common-parameter compatibility are certified.
+
 ## 0.24.32 — Life/red-life synchronization
 
 LifeAdd/Set now invoke the native lifeSet red-life rules through shared synchronizeLifeRedLife: death clears red life, disabled red life mirrors HP, and enabled red life is unchanged by healing (even when its current value is below HP). WEB hit resolution also synchronizes death/disabled resources independently of explicit HitDef redlife damage. Caller redirects apply these rules to the target root/helper.

@@ -1,3 +1,7 @@
+# 0.24.33 — Dizzy/guard point controllers
+
+DizzyPointsAdd/Set and GuardPointsAdd/Set now update root/helper-owned resources with redirects, bounds, absolute/defense handling and expression reads. Unit/browser checks cover actual helper-local execution and gates. Hit consumption, automatic stun/guard-break behavior and full controller compatibility remain pending.
+
 # 0.24.32 — Life/red-life synchronization
 
 LifeAdd/Set clear red life on death and mirror HP when red life is disabled, matching the pinned native lifeSet behavior. Healing preserves enabled red life. Root/helper browser tests and module tests cover these rules; complete controller compatibility remains in progress.
