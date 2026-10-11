@@ -175,10 +175,10 @@
   },
   {
     "parameter": "dizzypoints",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and assertions remain pending."
   },
   {
     "parameter": "down.bounce",
@@ -656,10 +656,10 @@
   },
   {
     "parameter": "guardpoints",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit guard point damage executes with its independent attack factor and target defense. Native defaults, air guarding, queued timing and assertions remain pending."
   },
   {
     "parameter": "guardsound",

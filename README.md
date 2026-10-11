@@ -1,3 +1,7 @@
+# 0.24.34 — HitDef dizzy/guard damage
+
+Explicit HitDef dizzypoints/guardpoints now consume actual resources using independent attack multipliers and defense. Expressions evaluate at HitDef creation; projectiles retain spawn-time factors. Unit/browser tests cover hit/guard selection, bounds and snapshots. Native defaults, queued timing and automatic stun/guard-break remain pending.
+
 # 0.24.33 — Dizzy/guard point controllers
 
 DizzyPointsAdd/Set and GuardPointsAdd/Set now update root/helper-owned resources with redirects, bounds, absolute/defense handling and expression reads. Unit/browser checks cover actual helper-local execution and gates. Hit consumption, automatic stun/guard-break behavior and full controller compatibility remain pending.

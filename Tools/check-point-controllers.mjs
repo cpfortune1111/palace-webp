@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {applyPointController} from '../Engine/point-controllers.js';
+import {applyPointController,consumeHitPoints} from '../Engine/point-controllers.js';
 
 const actor={dizzyPoints:900,dizzyPointsMax:1000,guardPoints:400,guardPointsMax:500,finalDefense:2};
 const other={dizzyPoints:100,dizzyPointsMax:200,guardPoints:200,guardPointsMax:300,finalDefense:1};
@@ -18,4 +18,10 @@ enabled=true;noDamage=true;run('DizzyPointsSet',{value:'500'});assert.equal(acto
 run('DizzyPointsSet',{redirectid:'99'});assert.equal(actor.dizzyPoints,0);
 assert.throws(()=>run('GuardPointsAdd',{}),/Missing/);
 assert.equal(run('Null',{}),false);
+actor.dizzyPoints=900;actor.guardPoints=400;
+consumeHitPoints(actor,'dizzyPoints',101,true,false);assert.equal(actor.dizzyPoints,799);assert.equal(actor.guardPoints,400);
+consumeHitPoints(actor,'guardPoints',1000,true,false);assert.equal(actor.guardPoints,0);
+consumeHitPoints(actor,'guardPoints',-1000,true,false);assert.equal(actor.guardPoints,500);
+consumeHitPoints(actor,'dizzyPoints',100,false,false);assert.equal(actor.dizzyPoints,799);
+consumeHitPoints(actor,'dizzyPoints',100,true,true);assert.equal(actor.dizzyPoints,799);
 console.log('Dizzy/guard point bounds, defense rounding, absolute, integer values, redirects and gates passed');

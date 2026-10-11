@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.08
+# HitDef parameter audit — 0.24.34
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -10,7 +10,7 @@ Implemented means a WEB execution path exists, not that every default/expression
 
 Audited parameters: 131. Current-source parameters with no complete execution path: airguard.cornerpush.veloff, airguard.velocity, down.velocity, fall.recover, forcestand, guard.dist, hitonce, numhits, p2facing, snap.
 
-Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
+Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js and Engine/redlife-controllers.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
 | Parameter | WEB status | Explicit source use | Reference | Limitation |
 |---|---|---|---|---|
@@ -33,7 +33,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | chainid | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | crouch.friction | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | damage | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| dizzypoints | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| dizzypoints | Partial | — | Ikemen | Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and assertions remain pending. |
 | down.bounce | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | down.cornerpush.velmul | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | down.cornerpush.veloff | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
@@ -91,7 +91,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.sparkscale | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | guard.velocity | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground X velocity exists; aerial guard velocity is not implemented. |
 | guardflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Ground H/L/M guard paths only; native aerial guarding is not complete. |
-| guardpoints | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| guardpoints | Partial | — | Ikemen | Explicit guard point damage executes with its independent attack factor and target defense. Native defaults, air guarding, queued timing and assertions remain pending. |
 | guardsound | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Same ownership/default limitations as hitsound. |
 | guardsound.channel | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | hitflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | M/A/F and stance checks exist; complete D/H/L and +/- eligibility semantics are missing. |

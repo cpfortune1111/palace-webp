@@ -1,3 +1,11 @@
+## 0.24.34 — Explicit HitDef dizzy/guard point consumption
+
+HitDef now consumes explicit dizzypoints on hit and guardpoints on guard through the actual WEB contact resolver. Independent AttackMulSet slots, target defense, half-away rounding, minimum positive damage and no remaining-life cap follow the pinned computeDamage path. Point consumption clamps to resource bounds and respects internal enabled/round gates. Explicit red-life/dizzy/guard point expressions evaluate in caller context at HitDef/Projectile creation using native integer conversion.
+
+Unit checks cover resource selection, depletion, negative/healing input and gates. Browser tests exercise actual resolver writes, hit/guard isolation, var expressions, 2x/3x point factors, low-life unbounded damage and actual projectile spawn snapshots despite later root changes. Saturn simultaneous-super regressions pass. HitDef inventory and its reproducible generator now classify these four resource parameters as Partial, not fully implemented.
+
+Remaining: omitted-value native constants, attack-base composition, native queued end-of-update consumption/keepstate gating, no-point-damage assertions, suppression while already dizzy, GetHitVar pending-damage lifetime, automatic recovery/stun/guard-break, native bar configuration, aerial guards and helper collision parity. The complete controller/parameter goal remains unfinished.
+
 ## 0.24.33 — Dizzy/guard point resource controllers
 
 DizzyPointsAdd/Set and GuardPointsAdd/Set now dispatch through Engine/point-controllers.js into root/helper-owned resources. Caller-context value/absolute/redirectid, signed integer inputs, half-away rounding, target defense, zero-Add behavior, resource bounds and enabled/round gates follow pinned bytecode.go and char.go. Root resources reset each round; optional imported data.dizzypoints/data.guardpoints are read from battle constants, otherwise native CharData's 1000 defaults apply. Helper resources currently initialize lazily using their root maximum.

@@ -2,6 +2,11 @@ const integer=value=>Math.trunc(Number(value))|0;
 const rounded=value=>Math.sign(value)*Math.floor(Math.abs(value)+0.5);
 const fields={dizzypointsadd:'dizzyPoints',dizzypointsset:'dizzyPoints',guardpointsadd:'guardPoints',guardpointsset:'guardPoints'};
 
+export function consumeHitPoints(actor,field,damage,enabled,noDamage){
+ if(damage===0)return;
+ if(enabled&&!noDamage)actor[field]=Math.max(0,Math.min(actor[field+'Max'],actor[field]-damage));
+}
+
 export function applyPointController(controller,actor,api){
  const type=controller.type.toLowerCase(),field=fields[type];
  if(!field)return false;
