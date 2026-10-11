@@ -1,3 +1,11 @@
+## 0.24.41 — Red-life / point controller damage-window parity
+
+Red-life and dizzy/guard point controller adapters now share roundFlow.noDamage with LifeAdd/LifeSet, following pinned char.go setters and system.go roundNoDamage. Their previous RoundState!=2 gate incorrectly rejected intro and late post-round writes. Explicit HitDef red-life and point consumption also use the real window instead of the broad state test.
+
+Browser fixtures verify all three resources can be assigned during RoundState 1, remain unchanged for protected Add operations during state 3, and resume Add afterward while still in state 3. Existing root/helper tests now explicitly supply the damage-window gate rather than treating an arbitrary RoundState as protection. Unit round-window boundaries, resource controllers and full combat regression remain required.
+
+Still partial: full native intro timer/freeze ordering, separate alive status, queued HitDef resource consumption, defaults, team sharing, automatic recovery and full controller certification remain pending. This fixes the resource gate adapters without claiming those missing semantics.
+
 ## 0.24.40 — Native post-round damage window / life controller adapter
 
 Pinned system.go roundNoDamage checks a specific negative-intro interval: intro < 0, intro <= -over_hittime and intro >= -over_waittime. It does not simply reject all RoundState values outside 2. Round flow now keeps postRoundAge across result, resultBuffer and later presentation phases, resets it at new rounds, and exposes the inclusive native damage window. fight.def over.hittime=10 is imported into round configuration and its exporter.

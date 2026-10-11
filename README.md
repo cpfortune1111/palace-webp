@@ -1,3 +1,7 @@
+## 0.24.41 — Shared resource protection window
+
+RedLifeAdd/Set, DizzyPointsAdd/Set and GuardPointsAdd/Set now use the native post-round damage window instead of rejecting every RoundState outside 2. Explicit HitDef red-life/point consumption uses the same window. Intro and later post-round writes are allowed outside that interval. Actual browser paths and existing combat regressions verify behavior; queued hit consumption, native alive-state and complete resource recovery remain pending.
+
 ## 0.24.40 — Life controller post-round protection
 
 LifeAdd/LifeSet now honor the native post-round no-damage time window through their actual root/helper adapters. The round clock remains continuous across result/presentation phases; over.hittime is imported from fight.def (10 ticks for this screenpack). Boundary, round-announcer and resource tests verify the gate without blocking all intro or non-fight states. Complete alive-state, HitDef queued-damage and other resource timing parity remain pending.
