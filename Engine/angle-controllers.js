@@ -30,10 +30,18 @@ export function applyAngleController(controller,actor,api){
 
 export function transformAngleDrawing(context,state){
  if(!state?.enabled)return;
- if(state.xangle!==0||state.yangle!==0)throw Error('AngleDraw 3D projection is not implemented');
  const [pivotX,pivotY]=state.pivot;
  context.translate(pivotX,pivotY);
- context.rotate(-state.value*Math.PI/180);
+ const matrix=orthographicAngleMatrix(state);
+ context.transform(...matrix,0,0);
  context.scale(state.scale[0],state.scale[1]);
  context.translate(-pivotX,-pivotY);
+}
+
+export function orthographicAngleMatrix(state){
+ const radians=Math.PI/180;
+ const cosX=Math.cos(state.xangle*radians),sinX=Math.sin(state.xangle*radians);
+ const cosY=Math.cos(state.yangle*radians),sinY=Math.sin(state.yangle*radians);
+ const cosZ=Math.cos(state.value*radians),sinZ=Math.sin(state.value*radians);
+ return [cosY*cosZ,-cosX*sinZ+sinX*sinY*cosZ,cosY*sinZ,cosX*cosZ+sinX*sinY*sinZ];
 }

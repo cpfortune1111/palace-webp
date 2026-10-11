@@ -1,3 +1,9 @@
+## 0.24.17 — Angle X/Y orthographic
+
+Pinned Ikemen render.go uses orthographic projection by default. WEB AngleDraw now applies X(-x) × Y(y) × Z(z) with Canvas coordinate conversion, rather than rejecting X/Y angles or inventing perspective. Independent transformed-point tests cover combined axes; real browser pixel bounds verify 60-degree X/Y tilt, 90-degree Z rotation and tick reset. Saturn simultaneous supers at offsets 0/1/5 still pass.
+
+Not certified complete: perspective modes 1/2, native local-coordinate/aspect/pivot parity, reflections, afterimages and paused drawing lifecycle. The overall controller/parameter goal remains incomplete; no unsupported controller is counted as implemented.
+
 # Controller implementation progress
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
