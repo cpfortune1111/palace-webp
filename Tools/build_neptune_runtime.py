@@ -6,22 +6,14 @@ from pathlib import Path
 from compile_moon_states import build, compile_controller, fields
 
 DISABLED_ACTIONS = set()
-SUPPORT_STATES = {1990, 1991, 9999}
 
 
 def enabled_state(state_id):
-    return 0 <= state_id <= 999 or 5000 <= state_id <= 5900 or state_id in SUPPORT_STATES
+    return state_id >= 0
 
 
-def non_3do_controller(controller):
-    compiled = compile_controller(controller)
-    if any(re.search(r'3DO|var\(50\)\s*=\s*1\b', expression, re.I)
-           for expression in compiled['triggerall']):
-        return None
-    compiled['triggers'] = {key: expressions for key, expressions in compiled['triggers'].items()
-                            if not any(re.search(r'3DO|var\(50\)\s*=\s*1\b', expression, re.I)
-                                       for expression in expressions)}
-    return compiled if compiled['triggers'] else None
+def compile_neptune_controller(controller):
+    return compile_controller(controller)
 
 
 def compile_runtime(imported, output):
@@ -51,7 +43,7 @@ def compile_runtime(imported, output):
         for controller in raw['controllers']:
             if controller['file'] != definition['file'] or not definition['line'] < controller['line'] < boundary:
                 continue
-            compiled = non_3do_controller(controller)
+            compiled = compile_neptune_controller(controller)
             if compiled is None:
                 continue
             compiled['type'] = canonical.get(compiled['type'].lower(), compiled['type'])
@@ -66,7 +58,7 @@ def compile_runtime(imported, output):
     expected_states = {str(definition['id']) for definition in definitions
                        if enabled_state(definition['id'])}
     if set(states) != expected_states:
-        raise ValueError('Incomplete Neptune non-3DO state coverage')
+        raise ValueError('Incomplete Neptune source state coverage')
     constants, section = {}, None
     for line in (imported / 'original/neptune.cns').read_text(encoding='utf-8-sig').splitlines():
         line = line.split(';', 1)[0].strip()
@@ -93,7 +85,7 @@ def compile_runtime(imported, output):
         for controller in raw['controllers']:
             if controller['state'] != state_id:
                 continue
-            compiled = non_3do_controller(controller)
+            compiled = compile_neptune_controller(controller)
             if compiled is None:
                 continue
             if re.search(r'fvar\((?:10|11)\)', str(compiled), re.I):
@@ -132,7 +124,7 @@ def compile_runtime(imported, output):
     for controller in raw['controllers']:
         if controller['state'] != -1 or controller['type'].lower() != 'changestate':
             continue
-        compiled = non_3do_controller(controller)
+        compiled = compile_neptune_controller(controller)
         if compiled is None or compiled['params'].get('value') not in states:
             continue
         target = player_commands if any(re.search(r'!\s*AILevel', expression, re.I)
@@ -146,7 +138,7 @@ def compile_runtime(imported, output):
               'lifecycleHelpers': {key: states[key] for key in ('915', '925', '950', '9999')},
               'helperStates': {key: value for key, value in states.items()
                                if value['source']['file'] == 'neptune_Helper.st'}, 'globalControllers': globals_data,
-              'playerCommands': player_commands, 'attackCommands': player_commands, 'aiCommands': [],
+              'playerCommands': player_commands, 'attackCommands': player_commands, 'aiCommands': ai_commands,
               'commands': commands, 'collision': audit['collision'], 'loopStarts': audit['loopStarts'],
               'sizeConstants': constants, 'locomotionConstants': constants,
               'landingSound': next(item for item in states['52']['controllers'] if item['type'] == 'PlaySnd'),
@@ -159,8 +151,8 @@ def compile_runtime(imported, output):
               'cornerpushProfile': {'defaultMultiplier': .7, 'stopThreshold': 4},
               'stateCoverage': {'included': sorted(map(int, states)),
                                 'hitRecoveryKO': sorted(int(key) for key in states if 5000 <= int(key) < 5900),
-                                'excludedSkills': sorted({definition['id'] for definition in definitions if 1000 <= definition['id'] < 5000 and definition['id'] not in SUPPORT_STATES}), 'excludedHardware': ['3do'], 'globalStates': [-3, -2, -1]},
-              'source': {'character': 'SailorNeptune', 'scope': 'S0-S999; supporting intro, hit recovery and KO; no 3DO',
+                                'excludedSkills': [], 'excludedHardware': ['3do'], 'globalStates': [-3, -2, -1]},
+              'source': {'character': 'SailorNeptune', 'scope': 'All original states and AI; source has no 3DO',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')

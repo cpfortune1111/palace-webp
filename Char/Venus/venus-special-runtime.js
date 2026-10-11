@@ -72,6 +72,7 @@ export function createSpecialRuntime(api){
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
+   case 'PosFreeze':entity.positionFrozen=params.value===undefined||!!api.eval(params.value,ctx);break;
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
    case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
@@ -109,7 +110,7 @@ export function createSpecialRuntime(api){
    if(entity.hitPause>0){entity.hitPause--;continue}
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
-    entity.randomValue=Math.floor(Math.random()*1000);
+    entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
     const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
@@ -122,7 +123,7 @@ export function createSpecialRuntime(api){
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    hit(entity);
-   entity.x+=entity.vx;entity.y+=entity.vy;entity.time++;api.advance(entity);
+   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);

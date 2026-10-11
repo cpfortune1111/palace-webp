@@ -15,7 +15,7 @@ parser.add_argument('--runtime', type=Path, required=True)
 parser.add_argument('--output', type=Path, required=True)
 arguments = parser.parse_args() 
 available = {int(value) for value in re.findall(r'\[Begin\s+Action\s+(\d+)\]', (arguments.source / 'neptune.air').read_text(encoding='utf-8-sig'), re.I)}
-enabled = {value for value in available if value < 1000 or 5000 <= value < 5900 or value in (1910, 1911, 9999)}
+enabled = available
 with tempfile.TemporaryDirectory() as temporary:
     staged = Path(temporary)
     shutil.copy2(arguments.source / 'neptune.sff', staged / 'neptune.sff')

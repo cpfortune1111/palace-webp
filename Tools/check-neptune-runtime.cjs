@@ -27,18 +27,38 @@ const server=http.createServer((request,response)=>{
   const run=source=>page.evaluate(source=>window.runtimeTest.run(source),source);
 
 
-  for(const players of [['SailorNeptune','SailorNeptune'],['SailorNeptune','SailorJupiter'],['SailorVenus','SailorNeptune']]){
+  for(const players of process.env.NEPTUNE_AI_ONLY?[]:[['SailorNeptune','SailorNeptune'],['SailorNeptune','SailorJupiter'],['SailorVenus','SailorNeptune']]){
    await run(`prepareCharacters(${JSON.stringify(players)})`);
    await run("roundFlow.begin('training','infinite');simPaused=false;for(let tick=0;tick<1800;tick++)simStep();");
    assert.equal(await run('roundFlow.canFight()'),true);
    for(const player of [1,2]){
     if(players[player-1]!=='SailorNeptune')continue;
-    for(const skill of [0,10,11,12,20,40,45,50,52,100,105,106,200,210,230,240,400,410,430,440,600,610,630,640]){
-     const result=await run(`(()=>{resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;customStateOwners.fill(null);customAnimationOwners.fill(null);throwTargets.fill(null);throwBindings.fill(null);p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;posX=-70;p2.x=70;posY=${skill>=600?-250:0};p2.y=posY;vx=0;vy=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);p1Facing=1;p2.facing=-1;p1LastHitKey=null;p2.lastHitKey=null;runtimeVar[50]=0;p2.vars[50]=0;${player===1?'enterIRState':'enterP2State'}(${skill});let seen=new Set();for(let tick=0;tick<220;tick++){simStep();draw();drawMars();drawSourceExplods();seen.add(${player===1?'current':'p2.anim'});}return {seen:[...seen],runtimeFailed,frames:framesFor(${player===1?'current':'p2.anim'},${player}).length}})()`);
+    for(const skill of [0,10,11,12,20,40,45,50,52,100,105,106,200,210,230,240,400,410,430,440,600,610,630,640,1000,1100,3000,3005,3006,3007]){
+     const result=await run(`(()=>{resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;customStateOwners.fill(null);customAnimationOwners.fill(null);throwTargets.fill(null);throwBindings.fill(null);p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;posX=-70;p2.x=70;posY=${skill>=600&&skill<1000?-250:0};p2.y=posY;vx=0;vy=0;p2.vx=0;p2.vy=0;enterIRState(0);enterP2State(0);p1Facing=1;p2.facing=-1;p1LastHitKey=null;p2.lastHitKey=null;runtimeVar[50]=0;p2.vars[50]=0;${player===1?'enterIRState':'enterP2State'}(${skill});let seen=new Set();for(let tick=0;tick<${skill>=1000?700:100};tick++){simStep();if(tick%30===0){draw();drawMars();drawSourceExplods();}seen.add(${player===1?'current':'p2.anim'});}return {seen:[...seen],runtimeFailed,frames:framesFor(${player===1?'current':'p2.anim'},${player}).length}})()`);
      assert.equal(result.runtimeFailed,false,JSON.stringify({players,player,skill,result}));assert.ok(result.frames>0,JSON.stringify(result));console.log('Neptune passed',player,skill);
     }
    }
   }
+  await run("prepareCharacters(['SailorNeptune','SailorNeptune'])");
+  const coverage=await run("({states:Object.keys(profileFor(1).battle.states).length,actions:Object.keys(profileFor(1).data.actions).length,ai:profileFor(1).battle.aiCommands.length,excluded:profileFor(1).battle.stateCoverage.excludedSkills})");
+  assert.equal(coverage.states,87);
+  assert.equal(coverage.actions,139);
+  assert.ok(coverage.ai>0);
+  assert.deepEqual(coverage.excluded,[]);
+  for(const player of process.env.NEPTUNE_AI_ONLY?[]:[1,2])for(const skill of [1000,1100,3000]){
+   await run("roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();");
+   const result=await run(`(()=>{resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;customStateOwners.fill(null);customAnimationOwners.fill(null);throwTargets.fill(null);throwBindings.fill(null);p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;posX=-100;p2.x=100;posY=0;p2.y=0;vx=0;vy=0;p2.vx=0;p2.vy=0;runtimeVar.fill(0);p2.vars.fill(0);enterIRState(0);enterP2State(0);p1Facing=1;p2.facing=-1;p1LastHitKey=null;p2.lastHitKey=null;${player===1?'enterIRState':'enterP2State'}(${skill});const seen=new Set(),helpers=new Set();let life=1000;for(let tick=0;tick<1200;tick++){simStep();seen.add(${player===1?'state':'p2.state'});life=Math.min(life,${player===1?'p2.life':'p1Life'});for(const entity of specialRuntime.entities)helpers.add(entity.state);}return {seen:[...seen],helpers:[...helpers],life,state:${player===1?'state':'p2.state'},runtimeFailed}})()`);
+   assert.equal(result.runtimeFailed,false);assert.equal(result.state,0,JSON.stringify({player,skill,result}));
+   if(skill===1000)assert.ok(result.helpers.includes(1050),JSON.stringify(result));
+   if(skill===3000){assert.ok(result.helpers.includes(3050),JSON.stringify(result));assert.ok(result.seen.includes(3007),JSON.stringify(result));}
+   assert.ok(result.life<1000,JSON.stringify({player,skill,result}));
+   console.log('Neptune complete skill passed',player,skill,result);
+  }
+  await run("gameShell.originalIsWatch=gameShell.isWatch;gameShell.isWatch=()=>true;roundFlow.begin('watch','infinite');for(let tick=0;tick<1800;tick++)simStep();");
+  const ai=await run("(()=>{const seen=[new Set(),new Set()];for(let tick=0;tick<2400;tick++){simStep();seen[0].add(state);seen[1].add(p2.state);if(runtimeFailed)break;}return {seen:seen.map(states=>[...states]),runtimeFailed}})()");
+  assert.equal(ai.runtimeFailed,false);assert.ok(ai.seen.every(states=>states.some(state=>state>=200&&state<5000)),JSON.stringify(ai));
+  console.log('Neptune source AI passed',ai);
+  await run("gameShell.isWatch=gameShell.originalIsWatch");
   await run("prepareCharacters(['SailorJupiter','SailorJupiter'])");
   await run("roundFlow.begin('training','infinite');for(let tick=0;tick<1800;tick++)simStep();");
   for(const skill of [1000,1100]){
