@@ -1,3 +1,11 @@
+## 0.24.29 — AttackMulSet damage execution
+
+AttackMulSet now evaluates value and per-field overrides in caller context and writes actor-owned root/helper attack state. value sets four native multiplier slots before explicit damage/redlife/dizzypoints/guardpoints overrides, following pinned compiler-functions.go/bytecode.go. Actual root/helper HitDef damage uses the attack damage factor. Projectiles copy spawning actor state at creation, matching char.go parentAttackMul snapshots, rather than reading later root changes. Root round reset restores defaults.
+
+Unit tests cover defaults, precedence, missing targets and snapshot independence. Browser tests verify root/helper redirects, actual projectile creation with an immutable multiplier snapshot, and 1x/2x/3x actual HitDef damage. Existing combat regressions remain required.
+
+Not fully implemented/certified: redlife/dizzypoints/guardpoints slots are evaluated/stored but their resource systems and HitDef consumption are still missing; they are not counted as complete parameter support. Also pending native TargetLifeAdd/fall damage/attack-base composition, projectile edge cases, helper hit routing details, negative/nonfinite damage and save-state parity. The complete controller objective remains incomplete.
+
 ## 0.24.28 — Actor-owned defense multiplier
 
 DefenceMulSet now uses Engine/defense-controllers.js and real root/helper storage. value, onhit and redirectid evaluate in caller context; literal multype 0/1 selects reciprocal damage multiplier versus direct defense multiplier. MUGEN defaults onhit=true/multype=0 and Ikemen defaults false/1 follow pinned bytecode.go. Current imported characters use MUGEN mode. Effective custom defense activates only in MoveType H when delayed, matching char.go's final-defense calculation. Damage now divides by effective defense; LifeAdd uses the same custom defense factor. Round reset restores root defaults; helpers retain independent state.

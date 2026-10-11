@@ -1,4 +1,8 @@
-# 0.24.28 — Defense multiplier semantics
+# 0.24.29 — Attack multiplier damage
+
+AttackMulSet now owns root/helper multipliers, resolves redirectid and applies its damage factor to actual HitDef damage. Projectiles snapshot the spawning actor's multipliers. value/field precedence is tested. Red-life/dizzy/guard systems and full controller compatibility remain pending.
+
+## 0.24.28 — Defense multiplier semantics
 
 DefenceMulSet now keeps actor-owned defense state, resolves redirectid and supports onhit/multype with native MUGEN defaults. Damage and LifeAdd consume effective custom defense; helper-local controllers no longer alter their root. Browser damage tests cover immediate/delayed activation. Full compatibility remains in progress.
 
