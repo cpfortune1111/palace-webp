@@ -7,24 +7,7 @@ export function createLifecycleRuntime(api){
   if(!api.trigger(controller,context))return false;
   const params=controller.params,type=controllerType(controller);
   switch(type){
-   case 'VarRangeSet':{
-    const floating=params.fvalue!==undefined,variables=floating?fighter.fvars:fighter.vars;
-    if(!variables)throw Error('Missing lifecycle variable storage');
-    const first=number(params.first??0,context),last=number(params.last??variables.length-1,context);
-    if(!Number.isInteger(first)||!Number.isInteger(last)||first<0||last>=variables.length)throw Error('Invalid VarRangeSet range');
-    const value=number(floating?params.fvalue:params.value,context);
-    for(let index=first;index<=last;index++)variables[index]=value;
-    break;
-   }
-   case 'PowerSet':api.controller({...controller,type},fighter,context);break;
-   case 'VarRandom':{
-    const bounds=String(params.range??'0,1000').split(',').map(value=>Math.trunc(number(value,context)));
-    if(bounds.length===1)bounds.unshift(0);
-    const first=Math.min(...bounds),last=Math.max(...bounds),index=Math.trunc(number(params.v,context));
-    if(bounds.length!==2||!Number.isFinite(first)||!Number.isFinite(last))throw Error('Invalid VarRandom range');
-    if(index>=0&&index<fighter.vars.length)fighter.vars[index]=first+Math.floor(Math.random()*(last-first+1));
-    break;
-   }
+   case 'VarRangeSet':case 'VarRandom':case 'PowerSet':api.controller({...controller,type},fighter,context);break;
    case 'DisplayToClipboard':api.debug?.(fighter,params,context);break;
    default:api.controller({...controller,type},fighter,context);
   }

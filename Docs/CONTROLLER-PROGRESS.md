@@ -2,6 +2,14 @@
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
 
+## 0.24.12 — Unified variable controllers
+
+VarSet/VarAdd/VarRangeSet/VarRandom use one dispatcher for roots and helper fallback, with lifecycle range/random handling delegated to it. Range defaults, integer/float distinction, signed 32-bit integer wrapping, float32 rounding, caller-context expression indices, redirected variable storage and invalid/empty ranges have tests. Random ranges support one upper bound, a pair or reversed bounds; runtime expression splitting preserves nested function commas.
+
+The module also provides Ikemen extended-index sparse storage, zero-range deletion and the pinned native 2500-iteration limit. These are module-tested, not yet engine-certified: selecting Ikemen mode and fully sparse storage for future Ikemen character imports remain pending. Current imported characters use bounded MUGEN storage. Parent/root controller families and complete persistence semantics remain pending.
+
+Tests: `Tools/check-variables.mjs`, `Tools/check-lifecycle-random.mjs` and root redirected-range assertions in `Tools/check-saturn-priority.cjs`.
+
 ## 0.24.11 — Helper scheduling
 
 Helper execution now uses per-state controller counters. Persistent defaults to 1; values 2–128 count eligible controller visits between successful executions; nonpositive values execute once per state; values above 128 fall back to 1 for MUGEN compatibility. False triggers do not reset the counter. State entry resets counters. Hitpause skips ordinary controllers without consuming counters, while ignorehitpause controllers remain eligible without advancing helper state time or animation.

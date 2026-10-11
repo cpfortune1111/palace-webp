@@ -82,7 +82,6 @@ export function createSpecialRuntime(api){
    case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
    case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
-   case 'VarRandom':{const bounds=api.pair(params.range||'0,1000').map(value=>api.eval(value,ctx));entity.vars[Number(params.v)]=bounds[0]+Math.floor(Math.random()*(bounds[1]-bounds[0]+1));break;}
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
   }
  }

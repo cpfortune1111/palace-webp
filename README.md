@@ -1,4 +1,8 @@
-# 0.24.11 — Helper controller scheduling
+# 0.24.12 — Variable controller unification
+
+VarRangeSet and VarRandom now share the root/helper/lifecycle variable dispatcher with expression evaluation and redirected ownership. Native signed integer overflow and float32 storage are tested. A reusable Ikemen sparse-variable path covers extended indices and its 2500-iteration range cap; current character imports retain MUGEN mode. Full compatibility remains in progress.
+
+## 0.24.11 — Helper controller scheduling
 
 Helper controllers now honor persistence intervals and once-per-state execution; ignorehitpause controllers execute during hitpause without advancing animation or state time. Scheduling and real helper-runtime tests accompany the existing combat regression. Full compatibility remains in progress.
 

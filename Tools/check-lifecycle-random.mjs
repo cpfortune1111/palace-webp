@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import {createLifecycleRuntime} from '../Char/Venus/venus-lifecycle-runtime.js';
+import {applyVariableController} from '../Engine/variables.js';
 
-const runtime=createLifecycleRuntime({trigger:()=>true,eval:expression=>Number(expression)});
+const runtime=createLifecycleRuntime({trigger:()=>true,eval:Number,controller:(controller,fighter)=>applyVariableController(controller,fighter,Number)});
 const fighter={vars:Array(60).fill(0)};
 const originalRandom=Math.random;
 try{
