@@ -1,3 +1,11 @@
+## 0.24.23 — Position controller redirection and origins
+
+PosSet/Add now execute through Engine/position-controllers.js before specialized dispatch. Caller-context input is converted to float32; missing redirect IDs do not write, omitted axes remain unchanged. PosSet X starts at camera X in target coordinates rather than absolute world zero; Y starts at target ground/platform origin. PosAdd X uses target facing, not caller facing. Position and velocity redirected adapters share mutable root/reaction/helper accessors.
+
+Checks: check-position-controllers.mjs verifies local-scale ratio, camera/ground origins, target facing, float32 and missing targets. Actual browser tests set nonzero camera X and assert coordinates for both roots and a facing=-1 nested helper. Existing movement, reaction scheduling/hitpause, drawing and Saturn simultaneous-super regressions remain required.
+
+Not fully certified: Z-axis stage physics, real native localScale/ground/platform import and stage integration, bound-position offsets, native interpolation/history updates and save-state parity. Z parameters fail explicitly instead of being ignored. Full controller inventory remains incomplete.
+
 ## 0.24.22 — Velocity controller redirection
 
 VelSet/Add/Mul share Engine/velocity-controllers.js before specialized dispatch. Caller expressions evaluate before writing the redirected target's relative velocity; missing IDs do not write. Root and helper world velocity adapters convert X using target facing. Inputs/results use native float32 rounding; omitted axes retain their values. VelSet/Add scale redirected values; VelMul does not scale multipliers, matching pinned bytecode.go.

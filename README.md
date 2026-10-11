@@ -1,4 +1,8 @@
-# 0.24.22 — Velocity redirection
+# 0.24.23 — Position redirection
+
+PosSet/Add now share caller-context evaluation and root/helper redirectid writes. PosSet uses the camera X origin and ground Y origin; PosAdd X follows target facing. Module and actual browser coordinate tests cover these paths. Full movement/controller compatibility remains in progress.
+
+## 0.24.22 — Velocity redirection
 
 VelSet/Add/Mul now share caller-context evaluation and root/helper redirectid writes, respecting target facing and float32 velocity storage. Module tests cover local-scale arithmetic; browser tests verify actual redirected roots/helpers. Z physics and complete movement compatibility remain pending.
 
