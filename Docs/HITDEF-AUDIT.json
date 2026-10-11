@@ -583,7 +583,7 @@
     "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "The nonlethal guard floor exists; lethal chip currently switches into the unguarded resolution path instead of preserving guard-hit semantics."
+    "note": "Nonlethal guard floor and native lethal-chip switch to hit reaction exist. Pinned native char.go confirms this switch is intentional. NoKO/NoGuardKO/global survival assertions, rounding and queued damage parity remain pending."
   },
   {
     "parameter": "guard.pausetime",

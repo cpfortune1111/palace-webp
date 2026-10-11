@@ -1,3 +1,13 @@
+## 0.24.39 — KO reaction / cornerpush actor assertions
+
+NoKOFall and NoKOVelocity join the actual actor assertion dispatcher, enabled/redirected multi-flag handling and IsAsserted. HitDef's lethal unguarded contact now respects each flag independently: NoKOFall skips forced KO fall/animation selection while preserving original fall; NoKOVelocity skips profile-added KO velocity. Neither flag suppresses HP damage or already-present HitDef velocity. This follows pinned char.go's separate checks at the KO reaction block.
+
+NoCornerPush now gates actual P1 and P2 cornerpush displacement, not the stored MoveHitVar-like velocity. Friction/decay and storage persist while the flag is asserted, matching pinned char.go's explicit distinction. Disabling restores displacement using the decayed value.
+
+Unit tests cover redirected/mixed flags and explicit disabling. Browser fixtures check baseline versus each KO flag, combined flags, aerial contact, HP remaining zero and restored KO additions; cornerpush fixtures check both actual roots, retained/decayed velocities and resumption. Existing combat/resource/drawing/guard regression remains required.
+
+Still partial: NoKO/NoGuardKO/global flags require proper alive-state separation and are not substituted with a fake HP floor. Complete native hit/KO animation selection, per-character kovelocity/default import, tick/round assertion lifetime, helper cornerpush, system-triggered non-contact KO handling and full native corner conditions remain pending. No complete AssertSpecial or KO semantic certification is claimed. The guard.kill audit also corrects an earlier interpretation: pinned native code intentionally switches lethal chip to hit reaction when no survival assertion applies.
+
 ## 0.24.38 — Aerial guard contact / source reaction execution
 
 Imported character guardflag A contacts now route to original state 154 and execute the character's original state 155 controllers, including HitVelSet, gravity, CtrlSet and grounded transitions. The reaction dispatcher and hitpause controller paths recognize these source states in both player slots. Explicit airguard.velocity/airguard.ctrltime expressions are evaluated at HitDef creation. XY velocities, native 1.5x/0.5x aerial fallback, guard hit/slide time and aerial control time feed GetHitVar; airguard cornerpush parameters reach actual contact results. NoAirGuard joins actor-local assertions and IsAsserted. Nonzero Z velocity fails explicitly.

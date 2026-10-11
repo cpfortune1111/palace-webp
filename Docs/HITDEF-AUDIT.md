@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.38
+# HitDef parameter audit — 0.24.39
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -83,7 +83,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.dist.height | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | guard.dist.width | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | guard.hittime | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| guard.kill | Partial | — | MUGEN + Ikemen | The nonlethal guard floor exists; lethal chip currently switches into the unguarded resolution path instead of preserving guard-hit semantics. |
+| guard.kill | Partial | — | MUGEN + Ikemen | Nonlethal guard floor and native lethal-chip switch to hit reaction exist. Pinned native char.go confirms this switch is intentional. NoKO/NoGuardKO/global survival assertions, rounding and queued damage parity remain pending. |
 | guard.pausetime | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.slidetime | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.sparkangle | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |

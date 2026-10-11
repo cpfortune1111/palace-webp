@@ -1,3 +1,7 @@
+## 0.24.39 — KO/cornerpush assertions
+
+NoKOFall and NoKOVelocity now independently suppress their HitDef KO reaction additions without suppressing HP damage. NoCornerPush suppresses actual root displacement while retaining and decaying stored cornerpush velocity. Unit and browser tests cover mixing, redirects, enabling/disabling and both player slots. This remains partial controller support; native alive/NoKO/global flags, complete hit reaction mappings and helper cornerpush are pending.
+
 ## 0.24.38 — Aerial guard execution
 
 Imported character aerial guards now execute original states 154/155, airguard velocity/control/cornerpush and NoAirGuard. Unit and browser regressions cover both player slots through recovery and landing. Controller inventory now expands delegated compiler prefixes. This remains partial MUGEN/Ikemen support: Venus aerial guard data/assets, native input ordering, Z and further controllers/parameters are pending.

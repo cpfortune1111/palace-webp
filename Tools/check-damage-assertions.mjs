@@ -17,6 +17,11 @@ run({flag:'NoStandGuard',flag2:'NoCrouchGuard',flag3:'UnGuardable',redirectid:'7
 assert.equal(other.assertions.has('nostandguard'),true);assert.equal(other.assertions.has('nocrouchguard'),true);assert.equal(other.assertions.has('unguardable'),true);
 run({flag:'NoAirGuard',redirectid:'7'});assert.equal(other.assertions.has('noairguard'),true);
 run({flag:'NoAirGuard',redirectid:'7',enabled:'0'});assert.equal(other.assertions.has('noairguard'),false);
+run({flag:'NoKOFall',flag2:'NoKOVelocity',redirectid:'7'});
+assert.equal(other.assertions.has('nokofall'),true);assert.equal(other.assertions.has('nokovelocity'),true);
+run({flag:'NoKOFall',flag2:'NoKOVelocity',redirectid:'7',enabled:'0'});
+assert.equal(other.assertions.has('nokofall'),false);assert.equal(other.assertions.has('nokovelocity'),false);
+run({flag:'NoCornerPush',redirectid:'7'});assert.equal(other.assertions.has('nocornerpush'),true);
 assert.throws(()=>run({flag:'NoHitDamage',flag2:'Intro'}),/Unsupported mixed/);
 assert.equal(run({flag:'Intro'}),false);
 actor.assertions.clear();assert.equal(actor.assertions.size,0);
