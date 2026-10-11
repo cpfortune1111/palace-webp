@@ -1,4 +1,8 @@
-# 0.24.21 — Reaction ignorehitpause
+# 0.24.22 — Velocity redirection
+
+VelSet/Add/Mul now share caller-context evaluation and root/helper redirectid writes, respecting target facing and float32 velocity storage. Module tests cover local-scale arithmetic; browser tests verify actual redirected roots/helpers. Z physics and complete movement compatibility remain pending.
+
+## 0.24.21 — Reaction ignorehitpause
 
 Reaction controllers opted into ignorehitpause now execute during hitshake while ordinary controllers, state time, animation and physics remain frozen. P1/P2 outer pause forwarding avoids duplicate execution and timer decrements. Full controller compatibility remains in progress.
 

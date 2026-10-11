@@ -1,3 +1,11 @@
+## 0.24.22 — Velocity controller redirection
+
+VelSet/Add/Mul share Engine/velocity-controllers.js before specialized dispatch. Caller expressions evaluate before writing the redirected target's relative velocity; missing IDs do not write. Root and helper world velocity adapters convert X using target facing. Inputs/results use native float32 rounding; omitted axes retain their values. VelSet/Add scale redirected values; VelMul does not scale multipliers, matching pinned bytecode.go.
+
+Tests: check-velocity-controllers.mjs covers caller context, omitted axes, missing IDs, local-scale ratio, multiplication and float32. Real browser assertions verify both root directions and nested-helper writes at facing -1, plus existing combat/scheduler regressions.
+
+Not full certification: Z-axis stage physics, native localScale metadata import/wiring (current imported actors use one shared WEB coordinate system), native clamp/platform/binding behavior and save-state parity remain pending. Z parameters fail explicitly rather than being ignored. Position controller redirection and camera-relative PosSet remain separate gaps.
+
 ## 0.24.21 — Reaction ignorehitpause execution
 
 Source reaction dispatch now gates controller scheduling with the actual hitpause state instead of returning before controllers. Opted-in persistent counters continue; ordinary counters are not consumed. Controllers-only forwarding allows the outer simulation pause to execute P1/P2 reaction controllers while retaining one timer decrement and frozen state time, AIR advancement, hit time and physics. Entity-defender pause forwards paused source reactions directly rather than decrementing hitshake once inside and again outside.
