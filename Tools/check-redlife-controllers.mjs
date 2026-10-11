@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {applyRedLifeController} from '../Engine/redlife-controllers.js';
+import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife} from '../Engine/redlife-controllers.js';
 
 const actor={life:500,lifeMax:1000,redLife:900,finalDefense:2},other={life:200,lifeMax:1000,redLife:800,finalDefense:1};
 let enabled=true,noDamage=false;
@@ -13,4 +13,17 @@ enabled=false;run('RedLifeSet',{value:'900'});assert.equal(actor.redLife,500);
 enabled=true;noDamage=true;run('RedLifeSet',{value:'900'});assert.equal(actor.redLife,500);
 actor.life=0;run('RedLifeSet',{value:'900'});assert.equal(actor.redLife,0);
 assert.throws(()=>run('RedLifeSet',{}),/Missing/);
+assert.equal(hitRedLifeDamage(101,1,2,500),51);
+assert.equal(hitRedLifeDamage(1,0.01,2,500),1);
+assert.equal(hitRedLifeDamage(100,0,2,500),0);
+assert.equal(hitRedLifeDamage(100,20,1,500),500);
+assert.equal(hitRedLifeDamage(100,20,1,500,false),2000);
+assert.equal(hitRedLifeDamage(-101,1,2,500),-51);
+actor.life=500;actor.redLife=900;
+consumeHitRedLife(actor,100,400,true,false);assert.equal(actor.redLife,800);
+consumeHitRedLife(actor,1000,400,true,false);assert.equal(actor.redLife,400);
+consumeHitRedLife(actor,-1000,400,true,false);assert.equal(actor.redLife,1000);
+consumeHitRedLife(actor,100,400,false,false);assert.equal(actor.redLife,1000);
+consumeHitRedLife(actor,100,400,true,true);assert.equal(actor.redLife,1000);
+consumeHitRedLife(actor,100,0,true,true);assert.equal(actor.redLife,0);
 console.log('Red life bounds, death clearing, defense rounding, absolute and redirect paths passed');

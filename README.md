@@ -1,3 +1,7 @@
+# 0.24.31 — HitDef red-life damage
+
+Explicit hitredlife/guardredlife now consume real red-life resources using a separate attack multiplier and defense calculation. Unit/browser checks cover damage, guard values and bounds. Native defaults, exact queued timing, recovery and full controller compatibility remain in progress.
+
 # 0.24.30 — RedLife controllers
 
 RedLifeAdd/Set now write real root/helper resources with redirectid, life bounds, defense rounding and absolute handling. The redlife expression reads current storage; dead actors clear it. Browser checks cover helper-local execution and round gates. Automatic hit consumption/recovery and HUD integration remain pending.

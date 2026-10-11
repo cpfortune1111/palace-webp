@@ -1,3 +1,11 @@
+## 0.24.31 — Explicit HitDef red-life damage
+
+Explicit HitDef hitredlife/guardredlife now calculate independent red-life damage using the actor-owned AttackMulSet redlife slot (including projectile snapshots), target defense, half-away rounding, minimum positive damage and remaining-life bounds. Actual WEB contact resolution consumes the selected hit/guard amount and clamps red life against post-hit life. GetHitVar hitredlife/guardredlife expose unbounded computed amounts. Zero or omitted explicit values do not change existing imported characters.
+
+Unit checks verify multiplier, defense, rounding, bounds, healing, feature gates and death clearing. Browser resolver assertions verify actual resource changes for 1x/2x multipliers and guard metadata. The existing simultaneous Saturn super regression remains required.
+
+Partial implementation only: native omitted-value constants import, attack-base composition, queued end-of-update consumption timing, accumulated GetHitVar metadata, noredlifedamage assertions, keepstate gating and helper-target collision routing remain pending. Existing LifeSet synchronization, recovery, HUD, native configuration and team sharing gaps remain. This does not certify full HitDef or AttackMulSet support.
+
 ## 0.24.30 — RedLife resource controllers
 
 RedLifeAdd/Set now execute through Engine/redlife-controllers.js with actual root/helper storage and redlife expression reads. Caller-context value/absolute/redirectid, integer conversion, defense scaling, native half-away rounding, alive lower bound=current life and upper bound=lifeMax follow pinned bytecode.go/char.go. Dead actors clear redlife even when round writes are gated. Root round reset initializes resources at lifeMax.
