@@ -1,4 +1,6 @@
-# 0.24.03 — Neptune all states / AI
+# 0.24.04 — Neptune selection / ACS / Battle entry
+
+## 0.24.03 — Neptune all states / AI
 
 ## 0.24.02 — Neptune S0–S999 / Electric hit animation
 
