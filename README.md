@@ -1,4 +1,8 @@
-# 0.24.19 — Lifecycle scheduling
+# 0.24.20 — Reaction controller scheduling
+
+Reaction states now schedule both specialized and generic controllers with full persistent intervals and state re-entry reset, without double-consuming counters. PosAdd X follows actor facing. Browser fixtures verify conditional intervals, one-shot movement and re-entry; full controller compatibility remains in progress.
+
+## 0.24.19 — Lifecycle scheduling
 
 Lifecycle initialization now delegates conditional triggers to the scheduled dispatcher, so persistent intervals count eligible visits even when triggers are false. Command controllers retain their -1 origin and the native negative-state persistence exception. Full controller compatibility remains in progress.
 

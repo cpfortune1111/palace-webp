@@ -1,3 +1,11 @@
+## 0.24.20 — Reaction persistence and PosAdd facing
+
+Specialized fall/reaction dispatch now uses independent actor/state-entry schedules before trigger evaluation instead of only a persistent=0 executed set. Generic fallback controllers mark scheduling already applied, avoiding a second counter decrement. Reaction entry serials reset schedules even when re-entering the same state; round reset clears both root and reaction schedules.
+
+The actual reaction fixture verifies VarAdd persistent=2 with a false intervening trigger, specialized Turn persistent=3, PosAdd persistent=0 and same-state re-entry. This revealed and corrected generic PosAdd X to add x*facing, matching pinned char.go addX. Native local-coordinate redirection, Z movement and bound offsets remain unimplemented in that generic branch.
+
+Still pending common-parameter certification: reaction ignorehitpause execution (the outer hitshake path currently skips controllers), entry-time ChangeAnim shortcuts, custom-state hitpause transition suppression, debug/clipboard and Ikemen nested blocks/RunState. No full movement or scheduling certification is claimed.
+
 ## 0.24.19 — Lifecycle scheduling and command origins
 
 Positive lifecycle forwarding no longer rejects false triggers before the shared scheduler. Native bytecode.go decrements persistent counters before trigger evaluation; the browser fixture verifies a persistent=2 controller with a false trigger on visit 1 executes on visits 0/2/4, not 0/3. P1 normal/reaction command and P2 command forwarding now annotate state -1 and preserve original scheduling identity, matching compiler.go's exclusion of all negative states from persistent handling.
