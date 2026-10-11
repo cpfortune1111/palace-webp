@@ -1,4 +1,6 @@
-# 0.24.06 — Saturn all states / AI
+# 0.24.07 — Saturn super multi-hit
+
+## 0.24.06 — Saturn all states / AI
 
 ## 0.24.05 — Neptune projectile / Intro / Explod layers
 
