@@ -1,12 +1,13 @@
 export function createSpecialRuntime(api){
- const entities=[],pauses={normal:null,super:null},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
+ const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
  const projectileContacts=new Map();
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
-  const pause=pauses.super?.remaining>0?pauses.super:pauses.normal?.remaining>0?pauses.normal:null;
-  if(!pause||pause.created===api.tick())return false;
-  if(entity)return !(Number(entity[pause.kind==='super'?'supermovetime':'pausemovetime']||0)>0);
-  return pause.player!==player||pause.movetime<=0;
+  const slot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal',active=pauses[slot].filter(pause=>pause?.remaining>0&&pause.created!==api.tick());
+  if(!active.length)return false;
+  if(entity){const allowance=Number(entity[slot==='super'?'supermovetime':'pausemovetime']||0),start=Math.max(Math.min(...active.map(pause=>pause.created)),entity.created??-Infinity);return api.tick()-start>allowance}
+  if(!pauses[slot][player-1]?.movetime&&api.trigger){const fighter=root(player),data=api.data(player),definition=data.states?.[String(fighter.state)]||data.attackStates?.[String(fighter.state)]||data.locomotionStates?.[String(fighter.state)];if(fighter.time===0){const pending=definition?.controllers.find(controller=>controller.type===(slot==='super'?'SuperPause':'Pause')&&Number(controller.params.movetime)>0&&api.trigger(controller,context(fighter)));if(pending){const remaining=Number(pending.params.time);pauses[slot][player-1]={kind:slot,remaining,movetime:Math.min(remaining,Number(pending.params.movetime)),player,created:api.tick()}}}}
+  return !(pauses[slot][player-1]?.movetime>0);
  };
  const numeric=(params,context)=>{
   const result={...params};
@@ -41,15 +42,15 @@ export function createSpecialRuntime(api){
   entities.push(entity);return entity;
  }
  function startPause(params,player,kind){
-  const remaining=Number(params.time),movetime=Number(params.movetime||0),slot=kind==='super'?'super':'normal',previous=pauses[slot];
-  if(!previous||previous.player===player||remaining>previous.remaining)pauses[slot]={kind,remaining,movetime:movetime>remaining?0:movetime,player,created:api.tick()};
+  const remaining=Number(params.time),movetime=Math.max(0,Math.min(remaining,Number(params.movetime||0))),slot=kind==='super'?'super':'normal';
+  pauses[slot][player-1]=remaining>0?{kind,remaining,movetime,player,created:api.tick()}:null;
   if(kind==='super'){if(params.sound){if(/^S/i.test(params.sound))api.sound(params.sound,player===1?0:4,player);else {const sound=String(params.sound).split(',').map(Number);api.commonSound(sound[0],sound[1],player===1?0:4)}}if(Number(params.unhittable??1))unhittableUntil[player]=api.tick()+remaining+1}
  }
  function dispatch(controller,binding,sourceContext,adapter,owner,player){
   const params=controller.params;
   switch(controller.type){
    case 'Projectile':spawn(params,owner,player,'projectile');return true;
-   case 'Helper':spawn(params,owner,player,'helper');return true;
+   case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
    case 'Pause':startPause(params,player,'normal');return true;
    case 'SuperPause':startPause(params,player,'super');return true;
    case 'BGPalFX':api.background(String(params.mul).split(',').map(Number));bgTime=Number(params.time);bgCreated=api.tick();return true;
@@ -97,7 +98,7 @@ export function createSpecialRuntime(api){
  }
  function removeProjectile(entity,reason){
   entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
-  const selected=entity.params[reason==='camera-top'?'projhitanim':reason==='cancel'?'projcancelanim':'projremanim'];
+  const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??entity.params.projhitanim??-1;
   if(selected!==undefined){entity.anim=Number(selected);entity.time=0;entity.elem=1;entity.elemTick=0}
   else entity.time=api.frames(entity.anim,entity.player).slice(0,entity.elem-1).reduce((total,frame)=>total+Math.max(1,Number(frame.time)||1),0)+entity.elemTick;
   entity.animStartTime=0;if(entity.anim<0||api.duration(entity.anim,entity.player)<=0)entity.destroyed=true;
@@ -139,8 +140,8 @@ export function createSpecialRuntime(api){
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }
  function finishTick(){
-  const superActive=pauses.super?.remaining>0;
-  for(const slot of ['super','normal']){const pause=pauses[slot];if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot]=null}}
+  const superActive=pauses.super.some(pause=>pause?.remaining>0);
+  for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
   if(bgTime>0&&bgCreated!==api.tick()&&--bgTime===0)api.background([256,256,256]);
  }
  return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,
@@ -148,5 +149,5 @@ export function createSpecialRuntime(api){
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
-  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal=null;pauses.super=null;unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
+  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
 }

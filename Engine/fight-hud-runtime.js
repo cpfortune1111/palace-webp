@@ -27,7 +27,7 @@ export function createFightHud(){
    for(const [amount,animation] of [[trails[player-1].value,'12'],[fronts[player-1].value,'1311']]){context.save();const edge=player===1?619-458*amount:1278-619;context.beginPath();context.rect(edge,0,458*amount,720);context.clip();sprite(fight,fightAtlas,fight.actions[animation][animation==='1311'?Math.floor(ticks/4)%60:0],anchor,0,facing);context.restore();}
    const background=fight.sprites['51,0'];backdropContext.save();backdropContext.translate(player===1?0:1280,0);backdropContext.scale(facing,1);backdropContext.drawImage(fightAtlas,background.x,background.y,background.w,background.h,-background.axisX,-background.axisY,background.w,background.h);backdropContext.restore();
    const ownEmblem=characterEmblems.get((player===1?first:second).character);const emblemData=ownEmblem?.data||emblem;
-   if(emblemData)for(const animation of hpEmblemLayers(life,max)){const frame=hpEmblemFrame(emblemData,animation,ticks);if(frame&&!frame.empty)sprite(emblemData,ownEmblem?ownEmblem.images[emblemData.sprites[frame.group+','+frame.item].page]:emblemAtlas,frame,player===1?147:1133,75)}
+   if(emblemData)for(const animation of hpEmblemLayers(life,max)){const frame=hpEmblemFrame(emblemData,animation,ticks);if(frame&&!frame.empty)sprite(emblemData,ownEmblem?ownEmblem.images[emblemData.sprites[frame.group+','+frame.item].page]:emblemAtlas,frame,player===1?180:1100,85)}
   }
   sprite(fight,fightAtlas,fight.actions['60'][0],0,0);
   const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?614:642,42)}

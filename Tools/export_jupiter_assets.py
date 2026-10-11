@@ -5,6 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / 'Legacy'))
 from export_venus_turn import export
+from normalize_jupiter_intro import normalize_intro
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source', type=Path, required=True)
@@ -16,6 +17,7 @@ enabled = tuple(str(action['id']) for action in actions if action['id'] not in (
 export(arguments.source, arguments.output, enabled, 'jupiter_full', 'jupiter', webp_quality=85, blank_pairs=((122, 0), (951, 99), (953, 99)), trim_transparent=True)
 metadata_path = arguments.output / 'jupiter_full.json'
 metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
+normalize_intro(metadata)
 metadata['character'] = 'SailorJupiter'
 metadata['disabledActions'] = [60, 9050]
 metadata['compression'] = {'format': 'webp', 'quality': 85, 'alphaQuality': 100}
