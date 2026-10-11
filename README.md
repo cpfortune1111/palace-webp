@@ -1,4 +1,6 @@
-# 0.24.04 — Neptune selection / ACS / Battle entry
+# 0.24.05 — Neptune projectile / Intro / Explod layers
+
+## 0.24.04 — Neptune selection / ACS / Battle entry
 
 ## 0.24.03 — Neptune all states / AI
 

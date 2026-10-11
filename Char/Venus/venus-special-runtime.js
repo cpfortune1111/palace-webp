@@ -32,7 +32,7 @@ export function createSpecialRuntime(api){
  function spawn(params,owner,player,kind){
   const sourceContext=context({...owner,player,key:owner.key||'root'+player});
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
-  const entity={kind,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
+  const entity={kind,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,fvars:Array(40).fill(0),hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
@@ -117,7 +117,8 @@ export function createSpecialRuntime(api){
     if(entity.state!==previous)continue;
     if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
    }else if(!entity.removing){
-    if(api.projectileOutside?.(entity)){entity.destroyed=true;continue}
+    const invisible=entity.scale.every(value=>value===0);
+    if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}
     if(entity.removetime===0)removeProjectile(entity,'expire');
     if(entity.removetime>0)entity.removetime--;
    }
