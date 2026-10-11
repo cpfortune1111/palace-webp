@@ -1,3 +1,9 @@
+## 0.24.19 — Lifecycle scheduling and command origins
+
+Positive lifecycle forwarding no longer rejects false triggers before the shared scheduler. Native bytecode.go decrements persistent counters before trigger evaluation; the browser fixture verifies a persistent=2 controller with a false trigger on visit 1 executes on visits 0/2/4, not 0/3. P1 normal/reaction command and P2 command forwarding now annotate state -1 and preserve original scheduling identity, matching compiler.go's exclusion of all negative states from persistent handling.
+
+Tests: lifecycle VarRandom regression, negative-state scheduler unit checks, real browser lifecycle conditional execution and existing simultaneous Saturn supers. Remaining scheduling gaps include specialized reaction controllers, custom-state hitpause transition suppression, clipboard/debug paths and Ikemen nested blocks/RunState. These changes do not certify all common parameters.
+
 ## 0.24.18 — Angle trails and reflections
 
 Afterimage capture now clones actor angle state, including scale/pivot arrays, instead of retaining mutable references. Trail rendering applies the recorded matrix and animation-facing convention. Stage reflections apply actor angle drawing under the existing mirrored floor transform. Pinned native char.go records charSD for afterimages and defaults reflection data to char sprite data.

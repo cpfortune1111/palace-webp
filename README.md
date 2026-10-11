@@ -1,4 +1,8 @@
-# 0.24.18 — Angle trails / reflections
+# 0.24.19 — Lifecycle scheduling
+
+Lifecycle initialization now delegates conditional triggers to the scheduled dispatcher, so persistent intervals count eligible visits even when triggers are false. Command controllers retain their -1 origin and the native negative-state persistence exception. Full controller compatibility remains in progress.
+
+## 0.24.18 — Angle trails / reflections
 
 Afterimages now retain independent recorded angle, scale and pivot snapshots; stage reflections apply actor AngleDraw transforms. Rotation arithmetic and actual browser trail bounds are tested. Full controller/parameter compatibility remains in progress.
 

@@ -33,3 +33,9 @@ for(let tick=0;tick<4;tick++){
 assert.equal(actors.prepare(1,2,controller,{global:true,hitPause:true}).eligible,false);
 actors.reset();assert.equal(actors.prepare(1,1,controller).eligible,true);
 console.log('Actor/state ownership, cloned source identity, negative states and round reset passed');
+for(const stateNo of [-1,-2,-3]){
+ const negative={...controller,controllerStateNo:stateNo};
+ for(let tick=0;tick<3;tick++){const visit=actors.prepare(1,1,negative,{global:negative.controllerStateNo<0});assert.equal(visit.eligible,true);visit.executed()}
+}
+console.log('All MUGEN negative state origins ignore persistent counters');
+

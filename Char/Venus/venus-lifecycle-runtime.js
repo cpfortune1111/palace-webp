@@ -4,11 +4,10 @@ export function createLifecycleRuntime(api){
  const controllerType=controller=>canonicalTypes[controller.type.toLowerCase()]||controller.type;
  const number=(expression,context)=>Number(api.eval(expression,context));
  function execute(controller,fighter,context){
-  if(!api.trigger(controller,context))return false;
   const params=controller.params,type=controllerType(controller);
   switch(type){
    case 'VarRangeSet':case 'VarRandom':case 'PowerSet':api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);break;
-   case 'DisplayToClipboard':api.debug?.(fighter,params,context);break;
+   case 'DisplayToClipboard':if(api.trigger(controller,context))api.debug?.(fighter,params,context);break;
    default:api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);
   }
   return true;
