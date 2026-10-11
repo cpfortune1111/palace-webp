@@ -1,3 +1,11 @@
+## 0.24.28 — Actor-owned defense multiplier
+
+DefenceMulSet now uses Engine/defense-controllers.js and real root/helper storage. value, onhit and redirectid evaluate in caller context; literal multype 0/1 selects reciprocal damage multiplier versus direct defense multiplier. MUGEN defaults onhit=true/multype=0 and Ikemen defaults false/1 follow pinned bytecode.go. Current imported characters use MUGEN mode. Effective custom defense activates only in MoveType H when delayed, matching char.go's final-defense calculation. Damage now divides by effective defense; LifeAdd uses the same custom defense factor. Round reset restores root defaults; helpers retain independent state.
+
+Unit tests verify both version defaults, delay, reciprocal/direct values and missing targets. Browser LifeAdd checks verify root redirects, delayed activation and actual helper-local defense without changing root storage. Existing combat regressions remain required.
+
+Not fully certified: Ikemen import/version selection, native final-defense update tick timing, complete base/fall/super/team defense composition, zero/negative/nonfinite defense damage behavior, helper attack damage routing, fall damage and save-state parity. Module semantics and current root damage paths are not a claim of full defense certification.
+
 ## 0.24.27 — HitVelSet target velocity
 
 HitVelSet joins the shared velocity dispatcher rather than reading caller context hitVelocity in a separate switch. Flags and redirectid evaluate in caller context, but selected axes copy the target's own GetHit xvel/yvel. Relative X is target GetHit xvel*facing; mutable world adapters then retain correct world motion. Omitted/zero flags preserve velocity. No MoveType H gate is applied, matching pinned bytecode.go. Root, reaction and ground-reaction bindings expose actual GetHit storage.

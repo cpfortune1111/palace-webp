@@ -1,4 +1,8 @@
-# 0.24.27 — Hit velocity redirection
+# 0.24.28 — Defense multiplier semantics
+
+DefenceMulSet now keeps actor-owned defense state, resolves redirectid and supports onhit/multype with native MUGEN defaults. Damage and LifeAdd consume effective custom defense; helper-local controllers no longer alter their root. Browser damage tests cover immediate/delayed activation. Full compatibility remains in progress.
+
+## 0.24.27 — Hit velocity redirection
 
 HitVelSet now reads redirected target GetHit velocity, converts X by target facing and writes through shared root/reaction/helper bindings. Omitted/disabled axes remain unchanged; no MoveType H restriction is added. Actual browser target/local-helper checks cover the path. Full controller compatibility remains in progress.
 
