@@ -2,6 +2,14 @@
 
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; MUGEN 1.1b1 documentation. The registry inventory is not a complete parameter certification.
 
+## 0.24.16 — Angle state and 2D drawing
+
+AngleSet/Add/Mul/Draw evaluate numeric expressions in caller context and support redirected roots/helpers. Defaults follow the pinned bytecode: AngleSet and AngleMul use zero for omitted axes; AngleAdd and AngleDraw preserve omitted axes. Float32 angle storage persists across ordinary ticks; enabled/scale/pivot draw modifiers reset each active tick. Repeated AngleDraw scales multiply. Pivot and per-actor facing are applied to actual root/helper sprite drawing.
+
+Tests: `Tools/check-angle-controllers.mjs`; browser pixel-bound assertions verify a 90-degree root rotation exchanges width/height and reset restores the original image bounds, while P1/P2 angle storage stays independent. Existing helper, Map, variable, resource and Saturn simultaneous-super assertions pass.
+
+Pending certification: nonzero xangle/yangle perspective rendering, native reflection/afterimage transforms, frozen-round reset timing, camera/local-coordinate pivot parity and custom hitpause rendering. X/Y angle state is evaluated and stored, but the 2D renderer explicitly throws on nonzero X/Y projection rather than claiming support. This is not full Angle family certification.
+
 ## 0.24.15 — Ikemen maps
 
 Nine map controllers now have execution paths: MapSet/Add, ParentMapSet/Add, RootMapSet/Add, TeamMapSet/Add and MapReset. Actor-owned Maps support case-insensitive Map expression reads, string values, numeric addition, root/parent/redirect ownership and reset to defaults. MapReset supports exclude and exclude2–8 as case-insensitive substring exclusions. Native string addition rejection warns without overwriting storage. Helpers receive separate map storage; extendsmap copies the spawning actor's maps when enabled.

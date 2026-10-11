@@ -1,4 +1,8 @@
-# 0.24.15 — Ikemen Map controllers
+# 0.24.16 — Angle controllers / 2D draw
+
+AngleSet/Add/Mul and AngleDraw now share actor-owned angle state. Root/helper 2D drawing applies rotation, accumulated scale and pivot; draw flags reset each active tick. Actual root pixel-bound tests verify 90-degree rotation and reset. Ikemen X/Y-axis perspective projection remains explicitly unsupported, not silently ignored; full compatibility remains in progress.
+
+## 0.24.15 — Ikemen Map controllers
 
 MapSet/Add, ParentMapSet/Add, RootMapSet/Add, TeamMapSet/Add and MapReset now execute in the WEB runtime. Map expression reads, lowercase keys, numeric/string storage, helper ownership, redirect IDs and reset exclusions are tested. Full compatibility remains in progress; team modes and typed-expression/compiler parity are tracked explicitly.
 

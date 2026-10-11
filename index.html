@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.24.15 Ikemen Map Controllers</title>
+<title>Prototype 0.24.16 Angle Controllers / 2D Draw</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,19 +40,20 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.15 · Ikemen Map Controllers</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD map-controllers-02415-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.16 · Angle Controllers / 2D Draw</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD angle-controllers-02416-20261011-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {applyMapController} from './Engine/map-controllers.js?v=02415';
-import {applyResourceController} from './Engine/resource-controllers.js?v=02415';
-import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02415';
-import {applyVariableController} from './Engine/variables.js?v=02415';
+import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing} from './Engine/angle-controllers.js?v=02416';
+import {applyMapController} from './Engine/map-controllers.js?v=02416';
+import {applyResourceController} from './Engine/resource-controllers.js?v=02416';
+import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02416';
+import {applyVariableController} from './Engine/variables.js?v=02416';
 import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02415';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02416';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
@@ -60,7 +61,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02415';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02416';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -118,22 +119,22 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.15 · Ikemen Map Controllers';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.16 · Angle Controllers / 2D Draw';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {electricHitStates} from './Engine/electric-hit-states.js?v=02415';
-import {resolveHitPriority} from './Engine/hit-priority.js?v=02415';
-import {excludesHit} from './Engine/hit-attribute-mask.js?v=02415';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02415';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02415';
+import {electricHitStates} from './Engine/electric-hit-states.js?v=02416';
+import {resolveHitPriority} from './Engine/hit-priority.js?v=02416';
+import {excludesHit} from './Engine/hit-attribute-mask.js?v=02416';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02416';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02416';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
 fetch(assetUrl('./venus_special.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));specialDat=data}).catch(showRuntimeError);
 let reactionDat,reactionAtlases=[];
-const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02415').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
+const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02416').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -208,7 +209,7 @@ function drawSourceExplods(){
   if(!source)continue;
   const drawing=!effect.ontop&&!effect.screen&&effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
   const airFlip=String(frame.flip||'').toUpperCase();
-  drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
+  drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));if(effect.entity)transformAngleDrawing(drawing,effect.angleState);drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
  }
 }
 function playSourceSound(value,channel=-1,player=characterScopePlayer){
@@ -268,13 +269,15 @@ function drawMarsForCharacter(){
  mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();
  const src=spriteCanvasFor(f);
  if(src){
- if(flip){mctx.translate(dx+sp.w*scale,0);mctx.scale(-1,1);mctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale)}
+ if(rootAngleStates[1].enabled){mctx.translate(px,ground+fighter.y*scale);mctx.scale((flip?-1:1)*scale,scale);transformAngleDrawing(mctx,rootAngleStates[1]);mctx.drawImage(src,-sp.axisX+f.ox,-sp.axisY+f.oy)}
+ else if(flip){mctx.translate(dx+sp.w*scale,0);mctx.scale(-1,1);mctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale)}
  else mctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);
  }
  mctx.restore();
 }
 const input={left:false,right:false,up:false,down:false,jump:false,neutralVertical:false};
 let vx=0,vy=0,posX=-280,posY=0,p1Facing=1,state=0,prevState=0,runtimeCtrl=1,runtimeMoveType='I',jumpLatch=false,jumpIntent='neutral',stateTicks=0;
+const rootAngleStates=[createAngleState(),createAngleState()];
 const rootMaps=[new Map(),new Map()],rootMapDefaults=[new Map(),new Map()];
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0),runtimeFVar=Array(40).fill(0),runtimeSysFVar=Array(5).fill(0);
 let p1SprPriority=0,p1Life=1000,p1LifeMax=1000;
@@ -512,7 +515,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02415'),fetch(base+prefix+'_full.json?v=02415'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02415')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02416'),fetch(base+prefix+'_full.json?v=02416'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02416')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -532,7 +535,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,character);if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
-  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02415';images[page]=image})));
+  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02416';images[page]=image})));
   fightHud.setCharacterEmblem(character,data,images);
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
@@ -818,6 +821,10 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  scheduling?.executed();
  const params=controller.params||controller;
  const value=expression=>Number(evalM1(expression,context));
+ if(applyAngleController(controller,adapter.owner||specialRoot(player),{
+  evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,
+  findActor:id=>id===1||id===2?specialRoot(id):specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id)
+ }))return;
  if(applyMapController(controller,adapter.owner||specialRoot(player),{
   evaluate:expression=>evalM1(expression,context),
   findActor:id=>id===1||id===2?specialRoot(id):specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id),
@@ -1147,7 +1154,7 @@ function spawnSourceHitSpark(params,guarded,attacker,defender){
  const context=fighterExpressionContext(attacker,defender),offset=splitExpressionPairM1(params.sparkxy||'0,0').map(expression=>Number(evalM1(expression,context))),edge=constVal('size.'+(defender.type==='A'?'air':'ground')+'.'+(attacker.facing!==defender.facing?'front':'back'),defender.player)*(attacker.facing!==defender.facing?1:-1);
  sourceExplods.push({id:-1,anim:Number(match[1]),player:attacker.player,ownerKey:attacker.key,x:defender.x+edge*defender.facing-(offset[0]||0)*attacker.facing,y:attacker.y+(offset[1]||0),vx:0,vy:0,facing:attacker.facing,age:0,sprpriority:3,supermovetime:999999999,pausemovetime:999999999});
 }
-function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);p2.fvars??=Array(40).fill(0);p2.sysfvars??=Array(5).fill(0);return {...p2,maps:rootMaps[1],mapDefaults:rootMapDefaults[1],player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:p1LifeMax,vars:runtimeVar,sysvars:runtimeSysVar,fvars:runtimeFVar,sysfvars:runtimeSysFVar,hitCount:p1HitCount,maps:rootMaps[0],mapDefaults:rootMapDefaults[0],player:1,key:'root1'}}
+function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);p2.fvars??=Array(40).fill(0);p2.sysfvars??=Array(5).fill(0);return {...p2,angleState:rootAngleStates[1],maps:rootMaps[1],mapDefaults:rootMapDefaults[1],player:2,key:'root2'}}return {...p1ExpressionFighter(),prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:p1LifeMax,vars:runtimeVar,sysvars:runtimeSysVar,fvars:runtimeFVar,sysfvars:runtimeSysFVar,hitCount:p1HitCount,angleState:rootAngleStates[0],maps:rootMaps[0],mapDefaults:rootMapDefaults[0],player:1,key:'root1'}}
 function applyEntityHit(entity,defender,params){
  const held=canonicalNow(),guard=entity.player===1?p2GuardMode():held.B?(held.D?'crouch':'stand'):'none';
  const hitFacing=profileFor(entity.player)?.battle.character==='SailorMoon'&&[3050,3051].includes(entity.state)?Math.sign(defender.x-entity.x)||entity.facing:entity.facing;
@@ -1181,7 +1188,7 @@ const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot(
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
  reset:()=>{
-  resetPlayerInput();customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);defenceMultipliers.fill(1);resourceDamage.fill(0);rootControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
+  resetPlayerInput();customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);defenceMultipliers.fill(1);resourceDamage.fill(0);for(let index=0;index<2;index++)Object.assign(rootAngleStates[index],createAngleState());rootControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
   roundVoiceUntil=0;roundAnnouncerUntil=0;roundNotOverUntil.fill(0);playerPushDisabledUntil.fill(0);
   for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
   for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
@@ -1676,7 +1683,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.15',build:'map-controllers-02415-20261011-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.16',build:'angle-controllers-02416-20261011-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1684,10 +1691,11 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.15-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.16-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
+ for(const player of [1,2])if(!specialRuntime.blocked(player))resetAngleDraw(rootAngleStates[player-1]);
  const roundActive=roundFlow.canFight();
  fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life/p1LifeMax*1000,p2.life/p2.lifeMax*1000]);
  stepFallShake();
@@ -1814,7 +1822,8 @@ function drawForCharacter(){
  let frames=framesFor(drawAnim);if(!frames.length)frames=framesFor(0);if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(posX+hitShakeOffset(displayP1()))*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
  const src=spriteCanvasFor(f);if(!src)return;
- if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
+ if(rootAngleStates[0].enabled){ctx.save();ctx.translate(px,ground+posY*scale);ctx.scale(spriteFacingFor(drawAnim,p1Facing)*scale,scale);transformAngleDrawing(ctx,rootAngleStates[0]);ctx.drawImage(src,-sp.axisX+f.ox,-sp.axisY+f.oy);ctx.restore()}
+ else if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
  else ctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);
 }
 function updateStageClipping(){
