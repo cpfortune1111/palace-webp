@@ -1,3 +1,11 @@
+## 0.24.30 — RedLife resource controllers
+
+RedLifeAdd/Set now execute through Engine/redlife-controllers.js with actual root/helper storage and redlife expression reads. Caller-context value/absolute/redirectid, integer conversion, defense scaling, native half-away rounding, alive lower bound=current life and upper bound=lifeMax follow pinned bytecode.go/char.go. Dead actors clear redlife even when round writes are gated. Root round reset initializes resources at lifeMax.
+
+Unit checks cover resource bounds, absolute, defense rounding, missing targets, enabled/no-damage gating and death clearing. Browser checks verify both root/helper writes, actual helper-local RedLifeAdd, expression reads and current WEB round gating.
+
+Not complete: HitDef redlife/guardredlife and AttackMulSet redlife consumption, automatic recovery, red-life HUD, native fight.def redlifebar configuration import (WEB currently has an internal enabled flag), exact roundNoDamage rules, LifeSet/LifeAdd synchronization, team life sharing, nonfinite conversion and save-state parity. These controller paths do not certify the full red-life system or all parameters.
+
 ## 0.24.29 — AttackMulSet damage execution
 
 AttackMulSet now evaluates value and per-field overrides in caller context and writes actor-owned root/helper attack state. value sets four native multiplier slots before explicit damage/redlife/dizzypoints/guardpoints overrides, following pinned compiler-functions.go/bytecode.go. Actual root/helper HitDef damage uses the attack damage factor. Projectiles copy spawning actor state at creation, matching char.go parentAttackMul snapshots, rather than reading later root changes. Root round reset restores defaults.

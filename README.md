@@ -1,4 +1,8 @@
-# 0.24.29 — Attack multiplier damage
+# 0.24.30 — RedLife controllers
+
+RedLifeAdd/Set now write real root/helper resources with redirectid, life bounds, defense rounding and absolute handling. The redlife expression reads current storage; dead actors clear it. Browser checks cover helper-local execution and round gates. Automatic hit consumption/recovery and HUD integration remain pending.
+
+## 0.24.29 — Attack multiplier damage
 
 AttackMulSet now owns root/helper multipliers, resolves redirectid and applies its damage factor to actual HitDef damage. Projectiles snapshot the spawning actor's multipliers. value/field precedence is tested. Red-life/dizzy/guard systems and full controller compatibility remain pending.
 
