@@ -125,7 +125,7 @@ def compile_runtime(imported, output):
         compiled = non_3do_controller(controller)
         if compiled is None or compiled['params'].get('value') not in states:
             continue
-        target = player_commands if any(re.search(r'!AILevel', expression, re.I)
+        target = player_commands if any(re.search(r'!\s*AILevel', expression, re.I)
                                         for expression in compiled['triggerall']) else ai_commands
         target.append(compiled)
     bundle = {'character': 'SailorJupiter', 'runtimeEnabled': True, 'states': states, 'constants': constants,
