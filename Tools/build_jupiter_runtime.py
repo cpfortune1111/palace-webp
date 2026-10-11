@@ -50,6 +50,8 @@ def compile_runtime(imported, output):
             if compiled is None:
                 continue
             compiled['type'] = canonical.get(compiled['type'].lower(), compiled['type'])
+            if state_id in (630, 640) and compiled['type'] == 'ChangeAnim':
+                compiled['params']['value'] = str(state_id)
             if compiled['type'] == 'ChangeAnim' and compiled['params'].get('value', '').isdigit() and int(compiled['params']['value']) in DISABLED_ACTIONS:
                 continue
             if state_id == 190 and compiled['type'] == 'ChangeState':
@@ -130,7 +132,7 @@ def compile_runtime(imported, output):
         target.append(compiled)
     bundle = {'character': 'SailorJupiter', 'runtimeEnabled': True, 'states': states, 'constants': constants,
               'attackStates': {key: value for key, value in states.items() if value['moveType'] == 'A'},
-              'locomotionStates': {key: states[key] for key in ('70', '100', '105')},
+              'locomotionStates': {key: states[key] for key in ('70', '100', '105', '106')},
               'lifecycleStates': {key: states[key] for key in ('5900', '190', '191', '192', '170', '175', '180', '181', '1990', '1991')},
               'fallStates': {key: value for key, value in states.items() if 5000 <= int(key) < 5900},
               'lifecycleHelpers': {key: states[key] for key in ('915', '925', '950', '951', '9999')},

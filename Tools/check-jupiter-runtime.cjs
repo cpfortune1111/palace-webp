@@ -33,7 +33,7 @@ const server=http.createServer((request,response)=>{
    for(const player of [1,2]){
     if(players[player-1]!=='SailorJupiter')continue;
     for(const hardware of [0]){
-     for(const skill of [1000,1100,1200,1300,3000,3005,200,210,230,240,400,410,430,440,600,610,630,640]){
+     for(const skill of [106,1000,1100,1200,1300,3000,3005,200,210,230,240,400,410,430,440,600,610,630,640]){
       await run(`lifecycleRuntime.rounds.state=2;resetPlayerInput();specialRuntime.reset();sourceExplods.length=0;customStateOwners.fill(null);customAnimationOwners.fill(null);throwTargets.fill(null);throwBindings.fill(null);p1Reaction=null;p1HitPause=0;p2.hitShake=0;p2.attackPause=0;p1Life=1000;p2.life=1000;posX=-70;p2.x=70;posY=${skill>=600&&skill<=640?-250:0};p2.y=${skill>=600&&skill<=640?-250:0};enterIRState(0);enterP2State(0);p1Facing=1;p2.facing=-1;if(${skill}===1300)p2.x=posX+constVal('size.ground.front',1)+constVal('size.ground.front',2)+10;runtimeCtrl=1;p2.ctrl=1;specialRoot(${player}).vars[50]=${hardware};specialRoot(${player}).vars[2]=0;${player===1?'enterIRState':'enterP2State'}(${skill});`);
       const trace=await run(`(()=>{const seen=new Set();for(let tick=0;tick<1400;tick++){simStep();seen.add(${player===1?'state':'p2.state'});if([0,11].includes(${player===1?'state':'p2.state'})&&tick>10)break;}return {state:${player===1?'state':'p2.state'},y:${player===1?'posY':'p2.y'},life:${player===1?'p2.life':'p1Life'},seen:[...seen],runtimeFailed}})()`);
       assert.equal(trace.runtimeFailed,false,JSON.stringify({players,player,hardware,skill,trace}));

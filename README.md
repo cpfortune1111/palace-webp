@@ -1,4 +1,6 @@
-# 0.23.98 — Jupiter inputs / Helpers / Electric reactions
+# 0.23.99 — Jupiter effects / Projectiles / Electric recovery
+
+## 0.23.98 — Jupiter inputs / Helpers / Electric reactions
 
 ## 0.23.97 — Jupiter S0–S4999 / SNES
 

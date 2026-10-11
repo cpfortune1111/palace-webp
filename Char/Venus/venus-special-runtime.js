@@ -2,7 +2,6 @@ export function createSpecialRuntime(api){
  const entities=[],pauses={normal:null,super:null},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
  const projectileContacts=new Map();
  const root=player=>api.root(player);
- const endsAtCameraTop=entity=>entity.kind==='projectile'&&api.data(entity.player).userOverrides?.[String(entity.id)]?.cameraTopEnding&&entity.anim===Number(entity.params.projanim);
  const blocked=(player,entity=null)=>{
   const pause=pauses.super?.remaining>0?pauses.super:pauses.normal?.remaining>0?pauses.normal:null;
   if(!pause||pause.created===api.tick())return false;
@@ -13,7 +12,7 @@ export function createSpecialRuntime(api){
   const result={...params};
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
+  for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
  function context(entity,commands=api.commands(entity.player)){
@@ -26,6 +25,7 @@ export function createSpecialRuntime(api){
   const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
+  if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
  }
  function spawn(params,owner,player,kind){
@@ -35,7 +35,7 @@ export function createSpecialRuntime(api){
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,fvars:Array(40).fill(0),hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
-  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(params.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
+  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
@@ -112,20 +112,16 @@ export function createSpecialRuntime(api){
     const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
+    if(entity.state!==previous)continue;
     if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
    }else if(!entity.removing){
-    const height=String(entity.params.projheightbound||'-960,4').split(',').map(Number);
-    const cameraTopEnding=endsAtCameraTop(entity);
-    if((!cameraTopEnding&&entity.removetime===0)||entity.x<api.camera()-800||entity.x>api.camera()+800||entity.x<-3910||entity.x>3910||(entity.vy>0&&entity.y>height[1])||(!cameraTopEnding&&entity.vy<0&&entity.y<height[0]))removeProjectile(entity,'expire');
-    if(!cameraTopEnding&&entity.removetime>0)entity.removetime--;
+    if(api.projectileOutside?.(entity)){entity.destroyed=true;continue}
+    if(entity.removetime===0)removeProjectile(entity,'expire');
+    if(entity.removetime>0)entity.removetime--;
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    hit(entity);
    entity.x+=entity.vx;entity.y+=entity.vy;entity.time++;api.advance(entity);
-   if(endsAtCameraTop(entity)&&!entity.removing&&entity.vy<0){
-    const top=api.projectileTop(entity),edge=api.cameraTop();
-    if(entity.y+top<=edge){entity.y=edge-top;removeProjectile(entity,'camera-top')}
-   }
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
