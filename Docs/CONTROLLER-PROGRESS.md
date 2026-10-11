@@ -1,3 +1,11 @@
+## 0.24.32 — Life/red-life synchronization
+
+LifeAdd/Set now invoke the native lifeSet red-life rules through shared synchronizeLifeRedLife: death clears red life, disabled red life mirrors HP, and enabled red life is unchanged by healing (even when its current value is below HP). WEB hit resolution also synchronizes death/disabled resources independently of explicit HitDef redlife damage. Caller redirects apply these rules to the target root/helper.
+
+Unit checks verify healing preservation, death, disabled LifeSet/LifeAdd, redirects and suppressed writes. Browser tests verify actual root healing/death, disabled P2 storage and helper death. Pixel-readback fixtures explicitly request a read-friendly canvas backend and establish camera coordinates; semantic pixel assertions are unchanged.
+
+Remaining: exact native roundNoDamage integration (the LifeAdd/Set engine adapter has not yet supplied that gate), immortal helper rules, queued HitDef timing, team sharing, native redlifebar config, recovery/HUD, nonfinite conversions and complete compatibility. No blanket controller certification is claimed.
+
 ## 0.24.31 — Explicit HitDef red-life damage
 
 Explicit HitDef hitredlife/guardredlife now calculate independent red-life damage using the actor-owned AttackMulSet redlife slot (including projectile snapshots), target defense, half-away rounding, minimum positive damage and remaining-life bounds. Actual WEB contact resolution consumes the selected hit/guard amount and clamps red life against post-hit life. GetHitVar hitredlife/guardredlife expose unbounded computed amounts. Zero or omitted explicit values do not change existing imported characters.

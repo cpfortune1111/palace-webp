@@ -1,6 +1,11 @@
 const integer=value=>Math.trunc(Number(value))|0;
 const rounded=value=>Math.sign(value)*Math.floor(Math.abs(value)+0.5);
 
+export function synchronizeLifeRedLife(actor,life,enabled=true){
+ if(life<=0)actor.redLife=0;
+ else if(!enabled)actor.redLife=life;
+}
+
 export function hitRedLifeDamage(value,multiplier,defense,life,bounded=true){
  if(value===0||multiplier===0)return 0;
  let damage=value*Math.fround(multiplier)/defense;

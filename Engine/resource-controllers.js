@@ -1,3 +1,5 @@
+import {synchronizeLifeRedLife} from './redlife-controllers.js';
+
 const supported=new Set(['lifeadd','lifeset','poweradd','powerset']);
 const integer=value=>Math.trunc(Number(value))|0;
 const rounded=value=>Math.sign(value)*Math.floor(Math.abs(value)+0.5);
@@ -19,7 +21,7 @@ export function applyResourceController(controller,actor,api){
   return true;
  }
  if(type==='lifeset'){
-  if(!(target.life>0&&api.noDamage?.(target)))target.life=clamp(value,target.lifeMax);
+  if(!(target.life>0&&api.noDamage?.(target))){target.life=clamp(value,target.lifeMax);synchronizeLifeRedLife(target,target.life,api.redLifeEnabled?.(target)??true)}
   return true;
  }
  const kill=params.kill===undefined||!!evaluate(params.kill);
@@ -34,6 +36,6 @@ export function applyResourceController(controller,actor,api){
  if(delta>0&&life<previous||delta<0&&life>previous)life=0;
  if(!kill&&life<=0)life=previous>0||api.compatibility?.(actor)==='mugen'?1:0;
  if(delta<0)target.receivedDamage=(target.receivedDamage||0)+Math.min(previous,-delta);
- if(!(previous>0&&api.noDamage?.(target)))target.life=clamp(life,target.lifeMax);
+ if(!(previous>0&&api.noDamage?.(target))){target.life=clamp(life,target.lifeMax);synchronizeLifeRedLife(target,target.life,api.redLifeEnabled?.(target)??true)}
  return true;
 }

@@ -1,3 +1,7 @@
+# 0.24.32 — Life/red-life synchronization
+
+LifeAdd/Set clear red life on death and mirror HP when red life is disabled, matching the pinned native lifeSet behavior. Healing preserves enabled red life. Root/helper browser tests and module tests cover these rules; complete controller compatibility remains in progress.
+
 # 0.24.31 — HitDef red-life damage
 
 Explicit hitredlife/guardredlife now consume real red-life resources using a separate attack multiplier and defense calculation. Unit/browser checks cover damage, guard values and bounds. Native defaults, exact queued timing, recovery and full controller compatibility remain in progress.
