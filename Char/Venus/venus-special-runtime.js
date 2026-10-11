@@ -1,4 +1,5 @@
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
+import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
  const projectileContacts=new Map();
@@ -26,6 +27,7 @@ export function createSpecialRuntime(api){
  function enter(entity,state){
   const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
   if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
@@ -63,7 +65,9 @@ export function createSpecialRuntime(api){
  function helperController(entity,controller,index){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
-  const ctx=context(entity);if(!api.trigger(controller,ctx)||Number(controller.params.persistent)===0&&entity.once.has(index))return;
+  const ctx=context(entity);
+  if(!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0})||!api.trigger(controller,ctx))return;
+  entity.controllerSchedule.executed(index,controller.params);
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
@@ -109,7 +113,13 @@ export function createSpecialRuntime(api){
  function step(){
   for(const entity of [...entities]){
    if(entity.destroyed||blocked(entity.player,entity))continue;
-   if(entity.hitPause>0){entity.hitPause--;continue}
+   if(entity.hitPause>0){
+    if(entity.kind==='helper'){
+     const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
+     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
+    }
+    entity.hitPause--;continue;
+   }
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);

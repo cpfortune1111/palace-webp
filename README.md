@@ -1,4 +1,8 @@
-# 0.24.10 — Life / Power controllers
+# 0.24.11 — Helper controller scheduling
+
+Helper controllers now honor persistence intervals and once-per-state execution; ignorehitpause controllers execute during hitpause without advancing animation or state time. Scheduling and real helper-runtime tests accompany the existing combat regression. Full compatibility remains in progress.
+
+## 0.24.10 — Life / Power controllers
 
 Unified LifeAdd/LifeSet/PowerAdd/PowerSet execution for roots, lifecycle states and helpers, with evaluated redirect IDs, native rounding/limits and helper ownership. Focused semantic and browser regression tests are provided. Full controller compatibility remains in progress; see `Docs/CONTROLLER-PROGRESS.md` for explicit remaining work.
 
