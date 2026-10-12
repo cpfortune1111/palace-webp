@@ -10,6 +10,8 @@ for(const kind of ['helper','projectile'])for(const guarded of [false,true]){
  runtime.dispatch({type:kind==='helper'?'Helper':'Projectile',params:kind==='helper'?{id:'1',stateno:'1'}:{...params,projid:'1',projanim:'0'}},null,null,{},root,1);
  const entity=runtime.entities[0];tick=1;runtime.step();
  assert.equal(entity.hitCount,guarded?0:3);
+ assert.equal(entity.guardCount,guarded?3:0);
+ assert.equal(runtime.context(entity).query('guardcount'),guarded?3:0);
  assert.equal(entity.moveGuarded,guarded?1:0);
 }
 console.log('Actual helper/projectile runtime contact writers honor evaluated numhits and guard exclusion');

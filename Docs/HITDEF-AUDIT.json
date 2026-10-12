@@ -794,7 +794,7 @@
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Caller integer expressions drive actual root/entity HitCount and report hit/combo totals. Native guardCount/receivedHits, projectile-owner attribution, queued timing and integer overflow remain pending."
+    "note": "Caller integer expressions drive actual root/entity HitCount/GuardCount queries and report hit/combo totals. Defender receivedHits/GetHitVar guardcount, full reset rules, projectile-owner attribution, queued timing and integer overflow remain pending."
   },
   {
     "parameter": "p1facing",

@@ -26,12 +26,12 @@ export function createSpecialRuntime(api){
   const base=api.context(entity,root(entity.player===1?2:1),commands);
   return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
-   query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:base.query(name)};
+   query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
  function enter(entity,state){
   const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
   if(!definition.hitdefpersist)entity.guardHitDef=null;
-  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,guardCount:0,activeHitDef:null});
   entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
   if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
@@ -42,7 +42,7 @@ export function createSpecialRuntime(api){
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
   const entity={kind,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
-   life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
+   life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
@@ -97,7 +97,7 @@ export function createSpecialRuntime(api){
   const result=api.hit(entity,defender,entity.activeHitDef.params);
   if(!result)return;
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
-  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});
+  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});entity.guardCount=(entity.guardCount||0)+(result.guarded?hitDefCount(entity.activeHitDef?.params||entity.params||{}):0);
   entity.hitPause=result.attackerPause;
   if(entity.kind==='projectile'){
    projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});

@@ -1,3 +1,7 @@
+## 0.24.50 — GuardCount execution
+
+Guarded contacts now accumulate evaluated numhits into actor GuardCount without increasing HitCount or report hit totals. Root/helper expression queries expose the count. Browser tests cover both actual root guard paths alongside preserved hit-count regressions; entity tests cover helper/projectile writers. MoveHitPersist/reset coverage, receivedHits/GetHitVar guardcount and projectile-owner attribution remain partial.
+
 ## 0.24.49 — HitDef numhits execution
 
 Caller-evaluated numhits now drives actual root/helper/entity HitCount writes and match-report hit/combo totals, defaulting to 1 instead of always adding one. Browser tests cover both root hit paths and report totals; entity runtime unit tests cover helper/projectile contacts and guard exclusion. Native guardCount/receivedHits, projectile-owner attribution and queued timing remain partial.

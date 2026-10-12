@@ -1,3 +1,15 @@
+## 0.24.50 — GuardCount guarded contact / query execution
+
+Guarded P1/P2/helper/entity contacts now add evaluated numhits to source GuardCount, while ordinary hits retain HitCount behavior. Root expression context and helper query expose actor-local GuardCount. Ordinary root/helper state entry clears the new counter along the existing reset path.
+
+Browser tests execute both actual root guarded contacts with caller counts 3/4, read GuardCount through expressions and verify HitCount/report totals remain zero. Original unguarded numhits tests remain in the same suite. Entity-runtime tests cover guarded-only counters and helper query reads; existing combat regression remains required.
+
+Still partial: complete StateDef MoveHitPersist and reaction-entry reset behavior, defender receivedHits and GetHitVar guardcount, queued contact updates, projectile-owner attribution and full native count certification. Prior local notes below are historical staging descriptions.
+
+## GuardCount contact writes / expression storage — local
+
+Guarded root/helper/entity contacts now add evaluated numhits to actor GuardCount without incrementing HitCount. Root expression context and helper runtime query expose the stored count; ordinary root/helper state entry resets it along the existing counter path. Entity-runtime tests verify guarded-only accumulation and helper query reads. Actual root browser checks, MoveHitPersist/full reset rules, GetHitVar guardcount, receivedHits, projectile owner attribution and publication remain pending; no complete count semantic certification is claimed.
+
 ## 0.24.49 — Explicit numhits contact / report execution
 
 HitDef/Projectile numeric preparation evaluates numhits in caller context as an integer. Actual P1/P2 hit paths, helper/projectile entity contact writers and report hit/combo totals consume that value, with native default 1 and zero/signed values preserved. The P2 frame-based writer uses its actual frame HitDef params.
