@@ -1,3 +1,7 @@
+## 0.24.54 — Fall recovery eligibility execution
+
+fall.recover/recovertime now evaluate in caller context and feed actual CanRecover/GetHitVar queries. Source fall reactions advance the recovery clock; browser tests verify threshold, paused-controller exclusion, disabled recovery and a real ChangeState driven by CanRecover. Original commented character recovery branches stay disabled. Exact native hitpause/hitshake/reset ordering and all actor paths remain partial.
+
 ## 0.24.53 — Down-hit velocity and reaction execution
 
 Down-state HitDef contacts now use explicit/down-to-air velocity fallback, down hit/control times and grounded S5080 routing. Actual source S5081/S5030 paths consume those velocities. down.bounce=false suppresses subsequent fall velocity; lying actors are excluded from guarding and extra KO velocity. Browser/unit regressions pass; offsets, recovery, version timing and full down-hit semantics remain partial.

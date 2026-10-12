@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.53
+# HitDef parameter audit — 0.24.54
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: fall.recover, hitonce, p2facing, snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: hitonce, p2facing, snap.
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -59,8 +59,8 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | fall.envshake.phase | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.envshake.time | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.kill | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| fall.recover | Not implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| fall.recovertime | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| fall.recover | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Caller boolean/default true drives actual CanRecover and source-state recovery transition eligibility. Full native clock/reset/ownership and all actor/input paths remain pending. |
+| fall.recovertime | Partial | — | MUGEN + Ikemen | Caller integer/default 4 drives actual fall-clock threshold and GetHitVar queries. Separate native hitpause/hitshake scheduling, exact reset and overflow parity remain pending. |
 | fall.xvelocity | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.yvelocity | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.zvelocity | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |

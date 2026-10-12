@@ -365,7 +365,7 @@
   },
   {
     "parameter": "fall.recover",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Jupiter",
       "Moon",
@@ -373,14 +373,14 @@
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller boolean/default true drives actual CanRecover and source-state recovery transition eligibility. Full native clock/reset/ownership and all actor/input paths remain pending."
   },
   {
     "parameter": "fall.recovertime",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller integer/default 4 drives actual fall-clock threshold and GetHitVar queries. Separate native hitpause/hitshake scheduling, exact reset and overflow parity remain pending."
   },
   {
     "parameter": "fall.xvelocity",

@@ -1,3 +1,15 @@
+## 0.24.54 — Fall recovery flags / eligibility / source clock
+
+HitDef preparation evaluates fall.recover as a boolean and fall.recovertime as an integer; resolver stores native true/4 defaults. Actual CanRecover and GetHitVar fall fields read these values. Source falling hit reactions advance the clock outside their paused path.
+
+Browser tests use a temporary source reaction controller to verify caller vars, paused clock, three-tick eligibility, actual ChangeState5200 and disabled recovery remaining in its source state. GetHitVar fall.time/recovertime reads are verified through expressions. Original commented Saturn recovery commands are not enabled. Unit and existing combat regressions remain required.
+
+Still partial: separate native hitshake/hitpause flags and tick order, exact fall-time reset/preservation, legacy/helper lifecycle clocks, override/custom ownership, recovery-input semantics and all original-state transitions. Fields are audited Partial; the clock currently follows WEB source-reaction pause semantics rather than full native scheduling.
+
+## Fall recovery metadata / source reaction clock — local
+
+HitDef preparation now evaluates fall.recover and fall.recovertime; resolver stores native true/4 defaults and exposes CanRecover/GetHitVar fall fields. Source reaction stepping advances the fall clock during falling hit states outside its paused path. Unit cases cover threshold and pause predicates. WEB currently conflates some hitshake/hitpause clocks; exact native timer/reset/owner scheduling, all legacy/helper states, actual recovery-entry transitions, browser regression and publication remain pending. Original Saturn recovery triggers are commented out and are not silently enabled. This is partial recover eligibility execution, not complete recovery behavior.
+
 ## 0.24.53 — Down HitDef contact / source reaction execution
 
 Down-state contacts select grounded down.velocity (air.velocity fallback), aerial down-state air velocity, down.hittime (20 fallback) and the corresponding control time. Grounded lying victims enter S5080 before trip routing; airborne lying victims enter S5020. down.bounce=false with nonzero grounded Y suppresses stored fall velocities, and lying actors are excluded from guard stance and additional KO velocity.
