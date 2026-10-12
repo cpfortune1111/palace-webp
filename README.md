@@ -1,3 +1,7 @@
+## 0.24.43 — DefenceMulSet literal compilation
+
+DefenceMulSet multype now follows the pinned compiler's Atoi prefix parsing and 0/1 validation, not runtime expression evaluation. Unit/browser tests cover variable-looking text, numeric prefixes, overflow and redirected targets. This replaces an unpublished local change that relied only on bytecode behavior. Complete defense/controller certification remains pending.
+
 ## 0.24.42 — Imported character version defaults
 
 Four character bundles now include definition-derived engine version metadata without changing existing state/action content. Actual guard hit-time, DefenceMulSet and LifeAdd default selection reads caller version instead of hardcoded MUGEN. Native parsing and browser tests cover both MUGEN/Ikemen branches. Full version-dependent semantics, custom-state ownership and other controllers remain pending.

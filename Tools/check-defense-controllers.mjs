@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createDefenseState,effectiveCustomDefense,applyDefenseController} from '../Engine/defense-controllers.js';
+import {createDefenseState,effectiveCustomDefense,applyDefenseController,compileDefenseMulType} from '../Engine/defense-controllers.js';
 
 const caller={defenseState:createDefenseState()},target={defenseState:createDefenseState()};
 const api={compatibility:'mugen',evaluate:Number,findActor:id=>id===7?target:null};
@@ -10,5 +10,16 @@ run({redirectid:'7',value:'4',multype:'1',onhit:'0'});assert.equal(effectiveCust
 run({redirectid:'99',value:'5'});assert.equal(caller.defenseState.customDefense,0.5);
 api.compatibility='ikemen';run({value:'3'});assert.deepEqual(caller.defenseState,{customDefense:3,onHit:false});
 assert.throws(()=>run({value:'2',multype:'2'}),/Invalid/);
+assert.throws(()=>run({value:'4',multype:'-3'}),/Invalid/);
+const numeric=api.evaluate;
+api.evaluate=value=>value==='var(8)'?0:value==='var(9)'?-7:numeric(value);
+run({value:'4',multype:'var(8)'});assert.equal(caller.defenseState.customDefense,0.25);
+run({value:'4',multype:'var(9)',redirectid:'7'});assert.equal(target.defenseState.customDefense,0.25);
+api.evaluate=numeric;
+assert.equal(compileDefenseMulType('1 + 1'),1);
+assert.equal(compileDefenseMulType('  +0.8'),0);
+assert.equal(compileDefenseMulType('var(8)'),0);
+assert.throws(()=>compileDefenseMulType('2147483648'),/Invalid/);
+assert.throws(()=>compileDefenseMulType('-2147483648'),/Invalid/);
 assert.throws(()=>run({}),/Missing/);
 console.log('Defense native version defaults, delay, reciprocal/direct multiplier and redirection passed');
