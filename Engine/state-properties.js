@@ -22,10 +22,12 @@ export function applyStatePropertyController(controller,actor,api){
   return true;
  }
  const fields=[['type',params.statetype??params.value,'SCAL'],['moveType',params.movetype??params.moveType,'IAH'],['physics',params.physics,'SCAN']];
+ const changes=[];
  for(const [field,input,allowed] of fields)if(input!==undefined){
   const value=String(input).trim().toUpperCase()[0];
   if(!value||!allowed.includes(value))throw Error('Invalid StateTypeSet '+field);
-  target[field]=value;
+  changes.push([field,value]);
  }
+ for(const [field,value] of changes)target[field]=value;
  return true;
 }

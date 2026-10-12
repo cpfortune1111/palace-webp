@@ -12,6 +12,13 @@ run('StateTypeSet',{value:'L',statetype:'C',moveType:'H'});assert.equal(caller.t
 run('StateTypeSet',{redirectid:'99',statetype:'A'});assert.equal(caller.type,'C');
 assert.throws(()=>run('CtrlSet',{}),/Missing/);
 assert.throws(()=>run('StateTypeSet',{physics:'L'}),/Invalid/);
+const previous={...caller};
+assert.throws(()=>run('StateTypeSet',{statetype:'A',movetype:'I',physics:'L'}),/Invalid/);
+assert.deepEqual(caller,previous);
+assert.throws(()=>run('StateTypeSet',{statetype:'A',movetype:'unknown'}),/Invalid/);
+assert.deepEqual(caller,previous);
+assert.throws(()=>run('StateTypeSet',{statetype:'A',physics:''}),/Invalid/);
+assert.deepEqual(caller,previous);
 assert.equal(run('Null',{}),false);
 console.log('Control boolean conversion, state type aliases, omitted fields and caller-context redirection passed');
 caller.facing=1;caller.vx=3;target.facing=-1;target.vx=5;

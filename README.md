@@ -1,3 +1,7 @@
+## 0.24.44 — Atomic StateTypeSet validation
+
+StateTypeSet validates all supplied literals before modifying actor fields. Invalid later parameters no longer leave partial state-type/movement changes. Unit/browser checks verify both roots and a redirected helper, alongside existing combat regressions. Upfront whole-file native compilation and complete controller certification remain pending.
+
 ## 0.24.43 — DefenceMulSet literal compilation
 
 DefenceMulSet multype now follows the pinned compiler's Atoi prefix parsing and 0/1 validation, not runtime expression evaluation. Unit/browser tests cover variable-looking text, numeric prefixes, overflow and redirected targets. This replaces an unpublished local change that relied only on bytecode behavior. Complete defense/controller certification remains pending.
