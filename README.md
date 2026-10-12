@@ -1,3 +1,7 @@
+## 0.24.55 — HitDef victim facing execution
+
+Normal root/entity victim hit paths now apply caller-evaluated p2facing signs, preserving facing on zero or guard contacts and world velocity on a flip. Browser tests cover both root directions and guarded exclusion; existing counter/combat regressions are retained. Native deferred timing, p1-facing combinations and custom/throw/helper-victim ownership remain partial.
+
 ## 0.24.54 — Fall recovery eligibility execution
 
 fall.recover/recovertime now evaluate in caller context and feed actual CanRecover/GetHitVar queries. Source fall reactions advance the recovery clock; browser tests verify threshold, paused-controller exclusion, disabled recovery and a real ChangeState driven by CanRecover. Original commented character recovery branches stay disabled. Exact native hitpause/hitshake/reset ordering and all actor paths remain partial.

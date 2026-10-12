@@ -1,3 +1,15 @@
+## 0.24.55 — p2facing victim contact application
+
+Contact results select p2facing sign behavior from pinned char.go: negative follows attack direction, positive faces the opposite direction, zero leaves facing unchanged and guarding excludes the change. Root P1/P2 plus entity-to-root victim paths apply the result after reaction entry while preserving world velocity.
+
+Browser tests found and fixed a previously unwired P1 path. Both actual root contacts now verify caller-var signs and resulting facing; guarded fixtures verify negative p2facing does not turn either victim. Unit sign/guard/world-velocity cases and existing counter/combat regression remain required. Assertions were retained during the fix.
+
+Still partial: native queued post-position timing, combined p1facing/p1getp2facing, reversal/type-None behavior, custom/throw/override owner semantics, helper victims and full version parity. p2facing remains audited Partial, not fully certified.
+
+## HitDef p2facing contact application — local
+
+Contact results now select defender facing from p2facing: positive faces opposite the attack direction, negative follows it, zero preserves current facing, and guarding does not apply this change. Actual root/entity victim state-entry paths apply it while preserving world X velocity. Native char.go queues facing until post-position update; WEB currently applies after reaction entry, so exact deferred timing, p1-facing combinations, throws/custom/override ownership and helper victims remain pending. Unit sign/guard/velocity cases pass; browser regression and publication remain pending. No complete facing certification is claimed.
+
 ## 0.24.54 — Fall recovery flags / eligibility / source clock
 
 HitDef preparation evaluates fall.recover as a boolean and fall.recovertime as an integer; resolver stores native true/4 defaults. Actual CanRecover and GetHitVar fall fields read these values. Source falling hit reactions advance the clock outside their paused path.
