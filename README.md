@@ -1,3 +1,7 @@
+## 0.24.45 — Partial AttackDist execution
+
+AttackDist now dispatches into actor-owned guard-distance storage, and actual root InGuardDist queries use width/height/depth with native strict boundaries and same-plane safeguards. Tests cover parameter order, omission, redirects, scaling and root guard behavior. This is partial support: full live HitDef ownership/reset, custom size defaults, helper/projectile proximity aggregation and Z gameplay remain pending.
+
 ## 0.24.44 — Atomic StateTypeSet validation
 
 StateTypeSet validates all supplied literals before modifying actor fields. Invalid later parameters no longer leave partial state-type/movement changes. Unit/browser checks verify both roots and a redirected helper, alongside existing combat regressions. Upfront whole-file native compilation and complete controller certification remain pending.

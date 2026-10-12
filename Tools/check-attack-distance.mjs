@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {applyAttackDistanceController,withinAttackGuardDistance} from '../Engine/attack-distance.js';
+
+const actor={localScale:1,hitDef:{guardDistance:{x:[100,0],y:[50,60],z:[10,20]}}};
+const target={localScale:2,hitDef:{guardDistance:{x:[200,30],y:[40,50],z:[60,70]}}};
+const api={evaluate:value=>value==='var(8)'?80:Number(value),splitPair:value=>String(value).split(','),findActor:id=>id===7?target:null};
+const run=params=>applyAttackDistanceController({type:'AttackDist',params},actor,api);
+run({value:'40,20',width:'80',height:'-10,30'});
+assert.deepEqual(actor.hitDef.guardDistance,{x:[80,20],y:[0,30],z:[10,20]});
+run({redirectid:'7',width:'var(8),20',depth:'10'});
+assert.deepEqual(target.hitDef.guardDistance,{x:[40,10],y:[40,50],z:[5,70]});
+const before=structuredClone(actor.hitDef);
+run({redirectid:'999',width:'10'});assert.deepEqual(actor.hitDef,before);
+assert.throws(()=>run({width:'1,2,3'}),/at most two/);
+assert.deepEqual(actor.hitDef,before);
+assert.equal(applyAttackDistanceController({type:'Null'},actor,api),false);
+const attacker={moveType:'A',x:0,y:0,facing:1},range={x:[100,20],y:[30,40],z:[10,20]};
+assert.equal(withinAttackGuardDistance(attacker,{x:99,y:0},range),true);
+assert.equal(withinAttackGuardDistance(attacker,{x:100,y:0},range),false);
+assert.equal(withinAttackGuardDistance(attacker,{x:-20,y:0},range),false);
+assert.equal(withinAttackGuardDistance(attacker,{x:10,y:-30},range),false);
+assert.equal(withinAttackGuardDistance(attacker,{x:10,y:39},range),true);
+assert.equal(withinAttackGuardDistance(attacker,{x:10,y:0,z:20},range),false);
+assert.equal(withinAttackGuardDistance({...attacker,facing:-1},{x:-99,y:0},range),true);
+console.log('AttackDist native parameter ordering, omission, scaling, clamping and redirection passed');

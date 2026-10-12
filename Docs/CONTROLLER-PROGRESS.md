@@ -1,3 +1,19 @@
+## 0.24.45 — AttackDist root query integration
+
+AttackDist value/width/height/depth/redirectid now reach the real dispatcher and actor-owned guard HitDef storage. Root InGuardDist uses these vectors, strict comparisons and native same-plane Y/Z safeguards. Default height/depth use pinned CharSize defaults [1000,1000]/[4,4], replacing temporary infinite staging ranges. Ordinary root state entry clears storage unless its definition has hitdefpersist.
+
+Unit tests verify mutation order, omitted components, redirected scale, nonnegative clamping and query boundaries. Browser fixtures verify actual root proximity changes, height boundaries, root redirects and helper-owned scaled writes. Existing controller/combat regression remains required.
+
+Still partial: full live HitDef shared ownership, HitDef guard.dist precedence, imported/custom size defaults and localcoord scale, all reaction/helper state-entry/reset paths, hitdefpersist exporter coverage, helper/projectile proximity aggregation and Z gameplay. No complete AttackDist or parameter certification is claimed. Earlier local staging notes below remain historical and are superseded by this verified batch.
+
+## AttackDist root guard-distance execution — local
+
+The controller dispatcher now routes AttackDist into root/helper guard HitDef storage, and actual root InGuardDist queries read the modified vectors with native strict X/Y/Z comparisons and same-plane safeguards. Ordinary root state entry resets storage unless hitdefpersist is set. Unit tests cover query boundaries and facing. Full live-HitDef mutation/reset ownership, imported default Y/Z sizes, helper/projectile proximity aggregation, all state-entry paths, Z gameplay and browser regression remain pending; this is partial root execution, not complete AttackDist certification. Publication remains pending.
+
+## AttackDist native mutation module — local staging
+
+Pinned compiler/bytecode sources establish value then width ordering, optional second components, caller-context float evaluation, redirected local-scale ratio and nonnegative clamping into the target HitDef's guard-distance vectors. A new mutation module and tests cover these semantics for all three axes. This module is not yet wired into real root/helper HitDef ownership, reset/persistence and collision guard-distance queries, so AttackDist is NOT counted as runtime implemented. Browser regression and publication remain pending.
+
 ## 0.24.44 — StateTypeSet parameter validation
 
 StateTypeSet now validates all requested type/movetype/physics literals before writing any fields. Previously an invalid later parameter could leave earlier state fields modified. Pinned compiler-functions.go rejects invalid literals before producing an executable controller. Unit tests verify invalid physics, movement type and empty physics preserve all original actor fields. Browser tests verify both root actors and a redirected helper retain every original field when a later parameter is invalid. Existing combat regression remains required. Native upfront whole-file validation remains pending; this does not certify complete controller behavior.
