@@ -13,6 +13,7 @@ export function guardContactParameters(params,aerial,compatibility='mugen'){
 }
 
 export function guardContactAllowed(defender,params,mode,assertions,sourceAssertions,airStatesAvailable){
+ if(!['S','C','A'].includes(defender.type))return false;
  const aerial=defender.type==='A',stance=aerial?'noairguard':defender.type==='C'?'nocrouchguard':'nostandguard';
  if(sourceAssertions.has('unguardable')||assertions.has(stance)||mode==='none')return false;
  const ready=(defender.ctrl&&defender.moveType==='I')||[120,130,131,132,140,150,151,152,153,154,155].includes(defender.state);

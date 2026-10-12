@@ -1,3 +1,7 @@
+## 0.24.53 — Down-hit velocity and reaction execution
+
+Down-state HitDef contacts now use explicit/down-to-air velocity fallback, down hit/control times and grounded S5080 routing. Actual source S5081/S5030 paths consume those velocities. down.bounce=false suppresses subsequent fall velocity; lying actors are excluded from guarding and extra KO velocity. Browser/unit regressions pass; offsets, recovery, version timing and full down-hit semantics remain partial.
+
 ## 0.24.52 — HitDef forced stance routing
 
 Caller-evaluated forcestand/forcecrouch now select standing/crouching ordinary hit reactions; omitted forcestand follows native nonzero ground-Y velocity default. Browser tests verify source reaction entries, explicit disabling and guard/trip/air precedence. Full pre-state mutation, custom/override/helper rules and native reset timing remain partial.

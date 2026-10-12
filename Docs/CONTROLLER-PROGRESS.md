@@ -1,3 +1,15 @@
+## 0.24.53 — Down HitDef contact / source reaction execution
+
+Down-state contacts select grounded down.velocity (air.velocity fallback), aerial down-state air velocity, down.hittime (20 fallback) and the corresponding control time. Grounded lying victims enter S5080 before trip routing; airborne lying victims enter S5020. down.bounce=false with nonzero grounded Y suppresses stored fall velocities, and lying actors are excluded from guard stance and additional KO velocity.
+
+Browser tests execute S5080 followed by original S5081/S5030 controllers, observing actual X/Y movement and explicit hit/control metadata. They verify grounded versus airborne routing and bounce suppression metadata. Unit/default, guard and entity-contact checks pass; existing combat regression remains required.
+
+Still partial: full down-hit offset/bounce animation/recovery, MUGEN extra-hit-time/version rules, Z/localcoord scale, custom/override/helper victim eligibility and native queued/reset semantics. Parameters remain audited Partial; prior local notes below describe staging.
+
+## Down HitDef velocity/time/state routing — local
+
+Down-state contact resolution now uses down.velocity with air.velocity fallback when grounded, air velocity when a lying actor is above ground, down.hittime default 20 for hit/control time, and S5080/S5020 routing before trip handling. Explicit down.bounce=false suppresses subsequent fall velocity when launched, following pinned char.go. Preparation evaluates caller expressions; nonzero Z fails explicitly. Lying actors no longer enter guard eligibility, and KO extra velocity skips L stance. Unit cases pass. Browser regression, native down offsets/recovery/default/ownership and publication remain pending; no complete down-hit certification is claimed.
+
 ## 0.24.52 — HitDef force-stance ordinary reaction execution
 
 HitDef preparation evaluates forcestand/forcecrouch as caller booleans (including fractional nonzero values). Omitted forcestand defaults to ground Y velocity !=0; forcecrouch defaults false. Ordinary crouching/standing hit reaction selection uses the native initial-stance precedence while guarded, trip, aerial and custom-state branches retain their own priorities. Hit metadata stores flags.

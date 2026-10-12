@@ -22,4 +22,5 @@ flags.clear();source.add('unguardable');assert.equal(allowed(),false);
 source.clear();defender.ctrl=0;defender.moveType='H';defender.state=154;assert.equal(allowed(),true);
 assert.equal(guardContactAllowed(defender,{guardflag:'M'},'stand',flags,source,true),false);
 assert.equal(guardContactAllowed(defender,params,'stand',flags,source,false),false);
+assert.equal(guardContactAllowed({type:'L',state:0,ctrl:1,moveType:'I',y:0},params,'stand',flags,source,true),false);
 console.log('Aerial/ground guard stance, assertions, velocity and time parameters passed');

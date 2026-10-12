@@ -182,10 +182,10 @@
   },
   {
     "parameter": "down.bounce",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller boolean suppresses future fall velocity for launched grounded L victims when disabled. Complete bounce animation, offset/recovery and ownership remain pending."
   },
   {
     "parameter": "down.cornerpush.velmul",
@@ -203,10 +203,10 @@
   },
   {
     "parameter": "down.hittime",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit caller integer/default 20 supplies down hit/control time. Full MUGEN version timing, queued/reset/recovery parity remain pending."
   },
   {
     "parameter": "down.recover",
@@ -224,13 +224,13 @@
   },
   {
     "parameter": "down.velocity",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Jupiter",
       "Neptune"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Explicit XY and air fallback feed actual grounded down-hit source states; aerial L victims use air velocity. Z, scale, native down offsets and full ownership/reset rules remain pending."
   },
   {
     "parameter": "envshake.ampl",

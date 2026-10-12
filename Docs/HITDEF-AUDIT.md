@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.52
+# HitDef parameter audit — 0.24.53
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, hitonce, p2facing, snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: fall.recover, hitonce, p2facing, snap.
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -34,13 +34,13 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | crouch.friction | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | damage | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | dizzypoints | Partial | — | Ikemen | Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and other assertion interactions remain pending. |
-| down.bounce | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| down.bounce | Partial | — | MUGEN + Ikemen | Caller boolean suppresses future fall velocity for launched grounded L victims when disabled. Complete bounce animation, offset/recovery and ownership remain pending. |
 | down.cornerpush.velmul | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | down.cornerpush.veloff | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| down.hittime | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| down.hittime | Partial | — | MUGEN + Ikemen | Explicit caller integer/default 20 supplies down hit/control time. Full MUGEN version timing, queued/reset/recovery parity remain pending. |
 | down.recover | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | down.recovertime | Implemented | — | Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| down.velocity | Not implemented | Jupiter, Neptune | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| down.velocity | Partial | Jupiter, Neptune | MUGEN + Ikemen | Explicit XY and air fallback feed actual grounded down-hit source states; aerial L victims use air velocity. Z, scale, native down offsets and full ownership/reset rules remain pending. |
 | envshake.ampl | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | envshake.decay | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | envshake.dir | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
