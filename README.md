@@ -1,3 +1,7 @@
+## 0.24.49 — HitDef numhits execution
+
+Caller-evaluated numhits now drives actual root/helper/entity HitCount writes and match-report hit/combo totals, defaulting to 1 instead of always adding one. Browser tests cover both root hit paths and report totals; entity runtime unit tests cover helper/projectile contacts and guard exclusion. Native guardCount/receivedHits, projectile-owner attribution and queued timing remain partial.
+
 ## 0.24.48 — Projectile proximity guard integration
 
 Projectile guard ranges now snapshot caller expressions and imported projectile front-distance defaults at spawn. Actual InGuardDist includes active enemy projectiles; later owner AttackDist changes do not alter existing projectile ranges. Unit/browser tests verify snapshots, strict boundaries and defaults. Platform/attribute eligibility, all size/localcoord cases and full projectile behavior remain partial.

@@ -1,3 +1,15 @@
+## 0.24.49 — Explicit numhits contact / report execution
+
+HitDef/Projectile numeric preparation evaluates numhits in caller context as an integer. Actual P1/P2 hit paths, helper/projectile entity contact writers and report hit/combo totals consume that value, with native default 1 and zero/signed values preserved. The P2 frame-based writer uses its actual frame HitDef params.
+
+Browser fixtures execute both root hit applications using caller vars 3/4 and verify root HitCount plus report totals [3,4]. Entity-runtime unit tests exercise helper/projectile contact writers with deterministic collision callbacks and guarded exclusion; report/count conversion tests pass. Existing combat/controller regression passes.
+
+Still partial: native guardCount and defender receivedHits, queued contact timing, projectile-owner attribution, full combo/HUD/reset semantics and native integer overflow conversion. numhits is audited Partial, not fully certified. Historical local staging notes below are superseded by this batch upon verified publication.
+
+## HitDef numhits contact execution — local
+
+Explicit numhits now evaluates in caller context when creating HitDef/Projectile data, and actual root/helper/entity hit-count writes plus match-report hit/combo totals use that count rather than fixed +1. Native omitted value defaults to 1; zero and signed integer values are retained. Unit count conversion tests pass. Native guardCount/receivedHits counters, queued contact timing, projectile-owner counting, browser regression, score regression and publication remain pending; numhits is not certified complete.
+
 ## 0.24.48 — Projectile guard-distance snapshots / actual proximity
 
 Projectile spawn creates independent guard vectors from imported size.proj.attack.dist front width (native 90 fallback), native Y/Z defaults and explicit guard.dist fields evaluated in the spawning caller context. Actual InGuardDist now includes active enemy projectile ranges. Owner AttackDist mutations and later variable changes do not overwrite the spawn snapshot.

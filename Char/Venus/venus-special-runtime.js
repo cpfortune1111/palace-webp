@@ -1,3 +1,4 @@
+import {hitDefCount} from '../../Engine/hit-count.js';
 import {createAttackState} from '../../Engine/attack-controllers.js';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
@@ -17,7 +18,7 @@ export function createSpecialRuntime(api){
   const result={...params};
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','airguard.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
+  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
@@ -96,7 +97,7 @@ export function createSpecialRuntime(api){
   const result=api.hit(entity,defender,entity.activeHitDef.params);
   if(!result)return;
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
-  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:1;
+  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});
   entity.hitPause=result.attackerPause;
   if(entity.kind==='projectile'){
    projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
