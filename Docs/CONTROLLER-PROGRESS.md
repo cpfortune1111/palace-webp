@@ -1,3 +1,15 @@
+## 0.24.51 — Defender GetHitVar physical contact counts
+
+Hit resolution records defender gethit hitcount and guardcount, and GetHitVar now exposes those actual stored values. Pinned char.go increments physical contacts once, distinct from source HitCount/GuardCount and numhits-based report totals. New hit chains restart after guarding; guard contact preserves prior gethit hitcount.
+
+Unit tests cover hit/guard chains and transitions. Browser fixtures execute both actual root contact paths and read GetHitVar through expression evaluation: defender count 1 versus source/report numhits 3/4. Existing unguarded/guarded counter regressions are retained. Full combat regression remains required.
+
+Still partial: native CSF_gethit/override/reversal eligibility, exact gethit clear timing, reaction/helper state reset paths, defender receivedHits, projectile-owner attribution and full counter certification. MoveType is an explicit approximation for native in-combo/reset flags, not a claim of complete parity.
+
+## Defender GetHitVar contact counts — local
+
+Contact resolution now records defender gethit hitcount/guardcount separately from attacker HitCount/GuardCount and numhits-based report totals. Pinned char.go increments physical gethit contacts once, starts a fresh hit chain after guarding, and preserves the prior hitcount on guard contacts. The resolver exposes both via GetHitVar. Unit cases cover idle, hit chains, guard chains and guard-to-hit transitions. The WEB idle approximation uses MoveType instead of native CSF_gethit/full reset scheduling; browser regression, receivedHits and publication remain pending. This is partial GetHitVar support, not complete native count certification.
+
 ## 0.24.50 — GuardCount guarded contact / query execution
 
 Guarded P1/P2/helper/entity contacts now add evaluated numhits to source GuardCount, while ordinary hits retain HitCount behavior. Root expression context and helper query expose actor-local GuardCount. Ordinary root/helper state entry clears the new counter along the existing reset path.

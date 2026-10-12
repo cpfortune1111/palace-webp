@@ -1,3 +1,7 @@
+## 0.24.51 — Defender GetHitVar contact counts
+
+GetHitVar(hitcount/guardcount) now reads defender physical-contact counters separately from attacker numhits-based HitCount/GuardCount and report totals. Tests verify both actual root hit/guard paths, including count 1 on the defender versus caller numhits 3/4. Full native gethit/reset scheduling and receivedHits remain partial.
+
 ## 0.24.50 — GuardCount execution
 
 Guarded contacts now accumulate evaluated numhits into actor GuardCount without increasing HitCount or report hit totals. Root/helper expression queries expose the count. Browser tests cover both actual root guard paths alongside preserved hit-count regressions; entity tests cover helper/projectile writers. MoveHitPersist/reset coverage, receivedHits/GetHitVar guardcount and projectile-owner attribution remain partial.
