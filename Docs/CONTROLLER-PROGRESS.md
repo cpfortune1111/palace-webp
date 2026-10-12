@@ -1,3 +1,15 @@
+## 0.24.47 — Helper shared guard-distance / proximity execution
+
+Helper HitDef creation now evaluates guard.dist fields in helper context and stores the same vectors mutated by helper AttackDist. Ordinary helper entry clears guard storage unless hitdefpersist is set. Actual InGuardDist checks opposing root plus enemy helpers, and expression queries use the actual requesting actor rather than replacing helper/P1 reaction context with a root.
+
+Browser tests run a real helper HitDef controller during permitted hitpause, verify caller-var width and shared reference, modify the helper via redirected AttackDist, and observe the actual defender's proximity result change at narrow/inside distances. Pure guard-distance and helper scheduling checks pass; existing combat regression remains required.
+
+Still partial: projectile proximity/ownership, repeated helper HitDef activation, full helper size/scale and reset/persistence imports, team/platform/collision eligibility and actual Z gameplay. Earlier local notes below describe staging, not complete certification.
+
+## Helper guard HitDef / proximity wiring — local
+
+Helper HitDef creation now receives the same actor-owned guard vectors used by helper AttackDist, with guard.dist expressions evaluated in helper context. Ordinary helper state entry clears guard storage unless hitdefpersist applies. Actual InGuardDist queries now aggregate enemy helper proximity as well as the opposing root, and expression queries use the real querying actor instead of substituting its root. Unit mutation/query and helper scheduling checks pass. Actual helper/browser regression, repeated helper HitDef reactivation, all size/reset/ownership cases, projectile aggregation and publication remain pending; no complete helper/AttackDist certification is claimed.
+
 ## 0.24.46 — Shared root HitDef guard-distance execution
 
 Root HitDef dispatch applies legacy guard.dist and guard.dist.width/height/depth into the actor's guard-distance vectors. New root HitDef objects retain the same reference AttackDist mutates, so live contact data and InGuardDist queries no longer diverge. Pinned compiler ordering and bytecode rules give width precedence, retain negative components and zero an omitted second component on supplied HitDef parameters.

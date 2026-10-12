@@ -1,3 +1,7 @@
+## 0.24.47 — Helper proximity guard integration
+
+Helper HitDef now shares actor-owned guard vectors with AttackDist. Actual InGuardDist includes enemy helper proximity and queries the requesting actor rather than substituting its root. Browser tests verify helper expressions, reference identity and redirected distance changes; existing regression remains required. Projectile aggregation, repeated helper HitDef activation, custom size/defaults and full reset coverage remain partial.
+
 ## 0.24.46 — Shared root HitDef guard distances
 
 Root HitDef guard.dist/width/height/depth now update the same vectors as AttackDist, with native alias precedence, negative-value retention and omitted second-component zero. Live root HitDef objects share the vectors used by actual InGuardDist queries. Unit/browser regression verifies behavior. Helper/projectile ownership, size/localcoord defaults and all reset paths remain partial.

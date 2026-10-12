@@ -29,6 +29,7 @@ export function createSpecialRuntime(api){
  }
  function enter(entity,state){
   const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
+  if(!definition.hitdefpersist)entity.guardHitDef=null;
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
   entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
@@ -75,7 +76,7 @@ export function createSpecialRuntime(api){
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
-   case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),params:numeric(params,ctx)};break;
+   case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};break;
    case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
