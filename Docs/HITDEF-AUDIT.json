@@ -543,7 +543,7 @@
       "Moon"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Actual root HitDef shares guard-distance vectors with AttackDist and InGuardDist. Helper/projectile ownership, local scale/defaults and full reset/persistence remain pending."
+    "note": "Root/helper HitDefs share actor guard-distance vectors with AttackDist; projectile snapshots also feed InGuardDist. Full local scale/defaults, eligibility and reset/persistence remain pending."
   },
   {
     "parameter": "guard.dist.depth",
@@ -557,14 +557,14 @@
     "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "Root vertical range updates actual strict proximity checks with same-plane safeguard. Custom defaults, scale and helper/projectile aggregation remain pending."
+    "note": "Root vertical range updates actual strict proximity checks with same-plane safeguard. Root/helper/projectile proximity aggregation exists; custom defaults, scale and native eligibility remain pending."
   },
   {
     "parameter": "guard.dist.width",
     "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Full owner/default/reset parity remains pending."
+    "note": "Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Root/helper caller and independent projectile paths exist; full default/reset parity remains pending."
   },
   {
     "parameter": "guard.hittime",

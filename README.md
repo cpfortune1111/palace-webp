@@ -1,3 +1,7 @@
+## 0.24.48 — Projectile proximity guard integration
+
+Projectile guard ranges now snapshot caller expressions and imported projectile front-distance defaults at spawn. Actual InGuardDist includes active enemy projectiles; later owner AttackDist changes do not alter existing projectile ranges. Unit/browser tests verify snapshots, strict boundaries and defaults. Platform/attribute eligibility, all size/localcoord cases and full projectile behavior remain partial.
+
 ## 0.24.47 — Helper proximity guard integration
 
 Helper HitDef now shares actor-owned guard vectors with AttackDist. Actual InGuardDist includes enemy helper proximity and queries the requesting actor rather than substituting its root. Browser tests verify helper expressions, reference identity and redirected distance changes; existing regression remains required. Projectile aggregation, repeated helper HitDef activation, custom size/defaults and full reset coverage remain partial.

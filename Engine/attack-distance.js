@@ -36,3 +36,8 @@ export function applyHitDefGuardDistance(params,range,api){
  }
  return range;
 }
+
+export function createProjectileGuardDistance(params,defaults,api){
+ const range={x:[...(defaults.x??[90,0])],y:[...(defaults.y??[1000,1000])],z:[...(defaults.z??[10,10])]};
+ return applyHitDefGuardDistance(params,range,api);
+}

@@ -44,7 +44,7 @@ export function createSpecialRuntime(api){
    life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
-  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
+  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;

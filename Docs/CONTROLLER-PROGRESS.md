@@ -1,3 +1,15 @@
+## 0.24.48 — Projectile guard-distance snapshots / actual proximity
+
+Projectile spawn creates independent guard vectors from imported size.proj.attack.dist front width (native 90 fallback), native Y/Z defaults and explicit guard.dist fields evaluated in the spawning caller context. Actual InGuardDist now includes active enemy projectile ranges. Owner AttackDist mutations and later variable changes do not overwrite the spawn snapshot.
+
+Browser tests create actual projectiles, verify caller-var width, strict boundary rejection, preservation after owner AttackDist/var changes and imported default width. Temporary projectiles are removed to preserve later regression fixtures. Pure range and helper scheduling checks pass; existing combat regression remains required.
+
+Still partial: platform/attribute eligibility, all projectile size pairs and localcoord scale imports, depth gameplay, current-animation ownership, complete projectile contact/pause/reset semantics and full controller certification. Earlier local notes below describe staging rather than complete support.
+
+## Projectile guard-distance snapshot / proximity — local
+
+Projectile creation now initializes independent guard-distance vectors using imported size.proj.attack.dist front width (native 90 fallback), native default height/depth and explicit guard.dist overrides evaluated in its spawning caller context. Vectors are not shared with later owner AttackDist mutations. Actual InGuardDist now includes active enemy projectiles. Unit tests verify native defaults, override rules and independent storage. Browser regression, complete projectile size/localscl/platform/attribute eligibility and publication remain pending; no complete projectile/guard certification is claimed.
+
 ## 0.24.47 — Helper shared guard-distance / proximity execution
 
 Helper HitDef creation now evaluates guard.dist fields in helper context and stores the same vectors mutated by helper AttackDist. Ordinary helper entry clears guard storage unless hitdefpersist is set. Actual InGuardDist checks opposing root plus enemy helpers, and expression queries use the actual requesting actor rather than replacing helper/P1 reaction context with a root.

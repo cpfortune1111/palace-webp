@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.46
+# HitDef parameter audit — 0.24.48
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -78,10 +78,10 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.cornerpush.velmul | Implemented | — | Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.cornerpush.veloff | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.ctrltime | Implemented | Jupiter | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| guard.dist | Partial | Jupiter, Moon | MUGEN + Ikemen | Actual root HitDef shares guard-distance vectors with AttackDist and InGuardDist. Helper/projectile ownership, local scale/defaults and full reset/persistence remain pending. |
+| guard.dist | Partial | Jupiter, Moon | MUGEN + Ikemen | Root/helper HitDefs share actor guard-distance vectors with AttackDist; projectile snapshots also feed InGuardDist. Full local scale/defaults, eligibility and reset/persistence remain pending. |
 | guard.dist.depth | Partial | — | Ikemen | Root depth vectors and strict pure query tests exist; actual Z gameplay and full actor/projectile integration remain pending. |
-| guard.dist.height | Partial | — | Ikemen | Root vertical range updates actual strict proximity checks with same-plane safeguard. Custom defaults, scale and helper/projectile aggregation remain pending. |
-| guard.dist.width | Partial | — | Ikemen | Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Full owner/default/reset parity remains pending. |
+| guard.dist.height | Partial | — | Ikemen | Root vertical range updates actual strict proximity checks with same-plane safeguard. Root/helper/projectile proximity aggregation exists; custom defaults, scale and native eligibility remain pending. |
+| guard.dist.width | Partial | — | Ikemen | Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Root/helper caller and independent projectile paths exist; full default/reset parity remains pending. |
 | guard.hittime | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.kill | Partial | — | MUGEN + Ikemen | Nonlethal guard floor and native lethal-chip switch to hit reaction exist. Pinned native char.go confirms this switch is intentional. NoKO/NoGuardKO/global survival assertions, rounding and queued damage parity remain pending. |
 | guard.pausetime | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |

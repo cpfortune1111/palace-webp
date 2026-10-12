@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance} from '../Engine/attack-distance.js';
+import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from '../Engine/attack-distance.js';
 
 const actor={localScale:1,hitDef:{guardDistance:{x:[100,0],y:[50,60],z:[10,20]}}};
 const target={localScale:2,hitDef:{guardDistance:{x:[200,30],y:[40,50],z:[60,70]}}};
@@ -30,3 +30,8 @@ applyHitDefGuardDistance({'guard.dist.width':'-5,15','guard.dist.height':'22.9'}
 assert.deepEqual(hitRange,{x:[80,15],y:[22,0],z:[10,20]});
 applyHitDefGuardDistance({},hitRange,api);assert.deepEqual(hitRange.x,[80,15]);
 assert.equal(applyHitDefGuardDistance({},hitRange,api),hitRange);
+const defaults={x:[360,20]};
+const projectile=createProjectileGuardDistance({'guard.dist.width':'50'},defaults,api);
+assert.deepEqual(projectile,{x:[50,0],y:[1000,1000],z:[10,10]});
+defaults.x[0]=999;assert.deepEqual(projectile.x,[50,0]);
+assert.deepEqual(createProjectileGuardDistance({}, {},api).x,[90,0]);
