@@ -1,3 +1,7 @@
+## 0.24.46 — Shared root HitDef guard distances
+
+Root HitDef guard.dist/width/height/depth now update the same vectors as AttackDist, with native alias precedence, negative-value retention and omitted second-component zero. Live root HitDef objects share the vectors used by actual InGuardDist queries. Unit/browser regression verifies behavior. Helper/projectile ownership, size/localcoord defaults and all reset paths remain partial.
+
 ## 0.24.45 — Partial AttackDist execution
 
 AttackDist now dispatches into actor-owned guard-distance storage, and actual root InGuardDist queries use width/height/depth with native strict boundaries and same-plane safeguards. Tests cover parameter order, omission, redirects, scaling and root guard behavior. This is partial support: full live HitDef ownership/reset, custom size defaults, helper/projectile proximity aggregation and Z gameplay remain pending.

@@ -537,34 +537,34 @@
   },
   {
     "parameter": "guard.dist",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Jupiter",
       "Moon"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Actual root HitDef shares guard-distance vectors with AttackDist and InGuardDist. Helper/projectile ownership, local scale/defaults and full reset/persistence remain pending."
   },
   {
     "parameter": "guard.dist.depth",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Root depth vectors and strict pure query tests exist; actual Z gameplay and full actor/projectile integration remain pending."
   },
   {
     "parameter": "guard.dist.height",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Root vertical range updates actual strict proximity checks with same-plane safeguard. Custom defaults, scale and helper/projectile aggregation remain pending."
   },
   {
     "parameter": "guard.dist.width",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Full owner/default/reset parity remains pending."
   },
   {
     "parameter": "guard.hittime",

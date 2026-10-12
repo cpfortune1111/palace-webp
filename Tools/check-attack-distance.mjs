@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {applyAttackDistanceController,withinAttackGuardDistance} from '../Engine/attack-distance.js';
+import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance} from '../Engine/attack-distance.js';
 
 const actor={localScale:1,hitDef:{guardDistance:{x:[100,0],y:[50,60],z:[10,20]}}};
 const target={localScale:2,hitDef:{guardDistance:{x:[200,30],y:[40,50],z:[60,70]}}};
@@ -23,3 +23,10 @@ assert.equal(withinAttackGuardDistance(attacker,{x:10,y:39},range),true);
 assert.equal(withinAttackGuardDistance(attacker,{x:10,y:0,z:20},range),false);
 assert.equal(withinAttackGuardDistance({...attacker,facing:-1},{x:-99,y:0},range),true);
 console.log('AttackDist native parameter ordering, omission, scaling, clamping and redirection passed');
+const hitRange={x:[100,20],y:[30,40],z:[10,20]};
+applyHitDefGuardDistance({'guard.dist':'50,25','guard.dist.width':'var(8)'},hitRange,api);
+assert.deepEqual(hitRange.x,[80,0]);
+applyHitDefGuardDistance({'guard.dist.width':'-5,15','guard.dist.height':'22.9'},hitRange,api);
+assert.deepEqual(hitRange,{x:[80,15],y:[22,0],z:[10,20]});
+applyHitDefGuardDistance({},hitRange,api);assert.deepEqual(hitRange.x,[80,15]);
+assert.equal(applyHitDefGuardDistance({},hitRange,api),hitRange);

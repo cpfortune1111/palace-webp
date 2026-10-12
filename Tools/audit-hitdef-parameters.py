@@ -18,6 +18,10 @@ IMPLEMENTED = {
     'fall.envshake.mul',
 }
 PARTIAL = {
+    'guard.dist': 'Actual root HitDef shares guard-distance vectors with AttackDist and InGuardDist. Helper/projectile ownership, local scale/defaults and full reset/persistence remain pending.',
+    'guard.dist.width': 'Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Full owner/default/reset parity remains pending.',
+    'guard.dist.height': 'Root vertical range updates actual strict proximity checks with same-plane safeguard. Custom defaults, scale and helper/projectile aggregation remain pending.',
+    'guard.dist.depth': 'Root depth vectors and strict pure query tests exist; actual Z gameplay and full actor/projectile integration remain pending.',
     'hitredlife': 'Explicit caller expressions consume red life using the independent attack factor, target defense and bounds. Native defaults, attack-base composition, queued timing, other assertion interactions and keepstate parity remain pending.',
     'guardredlife': 'Explicit guard red-life damage executes with its independent factor. Native defaults, air guarding, queued timing and other assertion interactions remain pending.',
     'dizzypoints': 'Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and other assertion interactions remain pending.',
@@ -98,7 +102,7 @@ def main():
         rows.append({'parameter': parameter, 'status': status, 'usedBy': sorted(usage[parameter]), 'reference': 'MUGEN + Ikemen' if parameter in mugen and parameter in ikemen else 'MUGEN' if parameter in mugen else 'Ikemen', 'note': note})
     missing_used = [row['parameter'] for row in rows if row['status'] == 'Not implemented' and row['usedBy']]
     lines = [
-        '# HitDef parameter audit — 0.24.39', '',
+        '# HitDef parameter audit — 0.24.46', '',
         'This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.',
         'Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.', '',
         '[MUGEN reference](https://www.elecbyte.com/mugendocs-11b1/sctrls.html#hitdef)',

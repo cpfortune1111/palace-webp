@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.39
+# HitDef parameter audit — 0.24.46
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, forcestand, guard.dist, hitonce, numhits, p2facing, snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, forcestand, hitonce, numhits, p2facing, snap.
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -78,10 +78,10 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guard.cornerpush.velmul | Implemented | — | Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.cornerpush.veloff | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.ctrltime | Implemented | Jupiter | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| guard.dist | Not implemented | Jupiter, Moon | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| guard.dist.depth | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| guard.dist.height | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| guard.dist.width | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| guard.dist | Partial | Jupiter, Moon | MUGEN + Ikemen | Actual root HitDef shares guard-distance vectors with AttackDist and InGuardDist. Helper/projectile ownership, local scale/defaults and full reset/persistence remain pending. |
+| guard.dist.depth | Partial | — | Ikemen | Root depth vectors and strict pure query tests exist; actual Z gameplay and full actor/projectile integration remain pending. |
+| guard.dist.height | Partial | — | Ikemen | Root vertical range updates actual strict proximity checks with same-plane safeguard. Custom defaults, scale and helper/projectile aggregation remain pending. |
+| guard.dist.width | Partial | — | Ikemen | Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Full owner/default/reset parity remains pending. |
 | guard.hittime | Implemented | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | guard.kill | Partial | — | MUGEN + Ikemen | Nonlethal guard floor and native lethal-chip switch to hit reaction exist. Pinned native char.go confirms this switch is intentional. NoKO/NoGuardKO/global survival assertions, rounding and queued damage parity remain pending. |
 | guard.pausetime | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |

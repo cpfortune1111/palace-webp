@@ -1,3 +1,15 @@
+## 0.24.46 — Shared root HitDef guard-distance execution
+
+Root HitDef dispatch applies legacy guard.dist and guard.dist.width/height/depth into the actor's guard-distance vectors. New root HitDef objects retain the same reference AttackDist mutates, so live contact data and InGuardDist queries no longer diverge. Pinned compiler ordering and bytecode rules give width precedence, retain negative components and zero an omitted second component on supplied HitDef parameters.
+
+Unit and browser tests verify reference identity, live AttackDist mutation, repeated HitDef preservation, negative retention, caller-var expressions, alias priority and actual strict query boundaries. Existing combat/controller regression remains required. Audit marks these fields Partial, not complete.
+
+Still pending: helper/projectile equivalent shared ownership, imported custom sizes and localscl/defaults, all HitDef/state reset/persistence paths, native integer edge conversion and collision proximity aggregation. Prior local notes below describe staging and are superseded by this batch upon verified publication.
+
+## HitDef guard-distance precedence / shared root storage — local
+
+Root HitDef dispatch now applies guard.dist, guard.dist.width/height/depth into the same storage AttackDist modifies; created root HitDef objects share that vector reference. Pinned compiler ordering gives width precedence over the legacy alias. Negative values preserve old components, and a supplied scalar resets the omitted second component to zero, unlike AttackDist. Unit tests cover these distinctions and reference preservation. Real browser validation, helper/projectile paths, default/reset coverage and publication remain pending; no full guard-distance certification is claimed.
+
 ## 0.24.45 — AttackDist root query integration
 
 AttackDist value/width/height/depth/redirectid now reach the real dispatcher and actor-owned guard HitDef storage. Root InGuardDist uses these vectors, strict comparisons and native same-plane Y/Z safeguards. Default height/depth use pinned CharSize defaults [1000,1000]/[4,4], replacing temporary infinite staging ranges. Ordinary root state entry clears storage unless its definition has hitdefpersist.
