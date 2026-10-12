@@ -1,3 +1,23 @@
+## 0.24.42 — Version metadata execution and guard defaults
+
+Four imported character bundles receive compatibility and engineVersions from their original definition snapshots. Existing bundle fields are verified semantically unchanged before writing the metadata-only patch; no raw original assets are included. The actual LifeAdd and DefenceMulSet adapters now select caller version metadata rather than hardcoded MUGEN, alongside the guard hit-time selection introduced locally. Current imported originals all specify MUGEN 1.0.
+
+Tests cover pinned version parsing, invalid/partial versions, guard inherited depth rejection and actual browser default differences: MUGEN delayed reciprocal defense/healing absolute versus Ikemen immediate direct defense/defense-scaled healing, and guard ground.slidetime versus ground.hittime fallback. Existing combat regression remains required.
+
+Still partial: legacy Venus metadata, all version-dependent behaviors, state-owner version in custom states/redirected execution, full expression/version queries, Z execution and native controller certification. Earlier local exporter/guard notes below describe their staging history; this batch supersedes their pending-bundle status once deployment is verified.
+
+## Character compatibility metadata — exporter wiring
+
+All four imported-character runtime builders now read original definition Info version fields and attach compatibility/engineVersions metadata. Parsing follows pinned common.go ParseMugenVersion/ParseIkemenVersion and compiler.go's Ikemen major/minor activation plus MUGEN 1.1 safeguard. Invalid/out-of-range components, partial Ikemen versions and patch-only versions are tested. Original definition paths are confined to the import snapshot.
+
+The existing guard resolver reads this metadata. Updated runtime bundle regeneration, browser regression and publication of this local batch remain pending; current production remains 0.24.41. No native version-dependent controller certification is claimed.
+
+## Guard defaults — version selection and inherited depth
+
+Guard contact parameter defaults now distinguish pinned native MUGEN ground.slidetime versus Ikemen ground.hittime fallback. The actual resolver reads the attacker's optional battle.compatibility metadata, defaulting existing imports to MUGEN. Explicit guard.hittime still takes precedence. Inherited ground velocity Z is now rejected explicitly instead of being dropped when guard.velocity is omitted.
+
+Unit tests verify both default branches, explicit precedence and inherited unsupported depth. Native version metadata extraction into all character exporters, Z execution and full browser/regression/publication verification of this local change remain pending. This is not full guard parameter certification.
+
 ## 0.24.41 — Red-life / point controller damage-window parity
 
 Red-life and dizzy/guard point controller adapters now share roundFlow.noDamage with LifeAdd/LifeSet, following pinned char.go setters and system.go roundNoDamage. Their previous RoundState!=2 gate incorrectly rejected intro and late post-round writes. Explicit HitDef red-life and point consumption also use the real window instead of the broad state test.

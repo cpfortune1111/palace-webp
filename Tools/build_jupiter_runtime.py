@@ -3,6 +3,8 @@ import json
 import re
 from pathlib import Path
 
+from character_compatibility import imported_compatibility
+
 from compile_moon_states import build, compile_controller, fields
 
 DISABLED_ACTIONS = {60, 9050}
@@ -160,6 +162,7 @@ def compile_runtime(imported, output):
               'source': {'character': 'SailorJupiter', 'scope': 'All source states; non-3DO skills, recovery, KO and helpers',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     output.parent.mkdir(parents=True, exist_ok=True)
+    bundle.update(imported_compatibility(imported))
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Jupiter runtime:', len(states), 'states;', len(commands), 'command definitions')
 

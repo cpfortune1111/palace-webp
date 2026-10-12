@@ -5,6 +5,11 @@ const params={'ground.velocity':'-4,0','air.velocity':'-8,-10','ground.slidetime
 assert.deepEqual(guardContactParameters(params,true),{velocity:[-12,-5],hittime:17,slidetime:17,ctrltime:17,prefix:'airguard'});
 assert.deepEqual(guardContactParameters({...params,'airguard.velocity':'-3,2','guard.hittime':20,'guard.slidetime':12,'guard.ctrltime':10,'airguard.ctrltime':8},true),{velocity:[-3,2],hittime:20,slidetime:12,ctrltime:8,prefix:'airguard'});
 assert.deepEqual(guardContactParameters(params,false).velocity,[-4]);
+const differentTimes={...params,'ground.hittime':31};
+assert.equal(guardContactParameters(differentTimes,false,'mugen').hittime,17);
+assert.equal(guardContactParameters(differentTimes,false,'ikemen').hittime,31);
+assert.equal(guardContactParameters({...differentTimes,'guard.hittime':7},true,'ikemen').hittime,7);
+assert.throws(()=>guardContactParameters({...params,'ground.velocity':'1,2,3'},false),/Z component/);
 assert.throws(()=>guardContactParameters({...params,'airguard.velocity':'1,2,3'},true),/Z component/);
 assert.throws(()=>guardContactParameters({...params,'air.velocity':'1,2,3'},true),/Z component/);
 const defender={type:'A',y:-100,ctrl:1,moveType:'I',state:50};

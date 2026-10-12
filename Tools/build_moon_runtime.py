@@ -3,6 +3,8 @@ import json
 import re
 from pathlib import Path
 
+from character_compatibility import imported_compatibility
+
 from compile_moon_states import DISABLED_ACTIONS, build, compile_controller, fields
 
 
@@ -151,6 +153,7 @@ def compile_runtime(imported, output):
               'cornerpushProfile': {'defaultMultiplier': .7, 'stopThreshold': 4},
               'source': {'character': 'SailorMoon', 'scope': 'All source states; non-3DO skills, recovery, KO and helpers',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
+    bundle.update(imported_compatibility(imported))
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')
 

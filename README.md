@@ -1,3 +1,7 @@
+## 0.24.42 — Imported character version defaults
+
+Four character bundles now include definition-derived engine version metadata without changing existing state/action content. Actual guard hit-time, DefenceMulSet and LifeAdd default selection reads caller version instead of hardcoded MUGEN. Native parsing and browser tests cover both MUGEN/Ikemen branches. Full version-dependent semantics, custom-state ownership and other controllers remain pending.
+
 ## 0.24.41 — Shared resource protection window
 
 RedLifeAdd/Set, DizzyPointsAdd/Set and GuardPointsAdd/Set now use the native post-round damage window instead of rejecting every RoundState outside 2. Explicit HitDef red-life/point consumption uses the same window. Intro and later post-round writes are allowed outside that interval. Actual browser paths and existing combat regressions verify behavior; queued hit consumption, native alive-state and complete resource recovery remain pending.

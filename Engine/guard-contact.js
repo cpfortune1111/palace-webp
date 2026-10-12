@@ -1,10 +1,10 @@
-export function guardContactParameters(params,aerial){
+export function guardContactParameters(params,aerial,compatibility='mugen'){
  const pair=value=>String(value??'0,0').split(',').map(Number);
  const groundVelocity=pair(params['ground.velocity']),airVelocity=pair(params['air.velocity']);
  const velocity=aerial?(params['airguard.velocity']===undefined?[Math.fround(airVelocity[0]*1.5),Math.fround((airVelocity[1]||0)*0.5)]:pair(params['airguard.velocity']).map(Math.fround)):pair(params['guard.velocity']??groundVelocity[0]).map(Math.fround);
- const depth=aerial?(params['airguard.velocity']===undefined?airVelocity[2]:velocity[2]):velocity[2];
+ const depth=aerial?(params['airguard.velocity']===undefined?airVelocity[2]:velocity[2]):params['guard.velocity']===undefined?groundVelocity[2]:velocity[2];
  if(depth)throw Error('Unsupported guard velocity Z component');
- const hittime=Number(params['guard.hittime']??params['ground.slidetime']??0);
+ const hittime=Number(params['guard.hittime']??params[compatibility==='ikemen'?'ground.hittime':'ground.slidetime']??0);
  const slidetime=Number(params['guard.slidetime']??hittime);
  const groundControl=Number(params['guard.ctrltime']??slidetime);
  const ctrltime=aerial?Number(params['airguard.ctrltime']??groundControl):groundControl;
