@@ -405,10 +405,10 @@
   },
   {
     "parameter": "forcecrouch",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller boolean selects crouching ordinary standing-victim reactions. Full native state mutation/ownership, custom/override/down/helper paths remain pending."
   },
   {
     "parameter": "forcenofall",
@@ -419,12 +419,12 @@
   },
   {
     "parameter": "forcestand",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller boolean and ground-Y default select standing ordinary reactions; guarded/trip/air branches retain priority. Native pre-state flags, down/custom/override ownership and helper victim parity remain pending."
   },
   {
     "parameter": "getpower",

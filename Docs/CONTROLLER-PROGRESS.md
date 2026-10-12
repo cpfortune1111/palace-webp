@@ -1,3 +1,15 @@
+## 0.24.52 — HitDef force-stance ordinary reaction execution
+
+HitDef preparation evaluates forcestand/forcecrouch as caller booleans (including fractional nonzero values). Omitted forcestand defaults to ground Y velocity !=0; forcecrouch defaults false. Ordinary crouching/standing hit reaction selection uses the native initial-stance precedence while guarded, trip, aerial and custom-state branches retain their own priorities. Hit metadata stores flags.
+
+Unit tests cover defaults, explicit flags, both flags, A/L stance preservation and boolean evaluation. Browser tests run actual contact resolution plus source reaction state entry, check S5000/S5010 and resulting S/C types, and verify guard/trip/air priority. Existing combat regression remains required.
+
+Still partial: native pre-state mutation/CSF ordering, custom-state and override ownership, down-hit routing, helper victim paths, complete per-version defaults and source state/reset behavior. Both parameters are audited Partial, not fully certified; earlier local notes below are historical staging.
+
+## HitDef force stance routing — local
+
+HitDef forcestand/forcecrouch now evaluate in caller context at preparation; omitted forcestand follows native ground Y velocity !=0 default. Actual normal root reaction selection uses forced S/C stance while guard, aerial, trip and custom-state branches retain their existing precedence. GetHit metadata records the flags. Unit tests cover explicit/default flags, conflicting flags by initial stance and A/L exclusion. Browser regression, true pre-state type mutation, all custom/override/helper paths and publication remain pending; these parameters are not fully certified.
+
 ## 0.24.51 — Defender GetHitVar physical contact counts
 
 Hit resolution records defender gethit hitcount and guardcount, and GetHitVar now exposes those actual stored values. Pinned char.go increments physical contacts once, distinct from source HitCount/GuardCount and numhits-based report totals. New hit chains restart after guarding; guard contact preserves prior gethit hitcount.

@@ -1,3 +1,7 @@
+## 0.24.52 — HitDef forced stance routing
+
+Caller-evaluated forcestand/forcecrouch now select standing/crouching ordinary hit reactions; omitted forcestand follows native nonzero ground-Y velocity default. Browser tests verify source reaction entries, explicit disabling and guard/trip/air precedence. Full pre-state mutation, custom/override/helper rules and native reset timing remain partial.
+
 ## 0.24.51 — Defender GetHitVar contact counts
 
 GetHitVar(hitcount/guardcount) now reads defender physical-contact counters separately from attacker numhits-based HitCount/GuardCount and report totals. Tests verify both actual root hit/guard paths, including count 1 on the defender versus caller numhits 3/4. Full native gethit/reset scheduling and receivedHits remain partial.

@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.51
+# HitDef parameter audit — 0.24.52
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, forcestand, hitonce, p2facing, snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: down.velocity, fall.recover, hitonce, p2facing, snap.
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -64,9 +64,9 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | fall.xvelocity | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.yvelocity | Implemented | — | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | fall.zvelocity | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| forcecrouch | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| forcecrouch | Partial | — | Ikemen | Caller boolean selects crouching ordinary standing-victim reactions. Full native state mutation/ownership, custom/override/down/helper paths remain pending. |
 | forcenofall | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| forcestand | Not implemented | Saturn | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| forcestand | Partial | Saturn | MUGEN + Ikemen | Caller boolean and ground-Y default select standing ordinary reactions; guarded/trip/air branches retain priority. Native pre-state flags, down/custom/override ownership and helper victim parity remain pending. |
 | getpower | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | givepower | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | ground.cornerpush.velmul | Implemented | — | Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
