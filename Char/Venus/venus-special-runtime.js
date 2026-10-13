@@ -6,6 +6,7 @@ import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
 import {createAttackState} from '../../Engine/attack-controllers.js';
+import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engine/hit-override.js?v=02484';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
@@ -25,7 +26,7 @@ export function createSpecialRuntime(api){
   if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
+  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
@@ -53,7 +54,7 @@ export function createSpecialRuntime(api){
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
-  if(kind==='helper'){entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
+  if(kind==='helper'){entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
@@ -88,7 +89,7 @@ export function createSpecialRuntime(api){
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
-   case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
+   case 'HitOverride':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'HitBy':entity.hitBy=params.value;break;
    case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
@@ -124,7 +125,7 @@ export function createSpecialRuntime(api){
  function step(){
   for(const entity of [...entities]){
    if(entity.destroyed||blocked(entity.player,entity))continue;
-   resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
+   if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
    entity.assertions?.clear();
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
@@ -160,10 +161,19 @@ export function createSpecialRuntime(api){
   const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
+   for(const attack of attacks){
+    if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))continue;
+    if(helper.hitBy&&!excludesHit(helper.hitBy,attack.hitDef.params.attr))continue;
+    const selected=selectHitOverride(helper.hitOverrides||[],attack.hitDef.params,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',unguardable:attack.assertions?.has('unguardable')});
+    if(!selected||selected.miss||!api.collision(attack,helper).contact)continue;
+    helper.lastHitOverride=selected;
+    const result=api.helperOverrideHit?.(attack,helper);
+    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(selected.override.forceAir)helper.type='A';if(!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
+    if(!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
+    break;
+   }
   }
-  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)
-  }
+  for(const [helper,nextState] of overrides){enter(helper,nextState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)}
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }
  function finishTick(){

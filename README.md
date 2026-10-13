@@ -1,3 +1,7 @@
+## 0.24.84 — HitOverride root/helper execution (partial)
+
+Eight slots, native attribute bitmasks/aggregate and multi-attack tokens, caller redirection, missonoverride/custom-state exclusion and Mugen versus Ikemen hitpause clocks now drive actual root/helper contacts. Root own-state, forceair/forceguard and keepstate preserve damage/GetHitVars; helper contacts apply isolated life/GetHitVars/hitpause and HitOnce acceptance. Entity keepstate preserves the existing HitDef; overridden custom states cannot overwrite defender ownership. Actual contact/ownership/timer and full Saturn regression tests pass. Helper attacker counters/power/score, normal helper hits, negative state/type-None/KO, compiler-mode propagation and exact native timing remain incomplete. This is not full HitOverride or all-controller certification.
+
 ## 0.24.83 — Native-like palette blend passes
 
 Palette blend branches now use separate per-pass shader sources for invert-add/disable-neg and SubAdd gray/color processing. Each pass clamps source channels before blending and writes an 8-bit intermediate, matching direct WebGL reference cases. Actual branch pixels and full regressions pass. Native dithering/MSAA/indexed shader and exhaustive backend precision remain uncertified; complete controller/parameter goal remains active.
