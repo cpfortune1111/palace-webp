@@ -1,3 +1,14 @@
+export function applyScoreController(controller,caller,api){
+ if(String(controller.type).toLowerCase()!=='scoreadd')return false;
+ const params=controller.params||{};
+ if(params.value===undefined)throw Error('Missing ScoreAdd value');
+ const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ if(!owner)return true;
+ const value=Math.fround(Number(api.evaluate(params.value)));
+ if(value!==0&&!api.excluded(owner))api.add(owner,value);
+ return true;
+}
+
 export function applyTargetScoreController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetscoreadd')return false;
  const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;

@@ -1,3 +1,7 @@
+## 0.24.69 — ScoreAdd redirection and native execution
+
+ScoreAdd now evaluates caller float32 value and redirectid, respects NoScore, and uses native per-round float32 accumulation rather than the old unrestricted direct write. Normal helpers remain eligible, unlike TargetScoreAdd. Actual redirected roots and normal-helper fixtures cover variable evaluation and exclusion. Full team score lifecycle/queries and compiler/version certification remain partial.
+
 ## 0.24.68 — TargetScoreAdd execution
 
 TargetScoreAdd now selects real targets with caller value/ID/index/redirection, uses float32 per-round score accumulation, and respects player-helper eligibility and NoScore. Dedicated actual root/helper fixtures cover ownership, fractional scores and exclusion. Existing game scoring remains unchanged. Complete team score lifecycle/queries and compiler/version certification remain partial.

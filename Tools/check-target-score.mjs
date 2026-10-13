@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {applyTargetScoreController} from '../Engine/target-score.js';
+import {applyTargetScoreController,applyScoreController} from '../Engine/target-score.js';
 import {createScoreRuntime} from '../Engine/score-runtime.js';
 import {createTargetList} from '../Engine/target-list.js';
 const owner={},target={player:2,getHit:{hitid:7}},targets=createTargetList();targets.add(2);
@@ -18,4 +18,13 @@ applyTargetScoreController({type:'TargetScoreAdd',params:{id:999,value:10}},owne
 applyTargetScoreController({type:'TargetScoreAdd',params:{redirectid:999,value:10}},owner,api);
 applyTargetScoreController({type:'TargetScoreAdd',params:{value:10}},owner,{...api,isPlayerType:()=>false});assert.deepEqual(score.snapshot().totals,[0,0]);
 console.log('TargetScoreAdd filtering, redirection, float32 accumulation and exclusion passed');
+score.resetMatch();
+applyScoreController({type:'ScoreAdd',params:{redirectid:2,value:0.1}},owner,api);assert.equal(score.snapshot().roundScores[1],Math.fround(0.1));
+applyScoreController({type:'ScoreAdd',params:{redirectid:2,value:10}},owner,{...api,excluded:()=>true});assert.equal(score.snapshot().roundScores[1],Math.fround(0.1));
+applyScoreController({type:'ScoreAdd',params:{redirectid:999,value:10}},owner,api);assert.equal(score.snapshot().roundScores[1],Math.fround(0.1));
+assert.throws(()=>applyScoreController({type:'ScoreAdd',params:{}},owner,api),/Missing/);
+console.log('ScoreAdd redirected float32 writes, NoScore and missing actors passed');
+const normalHelper={kind:'helper',helperType:1,player:1};
+applyScoreController({type:'ScoreAdd',params:{value:0.5}},normalHelper,{...api,isPlayerType:()=>false});assert.equal(score.snapshot().roundScores[0],0.5);
+applyScoreController({type:'ScoreAdd',params:{value:0}},normalHelper,{...api,add:()=>{throw Error('Zero must not add score')}});assert.equal(score.snapshot().roundScores[0],0.5);
 

@@ -1,3 +1,7 @@
+## 0.24.69 — ScoreAdd corrected execution
+
+The legacy direct ScoreAdd branch ignored redirectid/NoScore and native accumulation precision; it has been replaced by shared controller dispatch using caller float32 value and integer redirection. Native ScoreAdd allows normal helpers, unlike target-controller player-type filtering. Actual P1/P2 redirected expression fixtures and spawned normal-helper root-score/NoScore fixtures are present. Unit tests verify precision, missing actors/value, exclusion and zero-addition. Full native teamside/lifecycle/queries and compiler/version certification remain pending.
+
 ## 0.24.68 — Target score execution
 
 TargetScoreAdd evaluates caller float32 value and integer ID/index/redirectid against live target lists. Normal/projectile helpers are excluded; player helpers route to their root's score, with NoScore suppression. Native additions round current-round accumulations to float32 and transfer effective changes into existing match totals, preserving other game scoring. Unit tests cover precision, negative values, round/match resets and invalid/ineligible targets. Actual root fixtures verify redirected caller variables and NoScore; spawned helper fixtures manually register targets to verify eligibility/ownership, not collision acceptance. Full team ownership/score queries/lifecycle, invalid teamside and compiler/version certification remain pending.
