@@ -1,3 +1,7 @@
+## 0.24.79 — Trans real stage composition
+
+Active root/helper/AfterImage Trans now presents an ordered stage-backed frame instead of relying on whole-layer opacity. Native add/sub/SubAdd pass coefficients, AIR Default precedence, reflection intensity, recorded transforms and cropped pixel regions execute. Actual controller/helper/reset/pixel/stage/presentation regressions pass. Palette shader effects, compiler/version metadata, AIR interpolation, helper reflections, precision/performance and complete native certification remain pending.
+
 ## 0.24.78 — Correct Offset hitpause reset
 
 Pinned Mugen 1.1/Ikemen reset timing also resets Offset during hitpause. Root/helper paths and actual regressions now match this, correcting the .77 retention claim. WinMugen version metadata remains pending. Trans parameter and blend/compositor policies are tested foundations, not a completed controller or game rendering integration.

@@ -125,7 +125,7 @@ export function createSpecialRuntime(api){
  function step(){
   for(const entity of [...entities]){
    if(entity.destroyed||blocked(entity.player,entity))continue;
-   resetAngleDraw(entity.angleState);if(entity.kind==='helper')entity.drawOffset=[0,0];
+   resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
    entity.assertions?.clear();
    if(entity.hitPause>0){
     if(entity.kind==='helper'){

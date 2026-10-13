@@ -1,3 +1,7 @@
+## 0.24.79 — Trans real rendering
+
+Root/helper Trans dispatch, independent alpha/clamping, hitpause reset and active presentation now consume recorded per-sprite draws in a stage-backed framebuffer. Ordered add/sub/SubAdd passes, AIR types/Default precedence, reflection intensity and AfterImage own mode/priority are integrated. Cropped pixel reads preserve transformations and offscreen handling. Actual stage subtraction/SubAdd, helper source/reset, pixel/transformed queue and presentation fixtures pass. Full palette shader/inversion/tint, version/compiler metadata, AIR interpolation, helper reflection, native precision/performance/UI navigation certification remain pending; partial real execution, not full compatibility.
+
 ## 0.24.78 — Offset hitpause correction
 
 Broader native reset audit found .77 incorrectly retained Offset during hitpause. Mugen 1.1/Ikemen reset it before eligible controllers; root/helper implementation and actual tests now require this behavior. Full regression passes. WinMugen/version-owner distinctions remain pending. Trans parameter/native blend/compositor tests are groundwork only; actual shared stage/actor rendering is not yet connected and is not counted complete.
