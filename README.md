@@ -1,3 +1,7 @@
+## 0.24.71 — BindToTarget live positioning
+
+BindToTarget now evaluates caller ID/index/time/pos/posz/redirection, moves live root/helper callers relative to their first target and registers reciprocal TargetBind. Head/mid/foot, default untouched Y/Z and caller expressions are handled; actual root/head/mid/redirection/helper fixtures pass. Complete native localcoord/depth metadata and already-bound distance parity remain partial.
+
 ## 0.24.70 — TargetBind real-target lifecycle
 
 TargetBind now selects real target ID/index with caller time/XYZ/redirection and float32 scaling instead of the old throw-only path. Roots/helpers follow live owners with velocity synchronization, indefinite/paused/deferred timing, mutual-binding prevention, TargetDrop and finite-hit/missing-owner release. Actual root/helper entry, query and source-throw plumbing fixtures are included. Complete native timing, buffered hit identities and full character/helper trajectories remain partial.
