@@ -1,3 +1,7 @@
+## 0.24.65 — TargetPowerAdd execution
+
+TargetPowerAdd now evaluates caller target ID/index/value/redirection and writes eligible roots/player-helper power owners with limits and round locking. Actual root/helper, custom-state PowerMax ownership and simultaneous-super regressions pass. Team sharing/global maximum-power integration, exact native lock timing and full helper lifecycle remain partial.
+
 ## 0.24.64 — DizzySet / GuardBreakSet live flags
 
 Both controllers now evaluate caller booleans/redirection and mutate persistent root/helper flags, with Dizzy/GuardBreak queries reading live storage. State changes preserve flags, round initialization clears roots and TargetLifeAdd skips dizzy-point damage while the victim is dizzy. Actual root/helper redirection, independent queries and resource-exclusion browser fixtures pass. Missing required value fails explicitly. Full common-state/system-flag lifecycle, compiler-time validation and version parity remain partial.
@@ -766,3 +770,5 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
+
+

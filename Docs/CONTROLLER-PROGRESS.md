@@ -1,3 +1,7 @@
+## 0.24.65 — TargetPowerAdd resource execution
+
+Caller-evaluated ID/index/value/redirectid select real target lists. Normal/projectile helpers are excluded; player helpers share their root power. Saturation, limits, zero-addition and post-round lock tests pass. PowerMax now retains original character ownership in custom states. Actual browser regression exited 0 on 2026-10-13. Team sharing/global maximum-power integration, native timing, helper collisions and compiler/version certification remain pending; no complete-controller claim.
+
 ## 0.24.64 — Persistent dizzy / guard-break flag controllers
 
 DizzySet/GuardBreakSet execute caller value/redirectid through the shared dispatcher. Live root flag storage and helper fields back Dizzy/GuardBreak queries; changing source states preserves flags, independent resource feature switches do not suppress flag writes, and round initialization clears root flags. TargetLifeAdd reads live root dizzy rather than stale reaction data and skips dizzy-point damage accordingly. Pinned compiler mandatory-value validation now rejects omission without changing flags.
@@ -491,3 +495,4 @@ Still not certified complete: round-no-damage assertions, team power sharing, ma
 Root floating/system-floating storage is shared across expression evaluation, state controller execution and initialization. Native `v`/`fv` variable targets, expression indices and integer truncation have focused tests. VarRandom lifecycle single/reversed bounds are tested.
 
 Pending: complete parent/root redirection, helper VarRandom unification, variable persistence boundaries across rounds, redirectid, and native system-variable restrictions. No whole-controller certification is claimed yet.
+
