@@ -1,3 +1,7 @@
+## 0.24.62 — TargetState execution
+
+TargetState now evaluates caller id/index/value/redirectid against real target lists and uses the redirected owner's current state character, with own-character selection for minus -2/-4. Root custom state transfers preserve hit data and initial victim animation ownership; P1 reaction and general source-state paths are covered. Actual root/filter/redirection/control/ownership browser regressions pass. Native queued transitions, full helper ownership/victims, invalid-state behavior and version parity remain partial.
+
 ## 0.24.61 — TargetVelSet / TargetVelAdd execution
 
 Target velocity controllers now evaluate caller id/index/redirectid and float axis expressions, select real targets and write P1/P2/helper velocity adapters. X uses native target-facing-relative direction; P1 reaction globals synchronize correctly and non-reaction root set/add preserves the expected world direction. Policy tests cover omitted axes, evaluation order, redirection, native cumulative scaling and Z arithmetic; actual root browser regressions pass. Full local-scale metadata, root depth simulation, helper-victim collision ownership and version parity remain partial.

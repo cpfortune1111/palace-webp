@@ -1,3 +1,9 @@
+## 0.24.62 — TargetState real-target and source-owner execution
+
+The shared dispatcher evaluates caller integer id/index/value/redirectid, selects the redirected owner's target list, skips negative state numbers and removes control before switching source states. Current custom-state ownership determines root state owner; minus -2/-4 select its own character. Hit data and initial victim animation ownership are preserved. P1 reaction-state transfers synchronize root globals; general-state transfers release reaction storage and retain getHit data. The obsolete deduplicated legacy TargetState branch was removed.
+
+Policy tests and actual browser fixtures cover ID/index selection, redirection, both roots entering 5050, control removal, hit-object and animation-owner retention, plus P1 returning through general source state 0. Complete existing combat/pixel/simultaneous-super regressions pass. Native queued per-actor timing, full helper/custom ownership and helper victims, validation and version parity remain pending; TargetState is not fully certified.
+
 ## 0.24.61 — Target velocity controller execution
 
 TargetVelSet/Add run through the shared root/helper dispatcher with caller id/index/redirectid and float32 X/Y/Z values. Target selection uses the real registry; scaling preserves the pinned implementation's cumulative per-target conversion. Runtime X converts target-relative velocity into P2/helper/P1-reaction world velocity, while the non-reaction P1 root keeps relative storage; P1 reaction writes synchronize globals. Missing redirect actors exit before evaluating axis expressions. Unsupported actor depth is explicit, not silently ignored.
