@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 125204)
-Total output lines: 21137
-
 {
   "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
   "controllerCount": 163,
@@ -6779,7 +6776,7662 @@ Total output lines: 21137
         },
         {
           "function": "paramValue",
-          "prefix": …45204 tokens truncated…fterimage.timegap",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "getpower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "givepower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "mindist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "numhits"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "offset"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ownpal"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausemovetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projclsnangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projclsnscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projdepthbound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projedgebound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projfocallength"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projheightbound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projhits"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projlayerno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projmisstime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projreflection"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projremove"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projremovetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projshadow"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projsprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projstagebound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projwindow"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projxangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projxshear"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projyangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redlife"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "remappal"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "remvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "score"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "shader.playerno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "shader.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "snap"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "supermovetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "teamside"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "projectile",
+          "prefix": ""
+        },
+        {
+          "function": "projectileSub",
+          "prefix": ""
+        },
+        {
+          "function": "shaderSub",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "accel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "afterimage."
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.juggle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "attack.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "chainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.bounce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.decay"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.diradd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "getpower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "givepower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "mindist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "numhits"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "offset"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ownpal"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsncheck"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsnrequire"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "palfx."
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausemovetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projanim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projcancelanim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projclsnangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projclsnscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projdepthbound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projedgebound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projfocallength"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projheightbound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projhitanim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projhits"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projlayerno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projmisstime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projprojection"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projreflection"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projremanim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projremove"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projremovetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projshadow"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projsprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projstagebound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projwindow"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projxangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projxshear"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projyangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redlife"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "remappal"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "remvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "score"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "shader.playerno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "shader.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "snap"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "supermovetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "teamside"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramAnimtype: dynamic parameter names",
+        "paramClsnType: dynamic parameter names",
+        "paramHittype: dynamic parameter names",
+        "paramPrefixValue: dynamic parameter names",
+        "paramProjection: dynamic parameter names",
+        "paramValue: dynamic parameter names",
+        "projectileSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "remappal",
+      "compilerFunction": "remapPal",
+      "parameterCandidates": [
+        "dest",
+        "redirectid",
+        "source"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "remapPal",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "dest"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "source"
+        },
+        {
+          "function": "remapPal",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dest"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "source"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "removeexplod",
+      "compilerFunction": "removeExplod",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "removeExplod",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "removeExplod",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "removetext",
+      "compilerFunction": "removeText",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "removeText",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "removeText",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "reversaldef",
+      "compilerFunction": "reversalDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "palfx.add",
+        "palfx.color",
+        "palfx.hue",
+        "palfx.invertall",
+        "palfx.invertblend",
+        "palfx.mul",
+        "palfx.sinadd",
+        "palfx.sincolor",
+        "palfx.sinhue",
+        "palfx.sinmul",
+        "palfx.time",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "reversal.attr",
+        "reversal.guardflag",
+        "reversal.guardflag.not",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDefSub",
+        "palFXSub",
+        "paramAnimtype",
+        "paramClsnType",
+        "paramHittype",
+        "paramPrefixValue",
+        "paramValue",
+        "reversalDef",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "hitDefSub",
+          "prefix": ""
+        },
+        {
+          "function": "palFXSub",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "air.animtype"
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "animtype"
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "fall.animtype"
+        },
+        {
+          "function": "paramClsnType",
+          "prefix": "p2clsncheck"
+        },
+        {
+          "function": "paramClsnType",
+          "prefix": "p2clsnrequire"
+        },
+        {
+          "function": "paramHittype",
+          "prefix": "air.type"
+        },
+        {
+          "function": "paramHittype",
+          "prefix": "ground.type"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "guard.sparkno"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "guardsound"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "hitsound"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "sparkno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.fall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.juggle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "attack.depth"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "chainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.bounce"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.ampl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.decay"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.dir"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.diradd"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "getpower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "givepower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "mindist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "numhits"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redlife"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "score"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "snap"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "teamside"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "reversalDef",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.juggle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "attack.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "chainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.bounce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.decay"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.diradd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "getpower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "givepower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "mindist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "numhits"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsncheck"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsnrequire"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "palfx."
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redlife"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "score"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "snap"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "teamside"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramAnimtype: dynamic parameter names",
+        "paramClsnType: dynamic parameter names",
+        "paramHittype: dynamic parameter names",
+        "paramPrefixValue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "runstate",
+      "compilerFunction": "runState",
+      "parameterCandidates": [
+        "playerno",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "runState",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "playerno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "runState",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "playerno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "screenbound",
+      "compilerFunction": "screenBound",
+      "parameterCandidates": [
+        "movecamera",
+        "redirectid",
+        "stagebound",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "screenBound",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "screenBound",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "selfstate",
+      "compilerFunction": "selfState",
+      "parameterCandidates": [
+        "anim",
+        "continue",
+        "ctrl",
+        "readplayerid",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeStateSub",
+        "paramPrefixValue",
+        "paramValue",
+        "selfState",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "changeStateSub",
+          "prefix": ""
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "anim"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "continue"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ctrl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "readplayerid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "selfState",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "anim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "continue"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ctrl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "readplayerid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramPrefixValue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "sndpan",
+      "compilerFunction": "sndPan",
+      "parameterCandidates": [
+        "abspan",
+        "channel",
+        "pan",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "sndPan",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "abspan"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pan"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "sndPan",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "abspan"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pan"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "sprpriority",
+      "compilerFunction": "sprPriority",
+      "parameterCandidates": [
+        "layerno",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "sprPriority",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "layerno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "sprPriority",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "layerno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "statetypeset",
+      "compilerFunction": "stateTypeSet",
+      "parameterCandidates": [
+        "movetype",
+        "physics",
+        "redirectid",
+        "statetype",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "stateTypeSet"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "stateTypeSet",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "stopsnd",
+      "compilerFunction": "stopSnd",
+      "parameterCandidates": [
+        "channel",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "stopSnd"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "stopSnd",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "superpause",
+      "compilerFunction": "superPause",
+      "parameterCandidates": [
+        "anim",
+        "brightness",
+        "darken",
+        "endcmdbuftime",
+        "movetime",
+        "p2defmul",
+        "pausebg",
+        "pos",
+        "poweradd",
+        "redirectid",
+        "sound",
+        "time",
+        "unhittable"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramPrefixValue",
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "superPause"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramPrefixValue",
+          "prefix": "anim"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "sound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "brightness"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "darken"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "endcmdbuftime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "movetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2defmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausebg"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pos"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "poweradd"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "unhittable"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "anim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "brightness"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "darken"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "endcmdbuftime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "movetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2defmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausebg"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pos"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "poweradd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "unhittable"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "superPause",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramPrefixValue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetbind",
+      "compilerFunction": "targetBind",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "pos",
+        "redirectid",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetBind"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pos"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pos"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetBind",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetdrop",
+      "compilerFunction": "targetDrop",
+      "parameterCandidates": [
+        "excludeid",
+        "keepone",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetDrop"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "excludeid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "keepone"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "excludeid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "keepone"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetDrop",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetfacing",
+      "compilerFunction": "targetFacing",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetFacing"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetFacing",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetlifeadd",
+      "compilerFunction": "targetLifeAdd",
+      "parameterCandidates": [
+        "absolute",
+        "dizzy",
+        "id",
+        "index",
+        "kill",
+        "redirectid",
+        "redlife",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetLifeAdd"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "absolute"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dizzy"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redlife"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "absolute"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzy"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redlife"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetLifeAdd",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetpoweradd",
+      "compilerFunction": "targetPowerAdd",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetPowerAdd"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetPowerAdd",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetstate",
+      "compilerFunction": "targetState",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetState"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetState",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetveladd",
+      "compilerFunction": "targetVelAdd",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetVelAdd"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "z"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "z"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetVelAdd",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "targetvelset",
+      "compilerFunction": "targetVelSet",
+      "parameterCandidates": [
+        "id",
+        "index",
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "targetVelSet"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "index"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "z"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "index"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "z"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "targetVelSet",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "trans",
+      "compilerFunction": "trans",
+      "parameterCandidates": [
+        "alpha",
+        "redirectid",
+        "trans"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramTrans",
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "trans"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramTrans",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "trans",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "turn",
+      "compilerFunction": "turn",
+      "parameterCandidates": [
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "turn"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "turn",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varadd",
+      "compilerFunction": "varAdd",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "varAdd",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "varAdd",
+          "prefix": ""
+        },
+        {
+          "function": "varSetOlderSub",
+          "prefix": ""
+        },
+        {
+          "function": "varSetSub",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varrandom",
+      "compilerFunction": "varRandom",
+      "parameterCandidates": [
+        "range",
+        "redirectid",
+        "v"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "varRandom"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "range"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "v"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "range"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "v"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "varRandom",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varrangeset",
+      "compilerFunction": "varRangeSet",
+      "parameterCandidates": [
+        "first",
+        "fvalue",
+        "last",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "varRangeSet"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "first"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "last"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "first"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "last"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "varRangeSet",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "varset",
+      "compilerFunction": "varSet",
+      "parameterCandidates": [
+        "fv",
+        "redirectid",
+        "sysfv",
+        "sysv",
+        "v",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "varSet",
+        "varSetOlderSub",
+        "varSetSub"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "varSet",
+          "prefix": ""
+        },
+        {
+          "function": "varSetOlderSub",
+          "prefix": ""
+        },
+        {
+          "function": "varSetSub",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "veladd",
+      "compilerFunction": "velAdd",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "posSetSub",
+        "stateParam",
+        "stateSec",
+        "velAdd"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "z"
+        },
+        {
+          "function": "posSetSub",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "z"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "velAdd",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "velmul",
+      "compilerFunction": "velMul",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "posSetSub",
+        "stateParam",
+        "stateSec",
+        "velMul"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "z"
+        },
+        {
+          "function": "posSetSub",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "z"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "velMul",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "velset",
+      "compilerFunction": "velSet",
+      "parameterCandidates": [
+        "redirectid",
+        "x",
+        "y",
+        "z"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "posSetSub",
+        "stateParam",
+        "stateSec",
+        "velSet"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "z"
+        },
+        {
+          "function": "posSetSub",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "z"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "velSet",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "victoryquote",
+      "compilerFunction": "victoryQuote",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "victoryQuote"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "victoryQuote",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "width",
+      "compilerFunction": "width",
+      "parameterCandidates": [
+        "edge",
+        "player",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "width"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "width",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "zoom",
+      "compilerFunction": "zoom",
+      "parameterCandidates": [
+        "camerabound",
+        "endlag",
+        "lag",
+        "pos",
+        "scale",
+        "stagebound",
+        "time"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "paramValue",
+        "stateParam",
+        "stateSec",
+        "zoom"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "paramValue",
+          "prefix": "camerabound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "endlag"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "lag"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pos"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "scale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "stagebound"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "camerabound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "endlag"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "lag"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pos"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "scale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "stagebound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        },
+        {
+          "function": "zoom",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertanalogvector",
+      "compilerFunction": "assertAnalogVector",
+      "parameterCandidates": [
+        "lefttrigger",
+        "leftx",
+        "lefty",
+        "redirectid",
+        "righttrigger",
+        "rightx",
+        "righty"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertAnalogVector",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "assertAnalogVector",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "lefttrigger"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "leftx"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "lefty"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "righttrigger"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "rightx"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "righty"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "lefttrigger"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "leftx"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "lefty"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "righttrigger"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "rightx"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "righty"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertcommand",
+      "compilerFunction": "assertCommand",
+      "parameterCandidates": [
+        "buffer.time",
+        "name",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertCommand",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "assertCommand",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "buffer.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "buffer.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "assertinput",
+      "compilerFunction": "assertInput",
+      "parameterCandidates": [
+        "flag",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "assertInput",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "assertInput",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "assertInput: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "camera",
+      "compilerFunction": "cameraCtrl",
+      "parameterCandidates": [
+        "followid",
+        "pos",
+        "view"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "cameraCtrl",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "cameraCtrl",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "followid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pos"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "followid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pos"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "changemovelist",
+      "compilerFunction": "changeMovelist",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "changeMovelist",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "changeMovelist",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "depth",
+      "compilerFunction": "depth",
+      "parameterCandidates": [
+        "edge",
+        "player",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "depth",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "depth",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "depthbound",
+      "compilerFunction": "depthBound",
+      "parameterCandidates": [
+        "movecamera",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "depthBound",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "depthBound",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dialogue",
+      "compilerFunction": "dialogue",
+      "parameterCandidates": [
+        "force",
+        "hidebars",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dialogue",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "dialogue",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "force"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hidebars"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "force"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hidebars"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "dialogue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzypointsadd",
+      "compilerFunction": "dizzyPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzyPointsAdd",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "dizzyPointsAdd",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "absolute"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "absolute"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzypointsset",
+      "compilerFunction": "dizzyPointsSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzyPointsSet",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "dizzyPointsSet",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "dizzyset",
+      "compilerFunction": "dizzySet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "dizzySet",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "dizzySet",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "gethitvarset",
+      "compilerFunction": "getHitVarSet",
+      "parameterCandidates": [
+        "airtype",
+        "animtype",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "ctrltime",
+        "damage",
+        "dizzypoints",
+        "down.recover",
+        "down.recovertime",
+        "fall",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.decay",
+        "fall.envshake.dir",
+        "fall.envshake.diradd",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvel",
+        "fall.yvel",
+        "fall.zvel",
+        "fallcount",
+        "groundtype",
+        "guardcount",
+        "guarded",
+        "guardpoints",
+        "hitcount",
+        "hitshaketime",
+        "hittime",
+        "playerid",
+        "playerno",
+        "projid",
+        "redirectid",
+        "redlife",
+        "slidetime",
+        "stand.friction",
+        "teamside",
+        "xaccel",
+        "xvel",
+        "yaccel",
+        "yvel",
+        "zaccel",
+        "zvel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "getHitVarSet",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "getHitVarSet",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airtype"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "animtype"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "chainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.decay"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.diradd"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.xvel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.yvel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.zvel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fallcount"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "groundtype"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardcount"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guarded"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitcount"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitshaketime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "playerid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "playerno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "projid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redlife"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "teamside"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "xvel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "yvel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "zvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "chainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.decay"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.diradd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.xvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.yvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.zvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fallcount"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "groundtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardcount"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guarded"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitcount"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitshaketime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "playerid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "playerno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "projid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redlife"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "teamside"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "xvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "yvel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "zvel"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "groundleveloffset",
+      "compilerFunction": "groundLevelOffset",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "groundLevelOffset",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "groundLevelOffset",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardbreakset",
+      "compilerFunction": "guardBreakSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardBreakSet",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "guardBreakSet",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardpointsadd",
+      "compilerFunction": "guardPointsAdd",
+      "parameterCandidates": [
+        "absolute",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardPointsAdd",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "guardPointsAdd",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "absolute"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "absolute"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "guardpointsset",
+      "compilerFunction": "guardPointsSet",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "guardPointsSet",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "guardPointsSet",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "height",
+      "compilerFunction": "height",
+      "parameterCandidates": [
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "height",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "height",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "lifebaraction",
+      "compilerFunction": "lifebarAction",
+      "parameterCandidates": [
+        "anim",
+        "font.align",
+        "font.bank",
+        "font.color",
+        "font.no",
+        "palfx.add",
+        "palfx.color",
+        "palfx.hue",
+        "palfx.invertall",
+        "palfx.invertblend",
+        "palfx.mul",
+        "palfx.sinadd",
+        "palfx.sincolor",
+        "palfx.sinhue",
+        "palfx.sinmul",
+        "palfx.time",
+        "redirectid",
+        "refreshtype",
+        "snd",
+        "spr",
+        "text",
+        "time",
+        "timemul",
+        "top"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "lifebarAction",
+        "palFXSub",
+        "paramPrefixValue",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "lifebarAction",
+          "prefix": ""
+        },
+        {
+          "function": "palFXSub",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "anim"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "snd"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "spr"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "font.align"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "font.bank"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "font.color"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "font.no"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "refreshtype"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "timemul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "top"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "anim"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "font.align"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "font.bank"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "font.color"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "font.no"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "palfx."
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "refreshtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "snd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "spr"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "timemul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "top"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramPrefixValue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "loadfile",
+      "compilerFunction": "loadFile",
+      "parameterCandidates": [
+        "maps",
+        "maps.include",
+        "path",
+        "redirectid",
+        "savedata"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "loadFile",
+        "paramSaveData",
+        "paramStringList",
+        "paramValue",
+        "saveLoadFileSub",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "loadFile",
+          "prefix": ""
+        },
+        {
+          "function": "paramSaveData",
+          "prefix": ""
+        },
+        {
+          "function": "paramStringList",
+          "prefix": "maps"
+        },
+        {
+          "function": "paramStringList",
+          "prefix": "maps.include"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "saveLoadFileSub",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "maps"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "maps.include"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramStringList: dynamic parameter names",
+        "paramValue: dynamic parameter names",
+        "saveLoadFileSub: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "loadstate",
+      "compilerFunction": "loadState",
+      "parameterCandidates": [],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "loadState",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "loadState",
+          "prefix": ""
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapadd",
+      "compilerFunction": "mapAdd",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapAdd",
+        "mapSetSub",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "mapAdd",
+          "prefix": ""
+        },
+        {
+          "function": "mapSetSub",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapreset",
+      "compilerFunction": "mapReset",
+      "parameterCandidates": [
+        "exclude",
+        "exclude2",
+        "exclude3",
+        "exclude4",
+        "exclude5",
+        "exclude6",
+        "exclude7",
+        "exclude8",
+        "redirectid"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapReset",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "mapReset",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "mapReset: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "mapset",
+      "compilerFunction": "mapSet",
+      "parameterCandidates": [
+        "map",
+        "redirectid",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "mapSet",
+        "mapSetSub",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "mapSet",
+          "prefix": ""
+        },
+        {
+          "function": "mapSetSub",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "map(KEY) assignment syntax requires semantic parsing",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "matchrestart",
+      "compilerFunction": "matchRestart",
+      "parameterCandidates": [
+        "p1def",
+        "p1palette",
+        "p2def",
+        "p2palette",
+        "p3def",
+        "p3palette",
+        "p4def",
+        "p4palette",
+        "p5def",
+        "p5palette",
+        "p6def",
+        "p6palette",
+        "p7def",
+        "p7palette",
+        "p8def",
+        "p8palette",
+        "preservevars",
+        "reload",
+        "resetmatch",
+        "stagedef"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "matchRestart",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "matchRestart",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "preservevars"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "reload"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "resetmatch"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "preservevars"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "reload"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "resetmatch"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgctrl",
+      "compilerFunction": "modifyBGCtrl",
+      "parameterCandidates": [
+        "add",
+        "color",
+        "dest",
+        "hue",
+        "id",
+        "invertall",
+        "invertblend",
+        "mul",
+        "sinadd",
+        "sincolor",
+        "sinhue",
+        "sinmul",
+        "source",
+        "time",
+        "value",
+        "x",
+        "y"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBGCtrl",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "modifyBGCtrl",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "add"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "color"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dest"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hue"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "invertall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "invertblend"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sinadd"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sincolor"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sinhue"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sinmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "source"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "x"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "y"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "add"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "color"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dest"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hue"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "invertall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "invertblend"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sinadd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sincolor"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sinhue"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sinmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "source"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "x"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "y"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgctrl3d",
+      "compilerFunction": "modifyBGCtrl3d",
+      "parameterCandidates": [
+        "id",
+        "time",
+        "value"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBGCtrl3d",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "modifyBGCtrl3d",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "value"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "value"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifybgm",
+      "compilerFunction": "modifyBgm",
+      "parameterCandidates": [
+        "freqmul",
+        "loopcount",
+        "loopend",
+        "loopstart",
+        "position",
+        "volume"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyBgm",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "modifyBgm",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "freqmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "loopcount"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "loopend"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "loopstart"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "position"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "volume"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "freqmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "loopcount"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "loopend"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "loopstart"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "position"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "volume"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyhitdef",
+      "compilerFunction": "modifyHitDef",
+      "parameterCandidates": [
+        "affectteam",
+        "air.animtype",
+        "air.cornerpush.velmul",
+        "air.cornerpush.veloff",
+        "air.fall",
+        "air.hittime",
+        "air.juggle",
+        "air.type",
+        "air.velocity",
+        "airguard.cornerpush.velmul",
+        "airguard.cornerpush.veloff",
+        "airguard.ctrltime",
+        "airguard.velocity",
+        "animtype",
+        "attack.depth",
+        "attr",
+        "chainid",
+        "crouch.friction",
+        "damage",
+        "dizzypoints",
+        "down.bounce",
+        "down.cornerpush.velmul",
+        "down.cornerpush.veloff",
+        "down.hittime",
+        "down.recover",
+        "down.recovertime",
+        "down.velocity",
+        "envshake.ampl",
+        "envshake.decay",
+        "envshake.dir",
+        "envshake.diradd",
+        "envshake.freq",
+        "envshake.mul",
+        "envshake.phase",
+        "envshake.time",
+        "fall",
+        "fall.animtype",
+        "fall.damage",
+        "fall.envshake.ampl",
+        "fall.envshake.dir",
+        "fall.envshake.freq",
+        "fall.envshake.mul",
+        "fall.envshake.phase",
+        "fall.envshake.time",
+        "fall.kill",
+        "fall.recover",
+        "fall.recovertime",
+        "fall.xvelocity",
+        "fall.yvelocity",
+        "fall.zvelocity",
+        "forcecrouch",
+        "forcenofall",
+        "forcestand",
+        "getpower",
+        "givepower",
+        "ground.cornerpush.velmul",
+        "ground.cornerpush.veloff",
+        "ground.hittime",
+        "ground.slidetime",
+        "ground.type",
+        "ground.velocity",
+        "guard.cornerpush.velmul",
+        "guard.cornerpush.veloff",
+        "guard.ctrltime",
+        "guard.dist",
+        "guard.dist.depth",
+        "guard.dist.height",
+        "guard.dist.width",
+        "guard.hittime",
+        "guard.kill",
+        "guard.pausetime",
+        "guard.slidetime",
+        "guard.sparkangle",
+        "guard.sparkno",
+        "guard.sparkscale",
+        "guard.velocity",
+        "guardflag",
+        "guardpoints",
+        "guardsound",
+        "guardsound.channel",
+        "hitflag",
+        "hitonce",
+        "hitsound",
+        "hitsound.channel",
+        "id",
+        "ignorereversaldef",
+        "keepstate",
+        "kill",
+        "maxdist",
+        "mindist",
+        "missonoverride",
+        "nochainid",
+        "numhits",
+        "p1facing",
+        "p1getp2facing",
+        "p1sprpriority",
+        "p1stateno",
+        "p2clsncheck",
+        "p2clsnrequire",
+        "p2facing",
+        "p2getp1state",
+        "p2sprpriority",
+        "p2stateno",
+        "palfx.add",
+        "palfx.color",
+        "palfx.hue",
+        "palfx.invertall",
+        "palfx.invertblend",
+        "palfx.mul",
+        "palfx.sinadd",
+        "palfx.sincolor",
+        "palfx.sinhue",
+        "palfx.sinmul",
+        "palfx.time",
+        "pausetime",
+        "priority",
+        "redirectid",
+        "redlife",
+        "score",
+        "snap",
+        "sparkangle",
+        "sparkno",
+        "sparkscale",
+        "sparkxy",
+        "sprpriority",
+        "stand.friction",
+        "teamside",
+        "unhittabletime",
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "hitDefSub",
+        "modifyHitDef",
+        "palFXSub",
+        "paramAnimtype",
+        "paramClsnType",
+        "paramHittype",
+        "paramPrefixValue",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "hitDefSub",
+          "prefix": ""
+        },
+        {
+          "function": "modifyHitDef",
+          "prefix": ""
+        },
+        {
+          "function": "palFXSub",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "air.animtype"
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "animtype"
+        },
+        {
+          "function": "paramAnimtype",
+          "prefix": "fall.animtype"
+        },
+        {
+          "function": "paramClsnType",
+          "prefix": "p2clsncheck"
+        },
+        {
+          "function": "paramClsnType",
+          "prefix": "p2clsnrequire"
+        },
+        {
+          "function": "paramHittype",
+          "prefix": "air.type"
+        },
+        {
+          "function": "paramHittype",
+          "prefix": "ground.type"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "guard.sparkno"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "guardsound"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "hitsound"
+        },
+        {
+          "function": "paramPrefixValue",
+          "prefix": "sparkno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.fall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.juggle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "air.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "airguard.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "attack.depth"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "chainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.bounce"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "down.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.ampl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.decay"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.dir"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.diradd"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "getpower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "givepower"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "kill"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "mindist"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "numhits"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "palfx."
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redlife"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "score"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "snap"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "teamside"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.juggle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "air.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "airguard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "attack.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "chainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "crouch.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzypoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.bounce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "down.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.decay"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.diradd"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.animtype"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.damage"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.ampl"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.dir"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.freq"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.mul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.phase"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.envshake.time"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recover"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.recovertime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.xvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.yvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "fall.zvelocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcecrouch"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcenofall"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "forcestand"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "getpower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "givepower"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ground.type"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.velmul"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.cornerpush.veloff"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.ctrltime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.depth"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.height"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.dist.width"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.hittime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.slidetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guard.velocity"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardpoints"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitonce"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitsound.channel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ignorereversaldef"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "keepstate"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "kill"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "maxdist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "mindist"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "missonoverride"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "nochainid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "numhits"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1getp2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p1stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsncheck"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2clsnrequire"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2facing"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2getp1state"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "p2stateno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "palfx."
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redlife"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "score"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "snap"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkangle"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkno"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkscale"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sparkxy"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "sprpriority"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "stand.friction"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "teamside"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "xaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "yaccel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "zaccel"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramAnimtype: dynamic parameter names",
+        "paramClsnType: dynamic parameter names",
+        "paramHittype: dynamic parameter names",
+        "paramPrefixValue: dynamic parameter names",
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyplayer",
+      "compilerFunction": "modifyPlayer",
+      "parameterCandidates": [
+        "ailevel",
+        "alive",
+        "attack",
+        "defence",
+        "displayname",
+        "dizzypointsmax",
+        "guardpointsmax",
+        "helpername",
+        "helpervar.id",
+        "hitpausetime",
+        "lifebarname",
+        "lifemax",
+        "movecountered",
+        "moveguarded",
+        "movehit",
+        "movereversed",
+        "pausemovetime",
+        "powermax",
+        "redirectid",
+        "supermovetime",
+        "teamside",
+        "unhittabletime"
+      ],
+      "commonParameters": [
+        "persistent",
+        "ignorehitpause"
+      ],
+      "compilerFunctionsInspected": [
+        "modifyPlayer",
+        "paramValue",
+        "stateParam",
+        "stateSec"
+      ],
+      "compilerContextsInspected": [
+        {
+          "function": "modifyPlayer",
+          "prefix": ""
+        },
+        {
+          "function": "paramValue",
+          "prefix": "ailevel"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "alive"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "attack"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "defence"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "dizzypointsmax"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "guardpointsmax"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "helpervar.id"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "hitpausetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "lifemax"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "movecountered"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "moveguarded"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "movehit"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "movereversed"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "pausemovetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "powermax"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "supermovetime"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "teamside"
+        },
+        {
+          "function": "paramValue",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": ""
+        },
+        {
+          "function": "stateParam",
+          "prefix": "ailevel"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "alive"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "attack"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "defence"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "dizzypointsmax"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "guardpointsmax"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "helpervar.id"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "hitpausetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "lifemax"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "movecountered"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "moveguarded"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "movehit"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "movereversed"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "pausemovetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "powermax"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "redirectid"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "supermovetime"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "teamside"
+        },
+        {
+          "function": "stateParam",
+          "prefix": "unhittabletime"
+        },
+        {
+          "function": "stateSec",
+          "prefix": ""
+        }
+      ],
+      "unresolvedExtraction": [
+        "paramValue: dynamic parameter names"
+      ],
+      "coverageStatus": "not semantically certified"
+    },
+    {
+      "controller": "modifyprojectile",
+      "compilerFunction": "modifyProjectile",
+      "parameterCandidates": [
+        "accel",
+        "affectteam",
+        "afterimage.alpha",
+        "afterimage.framegap",
+        "afterimage.ignorehitpause",
+        "afterimage.length",
+        "afterimage.paladd",
+        "afterimage.palbright",
+        "afterimage.palcolor",
+        "afterimage.palcontrast",
+        "afterimage.palhue",
+        "afterimage.palinvertall",
+        "afterimage.palinvertblend",
+        "afterimage.palmul",
+        "afterimage.palpostbright",
+        "afterimage.time",
+        "afterimage.timegap",
         "afterimage.trans",
         "air.animtype",
         "air.cornerpush.velmul",

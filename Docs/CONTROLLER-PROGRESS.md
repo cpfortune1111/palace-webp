@@ -1,3 +1,7 @@
+## Controller inventory integrity repair — after 0.24.59
+
+The saved controller JSON contained a truncated tool-output header and was not parseable. It was regenerated from the pinned native compiler without changing scope or certification. All 163 controller rows and their extracted/delegated parameter candidates are preserved. A saved-artifact test now requires valid JSON, matching pinned reference, 163 rows and 163 distinct controller names. All three inventory tests pass; semantic certification remains Pending for every controller.
+
 ## 0.24.59 — Target registry / NumTarget / TargetDrop execution
 
 Unique per-root/helper target lists are written by real accepted root/helper/projectile-owner contacts and paired throws. NumTarget and NumTarget(hitID) query live victim IDs. Native swap-removal ordering drops recovered non-H targets with a current-contact exemption, round reset clears all lists and destroyed helper owners are removed. TargetDrop evaluates caller excludeid/keepone/redirectid, selects the actual redirected list, drops matching Snap/legacy throw bindings and supports the selection-drop newly-hit-owner SelfState path.

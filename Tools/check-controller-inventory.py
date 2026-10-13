@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import unittest
 
@@ -9,6 +10,14 @@ spec.loader.exec_module(inventory)
 
 
 class InventoryTests(unittest.TestCase):
+    def test_saved_inventory_is_complete_json(self):
+        root = Path(__file__).resolve().parents[1]
+        artifact = json.loads((root / 'Docs/CONTROLLER-AUDIT.json').read_text(encoding='utf-8-sig'))
+        self.assertEqual(artifact['referenceCommit'], inventory.REFERENCE)
+        self.assertEqual(artifact['controllerCount'], len(artifact['controllers']))
+        self.assertEqual(artifact['controllerCount'], 163)
+        self.assertEqual(len({row['controller'] for row in artifact['controllers']}), 163)
+
     def test_delegated_prefixes_and_registry_helpers(self):
         registry = '''c.scmap = map[string]scFunc{
             "example": c.example,
