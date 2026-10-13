@@ -58,7 +58,8 @@ PARTIAL = {
     'guardsound': 'Same ownership/default limitations as hitsound.',
     'p1stateno': 'Current paired throw path only; standalone/custom-state ownership semantics are incomplete.',
     'p2stateno': 'Custom hit/throw transitions exist; p2getp1state and standalone parity are incomplete.',
-    'p1facing': 'Paired throw path only.',
+    'p1facing': 'Root/helper hit writers execute caller integer signs and preserve world velocity. Projectile and guard contacts exclude attacker turns. Native deferred timing, reversal/type-None and throw interactions remain pending.',
+    'p1getp2facing': 'Caller integer expressions inherit defender facing with precedence over p1facing in actual root/helper contacts. Native deferred timing, reversal/type-None and throw interactions remain pending.',
     'id': 'Hit metadata/helper targeting exist; complete target-ID filtering is missing.',
     'nochainid': 'Single-ID helper/projectile check only; two-ID and root attack checks are missing.',
 }
@@ -111,7 +112,7 @@ def main():
         rows.append({'parameter': parameter, 'status': status, 'usedBy': sorted(usage[parameter]), 'reference': 'MUGEN + Ikemen' if parameter in mugen and parameter in ikemen else 'MUGEN' if parameter in mugen else 'Ikemen', 'note': note})
     missing_used = [row['parameter'] for row in rows if row['status'] == 'Not implemented' and row['usedBy']]
     lines = [
-        '# HitDef parameter audit — 0.24.55', '',
+        '# HitDef parameter audit — 0.24.56', '',
         'This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.',
         'Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.', '',
         '[MUGEN reference](https://www.elecbyte.com/mugendocs-11b1/sctrls.html#hitdef)',

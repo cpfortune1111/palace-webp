@@ -1,3 +1,7 @@
+## 0.24.56 — Attacker HitDef facing execution
+
+Caller-evaluated p1facing/p1getp2facing now control root/helper contact facing, including inherited-facing precedence. Received velocity uses effective contact direction; root/helper world velocity is preserved. Projectile attacker turns and guarded turns are excluded. Dedicated root/helper/projectile browser fixtures and unit tests cover these paths. Deferred timing, reversal/type-None, throws and full native parity remain partial.
+
 ## 0.24.55 — HitDef victim facing execution
 
 Normal root/entity victim hit paths now apply caller-evaluated p2facing signs, preserving facing on zero or guard contacts and world velocity on a flip. Browser tests cover both root directions and guarded exclusion; existing counter/combat regressions are retained. Native deferred timing, p1-facing combinations and custom/throw/helper-victim ownership remain partial.

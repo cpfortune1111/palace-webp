@@ -1,3 +1,7 @@
+## 0.24.56 — Attacker contact facing / inherited-facing precedence
+
+Root/helper hit paths now execute caller integer p1facing and p1getp2facing, with native precedence and projectile/guard exclusions. Effective facing feeds victim facing and horizontal received velocity; attacker world velocity remains unchanged. Browser fixtures cover both roots, inherited facing, helper and projectile contacts. Full guarded regression and publication are gated separately. Native deferred post-position timing, reversal/type-None and throw/custom owner interactions remain pending. No complete-controller certification is claimed.
+
 ## 0.24.55 — p2facing victim contact application
 
 Contact results select p2facing sign behavior from pinned char.go: negative follows attack direction, positive faces the opposite direction, zero leaves facing unchanged and guarding excludes the change. Root P1/P2 plus entity-to-root victim paths apply the result after reaction entry while preserving world velocity.

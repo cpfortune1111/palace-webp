@@ -804,14 +804,14 @@
       "Moon"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Paired throw path only."
+    "note": "Root/helper hit writers execute caller integer signs and preserve world velocity. Projectile and guard contacts exclude attacker turns. Native deferred timing, reversal/type-None and throw interactions remain pending."
   },
   {
     "parameter": "p1getp2facing",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller integer expressions inherit defender facing with precedence over p1facing in actual root/helper contacts. Native deferred timing, reversal/type-None and throw interactions remain pending."
   },
   {
     "parameter": "p1sprpriority",

@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.55
+# HitDef parameter audit — 0.24.56
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -107,8 +107,8 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | missonoverride | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | nochainid | Partial | Jupiter, Neptune, Saturn | MUGEN + Ikemen | Single-ID helper/projectile check only; two-ID and root attack checks are missing. |
 | numhits | Partial | Saturn | MUGEN + Ikemen | Caller integer expressions drive actual root/entity HitCount/GuardCount queries and report hit/combo totals. Defender physical GetHitVar hitcount/guardcount are separate from numhits. receivedHits, complete reset/eligibility rules, projectile-owner attribution, queued timing and integer overflow remain pending. |
-| p1facing | Partial | Jupiter, Moon | MUGEN + Ikemen | Paired throw path only. |
-| p1getp2facing | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| p1facing | Partial | Jupiter, Moon | MUGEN + Ikemen | Root/helper hit writers execute caller integer signs and preserve world velocity. Projectile and guard contacts exclude attacker turns. Native deferred timing, reversal/type-None and throw interactions remain pending. |
+| p1getp2facing | Partial | — | MUGEN + Ikemen | Caller integer expressions inherit defender facing with precedence over p1facing in actual root/helper contacts. Native deferred timing, reversal/type-None and throw interactions remain pending. |
 | p1sprpriority | Implemented | Jupiter, Moon | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
 | p1stateno | Partial | Jupiter, Moon, Saturn | MUGEN + Ikemen | Current paired throw path only; standalone/custom-state ownership semantics are incomplete. |
 | p2clsncheck | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
