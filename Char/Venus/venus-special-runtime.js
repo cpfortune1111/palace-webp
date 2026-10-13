@@ -33,8 +33,9 @@ export function createSpecialRuntime(api){
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
+ function helperDefinition(entity,state){const data=api.data(entity.player);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state){
-  const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
+  const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
   if(!definition.hitdefpersist)entity.guardHitDef=null;
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,guardCount:0,activeHitDef:null});
   entity.controllerSchedule=createControllerSchedule();
@@ -128,7 +129,7 @@ export function createSpecialRuntime(api){
    entity.assertions?.clear();
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
-     const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
+     const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     }
     entity.hitPause--;continue;
@@ -162,7 +163,7 @@ export function createSpecialRuntime(api){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
    if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
   }
-  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)
+  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)
   }
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }
@@ -171,7 +172,7 @@ export function createSpecialRuntime(api){
   for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
   if(bgTime>0&&bgCreated!==api.tick()&&--bgTime===0)api.background([256,256,256]);
  }
- return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,
+ return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,

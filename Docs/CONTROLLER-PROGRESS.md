@@ -1,3 +1,7 @@
+## 0.24.70 — TargetBind real-target execution
+
+Caller ID/index/time/pos/redirectid now drive live target bindings, including native float32 redirected/cumulative target scaling. A separate map follows live owner IDs, synchronizes P1 reactions and world velocity, clears on round reset, supports zero/negative time and binder pause, prevents mutual binding and releases on TargetDrop. Finite missing/hit-binder root/helper release enters own 5050; helper state lookup can fall back to its own complete state definitions. GetHitVar(isbound) checks current incoming identity and preserves deferred-zero binding until update. Source throws now retain attacker ID/contact tick. Unit and actual root/helper/query/release/source-throw plumbing fixtures are present. Complete native timing/scales, buffered hit-ID parity and full character/helper trajectories remain uncertified; this is partial integration.
+
 ## 0.24.69 — ScoreAdd corrected execution
 
 The legacy direct ScoreAdd branch ignored redirectid/NoScore and native accumulation precision; it has been replaced by shared controller dispatch using caller float32 value and integer redirection. Native ScoreAdd allows normal helpers, unlike target-controller player-type filtering. Actual P1/P2 redirected expression fixtures and spawned normal-helper root-score/NoScore fixtures are present. Unit tests verify precision, missing actors/value, exclusion and zero-addition. Full native teamside/lifecycle/queries and compiler/version certification remain pending.

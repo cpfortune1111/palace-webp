@@ -1,3 +1,7 @@
+## 0.24.70 — TargetBind real-target lifecycle
+
+TargetBind now selects real target ID/index with caller time/XYZ/redirection and float32 scaling instead of the old throw-only path. Roots/helpers follow live owners with velocity synchronization, indefinite/paused/deferred timing, mutual-binding prevention, TargetDrop and finite-hit/missing-owner release. Actual root/helper entry, query and source-throw plumbing fixtures are included. Complete native timing, buffered hit identities and full character/helper trajectories remain partial.
+
 ## 0.24.69 — ScoreAdd redirection and native execution
 
 ScoreAdd now evaluates caller float32 value and redirectid, respects NoScore, and uses native per-round float32 accumulation rather than the old unrestricted direct write. Normal helpers remain eligible, unlike TargetScoreAdd. Actual redirected roots and normal-helper fixtures cover variable evaluation and exclusion. Full team score lifecycle/queries and compiler/version certification remain partial.
