@@ -1,3 +1,7 @@
+## 0.24.73 — Width controller execution
+
+Caller edge/player/value/redirectid now write root/helper modifiers. Explicit edge/player use native compiler precedence over value; scalar second component defaults zero, and float32 scaling follows localcoord ratio. Root push/compensation consumes additive facing-aware player extents and normalizes reversed boxes; screen clamp consumes signed unnormalized edge offsets. Unpaused ordinary actor ticks reset modifiers, hitpause retains them. Actual root separation, redirected P2 margins, reset, helper redirection and hitpause/resume fixtures pass. Existing base push sizes are preserved; full native character boxes/helper collision/localcoord and reset timing/compiler/version certification remain pending.
+
 ## 0.24.72 — Family binding controllers
 
 BindToRoot/BindToParent share caller time/facing/XYZ/redirectid evaluation and float32 redirection scaling. Root characters have no parent/root. Live nested-helper ownership distinguishes parent from root; facing zero/omission retains the binding direction, while clear/expiry resets it. Ordinary binds retain velocity, use their own actor's pause clock rather than binder pause and clear immediately at zero. Actual fixtures verify nested positions, facing, root-to-child redirection, hitpause/resume and expiry; unit tests cover native evaluation order. Complete native shared-bind identity/scales/physics/persistence timing and compiler/version certification remain pending.

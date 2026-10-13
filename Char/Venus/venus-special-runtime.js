@@ -1,3 +1,4 @@
+import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
 import {helperTypeParameter} from '../../Engine/target-power.js?v=02465';
 import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
@@ -133,10 +134,11 @@ export function createSpecialRuntime(api){
     }
     entity.hitPause--;continue;
    }
+   if(entity.kind==='helper')entity.widthModifiers=createWidthModifiers();
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
-    const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
+    const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
     if(entity.state!==previous)continue;

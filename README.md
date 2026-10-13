@@ -1,3 +1,7 @@
+## 0.24.73 — Width real modifiers
+
+Width now evaluates edge/player/value/redirectid with native precedence and float32 scaling, replacing the no-op branch. Additive player modifiers affect root push/compensation; signed edge modifiers affect facing-aware screen bounds. Root/helper modifiers retain hitpause and reset on ordinary ticks. Actual push/edge/redirection/helper/reset regressions pass. Full character base boxes/helper collision/native localcoord and timing certification remain partial.
+
 ## 0.24.72 — BindToRoot / BindToParent execution
 
 Both controllers now resolve live root/nested-parent ownership with caller XYZ/time/facing/redirection, replacing the old helper-only timer branch. Ordinary binds retain world velocity, support indefinite duration and own-actor pause, clear immediately at expiry and reset facing. Actual nested-helper, root redirection, pause/resume and expiry fixtures pass. Full native shared-binding identity/scales/physics and version certification remain partial.
