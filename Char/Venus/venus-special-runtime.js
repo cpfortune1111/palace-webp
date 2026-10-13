@@ -10,7 +10,7 @@ import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 export function createSpecialRuntime(api){
- const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0;
+ const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
  const projectileContacts=new Map();
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
@@ -60,9 +60,9 @@ export function createSpecialRuntime(api){
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
  }
- function startPause(params,player,kind){
+ function startPause(params,player,kind,sourceContext){
   const remaining=Number(params.time),movetime=Math.max(0,Math.min(remaining,Number(params.movetime||0))),slot=kind==='super'?'super':'normal';
-  pauses[slot][player-1]=remaining>0?{kind,remaining,movetime,player,created:api.tick()}:null;
+  stagePauseFlags[slot]=params.pausebg===undefined||Number(api.eval(params.pausebg,sourceContext))!==0;pauses[slot][player-1]=remaining>0?{kind,remaining,movetime,player,created:api.tick()}:null;
   if(kind==='super'){if(params.sound){if(/^S/i.test(params.sound))api.sound(params.sound,player===1?0:4,player);else {const sound=String(params.sound).split(',').map(Number);api.commonSound(sound[0],sound[1],player===1?0:4)}}if(Number(params.unhittable??1))unhittableUntil[player]=api.tick()+remaining+1}
  }
  function dispatch(controller,binding,sourceContext,adapter,owner,player){
@@ -70,8 +70,8 @@ export function createSpecialRuntime(api){
   switch(controller.type){
    case 'Projectile':spawn(params,owner,player,'projectile');return true;
    case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
-   case 'Pause':startPause(params,player,'normal');return true;
-   case 'SuperPause':startPause(params,player,'super');return true;
+   case 'Pause':startPause(params,player,'normal',sourceContext||context(owner||root(player)));return true;
+   case 'SuperPause':startPause(params,player,'super',sourceContext||context(owner||root(player)));return true;
    case 'RemoveExplod':for(let index=api.effects.length-1;index>=0;index--)if(api.effects[index].ownerKey===(owner.key||'root'+player)&&(params.id===undefined||api.effects[index].id===Number(params.id)))api.effects.splice(index,1);return true;
    case 'StopSnd':api.stopSound(Number(params.channel||0)+(player===2?4:0));return true;
    default:return false;
@@ -171,10 +171,10 @@ export function createSpecialRuntime(api){
   const superActive=pauses.super.some(pause=>pause?.remaining>0);
   for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
  }
- return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
+ return {entities,pauses,stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
-  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;api.background([256,256,256])}};
+  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
 }

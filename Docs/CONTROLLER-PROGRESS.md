@@ -1,3 +1,7 @@
+## 0.24.82 — BGPalFX selected-entry execution
+
+Replaced explicit unsupported BG selection with real registry targeting, native repeated-ID/index selection and layer rendering. Optional compressed stage sprite entries load through stage configs; existing 3D-only configs remain unchanged and do not fabricate BG IDs. Actual pixels prove one selected entry changes and restores after expiry while other matches/IDs remain unchanged. Pause/SuperPause shared pausebg slots control per-BG clocks with native OR/last-writer behavior. Full native stage-definition export, animation/tiling/parallax, pause preflight/version/compiler metadata and indexed palettes remain partial; no full certification.
+
 ## 0.24.81 — AllPalFX/global BGPalFX execution
 
 Shared parameters and native inversion ranges now allocate global effects. Clocks continue under actor pause; AllPalFX stacks with actor effects and shades stage/filter, while global BGPalFX affects backgrounds only. Actual clock/expiry/no-actor-mutation/grayscale/background-only pixel regressions pass. Helper mul-only BGPalFX intercept removed. BG selector policy is tested but real id/index stage registry/rendering remains explicitly unsupported and incomplete. Palette-indexed background math, full shader inversion/tint/remap/precision and native certification remain pending.
