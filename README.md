@@ -1,3 +1,7 @@
+## 0.24.80 — PalFX actor rendering
+
+PalFX parameters, actor timers, root/helper ownership and shader-order RGBA adjustment now affect live sprite composition. Shared palette runtime survives parent helper removal; independent helpers allocate their own effect. Actual grayscale pixels, root redirection/expiry/hitpause and helper ownership regressions pass. Fixed normal/flipped root branches that omitted AIR/PalFX metadata; Trans Mugen Sub alpha locking and optimized composition are included. AllPalFX/BGPalFX, palette remaps/indexed shaders, inversion edge cases and full native certification remain pending.
+
 ## 0.24.79 — Trans real stage composition
 
 Active root/helper/AfterImage Trans now presents an ordered stage-backed frame instead of relying on whole-layer opacity. Native add/sub/SubAdd pass coefficients, AIR Default precedence, reflection intensity, recorded transforms and cropped pixel regions execute. Actual controller/helper/reset/pixel/stage/presentation regressions pass. Palette shader effects, compiler/version metadata, AIR interpolation, helper reflections, precision/performance and complete native certification remain pending.

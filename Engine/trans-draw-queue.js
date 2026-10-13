@@ -2,9 +2,9 @@ export function createTransDrawQueue(){
  const entries=[];
  return {
   reset(){entries.length=0},
-  record(context,source,args,{state=null,priority=0,ontop=false,kind='sprite',opacity=context.globalAlpha}={}){
+  record(context,source,args,{state=null,paletteEffect=null,priority=0,ontop=false,kind='sprite',opacity=context.globalAlpha}={}){
    const matrix=context.getTransform();
-   entries.push({source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],state:state?{type:state.type,alpha:[...state.alpha]}:null,priority,ontop,kind,opacity,composite:context.globalCompositeOperation,serial:entries.length});
+   entries.push({source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],state:state?{type:state.type,alpha:[...state.alpha]}:null,paletteEffect:paletteEffect?{...paletteEffect,add:[...paletteEffect.add],mul:[...paletteEffect.mul]}:null,priority,ontop,kind,opacity,composite:context.globalCompositeOperation,serial:entries.length});
   },
   ordered(){return [...entries].sort((left,right)=>Number(left.ontop)-Number(right.ontop)||left.priority-right.priority||left.serial-right.serial)},
   bounds(entry,width,height){
