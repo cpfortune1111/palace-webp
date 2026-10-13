@@ -1,3 +1,7 @@
+## 0.24.81 — AllPalFX/global BGPalFX execution
+
+Shared parameters and native inversion ranges now allocate global effects. Clocks continue under actor pause; AllPalFX stacks with actor effects and shades stage/filter, while global BGPalFX affects backgrounds only. Actual clock/expiry/no-actor-mutation/grayscale/background-only pixel regressions pass. Helper mul-only BGPalFX intercept removed. BG selector policy is tested but real id/index stage registry/rendering remains explicitly unsupported and incomplete. Palette-indexed background math, full shader inversion/tint/remap/precision and native certification remain pending.
+
 ## 0.24.80 — PalFX real actor execution
 
 Root/helper PalFX dispatch evaluates native parameters, ownpal gating, signed cycles and Mugen 1.1 fallback. Owned effects refresh/tick at actor finish, including hitpause but respecting global pause. Shared helper palette pointers remain stable across parent reset/removal; ownpal allocates independently. RGBA hue/invert/color/add/mul and Sub multiplier policy consume live draw snapshots. Actual visible grayscale pixels, root redirection/expiry/permanent clock and helper ownership/pointer-survival regressions pass. Normal/flipped root AIR/PalFX omission corrected; Trans compiler compatibility and allocation optimization included. Global/background effects, palette remaps/indexed shader, full inversion/stacking/interpolation/timing/performance/compiler certification remain pending, not counted complete.

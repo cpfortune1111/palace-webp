@@ -1,3 +1,7 @@
+## 0.24.81 — Global/background palette execution
+
+AllPalFX and global BGPalFX now execute independent clocks and actual stage/filter/sprite composition. Actor/global palette stacking retains native raw/effective inversion flags and Sub arithmetic. Removed helper BGPalFX brightness-only handling. Actual paused clocks, global grayscale and background-only blackening regressions pass. Selected BGPalFX id/index rendering remains explicitly unsupported; indexed shaders, inversion edge cases and full native certification remain pending.
+
 ## 0.24.80 — PalFX actor rendering
 
 PalFX parameters, actor timers, root/helper ownership and shader-order RGBA adjustment now affect live sprite composition. Shared palette runtime survives parent helper removal; independent helpers allocate their own effect. Actual grayscale pixels, root redirection/expiry/hitpause and helper ownership regressions pass. Fixed normal/flipped root branches that omitted AIR/PalFX metadata; Trans Mugen Sub alpha locking and optimized composition are included. AllPalFX/BGPalFX, palette remaps/indexed shaders, inversion edge cases and full native certification remain pending.

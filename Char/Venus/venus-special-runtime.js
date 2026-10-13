@@ -10,7 +10,7 @@ import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 export function createSpecialRuntime(api){
- const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
+ const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0;
  const projectileContacts=new Map();
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
@@ -72,7 +72,6 @@ export function createSpecialRuntime(api){
    case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
    case 'Pause':startPause(params,player,'normal');return true;
    case 'SuperPause':startPause(params,player,'super');return true;
-   case 'BGPalFX':api.background(String(params.mul).split(',').map(Number));bgTime=Number(params.time);bgCreated=api.tick();return true;
    case 'RemoveExplod':for(let index=api.effects.length-1;index>=0;index--)if(api.effects[index].ownerKey===(owner.key||'root'+player)&&(params.id===undefined||api.effects[index].id===Number(params.id)))api.effects.splice(index,1);return true;
    case 'StopSnd':api.stopSound(Number(params.channel||0)+(player===2?4:0));return true;
    default:return false;
@@ -171,12 +170,11 @@ export function createSpecialRuntime(api){
   api.finishPaletteEffects?.();
   const superActive=pauses.super.some(pause=>pause?.remaining>0);
   for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
-  if(bgTime>0&&bgCreated!==api.tick()&&--bgTime===0)api.background([256,256,256]);
  }
  return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
-  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
+  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;api.background([256,256,256])}};
 }

@@ -8,7 +8,7 @@ export function refreshPalFx(runtime){
  const definition=runtime.definition;
  runtime.enabled=definition.time!==0;if(!runtime.enabled)return;
  const wave=axis=>{const period=definition.cycleTime[axis];return period>1?Math.sin((2*Math.PI*runtime.phase[axis]+(period===2?Math.PI/2:0))/period):0};
- runtime.effective={add:definition.add.map((value,axis)=>(value+Math.trunc(wave(0)*definition.sinadd[axis]))|0),mul:definition.mul.map((value,axis)=>(value+Math.trunc(wave(1)*definition.sinmul[axis]))|0),color:Math.fround(definition.color+Math.fround(wave(2)*definition.sincolor/256)),hue:Math.fround(definition.hue+Math.fround(wave(3)*definition.sinhue/512)),invertall:definition.invertall,invertblend:definition.invertblend<=-2&&definition.invertall?3:definition.invertblend,allowNegative:runtime.allowNegative};
+ runtime.effective={add:definition.add.map((value,axis)=>(value+Math.trunc(wave(0)*definition.sinadd[axis]))|0),mul:definition.mul.map((value,axis)=>(value+Math.trunc(wave(1)*definition.sinmul[axis]))|0),color:Math.fround(definition.color+Math.fround(wave(2)*definition.sincolor/256)),hue:Math.fround(definition.hue+Math.fround(wave(3)*definition.sinhue/512)),invertall:definition.invertall,rawInvertall:definition.invertall,rawInvertblend:definition.invertblend,invertblend:definition.invertblend<=-2&&definition.invertall?3:definition.invertblend,allowNegative:runtime.allowNegative};
 }
 
 export function tickPalFx(runtime){
