@@ -1,3 +1,9 @@
+## 0.24.61 — Target velocity controller execution
+
+TargetVelSet/Add run through the shared root/helper dispatcher with caller id/index/redirectid and float32 X/Y/Z values. Target selection uses the real registry; scaling preserves the pinned implementation's cumulative per-target conversion. Runtime X converts target-relative velocity into P2/helper/P1-reaction world velocity, while the non-reaction P1 root keeps relative storage; P1 reaction writes synchronize globals. Missing redirect actors exit before evaluating axis expressions. Unsupported actor depth is explicit, not silently ignored.
+
+Policy tests cover axes omitted/empty, filtered index, caller expression order/redirection, differing target scales and Z arithmetic. Actual-root browser fixtures cover P2 set, redirected P1 add, and a facing -1 non-reaction P1 set/add ending at relative X -3, Y -4, world X +3. Full browser regressions pass. Live local-coordinate metadata, root depth simulation, helper-victim collision/ownership and full native version parity remain pending; these controllers are not fully certified.
+
 ## 0.24.60 — TargetFacing / indexed target selection
 
 The shared root/helper dispatcher executes TargetFacing caller-context integer parameters id/index/value/redirectid. Native target selection filters current hit IDs, resolves the requested filtered index and stops once it is found. Zero values preserve facing; positive follows the redirected owner's facing and negative opposes it. Target updates preserve world horizontal velocity for helpers/P2 and both P1 reaction and non-reaction representations.

@@ -1,3 +1,7 @@
+## 0.24.61 — TargetVelSet / TargetVelAdd execution
+
+Target velocity controllers now evaluate caller id/index/redirectid and float axis expressions, select real targets and write P1/P2/helper velocity adapters. X uses native target-facing-relative direction; P1 reaction globals synchronize correctly and non-reaction root set/add preserves the expected world direction. Policy tests cover omitted axes, evaluation order, redirection, native cumulative scaling and Z arithmetic; actual root browser regressions pass. Full local-scale metadata, root depth simulation, helper-victim collision ownership and version parity remain partial.
+
 ## 0.24.60 — TargetFacing execution
 
 TargetFacing evaluates caller id/index/value/redirectid and selects the true target list, including native early-stop index selection. P1/P2 facing changes preserve nonzero world velocity, including P1 outside a reaction. Root contact/filter/redirection browser fixtures and policy tests cover executed paths. Full actor/target ownership, helper-victim collision integration, native target buffers and exact version parity remain partial.
