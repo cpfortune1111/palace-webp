@@ -1,3 +1,7 @@
+## 0.24.59 — Real targets, NumTarget and TargetDrop
+
+Accepted root/helper/projectile-owner contacts and paired throws now record real per-actor targets. NumTarget reads live hit IDs; recovered targets and destroyed helper owners are cleaned up, with round resets clearing all lists. TargetDrop executes caller expressions/redirection and native ID/keepone selection, including matching Snap/legacy throw release. Root/helper browser fixtures and policy tests cover the executed paths. Native target buffers, GetHitVar ID/drop bookkeeping, exact state-change/reversal timing and full multi-target release remain partial.
+
 ## 0.24.58 — HitDef position offsets and Snap binding
 
 Caller Snap/MinDist/MaxDist values now drive queued root position offsets and GetHitVar offset queries. Temporal Snap follows live root/helper binders, freezes with binder pause and expires; positive-time binder-hit release returns the victim to its own 5050. Tests cover both victim directions, one-time offsets, live-facing binding and release. Native per-actor timing, target lists, local scales, version argument differences and helper victims remain partial.

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createTargetList,applyTargetDropController} from '../Engine/target-list.js';
+
+const actors=new Map([[1,{getHit:{hitid:5}}],[2,{getHit:{hitid:5}}],[3,{getHit:{hitid:7}}]]),lookup=id=>actors.get(id);
+const targets=createTargetList();targets.add(1);targets.add(1);targets.add(2);targets.add(3);
+assert.equal(targets.count(),3);assert.equal(targets.count(5,lookup),2);
+actors.get(1).getHit.hitid=7;assert.equal(targets.count(5,lookup),1);
+const removed=[];targets.drop({excludeId:7,keepOne:false,lookup,onDrop:id=>removed.push(id)});
+assert.deepEqual(targets.ids(),[1,3]);assert.deepEqual(removed,[2]);
+targets.drop({excludeId:7,keepOne:true,lookup,choose:()=>1});assert.deepEqual(targets.ids(),[3]);
+targets.add(1);targets.drop({excludeCharacter:1,keepOne:true,lookup});assert.deepEqual(targets.ids(),[1]);
+targets.drop({lookup});assert.deepEqual(targets.ids(),[]);
+targets.add(1);targets.add(2);actors.get(1).moveType='I';actors.get(2).moveType='H';
+targets.prune({lookup,stateChanging:target=>target===actors.get(1)});assert.equal(targets.count(),2);
+targets.prune({lookup,reversal:true});assert.equal(targets.count(),2);
+targets.prune({lookup});assert.deepEqual(targets.ids(),[2]);
+const redirected=createTargetList();redirected.add(1);redirected.add(2);
+const owner={targets},other={targets:redirected};
+applyTargetDropController({type:'TargetDrop',params:{redirectid:'var(8)',excludeid:'var(9)',keepone:'0.5'}},owner,{evaluate:value=>value==='var(8)'?99:value==='var(9)'?5:Number(value),findActor:id=>id===99?other:lookup(id),targets:actor=>actor.targets,choose:()=>0,onDrop:()=>{}});
+assert.deepEqual(redirected.ids(),[2]);assert.deepEqual(targets.ids(),[2]);
+console.log('Native unique targets, live hit-ID counts, HitOnce retention and TargetDrop selection passed');

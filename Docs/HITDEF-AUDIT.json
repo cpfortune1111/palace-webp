@@ -699,7 +699,7 @@
       "Neptune"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Target-drop, override/reversal, buffered timing and multi-target parity remain pending."
+    "note": "Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Real per-actor target retention executes, but native TargetDrop release/ID bookkeeping, override/reversal, buffered timing and multi-target parity remain pending."
   },
   {
     "parameter": "hitsound",

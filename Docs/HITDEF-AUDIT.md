@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.58
+# HitDef parameter audit — 0.24.59
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -95,7 +95,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | guardsound | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Same ownership/default limitations as hitsound. |
 | guardsound.channel | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | hitflag | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | M/A/F and stance checks exist; complete D/H/L and +/- eligibility semantics are missing. |
-| hitonce | Partial | Neptune | MUGEN + Ikemen | Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Target-drop, override/reversal, buffered timing and multi-target parity remain pending. |
+| hitonce | Partial | Neptune | MUGEN + Ikemen | Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Real per-actor target retention executes, but native TargetDrop release/ID bookkeeping, override/reversal, buffered timing and multi-target parity remain pending. |
 | hitsound | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Character-owned sound playback exists; common/character ownership and native defaults are not complete. |
 | hitsound.channel | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | id | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Hit metadata/helper targeting exist; complete target-ID filtering is missing. |

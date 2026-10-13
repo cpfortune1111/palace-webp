@@ -1,3 +1,9 @@
+## 0.24.59 — Target registry / NumTarget / TargetDrop execution
+
+Unique per-root/helper target lists are written by real accepted root/helper/projectile-owner contacts and paired throws. NumTarget and NumTarget(hitID) query live victim IDs. Native swap-removal ordering drops recovered non-H targets with a current-contact exemption, round reset clears all lists and destroyed helper owners are removed. TargetDrop evaluates caller excludeid/keepone/redirectid, selects the actual redirected list, drops matching Snap/legacy throw bindings and supports the selection-drop newly-hit-owner SelfState path.
+
+Tests cover actual root counts/ID filtering/pruning, matching/mismatching TargetDrop IDs, root redirection, helper target isolation and legacy throw-field release, plus existing simultaneous-super/combat regressions. Native CSF/stateChangeTmp/reversal tracking, target buffers, incoming GetHitVar ownership, multi-target random/release semantics and exact version parity remain incomplete. This controller has execution coverage, not complete semantic certification.
+
 ## 0.24.58 — Queued hit positions / temporal Snap
 
 Caller float coordinates and integer snap time feed actual contact position plans. Root post-contact updates consume and clear xoff/yoff/zoff; queries expose queued offsets. Temporal binding follows live root/helper owner position and facing, handles pause/expiry, prevents mutual bindings and releases positive-time targets to their own 5050 when the binder disappears or is hit in the current frame. Dedicated root position, binding and both-direction release fixtures accompany existing regression tests. Native target buffers/CSF_gethit timing, local-coordinate scales, version layouts, helper/custom victims and full binding ownership remain pending; all three position parameters stay Partial.
