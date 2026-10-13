@@ -1,3 +1,7 @@
+## 0.24.74 — ScreenBound real camera/bounds flags
+
+Caller value/movecamera/stagebound/redirectid now mutate root/helper flags. Controller default value/camera axes are false; omitted stagebound preserves its flag, while ordinary actor defaults restore player-type screen/camera and stage bounds. Signed Width edge offsets affect screen clamping independently from stage limits. Per-axis camera participant filtering reads established root coordinates and live helpers. Actual tests cover stage-only/full-unbounded/screen-only redirection, independent X/Y camera axes, root/normal-helper hitpause retention and reset. Complete native camera/zoom/standby/team/localcoord and player-helper matrix remain uncertified; partial integration only.
+
 ## 0.24.73 — Width controller execution
 
 Caller edge/player/value/redirectid now write root/helper modifiers. Explicit edge/player use native compiler precedence over value; scalar second component defaults zero, and float32 scaling follows localcoord ratio. Root push/compensation consumes additive facing-aware player extents and normalizes reversed boxes; screen clamp consumes signed unnormalized edge offsets. Unpaused ordinary actor ticks reset modifiers, hitpause retains them. Actual root separation, redirected P2 margins, reset, helper redirection and hitpause/resume fixtures pass. Existing base push sizes are preserved; full native character boxes/helper collision/localcoord and reset timing/compiler/version certification remain pending.

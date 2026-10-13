@@ -1,3 +1,7 @@
+## 0.24.74 — ScreenBound execution
+
+ScreenBound now evaluates value/movecamera/stagebound/redirection and replaces the no-op branch. Screen/stage limits are independent; horizontal/vertical camera tracking excludes actors per axis. Root/helper defaults reset on ordinary ticks and retain hitpause. Actual bounds/redirection/camera-axis/helper/reset regressions pass. Complete native camera/zoom/team/localcoord and player-helper certification remain partial.
+
 ## 0.24.73 — Width real modifiers
 
 Width now evaluates edge/player/value/redirectid with native precedence and float32 scaling, replacing the no-op branch. Additive player modifiers affect root push/compensation; signed edge modifiers affect facing-aware screen bounds. Root/helper modifiers retain hitpause and reset on ordinary ticks. Actual push/edge/redirection/helper/reset regressions pass. Full character base boxes/helper collision/native localcoord and timing certification remain partial.
