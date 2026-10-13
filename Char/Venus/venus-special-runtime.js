@@ -137,7 +137,7 @@ export function createSpecialRuntime(api){
    if(entity.kind==='helper'){entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
-    entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
+    entity.positionFrozen=false;entity.drawOffset=[0,0];entity.randomValue=Math.floor(Math.random()*1000);
     const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;

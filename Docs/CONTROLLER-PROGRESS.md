@@ -1,3 +1,7 @@
+## 0.24.77 — Offset real rendering
+
+Caller float32 X/Y use caller local scale; redirected recipients preserve omitted axes and missing recipients stop axis evaluation. Shared dispatch writes root/helper drawing-only offsets. Root/helper normal resets retain hitpause. Actual root pixels at both facings, helper source execution, redirection and afterimage snapshots pass. Root reflection offset uses native vertical scale. Full localcoord/interpolation/size offsets/helper reflection/stage ground-level/version/compiler certification remain pending; partial integration only.
+
 ## 0.24.76 — PosFreeze real motion flags
 
 Optional caller value defaults true, redirectid selects live roots/helpers, and ordinary reset retains hitpause. Root locomotion/source/reaction and helper velocity motion honor freeze; explicit PosSet, live binding and cornerpush still execute. Source fall gravity/friction no longer stop with frozen coordinates. Real root/helper/reset/redirection/setter/physics/binding/cornerpush fixtures and Saturn regression pass. Removed a helper source PlayerPush intercept that bypassed priority/team. Full native oldPos, interpolation, camera velocity prediction, timing/scales/compiler certification remain pending; partial integration only.

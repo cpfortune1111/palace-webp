@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.24.76 Controller Integration</title>
+<title>Prototype 0.24.77 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,62 +40,63 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.76 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD pos-freeze-02476-20261014-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.77 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD offset-02477-20261014-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02476';
-import {applyMapController} from './Engine/map-controllers.js?v=02476';
-import {applyResourceController} from './Engine/resource-controllers.js?v=02476';
-import {guardContactAllowed,guardContactParameters} from './Engine/guard-contact.js?v=02476';
-import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02476';
-import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02476';
-import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02476';
-import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02476';
-import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02476';
-import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02476';
-import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02476';
-import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02476';
-import {applyFamilyBindController} from './Engine/family-bind.js?v=02476';
-import {applyBindToTargetController} from './Engine/bind-to-target.js?v=02476';
-import {applyTargetBindController,updateTargetBinding,stepTargetBinding,targetBindingMatchesHit} from './Engine/target-bind.js?v=02476';
-import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02476';
-import {applyTargetRedLifeController} from './Engine/target-redlife.js?v=02476';
-import {applyTargetPointController} from './Engine/target-points.js?v=02476';
-import {applyTargetPowerController} from './Engine/target-power.js?v=02476';
-import {applyStatusController} from './Engine/status-controllers.js?v=02476';
-import {applyTargetLifeController,executeTargetLifeAddition,targetLifeMultipliers} from './Engine/target-life.js?v=02476';
-import {applyTargetStateController} from './Engine/target-state.js?v=02476';
-import {applyTargetVelocityController} from './Engine/target-velocity.js?v=02476';
-import {createTargetList,applyTargetDropController,applyTargetFacingController} from './Engine/target-list.js?v=02476';
-import {hitOnceParameter} from './Engine/hit-once.js?v=02476';
-import {hitPositionPlan,consumeHitPositionOffsets,updateSnapBinding,snapBindingNeedsSelfState} from './Engine/hit-position.js?v=02476';
-import {consumeHitOnceContact} from './Engine/hit-once.js?v=02476';
-import {attackerHitFacing,defenderHitFacing,applyDefenderHitFacing} from './Engine/hit-facing.js?v=02476';
-import {fallRecoveryParameters,canRecover,advanceFallRecovery} from './Engine/fall-recovery.js?v=02476';
-import {downHitParameters} from './Engine/down-hit.js?v=02476';
-import {hitStanceParameters,forcedHitStance} from './Engine/hit-stance.js?v=02476';
-import {hitDefCount,getHitContactCounts} from './Engine/hit-count.js?v=02476';
-import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02476';
-import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02476';
-import {applyStatePropertyController} from './Engine/state-properties.js?v=02476';
-import {applyPositionController} from './Engine/position-controllers.js?v=02476';
-import {applyVelocityController} from './Engine/velocity-controllers.js?v=02476';
-import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02476';
-import {applyVariableController} from './Engine/variables.js?v=02476';
+import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02477';
+import {applyMapController} from './Engine/map-controllers.js?v=02477';
+import {applyResourceController} from './Engine/resource-controllers.js?v=02477';
+import {guardContactAllowed,guardContactParameters} from './Engine/guard-contact.js?v=02477';
+import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02477';
+import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02477';
+import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02477';
+import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02477';
+import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02477';
+import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02477';
+import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02477';
+import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02477';
+import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02477';
+import {applyFamilyBindController} from './Engine/family-bind.js?v=02477';
+import {applyBindToTargetController} from './Engine/bind-to-target.js?v=02477';
+import {applyTargetBindController,updateTargetBinding,stepTargetBinding,targetBindingMatchesHit} from './Engine/target-bind.js?v=02477';
+import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02477';
+import {applyTargetRedLifeController} from './Engine/target-redlife.js?v=02477';
+import {applyTargetPointController} from './Engine/target-points.js?v=02477';
+import {applyTargetPowerController} from './Engine/target-power.js?v=02477';
+import {applyStatusController} from './Engine/status-controllers.js?v=02477';
+import {applyTargetLifeController,executeTargetLifeAddition,targetLifeMultipliers} from './Engine/target-life.js?v=02477';
+import {applyTargetStateController} from './Engine/target-state.js?v=02477';
+import {applyTargetVelocityController} from './Engine/target-velocity.js?v=02477';
+import {createTargetList,applyTargetDropController,applyTargetFacingController} from './Engine/target-list.js?v=02477';
+import {hitOnceParameter} from './Engine/hit-once.js?v=02477';
+import {hitPositionPlan,consumeHitPositionOffsets,updateSnapBinding,snapBindingNeedsSelfState} from './Engine/hit-position.js?v=02477';
+import {consumeHitOnceContact} from './Engine/hit-once.js?v=02477';
+import {attackerHitFacing,defenderHitFacing,applyDefenderHitFacing} from './Engine/hit-facing.js?v=02477';
+import {fallRecoveryParameters,canRecover,advanceFallRecovery} from './Engine/fall-recovery.js?v=02477';
+import {downHitParameters} from './Engine/down-hit.js?v=02477';
+import {hitStanceParameters,forcedHitStance} from './Engine/hit-stance.js?v=02477';
+import {hitDefCount,getHitContactCounts} from './Engine/hit-count.js?v=02477';
+import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02477';
+import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02477';
+import {applyStatePropertyController} from './Engine/state-properties.js?v=02477';
+import {applyPositionController} from './Engine/position-controllers.js?v=02477';
+import {applyVelocityController} from './Engine/velocity-controllers.js?v=02477';
+import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02477';
+import {applyVariableController} from './Engine/variables.js?v=02477';
 import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02476';
-import {createScoreRuntime} from './Engine/score-runtime.js?v=02476';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02477';
+import {createScoreRuntime} from './Engine/score-runtime.js?v=02477';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
 const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02476';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02477';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -153,22 +154,22 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.76 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.77 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {electricHitStates} from './Engine/electric-hit-states.js?v=02476';
-import {resolveHitPriority} from './Engine/hit-priority.js?v=02476';
-import {excludesHit} from './Engine/hit-attribute-mask.js?v=02476';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02476';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02476';
+import {electricHitStates} from './Engine/electric-hit-states.js?v=02477';
+import {resolveHitPriority} from './Engine/hit-priority.js?v=02477';
+import {excludesHit} from './Engine/hit-attribute-mask.js?v=02477';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02477';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02477';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
 fetch(assetUrl('./venus_special.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));specialDat=data}).catch(showRuntimeError);
 let reactionDat,reactionAtlases=[];
-const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02476').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
+const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02477').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -192,8 +193,8 @@ function drawStageVisuals(){
  for(const [index,fighter] of [displayP1(),displayP2()].entries()){
   const frame=framesFor(fighter.anim,index+1)[Math.max(0,fighter.elem-1)],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source||frame.empty)continue;
   const scale=fit*cameraZoom;
-  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,px=viewX+worldScreenX(fighter.x+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
-  reflected.save();reflected.translate(px,ground-fighter.y*scale);reflected.scale((flip?-1:1)*scale,-stageVisuals.reflection.yscale*scale);transformAngleDrawing(reflected,rootAngleStates[index]);reflected.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy);reflected.restore();
+  const drawPosition=offsetDrawingPosition([fighter.x,fighter.y],rootDrawOffsets[index]),flip=spriteFacingFor(fighter.anim,fighter.facing)<0,px=viewX+worldScreenX(drawPosition[0]+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
+  reflected.save();reflected.translate(px,ground-drawPosition[1]*stageVisuals.reflection.yscale*scale);reflected.scale((flip?-1:1)*scale,-stageVisuals.reflection.yscale*scale);transformAngleDrawing(reflected,rootAngleStates[index]);reflected.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy);reflected.restore();
  }
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
@@ -243,7 +244,7 @@ function drawSourceExplods(){
   if(!source)continue;
   const drawing=!effect.ontop&&!effect.screen&&effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
   const airFlip=String(frame.flip||'').toUpperCase();
-  drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));if(effect.entity)transformAngleDrawing(drawing,effect.angleState);drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
+  drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate(offset[0]*cameraZoom*fit,offset[1]*cameraZoom*fit)}drawing.scale((effect.screen?1:effect.facing*cameraZoom)*fit*(effect.scale?.[0]??1)*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.scale?.[1]??1)*(airFlip.includes('V')?-1:1));if(effect.entity)transformAngleDrawing(drawing,effect.angleState);drawing.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawing.restore();
  }
 }
 function playSourceSound(value,channel=-1,player=characterScopePlayer){
@@ -289,8 +290,8 @@ const mcv=document.querySelector('#mars'),mctx=mcv.getContext('2d');
 function p2Data(){return dat}
 function p2AtlasFor(f){return atlasFor(f)}
 function drawMars(){return withCharacter(2,()=>drawMarsForCharacter())}
-function drawAfterImages(context,player){const trail=afterImages[player-1];if(!trail)return;const fit=Math.min((visualViewport?.width||innerWidth)/1280,(visualViewport?.height||innerHeight)/720),left=((visualViewport?.width||innerWidth)-1280*fit)/2,top=((visualViewport?.height||innerHeight)-720*fit)/2;for(const [index,fighter] of trail.frames.entries()){const frame=framesFor(fighter.anim,player)[fighter.elem-1],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source)continue;context.save();context.globalAlpha=.5*(index+1)/Math.max(1,trail.length);context.translate(left+worldScreenX(fighter.x)*fit,top+worldScreenY(fighter.y)*fit);context.scale(spriteFacingFor(fighter.anim,fighter.facing)*fit*cameraZoom,fit*cameraZoom);transformAngleDrawing(context,fighter.angleState);context.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy);context.restore()}}
-function stepAfterImages(){for(const player of [1,2]){const trail=afterImages[player-1];if(!trail)continue;if(trail.remaining>0&&combatTraceTick%trail.gap===0)trail.frames.push({...specialRoot(player),angleState:snapshotAngleState(rootAngleStates[player-1])});if(trail.frames.length>trail.length||trail.remaining<=0)trail.frames.shift();trail.remaining--;if(!trail.frames.length&&trail.remaining<=0)afterImages[player-1]=null}}
+function drawAfterImages(context,player){const trail=afterImages[player-1];if(!trail)return;const fit=Math.min((visualViewport?.width||innerWidth)/1280,(visualViewport?.height||innerHeight)/720),left=((visualViewport?.width||innerWidth)-1280*fit)/2,top=((visualViewport?.height||innerHeight)-720*fit)/2;for(const [index,fighter] of trail.frames.entries()){const frame=framesFor(fighter.anim,player)[fighter.elem-1],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source)continue;context.save();context.globalAlpha=.5*(index+1)/Math.max(1,trail.length);const drawPosition=offsetDrawingPosition([fighter.x,fighter.y],fighter.drawOffset||[0,0]);context.translate(left+worldScreenX(drawPosition[0])*fit,top+worldScreenY(drawPosition[1])*fit);context.scale(spriteFacingFor(fighter.anim,fighter.facing)*fit*cameraZoom,fit*cameraZoom);transformAngleDrawing(context,fighter.angleState);context.drawImage(source,-sprite.axisX+frame.ox,-sprite.axisY+frame.oy);context.restore()}}
+function stepAfterImages(){for(const player of [1,2]){const trail=afterImages[player-1];if(!trail)continue;if(trail.remaining>0&&combatTraceTick%trail.gap===0)trail.frames.push({...specialRoot(player),drawOffset:[...rootDrawOffsets[player-1]],angleState:snapshotAngleState(rootAngleStates[player-1])});if(trail.frames.length>trail.length||trail.remaining<=0)trail.frames.shift();trail.remaining--;if(!trail.frames.length&&trail.remaining<=0)afterImages[player-1]=null}}
 function drawMarsForCharacter(){
  mctx.clearRect(0,0,mcv.width,mcv.height);
  if(!dat||!atlas)return;
@@ -300,7 +301,7 @@ function drawMarsForCharacter(){
  const scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(fighter.x+hitShakeOffset(fighter))*fit;
  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+fighter.y*scale;
- mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();
+ mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[1]);mctx.translate(offset[0]*scale,offset[1]*scale);
  const src=spriteCanvasFor(f);
  if(src){
  if(rootAngleStates[1].enabled){mctx.translate(px,ground+fighter.y*scale);mctx.scale((flip?-1:1)*scale,scale);transformAngleDrawing(mctx,rootAngleStates[1]);mctx.drawImage(src,-sp.axisX+f.ox,-sp.axisY+f.oy)}
@@ -538,7 +539,7 @@ coarsePointer.addEventListener('change',()=>{if(inputPreference==='auto')setInpu
 
 const characterProfiles=new Map(),battleCharacters=['SailorVenus','SailorVenus'],frameProfiles=new WeakMap();
 const notHitByMasks=[[],[]];
-const controllerTargetBindings=new Map(),rootBindFacing=[0,0],rootWidthModifiers=[createWidthModifiers(),createWidthModifiers()],rootScreenBoundFlags=[createScreenBoundFlags(),createScreenBoundFlags()],rootPlayerPushStates=[createPlayerPushState(),createPlayerPushState()],rootPositionFrozen=[false,false];
+const controllerTargetBindings=new Map(),rootBindFacing=[0,0],rootWidthModifiers=[createWidthModifiers(),createWidthModifiers()],rootScreenBoundFlags=[createScreenBoundFlags(),createScreenBoundFlags()],rootPlayerPushStates=[createPlayerPushState(),createPlayerPushState()],rootPositionFrozen=[false,false],rootDrawOffsets=[[0,0],[0,0]];
 const customAnimationOwners=[null,null],customStateOwners=[null,null],throwTargets=[null,null],throwBindings=[null,null],throwHitData=[null,null];
 let characterScopePlayer=1;
 const attackStates=[createAttackState(),createAttackState()];
@@ -556,7 +557,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02476'),fetch(base+prefix+'_full.json?v=02476'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02476')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02477'),fetch(base+prefix+'_full.json?v=02477'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02477')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -576,7 +577,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,character);if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
-  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02476';images[page]=image})));
+  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02477';images[page]=image})));
   fightHud.setCharacterEmblem(character,data,images);
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
@@ -830,9 +831,10 @@ function screenFlagsFor(actor){if(actor.kind==='helper')return actor.screenBound
 function resetRootScreenBounds(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootScreenBoundFlags[player-1]=createScreenBoundFlags()}
 function playerPushStateFor(actor){if(actor.kind==='helper')return actor.playerPushState??=createPlayerPushState(actor.helperType===2);return rootPlayerPushStates[fighterPlayer(actor)-1]}
 function resetRootPlayerPush(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootPlayerPushStates[player-1]=createPlayerPushState(lifecycleRuntime.rounds.state>0&&lifecycleRuntime.rounds.state<4)}
+function resetRootDrawOffsets(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootDrawOffsets[player-1]=[0,0]}
 function isPositionFrozen(actor){return actor.kind==='helper'?!!actor.positionFrozen:rootPositionFrozen[fighterPlayer(actor)-1]}
 function resetRootPositionFreeze(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootPositionFrozen[player-1]=false}
-function resetRootAssertions(){resetRootWidths();resetRootScreenBounds();resetRootPlayerPush();resetRootPositionFreeze();for(const player of [1,2])if(!specialRuntime.blocked(player)){previousRootAssertions[player-1].clear();for(const flag of rootAssertions[player-1])previousRootAssertions[player-1].add(flag);rootAssertions[player-1].clear()}}
+function resetRootAssertions(){resetRootWidths();resetRootScreenBounds();resetRootPlayerPush();resetRootPositionFreeze();resetRootDrawOffsets();for(const player of [1,2])if(!specialRuntime.blocked(player)){previousRootAssertions[player-1].clear();for(const flag of rootAssertions[player-1])previousRootAssertions[player-1].add(flag);rootAssertions[player-1].clear()}}
 function assertionActor(player,entity=null){if(entity?.kind==='helper'){entity.assertions??=new Set();return entity}return {assertions:rootAssertions[player-1]}}
 function runDamageAssertion(controller,entity,context,player=entity.player||1){return applyDamageAssertion(controller,assertionActor(player,entity),{evaluate:expression=>evalM1(expression,context),findActor:id=>{if(id===1||id===2)return assertionActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?assertionActor(helper.player,helper):null}})}
 const pointResources=[{dizzyPoints:1000,dizzyPointsMax:1000,guardPoints:1000,guardPointsMax:1000},{dizzyPoints:1000,dizzyPointsMax:1000,guardPoints:1000,guardPointsMax:1000}];
@@ -930,6 +932,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  if(applyAttackController(controller,attackActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),findActor:id=>{if(id===1||id===2)return attackActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?attackActor(helper.player,helper):null}}))return;
  if(applyDefenseController(controller,defenseActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),compatibility:profileFor(player)?.battle?.compatibility??'mugen',findActor:id=>{if(id===1||id===2)return defenseActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?defenseActor(helper.player,helper):null}}))return;
  if(applyRedLifeController(controller,resourceActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),enabled:()=>combatResourceFeatures.redLife,noDamage:()=>roundFlow.noDamage(),findActor:id=>{if(id===1||id===2)return resourceActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?resourceActor(helper.player,helper):null}}))return;
+ if(applyOffsetController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,localScale:actor=>actor.localScale??1,set:(actor,axis,value)=>{if(actor.kind==='helper'){actor.drawOffset??=[0,0];actor.drawOffset[axis]=value}else rootDrawOffsets[fighterPlayer(actor)-1][axis]=value}}))return;
  if(applyPosFreezeController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,set:(actor,value)=>{if(actor.kind==='helper')actor.positionFrozen=value;else rootPositionFrozen[fighterPlayer(actor)-1]=value}}))return;
  if(applyPlayerPushController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,state:playerPushStateFor}))return;
  if(applyScreenBoundController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,flags:screenFlagsFor,split:splitExpressionPairM1}))return;
@@ -1305,7 +1308,7 @@ const roundView=createRoundView({rematch:()=>{const snapshot=roundFlow.snapshot(
 roundView.ready.catch(showRuntimeError);
 const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=String(value)},config:roundConfig,rounds:lifecycleRuntime.rounds,setTimer:timer=>{timerMode.value=timer;fightHud.setMode(timer)},onFinish:(winner,reason)=>scoreRuntime.finish(winner,reason,[p1Life,p2.life],fightHud.remainingExact(),Number(timerMode.value)),remaining:()=>fightHud.remaining(),life:()=>[p1Life,p2.life],
  reset:()=>{
-  resetPlayerInput();rootStatusFlags.forEach(flags=>{flags.dizzy=false;flags.guardBreak=false});combatTargets.clear();controllerTargetBindings.clear();rootBindFacing.fill(0);rootWidthModifiers.splice(0,2,createWidthModifiers(),createWidthModifiers());rootScreenBoundFlags.splice(0,2,createScreenBoundFlags(),createScreenBoundFlags());rootPlayerPushStates.splice(0,2,createPlayerPushState(false),createPlayerPushState(false));rootPositionFrozen.fill(false);customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);for(const attack of attackStates)Object.assign(attack,createAttackState());for(const defense of defenseStates)Object.assign(defense,createDefenseState());rootAssertions.forEach(flags=>flags.clear());previousRootAssertions.forEach(flags=>flags.clear());resetPointResources();resourceDamage.fill(0);for(let index=0;index<2;index++)Object.assign(rootAngleStates[index],createAngleState());rootControllerSchedules.reset();reactionControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
+  resetPlayerInput();rootStatusFlags.forEach(flags=>{flags.dizzy=false;flags.guardBreak=false});combatTargets.clear();controllerTargetBindings.clear();rootBindFacing.fill(0);rootWidthModifiers.splice(0,2,createWidthModifiers(),createWidthModifiers());rootScreenBoundFlags.splice(0,2,createScreenBoundFlags(),createScreenBoundFlags());rootPlayerPushStates.splice(0,2,createPlayerPushState(false),createPlayerPushState(false));rootPositionFrozen.fill(false);rootDrawOffsets.splice(0,2,[0,0],[0,0]);customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);throwTargets.fill(null);throwBindings.fill(null);throwHitData.fill(null);for(const attack of attackStates)Object.assign(attack,createAttackState());for(const defense of defenseStates)Object.assign(defense,createDefenseState());rootAssertions.forEach(flags=>flags.clear());previousRootAssertions.forEach(flags=>flags.clear());resetPointResources();resourceDamage.fill(0);for(let index=0;index<2;index++)Object.assign(rootAngleStates[index],createAngleState());rootControllerSchedules.reset();reactionControllerSchedules.reset();resourceGetHit[0]={};resourceGetHit[1]={};afterImages.fill(null);specialRuntime.reset();sourceExplods.length=0;p1Reaction=null;p1HitPause=0;entityDefenderPause=false;fallShake=null;cornerPushVelocity=0;p1Life=p1LifeMax;p2.life=p2.lifeMax;
   roundVoiceUntil=0;roundAnnouncerUntil=0;roundNotOverUntil.fill(0);playerPushDisabledUntil.fill(0);
   for(const sound of [...soundChannels.values(),...automaticSounds])sound.pause();soundChannels.clear();automaticSounds.clear();
   for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='';
@@ -1813,7 +1816,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.76',build:'angle-controllers-02476-20261011-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.77',build:'angle-controllers-02477-20261011-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1821,7 +1824,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.76-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.77-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1968,10 +1971,10 @@ function drawForCharacter(){
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
  let frames=framesFor(drawAnim);if(!frames.length)frames=framesFor(0);if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(posX+hitShakeOffset(displayP1()))*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
- const src=spriteCanvasFor(f);if(!src)return;
+ const src=spriteCanvasFor(f);if(!src)return;ctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[0]);ctx.translate(offset[0]*scale,offset[1]*scale);
  if(rootAngleStates[0].enabled){ctx.save();ctx.translate(px,ground+posY*scale);ctx.scale(spriteFacingFor(drawAnim,p1Facing)*scale,scale);transformAngleDrawing(ctx,rootAngleStates[0]);ctx.drawImage(src,-sp.axisX+f.ox,-sp.axisY+f.oy);ctx.restore()}
  else if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);ctx.drawImage(src,0,dy,sp.w*scale,sp.h*scale);ctx.restore()}
- else ctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);
+ else ctx.drawImage(src,dx,dy,sp.w*scale,sp.h*scale);ctx.restore();
 }
 function updateStageClipping(){
  const width=visualViewport?.width||innerWidth,height=visualViewport?.height||innerHeight,fit=Math.min(width/1280,height/720),side=(width-1280*fit)/2,bottom=(height-720*fit)/2;

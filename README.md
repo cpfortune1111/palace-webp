@@ -1,3 +1,7 @@
+## 0.24.77 — Offset drawing execution
+
+Offset X/Y/redirection now write root/helper drawing coordinates without physical movement or facing inversion. Ordinary reset retains hitpause. Root pixel tests, helper source controllers and afterimage snapshot tests pass; root reflections use the pinned vertical scale formula. Native helper reflections, stage ground-level/ydelta, size offsets, interpolation and compiler/version certification remain pending.
+
 ## 0.24.76 — PosFreeze execution
 
 PosFreeze now evaluates optional value/redirection through shared root/helper dispatch. Velocity movement freezes without suppressing gravity/friction, explicit setters, bindings or cornerpush. Actual root/helper hitpause/reset/redirect/setter/binding/cornerpush regressions pass. Helper source PlayerPush now uses shared priority/team handling. Native oldPos/interpolation/camera prediction and full compatibility certification remain pending.
