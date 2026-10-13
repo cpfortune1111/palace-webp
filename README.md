@@ -1,3 +1,7 @@
+## 0.24.75 — PlayerPush priority and helper participation
+
+PlayerPush now evaluates value/priority/affectteam/redirection, replacing the old root disable controller. Root/helper team filtering and priority shares affect actual ground push; normal helpers can explicitly enable pushing. Per-tick state resets retain hitpause. Actual redirected root/helper enemy/friend/disable fixtures pass; full native aerial boxes, weights, corner compensation and timing remain partial.
+
 ## 0.24.74 — ScreenBound execution
 
 ScreenBound now evaluates value/movecamera/stagebound/redirection and replaces the no-op branch. Screen/stage limits are independent; horizontal/vertical camera tracking excludes actors per axis. Root/helper defaults reset on ordinary ticks and retain hitpause. Actual bounds/redirection/camera-axis/helper/reset regressions pass. Complete native camera/zoom/team/localcoord and player-helper certification remain partial.

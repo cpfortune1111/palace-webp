@@ -1,3 +1,7 @@
+## 0.24.75 — PlayerPush real displacement
+
+Caller value/priority/affectteam/redirectid now write root/helper flags with native validation and first-letter Enemy/Friend/Both parsing. Enemy filtering is strict, partner filtering permissive; higher priority stays while lower priority moves. Root equal-priority compensation is preserved. Ground helper/root and helper/helper pairs consume own-character size constants and Width modifiers, once per combat tick. Ordinary resets restore default priority/team/round enable and retain hitpause. Actual priority/redirection/disable/enemy/friend/helper fixtures pass; root reset has an added assertion. Full native aerial boxes/weights/corner/round/timing and compiler/version certification remain pending.
+
 ## 0.24.74 — ScreenBound real camera/bounds flags
 
 Caller value/movecamera/stagebound/redirectid now mutate root/helper flags. Controller default value/camera axes are false; omitted stagebound preserves its flag, while ordinary actor defaults restore player-type screen/camera and stage bounds. Signed Width edge offsets affect screen clamping independently from stage limits. Per-axis camera participant filtering reads established root coordinates and live helpers. Actual tests cover stage-only/full-unbounded/screen-only redirection, independent X/Y camera axes, root/normal-helper hitpause retention and reset. Complete native camera/zoom/standby/team/localcoord and player-helper matrix remain uncertified; partial integration only.
