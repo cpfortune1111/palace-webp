@@ -1,3 +1,7 @@
+## 0.24.76 — PosFreeze execution
+
+PosFreeze now evaluates optional value/redirection through shared root/helper dispatch. Velocity movement freezes without suppressing gravity/friction, explicit setters, bindings or cornerpush. Actual root/helper hitpause/reset/redirect/setter/binding/cornerpush regressions pass. Helper source PlayerPush now uses shared priority/team handling. Native oldPos/interpolation/camera prediction and full compatibility certification remain pending.
+
 ## 0.24.75 — PlayerPush priority and helper participation
 
 PlayerPush now evaluates value/priority/affectteam/redirection, replacing the old root disable controller. Root/helper team filtering and priority shares affect actual ground push; normal helpers can explicitly enable pushing. Per-tick state resets retain hitpause. Actual redirected root/helper enemy/friend/disable fixtures pass; full native aerial boxes, weights, corner compensation and timing remain partial.
@@ -810,5 +814,3 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
-
-

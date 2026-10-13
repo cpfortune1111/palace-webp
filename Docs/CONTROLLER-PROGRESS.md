@@ -1,3 +1,7 @@
+## 0.24.76 — PosFreeze real motion flags
+
+Optional caller value defaults true, redirectid selects live roots/helpers, and ordinary reset retains hitpause. Root locomotion/source/reaction and helper velocity motion honor freeze; explicit PosSet, live binding and cornerpush still execute. Source fall gravity/friction no longer stop with frozen coordinates. Real root/helper/reset/redirection/setter/physics/binding/cornerpush fixtures and Saturn regression pass. Removed a helper source PlayerPush intercept that bypassed priority/team. Full native oldPos, interpolation, camera velocity prediction, timing/scales/compiler certification remain pending; partial integration only.
+
 ## 0.24.75 — PlayerPush real displacement
 
 Caller value/priority/affectteam/redirectid now write root/helper flags with native validation and first-letter Enemy/Friend/Both parsing. Enemy filtering is strict, partner filtering permissive; higher priority stays while lower priority moves. Root equal-priority compensation is preserved. Ground helper/root and helper/helper pairs consume own-character size constants and Width modifiers, once per combat tick. Ordinary resets restore default priority/team/round enable and retain hitpause. Actual priority/redirection/disable/enemy/friend/helper fixtures pass; root reset has an added assertion. Full native aerial boxes/weights/corner/round/timing and compiler/version certification remain pending.
@@ -535,4 +539,3 @@ Still not certified complete: round-no-damage assertions, team power sharing, ma
 Root floating/system-floating storage is shared across expression evaluation, state controller execution and initialization. Native `v`/`fv` variable targets, expression indices and integer truncation have focused tests. VarRandom lifecycle single/reversed bounds are tested.
 
 Pending: complete parent/root redirection, helper VarRandom unification, variable persistence boundaries across rounds, redirectid, and native system-variable restrictions. No whole-controller certification is claimed yet.
-

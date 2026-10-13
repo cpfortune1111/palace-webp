@@ -92,8 +92,6 @@ export function createSpecialRuntime(api){
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
    case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
-   case 'PosFreeze':entity.positionFrozen=params.value===undefined||!!api.eval(params.value,ctx);break;
-   case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
@@ -181,4 +179,3 @@ export function createSpecialRuntime(api){
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
   reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
 }
-
