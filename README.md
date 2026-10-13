@@ -1,3 +1,7 @@
+## 0.24.66 — Target dizzy / guard point controllers
+
+TargetDizzyPointsAdd and TargetGuardPointsAdd now select real targets and apply caller value/absolute/id/index/redirection with native defence, signed rounding and nonlethal limits. Actual root writes, dizzy exclusion, feature/round gates, damage assertions and redirected caller expressions have dedicated fixtures. Full helper/version/compiler certification remains pending.
+
 ## 0.24.65 — TargetPowerAdd execution
 
 TargetPowerAdd now evaluates caller target ID/index/value/redirection and writes eligible roots/player-helper power owners with limits and round locking. Actual root/helper, custom-state PowerMax ownership and simultaneous-super regressions pass. Team sharing/global maximum-power integration, exact native lock timing and full helper lifecycle remain partial.

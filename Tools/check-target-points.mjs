@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {targetPointAddition,applyTargetPointController} from '../Engine/target-points.js';
+import {createTargetList} from '../Engine/target-list.js';
+const target={life:100,finalDefense:2,getHit:{hitid:7}},owner={},targets=createTargetList();targets.add(2);
+assert.equal(targetPointAddition(10,target),5);
+assert.equal(targetPointAddition(1,target),1);
+assert.equal(targetPointAddition(-1,target),-1);
+assert.equal(targetPointAddition(1000,target,{absolute:true}),99);
+assert.equal(targetPointAddition(10,{...target,life:0}),-1);
+assert.equal(targetPointAddition(10,{...target,life:0},{compatibility:'ikemen'}),5);
+assert.equal(targetPointAddition(-2147483648,{...target,finalDefense:0.5}),-2147483648);
+assert.equal(targetPointAddition(-1,{...target,finalDefense:4}),0);
+const writes=[],api={evaluate:Number,findActor:id=>id===1?owner:id===2?target:null,targets:()=>targets,excluded:()=>false,resource:actor=>actor,compatibility:()=> 'mugen',add:(actor,field,value)=>writes.push([field,value])};
+applyTargetPointController({type:'TargetDizzyPointsAdd',params:{id:7,value:10}},owner,api);
+applyTargetPointController({type:'TargetGuardPointsAdd',params:{redirectid:1,id:7,index:0,value:-10,absolute:1}},owner,api);
+assert.deepEqual(writes,[['dizzyPoints',5],['guardPoints',-10]]);
+applyTargetPointController({type:'TargetDizzyPointsAdd',params:{value:10}},owner,{...api,excluded:()=>true});assert.equal(writes.length,2);
+applyTargetPointController({type:'TargetGuardPointsAdd',params:{id:8,value:10}},owner,api);assert.equal(writes.length,2);
+applyTargetPointController({type:'TargetGuardPointsAdd',params:{redirectid:999,value:10}},owner,api);assert.equal(writes.length,2);
+applyTargetPointController({type:'TargetGuardPointsAdd',params:{value:0}},owner,{...api,resource:()=>{throw Error('Zero addition must not resolve resources')}});assert.equal(writes.length,2);
+assert.throws(()=>applyTargetPointController({type:'TargetGuardPointsAdd',params:{}},owner,api),/Missing/);
+const evaluations=[];
+applyTargetPointController({type:'TargetGuardPointsAdd',params:{redirectid:'caller-owner',id:'caller-hit',index:'caller-index',value:'caller-value',absolute:'caller-absolute'}},owner,{...api,evaluate:expression=>{evaluations.push(expression);return {'caller-owner':1,'caller-hit':7.9,'caller-index':0.9,'caller-value':-9.9,'caller-absolute':-0.5}[expression]}});
+assert.deepEqual(writes.at(-1),['guardPoints',-9]);
+assert.deepEqual(evaluations,['caller-owner','caller-hit','caller-index','caller-value','caller-absolute']);
+console.log('Target point selection, defence, signs, nonlethal limits and exclusions passed');
+

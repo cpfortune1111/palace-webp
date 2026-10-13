@@ -1,3 +1,7 @@
+## 0.24.66 — Target point resource execution
+
+TargetDizzyPointsAdd/TargetGuardPointsAdd evaluate value, absolute, ID/index and redirectid in caller context, then mutate actual target resources. Native attack multiplier 1, defence scaling, positive minimum one, nonlethal life limits and integer saturation are retained. Dizzy and respective damage assertions exclude writes; feature switches and round no-damage gate protect point setters. Tests cover zero/missing/unmatched targets, fractional integer inputs and negative-zero normalization. Actual fixtures cover both root resources, exclusions, gates and redirected P1 variable evaluation. Full helper-victim/version/final-defence/compiler certification remains pending; no complete-controller certification is claimed.
+
 ## 0.24.65 — TargetPowerAdd resource execution
 
 Caller-evaluated ID/index/value/redirectid select real target lists. Normal/projectile helpers are excluded; player helpers share their root power. Saturation, limits, zero-addition and post-round lock tests pass. PowerMax now retains original character ownership in custom states. Actual browser regression exited 0 on 2026-10-13. Team sharing/global maximum-power integration, native timing, helper collisions and compiler/version certification remain pending; no complete-controller claim.
