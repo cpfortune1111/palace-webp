@@ -1,3 +1,4 @@
+import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
 import {createAttackState} from '../../Engine/attack-controllers.js';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
@@ -19,7 +20,7 @@ export function createSpecialRuntime(api){
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
   for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
-  for(const key of ['forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
+  for(const key of ['hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
@@ -78,7 +79,7 @@ export function createSpecialRuntime(api){
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
-   case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};break;
+   case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;break;
    case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
@@ -93,10 +94,11 @@ export function createSpecialRuntime(api){
  }
  function hit(entity){
   const defender=root(entity.player===1?2:1);
-  if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
+  if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||entity.activeHitDef.hitOnceSpent||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
   if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
   const result=api.hit(entity,defender,entity.activeHitDef.params);
   if(!result)return;
+  consumeHitOnceContact(entity.activeHitDef,{accepted:true,isProjectile:entity.kind==='projectile'});
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
   entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});entity.guardCount=(entity.guardCount||0)+(result.guarded?hitDefCount(entity.activeHitDef?.params||entity.params||{}):0);
   entity.hitPause=result.attackerPause;

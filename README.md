@@ -1,3 +1,7 @@
+## 0.24.57 — HitOnce activation consumption
+
+Accepted root/helper hit and guard contacts consume explicit hitonce activations; caller boolean expressions and throw defaults execute. Explicit zero remains available and projectile hit budgets are unchanged. Helper HitDef trigger/persistence execution now creates a fresh activation. Actual root/helper tests and full browser regressions pass. Target-drop, buffered target timing, overrides/reversals and multi-target parity remain partial.
+
 ## 0.24.56 — Attacker HitDef facing execution
 
 Caller-evaluated p1facing/p1getp2facing now control root/helper contact facing, including inherited-facing precedence. Received velocity uses effective contact direction; root/helper world velocity is preserved. Projectile attacker turns and guarded turns are excluded. Dedicated root/helper/projectile browser fixtures and unit tests cover these paths. Deferred timing, reversal/type-None, throws and full native parity remain partial.

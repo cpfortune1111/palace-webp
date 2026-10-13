@@ -1,3 +1,7 @@
+## 0.24.57 — HitOnce root/helper activation lifecycle
+
+Caller boolean hitonce values and throw defaults drive spent activation marking for accepted hits and guards. Root P1/P2 reject a spent activation independently of legacy per-target keys. Helper contacts do the same independently of hitSpent, and trigger/persistence execution creates fresh activations. Explicit-zero and projectile-budget contrast tests pass. Full browser regressions including simultaneous supers pass. Native target-drop/buffering, override/reversal and multi-target semantics remain pending; HitOnce remains Partial.
+
 ## 0.24.56 — Attacker contact facing / inherited-facing precedence
 
 Root/helper hit paths now execute caller integer p1facing and p1getp2facing, with native precedence and projectile/guard exclusions. Effective facing feeds victim facing and horizontal received velocity; attacker world velocity remains unchanged. Browser fixtures cover both roots, inherited facing, helper and projectile contacts. Full guarded regression and publication are gated separately. Native deferred post-position timing, reversal/type-None and throw/custom owner interactions remain pending. No complete-controller certification is claimed.
