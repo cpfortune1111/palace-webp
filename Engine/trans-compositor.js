@@ -1,4 +1,4 @@
-import {transBlendPasses} from './trans-blend.js';
+import {transBlendPasses,quantizeBlendValue} from './trans-blend.js?v=02483';
 
 export function grayscaleTransPixels(source){
  if(source.length%4)throw Error('Trans grayscale input must contain RGBA pixels');
@@ -10,22 +10,24 @@ export function grayscaleTransPixels(source){
  return result;
 }
 
-export function compositeOpaqueTransPixels(destination,source,state,{graySource,passes=transBlendPasses(state)}={}){
+export function compositeOpaqueTransPixels(destination,source,state,{graySource,passSources,passes=transBlendPasses(state),quantize=true}={}){
  if(destination.length!==source.length||destination.length%4)throw Error('Trans pixel surfaces must have matching RGBA lengths');
  if(graySource&&graySource.length!==source.length)throw Error('Trans grayscale surface must match source');
+ if(passSources&&(passSources.length!==passes.length||passSources.some(pixels=>pixels.length!==source.length)))throw Error('Trans per-pass sources must match the blend plan and surface');
  const result=new Uint8ClampedArray(destination);
  const needsGray=passes.some(pass=>pass.gray);
  for(let offset=0;offset<source.length;offset+=4){
   if(source[offset+3]===0)continue;
   if(destination[offset+3]!==255)throw Error('Trans composition requires an opaque resolved destination');
-  if(needsGray&&!graySource)throw Error('SubAdd requires a shader-equivalent grayscale source');
+  if(needsGray&&!graySource&&!passSources)throw Error('SubAdd requires a shader-equivalent grayscale source');
   for(let channel=0;channel<3;channel++){
    let value=destination[offset+channel];
-   for(const pass of passes){
-    const pixel=pass.gray?graySource:source,alpha=pixel[offset+3]*pass.amount/255;
+   for(let passIndex=0;passIndex<passes.length;passIndex++){
+    const pass=passes[passIndex],pixel=passSources?passSources[passIndex]:pass.gray?graySource:source,alpha=Math.max(0,Math.min(1,pixel[offset+3]*pass.amount/255));
     const retained=pass.destinationFactor==='one'?1:1-alpha;
-    const contribution=pass.sourceFactor==='zero'?0:pixel[offset+channel]*alpha;
+    const contribution=pass.sourceFactor==='zero'?0:Math.max(0,Math.min(255,pixel[offset+channel]))*alpha;
     value=Math.max(0,Math.min(255,value*retained+(pass.equation==='subtract'?-contribution:contribution)));
+    if(quantize)value=quantizeBlendValue(value);
    }
    result[offset+channel]=value;
   }

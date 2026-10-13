@@ -10,4 +10,8 @@ const expected=100*(1-(1-64/255)*128/255)+60*(128/255)*(128/255);
 assert.ok(Math.abs(translucent[0]-expected)<0.000001);
 assert.deepEqual(transBlendPasses({type:'subadd',alpha:[255,255]}).map(pass=>[pass.equation,pass.gray]),[['subtract',true],['add',false]]);
 assert.deepEqual(transBlendPasses({type:'subadd',alpha:[255,255]},{negative:true}).map(pass=>pass.equation),['add','subtract']);
+assert.equal(transBlendPasses({type:'add',alpha:[128,255]},{invertBlend:1}).at(-1).invertAdd,false);
+assert.equal(transBlendPasses({type:'add',alpha:[128,255]},{invertBlend:2}).at(-1).invertAdd,true);
+assert.equal(transBlendPasses({type:'add',alpha:[255,255]},{invertBlend:3}).at(-1).disableNegative,true);
+assert.equal(transBlendPasses({type:'none',alpha:[255,0]},{invertBlend:3})[0].disableNegative,undefined);
 console.log('Native blend pass ordering, independent alpha, none/sub/add and subadd ordering passed');

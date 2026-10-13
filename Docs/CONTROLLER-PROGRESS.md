@@ -1,3 +1,7 @@
+## 0.24.83 — Palette blend branch/precision repair
+
+Native renderWithBlending branch flags now drive distinct shader source surfaces, preserving opaque None versus full/partial Add/Sub/SubAdd behavior. Source RGB/alpha clamp before contribution; each pass writes a quantized byte intermediate. Direct GPU/CPU multi-pass case matches; out-of-range clipping fixture uses an explicit one-byte hardware rounding/dither allowance that cannot mask wrong unclamped contributions. Full regression passes. All controllers/parameters, indexed shader/inversion corner cases, MSAA/dither/backend precision and native certification remain unfinished.
+
 ## 0.24.82 — BGPalFX selected-entry execution
 
 Replaced explicit unsupported BG selection with real registry targeting, native repeated-ID/index selection and layer rendering. Optional compressed stage sprite entries load through stage configs; existing 3D-only configs remain unchanged and do not fabricate BG IDs. Actual pixels prove one selected entry changes and restores after expiry while other matches/IDs remain unchanged. Pause/SuperPause shared pausebg slots control per-BG clocks with native OR/last-writer behavior. Full native stage-definition export, animation/tiling/parallax, pause preflight/version/compiler metadata and indexed palettes remain partial; no full certification.

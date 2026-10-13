@@ -1,3 +1,7 @@
+## 0.24.83 — Native-like palette blend passes
+
+Palette blend branches now use separate per-pass shader sources for invert-add/disable-neg and SubAdd gray/color processing. Each pass clamps source channels before blending and writes an 8-bit intermediate, matching direct WebGL reference cases. Actual branch pixels and full regressions pass. Native dithering/MSAA/indexed shader and exhaustive backend precision remain uncertified; complete controller/parameter goal remains active.
+
 ## 0.24.82 — Selected background palette rendering
 
 BGPalFX id/index now target actual ordered background entries and render independently before/after actors. Stage configs can load compressed static sprite entries without inventing IDs for existing 3D geometry. Per-BG clocks obey Pause/SuperPause pausebg last-writer flags; global palettes remain independent. Actual selection/expiry pixel and pause regressions pass. Full native stage export/animation/parallax/tiling, palette remap/indexed shader and complete pause/compiler certification remain pending.
