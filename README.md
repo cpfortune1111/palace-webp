@@ -1,3 +1,7 @@
+## 0.24.58 — HitDef position offsets and Snap binding
+
+Caller Snap/MinDist/MaxDist values now drive queued root position offsets and GetHitVar offset queries. Temporal Snap follows live root/helper binders, freezes with binder pause and expires; positive-time binder-hit release returns the victim to its own 5050. Tests cover both victim directions, one-time offsets, live-facing binding and release. Native per-actor timing, target lists, local scales, version argument differences and helper victims remain partial.
+
 ## 0.24.57 — HitOnce activation consumption
 
 Accepted root/helper hit and guard contacts consume explicit hitonce activations; caller boolean expressions and throw defaults execute. Explicit zero remains available and projectile hit budgets are unchanged. Helper HitDef trigger/persistence execution now creates a fresh activation. Actual root/helper tests and full browser regressions pass. Target-drop, buffered target timing, overrides/reversals and multi-target parity remain partial.

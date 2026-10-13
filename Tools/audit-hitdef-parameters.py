@@ -58,6 +58,9 @@ PARTIAL = {
     'guardsound': 'Same ownership/default limitations as hitsound.',
     'p1stateno': 'Current paired throw path only; standalone/custom-state ownership semantics are incomplete.',
     'p2stateno': 'Custom hit/throw transitions exist; p2getp1state and standalone parity are incomplete.',
+    'snap': 'Caller float coordinate expressions and integer temporal binding feed actual root offset consumption, live root/helper owner following, expiry and same-frame binder-hit SelfState release. Guarded-Y and projectile owner rules exist. Native per-actor flags, target lists, local scales, version argument layout and helper victims remain partial.',
+    'mindist': 'Caller coordinate expressions feed facing-sensitive root hit offsets and optional snap-time constrained axes. Full native scale/version/actor and binding conditions remain pending.',
+    'maxdist': 'Caller coordinate expressions feed facing-sensitive root hit offsets with native max-after-min ordering. Full native scale/version/actor and binding conditions remain pending.',
     'hitonce': 'Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Target-drop, override/reversal, buffered timing and multi-target parity remain pending.',
     'p1facing': 'Root/helper hit writers execute caller integer signs and preserve world velocity. Projectile and guard contacts exclude attacker turns. Native deferred timing, reversal/type-None and throw interactions remain pending.',
     'p1getp2facing': 'Caller integer expressions inherit defender facing with precedence over p1facing in actual root/helper contacts. Native deferred timing, reversal/type-None and throw interactions remain pending.',
@@ -113,7 +116,7 @@ def main():
         rows.append({'parameter': parameter, 'status': status, 'usedBy': sorted(usage[parameter]), 'reference': 'MUGEN + Ikemen' if parameter in mugen and parameter in ikemen else 'MUGEN' if parameter in mugen else 'Ikemen', 'note': note})
     missing_used = [row['parameter'] for row in rows if row['status'] == 'Not implemented' and row['usedBy']]
     lines = [
-        '# HitDef parameter audit — 0.24.57', '',
+        '# HitDef parameter audit — 0.24.58', '',
         'This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.',
         'Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.', '',
         '[MUGEN reference](https://www.elecbyte.com/mugendocs-11b1/sctrls.html#hitdef)',

@@ -1,3 +1,4 @@
+import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
 import {createAttackState} from '../../Engine/attack-controllers.js';
@@ -17,6 +18,7 @@ export function createSpecialRuntime(api){
  };
  const numeric=(params,context)=>{
   const result={...params};
+  if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
   for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;

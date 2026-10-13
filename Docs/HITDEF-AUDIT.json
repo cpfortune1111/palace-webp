@@ -757,17 +757,17 @@
   },
   {
     "parameter": "maxdist",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller coordinate expressions feed facing-sensitive root hit offsets with native max-after-min ordering. Full native scale/version/actor and binding conditions remain pending."
   },
   {
     "parameter": "mindist",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller coordinate expressions feed facing-sensitive root hit offsets and optional snap-time constrained axes. Full native scale/version/actor and binding conditions remain pending."
   },
   {
     "parameter": "missonoverride",
@@ -1007,12 +1007,12 @@
   },
   {
     "parameter": "snap",
-    "status": "Not implemented",
+    "status": "Partial",
     "usedBy": [
       "Saturn"
     ],
     "reference": "MUGEN + Ikemen",
-    "note": "No complete native execution path. Importing/storing a value is not implementation."
+    "note": "Caller float coordinate expressions and integer temporal binding feed actual root offset consumption, live root/helper owner following, expiry and same-frame binder-hit SelfState release. Guarded-Y and projectile owner rules exist. Native per-actor flags, target lists, local scales, version argument layout and helper victims remain partial."
   },
   {
     "parameter": "sparkangle",

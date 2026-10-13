@@ -1,3 +1,7 @@
+## 0.24.58 — Queued hit positions / temporal Snap
+
+Caller float coordinates and integer snap time feed actual contact position plans. Root post-contact updates consume and clear xoff/yoff/zoff; queries expose queued offsets. Temporal binding follows live root/helper owner position and facing, handles pause/expiry, prevents mutual bindings and releases positive-time targets to their own 5050 when the binder disappears or is hit in the current frame. Dedicated root position, binding and both-direction release fixtures accompany existing regression tests. Native target buffers/CSF_gethit timing, local-coordinate scales, version layouts, helper/custom victims and full binding ownership remain pending; all three position parameters stay Partial.
+
 ## 0.24.57 — HitOnce root/helper activation lifecycle
 
 Caller boolean hitonce values and throw defaults drive spent activation marking for accepted hits and guards. Root P1/P2 reject a spent activation independently of legacy per-target keys. Helper contacts do the same independently of hitSpent, and trigger/persistence execution creates fresh activations. Explicit-zero and projectile-budget contrast tests pass. Full browser regressions including simultaneous supers pass. Native target-drop/buffering, override/reversal and multi-target semantics remain pending; HitOnce remains Partial.

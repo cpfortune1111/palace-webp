@@ -1,4 +1,4 @@
-# HitDef parameter audit — 0.24.57
+# HitDef parameter audit — 0.24.58
 
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
@@ -8,7 +8,7 @@ Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation
 
 Implemented means a WEB execution path exists, not that every default/expression/mode has engine-identical behavior. Partial and Not implemented must not be treated as supported. Current battles use two roots, 2D and no team mode. Both root simultaneous attacks now use the native equal-priority Hit/Miss/Dodge table; cancelled ties leave their HitDefs active.
 
-Audited parameters: 131. Current-source parameters with no complete execution path: snap.
+Audited parameters: 131. Current-source parameters with no complete execution path: .
 
 Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/score-runtime.js, Engine/hit-priority.js, Engine/hit-attribute-mask.js, Engine/point-controllers.js, Engine/redlife-controllers.js and Engine/damage-assertions.js. Imported character runtime data was inspected for explicit usage, not inferred from visual tests.
 
@@ -102,8 +102,8 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | ignorereversaldef | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | keepstate | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | kill | Implemented | Saturn | MUGEN + Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| maxdist | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
-| mindist | Not implemented | — | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| maxdist | Partial | — | MUGEN + Ikemen | Caller coordinate expressions feed facing-sensitive root hit offsets with native max-after-min ordering. Full native scale/version/actor and binding conditions remain pending. |
+| mindist | Partial | — | MUGEN + Ikemen | Caller coordinate expressions feed facing-sensitive root hit offsets and optional snap-time constrained axes. Full native scale/version/actor and binding conditions remain pending. |
 | missonoverride | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | nochainid | Partial | Jupiter, Neptune, Saturn | MUGEN + Ikemen | Single-ID helper/projectile check only; two-ID and root attack checks are missing. |
 | numhits | Partial | Saturn | MUGEN + Ikemen | Caller integer expressions drive actual root/entity HitCount/GuardCount queries and report hit/combo totals. Defender physical GetHitVar hitcount/guardcount are separate from numhits. receivedHits, complete reset/eligibility rules, projectile-owner attribution, queued timing and integer overflow remain pending. |
@@ -133,7 +133,7 @@ Runtime files reviewed: index.html, Char/Venus/venus-special-runtime.js, Engine/
 | redirectid | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | redlife | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | score | Implemented | — | Ikemen | Execution path present; numeric expression/default parity has not been certified for every input. |
-| snap | Not implemented | Saturn | MUGEN + Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
+| snap | Partial | Saturn | MUGEN + Ikemen | Caller float coordinate expressions and integer temporal binding feed actual root offset consumption, live root/helper owner following, expiry and same-frame binder-hit SelfState release. Guarded-Y and projectile owner rules exist. Native per-actor flags, target lists, local scales, version argument layout and helper victims remain partial. |
 | sparkangle | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
 | sparkno | Partial | Jupiter, Moon, Neptune, Saturn | MUGEN + Ikemen | Character-owned S-prefixed sparks only; common fightfx sparks/defaults are not complete. |
 | sparkscale | Not implemented | — | Ikemen | No complete native execution path. Importing/storing a value is not implementation. |
