@@ -1,3 +1,7 @@
+## 0.24.63 — TargetLifeAdd resource execution
+
+TargetLifeAdd now writes actual root/helper resource adapters using native defence/absolute/nonlethal/healing calculation with attack multiplier 1. Life, received damage, getHit.kill, enabled red life and dizzy resources honor their respective gates; normal/hyper conversion uses pinned float32 defaults and owner overrides. Actual P1/P2 resource, hyper, flag and nonlethal browser regressions pass. Complete native alive/finalDefense ownership, dizzy lifecycle, helper victims, buffered IDs and version parity remain partial.
+
 ## 0.24.62 — TargetState execution
 
 TargetState now evaluates caller id/index/value/redirectid against real target lists and uses the redirected owner's current state character, with own-character selection for minus -2/-4. Root custom state transfers preserve hit data and initial victim animation ownership; P1 reaction and general source-state paths are covered. Actual root/filter/redirection/control/ownership browser regressions pass. Native queued transitions, full helper ownership/victims, invalid-state behavior and version parity remain partial.

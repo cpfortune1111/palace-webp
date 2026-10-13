@@ -1,3 +1,9 @@
+## 0.24.63 — TargetLifeAdd actual resource writes
+
+The shared dispatcher evaluates caller target/value/absolute/kill/dizzy/redlife/redirect parameters against real targets. Damage calculation ignores attack multipliers, adjusts defence unless absolute, rounds like native computeDamage, bounds to current life and applies nonlethal/version/overflow rules. Actual life and received-damage adapters are written, getHit.kill is retained, and enabled red-life/dizzy conversions use owner constants and incoming normal/hyper attributes. Positive-life round-damage gating and NoDizzyPointsDamage are respected. Hyper aggregate attributes mirror the pinned compiler's accepted masks.
+
+Unit execution tests and actual-root browser fixtures verify damage/healing, high defence/absolute/nonlethal limits, defaults/overrides, normal/hyper resource reductions, disabled flags, attack multiplier 9 exclusion, and P1 life/reaction/received-damage synchronization. Existing complete combat/pixel/simultaneous-super regressions pass. Native alive/finalDefense/version ownership, dizzy lifecycle, helper victims, target buffers/IDs and full conversion parity remain pending; TargetLifeAdd is not fully certified.
+
 ## 0.24.62 — TargetState real-target and source-owner execution
 
 The shared dispatcher evaluates caller integer id/index/value/redirectid, selects the redirected owner's target list, skips negative state numbers and removes control before switching source states. Current custom-state ownership determines root state owner; minus -2/-4 select its own character. Hit data and initial victim animation ownership are preserved. P1 reaction-state transfers synchronize root globals; general-state transfers release reaction storage and retain getHit data. The obsolete deduplicated legacy TargetState branch was removed.
