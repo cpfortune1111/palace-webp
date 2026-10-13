@@ -1,3 +1,9 @@
+## 0.24.60 — TargetFacing / indexed target selection
+
+The shared root/helper dispatcher executes TargetFacing caller-context integer parameters id/index/value/redirectid. Native target selection filters current hit IDs, resolves the requested filtered index and stops once it is found. Zero values preserve facing; positive follows the redirected owner's facing and negative opposes it. Target updates preserve world horizontal velocity for helpers/P2 and both P1 reaction and non-reaction representations.
+
+Policy tests cover selection/no-match/index bounds/early-stop, signs/zero and caller redirection. Actual browser fixtures force both victim roots to flip with world velocities 7/-9, then verify non-reaction P1 retains world speed 3. Existing counter/contact/pixel/simultaneous-super regressions remain required. Helper-victim collision/ownership, native target buffers, per-actor timing and full version parity remain pending; no complete-controller semantic certification is claimed.
+
 ## Controller inventory integrity repair — after 0.24.59
 
 The saved controller JSON contained a truncated tool-output header and was not parseable. It was regenerated from the pinned native compiler without changing scope or certification. All 163 controller rows and their extracted/delegated parameter candidates are preserved. A saved-artifact test now requires valid JSON, matching pinned reference, 163 rows and 163 distinct controller names. All three inventory tests pass; semantic certification remains Pending for every controller.

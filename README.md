@@ -1,3 +1,7 @@
+## 0.24.60 — TargetFacing execution
+
+TargetFacing evaluates caller id/index/value/redirectid and selects the true target list, including native early-stop index selection. P1/P2 facing changes preserve nonzero world velocity, including P1 outside a reaction. Root contact/filter/redirection browser fixtures and policy tests cover executed paths. Full actor/target ownership, helper-victim collision integration, native target buffers and exact version parity remain partial.
+
 ## 0.24.59 — Real targets, NumTarget and TargetDrop
 
 Accepted root/helper/projectile-owner contacts and paired throws now record real per-actor targets. NumTarget reads live hit IDs; recovered targets and destroyed helper owners are cleaned up, with round resets clearing all lists. TargetDrop executes caller expressions/redirection and native ID/keepone selection, including matching Snap/legacy throw release. Root/helper browser fixtures and policy tests cover the executed paths. Native target buffers, GetHitVar ID/drop bookkeeping, exact state-change/reversal timing and full multi-target release remain partial.
@@ -746,4 +750,3 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 - [ ] Intro／win／taunt／KO／round／AI、完整招式表；每招與原 IKEMEN 並排比對、手機性能／输入回歸。
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
-

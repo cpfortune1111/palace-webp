@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {createTargetList,applyTargetDropController} from '../Engine/target-list.js';
+import {createTargetList,applyTargetDropController,applyTargetFacingController} from '../Engine/target-list.js';
 
 const actors=new Map([[1,{getHit:{hitid:5}}],[2,{getHit:{hitid:5}}],[3,{getHit:{hitid:7}}]]),lookup=id=>actors.get(id);
 const targets=createTargetList();targets.add(1);targets.add(1);targets.add(2);targets.add(3);
@@ -18,4 +18,16 @@ const redirected=createTargetList();redirected.add(1);redirected.add(2);
 const owner={targets},other={targets:redirected};
 applyTargetDropController({type:'TargetDrop',params:{redirectid:'var(8)',excludeid:'var(9)',keepone:'0.5'}},owner,{evaluate:value=>value==='var(8)'?99:value==='var(9)'?5:Number(value),findActor:id=>id===99?other:lookup(id),targets:actor=>actor.targets,choose:()=>0,onDrop:()=>{}});
 assert.deepEqual(redirected.ids(),[2]);assert.deepEqual(targets.ids(),[2]);
+const selection=createTargetList();selection.add(1);selection.add(2);selection.add(3);
+assert.deepEqual(selection.select(7,0,lookup),[1]);assert.deepEqual(selection.select(7,1,lookup),[3]);
+assert.deepEqual(selection.select(7,2,lookup),[]);assert.deepEqual(selection.select(5,-1,lookup),[2]);
+let lookups=0;assert.deepEqual(selection.select(7,0,id=>{lookups++;return lookup(id)}),[1]);assert.equal(lookups,1);
+const facingOwner={facing:-1,targets:selection};actors.get(3).facing=-1;actors.get(3).vx=5;
+applyTargetFacingController({type:'TargetFacing',params:{id:7,index:1,value:-2}},facingOwner,{evaluate:Number,findActor:lookup,targets:actor=>actor.targets,setFacing:(actor,facing)=>{actor.facing=facing}});
+assert.deepEqual([actors.get(3).facing,actors.get(3).vx],[1,5]);
+const facingApi={evaluate:value=>value==='var(8)'?99:Number(value),findActor:id=>id===99?facingOwner:lookup(id),targets:actor=>actor.targets,setFacing:(actor,facing)=>{actor.facing=facing}};
+applyTargetFacingController({type:'TargetFacing',params:{redirectid:'var(8)',id:7,index:1,value:0}},owner,facingApi);
+assert.equal(actors.get(3).facing,1);
+applyTargetFacingController({type:'TargetFacing',params:{redirectid:'var(8)',id:7,index:1,value:2}},owner,facingApi);
+assert.equal(actors.get(3).facing,-1);
 console.log('Native unique targets, live hit-ID counts, HitOnce retention and TargetDrop selection passed');
