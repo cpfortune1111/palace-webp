@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {createHitBySlots,applyHitByController,hitByAllows,tickHitBySlots} from '../Engine/hit-by.js';
+
+const root={slots:createHitBySlots()},other={slots:createHitBySlots()},api={evaluate:Number,findActor:id=>id===2?other:null,slots:actor=>actor.slots};
+applyHitByController({type:'NotHitBy',params:{value:'S,SP',value2:'SCA',time:-2}},root,api);
+assert.equal(root.slots[1],null);
+assert.equal(hitByAllows(root.slots,{attr:'A,SP'}),false);
+assert.equal(hitByAllows(root.slots,{attr:'S,NP'}),false);
+assert.equal(hitByAllows(root.slots,{attr:'A,NP'}),true);
+tickHitBySlots(root.slots);assert.equal(root.slots[0].time,-2);
+applyHitByController({type:'HitBy',params:{redirectid:2,attr:'SCA,N',slot:99,playerno:1,playerid:42,time:2}},root,api);
+assert.equal(hitByAllows(other.slots,{attr:'A,NA'},{attackerPlayerNo:0,attackerId:42}),true);
+assert.equal(hitByAllows(other.slots,{attr:'A,NA'},{attackerPlayerNo:1,attackerId:42}),false);
+applyHitByController({type:'HitBy',params:{attr:'S,NA',slot:1,stack:1}},other,api);
+applyHitByController({type:'HitBy',params:{attr:'A,NP',slot:2,stack:1}},other,api);
+assert.equal(hitByAllows(other.slots,{attr:'A,NA'},{attackerPlayerNo:0,attackerId:42}),false);
+assert.equal(hitByAllows(other.slots,{attr:'A,NP'},{attackerPlayerNo:0,attackerId:42}),true);
+applyHitByController({type:'NotHitBy',params:{slot:3,attr:'SCA',time:-1,'clsn.group':'clsn2','clsn.index':4}},other,api);
+assert.equal(hitByAllows(other.slots,{attr:'A,NP'},{attackerPlayerNo:0,attackerId:42,group:2,index:4}),false);
+assert.equal(hitByAllows(other.slots,{attr:'A,NP'},{attackerPlayerNo:0,attackerId:42,group:2,index:3}),true);
+tickHitBySlots(other.slots);tickHitBySlots(other.slots);assert.equal(other.slots[0],null);
+assert.throws(()=>applyHitByController({type:'HitBy',params:{}},root,api),/No HitBy parameters/);
+console.log('Native HitBy slots, old value precedence, redirection, player filters, stack groups, collision filters and signed timers passed');

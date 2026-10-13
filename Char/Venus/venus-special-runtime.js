@@ -6,8 +6,9 @@ import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
 import {createAttackState} from '../../Engine/attack-controllers.js';
-import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engine/hit-override.js?v=02484';
-import {excludesHit} from '../../Engine/hit-attribute-mask.js';
+import {createHitBySlots,tickHitBySlots} from '../../Engine/hit-by.js?v=02485';
+import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engine/hit-override.js?v=02485';
+import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 export function createSpecialRuntime(api){
@@ -90,8 +91,7 @@ export function createSpecialRuntime(api){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
-   case 'HitBy':entity.hitBy=params.value;break;
-   case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
+   case 'HitBy':case 'NotHitBy':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
@@ -127,6 +127,7 @@ export function createSpecialRuntime(api){
    if(entity.destroyed||blocked(entity.player,entity))continue;
    if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
    entity.assertions?.clear();
+   if(entity.kind==='helper'&&!(entity.hitPause>0))tickHitBySlots(entity.hitBySlots??=createHitBySlots());
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
@@ -162,13 +163,13 @@ export function createSpecialRuntime(api){
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
    for(const attack of attacks){
-    if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))continue;
-    if(helper.hitBy&&!excludesHit(helper.hitBy,attack.hitDef.params.attr))continue;
+    if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
+    if(helper.hitBy&&!allowsHit(helper.hitBy,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     const selected=selectHitOverride(helper.hitOverrides||[],attack.hitDef.params,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',unguardable:attack.assertions?.has('unguardable')});
     if(!selected||selected.miss||!api.collision(attack,helper).contact)continue;
     helper.lastHitOverride=selected;
     const result=api.helperOverrideHit?.(attack,helper);
-    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(selected.override.forceAir)helper.type='A';if(!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
+    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
     if(!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;
    }

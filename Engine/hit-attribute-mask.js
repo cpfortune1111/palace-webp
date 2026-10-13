@@ -1,7 +1,10 @@
-export function excludesHit(mask,attribute){
- const [states,...excluded]=String(mask).toUpperCase().split(',').map(value=>value.trim());
- const [state,attack]=String(attribute).toUpperCase().split(',').map(value=>value.trim());
- if(!state||states&&!states.includes(state))return false;
- if(!excluded.length)return true;
- return excluded.some(value=>value.length===2&&attack?.length===2&&(value[0]==='A'||value[0]===attack[0])&&value[1]===attack[1]);
+import {compileAttackAttribute} from './attack-attribute.js';
+
+function matches(mask,attribute,{attackerState,projectile=false,compatibility='ikemen'}={}){
+ const flags=compileAttackAttribute(mask),attack=compileAttackAttribute(attribute,{hitdef:true});
+ const state=compatibility==='mugen'&&!projectile?({S:1,C:2,A:4,L:8,N:16}[String(attackerState).toUpperCase()]??attack&63):attack&63;
+ return [Boolean(flags&state),Boolean(flags&attack&~63)];
 }
+
+export function excludesHit(mask,attribute,options){const [state,attack]=matches(mask,attribute,options);return state||attack}
+export function allowsHit(mask,attribute,options){const [state,attack]=matches(mask,attribute,options);return state&&attack}
