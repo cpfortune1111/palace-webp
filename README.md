@@ -1,3 +1,7 @@
+## 0.24.67 — TargetRedLifeAdd execution
+
+TargetRedLifeAdd selects real target ID/index with caller value/absolute/redirection, preserves native signed damage calculation and caller-MUGEN healing compatibility, and writes clamped red-life resources. Actual root/redirection/assertion fixtures pass; disabled/round gate fixtures are included. Native alive, helper/teams, version ownership and compiler certification remain partial.
+
 ## 0.24.66 — Target dizzy / guard point controllers
 
 TargetDizzyPointsAdd and TargetGuardPointsAdd now select real targets and apply caller value/absolute/id/index/redirection with native defence, signed rounding and nonlethal limits. Actual root writes, dizzy exclusion, feature/round gates, damage assertions and redirected caller expressions have dedicated fixtures. Full helper/version/compiler certification remains pending.

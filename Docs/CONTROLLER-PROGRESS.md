@@ -1,3 +1,7 @@
+## 0.24.67 — Target red-life resource execution
+
+TargetRedLifeAdd evaluates caller value/absolute/id/index/redirectid against live target lists. Positive MUGEN-caller additions force absolute. Signed native computeDamage uses multiplier 1, victim defence and nonlethal/version bounds before red-life setter gates. Actual root writes, redirected P1 and NoRedLifeDamage fixtures pass; feature-disabled and round-protected paths have dedicated assertions. Unit tests cover missing/zero/unmatched owners, native signed additions, dead victim version rules and caller/victim compatibility distinction. Full helper/team life sharing, alive/final-defence/version ownership and compiler certification remain pending; no complete-controller claim.
+
 ## 0.24.66 — Target point resource execution
 
 TargetDizzyPointsAdd/TargetGuardPointsAdd evaluate value, absolute, ID/index and redirectid in caller context, then mutate actual target resources. Native attack multiplier 1, defence scaling, positive minimum one, nonlethal life limits and integer saturation are retained. Dizzy and respective damage assertions exclude writes; feature switches and round no-damage gate protect point setters. Tests cover zero/missing/unmatched targets, fractional integer inputs and negative-zero normalization. Actual fixtures cover both root resources, exclusions, gates and redirected P1 variable evaluation. Full helper-victim/version/final-defence/compiler certification remains pending; no complete-controller certification is claimed.
