@@ -1,3 +1,7 @@
+## 0.24.64 — DizzySet / GuardBreakSet live flags
+
+Both controllers now evaluate caller booleans/redirection and mutate persistent root/helper flags, with Dizzy/GuardBreak queries reading live storage. State changes preserve flags, round initialization clears roots and TargetLifeAdd skips dizzy-point damage while the victim is dizzy. Actual root/helper redirection, independent queries and resource-exclusion browser fixtures pass. Missing required value fails explicitly. Full common-state/system-flag lifecycle, compiler-time validation and version parity remain partial.
+
 ## 0.24.63 — TargetLifeAdd resource execution
 
 TargetLifeAdd now writes actual root/helper resource adapters using native defence/absolute/nonlethal/healing calculation with attack multiplier 1. Life, received damage, getHit.kill, enabled red life and dizzy resources honor their respective gates; normal/hyper conversion uses pinned float32 defaults and owner overrides. Actual P1/P2 resource, hyper, flag and nonlethal browser regressions pass. Complete native alive/finalDefense ownership, dizzy lifecycle, helper victims, buffered IDs and version parity remain partial.

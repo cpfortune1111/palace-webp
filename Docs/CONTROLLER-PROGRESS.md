@@ -1,3 +1,9 @@
+## 0.24.64 — Persistent dizzy / guard-break flag controllers
+
+DizzySet/GuardBreakSet execute caller value/redirectid through the shared dispatcher. Live root flag storage and helper fields back Dizzy/GuardBreak queries; changing source states preserves flags, independent resource feature switches do not suppress flag writes, and round initialization clears root flags. TargetLifeAdd reads live root dizzy rather than stale reaction data and skips dizzy-point damage accordingly. Pinned compiler mandatory-value validation now rejects omission without changing flags.
+
+Policy and actual browser fixtures cover fractional/negative values, clear, root redirection, source-state persistence, feature independence, TargetLifeAdd exclusion and a spawned real helper's independent flags/query/clearing. Whole-file compiler validation, common dizzy/guard-break state transitions, full reset/system-flag lifecycle and version parity remain pending; no complete-controller certification is claimed.
+
 ## 0.24.63 — TargetLifeAdd actual resource writes
 
 The shared dispatcher evaluates caller target/value/absolute/kill/dizzy/redlife/redirect parameters against real targets. Damage calculation ignores attack multipliers, adjusts defence unless absolute, rounds like native computeDamage, bounds to current life and applies nonlethal/version/overflow rules. Actual life and received-damage adapters are written, getHit.kill is retained, and enabled red-life/dizzy conversions use owner constants and incoming normal/hyper attributes. Positive-life round-damage gating and NoDizzyPointsDamage are respected. Hyper aggregate attributes mirror the pinned compiler's accepted masks.
