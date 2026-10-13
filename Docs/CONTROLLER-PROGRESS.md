@@ -1,3 +1,7 @@
+## 0.24.78 — Offset hitpause correction
+
+Broader native reset audit found .77 incorrectly retained Offset during hitpause. Mugen 1.1/Ikemen reset it before eligible controllers; root/helper implementation and actual tests now require this behavior. Full regression passes. WinMugen/version-owner distinctions remain pending. Trans parameter/native blend/compositor tests are groundwork only; actual shared stage/actor rendering is not yet connected and is not counted complete.
+
 ## 0.24.77 — Offset real rendering
 
 Caller float32 X/Y use caller local scale; redirected recipients preserve omitted axes and missing recipients stop axis evaluation. Shared dispatch writes root/helper drawing-only offsets. Root/helper normal resets retain hitpause. Actual root pixels at both facings, helper source execution, redirection and afterimage snapshots pass. Root reflection offset uses native vertical scale. Full localcoord/interpolation/size offsets/helper reflection/stage ground-level/version/compiler certification remain pending; partial integration only.

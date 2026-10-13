@@ -1,3 +1,7 @@
+## 0.24.78 — Correct Offset hitpause reset
+
+Pinned Mugen 1.1/Ikemen reset timing also resets Offset during hitpause. Root/helper paths and actual regressions now match this, correcting the .77 retention claim. WinMugen version metadata remains pending. Trans parameter and blend/compositor policies are tested foundations, not a completed controller or game rendering integration.
+
 ## 0.24.77 — Offset drawing execution
 
 Offset X/Y/redirection now write root/helper drawing coordinates without physical movement or facing inversion. Ordinary reset retains hitpause. Root pixel tests, helper source controllers and afterimage snapshot tests pass; root reflections use the pinned vertical scale formula. Native helper reflections, stage ground-level/ydelta, size offsets, interpolation and compiler/version certification remain pending.
