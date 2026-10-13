@@ -85,7 +85,6 @@ export function createSpecialRuntime(api){
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;break;
-   case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
    case 'HitBy':entity.hitBy=params.value;break;
@@ -141,7 +140,6 @@ export function createSpecialRuntime(api){
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
     if(entity.state!==previous)continue;
-    if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
    }else if(!entity.removing){
     const invisible=entity.scale.every(value=>value===0);
     if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}

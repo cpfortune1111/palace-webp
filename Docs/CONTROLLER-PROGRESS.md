@@ -1,3 +1,7 @@
+## 0.24.72 — Family binding controllers
+
+BindToRoot/BindToParent share caller time/facing/XYZ/redirectid evaluation and float32 redirection scaling. Root characters have no parent/root. Live nested-helper ownership distinguishes parent from root; facing zero/omission retains the binding direction, while clear/expiry resets it. Ordinary binds retain velocity, use their own actor's pause clock rather than binder pause and clear immediately at zero. Actual fixtures verify nested positions, facing, root-to-child redirection, hitpause/resume and expiry; unit tests cover native evaluation order. Complete native shared-bind identity/scales/physics/persistence timing and compiler/version certification remain pending.
+
 ## 0.24.71 — BindToTarget execution
 
 Caller integer target/time parameters and float32 position/depth expressions are evaluated before target selection. Default index 0/time 1/X 0 and NaN Y/Z preserve unspecified axes. Head/mid/foot selectors use target constants; reciprocal native scaled TargetBind offsets share live binding lifecycle. Actual default/head/mid/redirection/mutual-reset and spawned helper target/isbound fixtures pass; helper target lists are manually registered, not collision acceptance tests. Unit tests cover redirected scales, posz, missing targets and localcoord correction. WEB still uses normalized localcoord 320 without complete native metadata; full scale/depth/helper trajectory and already-bound distance/compiler/version certification remain pending.

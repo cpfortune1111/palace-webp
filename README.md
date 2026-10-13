@@ -1,3 +1,7 @@
+## 0.24.72 — BindToRoot / BindToParent execution
+
+Both controllers now resolve live root/nested-parent ownership with caller XYZ/time/facing/redirection, replacing the old helper-only timer branch. Ordinary binds retain world velocity, support indefinite duration and own-actor pause, clear immediately at expiry and reset facing. Actual nested-helper, root redirection, pause/resume and expiry fixtures pass. Full native shared-binding identity/scales/physics and version certification remain partial.
+
 ## 0.24.71 — BindToTarget live positioning
 
 BindToTarget now evaluates caller ID/index/time/pos/posz/redirection, moves live root/helper callers relative to their first target and registers reciprocal TargetBind. Head/mid/foot, default untouched Y/Z and caller expressions are handled; actual root/head/mid/redirection/helper fixtures pass. Complete native localcoord/depth metadata and already-bound distance parity remain partial.
