@@ -1,3 +1,7 @@
+## 0.24.68 — TargetScoreAdd execution
+
+TargetScoreAdd now selects real targets with caller value/ID/index/redirection, uses float32 per-round score accumulation, and respects player-helper eligibility and NoScore. Dedicated actual root/helper fixtures cover ownership, fractional scores and exclusion. Existing game scoring remains unchanged. Complete team score lifecycle/queries and compiler/version certification remain partial.
+
 ## 0.24.67 — TargetRedLifeAdd execution
 
 TargetRedLifeAdd selects real target ID/index with caller value/absolute/redirection, preserves native signed damage calculation and caller-MUGEN healing compatibility, and writes clamped red-life resources. Actual root/redirection/assertion fixtures pass; disabled/round gate fixtures are included. Native alive, helper/teams, version ownership and compiler certification remain partial.

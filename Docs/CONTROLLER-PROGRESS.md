@@ -1,3 +1,7 @@
+## 0.24.68 — Target score execution
+
+TargetScoreAdd evaluates caller float32 value and integer ID/index/redirectid against live target lists. Normal/projectile helpers are excluded; player helpers route to their root's score, with NoScore suppression. Native additions round current-round accumulations to float32 and transfer effective changes into existing match totals, preserving other game scoring. Unit tests cover precision, negative values, round/match resets and invalid/ineligible targets. Actual root fixtures verify redirected caller variables and NoScore; spawned helper fixtures manually register targets to verify eligibility/ownership, not collision acceptance. Full team ownership/score queries/lifecycle, invalid teamside and compiler/version certification remain pending.
+
 ## 0.24.67 — Target red-life resource execution
 
 TargetRedLifeAdd evaluates caller value/absolute/id/index/redirectid against live target lists. Positive MUGEN-caller additions force absolute. Signed native computeDamage uses multiplier 1, victim defence and nonlethal/version bounds before red-life setter gates. Actual root writes, redirected P1 and NoRedLifeDamage fixtures pass; feature-disabled and round-protected paths have dedicated assertions. Unit tests cover missing/zero/unmatched owners, native signed additions, dead victim version rules and caller/victim compatibility distinction. Full helper/team life sharing, alive/final-defence/version ownership and compiler certification remain pending; no complete-controller claim.

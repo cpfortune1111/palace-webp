@@ -1,0 +1,15 @@
+export function applyTargetScoreController(controller,caller,api){
+ if(String(controller.type).toLowerCase()!=='targetscoreadd')return false;
+ const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ if(params.value===undefined)throw Error('Missing TargetScoreAdd value');
+ const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
+ if(!owner)return true;
+ const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index),value=Math.fround(Number(api.evaluate(params.value)));
+ if(value===0)return true;
+ for(const id of api.targets(owner).select(hitId,index,api.findActor)){
+  const target=api.findActor(id);
+  if(target&&api.isPlayerType(target)&&!api.excluded(target))api.add(target,value);
+ }
+ return true;
+}
+

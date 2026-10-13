@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {applyTargetScoreController} from '../Engine/target-score.js';
+import {createScoreRuntime} from '../Engine/score-runtime.js';
+import {createTargetList} from '../Engine/target-list.js';
+const owner={},target={player:2,getHit:{hitid:7}},targets=createTargetList();targets.add(2);
+const score=createScoreRuntime(),api={evaluate:Number,findActor:id=>id===1?owner:id===2?target:null,targets:()=>targets,isPlayerType:()=>true,excluded:()=>false,add:(actor,value)=>score.addNative(actor.player,value)};
+applyTargetScoreController({type:'TargetScoreAdd',params:{redirectid:1,id:7,index:0,value:0.1}},owner,api);
+assert.equal(score.snapshot().roundScores[1],Math.fround(0.1));
+applyTargetScoreController({type:'TargetScoreAdd',params:{value:16777216}},owner,api);
+applyTargetScoreController({type:'TargetScoreAdd',params:{value:1}},owner,api);
+assert.equal(score.snapshot().roundScores[1],16777216);
+applyTargetScoreController({type:'TargetScoreAdd',params:{value:100}},owner,{...api,excluded:()=>true});assert.equal(score.snapshot().roundScores[1],16777216);
+assert.throws(()=>applyTargetScoreController({type:'TargetScoreAdd',params:{}},owner,api),/Missing/);
+score.resetMatch();score.addNative(1,-0.25);assert.equal(score.snapshot().roundScores[0],-0.25);
+score.resetRound();score.addNative(1,0.5);assert.deepEqual(score.snapshot().totals,[0.25,0]);
+score.resetMatch();assert.deepEqual(score.snapshot().roundScores,[0,0]);
+applyTargetScoreController({type:'TargetScoreAdd',params:{id:999,value:10}},owner,api);
+applyTargetScoreController({type:'TargetScoreAdd',params:{redirectid:999,value:10}},owner,api);
+applyTargetScoreController({type:'TargetScoreAdd',params:{value:10}},owner,{...api,isPlayerType:()=>false});assert.deepEqual(score.snapshot().totals,[0,0]);
+console.log('TargetScoreAdd filtering, redirection, float32 accumulation and exclusion passed');
+

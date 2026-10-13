@@ -4,6 +4,7 @@ export function createScoreRuntime(){
  const roundHundred=value=>Math.floor(value/100+.5)*100;
  const comboBonus=count=>count<2?0:count<=14?[0,0,300,500,1000,1200,1500,2000,2300,2600,3000,3300,3600,4000,4500][count]:Math.min(10000,5000+(count-15)*1000);
  function add(player,value){totals[player-1]+=value;roundScores[player-1]+=value}
+ function addNative(player,value){const index=player-1,previous=roundScores[index],next=Math.fround(previous+Math.fround(value));roundScores[index]=next;totals[index]+=next-previous}
  function resetRound(){roundScores.fill(0);combos.fill(0);finishers.fill(null);first=false}
  function resetMatch(){totals.fill(0);hits.fill(0);koTime=0;for(const list of icons)list.length=0;resetRound()}
  function endCombo(player){add(player,comboBonus(combos[player-1]));combos[player-1]=0}
@@ -23,5 +24,6 @@ export function createScoreRuntime(){
   add(winner,roundHundred(life[winner-1]/1000*10000*multiplier));
  }
  function matchWin(winner,{homeTeam=1,opponentAI=false}={}){if(!winner){streaks.fill(0);return}streaks[winner-1]++;streaks[(winner===1?2:1)-1]=0;if(winner!==homeTeam&&opponentAI)add(winner,30000+(streaks[winner-1]-1)*10000)}
- return {add,hit,step,finish,matchWin,resetRound,resetMatch,comboBonus,snapshot:()=>({totals:[...totals],hits:[...hits],koTime,roundScores:[...roundScores],icons:icons.map(list=>list.map(icon=>({...icon})))})};
+ return {add,addNative,hit,step,finish,matchWin,resetRound,resetMatch,comboBonus,snapshot:()=>({totals:[...totals],hits:[...hits],koTime,roundScores:[...roundScores],icons:icons.map(list=>list.map(icon=>({...icon})))})};
 }
+
