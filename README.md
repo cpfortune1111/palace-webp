@@ -1,3 +1,7 @@
+## 0.24.89 — Character collision coordinates (partial)
+
+Five character artifacts now preserve verified source localcoord metadata. Runtime collision geometry bridges character/animation-source units into the 1280-wide WEB world, scales base boxes before absolute overrides, supports helper ownclsnscale, and keeps Size/pivot conversion independent. Actual mixed-coordinate, redirected-unit and debug-canvas fixtures plus complete regressions pass. Exporters retain coordinates and full SizeBox tuples. Helper foreign-animation ownership, noncollision state coordinates, projectile geometry/proxies and exhaustive compiler/precision behavior remain unfinished; all-controller certification remains pending.
+
 ## 0.24.88 — Collision overrides and rotated contacts (partial)
 
 OverrideClsn/TransformClsn now execute through shared root/helper dispatch. Ordered overrides delete/replace/append boxes; transforms apply signed cumulative scale and last angle/pivot. Actual attack and target groups use facing-aware rotated SAT contacts, with independent group/index filters. Root/helper reset fixtures verify hitpause clearing and global-pause retention. Focused semantic/geometry tests and complete Saturn regression pass. Native scale/source metadata, proxies, other collision consumers and exhaustive compiler/precision behavior remain pending; no controller is newly certified complete.

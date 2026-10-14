@@ -1,0 +1,11 @@
+# Character coordinates — partial actual integration
+
+Pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d uses 320-wide native world coordinates and independent character/animation-owner scales. WEB uses a 1280-wide combat world; its world bridge is 1280/localcoord, not an unconditional native 320/localcoord shrink.
+
+All five imported DEF files declare 1280,720. Runtime JSON artifacts now include the same metadata without re-exporting unrelated gameplay data. Four runtime builders and the Venus State200 exporter retain coordinates; four-character constant export preserves four-component explicit state-specific SizeBox arrays. The coordinate parser confines definition paths, defaults absent declarations and rejects invalid/nonpositive input. Strict import diagnostics are not claimed equivalent to the native compiler.
+
+Actual root/helper collision execution resolves character and animation-source profiles, scales base animation boxes before absolute overrides, then applies transforms and world conversion. Helper ownclsnscale selects helper size only for its own animation owner. Size uses recipient world scale independently of sprite scale. Pivot conversion uses the recipient; Clsn rectangles use animation ownership. Height/OverrideClsn/TransformClsn redirection reads profile coordinates rather than a fixed 320 fallback.
+
+Executable evidence: check-character-coordinates.py, check-coordinate-artifacts.py and check-clsn-coordinate-scale.mjs pass. All five artifacts agree with original definitions. Actual mixed-coordinate contacts, animation-owner/helper scaling, absolute overrides, independent Size conversion and redirected local/world units pass in check-saturn-priority.cjs. Debug canvas paths match analytical rotated corners rather than original AIR AABBs. Complete regression passed with exit code 0 in outputs/controller-clsn-coordinate-render-actual.log.
+
+Remaining: helper foreign-animation ownership, state-coordinate execution beyond collisions, source/compiler leniency, projectile geometry, proxies, other collision consumers and exhaustive precision. No complete controller certification is asserted. This is a partial 0.24.89 release, not complete controller coverage.

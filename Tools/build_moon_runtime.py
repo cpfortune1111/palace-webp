@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 from character_compatibility import imported_compatibility
+from character_coordinates import imported_coordinates
 
 from compile_moon_states import DISABLED_ACTIONS, build, compile_controller, fields
 
@@ -73,7 +74,9 @@ def compile_runtime(imported, output):
                 numbers = [float(part) for part in value.split(',')]
             except ValueError:
                 continue
-            if len(numbers) > 1:
+            if section == 'size' and key.endswith('.sizebox'):
+                constants[section + '.' + key] = numbers[:4]
+            elif len(numbers) > 1:
                 for axis, number in zip(('x', 'y'), numbers):
                     constants[section + '.' + key + '.' + axis] = number
             else:
@@ -154,6 +157,7 @@ def compile_runtime(imported, output):
               'source': {'character': 'SailorMoon', 'scope': 'All source states; non-3DO skills, recovery, KO and helpers',
                          'duplicatePolicy': 'first definition; IKEMEN compiler.go', 'disabledHardware': ['3do']}}
     bundle.update(imported_compatibility(imported))
+    bundle.update(imported_coordinates(imported))
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')
 
