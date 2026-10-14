@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {applyVariableController} from '../Engine/variables.js';
 const local=fs.existsSync('work/Char/Venus/venus-lifecycle-runtime.js');
-const {createLifecycleRuntime}=await import(local?'./venus-lifecycle-runtime.js':'../venus-lifecycle-runtime.js');
+const {createLifecycleRuntime}=await import('../Char/Venus/venus-lifecycle-runtime.js');
 
 const data=JSON.parse(fs.readFileSync(local?'work/Char/Venus/venus_battle200.json':'venus_battle200.json','utf8'));
 assert.equal(data.globalControllers['-2'].length,44);
@@ -11,10 +12,10 @@ assert.equal(data.lifecycleStates['1990'].anim,'(PrevStateNo * 10)');
 const executed=[];
 const fighter={player:1,id:101,state:5900,vars:Array(60).fill(7),fvars:Array(40).fill(9),facing:1,y:0};
 const opponent={player:2,id:102,state:0,moveType:'I',y:-50};
-const runtime=createLifecycleRuntime({data:()=>data,root:()=>fighter,
+const runtime=createLifecycleRuntime({data:()=>data,root:player=>player===1?fighter:opponent,
  eval:(expression,context)=>/^\d+$/.test(String(expression))?Number(expression):context.query(expression),
  trigger:(controller,context)=>(controller.triggerall||[]).every(expression=>context.test(expression))&&Object.values(controller.triggers).some(group=>group.every(expression=>context.test(expression))),
- controller:(controller,entity)=>{executed.push(controller);if(controller.type==='ChangeState')entity.state=Number(controller.params.value)}
+ controller:(controller,entity,context)=>{executed.push(controller);if(!(controller.triggerall||[]).every(expression=>context.test(expression))||!Object.values(controller.triggers).some(group=>group.every(expression=>context.test(expression))))return;if(applyVariableController(controller,entity,Number))return;if(controller.type==='ChangeState')entity.state=Number(controller.params.value)}
 });
 const context={query:name=>runtime.queries(fighter,opponent).query(name),test:expression=>expression==='1'||expression==='RoundsExisted = 0'&&runtime.rounds.existed===0||expression==='RoundNo = 1'&&runtime.rounds.number===1};
 runtime.initialize(fighter,context);

@@ -1,3 +1,4 @@
+import {rootEnemyList} from '../../Engine/enemy-selection.js';
 export function createLifecycleRuntime(api){
  const rounds={state:2,number:1,existed:0,match:1};
  const canonicalTypes={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet'};
@@ -27,20 +28,22 @@ export function createLifecycleRuntime(api){
   }
  }
  function queries(fighter,opponent,helpers=[]){
+  const p2=()=>api.p2?api.p2(fighter):opponent;
+  const enemies=near=>rootEnemyList(fighter,[api.root(1),api.root(2)],{near,distance:api.enemyDistance});
   return {
    query(name){
-    const key=name.toLowerCase().replace(/\s+/g,' ');
+    const key=name.toLowerCase().replace(/\s+/g,' '),selectedP2=['p2movetype','p2dist y'].includes(key)?p2():null;
     const values={roundstate:rounds.state,roundno:rounds.number,roundsexisted:rounds.existed,matchno:rounds.match,
-     numpartner:0,numenemy:1,teammode:'Single',teamside:fighter.player,id:fighter.instanceId??(fighter.kind==='helper'?undefined:fighter.id??fighter.player),
-     facing:fighter.facing,p2movetype:opponent.moveType,'p2dist y':opponent.y-fighter.y};
+     numpartner:0,numenemy:key==='numenemy'?enemies(false).length:0,teammode:'Single',teamside:fighter.teamSide??fighter.player,id:fighter.instanceId??(fighter.kind==='helper'?undefined:fighter.id??fighter.player),
+     facing:fighter.facing,p2movetype:selectedP2?.moveType??NaN,'p2dist y':selectedP2?selectedP2.y-fighter.y:NaN};
     if(!(key in values))throw Error('Unsupported lifecycle query '+name);
     return values[key];
    },
    numHelper:id=>helpers.filter(helper=>helper.kind==='helper'&&helper.player===fighter.player&&!helper.destroyed&&(id===undefined||helper.id===id)).length,
    playerIDExist:id=>[fighter,opponent,...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].some(entity=>(entity.instanceId??(entity.kind==='helper'?undefined:entity.id??entity.player))===id),
-   redirect(name){
+   redirect(name,index=0){
     if(name.toLowerCase()==='partner')return null;
-    if(['enemy','enemynear'].includes(name.toLowerCase()))return opponent;
+    if(['enemy','enemynear'].includes(name.toLowerCase()))return index<0?null:enemies(name.toLowerCase()==='enemynear')[index]??null;
     if(['root','parent'].includes(name.toLowerCase()))return api.root(fighter.player);
     throw Error('Unsupported lifecycle redirect '+name);
    }

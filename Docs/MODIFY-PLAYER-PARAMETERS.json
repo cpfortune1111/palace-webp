@@ -2,8 +2,8 @@
  "reference":"Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
  "scope":"Complete parameter-name inventory for the pinned ModifyPlayer compiler only; not full semantic certification or all-controller inventory",
  "certifiedParameters":0,
- "partial":["redirectid","lifemax","powermax","dizzypointsmax","guardpointsmax","helpervar.id","movehit","moveguarded","movereversed","movecountered","hitpausetime","unhittabletime","attack","defence","pausemovetime","supermovetime"],
- "unimplemented":["teamside","displayname","lifebarname","helpername","alive","ailevel"],
+ "partial":["redirectid","lifemax","powermax","dizzypointsmax","guardpointsmax","helpervar.id","movehit","moveguarded","movereversed","movecountered","hitpausetime","unhittabletime","attack","defence","pausemovetime","supermovetime","ailevel","helpername","displayname","lifebarname","alive","teamside"],
+ "unimplemented":[],
  "tests":["check-modify-player.mjs","check-saturn-priority.cjs"],
- "pending":["All native parameters must be consumed","Cross-version scheduling and ownership","Native single hitpause counter equivalence","State-change-pending and initializer ordering","Round and cached-character persistence","Team PowerShare and team changes"]
+ "pending":["All 22 parameter hooks require complete semantic certification","Cross-version scheduling and ownership","Native single hitpause counter equivalence","State-change-pending and initializer ordering","Round and cached-character persistence","Team PowerShare and team changes"]
 }

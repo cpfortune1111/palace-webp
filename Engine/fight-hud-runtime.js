@@ -29,6 +29,7 @@ export function createFightHud(){
    const ownEmblem=characterEmblems.get((player===1?first:second).character);const emblemData=ownEmblem?.data||emblem;
    if(emblemData)for(const animation of hpEmblemLayers(life,max)){const frame=hpEmblemFrame(emblemData,animation,ticks);if(frame&&!frame.empty)sprite(emblemData,ownEmblem?ownEmblem.images[emblemData.sprites[frame.group+','+frame.item].page]:emblemAtlas,frame,player===1?180:1100,85)}
   }
+  for(const [index,actor] of [first,second].entries())if(actor.lifebarName!==undefined&&actor.lifebarName!==null){context.save();context.font='bold 18px serif';context.fillStyle='#ffffff';context.textAlign=index===0?'left':'right';context.fillText(actor.lifebarName,index===0?240:1040,112);context.restore()}
   sprite(fight,fightAtlas,fight.actions['60'][0],0,0);
   const value=remaining();if(value!==null){const text=String(value).padStart(2,'0');for(let index=0;index<2;index++)sprite(timer,timerAtlas,timer.actions[text[index]][0],index===0?614:642,42)}
   if(value===0&&showTimeOver){context.fillStyle='#ffffff';context.font='bold 30px serif';context.textAlign='center';context.fillText(first.life===second.life?'TIME OVER · DRAW':first.life>second.life?'TIME OVER · P1 WIN':'TIME OVER · P2 WIN',640,180)}

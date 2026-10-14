@@ -1,10 +1,15 @@
+import {controllerStringLiteral} from './controller-string-literal.js';
 export function applyModifyPlayerController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='modifyplayer')return false;
  const params=controller.params||{};
- for(const name of Object.keys(params))if(!['redirectid','unhittabletime','hitpausetime','lifemax','powermax','dizzypointsmax','guardpointsmax','helpervar.id','movehit','moveguarded','movereversed','movecountered','attack','defence','pausemovetime','supermovetime'].includes(name))throw Error('Unsupported ModifyPlayer parameter '+name);
+ for(const name of Object.keys(params))if(!['redirectid','unhittabletime','hitpausetime','lifemax','powermax','dizzypointsmax','guardpointsmax','helpervar.id','movehit','moveguarded','movereversed','movecountered','attack','defence','pausemovetime','supermovetime','ailevel','helpername','displayname','lifebarname','alive','teamside'].includes(name))throw Error('Unsupported ModifyPlayer parameter '+name);
+ const names={};for(const name of ['displayname','lifebarname','helpername'])if(params[name]!==undefined)names[name]=controllerStringLiteral(params[name],name);
  const target=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
  if(!target)return true;
  for(const [name,maximum,current,minimum] of [['lifemax','lifeMax','life',1],['powermax','powerMax','power',0],['dizzypointsmax','dizzyPointsMax','dizzyPoints',0],['guardpointsmax','guardPointsMax','guardPoints',0]])if(params[name]!==undefined){const actor=api.maximumActor(target,name),value=Math.max(minimum,Math.trunc(Number(api.evaluate(params[name])))|0);actor[maximum]=value;actor[current]=Math.max(0,Math.min(actor[current],value))}
+ if(params.teamside!==undefined){const side=Math.trunc(Number(api.evaluate(params.teamside)))|0;if(side>=0&&side<=2)api.setTeamSide(target,side)}
+ for(const name of ['displayname','lifebarname'])if(names[name]!==undefined)api.setName(target,name,names[name]);
+ if(names.helpername!==undefined&&target.kind==='helper')target.name=names.helpername;
  if(params['helpervar.id']!==undefined&&target.kind==='helper')target.id=Math.max(0,Math.trunc(Number(api.evaluate(params['helpervar.id'])))|0);
  for(const [name,type] of [['movehit','hit'],['moveguarded','guarded'],['movereversed','reversed']])if(params[name]!==undefined)api.setMoveContact(target,type,Math.max(0,Math.trunc(Number(api.evaluate(params[name])))|0));
  if(params.movecountered!==undefined)api.setMoveCountered(target,Number(api.evaluate(params.movecountered))!==0);
@@ -12,5 +17,7 @@ export function applyModifyPlayerController(controller,caller,api){
  for(const [name,slot] of [['pausemovetime','normal'],['supermovetime','super']])if(params[name]!==undefined)api.setPauseMoveTime(target,slot,Math.max(0,Math.trunc(Number(api.evaluate(params[name])))|0));
  if(params.unhittabletime!==undefined)api.setUnhittableTime(target,Math.max(0,Math.trunc(Number(api.evaluate(params.unhittabletime)))|0));
  for(const name of ['attack','defence'])if(params[name]!==undefined)api.setBase(target,name,Math.trunc(Number(api.evaluate(params[name])))|0);
+ if(params.alive!==undefined)api.setAlive(target,Number(api.evaluate(params.alive))!==0);
+ if(params.ailevel!==undefined)api.setAILevel(target,Math.fround(Number(api.evaluate(params.ailevel))));
  return true;
 }

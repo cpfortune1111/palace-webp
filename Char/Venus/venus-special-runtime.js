@@ -12,6 +12,7 @@ import {compileHitPriority} from '../../Engine/hit-priority.js?v=02505';
 import {hitPowerParameters} from '../../Engine/hit-power-parameters.js';
 import {hitAttackDepth} from '../../Engine/hit-attack-depth.js';
 import {compileHitChain} from '../../Engine/hit-chain.js';
+import {compileHitAffectTeam} from '../../Engine/hit-team.js';
 import {compileAttackAttribute} from '../../Engine/attack-attribute.js';
 import {hitUnhittableTime} from '../../Engine/hit-unhittable-time.js';
 import {hitPauseParameters} from '../../Engine/hit-pause-parameters.js';
@@ -42,6 +43,7 @@ export function createSpecialRuntime(api){
   const result={...params,...compileHitChain(params,{evaluate:value=>api.eval(value,context),split:api.pair})};
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.pausetime!==undefined||params['guard.pausetime']!==undefined){const pause=hitPauseParameters(params,{evaluate:value=>api.eval(value,context),split:api.pair});result.pausetime=pause.pause.join(',');result['guard.pausetime']=pause.guard.join(',')}
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.unhittabletime!==undefined)result.unhittabletime=hitUnhittableTime(params,{pause:String(result.pausetime??'0,0').split(',').map(Number),reversal:params['reversal.attr']!==undefined&&compileAttackAttribute(params['reversal.attr'])!==0,throwAttribute:params.attr!==undefined&&(compileAttackAttribute(params.attr,{hitdef:true})&9344)!==0,evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
+  if(params.attr!==undefined||params['reversal.attr']!==undefined){compileHitAffectTeam(params.affectteam);const nativeTeam=context?.teamSide??root(player).teamSide??player,side=params.teamside===undefined?nativeTeam:Math.trunc(Number(api.eval(params.teamside,context)))|0;result.hitDefinitionTeamSide=side>=0&&side<=2?side:nativeTeam}
   if(params['attack.depth']!==undefined)result['attack.depth']=hitAttackDepth(params,{evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
   if(params.attr!==undefined){const velocities=hitDefVelocityDefaults(params,{evaluate:value=>api.eval(value,context),split:api.pair});for(const [name,key] of [['ground.velocity','ground'],['air.velocity','air'],['guard.velocity','guard'],['airguard.velocity','airguard'],['down.velocity','down']])result[name]=velocities[key].join(',')}
   if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
@@ -53,7 +55,7 @@ export function createSpecialRuntime(api){
   for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
   for(const key of ['ignorereversaldef','keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
-  if(params['reversal.attr']!==undefined)result.reversalFallData={...reversalFallDefinition(result,{evaluate:value=>api.eval(value,context),resetOptions:api.hitDefinitionResetOptions?.(player)}),unhittabletime:result.unhittabletime};
+  if(params['reversal.attr']!==undefined)result.reversalFallData={...reversalFallDefinition(result,{evaluate:value=>api.eval(value,context),resetOptions:api.hitDefinitionResetOptions?.(player)}),unhittabletime:result.unhittabletime,hitDefinitionTeamSide:result.hitDefinitionTeamSide};
   return result;
  };
  function context(entity,commands=api.commands(entity.player)){

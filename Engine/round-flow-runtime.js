@@ -6,7 +6,7 @@ export function createRoundFlow(api){
  function speed(){const base=config.slowSpeed??.25,fade=config.slowFade??45;return slowRemaining<=0?1:slowRemaining<fade?base+(1-base)*(fade-slowRemaining)/fade:base}
  function begin(next,timer){mode=next;api.setTimer(timer);wins=[0,0];draws=0;matchWinner=0;Object.assign(rounds,{number:1,existed:0,match:1});startRound()}
  function startRound(duration=30){winner=0;reason='';age=0;postRoundAge=0;slowRemaining=0;trainingDown.fill(0);fadeDuration=duration;rounds.state=0;phase='startFade';api.reset();api.initialize();api.message('');api.lock();api.fade(1)}
- function finish(kind){if(phase!=='fight')return;const life=api.life();reason=kind;winner=life[0]===life[1]?0:life[0]>life[1]?1:2;if(winner)wins[winner-1]++;else draws++;api.onFinish?.(winner,kind);if(kind==='ko')triggerKoSlow();rounds.state=3;phase='result';age=0;api.stopCombat();api.message(kind==='ko'?(winner?'K.O.':'Double K.O.'):'Time Over');api.sound(kind==='ko'?(winner?'2,0':'2,1'):'2,2')}
+ function finish(kind){if(phase!=='fight')return;const life=api.life();reason=kind;const alive=kind==='ko'&&api.alive?.();winner=alive?alive[0]===alive[1]?0:alive[0]?1:2:life[0]===life[1]?0:life[0]>life[1]?1:2;if(winner)wins[winner-1]++;else draws++;api.onFinish?.(winner,kind);if(kind==='ko')triggerKoSlow();rounds.state=3;phase='result';age=0;api.stopCombat();api.message(kind==='ko'?(winner?'K.O.':'Double K.O.'):'Time Over');api.sound(kind==='ko'?(winner?'2,0':'2,1'):'2,2')}
  function step(){
   age++;
   if(['result','resultBuffer','pose','betweenFade','endFade','match'].includes(phase))postRoundAge++;
@@ -21,7 +21,7 @@ export function createRoundFlow(api){
   if(phase==='ready'){api.stepPresentation();if(age>=config.startWait&&api.announcerReady()){phase='roundVoiceBuffer';age=0}return}
   if(phase==='roundVoiceBuffer'){api.stepPresentation();if(age>=30){rounds.state=2;phase='fightBuffer';age=0;api.message('FIGHT');api.sound('1,0')}return}
   if(phase==='fightBuffer'){api.stepPresentation();if(age>=config.controlWait&&api.announcerReady()){rounds.state=2;phase=mode==='training'?'training':'fight';age=0;api.fight();api.message('')}return}
-  if(phase==='fight'){const life=api.life();if(life.some(value=>value<=0))finish('ko');else if(api.remaining()===0)finish('time');return}
+  if(phase==='fight'){const life=api.life();if(api.alive?api.alive().some(value=>!value):life.some(value=>value<=0))finish('ko');else if(api.remaining()===0)finish('time');return}
   if(phase==='result'){api.stepResult();if(age>=config.overWait&&api.settled()&&api.announcerReady()){phase='resultBuffer';age=0}return}
   if(phase==='resultBuffer'){api.stepResult();if(age>=45){phase='pose';age=0;rounds.state=4;api.pose(winner,reason)}return}
   if(phase==='pose'){api.stepPresentation();if(age===config.winTime)api.message(winner?'P'+winner+' Wins':'Draw');if(age>=config.overTime&&api.voiceReady()){age=0;if(wins.some(value=>value>=config.matchWins)||draws>config.maxDraws){matchWinner=wins[0]===wins[1]?0:wins[0]>wins[1]?1:2;phase='endFade'}else phase='betweenFade'}}
