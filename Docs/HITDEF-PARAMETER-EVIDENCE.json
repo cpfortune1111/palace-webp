@@ -1,0 +1,15 @@
+{
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "scope": "Incremental parameter evidence, not the complete controller/parameter inventory",
+  "certifiedParameters": 0,
+  "rows": [
+    {"controller":"HitDef","parameter":"id","status":"Partial","runtime":"shared numeric compiler and accepted contact","tests":["check-hit-chain.mjs","check-saturn-priority.cjs"],"pending":["activation persistence and version parity"]},
+    {"controller":"HitDef","parameter":"chainid","status":"Partial","runtime":"shared compiler and root/helper collision preconditions","tests":["check-hit-chain.mjs","check-saturn-priority.cjs"],"pending":["Mugen version differences","native targetedBy cleanup and hitshake phase ordering"]},
+    {"controller":"HitDef","parameter":"nochainid","status":"Partial","runtime":"eight-component compiler and source-aware collision preconditions","tests":["check-hit-chain.mjs","check-hit-targeted-by.mjs","check-saturn-priority.cjs"],"pending":["Mugen chain override differences","full juggle/source inheritance and cleanup"]},
+    {"controller":"HitDef","parameter":"attack.depth","status":"Partial","runtime":"shared float compiler and actual reversal geometry adapter","tests":["check-hit-attack-depth.mjs","check-saturn-priority.cjs"],"pending":["all ordinary HitDef consumers","state-owned coordinate scales and projectile modification parity"]},
+    {"controller":"HitDef","parameter":"ignorereversaldef","status":"Partial","runtime":"boolean compiler and actual reversal geometry filter","tests":["check-hit-power-runtime.mjs","check-saturn-priority.cjs"],"pending":["live reversal dispatch and collision arbitration"]},
+    {"controller":"ReversalDef","parameter":"reversal.attr","status":"Preparatory","runtime":"validated definition, filter and actual collision adapter","tests":["check-reversal-definition.mjs","check-reversal-contact-filter.mjs","check-saturn-priority.cjs"],"pending":["controller dispatch","full attribute eligibility","actual reversal hit ownership, state and pause semantics"]},
+    {"controller":"ReversalDef","parameter":"reversal.guardflag","status":"Preparatory","runtime":"validated guard filter and geometry primitive","tests":["check-reversal-contact-filter.mjs"],"pending":["actual source guard-filter browser fixture","live reversal dispatch"]},
+    {"controller":"ReversalDef","parameter":"reversal.guardflag.not","status":"Preparatory","runtime":"validated negative guard filter and geometry primitive","tests":["check-reversal-contact-filter.mjs"],"pending":["actual source guard-filter browser fixture","live reversal dispatch"]}
+  ]
+}

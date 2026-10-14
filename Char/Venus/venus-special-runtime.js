@@ -1,15 +1,17 @@
-import {movementHitFriction} from '../../Engine/hit-friction.js?v=02502';
-import {stepZPhysics} from '../../Engine/z-physics.js?v=02502';
-import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02502';
-import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02502';
-import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02502';
+import {movementHitFriction} from '../../Engine/hit-friction.js?v=02503';
+import {stepZPhysics} from '../../Engine/z-physics.js?v=02503';
+import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02503';
+import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02503';
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02503';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
 import {helperTypeParameter} from '../../Engine/target-power.js?v=02465';
-import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02502';
-import {compileHitPriority} from '../../Engine/hit-priority.js?v=02502';
+import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02503';
+import {compileHitPriority} from '../../Engine/hit-priority.js?v=02503';
 import {hitPowerParameters} from '../../Engine/hit-power-parameters.js';
+import {hitAttackDepth} from '../../Engine/hit-attack-depth.js';
+import {compileHitChain} from '../../Engine/hit-chain.js';
 import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
@@ -31,7 +33,8 @@ export function createSpecialRuntime(api){
   return !(pauses[slot][player-1]?.movetime>0);
  };
  const numeric=(params,context,player=context?.player??1)=>{
-  const result={...params};
+  const result={...params,...compileHitChain(params,{evaluate:value=>api.eval(value,context),split:api.pair})};
+  if(params['attack.depth']!==undefined)result['attack.depth']=hitAttackDepth(params,{evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
   if(params.attr!==undefined){const velocities=hitDefVelocityDefaults(params,{evaluate:value=>api.eval(value,context),split:api.pair});for(const [name,key] of [['ground.velocity','ground'],['air.velocity','air'],['guard.velocity','guard'],['airguard.velocity','airguard'],['down.velocity','down']])result[name]=velocities[key].join(',')}
   if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
   for(const key of ['damage','sparkxy','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity'])if(params[key]!==undefined&&!(params.attr!==undefined&&['ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity'].includes(key))&&!/^\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*(?:,\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*)*$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
@@ -40,7 +43,7 @@ export function createSpecialRuntime(api){
   if(params.priority!==undefined)result.priority=compileHitPriority(params.priority,{evaluate:value=>api.eval(value,context)});
   for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','p1stateno','p2stateno','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
-  for(const key of ['keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
+  for(const key of ['ignorereversaldef','keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };

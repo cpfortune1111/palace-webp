@@ -14,4 +14,11 @@ const explicit=runtime.numeric({attr:'S, NA',damage:'100,0',getpower:'attack,gua
 assert.equal(explicit.getpower,'11,3');
 assert.equal(explicit.givepower,'9,4');
 assert.deepEqual(reads.filter(value=>['attack','guard','receive'].includes(value)),['attack','guard','receive']);
+reads.length=0;
+const depth=runtime.numeric({attr:'S, NA',damage:'10,0','attack.depth':'attack,guard',ignorereversaldef:'receive'},{player:1});
+assert.equal(depth['attack.depth'],'11,3');
+assert.equal(depth.ignorereversaldef,1);
+assert.equal(reads.filter(value=>value==='attack').length,1);
+assert.equal(reads.filter(value=>value==='guard').length,1);
+assert.equal(reads.filter(value=>value==='receive').length,1);
 console.log('Live shared HitDef numeric compiler uses caller constants, raw compiled damage and evaluates each supplied power expression once');

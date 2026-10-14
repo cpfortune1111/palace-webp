@@ -1,3 +1,7 @@
+## 0.25.03 — Chain eligibility and reversal groundwork (partial)
+
+Shared HitDef ID/chain/nochain compilation and collision preconditions now use source identity, ordered targetedBy and activation-specific target records. Reversal geometry reads actual transformed animation attack boxes, evaluates attack depth and IgnoreReversalDef, and has an actual reciprocal-priority adapter with per-tick flags. Focused and browser regressions cover these components; live ReversalDef controller dispatch and complete counter eligibility are still not enabled. Added an incremental parameter evidence ledger with zero fully certified parameters. Full scheduler/version, juggle inheritance/cleanup and all-controller completion remain Pending. Final release regression passed with terminal exit 0; deployment is verified separately.
+
 ## 0.25.02 — Contact power and explicit score (partial)
 
 Live contact now routes attacker/recipient power to stable root/helper owners with immediate Mugen and tick-delayed Ikemen profiles; real resource-adapter timing and helper-owned projectile tests pass. Explicit score expressions reach shared contact, independent NoScore/player-type gates, query storage and reaction/hitpause/dizzy-aware reset without duplicate native credits or changing custom bonuses. All 89 native GetHitVar names have dispatch hooks, not full semantic certification. Native scheduler/ownership/version parity, full damage calculation and all-controller certification remain Pending. Final release regression passed with terminal exit 0; publishing is verified separately.
