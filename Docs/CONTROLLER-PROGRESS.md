@@ -1,3 +1,7 @@
+## 0.24.91 — Depth / DepthBound execution (partial)
+
+Shared root/helper Depth writes independent player/edge modifiers with native precedence, empty declaration suppression, redirected units and pause resets. Projectile-to-character depth uses those fields. DepthBound gates actual Z edge clamps and stage bounds; movecamera feeds root/helper range tracking, native-style Z offset smoothing and live screen/stage projection. Actual source/contact/bound/reset/camera fixtures and full regressions pass. Complete Z physics/rendering, character HitDef depth, push/overlap consumers, camera zoom coupling and compiler/version fidelity remain unfinished; full certification remains pending.
+
 ## 0.24.90 — Projectile geometry and cancellation (partial)
 
 Projectile collision scale/angle are source-evaluated and independent of sprite scale/root modifiers. Separate Clsn2 SAT trading consumes priority points/hits, applies survivor hitpause, sorts by distance/ID and obeys native mixed team rules. Stage-enabled depth uses attack.depth and world-coordinate conversion; zero-hit projectiles trade without damaging characters. Actual source/geometry/priority/team/depth fixtures and full Saturn regressions pass. Projectile-to-character depth, owner destruction, full Z simulation, paused timing, ModifyProjectile and other native parameters remain incomplete; no full controller certification is asserted.

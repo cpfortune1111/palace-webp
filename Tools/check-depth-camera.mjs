@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {createDepthCameraState,updateDepthCamera} from '../Engine/depth-camera.js';
+const state=createDepthCameraState(),config={zautocenter:1,zboundtop:-100,zboundbot:100};
+assert.equal(updateDepthCamera(state,[{z:40,moveCamera:true},{z:60,moveCamera:true},{z:999,moveCamera:false},{z:Infinity,moveCamera:true}],config,[-100,100],{skipSmoothing:true}),50);
+assert.equal(updateDepthCamera(state,[],config,[-100,100],{skipSmoothing:true}),50);
+assert.equal(updateDepthCamera(state,[],{...config,depthtoscreen:0},[-100,100],{skipSmoothing:true}),0);
+const smoothing=createDepthCameraState();
+assert.ok(Math.abs(updateDepthCamera(smoothing,[{z:100,moveCamera:true}],config,[-100,100])-14.2625)<0.00001);
+assert.equal(updateDepthCamera(createDepthCameraState(),[{z:100,moveCamera:true}],{},[-100,100],{skipSmoothing:true}),0);
+assert.equal(updateDepthCamera(createDepthCameraState(),[{z:50,moveCamera:true}],{...config,zboundbot:20},[-100,100],{skipSmoothing:true}),20);
+console.log('Native Z camera flags/infinity exclusions, previous-range fallback, auto-center, bounds and three smoothing passes passed');

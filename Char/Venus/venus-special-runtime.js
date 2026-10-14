@@ -1,4 +1,6 @@
-import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02490';
+import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02491';
+import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02491';
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02491';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
@@ -139,7 +141,7 @@ export function createSpecialRuntime(api){
     }
     entity.hitPause--;continue;
    }
-   if(entity.kind==='helper'){entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
+   if(entity.kind==='helper'){entity.depthBoundFlags=createDepthBoundFlags(entity.helperType===2);entity.depthModifiers=createDepthModifiers();entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
@@ -155,7 +157,7 @@ export function createSpecialRuntime(api){
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    hit(entity);
-   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);
+   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper')api.depthBound?.(entity);entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);

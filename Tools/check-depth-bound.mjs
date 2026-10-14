@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {createDepthBoundFlags,applyDepthBoundController,boundedDepthPosition} from '../Engine/depth-bound.js';
+const root={flags:createDepthBoundFlags()},helper={flags:createDepthBoundFlags(false)},api={evaluate:Number,findActor:id=>id===2?helper:null,flags:actor=>actor.flags};
+applyDepthBoundController({type:'DepthBound',params:{}},root,api);assert.deepEqual(root.flags,{enabled:false,moveCamera:false});
+applyDepthBoundController({type:'DepthBound',params:{redirectid:2,value:1,movecamera:1}},root,api);assert.deepEqual(helper.flags,{enabled:true,moveCamera:true});
+applyDepthBoundController({type:'DepthBound',params:{redirectid:99,value:'bad'}},root,api);
+assert.equal(boundedDepthPosition(30,[2,3],[0,40],{localScale:2}),17);
+assert.equal(boundedDepthPosition(-10,[2,3],[0,40]),2);
+assert.equal(boundedDepthPosition(50,[2,3],[0,40],{stageBound:false}),50);
+assert.equal(boundedDepthPosition(50,[2,3],[0,40],{depthBound:false}),50);
+assert.equal(boundedDepthPosition(5,[10,10],[0,5]),10);
+console.log('DepthBound defaults/redirected flags, stage/depth gates, edge/local scaling and inverted native Clamp order passed');
