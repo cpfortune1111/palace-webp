@@ -1,3 +1,7 @@
+## 0.25.06 — Contact invulnerability and reversal spark data (partial)
+
+Shared compilation consumes unhittabletime expressions with pinned missing-component, throw-mask and reversal defaults. Independent actor timers gate actual collision preconditions; accepted regular contacts and the staged reversal recipient callback write their respective timers. Runtime tests cover helper/root isolation, expiry, guard/KeepState/type-None exclusions and negative/zero writes. Reversal spark data follows pinned enemy-Y inheritance and selective-reset ordering. Native phase/version timing, same-pass ghvset state-change export, visual reversal dispatch and complete controller/parameter certification remain Pending. Deployment is verified separately.
+
 ## 0.25.05 — Hitpause finalization and MoveHitVar consumers (partial)
 
 Hitpause pairs and canonical reversal fall data now compile from caller expressions; reversal pause adapters use imported version arrays and independent collision-phase flags. MoveHitVar identity/frame, source-only pending power, regular source spark offsets, live root cornerpush and committed-definition target counts have actual browser regressions. Corrected engine-wide power profiles and separate receiver/source commit lanes. All ten native MoveHitVar names have dispatch hooks, not full semantic certification; helper cornerpush, reversal/projectile sparks, full ownership/phase/version behavior and complete ReversalDef dispatch remain Pending. Final release regression passed with terminal exit 0; deployment is verified separately.
