@@ -1,3 +1,8 @@
+## 0.24.92 — Z movement execution (partial)
+
+Position/velocity controllers now consume Z through persistent root/helper bindings and redirected coordinate conversion. Real battle ticks execute Z velocity/friction, PosFreeze and hitpause gates, including the final paused frame and non-fight rounds. Fixed the normal-fight root DepthBound call-site omission. Local-unit Z expression parsing/contexts and helper source/redirection fixtures pass with full regression. Binding old-position semantics, source-state coordinate ownership, full hit Z velocities, depth movement/rendering and complete native compiler/version behavior remain pending; no full controller certification is asserted.
+
+
 ## 0.24.91 — Depth / DepthBound execution (partial)
 
 Shared root/helper Depth writes independent player/edge modifiers with native precedence, empty declaration suppression, redirected units and pause resets. Projectile-to-character depth uses those fields. DepthBound gates actual Z edge clamps and stage bounds; movecamera feeds root/helper range tracking, native-style Z offset smoothing and live screen/stage projection. Actual source/contact/bound/reset/camera fixtures and full regressions pass. Complete Z physics/rendering, character HitDef depth, push/overlap consumers, camera zoom coupling and compiler/version fidelity remain unfinished; full certification remains pending.

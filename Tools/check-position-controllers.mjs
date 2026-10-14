@@ -10,5 +10,7 @@ run('PosSet',{x:'5'});assert.deepEqual([caller.x,caller.y],[130,20]);
 run('PosSet',{redirectid:'99',x:'100'});assert.equal(caller.x,130);
 run('PosAdd',{y:'0.1'});assert.equal(caller.y,Math.fround(20+Math.fround(0.1)));
 assert.equal(run('Null',{}),false);
-assert.throws(()=>run('PosSet',{z:'1'}),/Z physics/);
+run('PosSet',{z:'1'});assert.equal(caller.z,1);
+run('PosSet',{redirectid:7,z:'3'});assert.equal(target.z,6);
+run('PosAdd',{redirectid:7,z:'-2'});assert.equal(target.z,2);
 console.log('Position camera/ground origins, caller evaluation, redirection, facing and local scale passed');
