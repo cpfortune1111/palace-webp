@@ -1,3 +1,7 @@
+## 0.24.88 — Collision overrides and rotated contacts (partial)
+
+OverrideClsn/TransformClsn now execute through shared root/helper dispatch. Ordered overrides delete/replace/append boxes; transforms apply signed cumulative scale and last angle/pivot. Actual attack and target groups use facing-aware rotated SAT contacts, with independent group/index filters. Root/helper reset fixtures verify hitpause clearing and global-pause retention. Focused semantic/geometry tests and complete Saturn regression pass. Native scale/source metadata, proxies, other collision consumers and exhaustive compiler/precision behavior remain pending; no controller is newly certified complete.
+
 ## 0.24.87 — Target collision groups and Height (partial)
 
 Actual contacts now select Clsn1/Clsn2/Size/Dummy/None with presence requirements and group-specific HitBy filters. Size geometry uses native legacy/explicit boxes and signed Width/Height additions; Dummy has no invented base box. Shared root/helper Height dispatch supports caller expressions, recipient redirection and localcoord ratios. Actual fixtures verify expanded Size contacts, ordinary resets and hitpause/global-pause retention; focused tests and full Saturn regression pass. Native collision overrides/proxies, source-localcoord export, exhaustive timing/compiler behavior and ReversalDef integration remain unfinished. All 163 certification rows remain Pending; this release does not claim complete controller coverage.
