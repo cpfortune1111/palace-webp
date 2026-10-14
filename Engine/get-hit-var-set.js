@@ -20,8 +20,9 @@ export function applyGetHitVarSet(controller,caller,api){
   if(type==='f'||type==='scaled')value=Math.fround(value);
   if(type==='scaled')value=Math.fround(value*ratio);
   if(type==='ampl')value=Math.trunc(Math.fround(Math.fround(value)*ratio))|0;
-  hit[destination]=value;
-  if(destination==='hittime'||destination==='hitshaketime')api.setClock?.(recipient,destination,value);
+  const key=name==='hitcount'&&api.parameterProfile?.(caller)==='documented'?'hitcount':destination;
+  hit[key]=value;
+  if(key==='hittime'||key==='hitshaketime')api.setClock?.(recipient,key,value);
  }
  return true;
 }

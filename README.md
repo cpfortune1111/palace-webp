@@ -1,3 +1,7 @@
+## 0.24.98 — Explicit parameter profiles and velocity queries (partial)
+
+Actual contact records all fifteen ground/air/down/guard/airguard velocity-axis queries with facing and recipient/original-expression scaling. Explicit documented metadata profiles forward HitDef fall shake diradd/decay and separate GetHitVarSet hitcount from hittime; default pinned behavior remains unchanged. Actual source/contact/query/XY-step and clock fixtures pass full regression. These specific profiles are not all-version certification; full resets, deferred damage ledgers, ownership, camera projection and remaining controllers/parameters stay Pending.
+
 ## 0.24.97 — Shake presentation and hit identity (partial)
 
 EnvShake/FallEnvShake share real XY presentation with native direction, diradd, decay, cycle multiplier, defaults and last-frame clocks. HitDef fall-shake expression/scaling consumers, guardflag queries and root/helper/projectile source identities have actual source/contact/renderer regressions. Explicit Ikemen compatibility consumes guarded shake reset and logical-width fall-Y defaults without changing the legacy profile. Native HitDef omits diradd/decay copies; those accepted parameters are not falsely counted as fully integrated. Camera projection, full reset/damage ledgers and complete controller/version parity remain Pending.

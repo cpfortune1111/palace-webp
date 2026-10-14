@@ -7,4 +7,6 @@ assert.deepEqual(recipient.hit,{damage:7,xvel:4,'stand.friction':0.25,'fall.envs
 const before=evaluated.length;
 applyGetHitVarSet({type:'GetHitVarSet',params:{redirectid:99,damage:8}},caller,api);
 assert.equal(evaluated.length,before+1);
+recipient.hit={};applyGetHitVarSet({type:'GetHitVarSet',params:{redirectid:2,hitcount:7,hittime:9}},caller,{...api,parameterProfile:()=> 'documented'});
+assert.deepEqual(recipient.hit,{hitcount:7,hittime:9});
 console.log('Pinned GetHitVarSet types, redirection, scaling, attribute mask and hitcount compiler alias passed');
