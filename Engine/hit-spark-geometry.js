@@ -3,3 +3,8 @@ export function hitSparkGeometry(attacker,defender,offset,box,{attackerScale=1,d
  const x=Math.fround(Math.fround(defender.x+Math.fround(edge*defender.facing))-Math.fround(horizontal*attacker.facing)),y=Math.fround(attacker.y+vertical),ratio=Math.fround(defenderScale);
  return {x,y,sparkx:Math.fround(Math.fround((x-defender.x)/ratio)*defender.facing),sparky:Math.fround((y-defender.y)/ratio)};
 }
+
+export function hitSparkSourceOffset(point,attacker,scale=1){
+ const ratio=Math.fround(scale);
+ return {sparkx:Math.fround(Math.fround((point.x-attacker.x)/ratio)*attacker.facing),sparky:Math.fround((point.y-attacker.y)/ratio)};
+}

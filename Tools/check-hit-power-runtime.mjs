@@ -21,4 +21,7 @@ assert.equal(depth.ignorereversaldef,1);
 assert.equal(reads.filter(value=>value==='attack').length,1);
 assert.equal(reads.filter(value=>value==='guard').length,1);
 assert.equal(reads.filter(value=>value==='receive').length,1);
+const reversal=runtime.numeric({'reversal.attr':'SCA,NA',damage:'100,0',getpower:'attack,guard'},{player:1});
+assert.equal(reversal.getpower,'11,3');
+assert.equal(reversal.givepower,'60,30');
 console.log('Live shared HitDef numeric compiler uses caller constants, raw compiled damage and evaluates each supplied power expression once');

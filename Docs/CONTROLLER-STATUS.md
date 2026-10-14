@@ -1,8 +1,8 @@
-# Coverage accounting checkpoint — 0.25.04
+# Coverage accounting checkpoint — 0.25.05
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
 
-Additional GetHitVar query-name audit: 89 native names/aliases, zero absent name dispatches as of this checkpoint. All recognized query rows remain semantically uncertified; this separate query inventory does not alter controller certification counts or prove overall parameter completion.
+Additional GetHitVar query-name audit: 89 native names/aliases, zero absent name dispatches as of this checkpoint. Supplemental MoveHitVar audit: ten native names/aliases, zero absent live name hooks; helper cornerpush and broader consumers remain partial. All recognized query rows remain semantically uncertified; this separate query inventory does not alter controller certification counts or prove overall parameter completion.
 
 | Metric | Count | Meaning |
 | --- | ---: | --- |

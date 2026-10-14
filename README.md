@@ -1,3 +1,7 @@
+## 0.25.05 — Hitpause finalization and MoveHitVar consumers (partial)
+
+Hitpause pairs and canonical reversal fall data now compile from caller expressions; reversal pause adapters use imported version arrays and independent collision-phase flags. MoveHitVar identity/frame, source-only pending power, regular source spark offsets, live root cornerpush and committed-definition target counts have actual browser regressions. Corrected engine-wide power profiles and separate receiver/source commit lanes. All ten native MoveHitVar names have dispatch hooks, not full semantic certification; helper cornerpush, reversal/projectile sparks, full ownership/phase/version behavior and complete ReversalDef dispatch remain Pending. Final release regression passed with terminal exit 0; deployment is verified separately.
+
 ## 0.25.04 — Reversal recipient data and contact clocks (partial)
 
 Root/helper reversal recipient adapters now neutralize the active victim HitDef and write selective source/fall data without ordinary damage/state/velocity changes. Typed MoveReversed contact clocks have actual query/pause/persistence tests and full-driver phase coverage. Corrected independent P2 source hitpause countdown/freeze; isolated a BGPalFX pixel fixture from an unrelated foreground Explod without relaxing assertions. Native complete counter eligibility, canonical ReversalDef finalization/dispatch, MoveHitVar and full scheduler/version parity remain Pending. Final release regression passed with terminal exit 0; no full controller certification is claimed.
