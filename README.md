@@ -1,3 +1,7 @@
+## 0.24.95 — Hit acceleration and friction (partial)
+
+Shared HitDef source compilation and contact now consume XYZ acceleration and standing/crouching friction. Explicit logical game width drives acceleration defaults and root/helper standing cutoffs, independently of video resolution. Root/helper friction, GetHitVar and source velocity consumers have real contact/physics/hitpause fixtures with complete browser regression. Full aspect metadata export/import, GetHitVarSet, selective reset/persistence, ownership/version semantics and complete controller coverage remain Pending; this is not full certification.
+
 ## 0.24.94 — HitDef component defaults (partial)
 
 Shared root/helper/projectile HitDef compilation now finalizes all three velocity axes with per-component guard/airguard/down inheritance and one caller-expression evaluation per supplied component. Pinned Ikemen ground.velocity n grammar and zero initialization are covered by actual compilation/contact fixtures and full regression. Original Mugen n semantics, inherited HitDef persistence, fall defaults and broader native compiler/GetHit ownership remain unfinished; this is not full HitDef/controller certification.
