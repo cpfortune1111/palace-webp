@@ -1,4 +1,4 @@
-const integers=new Set(['air.animtype','ground.animtype','fall.animtype','type','priority','facing','dizzypoints','guardpoints','playerid','projid','redlife','fallcount','down.recovertime','fall.envshake.time','fall.envshake.ampl']);
+const integers=new Set(['hitdamage','guarddamage','hitpower','guardpower','air.animtype','ground.animtype','fall.animtype','type','priority','facing','dizzypoints','guardpoints','playerid','projid','redlife','fallcount','down.recovertime','fall.envshake.time','fall.envshake.ampl']);
 const floats=new Set(['fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay']);
 
 export function getHitScalar(hit,name){

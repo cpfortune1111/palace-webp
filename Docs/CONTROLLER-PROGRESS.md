@@ -1,3 +1,7 @@
+## 0.25.01 — Spark geometry and hit information (partial)
+
+Shared source/contact/render geometry now records recipient-relative spark queries. Fixed arithmetic pair misclassification and repeated facing/state expression reads. HitDef getpower/givepower compile using raw damage, caller constants and component defaults; informational hit/guard damage and power reach real contact, accumulation, keepstate and finish reset. Actual browser fixtures passed complete regression before final release preparation. Query-name audit has 89 names, with power and score still absent. Deferred power, native damage parity, full scheduler/version semantics and all-controller certification remain Pending.
+
 ## 0.25.00 — Hit frames and independent keepstate (partial)
 
 GetHitVar.frame now reaches real contact/finish-phase and pause paths. HitDef.keepstate has independent root/helper state application and prior-data preservation, separate from HitOverride; actual P1/P2 callbacks and Helper collision fixtures pass full regression. Corrected HitOverride native D/F masks and idle P1 fallback ownership. Query-name inventory has 89 native names and eight absent dispatches; all full-controller certifications remain Pending. Full native scheduler, deferred damage/points, throw/override/version semantics and remaining parameters remain unfinished.

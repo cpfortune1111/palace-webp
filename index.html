@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.00 Controller Integration</title>
+<title>Prototype 0.25.01 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,110 +40,112 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.00 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hit-state-02500-20261015-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.01 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD hit-info-02501-20261015-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02500';
-import {applyMapController} from './Engine/map-controllers.js?v=02500';
-import {applyResourceController} from './Engine/resource-controllers.js?v=02500';
-import {guardContactAllowed,guardContactParameters} from './Engine/guard-contact.js?v=02500';
-import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02500';
-import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02500';
-import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02500';
-import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02500';
-import {airTransState,resolveSpriteTrans} from './Engine/air-trans.js?v=02500';
-import {reflectionTransState} from './Engine/reflection-trans.js?v=02500';
-import {renderOpaqueTransQueue,grayscaleTransPixels} from './Engine/trans-compositor.js?v=02500';
-import {createTransDrawQueue} from './Engine/trans-draw-queue.js?v=02500';
-import {createStageBackgroundRegistry} from './Engine/stage-backgrounds.js?v=02500';
+import {createAngleState,resetAngleDraw,applyAngleController,transformAngleDrawing,snapshotAngleState} from './Engine/angle-controllers.js?v=02501';
+import {applyMapController} from './Engine/map-controllers.js?v=02501';
+import {applyResourceController} from './Engine/resource-controllers.js?v=02501';
+import {guardContactAllowed,guardContactParameters} from './Engine/guard-contact.js?v=02501';
+import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02501';
+import {applyPointController,consumeHitPoints} from './Engine/point-controllers.js?v=02501';
+import {applyRedLifeController,hitRedLifeDamage,consumeHitRedLife,synchronizeLifeRedLife} from './Engine/redlife-controllers.js?v=02501';
+import {createAttackState,applyAttackController} from './Engine/attack-controllers.js?v=02501';
+import {airTransState,resolveSpriteTrans} from './Engine/air-trans.js?v=02501';
+import {reflectionTransState} from './Engine/reflection-trans.js?v=02501';
+import {renderOpaqueTransQueue,grayscaleTransPixels} from './Engine/trans-compositor.js?v=02501';
+import {createTransDrawQueue} from './Engine/trans-draw-queue.js?v=02501';
+import {createStageBackgroundRegistry} from './Engine/stage-backgrounds.js?v=02501';
 import {compositeOpaqueTransCanvas} from './Engine/trans-compositor.js';
-import {applyAllPalFxController,applyBgPalFxController} from './Engine/global-palfx-controller.js?v=02500';
-import {stackPalFx} from './Engine/palfx-stack.js?v=02500';
-import {applyClsnTransformController,createClsnTransforms,transformedClsnBoxes} from './Engine/clsn-transform.js?v=02500';
-import {stepZPhysics} from './Engine/z-physics.js?v=02500';
-import {createDepthCameraState,updateDepthCamera} from './Engine/depth-camera.js?v=02500';
-import {applyDepthBoundController,createDepthBoundFlags,boundedDepthPosition} from './Engine/depth-bound.js?v=02500';
-import {applyDepthController,createDepthModifiers} from './Engine/depth-controller.js?v=02500';
-import {depthIntervalsOverlap} from './Engine/depth-overlap.js?v=02500';
-import {projectileCollisionSettings,projectileCollisionBoxes} from './Engine/projectile-collision-geometry.js?v=02500';
-import {characterLocalCoord,collisionWorldRatio,animationCollisionScale,collisionBoxesToWorld,scaledAnimationBoxes} from './Engine/clsn-coordinate-scale.js?v=02500';
-import {worldClsnBox,clsnWorldOverlap,rotatedClsnCorners} from './Engine/clsn-world-geometry.js?v=02500';
-import {applyClsnOverrideController,createClsnOverrides,overriddenClsnBoxes} from './Engine/clsn-override.js?v=02500';
-import {applyHeightController} from './Engine/height-controller.js?v=02500';
-import {sizeCollisionBox} from './Engine/size-collision-box.js?v=02500';
-import {hitDefCollisionBoxes} from './Engine/hitdef-collision-group.js?v=02500';
-import {createHitBySlots,applyHitByController,hitByAllows,tickHitBySlots} from './Engine/hit-by.js?v=02500';
-import {createHitOverrides,applyHitOverrideController,selectHitOverride,tickHitOverrides} from './Engine/hit-override.js?v=02500';
-import {applyPalFxController} from './Engine/palfx-controller.js?v=02500';
-import {palFxPixels} from './Engine/palfx-pixels.js?v=02500';
-import {transBlendPasses} from './Engine/trans-blend.js?v=02500';
-import {createPalFxRuntime,stepPalFx,samplePalFx} from './Engine/palfx-runtime.js?v=02500';
-import {applyTransController,compileTransParameters} from './Engine/trans-controller.js?v=02500';
-import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02500';
-import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02500';
-import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02500';
-import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02500';
-import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02500';
-import {applyFamilyBindController} from './Engine/family-bind.js?v=02500';
-import {applyBindToTargetController} from './Engine/bind-to-target.js?v=02500';
-import {applyTargetBindController,updateTargetBinding,stepTargetBinding,targetBindingMatchesHit} from './Engine/target-bind.js?v=02500';
-import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02500';
-import {applyTargetRedLifeController} from './Engine/target-redlife.js?v=02500';
-import {applyTargetPointController} from './Engine/target-points.js?v=02500';
-import {applyTargetPowerController} from './Engine/target-power.js?v=02500';
-import {applyStatusController} from './Engine/status-controllers.js?v=02500';
-import {applyTargetLifeController,executeTargetLifeAddition,targetLifeMultipliers} from './Engine/target-life.js?v=02500';
-import {applyTargetStateController} from './Engine/target-state.js?v=02500';
-import {applyTargetVelocityController} from './Engine/target-velocity.js?v=02500';
-import {createTargetList,applyTargetDropController,applyTargetFacingController} from './Engine/target-list.js?v=02500';
-import {hitOnceParameter} from './Engine/hit-once.js?v=02500';
-import {hitPositionPlan,consumeHitPositionOffsets,updateSnapBinding,snapBindingNeedsSelfState} from './Engine/hit-position.js?v=02500';
-import {consumeHitOnceContact} from './Engine/hit-once.js?v=02500';
-import {attackerHitFacing,defenderHitFacing,applyDefenderHitFacing} from './Engine/hit-facing.js?v=02500';
-import {fallRecoveryParameters,canRecover,advanceFallRecovery} from './Engine/fall-recovery.js?v=02500';
-import {downHitParameters} from './Engine/down-hit.js?v=02500';
-import {hitStanceParameters,forcedHitStance} from './Engine/hit-stance.js?v=02500';
-import {hitDefCount,getHitContactCounts} from './Engine/hit-count.js?v=02500';
-import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02500';
-import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02500';
-import {applyStatePropertyController} from './Engine/state-properties.js?v=02500';
-import {hitFrictionValue,movementHitFriction} from './Engine/hit-friction.js?v=02500';
-import {applyGetHitVarSet} from './Engine/get-hit-var-set.js?v=02500';
-import {getHitScalar} from './Engine/get-hit-scalar.js?v=02500';
-import {getHitQueryScale} from './Engine/get-hit-query-scale.js?v=02500';
-import {getHitAttributeString,getHitAttributeMatches} from './Engine/get-hit-attribute.js?v=02500';
-import {guardFlagString,guardFlagMatches} from './Engine/get-hit-guard-flag.js?v=02500';
-import {hitSourceIdentity} from './Engine/hit-source-identity.js?v=02500';
-import {applyFallEnvShake} from './Engine/fall-env-shake.js?v=02500';
-import {stepEnvShake} from './Engine/env-shake-step.js?v=02500';
-import {applyEnvShake} from './Engine/env-shake-controller.js?v=02500';
-import {hitFallShakeData} from './Engine/hit-fall-shake-data.js?v=02500';
-import {selectiveGetHitReset} from './Engine/get-hit-selective-reset.js?v=02500';
-import {getHitVelocityVectors} from './Engine/get-hit-velocity-vectors.js?v=02500';
-import {hitContactMetadata} from './Engine/hit-contact-metadata.js?v=02500';
-import {hitReactionMetadata,activeHitReaction} from './Engine/hit-reaction-metadata.js?v=02500';
-import {applyKoHitVelocity} from './Engine/ko-hit-velocity.js?v=02500';
-import {keepStateHitData} from './Engine/keep-state-hit-data.js?v=02500';
-import {hitDefAcceleration} from './Engine/hitdef-acceleration.js?v=02500';
-import {applyHitFallController} from './Engine/hit-fall-controllers.js?v=02500';
-import {applyPositionController} from './Engine/position-controllers.js?v=02500';
-import {applyVelocityController} from './Engine/velocity-controllers.js?v=02500';
-import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02500';
-import {applyVariableController} from './Engine/variables.js?v=02500';
+import {applyAllPalFxController,applyBgPalFxController} from './Engine/global-palfx-controller.js?v=02501';
+import {stackPalFx} from './Engine/palfx-stack.js?v=02501';
+import {applyClsnTransformController,createClsnTransforms,transformedClsnBoxes} from './Engine/clsn-transform.js?v=02501';
+import {stepZPhysics} from './Engine/z-physics.js?v=02501';
+import {createDepthCameraState,updateDepthCamera} from './Engine/depth-camera.js?v=02501';
+import {applyDepthBoundController,createDepthBoundFlags,boundedDepthPosition} from './Engine/depth-bound.js?v=02501';
+import {applyDepthController,createDepthModifiers} from './Engine/depth-controller.js?v=02501';
+import {depthIntervalsOverlap} from './Engine/depth-overlap.js?v=02501';
+import {projectileCollisionSettings,projectileCollisionBoxes} from './Engine/projectile-collision-geometry.js?v=02501';
+import {characterLocalCoord,collisionWorldRatio,animationCollisionScale,collisionBoxesToWorld,scaledAnimationBoxes} from './Engine/clsn-coordinate-scale.js?v=02501';
+import {worldClsnBox,clsnWorldOverlap,rotatedClsnCorners} from './Engine/clsn-world-geometry.js?v=02501';
+import {applyClsnOverrideController,createClsnOverrides,overriddenClsnBoxes} from './Engine/clsn-override.js?v=02501';
+import {applyHeightController} from './Engine/height-controller.js?v=02501';
+import {sizeCollisionBox} from './Engine/size-collision-box.js?v=02501';
+import {hitDefCollisionBoxes} from './Engine/hitdef-collision-group.js?v=02501';
+import {createHitBySlots,applyHitByController,hitByAllows,tickHitBySlots} from './Engine/hit-by.js?v=02501';
+import {createHitOverrides,applyHitOverrideController,selectHitOverride,tickHitOverrides} from './Engine/hit-override.js?v=02501';
+import {applyPalFxController} from './Engine/palfx-controller.js?v=02501';
+import {palFxPixels} from './Engine/palfx-pixels.js?v=02501';
+import {transBlendPasses} from './Engine/trans-blend.js?v=02501';
+import {createPalFxRuntime,stepPalFx,samplePalFx} from './Engine/palfx-runtime.js?v=02501';
+import {applyTransController,compileTransParameters} from './Engine/trans-controller.js?v=02501';
+import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02501';
+import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02501';
+import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02501';
+import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02501';
+import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02501';
+import {applyFamilyBindController} from './Engine/family-bind.js?v=02501';
+import {applyBindToTargetController} from './Engine/bind-to-target.js?v=02501';
+import {applyTargetBindController,updateTargetBinding,stepTargetBinding,targetBindingMatchesHit} from './Engine/target-bind.js?v=02501';
+import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02501';
+import {applyTargetRedLifeController} from './Engine/target-redlife.js?v=02501';
+import {applyTargetPointController} from './Engine/target-points.js?v=02501';
+import {applyTargetPowerController} from './Engine/target-power.js?v=02501';
+import {applyStatusController} from './Engine/status-controllers.js?v=02501';
+import {applyTargetLifeController,executeTargetLifeAddition,targetLifeMultipliers} from './Engine/target-life.js?v=02501';
+import {applyTargetStateController} from './Engine/target-state.js?v=02501';
+import {applyTargetVelocityController} from './Engine/target-velocity.js?v=02501';
+import {createTargetList,applyTargetDropController,applyTargetFacingController} from './Engine/target-list.js?v=02501';
+import {hitOnceParameter} from './Engine/hit-once.js?v=02501';
+import {hitPositionPlan,consumeHitPositionOffsets,updateSnapBinding,snapBindingNeedsSelfState} from './Engine/hit-position.js?v=02501';
+import {consumeHitOnceContact} from './Engine/hit-once.js?v=02501';
+import {attackerHitFacing,defenderHitFacing,applyDefenderHitFacing} from './Engine/hit-facing.js?v=02501';
+import {fallRecoveryParameters,canRecover,advanceFallRecovery} from './Engine/fall-recovery.js?v=02501';
+import {downHitParameters} from './Engine/down-hit.js?v=02501';
+import {hitStanceParameters,forcedHitStance} from './Engine/hit-stance.js?v=02501';
+import {hitDefCount,getHitContactCounts} from './Engine/hit-count.js?v=02501';
+import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02501';
+import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02501';
+import {applyStatePropertyController} from './Engine/state-properties.js?v=02501';
+import {hitFrictionValue,movementHitFriction} from './Engine/hit-friction.js?v=02501';
+import {applyGetHitVarSet} from './Engine/get-hit-var-set.js?v=02501';
+import {getHitScalar} from './Engine/get-hit-scalar.js?v=02501';
+import {getHitQueryScale} from './Engine/get-hit-query-scale.js?v=02501';
+import {getHitAttributeString,getHitAttributeMatches} from './Engine/get-hit-attribute.js?v=02501';
+import {guardFlagString,guardFlagMatches} from './Engine/get-hit-guard-flag.js?v=02501';
+import {hitSourceIdentity} from './Engine/hit-source-identity.js?v=02501';
+import {applyFallEnvShake} from './Engine/fall-env-shake.js?v=02501';
+import {stepEnvShake} from './Engine/env-shake-step.js?v=02501';
+import {applyEnvShake} from './Engine/env-shake-controller.js?v=02501';
+import {hitFallShakeData} from './Engine/hit-fall-shake-data.js?v=02501';
+import {selectiveGetHitReset} from './Engine/get-hit-selective-reset.js?v=02501';
+import {getHitVelocityVectors} from './Engine/get-hit-velocity-vectors.js?v=02501';
+import {hitContactMetadata} from './Engine/hit-contact-metadata.js?v=02501';
+import {hitReactionMetadata,activeHitReaction} from './Engine/hit-reaction-metadata.js?v=02501';
+import {applyKoHitVelocity} from './Engine/ko-hit-velocity.js?v=02501';
+import {keepStateHitData} from './Engine/keep-state-hit-data.js?v=02501';
+import {hitSparkGeometry} from './Engine/hit-spark-geometry.js';
+import {accumulateHitContactLedger,clearHitContactInformation} from './Engine/hit-contact-ledger.js';
+import {hitDefAcceleration} from './Engine/hitdef-acceleration.js?v=02501';
+import {applyHitFallController} from './Engine/hit-fall-controllers.js?v=02501';
+import {applyPositionController} from './Engine/position-controllers.js?v=02501';
+import {applyVelocityController} from './Engine/velocity-controllers.js?v=02501';
+import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02501';
+import {applyVariableController} from './Engine/variables.js?v=02501';
 import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createFightHud} from './Engine/fight-hud-runtime.js?v=02500';
-import {createScoreRuntime} from './Engine/score-runtime.js?v=02500';
+import {createFightHud} from './Engine/fight-hud-runtime.js?v=02501';
+import {createScoreRuntime} from './Engine/score-runtime.js?v=02501';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createResultStateWatchdog} from './Engine/result-state-watchdog.js?v=02365';
 const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02500';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02501';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -202,22 +204,22 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.00 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.01 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
 const specialAtlases=[];
-import {electricHitStates} from './Engine/electric-hit-states.js?v=02500';
-import {resolveHitPriority} from './Engine/hit-priority.js?v=02500';
-import {excludesHit} from './Engine/hit-attribute-mask.js?v=02500';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02500';
-import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02500';
+import {electricHitStates} from './Engine/electric-hit-states.js?v=02501';
+import {resolveHitPriority} from './Engine/hit-priority.js?v=02501';
+import {excludesHit} from './Engine/hit-attribute-mask.js?v=02501';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02501';
+import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02501';
 let lifecycleDat;
 const lifecycleAtlases=[];
 fetch(assetUrl('./venus_lifecycle.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;lifecycleAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));lifecycleDat=data}).catch(showRuntimeError);
 fetch(assetUrl('./venus_special.json?v=02362')).then(response=>response.json()).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const atlas=new Image();atlas.onload=resolve;atlas.onerror=reject;specialAtlases[index]=atlas;atlas.src=assetUrl('./'+file+'?v=02362')})));specialDat=data}).catch(showRuntimeError);
 let reactionDat,reactionAtlases=[];
-const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02500').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
+const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02501').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -614,7 +616,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02500'),fetch(base+prefix+'_full.json?v=02500'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02500')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02501'),fetch(base+prefix+'_full.json?v=02501'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02501')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -634,7 +636,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,character);if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
-  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02500';images[page]=image})));
+  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02501';images[page]=image})));
   fightHud.setCharacterEmblem(character,data,images);
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
@@ -902,7 +904,7 @@ let posZ=0,velZ=0;
 function stepRootZPhysics(player,{paused=false}={}){if(paused||specialRuntime.blocked(player)||player===1&&p1HitPause>0||player===2&&(p2.hitPause>0||p2.hitShake>0||p2.attackPause>0))return;const actor=specialRoot(player),data=collisionActorData(actor),constants=data.constants||data.locomotionConstants||{},result=stepZPhysics(actor.z??0,player===1?velZ:p2.vz??0,{physics:player===1?p1Physics:p2.physics??'N',frozen:isPositionFrozen(actor),standFriction:actorMovementFriction(actor,'S'),crouchFriction:actorMovementFriction(actor,'C'),standThreshold:characterLocalCoord(data)/320*nativeLogicalGameWidth()/320*collisionWorldRatio(data)});if(player===1){posZ=result.position;velZ=result.velocity}else{p2.z=result.position;p2.vz=result.velocity}applyDepthBoundary(specialRoot(player))}
 function fallHitData(actor){if(actor.kind==='helper')return actor.getHit??={};return fighterPlayer(actor)===1?p1Reaction?.getHit||throwHitData[0]||resourceGetHit[0]:p2.getHit||resourceGetHit[1]}
 let rootHitFrameFinishTick=-1;
-function finishActorHitFrame(actor){const hit=fallHitData(actor);hit.frame=false;hit.keepstate=false}
+function finishActorHitFrame(actor){const hit=fallHitData(actor);hit.frame=false;hit.keepstate=false;clearHitContactInformation(hit)}
 function finishRootHitFrames(){if(rootHitFrameFinishTick===combatTraceTick)return;rootHitFrameFinishTick=combatTraceTick;for(const player of [1,2])if(!specialRuntime.blocked(player))finishActorHitFrame(specialRoot(player))}
 function fallTargeted(actor){const id=actor.kind==='helper'?actor.instanceId:fighterPlayer(actor);return [...combatTargets.values()].some(targets=>targets.has(id))}
 function writeFallVelocity(actor,axis,value){if(axis==='z'){zMovementBinding(actor).vz=value;return}const player=fighterPlayer(actor),ratio=collisionWorldRatio(collisionActorData(actor)),world=value*ratio;if(actor.kind==='helper'){actor['v'+axis]=world*(axis==='x'?actor.facing:1)}else if(player===2)p2['v'+axis]=world*(axis==='x'?p2.facing:1);else {if(axis==='x')vx=world;else vy=world;if(p1Reaction)p1Reaction['v'+axis]=world*(axis==='x'?p1Reaction.facing:1)}}
@@ -1086,7 +1088,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
    if(['VarSet','VarAdd'].includes(controller.type)&&params.redirectid===undefined&&(params.target==='var(51)'||Number(params.v)===51))binding.vars[51]=commandModes[player-1]==='auto'?10:0;
    break;
   }
-  case 'HitDef':applyHitDefGuardDistance(params,guardHitDefActor(player,adapter.owner).hitDef.guardDistance,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1});adapter.hitDef(specialRuntime.numeric(params,context));break;
+  case 'HitDef':applyHitDefGuardDistance(params,guardHitDefActor(player,adapter.owner).hitDef.guardDistance,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1});adapter.hitDef(specialRuntime.numeric(params,context,player));break;
   case 'AssertSpecial':if(params.flag==='RoundNotOver'){roundNotOverUntil[player-1]=combatTraceTick+1;break}if(!['NoWalk','NoAutoTurn','NoAirGuard','Intro'].includes(params.flag))throw Error('Unsupported locomotion assertion '+params.flag);break;
   case 'DisplayToClipboard':break;
   case 'NotHitBy':applyNotHitBy(params,adapter.owner||{player},value);break;
@@ -1324,8 +1326,10 @@ function resolveGroundHitM1(attacker,defender,params,guardMode){
   'fall.envshake.time':Number(params['fall.envshake.time']??0),shake:{freq:Number(params['fall.envshake.freq']??60),phase:Number(params['fall.envshake.phase']??(Number(params['fall.envshake.freq']??60)>=90?90:0)),ampl:Number(params['fall.envshake.ampl']??-4),mul:Number(params['fall.envshake.mul']??1)},downRecovery:Number(params['down.recovertime']??constVal('data.liedown.time')),
   slidetime:guarded?guardParams.slidetime:Number(params[prefix+'.slidetime']??0),hittime:guarded?guardParams.hittime:downParams?downParams.hittime:Number(params[prefix+'.hittime']??(aerial?20:0)),
   ctrltime:downParams&&!guarded?downParams.ctrltime:guardParams.ctrltime,crouch:guarded&&!aerial&&defender.type==='C',...getHitContactCounts(defender,guarded),...fallRecoveryParameters(params)};
+ const priorContact=originalDefender.getHit||fallHitData(originalDefender),powerPair=pair(params.givepower??'0,0'),damagePair=pair(params.damage);for(const name of ['hitdamage','guarddamage','hitpower','guardpower'])getHit[name]=priorContact[name]??0;accumulateHitContactLedger(getHit,{hitDamage:damagePair[0]||0,guardDamage:damagePair[1]||0,hitGivePower:powerPair[0]||0,guardGivePower:powerPair[1]||0,playerType:false});
  getHit.snapBinderKey=attacker.binderKey??attacker.key??'root'+attacker.id;
  Object.assign(getHit,hitSourceIdentity(attacker));
+ const sparkPoint=sourceHitSparkGeometry(params,attacker,originalDefender);Object.assign(getHit,{sparkx:sparkPoint.sparkx,sparky:sparkPoint.sparky});
  Object.assign(getHit,hitContactMetadata(params,kill));
  getHit.guardko=Number(guardKO||!!originalDefender.getHit?.guardko);
  Object.assign(getHit,hitReactionMetadata(params,aerial));
@@ -1406,8 +1410,12 @@ function p1ExpressionFighter(){return p1Reaction||{player:1,id:1,getHit:throwHit
 let p1HitCount=0,p1GuardCount=0,entityDefenderPause=false;
 function spawnSourceHitSpark(params,guarded,attacker,defender){
  const source=String(params[guarded?'guard.sparkno':'sparkno']||''),match=source.match(/^S(\d+)$/i);if(!match||!specialDat?.actions?.[match[1]])return;
- const context=fighterExpressionContext(attacker,defender),offset=splitExpressionPairM1(params.sparkxy||'0,0').map(expression=>Number(evalM1(expression,context))),edge=constVal('size.'+(defender.type==='A'?'air':'ground')+'.'+(attacker.facing!==defender.facing?'front':'back'),defender.player)*(attacker.facing!==defender.facing?1:-1);
- sourceExplods.push({id:-1,anim:Number(match[1]),player:attacker.player,ownerKey:attacker.key,x:defender.x+edge*defender.facing-(offset[0]||0)*attacker.facing,y:attacker.y+(offset[1]||0),vx:0,vy:0,facing:attacker.facing,age:0,sprpriority:3,supermovetime:999999999,pausemovetime:999999999});
+ const point=sourceHitSparkGeometry(params,attacker,defender);
+ sourceExplods.push({id:-1,anim:Number(match[1]),player:attacker.player,ownerKey:attacker.key,x:point.x,y:point.y,vx:0,vy:0,facing:attacker.facing,age:0,sprpriority:3,supermovetime:999999999,pausemovetime:999999999});
+}
+function sourceHitSparkGeometry(params,attacker,defender){
+ const data=collisionActorData(defender),constants={...(data.constants||data.sizeConstants||{}),...(defender.kind==='helper'?defender.params:{})},box=sizeCollisionBox(constants,defender.type),targetScale=collisionWorldRatio(data),sourceScale=attacker.kind==='projectile'?attacker.collisionWorldScale??collisionWorldRatio(collisionActorData(attacker)):collisionWorldRatio(collisionActorData(attacker)),offset=String(params.sparkxy??'0,0').split(',').map(Number),boxScale=Math.fround(targetScale*Number(constants['size.xscale']??constants.xscale??1));
+ return hitSparkGeometry(attacker,defender,offset,box,{attackerScale:sourceScale,defenderScale:targetScale,boxScale});
 }
 function specialRoot(player){if(player===2){p2.vars??=Array(60).fill(0);p2.sysvars??=Array(10).fill(0);p2.fvars??=Array(40).fill(0);p2.sysfvars??=Array(5).fill(0);return {...p2,z:p2.z??0,redLife:redLifeValues[1],attackState:attackStates[1],angleState:rootAngleStates[1],maps:rootMaps[1],mapDefaults:rootMapDefaults[1],player:2,key:'root2'}}return {...p1ExpressionFighter(),z:posZ,vz:velZ,prevState,animStartTime:p1AnimStartTime,life:p1Life,lifeMax:p1LifeMax,vars:runtimeVar,sysvars:runtimeSysVar,fvars:runtimeFVar,sysfvars:runtimeSysFVar,hitCount:p1HitCount,guardCount:p1GuardCount,redLife:redLifeValues[0],attackState:attackStates[0],angleState:rootAngleStates[0],maps:rootMaps[0],mapDefaults:rootMapDefaults[0],player:1,key:'root1'}}
 function entitySourceAssertions(entity){if(entity.kind==='helper')return assertionActor(entity.player,entity).assertions;const parent=entity.parentKey?specialRuntime.entities.find(owner=>owner.kind==='helper'&&owner.key===entity.parentKey):null;return assertionActor(entity.player,parent).assertions}
@@ -1964,7 +1972,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.00',build:'hitdef-defaults-02500-20261014-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.01',build:'hit-info-02501-20261015-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1972,7 +1980,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.00-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.01-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
