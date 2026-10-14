@@ -1,3 +1,7 @@
+## 0.24.94 — HitDef component defaults (partial)
+
+Shared root/helper/projectile HitDef compilation now finalizes all three velocity axes with per-component guard/airguard/down inheritance and one caller-expression evaluation per supplied component. Pinned Ikemen ground.velocity n grammar and zero initialization are covered by actual compilation/contact fixtures and full regression. Original Mugen n semantics, inherited HitDef persistence, fall defaults and broader native compiler/GetHit ownership remain unfinished; this is not full HitDef/controller certification.
+
 ## 0.24.93 — HitDef Z and shared fall controllers (partial)
 
 Guard/down vectors accept Z with native fallback factors; shared hit resolution records recipient-local Z/fall-Z velocities. Root/helper HitFallSet/HitFallVel now share target ownership, redirection and velocity dispatch, including actual source fall states. Focused and real contact/source regressions pass. The pinned compiler omits HitFallSet.zvel despite a bytecode enum; unsupported source Z is not falsely certified. Broader XY/source-coordinate conventions, full component defaults/expression handling, KO/depth clocks and native compiler/version behavior remain pending; no full controller certification is asserted.

@@ -1,0 +1,6 @@
+export function hitDefVelocityDefaults(params,{evaluate=Number,split=value=>String(value).split(',')}={}){
+ const compile=(name,initial)=>{const result=initial.slice();if(params[name]===undefined)return result;const expressions=split(params[name]);if(expressions.length>3)throw Error('Too many '+name+' components');for(let index=0;index<expressions.length;index++){const expression=String(expressions[index]).trim();if(!expression)throw Error('Missing '+name+' component');if(name==='ground.velocity'&&expression.toLowerCase()==='n'){if(index===1&&expressions.length>2)throw Error('Invalid ground.velocity value after n');continue}result[index]=Math.fround(Number(evaluate(expression)))}return result};
+ const ground=compile('ground.velocity',[0,0,0]),air=compile('air.velocity',[0,0,0]),guard=compile('guard.velocity',[NaN,0,NaN]),airguard=compile('airguard.velocity',[NaN,NaN,NaN]),down=compile('down.velocity',[NaN,NaN,NaN]);
+ const replace=(values,defaults)=>values.map((value,index)=>Number.isNaN(value)?Math.fround(defaults[index]):value);
+ return {ground,air,guard:replace(guard,[ground[0],0,ground[2]]),airguard:replace(airguard,[Math.fround(air[0]*1.5),Math.fround(air[1]*0.5),Math.fround(air[2]*1.5)]),down:replace(down,air)};
+}
