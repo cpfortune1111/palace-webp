@@ -1,3 +1,7 @@
+## 0.24.96 — GetHitVarSet and query consumers (partial)
+
+Shared GetHitVarSet dispatch now writes native typed/scaled fields; the pinned compiler's 48 parameter names match the dispatcher inventory, which is not semantic certification. Actual root/helper fallback storage, scalar/attr queries, mixed-localcoord redirected write/query roundtrips and source velocity/friction consumers pass complete regression. Preserves pinned hitcount-to-hittime compiler alias, original expression owner through redirection, fall undefined sentinel and native attribute string/mask comparisons. Idle clock ownership, shake presentation, resets/version profiles and full controller parity remain Pending.
+
 ## 0.24.95 — Hit acceleration and friction (partial)
 
 Shared HitDef source compilation and contact now consume XYZ acceleration and standing/crouching friction. Explicit logical game width drives acceleration defaults and root/helper standing cutoffs, independently of video resolution. Root/helper friction, GetHitVar and source velocity consumers have real contact/physics/hitpause fixtures with complete browser regression. Full aspect metadata export/import, GetHitVarSet, selective reset/persistence, ownership/version semantics and complete controller coverage remain Pending; this is not full certification.
