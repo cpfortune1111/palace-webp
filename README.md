@@ -1,3 +1,7 @@
+## 0.24.93 — HitDef Z and shared fall controllers (partial)
+
+Guard/down vectors accept Z with native fallback factors; shared hit resolution records recipient-local Z/fall-Z velocities. Root/helper HitFallSet/HitFallVel now share target ownership, redirection and velocity dispatch, including actual source fall states. Focused and real contact/source regressions pass. The pinned compiler omits HitFallSet.zvel despite a bytecode enum; unsupported source Z is not falsely certified. Broader XY/source-coordinate conventions, full component defaults/expression handling, KO/depth clocks and native compiler/version behavior remain pending; no full controller certification is asserted.
+
 ## 0.24.92 — Z movement execution (partial)
 
 Position/velocity controllers now consume Z through persistent root/helper bindings and redirected coordinate conversion. Real battle ticks execute Z velocity/friction, PosFreeze and hitpause gates, including the final paused frame and non-fight rounds. Fixed the normal-fight root DepthBound call-site omission. Local-unit Z expression parsing/contexts and helper source/redirection fixtures pass with full regression. Binding old-position semantics, source-state coordinate ownership, full hit Z velocities, depth movement/rendering and complete native compiler/version behavior remain pending; no full controller certification is asserted.

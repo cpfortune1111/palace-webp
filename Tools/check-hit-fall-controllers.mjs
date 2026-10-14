@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {applyHitFallController} from '../Engine/hit-fall-controllers.js';
+const caller={moveType:'I',hit:{fall:0,'fall.xvel':null,'fall.yvel':-4,'fall.zvel':3}},target={moveType:'H',targeted:true,hit:{fall:1,'fall.xvel':2,'fall.yvel':-5,'fall.zvel':6}},api={evaluate:Number,findActor:id=>id===2?target:null,getHit:actor=>actor.hit,targeted:actor=>!!actor.targeted,writeVelocity:(actor,axis,value)=>{actor['v'+axis]=value}};
+applyHitFallController({type:'HitFallVel'},caller,api);assert.equal(caller.vz,undefined);
+applyHitFallController({type:'HitFallVel',params:{redirectid:2}},caller,api);assert.deepEqual([target.vx,target.vy,target.vz],[2,-5,6]);
+applyHitFallController({type:'HitFallSet',params:{value:1,xvel:9}},caller,api);assert.equal(caller.hit.fall,1);assert.equal(caller.hit['fall.xvel'],null);
+applyHitFallController({type:'HitFallSet',params:{redirectid:2,xvel:-3,yvel:-8}},caller,api);assert.deepEqual(target.hit,{fall:1,'fall.xvel':-3,'fall.yvel':-8,'fall.zvel':6});
+applyHitFallController({type:'HitFallSet',params:{redirectid:2,value:-1,xvel:NaN}},caller,api);assert.equal(target.hit['fall.xvel'],-3);
+target.hit['fall.xvel']=NaN;target.hit['fall.zvel']=null;applyHitFallController({type:'HitFallVel',params:{redirectid:2}},caller,api);assert.deepEqual([target.vx,target.vy,target.vz],[2,-8,6]);
+applyHitFallController({type:'HitFallSet',params:{redirectid:99,value:'bad'}},caller,api);
+console.log('HitFallSet native targeted gate/default flag and HitFallVel hit-movetype/unspecified-axis/redirection policy passed');
+assert.throws(()=>applyHitFallController({type:'HitFallSet',params:{zvel:1}},caller,api),/not compiled/);
