@@ -27,11 +27,13 @@ import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
- const projectileContacts=new Map();
+ const projectileContacts=new Map(),moveTimes=new Map();
+ const moveTimeKey=actor=>actor.kind==='helper'?actor.key:'root'+(actor.player??actor.id);
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
   const slot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal',active=pauses[slot].filter(pause=>pause?.remaining>0&&pause.created!==api.tick());
   if(!active.length)return false;
+  const modified=moveTimes.get(entity?entity.key:'root'+player)?.[slot];if(modified!==undefined)return modified<=0;
   if(entity){const allowance=Number(entity[slot==='super'?'supermovetime':'pausemovetime']||0),start=Math.max(Math.min(...active.map(pause=>pause.created)),entity.created??-Infinity);return api.tick()-start>allowance}
   if(!pauses[slot][player-1]?.movetime&&api.trigger){const fighter=root(player),data=api.data(player),definition=data.states?.[String(fighter.state)]||data.attackStates?.[String(fighter.state)]||data.locomotionStates?.[String(fighter.state)];if(fighter.time===0){const pending=definition?.controllers.find(controller=>controller.type===(slot==='super'?'SuperPause':'Pause')&&Number(controller.params.movetime)>0&&api.trigger(controller,context(fighter)));if(pending){const remaining=Number(pending.params.time);pauses[slot][player-1]={kind:slot,remaining,movetime:Math.min(remaining,Number(pending.params.movetime)),player,created:api.tick()}}}}
   return !(pauses[slot][player-1]?.movetime>0);
@@ -76,7 +78,7 @@ export function createSpecialRuntime(api){
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
   const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
-   life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
+   life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileId=entity.id}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
   if(kind==='helper'){entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
@@ -86,8 +88,9 @@ export function createSpecialRuntime(api){
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
  }
- function startPause(params,player,kind,sourceContext){
+ function startPause(params,player,kind,sourceContext,owner){
   const remaining=Number(params.time),movetime=Math.max(0,Math.min(remaining,Number(params.movetime||0))),slot=kind==='super'?'super':'normal';
+  const modified=moveTimes.get(moveTimeKey(owner||root(player)));if(modified)delete modified[slot];
   stagePauseFlags[slot]=params.pausebg===undefined||Number(api.eval(params.pausebg,sourceContext))!==0;pauses[slot][player-1]=remaining>0?{kind,remaining,movetime,player,created:api.tick()}:null;
   if(kind==='super'){if(params.sound){if(/^S/i.test(params.sound))api.sound(params.sound,player===1?0:4,player);else {const sound=String(params.sound).split(',').map(Number);api.commonSound(sound[0],sound[1],player===1?0:4)}}if(Number(params.unhittable??1))unhittableUntil[player]=api.tick()+remaining+1}
  }
@@ -96,8 +99,8 @@ export function createSpecialRuntime(api){
   switch(controller.type){
    case 'Projectile':spawn(params,owner,player,'projectile');return true;
    case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
-   case 'Pause':startPause(params,player,'normal',sourceContext||context(owner||root(player)));return true;
-   case 'SuperPause':startPause(params,player,'super',sourceContext||context(owner||root(player)));return true;
+   case 'Pause':startPause(params,player,'normal',sourceContext||context(owner||root(player)),owner);return true;
+   case 'SuperPause':startPause(params,player,'super',sourceContext||context(owner||root(player)),owner);return true;
    case 'RemoveExplod':for(let index=api.effects.length-1;index>=0;index--)if(api.effects[index].ownerKey===(owner.key||'root'+player)&&(params.id===undefined||api.effects[index].id===Number(params.id)))api.effects.splice(index,1);return true;
    case 'StopSnd':api.stopSound(Number(params.channel||0)+(player===2?4:0));return true;
    default:return false;
@@ -211,13 +214,14 @@ export function createSpecialRuntime(api){
  }
  function finishTick(){
   api.finishPaletteEffects?.();
+  const moveSlot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal';if(pauses[moveSlot].some(pause=>pause?.remaining>0&&pause.created!==api.tick()))for(const value of moveTimes.values())if(value[moveSlot]>0)value[moveSlot]--;
   const superActive=pauses.super.some(pause=>pause?.remaining>0);
   for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
  }
- return {entities,pauses,stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
+ return {entities,pauses,moveTimes,setMoveTime:(actor,slot,value)=>{const key=moveTimeKey(actor),times=moveTimes.get(key)||{};times[slot]=value;moveTimes.set(key,times)},stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
-  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
+  reset:()=>{entities.length=0;projectileContacts.clear();moveTimes.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
 }

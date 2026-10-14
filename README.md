@@ -1,3 +1,7 @@
+## 0.25.07 — ModifyPlayer live consumers (partial)
+
+Added explicit partial ModifyPlayer dispatch: redirectid, resource maxima, Helper ID, typed contacts/counter flag, hitpause/invulnerability, attack/defence bases and pause movement allowances now reach live consumers and runtime queries. Actual browser regressions cover helper/root isolation, subsequent PowerSet clamping, NumHelper lookup, contact persistence, damage/point scaling and independent Pause/SuperPause permissions. Complete pinned parameter-name inventory: 22 names, 16 partial hooks, six unsupported, zero certified. Remaining parameter implementations, native phase/version/persistence and full single-counter hitpause behavior remain Pending. Unsupported parameters fail explicitly. Deployment is verified separately.
+
 ## 0.25.06 — Contact invulnerability and reversal spark data (partial)
 
 Shared compilation consumes unhittabletime expressions with pinned missing-component, throw-mask and reversal defaults. Independent actor timers gate actual collision preconditions; accepted regular contacts and the staged reversal recipient callback write their respective timers. Runtime tests cover helper/root isolation, expiry, guard/KeepState/type-None exclusions and negative/zero writes. Reversal spark data follows pinned enemy-Y inheritance and selective-reset ordering. Native phase/version timing, same-pass ghvset state-change export, visual reversal dispatch and complete controller/parameter certification remain Pending. Deployment is verified separately.
