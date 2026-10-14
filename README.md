@@ -1,3 +1,7 @@
+## 0.24.86 — Coverage accounting checkpoint
+
+Documentation/checkpoint release; gameplay implementation is unchanged from 0.24.85. The current inventory lists 163 controllers and 2,158 controller/parameter candidates (597 distinct parameter names). All 163 controller certification rows remain Pending: this does not mean all controllers are unimplemented. No per-parameter completion ledger exists yet, so the exact unfinished parameter count and a defensible overall completion percentage are unknown. Dynamic/delegated extraction remains incomplete. See Docs/CONTROLLER-STATUS.md. Work pauses after this requested additional release is verified.
+
 ## 0.24.85 — HitBy/NotHitBy actual slots and collision (partial)
 
 Shared root/helper dispatch now writes independent native-style slots and consumes stack, player number/instance ID and per-Clsn2 index filters. Mugen actual attacker state, Ikemen HitDef state and projectile exception are covered by actual collision fixtures. NotHitBy uses state/attack OR; HitBy uses AND. Slot redirection, expiry, box selection and full Saturn regression tests pass. HitOverride ForceAir guard ordering, forced-guard kill ownership and helper-local defense were also corrected. Other box groups, mixed syntax/compiler diagnostics, exact timers, full Helper hit bookkeeping and signed type-None/KO semantics remain unfinished; all-controller certification remains pending. User-requested pause follows verified publication once allowance reaches 20% remaining.
