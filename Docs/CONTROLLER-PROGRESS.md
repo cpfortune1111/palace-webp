@@ -1,3 +1,7 @@
+## 0.24.87 — Target collision groups and Height (partial)
+
+Actual contacts now select Clsn1/Clsn2/Size/Dummy/None with presence requirements and group-specific HitBy filters. Size geometry uses native legacy/explicit boxes and signed Width/Height additions; Dummy has no invented base box. Shared root/helper Height dispatch supports caller expressions, recipient redirection and localcoord ratios. Actual fixtures verify expanded Size contacts, ordinary resets and hitpause/global-pause retention; focused tests and full Saturn regression pass. Native collision overrides/proxies, source-localcoord export, exhaustive timing/compiler behavior and ReversalDef integration remain unfinished. All 163 certification rows remain Pending; this release does not claim complete controller coverage.
+
 ## 0.24.86 — Coverage accounting checkpoint
 
 Documentation/checkpoint release; gameplay implementation is unchanged from 0.24.85. The current inventory lists 163 controllers and 2,158 controller/parameter candidates (597 distinct parameter names). All 163 controller certification rows remain Pending: this does not mean all controllers are unimplemented. No per-parameter completion ledger exists yet, so the exact unfinished parameter count and a defensible overall completion percentage are unknown. Dynamic/delegated extraction remains incomplete. See Docs/CONTROLLER-STATUS.md. Work pauses after this requested additional release is verified.
