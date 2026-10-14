@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {projectileCollisionSettings,projectileCollisionBoxes} from '../Engine/projectile-collision-geometry.js';
+const api={evaluate:Number,split:value=>String(value).split(','),defaultScale:[2,0.5]};
+assert.deepEqual(projectileCollisionSettings({projscale:'10,10'},api),{scale:[2,0.5],angle:0});
+const settings=projectileCollisionSettings({projclsnscale:'-3',projclsnangle:45},api);
+assert.deepEqual(settings,{scale:[-3,1],angle:45});
+const sets={c1:[[0,-2,10,4]],c2:[[1,2,3,4]]};
+assert.deepEqual(projectileCollisionBoxes(sets,1,settings,{worldScale:2,zScale:0.5}),[{rect:[-30,-2,-0,4],angle:45,pivot:[0,0]}]);
+assert.deepEqual(projectileCollisionBoxes(sets,2,{scale:[1,1],angle:0}),[{rect:[1,2,3,4],angle:0,pivot:[0,0]}]);
+assert.deepEqual(projectileCollisionBoxes(sets,3,settings),[]);
+assert.deepEqual(projectileCollisionBoxes(sets,4,settings),[]);
+assert.deepEqual(sets,{c1:[[0,-2,10,4]],c2:[[1,2,3,4]]});
+console.log('Projectile own collision scale/angle, missing second scale, sprite-scale independence, world/depth conversion and group limits passed');

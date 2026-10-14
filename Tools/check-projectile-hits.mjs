@@ -16,5 +16,8 @@ for(const guarded of [false,true]){
  tick=3;runtime.step();assert.equal(hits,2);
  tick=4;runtime.step();assert.equal(hits,2);
  tick=5;runtime.step();assert.equal(hits,3);assert.equal(runtime.entities.length,0);
+ runtime.reset();hits=0;
+ runtime.dispatch({type:'Projectile',params:{projid:1151,projanim:9044,projhits:0,attr:'S,SP'}},null,null,null,fighters[1],1);
+ tick=6;runtime.step();assert.equal(hits,0);assert.equal(runtime.entities.length,1);assert.equal(runtime.entities[0].remainingHits,0);
 }
 console.log('Projectile multiple-hit and guard events passed');

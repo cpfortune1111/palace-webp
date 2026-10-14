@@ -1,3 +1,4 @@
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02490';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
@@ -51,13 +52,14 @@ export function createSpecialRuntime(api){
  function spawn(params,owner,player,kind){
   const sourceContext=context({...owner,player,key:owner.key||'root'+player});
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
-  const entity={kind,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
+  const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;
+  if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
   if(kind==='helper'){entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
-  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
+  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
   else enter(entity,Number(params.stateno));
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
@@ -99,6 +101,7 @@ export function createSpecialRuntime(api){
  }
  function hit(entity){
   const defender=root(entity.player===1?2:1);
+  if(entity.kind==='projectile'&&entity.remainingHits<=0)return;
   if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||entity.activeHitDef.hitOnceSpent||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
   if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
   const result=api.hit(entity,defender,entity.activeHitDef.params);
@@ -156,9 +159,14 @@ export function createSpecialRuntime(api){
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
-  for(let first=0;first<projectiles.length;first++)for(let second=first+1;second<projectiles.length;second++){
-   const left=projectiles[first],right=projectiles[second];if(left.player===right.player||!api.collision({...left,hitDef:left.activeHitDef},right).overlap)continue;
-   if(left.priority<=right.priority)removeProjectile(left,'cancel');if(right.priority<=left.priority)removeProjectile(right,'cancel');
+  projectiles.sort((first,second)=>first.player-second.player);
+  for(let index=0;index<projectiles.length;index++){
+   const left=projectiles[index];if(left.removing||left.destroyed||left.remainingHits<0)continue;
+   const candidates=sortedProjectileCandidates(left,projectiles.slice(index+1).filter(right=>projectileTeamCanTrade(left,right)&&!right.removing&&!right.destroyed&&right.remainingHits>=0));
+   for(const right of candidates){
+    if(left.removing||left.destroyed)break;if(right.removing||right.destroyed||!api.projectileOverlap(left,right))continue;
+    const canceled=cancelProjectilePair(left,right);if(canceled[0])removeProjectile(left,'cancel');if(canceled[1])removeProjectile(right,'cancel');
+   }
   }
   const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){

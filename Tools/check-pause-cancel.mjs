@@ -3,7 +3,7 @@ import {createSpecialRuntime} from '../Char/Venus/venus-special-runtime.js';
 
 let tick=0;
 const roots=[null,{player:1,x:0,y:0,facing:1,vars:[]},{player:2,x:0,y:0,facing:-1,vars:[]}];
-const runtime=createSpecialRuntime({root:player=>roots[player],tick:()=>tick,data:()=>({}),commands:()=>[],effects:[],context:()=>({query:()=>0}),pair:value=>String(value).split(','),eval:Number,collision:()=>({contact:false,overlap:true}),advance:()=>{},duration:()=>4,frames:()=>[{time:4}],attack:()=>null,background:()=>{}});
+const runtime=createSpecialRuntime({root:player=>roots[player],tick:()=>tick,data:()=>({}),commands:()=>[],effects:[],context:()=>({query:()=>0}),pair:value=>String(value).split(','),eval:Number,collision:()=>({contact:false,overlap:false}),projectileOverlap:()=>true,advance:()=>{},duration:()=>4,frames:()=>[{time:4}],attack:()=>null,background:()=>{}});
 const pause=(player,time,movetime,kind='Pause')=>runtime.dispatch({type:kind,params:{time,movetime}},null,null,null,roots[player],player);
 pause(1,5,5);tick=1;assert.equal(runtime.blocked(1),false);assert.equal(runtime.blocked(2),true);
 pause(2,7,7);runtime.finishTick();tick=2;

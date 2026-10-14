@@ -1,3 +1,7 @@
+## 0.24.90 — Projectile geometry and cancellation (partial)
+
+Projectile collision scale/angle are source-evaluated and independent of sprite scale/root modifiers. Separate Clsn2 SAT trading consumes priority points/hits, applies survivor hitpause, sorts by distance/ID and obeys native mixed team rules. Stage-enabled depth uses attack.depth and world-coordinate conversion; zero-hit projectiles trade without damaging characters. Actual source/geometry/priority/team/depth fixtures and full Saturn regressions pass. Projectile-to-character depth, owner destruction, full Z simulation, paused timing, ModifyProjectile and other native parameters remain incomplete; no full controller certification is asserted.
+
 ## 0.24.89 — Character collision coordinates (partial)
 
 Five character artifacts now preserve verified source localcoord metadata. Runtime collision geometry bridges character/animation-source units into the 1280-wide WEB world, scales base boxes before absolute overrides, supports helper ownclsnscale, and keeps Size/pivot conversion independent. Actual mixed-coordinate, redirected-unit and debug-canvas fixtures plus complete regressions pass. Exporters retain coordinates and full SizeBox tuples. Helper foreign-animation ownership, noncollision state coordinates, projectile geometry/proxies and exhaustive compiler/precision behavior remain unfinished; all-controller certification remains pending.
