@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import {createContactPowerScheduler} from '../Engine/contact-power-scheduler.js';
+
+const actors=new Map([['root1',{power:0,compatibility:'mugen'}],['root2',{power:0,compatibility:'ikemen'}],['helper1',{power:0,compatibility:'ikemen'}]]);
+const commits=[];
+const scheduler=createContactPowerScheduler({findActor:key=>actors.get(key),compatibility:actor=>actor.compatibility,addPower:(actor,amount)=>{actor.power+=amount;commits.push(amount)}});
+assert.equal(scheduler.credit('root1',10),true);
+assert.equal(actors.get('root1').power,10);
+scheduler.credit('root2',20);scheduler.credit('root2',30);
+assert.equal(actors.get('root2').power,0);
+assert.equal(scheduler.pending('root2'),50);
+scheduler.credit('helper1',7);actors.delete('helper1');
+scheduler.finish();scheduler.finish();
+assert.equal(actors.get('root2').power,50);
+let tick=10;
+const timed=createContactPowerScheduler({findActor:key=>actors.get(key),compatibility:actor=>actor.compatibility,tick:()=>tick,addPower:(actor,amount)=>{actor.power+=amount}});
+timed.credit('root2',9);timed.finish();
+assert.equal(actors.get('root2').power,50);
+tick++;timed.credit('root2',4);timed.finish();
+assert.equal(actors.get('root2').power,59);
+assert.equal(timed.pending('root2'),4);
+tick++;timed.finish();
+assert.equal(actors.get('root2').power,63);
+assert.deepEqual(commits,[10,50]);
+assert.equal(scheduler.credit('missing',9),false);
+scheduler.credit('root2',4);scheduler.clear();scheduler.finish();
+assert.equal(actors.get('root2').power,63);
+console.log('Contact power scheduler distinguishes immediate Mugen and deferred Ikemen, resolves stable actor keys and commits once without reviving deleted helpers');

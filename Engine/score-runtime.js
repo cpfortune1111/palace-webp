@@ -1,4 +1,5 @@
 import {hitDefCount} from './hit-count.js';
+import {applyHitScoreContact} from './hit-score-contact.js';
 export function createScoreRuntime(){
  const totals=[0,0],roundScores=[0,0],icons=[[],[]],combos=[0,0],finishers=[null,null],streaks=[0,0];let first=false,koTime=0;const hits=[0,0];
  const roundHundred=value=>Math.floor(value/100+.5)*100;
@@ -10,7 +11,7 @@ export function createScoreRuntime(){
  function endCombo(player){add(player,comboBonus(combos[player-1]));combos[player-1]=0}
  function hit(player,defender,params,result,{platform='snes',commandMode='auto',ai=false}={}){
   const index=player-1,attr=String(params.attr||'').split(',')[1]?.trim().toUpperCase()||'NA';
-  if(params.score!==undefined){const values=String(params.score).split(',').map(Number);add(player,values[0]||0);add(player===1?2:1,values[1]||0)}
+  if(params.score!==undefined){if(!result.nativeScoreApplied)applyHitScoreContact(params,result.getHit,{guarded:result.guarded,sourceExcluded:!!result.sourceScoreExcluded,targetExcluded:!!result.targetScoreExcluded,playerType:result.targetPlayerType!==false,addSource:value=>addNative(player,value),addTarget:value=>addNative(player===1?2:1,value)})}
   else add(player,roundHundred(result.getHit.damage*({N:8,S:6,H:10}[attr[0]]||0)*({snes:1,'3do':1.1,saturn:1.25}[platform]||1)*(attr[0]==='N'||ai||commandMode==='auto'?1:1.2)));
   if(!result.guarded){hits[index]+=hitDefCount(params);if(!first){add(player,1500);first=true}if(defender.moveType==='A')add(player,100);combos[index]+=hitDefCount(params);}
   finishers[index]={type:result.guarded?'c':attr[1]==='T'?'throw':attr[0]==='H'?'h':attr[0]==='S'?'s':'n'};
@@ -26,4 +27,3 @@ export function createScoreRuntime(){
  function matchWin(winner,{homeTeam=1,opponentAI=false}={}){if(!winner){streaks.fill(0);return}streaks[winner-1]++;streaks[(winner===1?2:1)-1]=0;if(winner!==homeTeam&&opponentAI)add(winner,30000+(streaks[winner-1]-1)*10000)}
  return {add,addNative,hit,step,finish,matchWin,resetRound,resetMatch,comboBonus,snapshot:()=>({totals:[...totals],hits:[...hits],koTime,roundScores:[...roundScores],icons:icons.map(list=>list.map(icon=>({...icon})))})};
 }
-

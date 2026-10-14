@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {applyHitScoreContact,resetIdleHitScore} from '../Engine/hit-score-contact.js';
+
+const source=[],target=[],hit={score:99},api={addSource:value=>source.push(value),addTarget:value=>target.push(value)};
+applyHitScoreContact({score:'12.5,3.25'},hit,api);
+assert.deepEqual([source,target,hit.score],[[12.5],[3.25],12.5]);
+applyHitScoreContact({score:'5,6'},hit,{...api,guarded:true});
+assert.equal(hit.score,12.5);assert.equal(source.length,1);
+applyHitScoreContact({score:'7,8'},hit,{...api,sourceExcluded:true});
+assert.equal(hit.score,12.5);assert.deepEqual(target,[3.25,8]);
+applyHitScoreContact({score:'0,9'},hit,{...api,playerType:false});
+assert.equal(hit.score,0);assert.deepEqual(target,[3.25,8]);
+applyHitScoreContact({score:'NaN,10'},hit,{...api,targetExcluded:true});
+assert.equal(hit.score,0);assert.deepEqual(source,[12.5,0]);
+hit.score=12.5;
+resetIdleHitScore(hit,{moveType:'H'});assert.equal(hit.score,12.5);
+resetIdleHitScore(hit,{moveType:'I',hitPause:true});assert.equal(hit.score,12.5);
+resetIdleHitScore(hit,{moveType:'I',dizzy:true});assert.equal(hit.score,12.5);
+resetIdleHitScore(hit,{moveType:'I'});assert.equal(hit.score,0);
+console.log('Native explicit HitDef score respects guard, independent NoScore flags, player-type target gating and attacker score query identity');

@@ -1,3 +1,7 @@
+## 0.25.02 — Contact power and explicit score (partial)
+
+Live contact now routes attacker/recipient power to stable root/helper owners with immediate Mugen and tick-delayed Ikemen profiles; real resource-adapter timing and helper-owned projectile tests pass. Explicit score expressions reach shared contact, independent NoScore/player-type gates, query storage and reaction/hitpause/dizzy-aware reset without duplicate native credits or changing custom bonuses. All 89 native GetHitVar names have dispatch hooks, not full semantic certification. Native scheduler/ownership/version parity, full damage calculation and all-controller certification remain Pending. Final release regression passed with terminal exit 0; publishing is verified separately.
+
 ## 0.25.01 — Spark geometry and hit information (partial)
 
 Shared source/contact/render geometry now records recipient-relative spark queries. Fixed arithmetic pair misclassification and repeated facing/state expression reads. HitDef getpower/givepower compile using raw damage, caller constants and component defaults; informational hit/guard damage and power reach real contact, accumulation, keepstate and finish reset. Actual browser fixtures passed complete regression before final release preparation. Query-name audit has 89 names, with power and score still absent. Deferred power, native damage parity, full scheduler/version semantics and all-controller certification remain Pending.
