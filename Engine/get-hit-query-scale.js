@@ -5,7 +5,7 @@ export function getHitQueryScale(hit,name,ratio){
  if(!scaled.has(name)&&!vector)return {handled:false};
  const value=hit[name];
  if((name==='fall.xvel'||name==='fall.zvel')&&(value===null||Number.isNaN(value)))return {handled:true,value:-32760};
- if(value===undefined)return vector?{handled:true,value:0}:{handled:false};
+ if(value===undefined)return vector||name==='xveladd'||name==='yveladd'?{handled:true,value:0}:{handled:false};
  const converted=Math.fround(Math.fround(Number(value))*Math.fround(ratio));
  return {handled:true,value:name==='fall.envshake.ampl'?Math.trunc(converted)|0:converted};
 }

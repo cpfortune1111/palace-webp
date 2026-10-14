@@ -7,4 +7,7 @@ assert.equal(getHitScalar({},'playerno').value,0);
 assert.equal(getHitScalar({'down.recover':1},'down.recover').value,1);
 assert.equal(getHitScalar({guardpoints:3.9},'guardpoints').value,3);
 assert.equal(getHitScalar({},'attr').handled,false);
+assert.equal(getHitScalar({playerid:1080},'id').value,1080);
+assert.equal(getHitScalar({hitid:7},'hitid').value,7);
+assert.equal(getHitScalar({'down.recovertime':30},'recovertime').value,30);
 console.log('GetHitVar scalar identity, chain clamp, integer/boolean and unsupported-field boundaries passed');

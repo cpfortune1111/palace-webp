@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {hitReactionMetadata,activeHitReaction} from '../Engine/hit-reaction-metadata.js';
+const defaulted=hitReactionMetadata({animtype:'Hard'});
+assert.equal(defaulted['air.animtype'],2);assert.equal(defaulted['fall.animtype'],3);
+const up=hitReactionMetadata({animtype:'Medium','air.animtype':'Up','ground.type':'None','air.type':'Trip'},true);
+assert.equal(up['fall.animtype'],4);assert.equal(up.type,3);assert.equal(up.groundtype,0);
+assert.equal(activeHitReaction({...up,fall:true}),4);
+assert.equal(activeHitReaction({'ground.animtype':5,yvel:0}),2);
+assert.equal(hitReactionMetadata({animtype:'D'})['ground.animtype'],5);
+console.log('Native CNS reaction enum, air/fall inheritance, hit type and active reaction selection passed');

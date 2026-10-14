@@ -1,3 +1,7 @@
+## 0.24.99 — Hit contact metadata and live adapter (partial)
+
+Priority/KO-permission expressions, reaction/type metadata, deprecated query aliases, KO velocity deltas and NoKO/NoGuardKO now have actual source/contact/query regressions. Fixed the live entity-hit adapter dropping projectile/helper identity and scale; a full callback and real simStep recipient trajectory verifies life/state changes and retained metadata. Executable pinned GetHitVar name audit covers 89 names with 10 missing dispatches; recognized hooks are not semantic certification. Full keepstate, damage ledgers, camera/ownership/version semantics and all-controller completion remain Pending.
+
 ## 0.24.98 — Explicit parameter profiles and velocity queries (partial)
 
 Actual contact records all fifteen ground/air/down/guard/airguard velocity-axis queries with facing and recipient/original-expression scaling. Explicit documented metadata profiles forward HitDef fall shake diradd/decay and separate GetHitVarSet hitcount from hittime; default pinned behavior remains unchanged. Actual source/contact/query/XY-step and clock fixtures pass full regression. These specific profiles are not all-version certification; full resets, deferred damage ledgers, ownership, camera projection and remaining controllers/parameters stay Pending.

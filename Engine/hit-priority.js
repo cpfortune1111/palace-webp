@@ -1,3 +1,10 @@
+export function compileHitPriority(value,{evaluate=Number}={}){
+ const parts=String(value??'4, Hit').split(',').map(part=>part.trim());
+ if(parts.length>2||!parts[0])throw Error('Invalid HitDef priority '+value);
+ const kind=parts[1]??'Hit';if(!['hit','miss','dodge'].includes(kind.toLowerCase()))throw Error('Invalid HitDef priority type '+kind);
+ return (Math.trunc(Number(evaluate(parts[0])))|0)+', '+kind;
+}
+
 export function resolveHitPriority(first,second){
  const parse=value=>{
   const [number,kind='Hit']=String(value??'4, Hit').split(',').map(part=>part.trim());
