@@ -1,14 +1,14 @@
-import {movementHitFriction} from '../../Engine/hit-friction.js?v=02503';
-import {stepZPhysics} from '../../Engine/z-physics.js?v=02503';
-import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02503';
-import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02503';
-import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02503';
+import {movementHitFriction} from '../../Engine/hit-friction.js?v=02504';
+import {stepZPhysics} from '../../Engine/z-physics.js?v=02504';
+import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02504';
+import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02504';
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02504';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
 import {helperTypeParameter} from '../../Engine/target-power.js?v=02465';
-import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02503';
-import {compileHitPriority} from '../../Engine/hit-priority.js?v=02503';
+import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02504';
+import {compileHitPriority} from '../../Engine/hit-priority.js?v=02504';
 import {hitPowerParameters} from '../../Engine/hit-power-parameters.js';
 import {hitAttackDepth} from '../../Engine/hit-attack-depth.js';
 import {compileHitChain} from '../../Engine/hit-chain.js';
@@ -56,6 +56,7 @@ export function createSpecialRuntime(api){
  function helperDefinition(entity,state){const data=api.data(entity.player);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
+  api.transitionMoveContact?.(entity,definition);
   if(!definition.hitdefpersist)entity.guardHitDef=null;
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,guardCount:0,activeHitDef:null});
   entity.controllerSchedule=createControllerSchedule();
@@ -167,6 +168,7 @@ export function createSpecialRuntime(api){
     if(entity.removetime===0)removeProjectile(entity,'expire');
     if(entity.removetime>0)entity.removetime--;
    }
+   if(entity.kind==='helper')api.advanceMoveContact?.(entity);
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    if(entity.kind==='helper')api.finishHitFrame?.(entity);hit(entity);
    if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}entity.time++;api.advance(entity);

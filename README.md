@@ -1,3 +1,7 @@
+## 0.25.04 — Reversal recipient data and contact clocks (partial)
+
+Root/helper reversal recipient adapters now neutralize the active victim HitDef and write selective source/fall data without ordinary damage/state/velocity changes. Typed MoveReversed contact clocks have actual query/pause/persistence tests and full-driver phase coverage. Corrected independent P2 source hitpause countdown/freeze; isolated a BGPalFX pixel fixture from an unrelated foreground Explod without relaxing assertions. Native complete counter eligibility, canonical ReversalDef finalization/dispatch, MoveHitVar and full scheduler/version parity remain Pending. Final release regression passed with terminal exit 0; no full controller certification is claimed.
+
 ## 0.25.03 — Chain eligibility and reversal groundwork (partial)
 
 Shared HitDef ID/chain/nochain compilation and collision preconditions now use source identity, ordered targetedBy and activation-specific target records. Reversal geometry reads actual transformed animation attack boxes, evaluates attack depth and IgnoreReversalDef, and has an actual reciprocal-priority adapter with per-tick flags. Focused and browser regressions cover these components; live ReversalDef controller dispatch and complete counter eligibility are still not enabled. Added an incremental parameter evidence ledger with zero fully certified parameters. Full scheduler/version, juggle inheritance/cleanup and all-controller completion remain Pending. Final release regression passed with terminal exit 0; deployment is verified separately.
