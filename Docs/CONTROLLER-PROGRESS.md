@@ -1,3 +1,7 @@
+## 0.25.00 — Hit frames and independent keepstate (partial)
+
+GetHitVar.frame now reaches real contact/finish-phase and pause paths. HitDef.keepstate has independent root/helper state application and prior-data preservation, separate from HitOverride; actual P1/P2 callbacks and Helper collision fixtures pass full regression. Corrected HitOverride native D/F masks and idle P1 fallback ownership. Query-name inventory has 89 native names and eight absent dispatches; all full-controller certifications remain Pending. Full native scheduler, deferred damage/points, throw/override/version semantics and remaining parameters remain unfinished.
+
 ## 0.24.99 — Hit contact metadata and live adapter (partial)
 
 Priority/KO-permission expressions, reaction/type metadata, deprecated query aliases, KO velocity deltas and NoKO/NoGuardKO now have actual source/contact/query regressions. Fixed the live entity-hit adapter dropping projectile/helper identity and scale; a full callback and real simStep recipient trajectory verifies life/state changes and retained metadata. Executable pinned GetHitVar name audit covers 89 names with 10 missing dispatches; recognized hooks are not semantic certification. Full keepstate, damage ledgers, camera/ownership/version semantics and all-controller completion remain Pending.

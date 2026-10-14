@@ -1,10 +1,10 @@
 import {attackAttributeMatches} from './attack-attribute.js';
+import {guardFlagMask} from './get-hit-guard-flag.js';
 
 export function createHitOverrides(){return Array(8).fill(null)}
 
 export function hitFlagMask(value){
- const flags={H:1,L:2,M:3,A:4,F:8,D:16,P:32,'-':64,'+':128};
- return [...String(value).toUpperCase()].reduce((mask,flag)=>mask|(flags[flag]||0),0);
+ return guardFlagMask(value);
 }
 
 export function applyHitOverrideController(controller,caller,api){

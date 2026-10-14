@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import {createHitOverrides,applyHitOverrideController,selectHitOverride,tickHitOverrides} from '../Engine/hit-override.js';
+import {createHitOverrides,applyHitOverrideController,selectHitOverride,tickHitOverrides,hitFlagMask} from '../Engine/hit-override.js';
 
 const root={slots:createHitOverrides()},other={slots:createHitOverrides()},api={evaluate:Number,findActor:id=>id===2?other:null,slots:actor=>actor.slots};
+assert.equal(hitFlagMask('D'),8);assert.equal(hitFlagMask('F'),16);assert.throws(()=>hitFlagMask('Q'),/Invalid guard flag/);
 applyHitOverrideController({type:'HitOverride',params:{redirectid:2,attr:'SCA,AA',slot:99,time:0,stateno:700,forceair:1,guardflag:'M'}},root,api);
 assert.equal(other.slots[0].time,1);assert.equal(other.slots[0].forceAir,true);assert.equal(root.slots[0],null);
 assert.equal(selectHitOverride(other.slots,{attr:'A,NA',guardflag:'H'},{attackerState:'S'}).index,0);

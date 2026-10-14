@@ -1,5 +1,7 @@
 # GetHitVar query-name dispatch inventory — partial
 
+Latest refreshed name-dispatch audit: 89 native query names/aliases, eight absent populated-data dispatches (guarddamage, guardpower, hitdamage, hitpower, power, score, sparkx, sparky). Frame and independent keepstate now have source/callback/driver/helper collision fixtures; full semantic certification for every recognized name remains false. Historical checkpoints below describe earlier work, not current counts.
+
 Tools/audit-get-hit-query-coverage.mjs reads the supplied pinned compiler.go GetHitVar switch and compares all 89 query names/aliases against the actual index getter and shared scalar/scaling modules. The audit excludes the outer controller switch label, records populated and empty-data dispatch separately, and deliberately reports semanticCertification false for every row. It does not upload the native source reference.
 
 The first audit found 18 missing name dispatches plus two scaling hooks whose empty-data path still throws. Canonical deprecated aliases hitid/chainid, id/playerid and recovertime/down.recovertime have now been joined using the exact pinned compiler aliases. Focused tests pass; actual source setter/query alias fixtures are running. This closes three name-dispatch gaps, not three fully certified parameters.

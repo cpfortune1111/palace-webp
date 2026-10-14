@@ -1,14 +1,14 @@
-import {movementHitFriction} from '../../Engine/hit-friction.js?v=02499';
-import {stepZPhysics} from '../../Engine/z-physics.js?v=02499';
-import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02499';
-import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02499';
-import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02499';
+import {movementHitFriction} from '../../Engine/hit-friction.js?v=02500';
+import {stepZPhysics} from '../../Engine/z-physics.js?v=02500';
+import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02500';
+import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02500';
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02500';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
 import {helperTypeParameter} from '../../Engine/target-power.js?v=02465';
-import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02499';
-import {compileHitPriority} from '../../Engine/hit-priority.js?v=02499';
+import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02500';
+import {compileHitPriority} from '../../Engine/hit-priority.js?v=02500';
 import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
@@ -37,7 +37,7 @@ export function createSpecialRuntime(api){
   if(params.priority!==undefined)result.priority=compileHitPriority(params.priority,{evaluate:value=>api.eval(value,context)});
   for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
-  for(const key of ['kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
+  for(const key of ['keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
@@ -145,7 +145,7 @@ export function createSpecialRuntime(api){
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     }
-    entity.hitPause--;continue;
+    api.finishHitFrame?.(entity);entity.hitPause--;continue;
    }
    if(entity.kind==='helper'){entity.depthBoundFlags=createDepthBoundFlags(entity.helperType===2);entity.depthModifiers=createDepthModifiers();entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
    if(entity.created===api.tick())continue;
@@ -162,7 +162,7 @@ export function createSpecialRuntime(api){
     if(entity.removetime>0)entity.removetime--;
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
-   hit(entity);
+   if(entity.kind==='helper')api.finishHitFrame?.(entity);hit(entity);
    if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
@@ -186,8 +186,8 @@ export function createSpecialRuntime(api){
     if(!selected||selected.miss||!api.collision(attack,helper).contact)continue;
     helper.lastHitOverride=selected;
     const result=api.helperOverrideHit?.(attack,helper);
-    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
-    if(!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
+    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
+    if(!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;
    }
   }
