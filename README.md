@@ -1,3 +1,7 @@
+## 0.24.97 — Shake presentation and hit identity (partial)
+
+EnvShake/FallEnvShake share real XY presentation with native direction, diradd, decay, cycle multiplier, defaults and last-frame clocks. HitDef fall-shake expression/scaling consumers, guardflag queries and root/helper/projectile source identities have actual source/contact/renderer regressions. Explicit Ikemen compatibility consumes guarded shake reset and logical-width fall-Y defaults without changing the legacy profile. Native HitDef omits diradd/decay copies; those accepted parameters are not falsely counted as fully integrated. Camera projection, full reset/damage ledgers and complete controller/version parity remain Pending.
+
 ## 0.24.96 — GetHitVarSet and query consumers (partial)
 
 Shared GetHitVarSet dispatch now writes native typed/scaled fields; the pinned compiler's 48 parameter names match the dispatcher inventory, which is not semantic certification. Actual root/helper fallback storage, scalar/attr queries, mixed-localcoord redirected write/query roundtrips and source velocity/friction consumers pass complete regression. Preserves pinned hitcount-to-hittime compiler alias, original expression owner through redirection, fall undefined sentinel and native attribute string/mask comparisons. Idle clock ownership, shake presentation, resets/version profiles and full controller parity remain Pending.

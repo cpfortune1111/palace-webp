@@ -1,13 +1,13 @@
-import {movementHitFriction} from '../../Engine/hit-friction.js?v=02495';
-import {stepZPhysics} from '../../Engine/z-physics.js?v=02495';
-import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02495';
-import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02495';
-import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02495';
+import {movementHitFriction} from '../../Engine/hit-friction.js?v=02497';
+import {stepZPhysics} from '../../Engine/z-physics.js?v=02497';
+import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02497';
+import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02497';
+import {cancelProjectilePair,sortedProjectileCandidates,projectileTeamCanTrade} from '../../Engine/projectile-cancellation.js?v=02497';
 import {createPlayerPushState} from '../../Engine/player-push.js?v=02475';
 import {createScreenBoundFlags} from '../../Engine/screen-bound.js?v=02474';
 import {createWidthModifiers} from '../../Engine/width-controller.js?v=02473';
 import {helperTypeParameter} from '../../Engine/target-power.js?v=02465';
-import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02495';
+import {hitDefVelocityDefaults} from '../../Engine/hitdef-velocity-defaults.js?v=02497';
 import {prepareHitPosition} from '../../Engine/hit-position.js';
 import {consumeHitOnceContact} from '../../Engine/hit-once.js';
 import {hitDefCount} from '../../Engine/hit-count.js';
@@ -34,8 +34,8 @@ export function createSpecialRuntime(api){
   if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
   for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!(params.attr!==undefined&&['ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity'].includes(key))&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
-  for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
+  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
+  for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
   for(const key of ['hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
@@ -62,7 +62,7 @@ export function createSpecialRuntime(api){
   const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
    life:1000,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
-  entity.instanceId=1000+serial;
+  entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileId=entity.id}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
   if(kind==='helper'){entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);

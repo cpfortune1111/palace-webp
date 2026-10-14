@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {stepEnvShake} from '../Engine/env-shake-step.js';
+const make=params=>({remaining:2,age:0,params:{freq:0,phase:90,ampl:10,mul:1,dir:0,diradd:0,decay:0,...params}});
+const steady=make({});assert.deepEqual(stepEnvShake(steady).offset,[-0,10]);assert.equal(stepEnvShake(steady).offset[1],10);assert.equal(stepEnvShake(steady).finished,true);
+const decay=make({decay:2});stepEnvShake(decay);assert.equal(stepEnvShake(decay).offset[1],2.5);
+const sideways=stepEnvShake(make({dir:90})).offset;assert.equal(sideways[0],-10);assert.ok(Math.abs(sideways[1])<1e-5);
+const rotate=make({diradd:90});stepEnvShake(rotate);assert.equal(stepEnvShake(rotate).offset[0],-10);
+const cycles=make({freq:360,mul:2});stepEnvShake(cycles);assert.equal(stepEnvShake(cycles).offset[1],20);
+const zeroMultiplier=make({freq:360,mul:0});stepEnvShake(zeroMultiplier);assert.equal(stepEnvShake(zeroMultiplier).offset[1],10);
+console.log('Native EnvShake direction, diradd, explicit decay, constant default amplitude and last-frame clock passed');

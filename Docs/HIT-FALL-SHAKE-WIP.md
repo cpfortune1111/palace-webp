@@ -1,0 +1,7 @@
+# HitDef fall shake data — partial integration
+
+Pinned compiler-functions.go compiles all eight fall.envshake fields. Shared HitDef source compilation now evaluates their expressions with native integer time/amplitude and float other fields. Unguarded contact records time/amplitude/frequency/phase/multiplier/direction; amplitude truncates after recipient scaling, frequency clamps nonnegative and phase remains unclamped/NaN until FallEnvShake resolves its default.
+
+Important reference discrepancy: pinned bytecode accepts fall.envshake.diradd/decay, but char.go's HitDef-to-GetHit fall-group copy omits both fields. This pinned profile does not invent a copy absent from the native implementation; focused and actual fixtures expose that omission instead of counting these accepted parameters as fully integrated. GetHitVarSet can write both fields and the shared renderer consumes them. A documented/intended-behavior profile for the omitted HitDef copies remains Pending.
+
+Focused data/default/scaling tests pass. Actual source/contact/FallEnvShake fixture passed complete regression in outputs/controller-hit-fall-shake-contact-actual.log, terminal exit code 0. Still partial: guarded selective preservation, all source-state scaling/ownership, reference-version profiles, complete fall/default/reset behavior and full controller certification remain Pending.
