@@ -1,3 +1,7 @@
+## 0.25.15 — Automatic ReversalDef contact (partial)
+
+Root and idle Helper ReversalDef controllers now dispatch attack-box contacts through attribute/depth/chain filters and reciprocal arbitration, without ordinary damage. Accepted contacts bind state changes, priority, source-only power, selective recipient reset, pauses and P2Facing; per-definition/actor/tick decisions suppress duplicate contact. Pending native resource queues survive selective reset and consume once. Actual root, idle Helper and simultaneous reciprocal fixtures cover these paths. Full native phase/state ordering, HitOverride combinations, foreign Helper tables, combo counting, complete visual/sound dispatch and cross-version fidelity remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.14 — Definition-time state provider snapshot (partial)
 
 HitDef compilation now snapshots the original state-provider table and foreign-state distinction. Root target/source entry uses that snapshot even after the source changes providers; same-character foreign state remains distinct and normal Helpers keep their own provider. Runtime fixtures execute a state absent from the actor's body table on both recipients and sources. Full numeric native statePN identity, projectile global-controller workingState, foreign Helper tables, animation persistence, complete scheduler/version semantics and ReversalDef dispatch remain Pending. No controller is certified complete. Deployment is verified separately.

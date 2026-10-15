@@ -1,6 +1,7 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
+import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
@@ -55,7 +56,7 @@ export function createSpecialRuntime(api){
   if(params.attr!==undefined||params['reversal.attr']!==undefined){const power=hitPowerParameters({...params,damage:result.damage},{constants:api.data(player).constants||{},evaluate:value=>api.eval(value,context),split:api.pair});result.getpower=[power.hitGetPower,power.guardGetPower].join(',');result.givepower=[power.hitGivePower,power.guardGivePower].join(',')}
   if(params.score!==undefined){const components=api.pair(params.score);if(components.length>2)throw Error('Invalid score component count');result.score=components.map(value=>Math.fround(Number(api.eval(value,context)))).join(',')}
   if(params.priority!==undefined)result.priority=compileHitPriority(params.priority,{evaluate:value=>api.eval(value,context)});
-  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
+  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','p1sprpriority','p2sprpriority','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
   for(const key of ['ignorereversaldef','keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
@@ -121,7 +122,8 @@ export function createSpecialRuntime(api){
   entity.once.add(index);const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
-   case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;break;
+   case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;api.activateHitDef?.(entity);break;
+   case 'ReversalDef':{const definition=prepareReversalDefinition(params);entity.activeHitDef={reversal:true,hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,definition,ctx),params:numeric(definition,ctx)};entity.hitSpent=false;api.activateHitDef?.(entity);break;}
    case 'Explod':api.explod(params,entity,entity.player,ctx);break;
    case 'HitOverride':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'HitBy':case 'NotHitBy':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
@@ -187,7 +189,7 @@ export function createSpecialRuntime(api){
    }
    if(entity.kind==='helper')api.advanceMoveContact?.(entity);
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
-   if(entity.kind==='helper')api.finishHitFrame?.(entity);hit(entity);
+   if(entity.kind==='helper')api.finishHitFrame?.(entity);api.reversalContacts?.();hit(entity);
    if(entity.kind==='helper')api.stepCornerPush?.(entity);
    if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
@@ -206,6 +208,7 @@ export function createSpecialRuntime(api){
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
    for(const attack of attacks){
+    if(attack?.hitDef?.params?.['reversal.attr'])continue;
     if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     if(helper.hitBy&&!allowsHit(helper.hitBy,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     const selected=selectHitOverride(helper.hitOverrides||[],attack.hitDef.params,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',unguardable:attack.assertions?.has('unguardable')});

@@ -1,5 +1,7 @@
 # ReversalDef contact filtering — preparatory semantics
 
+Current integration: QUALIFIED-REVERSAL-PIPELINE-WIP.md describes the accepted-contact callback joining state, sprite priority, score/spark metadata, contact bookkeeping, source power, recipient reset and hitpause. Automatic root/Helper controller dispatch is connected, including idle Helper reversals and reciprocal arbitration. Full browser regression passed with terminal exit 0 in outputs/controller-reciprocal-automatic-reversal-browser.log. REVERSAL-RESOURCE-BRIDGE-WIP.md records the verified pending-resource retention fix. These are partial implementation, not complete ReversalDef certification. The chronological notes below describe earlier checkpoints and their limitations at that time.
+
 Pinned Ikemen char.go cb56d73badb322f3725257c2e8cfd157b2c3989d requires both state and attack-class intersections, valid active source HitDef, and no IgnoreReversalDef permission. Positive reversal.guardflag rejects unguardable attacks; negative reversal.guardflag.not suppresses matching guard classes only when the source is guardable.
 
 reversal-contact-filter.js and its executable test cover those filters only. No live ReversalDef controller exists yet in the root/helper dispatchers. Compilation, attack-box collision, reciprocal reversal arbitration, contact hit/power/score/spark ownership, pauses and state transitions all remain Pending. This module does not certify or count ReversalDef as implemented.

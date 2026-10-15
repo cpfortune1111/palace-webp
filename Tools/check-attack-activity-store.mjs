@@ -12,6 +12,8 @@ const reciprocal=reversalPriorityDecision(second,first,{counterContact:true});
 assert.equal(reciprocal.enemyLoses,true);
 second.temporaryActive=reciprocal.enemyTemporaryActive;
 assert.equal(store.actor('root2',10,{moveType:'I',reversal:true}).temporaryActive,-1);
+store.invalidate('root1');assert.equal(store.actor('root1',10,{moveType:'I',reversal:true}).temporaryActive,1);
+assert.equal(store.actor('root2',10,{moveType:'I',reversal:true}).temporaryActive,-1);
 assert.equal(store.actor('root1',11,{moveType:'A'}).temporaryActive,1);
 assert.equal(store.actor('helper1',11,{moveType:'I'}).temporaryActive,0);
 store.clear();assert.equal(store.actor('root1',11,{moveType:'I'}).temporaryActive,0);

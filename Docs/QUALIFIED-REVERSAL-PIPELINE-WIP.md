@@ -1,0 +1,13 @@
+# Qualified reversal contact pipeline — staged, not controller certification
+
+Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`, `src/char.go` hitResultCheck and the successful ReversalDef branch in hitDetection.
+
+`applyQualifiedReversalContactM1` joins existing real actor consumers behind an explicit qualified-contact requirement. It validates compiled reversal data, enters supported own/root target states, applies sprite priorities and explicit native score, computes reversal spark data before selective reset, enters source states, records contact/target metadata, consumes HitOnce, credits source-only power, neutralizes the original recipient definition, resets recipient data and applies version-aware pauses. Captured definition buffers survive immediate WEB state entry clearing the active definition.
+
+The actual registered-Helper fixture changes both states and clears control, sets evaluated priorities 4/3, applies pauses 3/4, exposes source spark offsets 10/50 and neutralizes both spent/original definitions. Damage 999 in the reversal definition is not applied as an ordinary hit: both actors initially remain at 1000 life. Preserved prior damage/points then consume to 980 life and 95/97 points. Source power 5 commits on a later Ikemen tick; recipient power remains 7 despite givepower 60. Unqualified calls fail before effects.
+
+Automatic root and Helper ReversalDef controller/collision dispatch is now connected through the existing attribute, geometry and reciprocal-priority adapters. Registered idle Helper and root fixtures prove accepted reversal contact without ordinary damage, source-only power, victim definition neutralization and duplicate-contact suppression. Reciprocal Helper reversals select one winner. These fixtures passed the full browser regression with terminal exit 0 in outputs/controller-reciprocal-automatic-reversal-browser.log. Subsequent P2Facing integration also passed the complete regression with terminal exit 0 in outputs/controller-reversal-facing-browser.log.
+
+Important limitations: the qualified function explicitly rejects unresolved matching HitOverride execution, projectile contacts and foreign Helper target states. Exact native deferred stateChange ordering, combo counters, facing/sprite defaults, all visual/sound variants, per-player provider identity and complete same-pass scheduling remain Pending. The actual fixture uses disabled visual spark output while verifying spark metadata; it is not visual-dispatch certification. No controller or parameter is newly certified complete.
+
+Full browser completion for this combined fixture is tracked separately from its passing checkpoint.

@@ -9,6 +9,7 @@ export function createAttackActivityStore(){
    if(!actors.has(key))actors.set(key,{temporaryActive:nativeAttackActivity(moveType,reversal),reversal});
    return actors.get(key);
   },
+  invalidate:key=>actors.delete(key),
   clear(){actors.clear();currentTick=null}
  };
 }

@@ -4,4 +4,7 @@ const result=selectiveGetHitReset({xoff:3,damage:7,guardpoints:4,'fall.envshake.
 assert.equal(result.xoff,3);assert.equal(result.damage,7);assert.equal(result.guardpoints,4);assert.equal(result['fall.envshake.time'],0);assert.equal(result.playerno,-2);assert.equal(result['fall.yvel'],-18);
 assert.ok(Number.isNaN(result['stand.friction']));assert.equal(selectiveGetHitReset({}, {localCoord:1280,gameWidth:640})['fall.yvel'],-36);
 assert.equal(selectiveGetHitReset({}, {legacyFall:true})['fall.yvel'],-4.5);
+const queued=selectiveGetHitReset({damage:20,dizzypoints:5,guardpoints:3,redlife:9,nativeResourceQueue:true,nativeOverrideIndex:2});
+assert.deepEqual([queued.damage,queued.dizzypoints,queued.guardpoints,queued.redlife,queued.nativeResourceQueue,queued.nativeOverrideIndex],[20,5,3,undefined,true,2]);
+assert.equal(selectiveGetHitReset({nativeResourceQueue:false}).nativeResourceQueue,false);
 console.log('Pinned selective GetHit reset preserves stacked fields/offsets, clears fall shake and restores native local defaults');

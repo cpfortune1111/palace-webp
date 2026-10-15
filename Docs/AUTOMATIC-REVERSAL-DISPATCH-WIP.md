@@ -1,0 +1,13 @@
+# Automatic ReversalDef dispatch — partial implementation
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, char.go attrCheck, hittableByChar and hitDetection. This checkpoint does not certify complete MUGEN/Ikemen compatibility.
+
+Root and Helper controller execution now prepares and compiles ReversalDef separately from ordinary HitDef. The collision pass uses actual animation attack boxes, transformed world positions, attack depth, reversal attribute/guard filters, IgnoreReversalDef, invulnerability, chain predicates, temporary attack activity and existing target/contact registries. Idle Helpers can reverse without entering the ordinary attack-only damage path.
+
+Contact decisions are cached per collision tick, definition pair and actor pair, including false reciprocal decisions. Geometry misses are not cached because later interleaved actor movement may establish overlap. Activating a new definition invalidates that actor's temporary activity. Captured definitions remain available when immediate WEB state entry clears the active definition.
+
+Executable actual-browser fixtures cover root dispatch, idle Helper dispatch and reciprocal Helper reversals. The reciprocal case produces one winner, one MoveReversed recipient, no ordinary damage and one source-only power credit; another collision pass cannot duplicate the event. The complete regression passed with terminal exit 0 in outputs/controller-reciprocal-automatic-reversal-browser.log. Subsequent P2Facing integration passed its own complete regression with terminal exit 0 in outputs/controller-reversal-facing-browser.log, including live Helper facing opposite to the reversal source.
+
+Pending: exact native global collision/action phase scheduling and deferred state changes, all HitOverride combinations, foreign Helper state tables, combo counting, complete visual/sound dispatch, per-player state-provider identity, MUGEN differences and exhaustive parameter combinations. Unsupported qualified projectile contacts and unresolved matching HitOverride/foreign Helper state paths fail explicitly rather than masquerading as implemented behavior. Projectiles are not character reversal recipients.
+
+No controller row is newly certified complete by these focused fixtures.

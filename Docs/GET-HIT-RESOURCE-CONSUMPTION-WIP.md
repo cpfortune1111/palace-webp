@@ -18,6 +18,8 @@ Required next work:
 
 All related certification remains Pending. No new controller is counted complete.
 
+The selective reset bridge also retains WEB queue/override metadata while applying the exact native preserved-field list. In particular, queued damage/dizzy/guard points survive a reversal recipient reset, but queued red-life does not. See REVERSAL-RESOURCE-BRIDGE-WIP.md for the actual one-debit versus legacy-no-redebit fixture and remaining scheduler/override limitations.
+
 Additional focused boundary evidence: each of the four queue fields wraps signed 32-bit accumulation at both integer limits, but converts to a floating-point value before negation during consumption, matching the pinned `-float64(c.ghv.field)` calls. Callback assertions verify that the field remains visible until its resource operation returns and is then cleared. Profile-transition tests discard legacy already-consumed values, preserve unrelated identity fields, and retain pending values on repeated queue preparation. These checks pass in `check-get-hit-resource-consumer.mjs`; they do not establish complete damage arithmetic or scheduler parity.
 ## Current evidence
 
