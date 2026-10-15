@@ -1,5 +1,6 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
+import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
@@ -42,7 +43,7 @@ export function createSpecialRuntime(api){
   return !(pauses[slot][player-1]?.movetime>0);
  };
  const numeric=(params,context,player=context?.player??1)=>{
-  const result={...params,...compileHitChain(params,{evaluate:value=>api.eval(value,context),split:api.pair})};
+  const result={...params,...compileHitChain(params,{evaluate:value=>api.eval(value,context),split:api.pair}),...compileHitStateParameters(params,{evaluate:value=>api.eval(value,context)})};
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.pausetime!==undefined||params['guard.pausetime']!==undefined){const pause=hitPauseParameters(params,{evaluate:value=>api.eval(value,context),split:api.pair});result.pausetime=pause.pause.join(',');result['guard.pausetime']=pause.guard.join(',')}
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.unhittabletime!==undefined)result.unhittabletime=hitUnhittableTime(params,{pause:String(result.pausetime??'0,0').split(',').map(Number),reversal:params['reversal.attr']!==undefined&&compileAttackAttribute(params['reversal.attr'])!==0,throwAttribute:params.attr!==undefined&&(compileAttackAttribute(params.attr,{hitdef:true})&9344)!==0,evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
   if(params.attr!==undefined||params['reversal.attr']!==undefined){compileHitAffectTeam(params.affectteam);const nativeTeam=context?.teamSide??root(player).teamSide??player,side=params.teamside===undefined?nativeTeam:Math.trunc(Number(api.eval(params.teamside,context)))|0;result.hitDefinitionTeamSide=side>=0&&side<=2?side:nativeTeam}
@@ -53,7 +54,7 @@ export function createSpecialRuntime(api){
   if(params.attr!==undefined||params['reversal.attr']!==undefined){const power=hitPowerParameters({...params,damage:result.damage},{constants:api.data(player).constants||{},evaluate:value=>api.eval(value,context),split:api.pair});result.getpower=[power.hitGetPower,power.guardGetPower].join(',');result.givepower=[power.hitGivePower,power.guardGivePower].join(',')}
   if(params.score!==undefined){const components=api.pair(params.score);if(components.length>2)throw Error('Invalid score component count');result.score=components.map(value=>Math.fround(Number(api.eval(value,context)))).join(',')}
   if(params.priority!==undefined)result.priority=compileHitPriority(params.priority,{evaluate:value=>api.eval(value,context)});
-  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','p1stateno','p2stateno','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
+  for(const key of ['hitredlife','guardredlife','dizzypoints','guardpoints','airguard.ctrltime','numhits','fall.envshake.time','fall.envshake.ampl','down.hittime','fall.recovertime','p1facing','p1getp2facing','p2facing','missonoverride'])if(params[key]!==undefined)result[key]=Math.trunc(Number(api.eval(params[key],context)))|0;
   for(const key of ['xaccel','yaccel','zaccel','stand.friction','crouch.friction','fall.envshake.freq','fall.envshake.phase','fall.envshake.mul','fall.envshake.dir','fall.envshake.diradd','fall.envshake.decay'])if(params[key]!==undefined)result[key]=Math.fround(Number(api.eval(params[key],context)));
   for(const key of ['ignorereversaldef','keepstate','kill','guard.kill','fall.kill','hitonce','forcestand','forcecrouch','down.bounce','fall.recover'])if(params[key]!==undefined)result[key]=Number(api.eval(params[key],context))!==0?1:0;
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
@@ -133,12 +134,13 @@ export function createSpecialRuntime(api){
   if(entity.kind==='projectile'&&entity.remainingHits<=0)return;
   if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||entity.activeHitDef.hitOnceSpent||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
   if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
-  const result=api.hit(entity,defender,entity.activeHitDef.params);
+  const contactParams=entity.activeHitDef.params,result=api.hit(entity,defender,contactParams);
   if(!result)return;
   consumeHitOnceContact(entity.activeHitDef,{accepted:true,isProjectile:entity.kind==='projectile'});
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
   entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});entity.guardCount=(entity.guardCount||0)+(result.guarded?hitDefCount(entity.activeHitDef?.params||entity.params||{}):0);
   entity.hitPause=result.attackerPause;
+  api.sourceHitState?.(entity,contactParams,result);
   if(entity.kind==='projectile'){
    projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
    entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;

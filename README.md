@@ -1,3 +1,7 @@
+## 0.25.13 — Hit state ownership and source transitions (partial)
+
+Shared HitDef compilation now evaluates P1StateNo/P2StateNo/P2GetP1State with native implicit source-owner defaults. Root contacts respect explicit own/source tables, nonnegative target states and KeepState; explicit target state entry forces H/control false. Standalone source state changes run after root/Helper contacts and select projectile owners. Actual fixtures cover both root callbacks, spawned Helper hits, ownership and control. Legacy paired-throw damage/effects, native statePN snapshots, foreign Helper tables, complete phase/version semantics and ReversalDef dispatch remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.12 — Hitflag and independent hit status (partial)
 
 Ordinary collision now consumes S/C/A/L, F and plus/minus hitflag rules, exact native guard-state ranges and source NoFallHitFlag. Explicit D can reach lying-target geometry. Independent root/Helper hit-status storage preserves same-pass snapshots, hitpause-held recovery and selective reversal -1; round reset and DestroySelf clean up entries. Focused and actual imported-animation/runtime fixtures cover these paths. Complete native phase placement, general Helper collision routing and all-controller/version certification remain Pending. Deployment is verified separately.
