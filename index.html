@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.15 Controller Integration</title>
+<title>Prototype 0.25.16 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.15 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD automatic-reversal-02515-20261016-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.16 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD reversal-order-02516-20261016-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -120,7 +120,7 @@ import {applyFallEnvShake} from './Engine/fall-env-shake.js?v=02514';
 import {stepEnvShake} from './Engine/env-shake-step.js?v=02514';
 import {applyEnvShake} from './Engine/env-shake-controller.js?v=02514';
 import {hitFallShakeData} from './Engine/hit-fall-shake-data.js?v=02514';
-import {selectiveGetHitReset} from './Engine/get-hit-selective-reset.js?v=02514';
+import {selectiveGetHitReset} from './Engine/get-hit-selective-reset.js?v=02515';
 import {getHitVelocityVectors} from './Engine/get-hit-velocity-vectors.js?v=02514';
 import {hitContactMetadata} from './Engine/hit-contact-metadata.js?v=02514';
 import {hitReactionMetadata,activeHitReaction} from './Engine/hit-reaction-metadata.js?v=02514';
@@ -141,7 +141,7 @@ import {applyHitScoreContact,resetIdleHitScore} from './Engine/hit-score-contact
 import {reversalAttackBoxContact} from './Engine/reversal-contact-geometry.js';
 import {hitAttackDepth} from './Engine/hit-attack-depth.js';
 import {createHitDefinitionTargets} from './Engine/hit-definition-targets.js';
-import {createAttackActivityStore} from './Engine/attack-activity-store.js';
+import {createAttackActivityStore} from './Engine/attack-activity-store.js?v=02515';
 import {reversalPriorityDecision} from './Engine/reversal-priority.js';
 import {compileAttackAttribute} from './Engine/attack-attribute.js';
 import {recordTargetedBy} from './Engine/hit-targeted-by.js';
@@ -150,6 +150,7 @@ import {neutralizeReversedHitDefinition} from './Engine/reversal-neutralization.
 import {reversalHitData} from './Engine/reversal-hit-data.js';
 import {prepareReversalDefinition} from './Engine/reversal-definition.js';
 import {createReversalContactCache} from './Engine/reversal-contact-cache.js';
+import {orderedHitContactCandidates} from './Engine/hit-contact-order.js';
 import {reversalHitPause} from './Engine/reversal-hit-pause.js';
 import {hitPauseVersionProfile} from './Engine/hit-pause-version.js';
 import {createHitPhaseStatus} from './Engine/hit-phase-status.js';
@@ -236,7 +237,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.15 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.16 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -244,7 +245,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02514';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02515';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02514';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -1548,6 +1549,9 @@ function applyReversalRecipientDataM1(source,target,definition){
  if(target.kind==='helper')target.getHit=hit;else if(player===2)p2.getHit=hit;else {resourceGetHit[0]=hit;if(p1Reaction)p1Reaction.getHit=hit;if(throwHitData[0])throwHitData[0]=hit}
  markMoveHitData(moveHitDataFor(target),hitSourceIdentity(source),{overridden:moveHitDataFor(target).overridden});markReversedMove(target);return hit;
 }
+function reversalContactCandidatesM1(source,actors){
+ return orderedHitContactCandidates(actors.filter(target=>target.key!==source.key&&target.hitDef?.params&&!target.hitDef.hitOnceSpent&&!target.disabled&&!target.standby),{distance:target=>combatDepthEnabled()?Math.hypot(target.x-source.x,(target.z??0)-(source.z??0)):target.x-source.x,id:target=>target.instanceId??fighterPlayer(target),reversal:target=>target.hitDef.params['reversal.attr']});
+}
 function processReversalContactsM1(){
  if(reversalPassRunning||roundFlow.enabled()&&!roundFlow.canFight())return 0;
  if(!activeHitDef?.reversal&&!p2.activeHitDef?.reversal&&!specialRuntime.entities.some(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.activeHitDef?.reversal))return 0;
@@ -1556,7 +1560,7 @@ function processReversalContactsM1(){
   const actors=[{...specialRoot(1),hitDef:activeHitDef},{...specialRoot(2),hitDef:p2.activeHitDef},...specialRuntime.entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
   for(const source of actors){
    if(!source.hitDef?.reversal||source.hitDef.hitOnceSpent||source.disabled||source.standby||specialRuntime.blocked(fighterPlayer(source),source.kind==='helper'?source:null))continue;
-   const targets=actors.filter(target=>target.key!==source.key&&target.hitDef?.params&&!target.hitDef.hitOnceSpent&&!target.disabled&&!target.standby).sort((first,second)=>Math.abs(first.x-source.x)-Math.abs(second.x-source.x)||(first.instanceId??fighterPlayer(first))-(second.instanceId??fighterPlayer(second)));
+   const targets=reversalContactCandidatesM1(source,actors);
    for(const target of targets){
     if(source.hitDef.hitOnceSpent)break;
     const params=source.hitDef.params,other=target.hitDef.params,sourceKey=hitDefinitionOwnerKey(source),targetKey=hitDefinitionOwnerKey(target);
@@ -1566,7 +1570,7 @@ function processReversalContactsM1(){
     if(!decision.handled||!decision.enemyLoses){reversalContactCache.set(params,other,sourceKey,targetKey,false);continue}
     const liveSource=source.kind==='helper'?specialRuntime.entities.find(entity=>entity.key===source.key&&!entity.destroyed):source,liveTarget=target.kind==='helper'?specialRuntime.entities.find(entity=>entity.key===target.key&&!entity.destroyed):target;
     if(!liveSource||!liveTarget)continue;
-    applyQualifiedReversalContactM1(liveSource,liveTarget,params,{qualified:true,capturedSourceDefinition:source.hitDef,capturedTargetDefinition:target.hitDef});reversalContactCache.set(params,other,sourceKey,targetKey,true);accepted++;
+    const result=applyQualifiedReversalContactM1(liveSource,liveTarget,params,{qualified:true,capturedSourceDefinition:source.hitDef,capturedTargetDefinition:target.hitDef});reversalContactCache.set(params,other,sourceKey,targetKey,!result.miss);if(!result.miss)accepted++;
    }
   }
   return accepted;
@@ -1578,7 +1582,9 @@ function applyQualifiedReversalContactM1(source,target,params,{qualified=false,c
  prepareReversalDefinition(params);if(!params.reversalFallData)throw Error('Missing compiled reversal fall definition');
  const sourceDefinition=capturedSourceDefinition??source.hitDef??source.activeHitDef??(fighterPlayer(source)===1?activeHitDef:p2.activeHitDef),targetDefinition=capturedTargetDefinition??target.hitDef??target.activeHitDef??(fighterPlayer(target)===1?activeHitDef:p2.activeHitDef);
  if(!sourceDefinition||!targetDefinition)throw Error('Reversal requires both active definitions');
- if(params.attr!==undefined&&matchingHitOverride(source,target,params))throw Error('Qualified reversal HitOverride execution remains unsupported');
+ const override=params.attr===undefined?null:matchingHitOverride(source,target,params);
+ if(override?.miss)return {miss:true};
+ if(override)throw Error('Qualified reversal HitOverride execution remains unsupported');
  const targetState=Number(params.p2stateno??-1),targetOwner=Number(params.p2getp1state??(params.p2stateno!==undefined?1:0))!==0?(params.hitDefinitionStateOwner??battleCharacters[fighterPlayer(source)-1]):battleCharacters[fighterPlayer(target)-1];
  if(targetState>=0&&!Number(params.keepstate??0)&&target.kind==='helper'&&targetOwner!==battleCharacters[fighterPlayer(target)-1])throw Error('Foreign Helper reversal target states remain unsupported');
  actorHitState(target);const sparkTarget={...target,hitDef:targetDefinition},pauseTarget={...target};
@@ -2188,7 +2194,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.15',build:'automatic-reversal-02515-20261016-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.16',build:'reversal-order-02516-20261016-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2196,7 +2202,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.15-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.16-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

@@ -1,3 +1,7 @@
+## 0.25.16 — Reversal target order and override misses (partial)
+
+Automatic reversal contacts now prioritize reversal recipients, then use absolute float32 X or enabled X/Z distance and actor-ID ties. Matching HitOverride default state-change misses and explicit MissOnOverride reject contact without applying state/resource effects. Actual runtime fixtures and full regression cover both changes. Updated resource/runtime import URLs prevent reuse of earlier cached module versions. Native eligibility/action phase ordering, local-coordinate arithmetic, non-miss override execution, foreign Helper tables, combo counting and all-controller/version completion remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.15 — Automatic ReversalDef contact (partial)
 
 Root and idle Helper ReversalDef controllers now dispatch attack-box contacts through attribute/depth/chain filters and reciprocal arbitration, without ordinary damage. Accepted contacts bind state changes, priority, source-only power, selective recipient reset, pauses and P2Facing; per-definition/actor/tick decisions suppress duplicate contact. Pending native resource queues survive selective reset and consume once. Actual root, idle Helper and simultaneous reciprocal fixtures cover these paths. Full native phase/state ordering, HitOverride combinations, foreign Helper tables, combo counting, complete visual/sound dispatch and cross-version fidelity remain Pending. No controller is certified complete. Deployment is verified separately.

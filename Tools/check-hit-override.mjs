@@ -9,6 +9,9 @@ assert.equal(selectHitOverride(other.slots,{attr:'A,NA',guardflag:'H'},{attacker
 assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'A'},{attackerState:'S'}),null);
 assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'H',p2stateno:600},{attackerState:'S'}).miss,true);
 assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'H',p2stateno:600},{attackerState:'A',projectile:true}).miss,false);
+assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'H',p1stateno:600},{attackerState:'S'}).miss,true);
+assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'H',missonoverride:1},{attackerState:'S'}).miss,true);
+assert.equal(selectHitOverride(other.slots,{attr:'S,NA',guardflag:'H',p2stateno:600,missonoverride:0},{attackerState:'S'}).miss,false);
 tickHitOverrides(other.slots);assert.equal(other.slots[0],null);
 applyHitOverrideController({type:'HitOverride',params:{attr:'S,AA',time:-1,keepstate:1}},root,api);tickHitOverrides(root.slots);assert.equal(root.slots[0].time,-1);
 console.log('HitOverride slots/default time, redirection, guard masks, miss rules and permanent expiry policy passed');
