@@ -13,12 +13,13 @@ export function createLifecycleRuntime(api){
   }
   return true;
  }
- function globals(fighter,context,{hitPause=false}={}){
-  for(const stateNo of [-3,-2])for(const controller of api.data(fighter.player).globalControllers[String(stateNo)]){
+ function globalState(fighter,context,stateNo,{hitPause=false}={}){
+  for(const controller of api.data(fighter.player).globalControllers?.[String(stateNo)]??[]){
    if(hitPause&&Number(controller.params.ignorehitpause??0)!==1)continue;
    execute({...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},fighter,context);
   }
  }
+ function globals(fighter,context,options={}){for(const stateNo of [-3,-2])globalState(fighter,context,stateNo,options)}
  function initialize(fighter,context){
   if(fighter.state!==5900)throw Error('Initialization requires State 5900');
   const original=fighter.state;
@@ -49,5 +50,5 @@ export function createLifecycleRuntime(api){
    }
   };
  }
- return {rounds,execute,globals,initialize,queries};
+ return {rounds,execute,globalState,globals,initialize,queries};
 }

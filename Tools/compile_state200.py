@@ -98,7 +98,7 @@ def compile_lifecycle_state(state_id):
 lifecycle_states = {str(state_id): compile_lifecycle_state(state_id)
                     for state_id in (5900, 190, 191, 1990, 1991, 170, 175, 180, 181)}
 global_controllers = {str(state_id): [compile_controller(controller) for controller in states['controllers']
-                                     if controller['state'] == state_id] for state_id in (-3, -2)}
+                                     if controller['state'] == state_id] for state_id in (-4, -3, -2)}
 lifecycle_helpers = {str(state_id): compile_lifecycle_state(state_id)
                      for state_id in (9999, 915, 925, 950)}
 

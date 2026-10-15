@@ -135,15 +135,18 @@ export function createSpecialRuntime(api){
    default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
   }
  }
- function helperGlobals(entity){
+ function helperGlobalState(entity,stateNo){
   const data=api.data(entity.player);
+  const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
+  for(const [index,controller]of controllers.entries()){
+   helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
+   if(entity.destroyed)return;
+  }
+ }
+ function helperGlobals(entity){
   for(const stateNo of [-3,-2,-1]){
    if(!helperNegativeStates(entity).includes(stateNo))continue;
-   const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
-   for(const [index,controller]of controllers.entries()){
-    helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
-    if(entity.destroyed)return;
-   }
+   helperGlobalState(entity,stateNo);if(entity.destroyed)return;
   }
  }
  function hit(entity){
@@ -175,13 +178,15 @@ export function createSpecialRuntime(api){
  }
  function step(){
   for(const entity of [...entities]){
-   if(entity.destroyed||blocked(entity.player,entity))continue;
+   if(entity.destroyed||entity.kind==='helper'&&entity.disabled)continue;
+   if(blocked(entity.player,entity)){if(entity.kind==='helper')helperGlobalState(entity,-4);continue}
    if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
    if(entity.kind==='helper')for(const slot of [...(entity.clsnOverrides||[]),...(entity.clsnTransforms||[])])slot.length=0;
    entity.assertions?.clear();
    if(entity.kind==='helper'&&!(entity.hitPause>0))tickHitBySlots(entity.hitBySlots??=createHitBySlots());
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
+     helperGlobalState(entity,-4);if(entity.destroyed)continue;
      helperGlobals(entity);if(entity.destroyed)continue;
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
@@ -189,6 +194,7 @@ export function createSpecialRuntime(api){
     api.finishHitFrame?.(entity);entity.hitPause--;continue;
    }
    if(entity.kind==='helper'){entity.depthBoundFlags=createDepthBoundFlags(entity.helperType===2);entity.depthModifiers=createDepthModifiers();entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
+   if(entity.kind==='helper'){helperGlobalState(entity,-4);if(entity.destroyed)continue}
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);

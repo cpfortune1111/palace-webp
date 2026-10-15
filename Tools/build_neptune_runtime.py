@@ -85,7 +85,7 @@ def compile_runtime(imported, output):
     constants['velocity.jump.y'] = constants['velocity.jump.neu.y']
     constants['velocity.airjump.y'] = constants['velocity.airjump.neu.y']
     globals_data = {}
-    for state_id in (-3, -2):
+    for state_id in (-4, -3, -2):
         controllers = []
         for controller in raw['controllers']:
             if controller['state'] != state_id:

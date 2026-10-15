@@ -1,3 +1,7 @@
+## 0.25.20 — State -4 execution and import selection (partial)
+
+Roots and Helpers now execute available State -4 controllers before global-pause gating; ordinary state execution stays paused and hitpause still filters controllers. Active Helper -4 execution follows the existing per-frame preparation. All five character builder selection paths include -4/-3/-2 and preserve source order and controller settings. Existing source snapshots have no -4, so no character payload regeneration is needed. Semantic/import fixtures and actual pause/resume regression cover these changes. Full preparation/creation timing, raw-source dialects, provider/deferred-state/global ordering and all-controller/version completion remain Pending. Zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.19 — Helper input ownership and negative states (partial)
 
 Helper keyctrl now evaluates integer permission enums and gates command access. Enabled Helpers own separate command buffers, facing and input modifiers instead of borrowing root command results; destruction/input reset cleans storage. Eligible -3/-2/-1 controllers execute before current state with player-type/ownership checks and hitpause rules. Actual fixtures cover isolation, command recognition, release, cleanup, execution order and global persistence. State -4/global pause, full numeric provider/deferred-state identity, other key-control behavior, AI/common movement and all-controller/version parity remain Pending. No controller is certified complete. Deployment is verified separately.
