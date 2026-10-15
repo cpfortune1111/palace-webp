@@ -216,7 +216,7 @@ export function createSpecialRuntime(api){
    }
   }
   for(const [helper,nextState] of overrides){enter(helper,nextState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)}
-  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
+  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper')api.forgetHitState?.(entities[index]);entities.splice(index,1)}
  }
  function finishTick(){
   api.finishPaletteEffects?.();

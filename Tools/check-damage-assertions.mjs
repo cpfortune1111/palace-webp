@@ -22,6 +22,8 @@ assert.equal(other.assertions.has('nokofall'),true);assert.equal(other.assertion
 run({flag:'NoKOFall',flag2:'NoKOVelocity',redirectid:'7',enabled:'0'});
 assert.equal(other.assertions.has('nokofall'),false);assert.equal(other.assertions.has('nokovelocity'),false);
 run({flag:'NoCornerPush',redirectid:'7'});assert.equal(other.assertions.has('nocornerpush'),true);
+run({flag:'NoFallHitFlag',redirectid:'7'});assert.equal(other.assertions.has('nofallhitflag'),true);
+run({flag:'NoFallHitFlag',redirectid:'7',enabled:'0'});assert.equal(other.assertions.has('nofallhitflag'),false);
 assert.throws(()=>run({flag:'NoHitDamage',flag2:'Intro'}),/Unsupported mixed/);
 assert.equal(run({flag:'Intro'}),false);
 actor.assertions.clear();assert.equal(actor.assertions.size,0);

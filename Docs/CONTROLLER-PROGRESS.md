@@ -1,3 +1,7 @@
+## 0.25.12 — Hitflag and independent hit status (partial)
+
+Ordinary collision now consumes S/C/A/L, F and plus/minus hitflag rules, exact native guard-state ranges and source NoFallHitFlag. Explicit D can reach lying-target geometry. Independent root/Helper hit-status storage preserves same-pass snapshots, hitpause-held recovery and selective reversal -1; round reset and DestroySelf clean up entries. Focused and actual imported-animation/runtime fixtures cover these paths. Complete native phase placement, general Helper collision routing and all-controller/version certification remain Pending. Deployment is verified separately.
+
 ## 0.25.11 — Shared cornerpush and parameter defaults (partial)
 
 P1/P2/Helper movement now shares source-aware cornerpush calculation and float32 decay with native logical-width stopping thresholds. Player-type Helper HitOverride contacts update real source storage; projectile sources and ordinary Helper recipients are excluded. All ten offset/multiplier expressions compile once with pinned legacy/modern defaults, ground inheritance and native cornerpush-parameter order. Runtime fixtures cover screen-bound/SuperPause gates, logical-width changes and source ownership. Native general Helper collisions, complete scheduler/coordinates, cross-parameter order and Mugen version behavior remain Pending; no controller is certified complete. Deployment is verified separately.
