@@ -1,0 +1,13 @@
+{
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "controller": "ShiftInput",
+  "certifiedParameters": 0,
+  "status": "Partial root-only command integration; actual fixture and complete browser regression passed in controller-shift-input-command-browser.log",
+  "rows": [
+    {"parameter":"input","consumer":"case-sensitive physical source key, required syntax and none/reset behavior","tests":["check-shift-input.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"output","consumer":"physical simultaneous destination mapping, none disabling and repeated-source replacement","tests":["check-shift-input.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"redirectid","consumer":"caller-evaluated int32 recipient lookup; pinned both-none reset uses caller","tests":["check-shift-input.mjs","check-saturn-priority.cjs"]}
+  ],
+  "pending": ["native input/action and hitpause phases","SOCD configuration/order","Helper key-control ownership","network/replay input","version differences","exhaustive composition"],
+  "commonParameters": "The existing controller scheduler handles Persistent/IgnoreHitPause paths; complete scheduler certification remains Pending."
+}

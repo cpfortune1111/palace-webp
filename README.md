@@ -1,3 +1,7 @@
+## 0.25.18 — Root ShiftInput and configured SOCD (partial)
+
+ShiftInput now remaps physical root command keys after AssertInput, supports disabling/replacement and simultaneous non-chaining swaps, and preserves pinned redirected caller-reset behavior. Configured SOCD supports allow-both, first/last, U/F priority and neutral policies with independent histories. Existing default controls remain unchanged pending native configuration migration. Actual command-buffer composition and full regression cover these paths. Helper ownership, default/raw-input parity, action/pause phases, replay/network input and all-controller/version completion remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.17 — Root AssertInput and reproducible inventory (partial)
 
 P1/P2 AssertInput now validates flag–flag8, evaluates RedirectID, resolves physical facing on the recipient and injects one-use keys into real command buffers. Runtime fixtures trigger a real command and verify release; input reset clears pending assertions. Reversal override misses clear stale MoveHitVar(overridden). The pinned compiler inventory now records literal key bindings and finite loops, recovering AssertInput flag2–flag8: 163 controllers, 2,165 candidates, 597 distinct names and nine extraction follow-ups. Saved inventory equals regeneration in executable tests. Helper input ownership, SOCD, native input/action/pause timing and broad controller/version completion remain Pending. Zero controllers are certified complete. Deployment is verified separately.

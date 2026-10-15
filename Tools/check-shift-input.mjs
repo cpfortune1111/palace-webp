@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {applyShiftInputController,createShiftInputState,shiftCommandInput} from '../Engine/shift-input.js';
+
+const caller={key:'root1'},other={key:'root2'},state=createShiftInputState(),api={evaluate:Number,findActor:id=>id===2?other:null,set:(owner,source,destination)=>state.set(owner.key,source,destination),clear:owner=>state.clear(owner.key)};
+const execute=params=>applyShiftInputController({type:'ShiftInput',params},caller,api);
+assert.equal(applyShiftInputController({type:'Other'},caller,api),false);
+assert.throws(()=>execute({input:'a'}),/requires/);
+for(const key of ['B','F','A','bad'])assert.throws(()=>execute({input:key,output:'a'}),/Invalid/);
+execute({redirectid:2,input:'a',output:'b'});execute({redirectid:2,input:'a',output:'x'});execute({redirectid:2,input:'x',output:'a'});execute({redirectid:2,input:'U',output:'NoNe'});
+const mapping=state.take('root2'),result=shiftCommandInput({a:true,x:true,U:true,m:true},mapping,-1);
+assert.equal(result.a,true);assert.equal(result.x,true);assert.equal(result.U,false);assert.equal(result.m,true);assert.equal(state.take('root2').size,0);
+assert.equal(shiftCommandInput({a:true},new Map([['a','b'],['b','x']]),1).b,true);
+assert.equal(shiftCommandInput({a:true},new Map([['a','b'],['b','x']]),1).x,false);
+assert.equal(shiftCommandInput({F:true},new Map([['L','R']]),-1).B,true);
+state.set('root1','a','b');state.set('root2','a','x');execute({redirectid:2,input:'none',output:'none'});
+assert.equal(state.take('root1').size,0);assert.equal(state.take('root2').size,1);
+execute({input:'none',output:'a'});assert.equal(state.take('root1').size,0);
+execute({redirectid:99,input:'a',output:'b'});assert.equal(state.take('root1').size,0);
+for(const key of ['U','D','L','R','a','b','c','x','y','z','s','d','w','m'])execute({input:key,output:key});
+assert.equal(state.take('root1').size,14);
+const inventory=JSON.parse(readFileSync(new URL('../Docs/CONTROLLER-AUDIT.json',import.meta.url),'utf8'));
+const evidence=JSON.parse(readFileSync(new URL('../Docs/SHIFT-INPUT-PARAMETER-EVIDENCE.json',import.meta.url),'utf8'));
+assert.deepEqual(evidence.rows.map(row=>row.parameter).sort(),inventory.controllers.find(row=>row.controller==='shiftinput').parameterCandidates);
+assert.equal(evidence.certifiedParameters,0);
+console.log('ShiftInput preserves physical/case-sensitive keys, simultaneous remaps, disabling, replacement and pinned redirected caller-reset behavior');
