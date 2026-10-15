@@ -19,3 +19,9 @@ export function calculateCornerPush({velocity,multiplier,sourceId,targets,left,r
  }
  return found?{distance:0,multiplier:Math.fround(pushMultiplier)}:{distance:0,multiplier:0};
 }
+
+export function decayCornerPush(velocity,multiplier,threshold){
+ if(!Number.isFinite(threshold)||threshold<=0)throw Error('Invalid cornerpush stopping threshold');
+ const next=Math.fround(Math.fround(velocity)*Math.fround(multiplier));
+ return Math.abs(next)<threshold?0:next;
+}

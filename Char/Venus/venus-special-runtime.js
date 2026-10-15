@@ -1,4 +1,6 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
+import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
+import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
 import {createDepthModifiers} from '../../Engine/depth-controller.js?v=02505';
@@ -45,9 +47,9 @@ export function createSpecialRuntime(api){
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.unhittabletime!==undefined)result.unhittabletime=hitUnhittableTime(params,{pause:String(result.pausetime??'0,0').split(',').map(Number),reversal:params['reversal.attr']!==undefined&&compileAttackAttribute(params['reversal.attr'])!==0,throwAttribute:params.attr!==undefined&&(compileAttackAttribute(params.attr,{hitdef:true})&9344)!==0,evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
   if(params.attr!==undefined||params['reversal.attr']!==undefined){compileHitAffectTeam(params.affectteam);const nativeTeam=context?.teamSide??root(player).teamSide??player,side=params.teamside===undefined?nativeTeam:Math.trunc(Number(api.eval(params.teamside,context)))|0;result.hitDefinitionTeamSide=side>=0&&side<=2?side:nativeTeam}
   if(params['attack.depth']!==undefined)result['attack.depth']=hitAttackDepth(params,{evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
-  if(params.attr!==undefined){const velocities=hitDefVelocityDefaults(params,{evaluate:value=>api.eval(value,context),split:api.pair});for(const [name,key] of [['ground.velocity','ground'],['air.velocity','air'],['guard.velocity','guard'],['airguard.velocity','airguard'],['down.velocity','down']])result[name]=velocities[key].join(',')}
+  if(params.attr!==undefined||params['reversal.attr']!==undefined){const velocities=hitDefVelocityDefaults(params,{evaluate:value=>api.eval(value,context),split:api.pair});for(const [name,key] of [['ground.velocity','ground'],['air.velocity','air'],['guard.velocity','guard'],['airguard.velocity','airguard'],['down.velocity','down']])result[name]=velocities[key].join(',');const data=api.data(player);Object.assign(result,hitDefCornerPush(params,{velocities,ikemen:hitPauseVersionProfile(data).ikemen,legacyDefault:data.constants?.['legacy.cornerpushdefaults'],evaluate:value=>api.eval(value,context)}))}
   if(['snap','mindist','maxdist'].some(key=>params[key]!==undefined))result.hitPosition=prepareHitPosition(params,{splitPair:api.pair,evaluate:value=>api.eval(value,context)});
-  for(const key of ['damage','sparkxy','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','airguard.cornerpush.veloff','airguard.cornerpush.velmul','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity'])if(params[key]!==undefined&&!(params.attr!==undefined&&['ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity'].includes(key))&&!/^\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*(?:,\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*)*$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
+  for(const key of ['damage','sparkxy','ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity','offset','velocity'])if(params[key]!==undefined&&!((params.attr!==undefined||params['reversal.attr']!==undefined)&&['ground.velocity','guard.velocity','air.velocity','airguard.velocity','down.velocity'].includes(key))&&!/^\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*(?:,\s*[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?\s*)*$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(params.attr!==undefined||params['reversal.attr']!==undefined){const power=hitPowerParameters({...params,damage:result.damage},{constants:api.data(player).constants||{},evaluate:value=>api.eval(value,context),split:api.pair});result.getpower=[power.hitGetPower,power.guardGetPower].join(',');result.givepower=[power.hitGivePower,power.guardGivePower].join(',')}
   if(params.score!==undefined){const components=api.pair(params.score);if(components.length>2)throw Error('Invalid score component count');result.score=components.map(value=>Math.fround(Number(api.eval(value,context)))).join(',')}
   if(params.priority!==undefined)result.priority=compileHitPriority(params.priority,{evaluate:value=>api.eval(value,context)});
@@ -207,6 +209,7 @@ export function createSpecialRuntime(api){
     if(!selected||selected.miss||!api.collision(attack,helper).contact)continue;
     helper.lastHitOverride=selected;
     const result=api.helperOverrideHit?.(attack,helper);
+    if(result)api.recordCornerPush?.(attack,helper,result);
     if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
     if(!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;

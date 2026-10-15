@@ -1,3 +1,7 @@
+## 0.25.11 — Shared cornerpush and parameter defaults (partial)
+
+P1/P2/Helper movement now shares source-aware cornerpush calculation and float32 decay with native logical-width stopping thresholds. Player-type Helper HitOverride contacts update real source storage; projectile sources and ordinary Helper recipients are excluded. All ten offset/multiplier expressions compile once with pinned legacy/modern defaults, ground inheritance and native cornerpush-parameter order. Runtime fixtures cover screen-bound/SuperPause gates, logical-width changes and source ownership. Native general Helper collisions, complete scheduler/coordinates, cross-parameter order and Mugen version behavior remain Pending; no controller is certified complete. Deployment is verified separately.
+
 ## 0.25.10 — Live Helper cornerpush (partial)
 
 Helper-to-root physical contacts now retain source cornerpush velocity and multiplier. Helper movement consumes shared target selection, corner confinement and friction; MoveHitVar queries read the live decaying value. Actual runtime tests cover NoCornerPush, projectile exclusion and spawned Helper stepping under PosFreeze. Signed queue-accumulation boundaries and float-before-negation are additionally tested. Root migration, Helper-to-Helper contact, complete phase/version/coordinate parity and all-controller certification remain Pending. Deployment is verified separately. The user has cancelled the previous 20% pause policy.
