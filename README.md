@@ -1,3 +1,7 @@
+## 0.25.14 — Definition-time state provider snapshot (partial)
+
+HitDef compilation now snapshots the original state-provider table and foreign-state distinction. Root target/source entry uses that snapshot even after the source changes providers; same-character foreign state remains distinct and normal Helpers keep their own provider. Runtime fixtures execute a state absent from the actor's body table on both recipients and sources. Full numeric native statePN identity, projectile global-controller workingState, foreign Helper tables, animation persistence, complete scheduler/version semantics and ReversalDef dispatch remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.13 — Hit state ownership and source transitions (partial)
 
 Shared HitDef compilation now evaluates P1StateNo/P2StateNo/P2GetP1State with native implicit source-owner defaults. Root contacts respect explicit own/source tables, nonnegative target states and KeepState; explicit target state entry forces H/control false. Standalone source state changes run after root/Helper contacts and select projectile owners. Actual fixtures cover both root callbacks, spawned Helper hits, ownership and control. Legacy paired-throw damage/effects, native statePN snapshots, foreign Helper tables, complete phase/version semantics and ReversalDef dispatch remain Pending. No controller is certified complete. Deployment is verified separately.
