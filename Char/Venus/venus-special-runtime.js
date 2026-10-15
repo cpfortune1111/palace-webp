@@ -76,8 +76,9 @@ export function createSpecialRuntime(api){
  function enter(entity,state){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
   api.transitionMoveContact?.(entity,definition);
+  if(!Number(definition.hitcountpersist??0)){entity.hitCount=0;entity.guardCount=0}
   if(!definition.hitdefpersist)entity.guardHitDef=null;
-  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,guardCount:0,activeHitDef:null});
+  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
   entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
   if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
@@ -158,7 +159,7 @@ export function createSpecialRuntime(api){
   if(!result)return;
   consumeHitOnceContact(entity.activeHitDef,{accepted:true,isProjectile:entity.kind==='projectile'});
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
-  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{});entity.guardCount=(entity.guardCount||0)+(result.guarded?hitDefCount(entity.activeHitDef?.params||entity.params||{}):0);
+  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount=(entity.hitCount+(result.guarded?0:hitDefCount(entity.activeHitDef?.params||entity.params||{})))|0;entity.guardCount=((entity.guardCount||0)+(result.guarded?hitDefCount(entity.activeHitDef?.params||entity.params||{}):0))|0;
   entity.hitPause=result.attackerPause;
   api.sourceHitState?.(entity,contactParams,result);
   if(entity.kind==='projectile'){

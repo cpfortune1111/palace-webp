@@ -1,0 +1,12 @@
+{
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "controller": "HitAdd",
+  "certifiedParameters": 0,
+  "status": "Partial live root/Helper integration; actual fixtures and complete regression passed in controller-hit-add-counter-lifecycle-browser.log",
+  "rows": [
+    {"parameter":"value","consumer":"caller-evaluated int32 addition to live source and native target/combo counters","tests":["check-hit-add.mjs","check-native-hit-counters.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"redirectid","consumer":"caller-evaluated int32 lookup of roots/Helpers with independent counters; projectiles are not character recipients","tests":["check-hit-add.mjs","check-saturn-priority.cjs"]}
+  ],
+  "pending": ["complete native actor/input/collision phase ordering","all counter baselines and override combinations","all StateDef persistence imports","native HUD renderer","original MUGEN and Simul/Tag parity"],
+  "commonParameters": "Existing scheduling consumes Persistent and IgnoreHitPause; complete scheduler certification remains Pending."
+}
