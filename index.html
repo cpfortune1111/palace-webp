@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.16 Controller Integration</title>
+<title>Prototype 0.25.17 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.16 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD reversal-order-02516-20261016-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.17 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD assert-input-02517-20261016-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -151,6 +151,8 @@ import {reversalHitData} from './Engine/reversal-hit-data.js';
 import {prepareReversalDefinition} from './Engine/reversal-definition.js';
 import {createReversalContactCache} from './Engine/reversal-contact-cache.js';
 import {orderedHitContactCandidates} from './Engine/hit-contact-order.js';
+import {applyAssertInputController,createAssertInputState,mergeAssertedCommandInput} from './Engine/assert-input.js';
+const assertedInputState=createAssertInputState();
 import {reversalHitPause} from './Engine/reversal-hit-pause.js';
 import {hitPauseVersionProfile} from './Engine/hit-pause-version.js';
 import {createHitPhaseStatus} from './Engine/hit-phase-status.js';
@@ -237,7 +239,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.16 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.17 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -580,6 +582,7 @@ const inputOS=/Android/i.test(deviceText)?'Android':/iPhone|iPad|iPod/i.test(dev
 let inputPreference='auto',activeInputMode='';
 function initialInputMode(){return coarsePointer.matches||/Android|iPhone|iPad|iPod/i.test(deviceText)||inputOS==='iOS / iPadOS'?'touch':'keyboard'}
 function resetPlayerInput(){
+ assertedInputState.clear();
  p2PunchRequested=false;p2ButtonCommands={};
  p2HeldKeys.clear();for(const action of keyboardActions)p2Input[action]=false;
  heldKeys.clear();stickPointer=null;clearStick();input.x=false;xHeld=false;consumedXPress=false;
@@ -845,6 +848,7 @@ function commandInputState(list,token){
  return value;
 }
 function sampleCommandList(player,now,paused){
+ now=mergeAssertedCommandInput(now,assertedInputState.take('root'+player),player===1?p1Facing:p2.facing);
  const list=playerCommandLists[player]??=createCommandList(player);
  list.previous={...list.signed};
  for(const key of ['U','D','B','F','a','b','c','x','y','z','s','d','w','m']){
@@ -1136,6 +1140,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  if(applyFamilyBindController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,localScale:actor=>actor.localScale??1,split:splitExpressionPairM1,getFacing:actor=>actor.kind==='helper'?(actor.bindFacing??0):rootBindFacing[fighterPlayer(actor)-1],setFacing:(actor,value)=>{if(actor.kind==='helper')actor.bindFacing=value;else rootBindFacing[fighterPlayer(actor)-1]=value},root:actor=>actor.kind==='helper'?specialRoot(actor.player):null,parent:actor=>actor.kind!=='helper'?null:actor.parentKey==='root1'?specialRoot(1):actor.parentKey==='root2'?specialRoot(2):specialRuntime.entities.find(entity=>entity.key===actor.parentKey&&!entity.destroyed),bind:registerControllerTargetBinding}))return;
  if(applyBindToTargetController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,targets:combatTargetList,localScale:actor=>actor.localScale??1,localCoord:()=>320,split:splitExpressionPairM1,anchor:(target,anchor)=>{const constants=(characterProfiles.get(battleCharacters[fighterPlayer(target)-1])?.battle||battleDat).constants,prefix='size.'+(anchor==='h'?'head':'mid')+'.pos.';return [Number(constants[prefix+'x']??0),Number(constants[prefix+'y']??0)]},move:(owner,position,options)=>{if(options.axes[2]&&owner.z===undefined&&position[2]!==0)throw Error('BindToTarget requires a depth-enabled actor');if(options.axes[0])owner.x=position[0];if(options.axes[1])owner.y=position[1];if(owner.z!==undefined&&options.axes[2])owner.z=position[2];if(owner.kind!=='helper'){if(fighterPlayer(owner)===1){posX=owner.x;posY=owner.y;if(p1Reaction){p1Reaction.x=posX;p1Reaction.y=posY;syncP1Reaction()}}else{p2.x=owner.x;p2.y=owner.y}}},bind:registerControllerTargetBinding}))return;
  if(applyTargetBindController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,targets:combatTargetList,localScale:actor=>actor.localScale??1,split:splitExpressionPairM1,bind:registerControllerTargetBinding}))return;
+ if(applyAssertInputController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,assert:(target,flags)=>{if(target.kind==='helper')throw Error('Helper AssertInput command-buffer ownership remains unsupported');assertedInputState.add('root'+fighterPlayer(target),flags)}}))return;
  if(applyScoreController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,excluded:target=>fighterPlayer(target)<1||fighterPlayer(target)>2||assertionActor(fighterPlayer(target),target).assertions.has('noscore'),add:(target,value)=>scoreRuntime.addNative(fighterPlayer(target),value)}))return;
  if(applyTargetScoreController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,targets:combatTargetList,isPlayerType:target=>target.kind!=='helper'||target.helperType===2,excluded:target=>fighterPlayer(target)<1||fighterPlayer(target)>2||assertionActor(fighterPlayer(target),target).assertions.has('noscore'),add:(target,value)=>scoreRuntime.addNative(fighterPlayer(target),value)}))return;
  if(applyTargetRedLifeController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,targets:combatTargetList,resource:target=>resourceActor(fighterPlayer(target),target),compatibility:target=>profileFor(fighterPlayer(target))?.battle?.compatibility??'mugen',excluded:target=>assertionActor(fighterPlayer(target),target).assertions.has('noredlifedamage'),add:(target,value)=>{const resource=resourceActor(fighterPlayer(target),target);consumeHitRedLife(resource,-value,resource.life,combatResourceFeatures.redLife,roundFlow.noDamage())}}))return;
@@ -1583,7 +1588,7 @@ function applyQualifiedReversalContactM1(source,target,params,{qualified=false,c
  const sourceDefinition=capturedSourceDefinition??source.hitDef??source.activeHitDef??(fighterPlayer(source)===1?activeHitDef:p2.activeHitDef),targetDefinition=capturedTargetDefinition??target.hitDef??target.activeHitDef??(fighterPlayer(target)===1?activeHitDef:p2.activeHitDef);
  if(!sourceDefinition||!targetDefinition)throw Error('Reversal requires both active definitions');
  const override=params.attr===undefined?null:matchingHitOverride(source,target,params);
- if(override?.miss)return {miss:true};
+ if(override?.miss){moveHitDataFor(source).overridden=false;return {miss:true}}
  if(override)throw Error('Qualified reversal HitOverride execution remains unsupported');
  const targetState=Number(params.p2stateno??-1),targetOwner=Number(params.p2getp1state??(params.p2stateno!==undefined?1:0))!==0?(params.hitDefinitionStateOwner??battleCharacters[fighterPlayer(source)-1]):battleCharacters[fighterPlayer(target)-1];
  if(targetState>=0&&!Number(params.keepstate??0)&&target.kind==='helper'&&targetOwner!==battleCharacters[fighterPlayer(target)-1])throw Error('Foreign Helper reversal target states remain unsupported');
@@ -2194,7 +2199,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.16',build:'reversal-order-02516-20261016-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.17',build:'assert-input-02517-20261016-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2202,7 +2207,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.16-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.17-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
