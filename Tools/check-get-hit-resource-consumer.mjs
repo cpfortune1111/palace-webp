@@ -17,4 +17,24 @@ for(const [moveType,keepstate,overrideIndex,eligible] of [['H',false,-1,true],['
  consumeGetHitResources(hit,{moveType,overrideIndex,apply:()=>{throw Error('Resource consumed twice')}});
 }
 assert.throws(()=>consumeGetHitResources({damage:2},{moveType:'H',apply:()=>{}}),/HitOverride index/);
+for(const field of ['damage','redlife','dizzypoints','guardpoints']){
+ for(const [previous,incoming,expected] of [[2147483647,1,-2147483648],[-2147483648,-1,2147483647],[-1,1,0]]){
+  const result=queueGetHitResources({nativeResourceQueue:true,[field]:previous},{[field]:incoming});
+  assert.equal(result[field],expected);
+  const deltas=[];
+  consumeGetHitResources(result,{moveType:'H',overrideIndex:-1,apply:(name,delta)=>{
+   assert.equal(name,field);
+   assert.equal(result[field],expected);
+   deltas.push(delta);
+  }});
+  assert.deepEqual(deltas,expected===0?[]:[-expected]);
+  assert.equal(result[field],0);
+ }
+}
+const migrated=prepareGetHitResourceQueue({damage:99,redlife:88,dizzypoints:77,guardpoints:66,hitid:12});
+assert.deepEqual(migrated,{damage:0,redlife:0,dizzypoints:0,guardpoints:0,hitid:12,nativeResourceQueue:true});
+migrated.damage=7;
+assert.equal(prepareGetHitResourceQueue(migrated),migrated);
+assert.equal(migrated.damage,7);
+assert.equal(queueGetHitResources({damage:99},{damage:3}).damage,3);
 console.log('Pinned GetHit resource consumption order, H/KeepState/override gating, negative values and one-time clearing pass; full scheduler/profile certification remains pending');

@@ -17,6 +17,8 @@ Required next work:
 - Retain the pinned compiler's hitcount-to-hittime alias separately from any documented-profile behavior.
 
 All related certification remains Pending. No new controller is counted complete.
+
+Additional focused boundary evidence: each of the four queue fields wraps signed 32-bit accumulation at both integer limits, but converts to a floating-point value before negation during consumption, matching the pinned `-float64(c.ghv.field)` calls. Callback assertions verify that the field remains visible until its resource operation returns and is then cleared. Profile-transition tests discard legacy already-consumed values, preserve unrelated identity fields, and retain pending values on repeated queue preparation. These checks pass in `check-get-hit-resource-consumer.mjs`; they do not establish complete damage arithmetic or scheduler parity.
 ## Current evidence
 
 The pinned System action loop runs character Prepare/Run/Finish before character update, fight-screen update and collision/global tick. Resource effects queued by collision are therefore consumed in a following character actionRun, after controller code. Reference: [System action order](https://github.com/ikemen-engine/Ikemen-GO/blob/cb56d73badb322f3725257c2e8cfd157b2c3989d/src/system.go#L2898), [resource consumption](https://github.com/ikemen-engine/Ikemen-GO/blob/cb56d73badb322f3725257c2e8cfd157b2c3989d/src/char.go#L12575).

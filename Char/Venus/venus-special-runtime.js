@@ -183,6 +183,7 @@ export function createSpecialRuntime(api){
    if(entity.kind==='helper')api.advanceMoveContact?.(entity);
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    if(entity.kind==='helper')api.finishHitFrame?.(entity);hit(entity);
+   if(entity.kind==='helper')api.stepCornerPush?.(entity);
    if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }

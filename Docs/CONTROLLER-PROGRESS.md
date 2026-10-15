@@ -1,3 +1,7 @@
+## 0.25.10 — Live Helper cornerpush (partial)
+
+Helper-to-root physical contacts now retain source cornerpush velocity and multiplier. Helper movement consumes shared target selection, corner confinement and friction; MoveHitVar queries read the live decaying value. Actual runtime tests cover NoCornerPush, projectile exclusion and spawned Helper stepping under PosFreeze. Signed queue-accumulation boundaries and float-before-negation are additionally tested. Root migration, Helper-to-Helper contact, complete phase/version/coordinate parity and all-controller certification remain Pending. Deployment is verified separately. The user has cancelled the previous 20% pause policy.
+
 ## 0.25.09 — Native hit-resource queue (partial, conditional-pause release)
 
 The explicit Ikemen engine profile now shares one deferred resource queue between accepted contacts and GetHitVarSet. Actual Helper stepping and P1/P2 reaction CNS tests rewrite pending 20 damage to 5 and consume only 5 once; red-life/point consumption, field clearing and live HitOverride/KeepState gating are tested. Extracted native life-add execution avoids changing GetHitVar kill merely to consume queued damage. Pinned GetHitVarSet name audit covers 48 names, not complete semantics. Default Mugen WEB resource effects remain unchanged; all-profile migration, complete per-actor phase ordering, reversal integration and numeric/version edge cases remain Pending. No controller certification is added. User requested one final verified release after account remaining reached 20%, then pause.
