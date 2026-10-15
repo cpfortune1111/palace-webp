@@ -1,3 +1,7 @@
+## 0.25.19 — Helper input ownership and negative states (partial)
+
+Helper keyctrl now evaluates integer permission enums and gates command access. Enabled Helpers own separate command buffers, facing and input modifiers instead of borrowing root command results; destruction/input reset cleans storage. Eligible -3/-2/-1 controllers execute before current state with player-type/ownership checks and hitpause rules. Actual fixtures cover isolation, command recognition, release, cleanup, execution order and global persistence. State -4/global pause, full numeric provider/deferred-state identity, other key-control behavior, AI/common movement and all-controller/version parity remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.18 — Root ShiftInput and configured SOCD (partial)
 
 ShiftInput now remaps physical root command keys after AssertInput, supports disabling/replacement and simultaneous non-chaining swaps, and preserves pinned redirected caller-reset behavior. Configured SOCD supports allow-both, first/last, U/F priority and neutral policies with independent histories. Existing default controls remain unchanged pending native configuration migration. Actual command-buffer composition and full regression cover these paths. Helper ownership, default/raw-input parity, action/pause phases, replay/network input and all-controller/version completion remain Pending. No controller is certified complete. Deployment is verified separately.

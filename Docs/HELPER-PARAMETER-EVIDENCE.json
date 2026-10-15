@@ -1,0 +1,14 @@
+{
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "scope": "Incremental Helper parameter evidence, not complete Helper coverage",
+  "certifiedParameters": 0,
+  "rows": [
+    {
+      "parameter": "keyctrl",
+      "status": "Partial",
+      "consumers": ["caller-evaluated integer enum flags","command access gate","independent Helper command/input-modifier buffers","flag-one -1 execution","flag-two -2 execution","flag-three own-state -3 execution"],
+      "tests": ["check-helper-key-control.mjs","check-saturn-priority.cjs"],
+      "pending": ["State -4/global-pause placement","other flag-four behavior","common movement/AI","complete state-provider identity","native deferred-state/input/pause phases","version parity"]
+    }
+  ]
+}

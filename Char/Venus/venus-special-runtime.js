@@ -2,6 +2,7 @@ import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
+import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
@@ -63,7 +64,9 @@ export function createSpecialRuntime(api){
   if(params['reversal.attr']!==undefined)result.reversalFallData={...reversalFallDefinition(result,{evaluate:value=>api.eval(value,context),resetOptions:api.hitDefinitionResetOptions?.(player)}),unhittabletime:result.unhittabletime,hitDefinitionTeamSide:result.hitDefinitionTeamSide};
   return result;
  };
- function context(entity,commands=api.commands(entity.player)){
+ function context(entity,commands){
+  if(commands===undefined)commands=entity.kind==='helper'?(api.helperCommands?.(entity)||{}):api.commands(entity.player);
+  if(!helperCommandAllowed(entity))commands={};
   const base=api.context(entity,root(entity.player===1?2:1),commands);
   return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
@@ -88,7 +91,7 @@ export function createSpecialRuntime(api){
    life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileId=entity.id}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
-  if(kind==='helper'){entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
+  if(kind==='helper'){entity.keyControl=helperKeyControl(params.keyctrl,{split:api.pair,evaluate:expression=>api.eval(expression,sourceContext)});entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
   else enter(entity,Number(params.stateno));
@@ -113,13 +116,13 @@ export function createSpecialRuntime(api){
    default:return false;
   }
  }
- function helperController(entity,controller,index){
+ function helperController(entity,controller,index,global=false){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ctx=context(entity);
-  if(!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0})||!api.trigger(controller,ctx))return;
-  entity.controllerSchedule.executed(index,controller.params);
-  entity.once.add(index);const params=controller.params;
+  if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
+  if(!api.trigger(controller,ctx))return;
+  if(!global){entity.controllerSchedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};entity.hitSpent=false;api.activateHitDef?.(entity);break;
@@ -129,7 +132,18 @@ export function createSpecialRuntime(api){
    case 'HitBy':case 'NotHitBy':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
-   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+  }
+ }
+ function helperGlobals(entity){
+  const data=api.data(entity.player);
+  for(const stateNo of [-3,-2,-1]){
+   if(!helperNegativeStates(entity).includes(stateNo))continue;
+   const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
+   for(const [index,controller]of controllers.entries()){
+    helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
+    if(entity.destroyed)return;
+   }
   }
  }
  function hit(entity){
@@ -168,6 +182,7 @@ export function createSpecialRuntime(api){
    if(entity.kind==='helper'&&!(entity.hitPause>0))tickHitBySlots(entity.hitBySlots??=createHitBySlots());
    if(entity.hitPause>0){
     if(entity.kind==='helper'){
+     helperGlobals(entity);if(entity.destroyed)continue;
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     }
@@ -177,6 +192,7 @@ export function createSpecialRuntime(api){
    if(entity.created===api.tick())continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
+    helperGlobals(entity);if(entity.destroyed)continue;
     const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
