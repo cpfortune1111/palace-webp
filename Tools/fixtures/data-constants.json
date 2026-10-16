@@ -1,0 +1,22 @@
+{
+  "dataConstants": {
+    "data.life": 1500,
+    "data.power": 2500,
+    "data.dizzypoints": 1500,
+    "data.guardpoints": 1300,
+    "data.attack": 110,
+    "data.defence": 120,
+    "data.fall.defence_up": 100,
+    "data.liedown.time": 0,
+    "data.airjuggle": 12,
+    "data.sparkno": 2,
+    "data.guard.sparkno": 40,
+    "data.hitsound.channel": -1,
+    "data.guardsound.channel": -1,
+    "data.ko.echo": 0,
+    "data.volume": 51,
+    "data.intpersistindex": 0,
+    "data.floatpersistindex": 7,
+    "data.fall.defence_mul": 0.5
+  }
+}

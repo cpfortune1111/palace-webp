@@ -13,92 +13,92 @@
     {
       "name": "data.life",
       "opcode": "OC_const_data_life",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.power",
       "opcode": "OC_const_data_power",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.dizzypoints",
       "opcode": "OC_const_data_dizzypoints",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.guardpoints",
       "opcode": "OC_const_data_guardpoints",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.attack",
       "opcode": "OC_const_data_attack",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.defence",
       "opcode": "OC_const_data_defence",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.fall.defence_up",
       "opcode": "OC_const_data_fall_defence_up",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.fall.defence_mul",
       "opcode": "OC_const_data_fall_defence_mul",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.liedown.time",
       "opcode": "OC_const_data_liedown_time",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.airjuggle",
       "opcode": "OC_const_data_airjuggle",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.sparkno",
       "opcode": "OC_const_data_sparkno",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.guard.sparkno",
       "opcode": "OC_const_data_guard_sparkno",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.hitsound.channel",
       "opcode": "OC_const_data_hitsound_channel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.guardsound.channel",
       "opcode": "OC_const_data_guardsound_channel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.ko.echo",
       "opcode": "OC_const_data_ko_echo",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.volume",
       "opcode": "OC_const_data_volume",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.intpersistindex",
       "opcode": "OC_const_data_intpersistindex",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "data.floatpersistindex",
       "opcode": "OC_const_data_floatpersistindex",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
     },
     {
       "name": "size.xscale",

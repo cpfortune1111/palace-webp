@@ -1,3 +1,7 @@
+## 0.25.26 — Original Data Const import and live queries (partial)
+
+All eighteen Data Const names now read own-character original metadata for roots/Helpers, independently of foreign state units and live ModifyPlayer maxima/base changes. Five exporters/payloads preserve native defaults, life-dependent point defaults, blank persistence indices, integer-prefix bounds, volume transformations and reciprocal fall defence values. Only metadata was added to current payloads; existing runtime tuning remains intact. Actual source/payload comparisons, raw/browser fixtures and complete regression pass. Parser/platform/version parity and other original Data consumers remain Pending; zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.25 — Custom Const import and reserved builtin inventory (partial)
 
 The pinned Const compiler inventory now records 138 builtin names/aliases separately from open-ended custom names. Original first-section/first-key Constants imports feed live own-character root/Helper consumers, including foreign-state lookup, float32 numeric-prefix/sign-exponent behavior and JSON-safe nonfinite values. Missing custom names return native zero without masking unsupported reserved builtins. All five actual source builds, shared raw-CNS/browser fixtures and complete regression pass. Current characters have no custom entries and need no payload regeneration. Other builtin consumers, platform/parser extremes and version parity remain Pending; zero controllers are certified complete. Deployment is verified separately.

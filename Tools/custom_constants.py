@@ -55,7 +55,7 @@ def float32_json(value):
     return value
 
 
-def constants_section(text):
+def first_ini_section(text, wanted):
     lines = [line.strip() for line in text.splitlines()]
     for index, raw in enumerate(lines):
         header = raw.split(';', 1)[0].strip()
@@ -63,7 +63,7 @@ def constants_section(text):
             continue
         name = header[1:header.index(']')]
         space = name.find(' ')
-        if (name[:space + 1] if space >= 0 else name).lower() != 'constants':
+        if (name[:space + 1] if space >= 0 else name).lower() != wanted:
             continue
         result = {}
         for raw in lines[index + 1:]:
@@ -77,19 +77,28 @@ def constants_section(text):
             key = line[:boundary].lower()
             if key not in result:
                 value = line.split('=', 1)[1].strip() if '=' in line else ''
-                result[key] = float32_json(native_atof(value))
+                result[key] = value
         return result
-    return {}
+    return None
 
 
-def imported_custom_constants(imported):
+def constants_section(text):
+    return {key: float32_json(native_atof(value))
+            for key, value in (first_ini_section(text, 'constants') or {}).items()}
+
+
+def imported_cns_text(imported):
     manifest = json.loads((imported / 'manifest.json').read_text(encoding='utf-8-sig'))
     filename = manifest.get('dependencies', {}).get('cns', '')
     if not filename:
-        return {}
+        return ''
     original = (imported / 'original').resolve()
     source = (original / filename).resolve()
     if not source.is_relative_to(original):
         raise ValueError('Constants source outside original import directory')
-    constants = constants_section(source.read_text(encoding='utf-8-sig'))
+    return source.read_text(encoding='utf-8-sig')
+
+
+def imported_custom_constants(imported):
+    constants = constants_section(imported_cns_text(imported))
     return {'customConstants': constants} if constants else {}

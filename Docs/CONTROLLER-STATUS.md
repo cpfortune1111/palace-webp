@@ -1,4 +1,4 @@
-# Coverage accounting checkpoint — 0.25.25
+# Coverage accounting checkpoint — 0.25.26
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
 
