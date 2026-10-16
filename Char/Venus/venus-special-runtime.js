@@ -3,6 +3,7 @@ import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
+import {applyStatePersistence} from '../../Engine/state-persistence.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
@@ -75,10 +76,14 @@ export function createSpecialRuntime(api){
  function helperDefinition(entity,state){const data=api.data(entity.player);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
-  api.transitionMoveContact?.(entity,definition);
-  if(!Number(definition.hitcountpersist??0)){entity.hitCount=0;entity.guardCount=0}
-  if(!definition.hitdefpersist)entity.guardHitDef=null;
-  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  Object.assign(entity,{prevState:entity.state,state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,animStartTime:0,once:new Set()});
+  applyStatePersistence(definition,{
+   evaluate:value=>api.eval(String(value),context(entity)),
+   clearHitCount:()=>{entity.hitCount=0;entity.guardCount=0;api.transitionMoveContact?.(entity,{hitcountpersist:0,movehitpersist:1})},
+   clearMoveHit:()=>{entity.moveContact=0;entity.moveHit=0;entity.moveGuarded=0;api.transitionMoveContact?.(entity,{hitcountpersist:1,movehitpersist:0})},
+   clearHitDef:()=>{entity.guardHitDef=null;entity.activeHitDef=null}
+  });
+  entity.ctrl=definition.ctrl??entity.ctrl;
   entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
   if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}

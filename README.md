@@ -1,3 +1,7 @@
+## 0.25.22 — StateDef persistence import and entry consumers (partial)
+
+All five character exporters preserve HitCountPersist, MoveHitPersist and HitDefPersist expressions. P1, P2, independent reaction and Helper entry paths evaluate them sequentially after incoming state/type initialization, without unconditional contact or HitDef clearing. Actual browser fixtures cover root/reaction idle and attack entries, live count/contact/HitDef retention and dependent resets; focused import and Helper tests also pass. Current character snapshots contain no explicit persistence fields, so no asset regeneration is needed. Foreign-state/version parity, full HitDef reset defaults and deferred entry remain Pending. Zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.21 — Live HitAdd and native hit counters (partial)
 
 HitAdd now changes real root/Helper counters through caller-evaluated Value/RedirectID, explicit target selection and native fallback rules. Live HitCount/UniqHitCount/ReceivedHits/ComboCount queries share contact/reset consumers; unique contacts remain distinct from NumHits, type None and projectiles. State-entry resets/persistence and int32 arithmetic were corrected without replacing custom report scoring. Root SOCD reset also clears only that side's Helper histories. Actual fixtures and full regression cover these paths. Full native phase/version/override coverage, persistence imports, Simul/Tag and native combo HUD rendering remain Pending. Zero controllers are certified complete. Deployment is verified separately.

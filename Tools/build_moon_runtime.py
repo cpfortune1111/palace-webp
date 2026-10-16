@@ -5,6 +5,7 @@ from pathlib import Path
 
 from character_compatibility import imported_compatibility
 from character_coordinates import imported_coordinates
+from state_persistence import import_state_persistence
 
 from compile_moon_states import DISABLED_ACTIONS, build, compile_controller, fields
 
@@ -39,6 +40,7 @@ def compile_runtime(imported, output):
         state = {'type': values.get('type', 'S'), 'physics': values.get('physics', 'N'),
                  'moveType': values.get('movetype', 'I'), 'controllers': [],
                  'source': {'file': definition['file'], 'line': definition['line']}}
+        import_state_persistence(state, values)
         for key in ('anim', 'ctrl', 'sprpriority', 'juggle', 'poweradd'):
             if key in values:
                 state[key] = int(values[key]) if re.fullmatch(r'-?\d+', values[key]) else values[key]
