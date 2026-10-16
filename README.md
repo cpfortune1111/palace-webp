@@ -1,3 +1,7 @@
+## 0.25.23 — Guard-distance source defaults and Helper snapshots (partial)
+
+Normal/projectile guard distances now read all three Size axes with legacy/explicit width precedence. All five exporters preserve the distance fields; real source builds pass, and Venus regains two omitted scalar constants without replacing other tuning. Helpers snapshot parent Size distances at creation, retain them through state resets and pass them independently to child Helpers/projectiles. Foreign state providers no longer replace root Size defaults. Actual ownership/reset/spawn fixtures and complete regression pass. Parser dialects, coordinate/version parity, remaining Size and HitDef reset fields remain Pending. Zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.22 — StateDef persistence import and entry consumers (partial)
 
 All five character exporters preserve HitCountPersist, MoveHitPersist and HitDefPersist expressions. P1, P2, independent reaction and Helper entry paths evaluate them sequentially after incoming state/type initialization, without unconditional contact or HitDef clearing. Actual browser fixtures cover root/reaction idle and attack entries, live count/contact/HitDef retention and dependent resets; focused import and Helper tests also pass. Current character snapshots contain no explicit persistence fields, so no asset regeneration is needed. Foreign-state/version parity, full HitDef reset defaults and deferred entry remain Pending. Zero controllers are certified complete. Deployment is verified separately.

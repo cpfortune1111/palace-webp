@@ -1,3 +1,16 @@
+export function characterGuardDistance(data,{projectile=false}={}){
+ const constants={...data.sizeConstants,...data.constants},prefix='size.'+(projectile?'proj.':'')+'attack.dist';
+ const range={x:projectile?[90,0]:[data.guardDistance?.front??160,data.guardDistance?.back??0],y:[1000,1000],z:projectile?[10,10]:[4,4]};
+ if(constants[prefix]!==undefined)range.x[0]=Number(constants[prefix]);
+ for(const [name,axis] of [['width','x'],['height','y'],['depth','z']]){
+  const value=constants[prefix+'.'+name];
+  if(value!==undefined){const values=Array.isArray(value)?value:[value];for(let index=0;index<Math.min(2,values.length);index++)range[axis][index]=Number(values[index])}
+  for(const [index,component] of ['x','y'].entries())if(constants[prefix+'.'+name+'.'+component]!==undefined)range[axis][index]=Number(constants[prefix+'.'+name+'.'+component]);
+ }
+ for(const axis of ['x','y','z'])range[axis]=range[axis].map(value=>Math.fround(value));
+ return range;
+}
+
 export function applyAttackDistanceController(controller,actor,api){
  if(controller.type.toLowerCase()!=='attackdist')return false;
  const params=controller.params||controller;

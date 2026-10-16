@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from character_coordinates import imported_coordinates
+from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
 
 parser = argparse.ArgumentParser()
@@ -176,7 +177,7 @@ for state_id in (100, 105, 106):
         locomotion_states[str(state_id)]['ctrl'] = int(fields['ctrl'])
 locomotion_constants = {}
 source_text = (source / 'venus.cns').read_text(encoding='utf-8-sig')
-size_constants = {}
+size_constants = attack_distance_constants(source_text)
 for name in ('ground.front', 'ground.back', 'air.front', 'air.back', 'height'):
     size_constants['size.' + name] = float(re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)[1])
 for axis, value in zip(('x', 'y'), re.search(r'^head\.pos\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):

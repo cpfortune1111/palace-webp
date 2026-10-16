@@ -1,5 +1,15 @@
 import assert from 'node:assert/strict';
-import {applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from '../Engine/attack-distance.js';
+import {characterGuardDistance,applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from '../Engine/attack-distance.js';
+
+assert.deepEqual(characterGuardDistance({}),{x:[160,0],y:[1000,1000],z:[4,4]});
+assert.deepEqual(characterGuardDistance({},{projectile:true}),{x:[90,0],y:[1000,1000],z:[10,10]});
+const sizeData={guardDistance:{front:300,back:20},constants:{'size.attack.dist':200,'size.attack.dist.width.x':240,'size.attack.dist.width.y':30,'size.attack.dist.height.x':50,'size.attack.dist.height.y':60,'size.attack.dist.depth.x':7,'size.attack.dist.depth.y':8,'size.proj.attack.dist.width.x':80,'size.proj.attack.dist.width.y':10,'size.proj.attack.dist.height.x':25,'size.proj.attack.dist.depth.y':12}};
+assert.deepEqual(characterGuardDistance(sizeData),{x:[240,30],y:[50,60],z:[7,8]});
+assert.deepEqual(characterGuardDistance(sizeData,{projectile:true}),{x:[80,10],y:[25,1000],z:[10,12]});
+const isolated=characterGuardDistance(sizeData);isolated.x[0]=1;
+assert.equal(characterGuardDistance(sizeData).x[0],240);
+assert.deepEqual(characterGuardDistance({sizeConstants:{'size.attack.dist.width':[12,13],'size.attack.dist.height':14}}),{x:[12,13],y:[14,1000],z:[4,4]});
+assert.deepEqual(characterGuardDistance({sizeConstants:{'size.attack.dist':640,'size.proj.attack.dist':360},constants:{'data.attack':100}},{projectile:true}),{x:[360,0],y:[1000,1000],z:[10,10]});
 
 const actor={localScale:1,hitDef:{guardDistance:{x:[100,0],y:[50,60],z:[10,20]}}};
 const target={localScale:2,hitDef:{guardDistance:{x:[200,30],y:[40,50],z:[60,70]}}};

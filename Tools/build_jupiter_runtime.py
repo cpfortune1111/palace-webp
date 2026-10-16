@@ -5,6 +5,7 @@ from pathlib import Path
 
 from character_compatibility import imported_compatibility
 from character_coordinates import imported_coordinates
+from attack_distance_constants import update_attack_distance_constants
 from state_persistence import import_state_persistence
 
 from compile_moon_states import build, compile_controller, fields
@@ -90,6 +91,7 @@ def compile_runtime(imported, output):
                 constants[section + '.' + key] = numbers[0]
                 if section == 'velocity':
                     constants[section + '.' + key + '.x'] = numbers[0]
+    update_attack_distance_constants(constants, (imported / 'original/jupiter.cns').read_text(encoding='utf-8-sig'))
     constants['velocity.jump.y'] = constants['velocity.jump.neu.y']
     globals_data = {}
     for state_id in (-4, -3, -2):
