@@ -1,3 +1,7 @@
+## 0.25.25 — Custom Const import and reserved builtin inventory (partial)
+
+The pinned Const compiler inventory now records 138 builtin names/aliases separately from open-ended custom names. Original first-section/first-key Constants imports feed live own-character root/Helper consumers, including foreign-state lookup, float32 numeric-prefix/sign-exponent behavior and JSON-safe nonfinite values. Missing custom names return native zero without masking unsupported reserved builtins. All five actual source builds, shared raw-CNS/browser fixtures and complete regression pass. Current characters have no custom entries and need no payload regeneration. Other builtin consumers, platform/parser extremes and version parity remain Pending; zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.24 — Guard-distance Const ownership and global programs (partial)
 
 Fourteen native guard-distance Const names/aliases now read actual root/Helper Size and convert to the original expression owner's units through redirection. Negative-state distance expressions use own-character program units even during borrowed states. P2 lifecycle dispatch retains its supplied context; root foreign states skip own -3, and Helper globals fetch own programs instead of the root's foreign provider. Actual foreign-unit/root/Helper/global fixtures and complete regression pass. Other Const families, full provider lifetime and cross-version/native scheduler parity remain Pending. Zero controllers are certified complete. Deployment is verified separately.

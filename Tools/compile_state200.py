@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 
 from character_coordinates import imported_coordinates
+from custom_constants import imported_custom_constants
 from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
 
@@ -325,6 +326,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
                                 for name in ('venus.cns', 'venus_Common.cns', 'venus_Helper.st', 'venus.cmd', 'venus.air')}},
           'intentionalBlankPairs': [[122, 0], [951, 99]], 'unfinishedActions': [645], 'airGuard': False}
 bundle.update(imported_coordinates(root))
+bundle.update(imported_custom_constants(root))
 import_bundle_persistence(bundle, states['states'])
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

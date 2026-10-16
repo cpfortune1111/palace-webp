@@ -5,6 +5,7 @@ from pathlib import Path
 
 from character_compatibility import imported_compatibility
 from character_coordinates import imported_coordinates
+from custom_constants import imported_custom_constants
 from attack_distance_constants import update_attack_distance_constants
 from state_persistence import import_state_persistence
 
@@ -171,6 +172,7 @@ def compile_runtime(imported, output):
     output.parent.mkdir(parents=True, exist_ok=True)
     bundle.update(imported_compatibility(imported))
     bundle.update(imported_coordinates(imported))
+    bundle.update(imported_custom_constants(imported))
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Jupiter runtime:', len(states), 'states;', len(commands), 'command definitions')
 

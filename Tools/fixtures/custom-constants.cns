@@ -1,0 +1,13 @@
+[Constants]
+test.rate = 1.23456789
+test.zero = 0
+data.attack = 9999
+test.prefix = 12.5tail
+test.exponent = 1e-2
+test.signed.exponent = -1e-2
+test.infinity = 1e999
+test.nan = 0e999
+TEST.RATE = 99
+
+[Constants]
+ignored = 123
