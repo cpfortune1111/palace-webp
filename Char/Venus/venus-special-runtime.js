@@ -4,6 +4,7 @@ import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
 import {applyStatePersistence} from '../../Engine/state-persistence.js';
+import {characterLocalCoord} from '../../Engine/clsn-coordinate-scale.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
 import {stepZPhysics} from '../../Engine/z-physics.js?v=02505';
 import {createDepthBoundFlags} from '../../Engine/depth-bound.js?v=02505';
@@ -65,10 +66,10 @@ export function createSpecialRuntime(api){
   if(params['reversal.attr']!==undefined)result.reversalFallData={...reversalFallDefinition(result,{evaluate:value=>api.eval(value,context),resetOptions:api.hitDefinitionResetOptions?.(player)}),unhittabletime:result.unhittabletime,hitDefinitionTeamSide:result.hitDefinitionTeamSide};
   return result;
  };
- function context(entity,commands){
+ function context(entity,commands,expressionOwner=entity){
   if(commands===undefined)commands=entity.kind==='helper'?(api.helperCommands?.(entity)||{}):api.commands(entity.player);
   if(!helperCommandAllowed(entity))commands={};
-  const base=api.context(entity,root(entity.player===1?2:1),commands);
+  const base=api.context(entity,root(entity.player===1?2:1),commands,expressionOwner);
   return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
@@ -126,7 +127,7 @@ export function createSpecialRuntime(api){
  function helperController(entity,controller,index,global=false){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
-  const ctx=context(entity);
+  const ctx=context(entity,undefined,global?{...entity,expressionLocalCoord:characterLocalCoord(api.ownData?.(entity.player)??api.data(entity.player))}:entity);
   if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
   if(!global){entity.controllerSchedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
@@ -143,7 +144,7 @@ export function createSpecialRuntime(api){
   }
  }
  function helperGlobalState(entity,stateNo){
-  const data=api.data(entity.player);
+  const data=api.ownData?.(entity.player)??api.data(entity.player);
   const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
   for(const [index,controller]of controllers.entries()){
    helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);

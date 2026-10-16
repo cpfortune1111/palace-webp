@@ -1,3 +1,7 @@
+## 0.25.24 — Guard-distance Const ownership and global programs (partial)
+
+Fourteen native guard-distance Const names/aliases now read actual root/Helper Size and convert to the original expression owner's units through redirection. Negative-state distance expressions use own-character program units even during borrowed states. P2 lifecycle dispatch retains its supplied context; root foreign states skip own -3, and Helper globals fetch own programs instead of the root's foreign provider. Actual foreign-unit/root/Helper/global fixtures and complete regression pass. Other Const families, full provider lifetime and cross-version/native scheduler parity remain Pending. Zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.23 — Guard-distance source defaults and Helper snapshots (partial)
 
 Normal/projectile guard distances now read all three Size axes with legacy/explicit width precedence. All five exporters preserve the distance fields; real source builds pass, and Venus regains two omitted scalar constants without replacing other tuning. Helpers snapshot parent Size distances at creation, retain them through state resets and pass them independently to child Helpers/projectiles. Foreign state providers no longer replace root Size defaults. Actual ownership/reset/spawn fixtures and complete regression pass. Parser dialects, coordinate/version parity, remaining Size and HitDef reset fields remain Pending. Zero controllers are certified complete. Deployment is verified separately.
