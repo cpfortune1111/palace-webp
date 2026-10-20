@@ -38,12 +38,17 @@ const server=http.createServer((request,response)=>{
     caller.vars.fill(0);caller.vars[0]=5;caller.vars[1]=7;caller.fvars[0]=.5;
     const context=specialRuntime.context(caller),expressions=['Var(0)&&Var(1)','Var(0)||2','FVar(0)||2','(Var(0)||2)/2','(FVar(0)||2)/2','5||2','Time||2','abs(5)||2','Var(0)^^0','Var(0)^^Var(1)','1||1^^1','1^^1&&0','(Var(0)^^0)/2','(Time^^0)/2'];
     for(const [index,value] of expressions.entries())executeControllerM1({type:'VarSet',params:{fv:index+9,value}},caller,context,{owner:caller,player,schedulingApplied:true});
-    rows.push({profile,player,kind,values:caller.fvars.slice(9,23)});
+    rows.push({profile,player,kind,values:caller.fvars.slice(9,23),undefinedValues:['(1/0)||2','(1/0)&&Var(0)','Var(0)&&(1/0)','Var(0)^^(1/0)','0||(1/0)'].map(value=>evalAST(parseExprAST(value),context))});
    }}finally{combatEngineProfile=saved}
    return rows;
   })()`);
   console.log('Actual logical profile controller observations',JSON.stringify(results));
-  for(const row of results)assert.deepEqual(row,{profile:row.profile,player:row.player,kind:row.kind,values:row.profile==='ikemen'?[7,5,.5,2,.25,1,5,1,1,0,1,1,0,0]:[1,1,1,0,0,1,1,1,1,0,1,1,0,0]});
+  for(const row of results){
+   const {undefinedValues,...observed}=row;
+   assert.deepEqual(observed,{profile:row.profile,player:row.player,kind:row.kind,values:row.profile==='ikemen'?[7,5,.5,2,.25,1,5,1,1,0,1,1,0,0]:[1,1,1,0,0,1,1,1,1,0,1,1,0,0]});
+   if(row.profile==='ikemen')assert.deepEqual(undefinedValues.map(Number),[1,NaN,NaN,1,0]);
+   else assert.ok(undefinedValues.every(Number.isNaN));
+  }
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

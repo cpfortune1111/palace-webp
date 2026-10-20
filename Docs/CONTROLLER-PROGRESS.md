@@ -1,3 +1,7 @@
+## 0.25.49 — Native query types, ranges and logical undefined (partial)
+
+Real parser/evaluator/controller consumers now preserve 41 existing native query tags and typed interval promotion/results, including pinned compiler/runtime undefined distinctions. MUGEN-profile evaluated logical bottom no longer normalizes into valid boolean values. All 196 Node checks and focused actual actor cases pass; complete final regression/deployment are separate gates. Remaining query values/versions, RNG timing, bottom/storage, constants, VM/native phases and parameters remain Pending. Whole-controller certifications stay 0/163.
+
 ## 0.25.48 — Typed math and redirection consumers (partial)
 
 Actual parser/evaluator/controller consumers now execute exponentiation, typed unary and multi-argument math, and selected numeric redirects. Source-backed profile rules cover overflow, negative integer promotion, caller argument scope and eager writes. Failing-before integer redirection fixtures now retain native division. All 194 Node checks pass; eight exponent and eight math actor cases cover 12 and 28 parameters respectively. Final combined-browser/deployment gates are separate. Full VM/undefined/query/constants/native-phase and parameter semantics remain Pending; no controller certification changes.

@@ -1,3 +1,7 @@
+## 0.25.49 — Query, interval and logical undefined consumers (partial)
+
+Forty-one existing queries now retain source-checked integer/boolean/float tags through real parameters. Typed intervals preserve promoted precision, boolean arithmetic and native runtime-versus-folded undefined behavior. Evaluated MUGEN logical undefined values no longer disappear into normal truth values. All 196 Node checks and focused root/Helper scenarios pass; final combined-browser/deployment gates are separate. Full query values, RNG timing, bottom/storage/compiler/native phases and controller parameters remain Pending. No controller is certified complete. See QUERY-NUMERIC-TYPES-WIP.md, INTERVAL-NUMERIC-WIP.md and LOGICAL-UNDEFINED-WIP.md.
+
 ## 0.25.48 — Typed math and numeric redirects (partial)
 
 Exponentiation, unary and multi-argument math now have actual typed parameter consumers, native-profile overflow/promotion rules and caller-scoped argument evaluation. Recognized numeric redirects preserve selected actor tags through arithmetic instead of silently using JavaScript division. All 194 Node checks and eight exponent/eight expanded math actor scenarios pass; final regression and deployment are separate gates. Full undefined/query/constant-folding/native phases and all 163 controller certifications remain Pending. See EXPONENT-EXPRESSION-WIP.md and MATH-FUNCTION-TYPES-WIP.md.

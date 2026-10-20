@@ -3,10 +3,16 @@ const variables={var:'int',sysvar:'int',fvar:'float',sysfvar:'float'};
 const comparisons=new Set(['=','==','!=','>','<','>=','<=']);
 const arithmetic=new Set(['+','-','*','/','%','**']);
 const bitwise=new Set(['&','|','^']);
-const integerQueries=new Set(['time','stateno','life','lifemax']);
+const integerQueries=new Set(['time','stateno','life','lifemax','anim','animtime','facing','backedgebodydist','backedgedist','frontedgebodydist','frontedgedist','gametime','hitcount','hitpausetime','id','movecontact','moveguarded','movehit','movereversed','numenemy','numpartner','numproj','power','powermax','prevstateno','random','roundstate','teamside','uniqhitcount']);
+const booleanQueries=new Set(['alive','canrecover','ctrl','hitfall','hitover','hitshakeover','inguarddist']);
 const floatQueries=new Set(['pos x','pos y','vel x','vel y','vel z']);
 const unaryMath=new Set(['abs','floor','ceil','ln','sin','cos','tan','asin','acos','atan','exp','sign','rad','deg']);
 const multiMath={log:2,max:2,min:2,round:2,atan2:2,clamp:3,lerp:3};
+
+export function numericQueryType(name){
+ const key=name.toLowerCase().replace(/\s+/g,' ');
+ return integerQueries.has(key)?'int':booleanQueries.has(key)?'bool':floatQueries.has(key)?'float':null;
+}
 
 export function isConstantNumericExpression(node){
  if(node.t==='num')return true;
@@ -24,8 +30,9 @@ function numericType(node){
  if(cachedTypes.has(node))return cachedTypes.get(node);
  let type=null;
  if(node.t==='num')type=node.numericType??(Number.isInteger(node.v)?'int':'float');
+ else if(node.t==='range'&&[node.a,node.lower,node.upper].every(argument=>numericType(argument)))type='bool';
  else if(['redirect','helperRedirect','indexedRedirect'].includes(node.t)&&numericType(node.expr))type='dynamic';
- else if(node.t==='id')type=integerQueries.has(node.name.toLowerCase())?'int':floatQueries.has(node.name.toLowerCase())?'float':null;
+ else if(node.t==='id')type=numericQueryType(node.name);
  else if(node.t==='call'&&node.args.length===1&&Object.hasOwn(variables,node.name.toLowerCase()))type=variables[node.name.toLowerCase()];
  else if(node.t==='call'&&node.args.length===1&&unaryMath.has(node.name.toLowerCase())&&numericType(node.args[0]))type=['abs','floor','ceil'].includes(node.name.toLowerCase())?'dynamic':node.name.toLowerCase()==='sign'?'int':'float';
  else if(node.t==='call'&&Object.hasOwn(multiMath,node.name.toLowerCase())&&node.args.length===multiMath[node.name.toLowerCase()]&&node.args.every(argument=>numericType(argument)))type='float';
@@ -52,11 +59,19 @@ export function evaluateTypedNumericAST(node,api){
  const integer=value=>Math.trunc(Number(value))|0;
  function evaluate(current){
   const type=numericType(current);
+  if(current.t==='range'){
+   const operands=[current.a,current.lower,current.upper].map(evaluate);
+   if(operands.some(operand=>Number.isNaN(operand.value))&&(!api.logicalOperands||!isConstantNumericExpression(current)))return {type:'bool',value:NaN};
+   const floating=operands.some(operand=>operand.type==='float'&&!Number.isNaN(operand.value));
+   const [value,lower,upper]=operands.map(operand=>Number.isNaN(operand.value)?0:floating?Math.fround(Number(operand.value)):integer(operand.value));
+   const inside=(current.includeLower?value>=lower:value>lower)&&(current.includeUpper?value<=upper:value<upper);
+   return {type:'bool',value:current.op==='!='?!inside:inside};
+  }
   if(['redirect','helperRedirect','indexedRedirect'].includes(current.t))return api.redirected(current);
   if(current.t==='num')return {type,value:type==='float'?Math.fround(current.v):integer(Math.max(-2147483648,Math.min(2147483647,current.v)))};
   if(current.t==='id'){
    const value=Number(api.query(current.name));
-   return {type,value:Number.isNaN(value)?NaN:type==='float'?Math.fround(value):integer(value)};
+   return {type,value:Number.isNaN(value)?NaN:type==='bool'?!!value:type==='float'?Math.fround(value):integer(value)};
   }
   if(current.t==='assign')return {type,value:api.assign(current.target,current.value)};
   if(current.t==='call'){
@@ -105,7 +120,9 @@ export function evaluateTypedNumericAST(node,api){
   if(current.op==='^^')return {type:'bool',value:api.logicalXor(current)};
   const first=evaluate(current.a);
   if(current.op==='&&'||current.op==='||'){
+   if(!api.logicalOperands&&Number.isNaN(first.value))return {type:'bool',value:NaN};
    const selected=current.op==='&&'?(first.value?evaluate(current.b):first):(first.value?first:evaluate(current.b));
+   if(!api.logicalOperands&&Number.isNaN(selected.value))return {type:'bool',value:NaN};
    return api.logicalOperands&&!isConstantNumericExpression(current)?selected:{type:'bool',value:!!selected.value};
   }
   const second=evaluate(current.b);
