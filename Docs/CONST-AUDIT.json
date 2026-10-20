@@ -103,37 +103,37 @@
     {
       "name": "size.xscale",
       "opcode": "OC_const_size_xscale",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.yscale",
       "opcode": "OC_const_size_yscale",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.ground.back",
       "opcode": "OC_const_size_ground_back",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.ground.front",
       "opcode": "OC_const_size_ground_front",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.air.back",
       "opcode": "OC_const_size_air_back",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.air.front",
       "opcode": "OC_const_size_air_front",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.height",
       "opcode": "OC_const_size_height",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.attack.dist",
@@ -173,12 +173,12 @@
     {
       "name": "size.attack.depth.top",
       "opcode": "OC_const_size_attack_depth_top",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.attack.depth.bottom",
       "opcode": "OC_const_size_attack_depth_bottom",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.proj.attack.dist",
@@ -218,62 +218,62 @@
     {
       "name": "size.proj.doscale",
       "opcode": "OC_const_size_proj_doscale",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.head.pos.x",
       "opcode": "OC_const_size_head_pos_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.head.pos.y",
       "opcode": "OC_const_size_head_pos_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.mid.pos.x",
       "opcode": "OC_const_size_mid_pos_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.mid.pos.y",
       "opcode": "OC_const_size_mid_pos_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.shadowoffset",
       "opcode": "OC_const_size_shadowoffset",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.draw.offset.x",
       "opcode": "OC_const_size_draw_offset_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.draw.offset.y",
       "opcode": "OC_const_size_draw_offset_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.depth.top",
       "opcode": "OC_const_size_depth_top",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.depth.bottom",
       "opcode": "OC_const_size_depth_bottom",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.weight",
       "opcode": "OC_const_size_weight",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "size.pushfactor",
       "opcode": "OC_const_size_pushfactor",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
     },
     {
       "name": "velocity.air.gethit.airrecover.add.x",

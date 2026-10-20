@@ -7,6 +7,7 @@ from pathlib import Path
 from character_coordinates import imported_coordinates
 from custom_constants import imported_custom_constants
 from data_constants import imported_data_constants
+from size_definition import imported_size_definition
 from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
 
@@ -329,6 +330,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
 bundle.update(imported_coordinates(root))
 bundle.update(imported_custom_constants(root))
 bundle.update(imported_data_constants(root))
+bundle.update(imported_size_definition(root))
 import_bundle_persistence(bundle, states['states'])
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

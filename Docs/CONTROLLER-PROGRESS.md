@@ -1,3 +1,7 @@
+## 0.25.27 — Size snapshots and typed numeric expressions (partial)
+
+Original Size structures now feed root/Helper Const ownership, independent Helper creation snapshots, body-box/spark/draw consumers and projectile sprite scaling. All 35 Size names remain partial rather than certified. A source-backed arithmetic correction distinguishes integer division from decimal division, applies int32 wrapping/float32 arithmetic to supported numeric subtrees and preserves explicitly fractional friction fixtures. Full expression VM typing, redirected creation, broader physical consumers and native/version fidelity remain Pending. No controller is certified complete. Deployment is verified separately.
+
 ## 0.25.26 — Original Data Const import and live queries (partial)
 
 All eighteen Data Const names now read own-character original metadata for roots/Helpers, independently of foreign state units and live ModifyPlayer maxima/base changes. Five exporters/payloads preserve native defaults, life-dependent point defaults, blank persistence indices, integer-prefix bounds, volume transformations and reciprocal fall defence values. Only metadata was added to current payloads; existing runtime tuning remains intact. Actual source/payload comparisons, raw/browser fixtures and complete regression pass. Parser/platform/version parity and other original Data consumers remain Pending; zero controllers are certified complete. Deployment is verified separately.

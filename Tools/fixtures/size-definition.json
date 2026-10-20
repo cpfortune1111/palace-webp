@@ -1,0 +1,21 @@
+{
+  "sizeDefinition": {
+    "xscale": 1.5,
+    "yscale": 0.75,
+    "standbox": [-21, -110, 31, 4],
+    "crouchbox": [-25, -50, 26, 4],
+    "airbox": [-13, -90, 15, 0],
+    "downbox": [-22, -30, 32, 0],
+    "attackDistance": {"x": [240, 30], "y": [50, 60], "z": [7, 8]},
+    "projectileAttackDistance": {"x": [80, 10], "y": [25, 26], "z": [11, 12]},
+    "projectileDoScale": 2,
+    "headPosition": [-5, -300],
+    "midPosition": [-3, -200],
+    "shadowOffset": 9,
+    "drawOffset": [6, -7],
+    "depth": [10, 11],
+    "attackDepth": [7, 8],
+    "weight": 123,
+    "pushFactor": 0.800000011920929
+  }
+}

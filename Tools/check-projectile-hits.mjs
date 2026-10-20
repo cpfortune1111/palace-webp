@@ -5,7 +5,7 @@ for(const guarded of [false,true]){
  let tick=0,hits=0;
  const fighters=[null,{player:1,x:0,y:0,facing:1,vars:[]},{player:2,x:0,y:0,facing:-1,vars:[]}];
  const runtime=createSpecialRuntime({
-  root:player=>fighters[player],tick:()=>tick,data:()=>({}),commands:()=>[],effects:[],
+  root:player=>fighters[player],tick:()=>tick,data:()=>({engineVersions:{mugen:[1,1],ikemen:[0,0]}}),commands:()=>[],effects:[],
   context:()=>({query:()=>0}),pair:value=>String(value).split(','),eval:value=>Number(value),
   collision:()=>({contact:true,overlap:true}),hit:()=>{hits++;return {guarded,attackerPause:0}},
   camera:()=>0,advance:()=>{},duration:()=>100,attack:()=>null,background:()=>{}
