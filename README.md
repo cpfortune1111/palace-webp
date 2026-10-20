@@ -1,3 +1,7 @@
+## 0.25.38 — Root target selected-state initialization (partial)
+
+P2StateNo and TargetState now defer real root headers through the recipient's pause, preserving old animation and velocity. Their distinct H/control selection rules have twelve actual profile/root/contact cases. Initial full browser regression, root-source checks and original Moon throws pass. Helper recipients, broader providers, general transitions and full native scheduling remain Pending; no controller is certified complete. See TARGET-STATE-CHANGE-WIP.md. Deployment is verified separately.
+
 ## 0.25.37 — Root selected-state and deferred initialization (partial)
 
 P1/P2 P1StateNo sources now select metadata immediately but initialize their real headers after their own pauses, including reaction-origin P1 sources and post-combat execution. P2 no longer waits for P1's unrelated pause. Actual fixtures exercise incoming expression timing, Time=0, GetHit clocks, replacement, U/-1 retention, intrinsic defaults and old-cost/new-header separation. Browser regression and original Moon throws pass; Node checks pass 179/184 with five existing failures. Target/general transitions, persistent-index/-1 ordering, foreign helpers and complete native scheduler/ghvset remain Pending; all 163 controllers remain uncertified. See ROOT-STATE-CHANGE-WIP.md. Deployment is verified separately.

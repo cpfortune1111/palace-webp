@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.37
+# Coverage accounting checkpoint — 0.25.38
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Root P2StateNo and TargetState now have real delayed-header consumers, distinct selection H/control phases, twelve actual profile/root/contact cases and an initial passing full browser regression. TARGET-STATE-CHANGE-WIP.md records broader provider/Helper/general-transition and native scheduler gaps. All 163 controller certifications remain Pending; this is not an overall completion percentage.
 
 Root P1StateNo source requests now have real delayed-header consumers and live own-pause, reaction-origin, result-path, Time=0, clock-write and intrinsic-default evidence. ROOT-STATE-CHANGE-WIP.md identifies remaining immediate target/general paths and incomplete index/provider/scheduler semantics. Inventory counts and all 163 pending controller certifications are unchanged; no overall percentage is asserted.
 
