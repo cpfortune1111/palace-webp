@@ -31,3 +31,4 @@ assert.equal(actors.get(3).facing,1);
 applyTargetFacingController({type:'TargetFacing',params:{redirectid:'var(8)',id:7,index:1,value:2}},owner,facingApi);
 assert.equal(actors.get(3).facing,-1);
 console.log('Native unique targets, live hit-ID counts, HitOnce retention and TargetDrop selection passed');
+selection.remove(2);assert.deepEqual(selection.ids(),[1,3]);selection.remove(999);assert.deepEqual(selection.ids(),[1,3]);

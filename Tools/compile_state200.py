@@ -118,7 +118,7 @@ for state_id in (200, 210, 230, 240, 400, 410, 430, 440, 600, 610, 630, 640):
     attack_states[str(state_id)] = {
         'type': fields['type'], 'physics': fields['physics'], 'moveType': fields['movetype'],
         'anim': int(fields['anim']), 'ctrl': state_scalar(fields['ctrl']),
-        'sprpriority': state_scalar(fields['sprpriority']), 'juggle': int(fields['juggle']),
+        'sprpriority': state_scalar(fields['sprpriority']), 'juggle': state_scalar(fields['juggle']),
         'poweradd': state_scalar(fields.get('poweradd', 0)),
         'velset': state_velocity(fields['velset']) if 'velset' in fields else [],
         'controllers': [compile_controller(controller) for controller in states['controllers']
@@ -140,7 +140,7 @@ for state_id in special_ids + helper_ids:
               for entry in state_definition['entries']}
     compiled = {'type': fields['type'], 'physics': fields['physics'], 'moveType': fields['movetype'],
                 'ctrl': state_scalar(fields.get('ctrl', 0)), 'sprpriority': state_scalar(fields.get('sprpriority', 0)),
-                'juggle': int(fields.get('juggle', 0)), 'poweradd': state_scalar(fields.get('poweradd', 0)),
+                'juggle': state_scalar(fields.get('juggle', 0)), 'poweradd': state_scalar(fields.get('poweradd', 0)),
                 'controllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == state_id]}
     if 'anim' in fields:
         compiled['anim'] = int(fields['anim'])

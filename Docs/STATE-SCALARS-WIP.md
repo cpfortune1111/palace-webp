@@ -1,5 +1,7 @@
 # StateDef priority, control and power — partial implementation
 
+0.25.33 follow-up: the shared source hook additionally preserves Juggle expressions and removes absent synthesized costs. Actual pre-velocity costs now drive collision budgets; see JUGGLE-INTEGRATION-WIP.md. Native same-frame/custom-throw and full phase fidelity remain incomplete.
+
 0.25.32 follow-up: FaceP2 has a real pre-velocity phase and native-facing consumers; see STATE-FACING-WIP.md. The shared source import additionally preserves FaceP2 expressions. The earlier three-field scalar phase and its release evidence remain documented below.
 
 Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go stateDef and bytecode.go stateDef.Run. Sprite priority evaluates as an integer after persistence and before velocity. Animation precedes boolean control, and integer PowerAdd observes the resulting control and current power. Native char.go powerAdd/powerOwner/setPower shares a Helper's root power, clamps/saturates resources, skips zero changes and locks changes after the round. Native get-hit state selection explicitly removes control before running its incoming StateDef.

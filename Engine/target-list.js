@@ -30,7 +30,7 @@ export function createTargetList(){
    }else index++;
   }
  }
- return {add,count,select,drop,prune,has:id=>targets.includes(id),ids:()=>[...targets],clear:()=>targets.splice(0)};
+ return {add,count,select,drop,prune,remove:id=>{const index=targets.indexOf(id);if(index>=0)targets.splice(index,1)},has:id=>targets.includes(id),ids:()=>[...targets],clear:()=>targets.splice(0)};
 }
 
 export function applyTargetFacingController(controller,owner,api){

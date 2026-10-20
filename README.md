@@ -1,3 +1,7 @@
+## 0.25.33 — Native juggle cost and contact budgets (partial)
+
+StateDef juggle expressions now feed real per-actor costs. Shared collision gates and accepted contacts use per-source budgets, player/projectile version rules, Helper inheritance and NoJuggleCheck; guarded/overridden contacts do not incorrectly debit cost. Source import, idle/pause reset, recovery and target-drop cleanup have executable coverage. Custom throws, exact same-frame/native phase ordering and broader version/query parity remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.
+
 ## 0.25.32 — StateDef facing and turn consumers (partial)
 
 FaceP2 now executes before velocity across actual P1/P2/reaction/Helper entry, with live assertions, selected/backup opponents, legacy distance truncation and native depth ties. Auto-turn shares target eligibility and preserves world velocity; hardcoded jump-state turning no longer replaces an omitted header. Import and browser fixtures exercise these consumers. Full StateDef/AssertSpecial/native scheduling parity remains Pending; all 163 controllers remain uncertified. Deployment is verified separately.

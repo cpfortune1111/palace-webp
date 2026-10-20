@@ -54,6 +54,13 @@ class StateScalarImportTests(unittest.TestCase):
         import_bundle_state_scalars(bundle, definitions)
         self.assertEqual(bundle['states'], {'100': {'facep2': 'Ctrl && Facing = 1'}, '101': {}})
 
+    def test_juggle_expression_and_omitted_cost_are_not_synthesized(self):
+        bundle = {'states': {'100': {'juggle': 0}, '101': {'juggle': 0}}}
+        definitions = [{'id': 100, 'entries': [{'text': 'juggle=Facing + 2'}, {'text': 'juggle=0'}]},
+                       {'id': 101, 'entries': []}]
+        import_bundle_state_scalars(bundle, definitions)
+        self.assertEqual(bundle['states'], {'100': {'juggle': 'Facing + 2'}, '101': {}})
+
     def test_current_payloads_match_original_scalar_headers(self):
         for name, path in [('moon', 'Char/Moon/Battle/moon_runtime.json'),
                            ('jupiter', 'Char/Jupiter/Battle/jupiter_runtime.json'),
