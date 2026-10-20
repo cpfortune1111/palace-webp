@@ -1,5 +1,7 @@
 # StateDef velocity import and live entry — partial implementation
 
+0.25.31 follow-up: provided sprite priority now evaluates before velocity, and control/power have live post-animation entry consumers across roots/reactions/Helpers and legacy Venus paths. Normal get-hit control removal is explicit rather than inferred from an absent header. Other StateDef fields and legacy/native phase fidelity remain incomplete; see STATE-SCALARS-WIP.md.
+
 Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go stateDef/exprs/argExpression and bytecode.go stateDef.Run. VelSet accepts up to three float expressions. The engine evaluates and writes X, then Y, then Z; later expressions observe earlier writes. Omitted axes retain their previous values. Entry velocity runs after persistence handling but before animation/control/power updates. OC_vel_x/y/z converts the subject's velocity into the original caller's active units.
 
 The previous five exporters coerced StateDef vectors with float(value) and split(','). Tools/state_velocity.py now preserves the complete expression text, including nested function/redirect commas, first StateDef definitions and first velset keys. All export groups and Venus state200 pass through the common hook; Moon's existing 1101-to-1110 remap is retained and negative headers remain ignored. Five actual builders completed under outputs/state-velocity-import-check. Current payloads selectively update source-backed velset fields only; unrelated runtime tuning is not regenerated.

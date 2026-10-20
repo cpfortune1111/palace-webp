@@ -12,6 +12,7 @@ from motion_constants import imported_motion_constants
 from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
 from state_velocity import import_bundle_velocity, state_velocity
+from state_scalars import STATE_SCALAR_FIELDS, import_bundle_state_scalars, state_scalar
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source-import', type=Path, default=Path('outputs/venus'))
@@ -95,7 +96,7 @@ def compile_lifecycle_state(state_id):
             compiled[target] = fields[field]
     for field in ('ctrl', 'sprpriority', 'juggle', 'poweradd'):
         if field in fields:
-            compiled[field] = int(fields[field])
+            compiled[field] = state_scalar(fields[field]) if field in STATE_SCALAR_FIELDS else int(fields[field])
     if 'anim' in fields:
         compiled['anim'] = fields['anim']
     if 'velset' in fields:
@@ -116,9 +117,9 @@ for state_id in (200, 210, 230, 240, 400, 410, 430, 440, 600, 610, 630, 640):
               for entry in state_definition['entries']}
     attack_states[str(state_id)] = {
         'type': fields['type'], 'physics': fields['physics'], 'moveType': fields['movetype'],
-        'anim': int(fields['anim']), 'ctrl': int(fields['ctrl']),
-        'sprpriority': int(fields['sprpriority']), 'juggle': int(fields['juggle']),
-        'poweradd': int(fields.get('poweradd', 0)),
+        'anim': int(fields['anim']), 'ctrl': state_scalar(fields['ctrl']),
+        'sprpriority': state_scalar(fields['sprpriority']), 'juggle': int(fields['juggle']),
+        'poweradd': state_scalar(fields.get('poweradd', 0)),
         'velset': state_velocity(fields['velset']) if 'velset' in fields else [],
         'controllers': [compile_controller(controller) for controller in states['controllers']
                         if controller['state'] == state_id]}
@@ -138,8 +139,8 @@ for state_id in special_ids + helper_ids:
     fields = {entry['text'].split('=', 1)[0].strip().lower(): entry['text'].split('=', 1)[1].strip()
               for entry in state_definition['entries']}
     compiled = {'type': fields['type'], 'physics': fields['physics'], 'moveType': fields['movetype'],
-                'ctrl': int(fields.get('ctrl', 0)), 'sprpriority': int(fields.get('sprpriority', 0)),
-                'juggle': int(fields.get('juggle', 0)), 'poweradd': int(fields.get('poweradd', 0)),
+                'ctrl': state_scalar(fields.get('ctrl', 0)), 'sprpriority': state_scalar(fields.get('sprpriority', 0)),
+                'juggle': int(fields.get('juggle', 0)), 'poweradd': state_scalar(fields.get('poweradd', 0)),
                 'controllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == state_id]}
     if 'anim' in fields:
         compiled['anim'] = int(fields['anim'])
@@ -179,7 +180,7 @@ for state_id in (100, 105, 106):
     locomotion_states[str(state_id)] = {'type': fields['type'], 'physics': fields['physics'],
         'moveType': fields.get('movetype', 'I'), 'anim': int(fields['anim']), 'controllers': compiled}
     if 'ctrl' in fields:
-        locomotion_states[str(state_id)]['ctrl'] = int(fields['ctrl'])
+        locomotion_states[str(state_id)]['ctrl'] = state_scalar(fields['ctrl'])
 locomotion_constants = {}
 source_text = (source / 'venus.cns').read_text(encoding='utf-8-sig')
 size_constants = attack_distance_constants(source_text)
@@ -247,7 +248,7 @@ for state_id in (5020, 5030, 5035, 5040, 5050, 5070, 5071, 5100, 5101, 5110, 512
         fall_states[str(state_id)]['velset'] = state_velocity(fields['velset'])
     for field in ('anim', 'ctrl'):
         if field in fields:
-            fall_states[str(state_id)][field] = int(fields[field])
+            fall_states[str(state_id)][field] = state_scalar(fields[field]) if field in STATE_SCALAR_FIELDS else int(fields[field])
 for name in ('air.gethit.groundrecover', 'air.gethit.airrecover.mul', 'air.gethit.airrecover.add'):
     for axis, number in zip(('x', 'y'), re.search(r'^' + re.escape(name) + r'\s*=\s*([^;\n]+)', source_text, re.M)[1].split(',')):
         locomotion_constants['velocity.' + name + '.' + axis] = float(number)
@@ -336,5 +337,6 @@ bundle.update(imported_size_definition(root))
 bundle.update(imported_motion_constants(root))
 import_bundle_persistence(bundle, states['states'])
 import_bundle_velocity(bundle, states['states'])
+import_bundle_state_scalars(bundle, states['states'])
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

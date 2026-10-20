@@ -40,6 +40,45 @@ const server=http.createServer((request,response)=>{
   const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy];try{runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy]=saved}})()`);
   assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,1,true,0,.25]);
   console.log('Actual numeric expression types preserve native integer division, float32 arithmetic and int32 wrapping through real VelSet parameters');
+  const stateScalarsActual=await run(`(()=>{
+   const data=characterProfiles.get(battleCharacters[0]).battle,legacy=characterProfiles.get('SailorVenus').battle,number=991511,foreign='StateScalarForeignFixture';
+   const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount,p1Power,p1Life,p1LifeMax],p2:{...p2},idle:data.states['0'],round:lifecycleRuntime.rounds.state,owners:[...customStateOwners],foreign:characterProfiles.get(foreign),legacy:legacy.lifecycleStates[number],state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],targets:[...throwTargets],bindings:[...throwBindings]};
+   try{
+    const definition={type:'S',physics:'N',moveType:'I',sprpriority:'Ctrl + 2 + Time',velset:'Ctrl + 1, 0',anim:11,ctrl:'Anim = 11 && Vel X = 2',poweradd:'Ctrl * 10 + Power',controllers:[]};
+    data.states[number]=definition;data.fallStates[number]=definition;data.helperStates[number]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    characterProfiles.set(foreign,{...characterProfiles.get(battleCharacters[0]),battle:{...data,coordinateSystem:{localcoord:[320,240],webWorldWidth:1280}},states:{states:data.states,constants:data.constants}});
+    lifecycleRuntime.rounds.state=2;customStateOwners.fill(null);p1Reaction=null;p1Facing=1;runtimeCtrl=1;current=0;p1SprPriority=7;p1Power=100;
+    enterIRState(number);const first=[p1SprPriority,runtimeCtrl,p1Power,current,vx,liveP1().sprPriority];
+    customStateOwners[1]=foreign;Object.assign(p2,{ctrl:1,anim:0,power:100,sprPriority:7,facing:-1});
+    enterP2State(number);const second=[p2.sprPriority,p2.ctrl,p2.power,p2.anim,p2.vx*p2.facing];
+    customStateOwners[0]=foreign;p1Power=100;
+    const fighter={...specialRoot(1),state:0,time:9,anim:0,elem:1,elemTick:0,animStartTime:0,ctrl:1,sprPriority:7,facing:-1};
+    enterGroundReactionState(fighter,number);const reaction=[fighter.sprPriority,fighter.ctrl,p1Power,fighter.anim,fighter.vx*fighter.facing];
+    customStateOwners[0]=null;specialRuntime.dispatch({type:'Helper',params:{id:number,stateno:number}},null,null,{},specialRoot(1),1);
+    const helper=specialRuntime.entities.at(-1),initialHelperPriority=helper.sprPriority;Object.assign(helper,{ctrl:1,anim:0,sprPriority:7,facing:-1,stateOwner:foreign});data.helperStates[number]={...definition};p1Power=100;
+    specialRuntime.enterState(helper,number);const helperEntry=[helper.sprPriority,helper.ctrl,p1Power,helper.anim,helper.vx*helper.facing,helper.power];
+    legacy.lifecycleStates[number]=definition;customStateOwners.fill('SailorVenus');runtimeCtrl=1;current=0;p1Power=100;enterIRState(number);
+    const legacyFirst=[p1SprPriority,runtimeCtrl,p1Power,current,vx];Object.assign(p2,{ctrl:1,anim:0,power:100});enterP2State(number);
+    const legacySecond=[p2.sprPriority,p2.ctrl,p2.power,p2.anim,p2.vx*p2.facing];customStateOwners[0]=null;customStateOwners[1]=foreign;
+    definition.poweradd='3.9';runtimeCtrl=1;p1Power=2999;enterIRState(number);const capped=p1Power;
+    definition.poweradd='-2147483648';runtimeCtrl=1;p1Power=1;enterIRState(number);const floored=p1Power;
+    lifecycleRuntime.rounds.state=4;definition.poweradd='100';runtimeCtrl=1;p1Power=100;enterIRState(number);const locked=p1Power;
+    lifecycleRuntime.rounds.state=2;delete definition.sprpriority;delete definition.ctrl;delete definition.poweradd;p1SprPriority=9;runtimeCtrl=1;p1Power=77;enterIRState(number);
+    const omitted=[p1SprPriority,runtimeCtrl,p1Power];data.states['0']={...saved.idle,anim:0,ctrl:'Anim = 0',controllers:[]};customStateOwners.fill(null);p1Life=p2.life=1;p1LifeMax=p2.lifeMax=1000;runtimeCtrl=0;current=11;enterIRState(0);
+    const idleFirst=[runtimeCtrl,current];p2.ctrl=0;p2.anim=11;enterP2State(0);
+    return [first,second,reaction,helperEntry,capped,floored,locked,omitted,initialHelperPriority,legacyFirst,legacySecond,idleFirst,[p2.ctrl,p2.anim]];
+   }finally{
+    for(const entity of specialRuntime.entities){forgetHelperCommandInput(entity);nativeHitStates.delete(hitDefinitionOwnerKey(entity))}
+    [state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount,p1Power,p1Life,p1LifeMax]=saved.root;data.states['0']=saved.idle;
+    for(const key of Object.keys(p2))if(!(key in saved.p2))delete p2[key];Object.assign(p2,saved.p2);lifecycleRuntime.rounds.state=saved.round;
+    customStateOwners.splice(0,2,...saved.owners);if(saved.foreign)characterProfiles.set(foreign,saved.foreign);else characterProfiles.delete(foreign);
+    if(saved.legacy===undefined)delete legacy.lifecycleStates[number];else legacy.lifecycleStates[number]=saved.legacy;
+    for(const [key,value]of [['states',saved.state],['fallStates',saved.fall],['helperStates',saved.helper]]){if(value===undefined)delete data[key][number];else data[key][number]=value}
+    specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);nativeHitCounters.restore(saved.counts);rootGuardHitDefs.splice(0,2,...saved.guards);throwTargets.splice(0,2,...saved.targets);throwBindings.splice(0,2,...saved.bindings);
+   }
+  })()`);
+  assert.deepEqual(stateScalarsActual,[[3,1,210,11,2,3],[3,1,210,11,8],[3,1,210,11,8],[3,1,210,11,8,0],3000,0,100,[9,1,77],0,[3,1,210,11,2],[3,1,210,11,2],[1,5300],[1,5300]]);
+  console.log('Actual StateDef priority/control/power phases evaluate before velocity and after animation across roots/reactions/Helpers, sharing/clamping/locking real power and retaining absence');
   const stateVelocityActual=await run(`(()=>{
    const data=characterProfiles.get(battleCharacters[0]).battle,number=991510,foreign='StateVelocityForeignFixture';
    const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount],p2:{...p2},owners:[...customStateOwners],foreign:characterProfiles.get(foreign),state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],targets:[...throwTargets],bindings:[...throwBindings]};

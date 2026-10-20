@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.30 Controller Integration</title>
+<title>Prototype 0.25.31 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.30 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state-velocity-02530-20261020-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.31 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD state-scalars-02531-20261020-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -166,6 +166,7 @@ import {motionConstant,motionConstantNames} from './Engine/motion-constants.js';
 import {velocityCoordinateBinding} from './Engine/velocity-coordinate-binding.js?v=02529';
 import {positionCoordinateBinding} from './Engine/position-coordinate-binding.js';
 import {applyStateDefVelocity} from './Engine/state-def-velocity.js';
+import {applyStateDefPriority,applyStateDefControlPower} from './Engine/state-def-scalars.js';
 import {helperSizeDrawing,sizeCollisionConstants,sizeConstant,sizeConstantNames} from './Engine/size-constants.js';
 import {evaluateTypedNumericAST} from './Engine/expression-numeric-types.js';
 import {createNativeHitCounters} from './Engine/native-hit-counters.js';
@@ -259,7 +260,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.30 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.31 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -267,7 +268,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02530';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02531';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02520';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -782,7 +783,6 @@ function setAnimForState(def){
 function enterIRState(st,animOverride){return withCharacter(1,()=>enterIRStateForCharacter(st,animOverride))}
 function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=null;throwBindings[0]=null}
  p1EntryCommands=[1000,1100,1200].includes(st)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,1)])):null;
- if(battleDat?.statePriorities?.[String(st)]!==undefined)p1SprPriority=battleDat.statePriorities[String(st)];
  prevState=state;state=st;stateTicks=0;p1AnimStartTime=0;stateEntrySerial++;
  const incoming=sourceState(st);p1StateType=incoming?.type||'S';p1Physics=incoming?.physics||'S';runtimeMoveType=String(incoming?.moveType??'I').toUpperCase();
  applyStatePersistence(incoming,{
@@ -791,13 +791,13 @@ function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=nu
   clearMoveHit:()=>{moveContact=0;moveHit=0;moveGuarded=0;transitionReversedMove({player:1},{hitcountpersist:1,movehitpersist:0})},
   clearHitDef:()=>{activeHitDef=null;rootGuardHitDefs[0]=null}
  });
+ applyStateDefPriorityM1(incoming,()=>specialRoot(1),value=>{p1SprPriority=value});
  applyStateDefVelocityM1(incoming,()=>specialRoot(1),(actor,axis,value)=>{if(axis==='x')vx=value;else if(axis==='y')vy=value;else velZ=value});
- runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  if(st===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[0])){runtimeVar[48]=battleCharacters[0]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);current=runtimeVar[48];fi=0;ticks=0;}
  const def=incoming;
- if(isAttackState(st))p1Power=Math.max(0,Math.min(resourceActor(1).powerMax,p1Power+Number(def.poweradd||0)));
  if(st===40&&posX!==p2.x)setP1Facing(posX<p2.x?1:-1);
  if(animOverride!==undefined){current=animOverride;fi=0;ticks=0}else if(def)setAnimForState(def);
+ applyStateDefControlPowerM1(incoming,()=>specialRoot(1),value=>{runtimeCtrl=Number(value)});
  if(st===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[0])){current=runtimeVar[48];fi=0;ticks=0;}
  if(st===0&&profileFor()?.data&&current!==5){current=p1Life<=p1LifeMax/4?5300:0;fi=0;ticks=0}
  if(st===11)for(const controller of def.controllers.filter(item=>item.type==='CtrlSet'))runController(controller);
@@ -1084,6 +1084,9 @@ function finishNativeComboCounts(){
 function actorVelocityWorldScale(actor,context=null){const player=fighterPlayer(actor),owner=actor.kind==='helper'?actor.stateOwner:customStateOwners[player-1],data=characterProfiles.get(owner||battleCharacters[player-1])?.battle||battleDat;return context?.expressionLocalCoord===undefined?collisionWorldRatio(data):Math.fround(Number(data.coordinateSystem?.webWorldWidth??1280)/Number(context.expressionLocalCoord))}
 function actorVelocityQuery(actor,axis,expressionOwner=actor){const player=fighterPlayer(actor),world=axis==='x'?(actor.vx??0)*(actor.facing??1):axis==='y'?actor.vy??0:actor.vz??(actor.kind==='helper'?0:player===1?velZ:p2.vz??0);return Math.fround(world/actorVelocityWorldScale(expressionOwner,expressionOwner))}
 function applyStateDefVelocityM1(definition,actorProvider,write){return applyStateDefVelocity(definition,{expressions:source=>parseExprAST(source,{list:true}),evaluate:expression=>{const context=specialRuntime.context(actorProvider());return expression&&typeof expression==='object'?evalAST(expression,context):evalM1(String(expression),context)},setVelocity:(axis,value)=>{const actor=actorProvider();write(actor,axis,Math.fround(value*actorVelocityWorldScale(actor)))}})}
+function applyStateDefPriorityM1(definition,actorProvider,write){return applyStateDefPriority(definition,{evaluate:expression=>evalM1(String(expression),specialRuntime.context(actorProvider())),setPriority:write})}
+function stateDefPowerAddM1(actor,amount){executeTargetPowerAddition(resourceActor(fighterPlayer(actor),actor),amount,{powerOwner:target=>resourceActor(target.player),locked:()=>lifecycleRuntime.rounds.state>2})}
+function applyStateDefControlPowerM1(definition,actorProvider,write){return applyStateDefControlPower(definition,{evaluate:expression=>evalM1(String(expression),specialRuntime.context(actorProvider())),setControl:write,addPower:amount=>stateDefPowerAddM1(actorProvider(),amount)})}
 function movementControllerBinding(binding,actor,context=null){
  if(!binding)return null;
  const player=fighterPlayer(actor),helper=actor.kind==='helper',raw=Object.create(binding),properties={};
@@ -1394,13 +1397,12 @@ function advanceFighterAirOneTickForCharacter(f){
  }
 }
 function reactionSourceState(number){return battleDat?.fallStates?.[String(number)]||([154,155].includes(Number(number))?sourceState(number):null)}
-function enterGroundReactionState(fighter,n){return withCharacter(fighterPlayer(fighter),()=>enterGroundReactionStateForCharacter(fighter,n))}
-function enterGroundReactionStateForCharacter(fighter,n){
+function enterGroundReactionState(fighter,n,options={}){return withCharacter(fighterPlayer(fighter),()=>enterGroundReactionStateForCharacter(fighter,n,options))}
+function enterGroundReactionStateForCharacter(fighter,n,options={}){
  const incoming=sourceState(n)||reactionSourceState(n),player=fighterPlayer(fighter);
  const inheritedAnimAge=fighter.time-(fighter.animStartTime||0),fallEntry=!!battleDat?.fallStates?.[String(n)];
  fighter.reactionEntrySerial=(fighter.reactionEntrySerial||0)+1;
  fighter.prevState=fighter.state;
- if(battleDat?.statePriorities?.[String(n)]!==undefined)fighter.sprPriority=battleDat.statePriorities[String(n)];
  fighter.state=n;fighter.time=0;
  for(const [field,key] of [['type','type'],['physics','physics'],['moveType','moveType']])if(incoming?.[key]!==undefined&&incoming[key]!=='U')fighter[field]=incoming[key];
  applyStatePersistence(incoming,{
@@ -1409,12 +1411,14 @@ function enterGroundReactionStateForCharacter(fighter,n){
   clearMoveHit:()=>{fighter.moveContact=0;fighter.moveHit=0;fighter.moveGuarded=0;if(player===1){moveContact=0;moveHit=0;moveGuarded=0}transitionReversedMove(fighter,{hitcountpersist:1,movehitpersist:0})},
   clearHitDef:()=>{fighter.activeHitDef=null;fighter.attackFrame=null;rootGuardHitDefs[player-1]=null;if(player===1)activeHitDef=null}
  });
+ const entryControl=fighter.ctrl;
+ applyStateDefPriorityM1(incoming,()=>({...specialRoot(player),...fighter}),value=>{fighter.sprPriority=value});
  const velocitySet=applyStateDefVelocityM1(incoming,()=>({...specialRoot(player),...fighter}),(actor,axis,value)=>{fighter['v'+axis]=Math.fround(value*(axis==='x'?fighter.facing:1));if(axis==='z'&&fighter===p1Reaction)velZ=value});
  const entryVelocity=velocitySet?{vx:fighter.vx,vy:fighter.vy,...(Object.hasOwn(fighter,'vz')?{vz:fighter.vz}:{})}:null;
  if(fallEntry)fighter.animStartTime=-inheritedAnimAge;
  else {fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}
  if(reactionSourceState(n)){
-  const definition=reactionSourceState(n);fighter.type=definition.type;fighter.physics=definition.physics;fighter.moveType=definition.moveType;fighter.ctrl=definition.ctrl??0;
+  const definition=reactionSourceState(n);fighter.type=definition.type;fighter.physics=definition.physics;fighter.moveType=definition.moveType;
   if(definition.anim!==undefined){fighter.anim=definition.anim;fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}
   fighter.vars??=[];fighter.sysvars??=[];
   if(n===5110)fighter.downRecovery=fighter.getHit?.downRecovery??constVal('data.liedown.time');
@@ -1431,6 +1435,14 @@ function enterGroundReactionStateForCharacter(fighter,n){
  if(n===150||n===152){fighter.type=n===152?'C':'S';fighter.physics='N';fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===152?151:150;fighter.vx=0;fighter.vy=0}
  if(n===151||n===153){fighter.type=n===153?'C':'S';fighter.physics=fighter.type;fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===153?151:150}
  if(entryVelocity)Object.assign(fighter,entryVelocity);
+ if(!options.deferStateDefPostlude){
+  fighter.ctrl=entryControl;
+  applyStateDefControlPowerM1(incoming,()=>({...specialRoot(player),...fighter}),value=>{fighter.ctrl=Number(value)});
+  runReactionEntryControllers(fighter,n,fallEntry);
+ }
+ return {definition:incoming,control:entryControl,fallEntry};
+}
+function runReactionEntryControllers(fighter,n,fallEntry){
  if([151,153,5001,5011].includes(n))applyGroundHitVelocityM1(fighter);
  if(fallEntry){const context=fighterExpressionContext(fighter,specialRoot(3-fighterPlayer(fighter)));for(const controller of battleDat.fallStates[String(n)].controllers)if(controller.type==='ChangeAnim'&&[...controller.triggerall,...Object.values(controller.triggers).flat()].some(trigger=>/\bTime\s*=\s*0\b/i.test(trigger))&&controllerTriggered(controller,context)){fighter.anim=Number(evalM1(controller.params.value,context));fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}}
 }
@@ -1438,16 +1450,20 @@ function enterP2State(n){return withCharacter(2,()=>enterP2StateForCharacter(n))
 function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBindings[1]=null}
  p2.entrySerial=(p2.entrySerial||0)+1;
  p2.entryCommands=[1000,1100,1200].includes(n)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,2)])):null;
- enterGroundReactionState(p2,n);
- if(profileFor()?.data){const def=sourceState(n);if(!def)throw Error('Moon unsupported state '+n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl??p2.ctrl;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));}
- if(n===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[1])){p2.vars[48]=battleCharacters[1]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);p2.anim=p2.vars[48];p2.elem=1;p2.elemTick=0;}
+ const entry=enterGroundReactionState(p2,n,{deferStateDefPostlude:true});
+ if(profileFor()?.data){const def=sourceState(n);if(!def)throw Error('Moon unsupported state '+n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));}
+ if(n===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[1])){p2.vars[48]=battleCharacters[1]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);}
  if(n===20){p2.type='S';p2.physics='S';p2.moveType='I';p2.ctrl=1;if(!(p2.anim===5&&p2TurnTime<actionDuration(5)))p2.anim=20}
- if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';p2.ctrl=def.ctrl??0;if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}p2.sprPriority=def.sprpriority??0}
- if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.power=Math.max(0,Math.min(resourceActor(2).powerMax,(p2.power||0)+Number(def.poweradd||0)));p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.ctrl=def.ctrl;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.sprPriority=def.sprpriority;p2.attackSerial=(p2.attackSerial||0)+1}
- if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim;if(def.ctrl!==undefined)p2.ctrl=def.ctrl}
- if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!==undefined&&def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
+ if(battleDat.lifecycleStates[String(n)]){const def=battleDat.lifecycleStates[String(n)];p2.type=def.type||'S';p2.physics=def.physics||'N';p2.moveType=def.moveType||'I';if(def.anim!==undefined){p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.elem=1;p2.elemTick=0}}
+ if(isAttackState(n)){const def=battleDat.attackStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;if(def.anim!==undefined)p2.anim=Number(evalM1(String(def.anim),specialRuntime.context(specialRoot(2))));p2.attackSerial=(p2.attackSerial||0)+1}
+ if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim}
+ if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.anim!==undefined&&def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
+ p2.ctrl=entry.control;applyStateDefControlPowerM1(entry.definition,()=>specialRoot(2),value=>{p2.ctrl=Number(value)});
  if(n===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[1])){p2.anim=p2.vars[48];p2.elem=1;p2.elemTick=0;}
- if(n===0&&profileFor()?.data&&p2.anim!==5){p2.anim=p2.life<=p2.lifeMax/4?5300:0;p2.elem=1;p2.elemTick=0}if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
+ if(n===0&&profileFor()?.data&&p2.anim!==5){p2.anim=p2.life<=p2.lifeMax/4?5300:0;p2.elem=1;p2.elemTick=0}
+
+ runReactionEntryControllers(p2,n,entry.fallEntry);
+ if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
 }
 function bindThrowTarget(player){const binding=throwBindings[player-1];if(!binding||binding.until<combatTraceTick)return;const root=specialRoot(player),x=root.x+binding.offset[0]*root.facing,y=root.y+binding.offset[1];if(binding.target===1){posX=x;posY=y;vx=0;vy=0}else{p2.x=x;p2.y=y;p2.vx=0;p2.vy=0}}
 function applySourceThrow(player,params){const target=3-player,attacker=specialRoot(player),defender=specialRoot(target);if(defender.moveType==='H'||defender.type==='A'||defender.life<=0)return false;throwTargets[player-1]=target;throwHitData[target-1]={attr:params.attr,attackerId:player,contactTick:combatTraceTick,hitid:Number(params.id??0),fall:1,xvel:0,yvel:0,animtype:0,groundtype:1,airtype:1,yaccel:1.4,slidetime:0,hittime:0,'fall.xvel':null,'fall.yvel':-18,'fall.damage':0,'fall.kill':1,'fall.envshake.time':0};if(target===2)p2.getHit=throwHitData[1];selectRootHitStateOwner(target,Number(params.p2getp1state??1)!==0?(params.hitDefinitionStateOwner??battleCharacters[player-1]):battleCharacters[target-1],Number(params.p2getp1state??1)!==0);selectRootHitStateOwner(player,params.hitDefinitionStateOwner??battleCharacters[player-1],!!params.hitDefinitionForeignStateOwner);const facing=attacker.facing*Number(params.p1facing??1);if(player===1){p1Reaction=null;runtimeCtrl=0;p1Facing=facing;enterIRState(Number(params.p1stateno))}else{p2.ctrl=0;p2.facing=facing;enterP2State(Number(params.p1stateno))}if(target===1){p1Reaction=null;runtimeCtrl=0;p1Facing=-facing;enterIRState(Number(params.p2stateno))}else{p2.ctrl=0;p2.facing=-facing;enterP2State(Number(params.p2stateno))}if(player===1)runtimeCtrl=0;else p2.ctrl=0;if(target===1){runtimeMoveType='H';runtimeCtrl=0;}else{p2.moveType='H';p2.ctrl=0;}recordCombatTarget(attacker,target,params);return true}
@@ -1493,7 +1509,7 @@ function applyP2HitM1(hitDef){
  p1HitPause=result.attackerPause;p2.hitShake=result.defenderPause;p2.hitTime=result.getHit.hittime;
  moveContact=1;moveHit=result.guarded?0:1;moveGuarded=result.guarded?1:0;
  if(!result.guarded)p1HitCount=(p1HitCount+hitDefCount(params))|0;else p1GuardCount=(p1GuardCount+hitDefCount(params))|0;
- if(!applyRootHitOverrideState(2,result,p2))enterP2State(result.state);applyDefenderHitFacing(p2,result.defenderFacing);
+ if(!applyRootHitOverrideState(2,result,p2)){p2.ctrl=0;enterP2State(result.state)}applyDefenderHitFacing(p2,result.defenderFacing);
  if(p1Facing!==result.attackerFacing){vx*=p1Facing/result.attackerFacing;p1Facing=result.attackerFacing}
  for(let index=sourceExplods.length-1;index>=0;index--)if(sourceExplods[index].player===2&&sourceExplods[index].removeongethit)sourceExplods.splice(index,1);
  playSourceSound(result.sound,2);
@@ -1732,7 +1748,7 @@ function applyEntityHit(entity,defender,params){
  for(let index=sourceExplods.length-1;index>=0;index--)if(sourceExplods[index].ownerKey==='root'+(entity.player===1?2:1)&&sourceExplods[index].removeongethit)sourceExplods.splice(index,1);
  if(result.sound)playSourceSound(result.sound,entity.player===1?2:6,entity.player);return result;
 }
-const specialRuntime=createSpecialRuntime({stateVelocityExpressions:source=>parseExprAST(source,{list:true}),evalAST,stateVelocityScale:actorVelocityWorldScale,sizeDefinition:actorSizeSnapshot,ownData:player=>characterProfiles.get(battleCharacters[player-1])?.battle||battleDat,sizeGuardDistances:guardDistanceDefaultsForActor,initializePalette:initializeActorPalette,hitDefinitionResetOptions:player=>{const data=profileFor(player)?.battle||battleDat;return {localCoord:characterLocalCoord(data),gameWidth:nativeLogicalGameWidth(),legacyFall:Number(data.constants?.['legacy.fallyvelyaccel'])===1}},finishPaletteEffects:()=>{stepActorPalFx();finishContactPower();finishReversedMoves();finishNativeComboCounts()},advanceMoveContact:actor=>advanceReversedMove(actor),transitionMoveContact:transitionReversedMove,roundState:()=>lifecycleRuntime.rounds.state,root:specialRoot,context:fighterExpressionContext,helperCommands:helperCommandValues,commands:player=>Object.fromEntries((profileFor(player)?.commands||cmdDat).commands.map(definition=>[definition.name,commandActive(definition.name,player)])),eval:evalM1,pair:splitExpressionPairM1,effects:sourceExplods,data:player=>characterProfiles.get(battleCharacters[player-1])?.battle||battleDat,tick:()=>combatTraceTick,sound:playSourceSound,commonSound:playCommonSound,stopSound:channel=>soundChannels.get(channel)?.pause(),background:mul=>{r.domElement.style.filter='brightness('+(mul[0]/256)+')'},controller:executeControllerM1,damageAssertion:runDamageAssertion,nativeGameWidth:nativeLogicalGameWidth,finishHitFrame:finishActorHitFrame,forgetHitState:actor=>{nativeHitStates.delete(hitDefinitionOwnerKey(actor));nativeHitCounters.delete(hitDefinitionOwnerKey(actor));forgetHelperCommandInput(actor)},recordCornerPush:recordCornerPushContact,sourceHitState:applySourceHitState,reversalContacts:processReversalContactsM1,activateHitDef:actor=>attackActivityStore.invalidate(hitDefinitionOwnerKey(actor)),stepCornerPush:stepHelperCornerPush,movementFriction:actorMovementFriction,depthBound:applyDepthBoundary,projectileOverlap:projectilePairOverlap,projectileCollisionSettings:(owner,params,context)=>{const data=collisionActorData(owner),animation=collisionAnimationData(owner),constants=data.constants||data.sizeConstants||{};return {settings:projectileCollisionSettings(params,{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,defaultScale:animationCollisionScale(animation,owner.kind==='helper'?actorCollisionSizeConstants(owner):null,{ownScale:owner.ownClsnScale??!!Number(owner.params?.ownclsnscale||0),sameOwner:animation===data})}),worldScale:collisionWorldRatio(data),attackDepth:(()=>{const fallback=[Number(constants['size.attack.depth.x']??4),Number(constants['size.attack.depth.y']??4)];if(params['attack.depth']===undefined)return fallback;const pair=splitExpressionPairM1(params['attack.depth']),first=Math.fround(Number(evalM1(pair[0],context)));return [first,pair[1]===undefined?first:Math.fround(Number(evalM1(pair[1],context)))]})()}},projectileGuardHitDef:(player,params,context,owner)=>createProjectileGuardDistance(params,guardDistanceDefaultsForActor(owner||specialRoot(player)).projectile,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1}),guardHitDef:(player,entity,params,context)=>applyHitDefGuardDistance(params,guardHitDefActor(player,entity).hitDef.guardDistance,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1}),trigger:controllerTriggered,explod:spawnSourceExplod,advance:advanceFighterAirOneTick,duration:actionDuration,frames:framesFor,collision:resolveFighterCollisionM1,helperOverrideHit:(attack,defender)=>resolveGroundHitM1({...attack,id:attack.player||attack.id,binderKey:attack.key},defender,attack.hitDef.params,'none'),hit:applyEntityHit,camera:()=>cameraX,cameraTop:()=>cameraY-660/cameraZoom,projectileOutside:entity=>{const frame=framesFor(entity.anim,entity.player)[entity.elem-1],sprite=frame&&spriteFor(frame);if(!sprite)return false;const scale=entity.scale||[1,1],left=(-sprite.axisX+frame.ox)*scale[0],right=left+sprite.w*scale[0],top=entity.y+(-sprite.axisY+frame.oy)*scale[1],bottom=top+sprite.h*scale[1],first=entity.x+left*entity.facing,last=entity.x+right*entity.facing;return Math.max(first,last)<cameraX-640/cameraZoom||Math.min(first,last)>cameraX+640/cameraZoom||bottom<cameraY-660/cameraZoom||top>cameraY+60/cameraZoom},projectileTop:entity=>{const frame=framesFor(entity.anim,entity.player)[entity.elem-1],sprite=frame&&spriteFor(frame);return sprite?-sprite.axisY+frame.oy:0},attack:opponent=>opponent.player===2?p2.attackFrame:activeHitDef?{...specialRoot(1),hitDef:activeHitDef}:null});
+const specialRuntime=createSpecialRuntime({stateDefPowerAdd:stateDefPowerAddM1,stateVelocityExpressions:source=>parseExprAST(source,{list:true}),evalAST,stateVelocityScale:actorVelocityWorldScale,sizeDefinition:actorSizeSnapshot,ownData:player=>characterProfiles.get(battleCharacters[player-1])?.battle||battleDat,sizeGuardDistances:guardDistanceDefaultsForActor,initializePalette:initializeActorPalette,hitDefinitionResetOptions:player=>{const data=profileFor(player)?.battle||battleDat;return {localCoord:characterLocalCoord(data),gameWidth:nativeLogicalGameWidth(),legacyFall:Number(data.constants?.['legacy.fallyvelyaccel'])===1}},finishPaletteEffects:()=>{stepActorPalFx();finishContactPower();finishReversedMoves();finishNativeComboCounts()},advanceMoveContact:actor=>advanceReversedMove(actor),transitionMoveContact:transitionReversedMove,roundState:()=>lifecycleRuntime.rounds.state,root:specialRoot,context:fighterExpressionContext,helperCommands:helperCommandValues,commands:player=>Object.fromEntries((profileFor(player)?.commands||cmdDat).commands.map(definition=>[definition.name,commandActive(definition.name,player)])),eval:evalM1,pair:splitExpressionPairM1,effects:sourceExplods,data:player=>characterProfiles.get(battleCharacters[player-1])?.battle||battleDat,tick:()=>combatTraceTick,sound:playSourceSound,commonSound:playCommonSound,stopSound:channel=>soundChannels.get(channel)?.pause(),background:mul=>{r.domElement.style.filter='brightness('+(mul[0]/256)+')'},controller:executeControllerM1,damageAssertion:runDamageAssertion,nativeGameWidth:nativeLogicalGameWidth,finishHitFrame:finishActorHitFrame,forgetHitState:actor=>{nativeHitStates.delete(hitDefinitionOwnerKey(actor));nativeHitCounters.delete(hitDefinitionOwnerKey(actor));forgetHelperCommandInput(actor)},recordCornerPush:recordCornerPushContact,sourceHitState:applySourceHitState,reversalContacts:processReversalContactsM1,activateHitDef:actor=>attackActivityStore.invalidate(hitDefinitionOwnerKey(actor)),stepCornerPush:stepHelperCornerPush,movementFriction:actorMovementFriction,depthBound:applyDepthBoundary,projectileOverlap:projectilePairOverlap,projectileCollisionSettings:(owner,params,context)=>{const data=collisionActorData(owner),animation=collisionAnimationData(owner),constants=data.constants||data.sizeConstants||{};return {settings:projectileCollisionSettings(params,{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,defaultScale:animationCollisionScale(animation,owner.kind==='helper'?actorCollisionSizeConstants(owner):null,{ownScale:owner.ownClsnScale??!!Number(owner.params?.ownclsnscale||0),sameOwner:animation===data})}),worldScale:collisionWorldRatio(data),attackDepth:(()=>{const fallback=[Number(constants['size.attack.depth.x']??4),Number(constants['size.attack.depth.y']??4)];if(params['attack.depth']===undefined)return fallback;const pair=splitExpressionPairM1(params['attack.depth']),first=Math.fround(Number(evalM1(pair[0],context)));return [first,pair[1]===undefined?first:Math.fround(Number(evalM1(pair[1],context)))]})()}},projectileGuardHitDef:(player,params,context,owner)=>createProjectileGuardDistance(params,guardDistanceDefaultsForActor(owner||specialRoot(player)).projectile,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1}),guardHitDef:(player,entity,params,context)=>applyHitDefGuardDistance(params,guardHitDefActor(player,entity).hitDef.guardDistance,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1}),trigger:controllerTriggered,explod:spawnSourceExplod,advance:advanceFighterAirOneTick,duration:actionDuration,frames:framesFor,collision:resolveFighterCollisionM1,helperOverrideHit:(attack,defender)=>resolveGroundHitM1({...attack,id:attack.player||attack.id,binderKey:attack.key},defender,attack.hitDef.params,'none'),hit:applyEntityHit,camera:()=>cameraX,cameraTop:()=>cameraY-660/cameraZoom,projectileOutside:entity=>{const frame=framesFor(entity.anim,entity.player)[entity.elem-1],sprite=frame&&spriteFor(frame);if(!sprite)return false;const scale=entity.scale||[1,1],left=(-sprite.axisX+frame.ox)*scale[0],right=left+sprite.w*scale[0],top=entity.y+(-sprite.axisY+frame.oy)*scale[1],bottom=top+sprite.h*scale[1],first=entity.x+left*entity.facing,last=entity.x+right*entity.facing;return Math.max(first,last)<cameraX-640/cameraZoom||Math.min(first,last)>cameraX+640/cameraZoom||bottom<cameraY-660/cameraZoom||top>cameraY+60/cameraZoom},projectileTop:entity=>{const frame=framesFor(entity.anim,entity.player)[entity.elem-1],sprite=frame&&spriteFor(frame);return sprite?-sprite.axisY+frame.oy:0},attack:opponent=>opponent.player===2?p2.attackFrame:activeHitDef?{...specialRoot(1),hitDef:activeHitDef}:null});
 function runLifecycleController(controller,fighter,context){
  if(fighter.player===1&&p1Reaction&&controller.type==='StateTypeSet'){executeControllerM1(controller,p1Reaction,context,{});syncP1Reaction();return}
  if(fighter.player===1)runController(controller,context);else runP2ControllerM1(controller,undefined,context);
@@ -1939,7 +1955,7 @@ function applyP1HitM1(frame){
  if(!result.guarded)p2.hitCount=((p2.hitCount||0)+hitDefCount(frame.hitDef.params))|0;else p2.guardCount=((p2.guardCount||0)+hitDefCount(frame.hitDef.params))|0;
  p2.cornerPushVelocity=result.cornerPushVelocity;p2.cornerPushMultiplier=result.cornerPushMultiplier;
  if(result.attackerPriority!==null)p2.sprPriority=result.attackerPriority;
- if(!applyRootHitOverrideState(1,result,defender)){enterGroundReactionState(p1Reaction,result.state);applyDefenderHitFacing(p1Reaction,result.defenderFacing);syncP1Reaction()}else if(p1Reaction)syncP1Reaction();
+ if(!applyRootHitOverrideState(1,result,defender)){p1Reaction.ctrl=0;runtimeCtrl=0;enterGroundReactionState(p1Reaction,result.state);applyDefenderHitFacing(p1Reaction,result.defenderFacing);syncP1Reaction()}else if(p1Reaction)syncP1Reaction();
  p2.facing=result.attackerFacing;
  for(let index=sourceExplods.length-1;index>=0;index--)if(sourceExplods[index].player===1&&sourceExplods[index].removeongethit)sourceExplods.splice(index,1);
  playSourceSound(result.sound,6,2);
@@ -2303,7 +2319,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.30',build:'state-velocity-02530-20261020-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.31',build:'state-scalars-02531-20261020-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2311,7 +2327,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.30-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.31-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

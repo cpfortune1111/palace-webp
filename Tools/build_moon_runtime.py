@@ -12,6 +12,7 @@ from motion_constants import imported_motion_constants
 from attack_distance_constants import update_attack_distance_constants
 from state_persistence import import_state_persistence
 from state_velocity import import_bundle_velocity, state_velocity
+from state_scalars import import_bundle_state_scalars
 
 from compile_moon_states import DISABLED_ACTIONS, build, compile_controller, fields
 
@@ -172,6 +173,7 @@ def compile_runtime(imported, output):
     bundle.update(imported_size_definition(imported))
     bundle.update(imported_motion_constants(imported))
     import_bundle_velocity(bundle, definitions, {1101: 1110})
+    import_bundle_state_scalars(bundle, definitions, {1101: 1110})
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')
 

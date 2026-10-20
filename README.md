@@ -1,3 +1,7 @@
+## 0.25.31 — StateDef priority, control and power phases (partial)
+
+StateDef priority/control/power expressions now reach actual render order, input control and shared root power across P1/P2/reaction/Helper and Venus legacy paths. Priority precedes velocity; control/power follow animation, with power limits and round locking. Source-aware imports retain declared expressions and remove synthesized defaults; legacy control shims remain explicitly documented. Actual fixtures and full initial browser regression pass. Native layers, remaining StateDef fields and broader version/action semantics remain Pending; zero controllers are certified complete. Five existing harness setup failures remain documented. Deployment is verified separately.
+
 ## 0.25.30 — StateDef velocity expressions and entry consumers (partial)
 
 Five importers preserve original StateDef velocity expressions instead of forcing numeric pairs. P1/P2/reaction/Helper entry evaluates XYZ sequentially before incoming control/animation, retains omitted axes and converts native units. Velocity queries use original caller units, with live per-component reads. Source comparisons, actual entry fixtures and browser regression cover these paths. Other StateDef fields/order, full expression and native/version semantics remain Pending; zero controllers are certified complete. Five existing harness setup failures remain documented. Deployment is verified separately.

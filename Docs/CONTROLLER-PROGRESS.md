@@ -1,3 +1,7 @@
+## 0.25.31 — StateDef priority, control and power phases (partial)
+
+Provided sprite priority, control and power expressions now execute in live entry phases across roots, reactions, Helpers and Venus legacy header paths. Actual fixtures verify old/new field dependencies, render priority, shared power, limits/locks and omissions; normal get-hit control is explicitly cleared before the incoming header. Source-aware import tests and expanded browser regression pass. The Node sweep passes 173/178 checks with the same five known harness setup failures. LayerNo, facep2/juggle, full animation/legacy entry handling and native/version timing remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.
+
 ## 0.25.30 — StateDef velocity expressions and entry consumers (partial)
 
 StateDef velocity preserves original expression text across all five exporters and existing character payloads. Shared P1/P2/reaction/Helper entry applies XYZ sequentially, retains omitted axes and reads prior Ctrl/Anim in the correct velocity phase. Live velocity queries convert into original caller units. Native component/redirect/comma fixtures, actual entry consumers and complete initial browser regression pass. The Node sweep passes 172/177 checks; five known harness setup failures remain documented. Other StateDef fields, expression/type fidelity and native action/version phases remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.
