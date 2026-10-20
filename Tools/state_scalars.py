@@ -3,7 +3,7 @@ import re
 from state_velocity import STATE_GROUPS
 
 
-STATE_SCALAR_FIELDS = ('sprpriority', 'ctrl', 'poweradd')
+STATE_SCALAR_FIELDS = ('sprpriority', 'facep2', 'ctrl', 'poweradd')
 
 
 def state_scalar(value):

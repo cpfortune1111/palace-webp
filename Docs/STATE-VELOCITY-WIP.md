@@ -1,5 +1,7 @@
 # StateDef velocity import and live entry — partial implementation
 
+0.25.32 follow-up: FaceP2 now executes between sprite priority and velocity. Actual four-path tests verify that subsequent Vel X reads the new facing while world velocity is preserved; see STATE-FACING-WIP.md. Complete native phase scheduling remains Pending.
+
 0.25.31 follow-up: provided sprite priority now evaluates before velocity, and control/power have live post-animation entry consumers across roots/reactions/Helpers and legacy Venus paths. Normal get-hit control removal is explicit rather than inferred from an absent header. Other StateDef fields and legacy/native phase fidelity remain incomplete; see STATE-SCALARS-WIP.md.
 
 Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go stateDef/exprs/argExpression and bytecode.go stateDef.Run. VelSet accepts up to three float expressions. The engine evaluates and writes X, then Y, then Z; later expressions observe earlier writes. Omitted axes retain their previous values. Entry velocity runs after persistence handling but before animation/control/power updates. OC_vel_x/y/z converts the subject's velocity into the original caller's active units.

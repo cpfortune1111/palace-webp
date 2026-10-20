@@ -1,3 +1,7 @@
+## 0.25.32 — StateDef facing and turn consumers (partial)
+
+FaceP2 now executes before velocity across actual P1/P2/reaction/Helper entry, with live assertions, selected/backup opponents, legacy distance truncation and native depth ties. Auto-turn shares target eligibility and preserves world velocity; hardcoded jump-state turning no longer replaces an omitted header. Import and browser fixtures exercise these consumers. Full StateDef/AssertSpecial/native scheduling parity remains Pending; all 163 controllers remain uncertified. Deployment is verified separately.
+
 ## 0.25.31 — StateDef priority, control and power phases (partial)
 
 StateDef priority/control/power expressions now reach actual render order, input control and shared root power across P1/P2/reaction/Helper and Venus legacy paths. Priority precedes velocity; control/power follow animation, with power limits and round locking. Source-aware imports retain declared expressions and remove synthesized defaults; legacy control shims remain explicitly documented. Actual fixtures and full initial browser regression pass. Native layers, remaining StateDef fields and broader version/action semantics remain Pending; zero controllers are certified complete. Five existing harness setup failures remain documented. Deployment is verified separately.

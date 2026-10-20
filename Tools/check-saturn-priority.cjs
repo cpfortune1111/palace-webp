@@ -40,6 +40,52 @@ const server=http.createServer((request,response)=>{
   const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy];try{runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy]=saved}})()`);
   assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,1,true,0,.25]);
   console.log('Actual numeric expression types preserve native integer division, float32 arithmetic and int32 wrapping through real VelSet parameters');
+  const stateFacingActual=await run(`(()=>{
+   const data=characterProfiles.get(battleCharacters[0]).battle,number=991512;
+   const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,posX,posY,posZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount],p2:{...p2},flags:rootAssertions.map(flags=>[...flags]),backups:[...actorP2EnemyBackups],overKo:[...actorOverKoFlags],depth:{...stageCameraConfig.player},turn:[p1TurnTime,p2TurnTime],foreign:characterProfiles.get('StateFacingLegacyFixture'),owners:[...customStateOwners],state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],targets:[...throwTargets],bindings:[...throwBindings]};
+   try{
+    const definition={type:'S',physics:'N',moveType:'I',facep2:'Ctrl',velset:'Vel X, 0',anim:0,ctrl:'Facing = -1',controllers:[]};
+    data.states[number]=definition;data.fallStates[number]=definition;data.helperStates[number]={...definition,facep2:0};customStateOwners.fill(null);p1Reaction=null;
+    posX=100;p2.x=-100;p1Facing=1;runtimeCtrl=1;vx=3;enterIRState(number);const first=[p1Facing,vx,runtimeCtrl];
+    posX=-100;p2.x=100;Object.assign(p2,{facing:1,ctrl:1,vx:3});enterP2State(number);const second=[p2.facing,p2.vx,p2.ctrl];
+    p2.x=-100;const fighter={...specialRoot(1),x:100,facing:1,ctrl:1,vx:3};enterGroundReactionState(fighter,number);const reaction=[fighter.facing,fighter.vx,fighter.ctrl];
+    posX=100;p1Facing=1;specialRuntime.dispatch({type:'Helper',params:{id:number,stateno:number}},null,null,{},specialRoot(1),1);const helper=specialRuntime.entities.at(-1);
+    data.helperStates[number]=definition;Object.assign(helper,{x:100,facing:1,ctrl:1,vx:3});specialRuntime.enterState(helper,number);
+    const core=[first,second,reaction,[helper.facing,helper.vx,helper.ctrl]];
+    definition.velset=[];definition.ctrl=1;helper.destroyed=true;
+    const enterFirst=()=>{posX=100;p2.x=-100;p1Facing=1;runtimeCtrl=1;vx=3;enterIRState(number);return [p1Facing,vx]};
+    runController({type:'AssertSpecial',params:{flag:'NoFaceP2'}});const noFace=enterFirst();
+    runController({type:'AssertSpecial',params:{flag:'NoFaceP2',enabled:0}});
+    runP2ControllerM1({type:'AssertSpecial',params:{flag:'NoTurnTarget'}});const noTarget=enterFirst();
+    runP2ControllerM1({type:'AssertSpecial',params:{flag:'NoTurnTarget',enabled:0}});
+    runController({type:'AssertSpecial',params:{flag:'NoAutoTurn'}});const noAutoHeader=enterFirst();rootAssertions[0].clear();
+    delete definition.facep2;const omitted=enterFirst();definition.facep2=0;const zero=enterFirst();definition.facep2=1;
+    enterFirst();actorOverKoFlags.set('root2',true);const backup=enterFirst();actorP2EnemyBackups.set('root1',999999);const missing=enterFirst();actorOverKoFlags.delete('root2');
+    Object.assign(helper,{destroyed:false,player:2,teamSide:2,helperType:2,x:90,assertions:new Set()});posX=100;p2.x=1000;p1Facing=1;runtimeCtrl=1;enterIRState(number);const playerHelper=p1Facing;
+    runDamageAssertion({type:'AssertSpecial',params:{flag:'NoTurnTarget'}},helper,specialRuntime.context(helper),2);p1Facing=1;enterIRState(number);const protectedHelper=p1Facing;helper.destroyed=true;
+    stageCameraConfig.player.topbound=-10;stageCameraConfig.player.botbound=10;posZ=0;p2.z=-1;posX=p2.x=100;p1Facing=1;enterIRState(number);const depthBehind=p1Facing;
+    p2.z=1;p1Facing=1;enterIRState(number);const depthAhead=p1Facing;stageCameraConfig.player.topbound=stageCameraConfig.player.botbound=0;
+    const foreign='StateFacingLegacyFixture',foreignData={...data,coordinateSystem:{localcoord:[320,240],webWorldWidth:1280},engineVersions:{mugen:[0,0],ikemen:[0,0]}};
+    characterProfiles.set(foreign,{...characterProfiles.get(battleCharacters[0]),battle:foreignData,states:{states:data.states,constants:data.constants}});customStateOwners[0]=foreign;
+    posX=0;p2.x=-2;p1Facing=1;enterIRState(number);const legacy=p1Facing;foreignData.engineVersions.mugen=[1,1];p1Facing=1;enterIRState(number);const modern=p1Facing;customStateOwners[0]=null;
+    state=0;runtimeCtrl=1;p1Facing=1;posX=100;p2.x=-100;vx=3;runP2ControllerM1({type:'AssertSpecial',params:{flag:'NoTurnTarget'}});autoTurnM1();const autoProtected=p1Facing;
+    runP2ControllerM1({type:'AssertSpecial',params:{flag:'NoTurnTarget',enabled:0}});runController({type:'AssertSpecial',params:{flag:'NoFaceP2'}});autoTurnM1();const autoAllowed=[p1Facing,vx];
+    posX=-100;Object.assign(p2,{x:100,state:0,ctrl:1,facing:1,vx:3});autoTurnM1();const secondAuto=[p2.facing,p2.vx];
+    return [core,noFace,noTarget,noAutoHeader,omitted,zero,backup,missing,playerHelper,protectedHelper,depthBehind,depthAhead,legacy,modern,autoProtected,autoAllowed,secondAuto];
+   }finally{
+    for(const entity of specialRuntime.entities){forgetHelperCommandInput(entity);nativeHitStates.delete(hitDefinitionOwnerKey(entity))}
+    [state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,posX,posY,posZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount]=saved.root;
+    actorP2EnemyBackups.clear();for(const [key,value]of saved.backups)actorP2EnemyBackups.set(key,value);actorOverKoFlags.clear();for(const [key,value]of saved.overKo)actorOverKoFlags.set(key,value);
+    for(const [index,flags]of rootAssertions.entries()){flags.clear();for(const flag of saved.flags[index])flags.add(flag)}Object.assign(stageCameraConfig.player,saved.depth);[p1TurnTime,p2TurnTime]=saved.turn;
+    if(saved.foreign)characterProfiles.set('StateFacingLegacyFixture',saved.foreign);else characterProfiles.delete('StateFacingLegacyFixture');
+    for(const key of Object.keys(p2))if(!(key in saved.p2))delete p2[key];Object.assign(p2,saved.p2);customStateOwners.splice(0,2,...saved.owners);
+    for(const [key,value]of [['states',saved.state],['fallStates',saved.fall],['helperStates',saved.helper]]){if(value===undefined)delete data[key][number];else data[key][number]=value}
+    specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);nativeHitCounters.restore(saved.counts);rootGuardHitDefs.splice(0,2,...saved.guards);throwTargets.splice(0,2,...saved.targets);throwBindings.splice(0,2,...saved.bindings);
+   }
+  })()`);
+  console.log('Actual StateDef facing observation',JSON.stringify(stateFacingActual));
+  assert.deepEqual(stateFacingActual,[[[-1,-3,1],[-1,3,1],[-1,3,1],[-1,3,1]],[1,3],[1,3],[-1,-3],[1,3],[1,3],[-1,-3],[1,3],-1,1,-1,1,1,-1,1,[-1,-3],[-1,3]]);
+  console.log('Actual StateDef facing honors flags, omissions, selected player Helpers, valid/missing backup enemies, native version/depth ties and auto-turn velocity preservation');
   const stateScalarsActual=await run(`(()=>{
    const data=characterProfiles.get(battleCharacters[0]).battle,legacy=characterProfiles.get('SailorVenus').battle,number=991511,foreign='StateScalarForeignFixture';
    const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount,p1Power,p1Life,p1LifeMax],p2:{...p2},idle:data.states['0'],round:lifecycleRuntime.rounds.state,owners:[...customStateOwners],foreign:characterProfiles.get(foreign),legacy:legacy.lifecycleStates[number],state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],targets:[...throwTargets],bindings:[...throwBindings]};

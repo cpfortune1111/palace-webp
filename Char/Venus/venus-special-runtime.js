@@ -88,6 +88,7 @@ export function createSpecialRuntime(api){
    clearHitDef:()=>{entity.guardHitDef=null;entity.activeHitDef=null}
   });
   applyStateDefPriority(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setPriority:value=>{entity.sprPriority=value}});
+  if(definition.facep2!==undefined){if(!api.stateDefFacing)throw Error('Missing StateDef facing consumer');api.stateDefFacing(definition,()=>entity,value=>{entity.facing=value})}
   applyStateDefVelocity(definition,{expressions:source=>{if(!api.stateVelocityExpressions)throw Error('Missing StateDef velocity expression parser');return api.stateVelocityExpressions(source)},evaluate:expression=>expression&&typeof expression==='object'?api.evalAST(expression,context(entity)):api.eval(String(expression),context(entity)),setVelocity:(axis,value)=>{const scale=api.stateVelocityScale?.(entity)??1;entity['v'+axis]=Math.fround(Math.fround(value*scale)*(axis==='x'?entity.facing:1))}});
   entity.controllerSchedule=createControllerSchedule();
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}

@@ -27,4 +27,8 @@ run({flag:'NoFallHitFlag',redirectid:'7',enabled:'0'});assert.equal(other.assert
 assert.throws(()=>run({flag:'NoHitDamage',flag2:'Intro'}),/Unsupported mixed/);
 assert.equal(run({flag:'Intro'}),false);
 actor.assertions.clear();assert.equal(actor.assertions.size,0);
+run({flag:'NoFaceP2',flag2:'NoTurnTarget',redirectid:'7'});
+assert.equal(other.assertions.has('nofacep2'),true);assert.equal(other.assertions.has('noturntarget'),true);
+run({flag:'NoFaceP2',flag2:'NoTurnTarget',redirectid:'7',enabled:'0'});
+assert.equal(other.assertions.has('nofacep2'),false);assert.equal(other.assertions.has('noturntarget'),false);
 console.log('Damage assertion flags, multi-flag slots, enabled, redirects and explicit unsupported mixtures passed');

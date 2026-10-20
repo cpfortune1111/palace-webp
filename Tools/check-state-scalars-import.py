@@ -46,6 +46,14 @@ class StateScalarImportTests(unittest.TestCase):
                                              {'id': -2, 'entries': [{'text': 'ctrl=1'}]}], {1101: 1110})
         self.assertEqual(bundle['states'], {'1110': {'ctrl': 1}, '-2': {}})
 
+    def test_facep2_expression_uses_first_key_and_preserves_omission(self):
+        bundle = {'states': {'100': {'facep2': 1}, '101': {'facep2': 1}}}
+        definitions = [{'id': 100, 'entries': [{'text': 'facep2=Ctrl && Facing = 1'},
+                                              {'text': 'facep2=0'}]},
+                       {'id': 101, 'entries': []}]
+        import_bundle_state_scalars(bundle, definitions)
+        self.assertEqual(bundle['states'], {'100': {'facep2': 'Ctrl && Facing = 1'}, '101': {}})
+
     def test_current_payloads_match_original_scalar_headers(self):
         for name, path in [('moon', 'Char/Moon/Battle/moon_runtime.json'),
                            ('jupiter', 'Char/Jupiter/Battle/jupiter_runtime.json'),
