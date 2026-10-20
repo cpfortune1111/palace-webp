@@ -267,13 +267,14 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
     if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     if(helper.hitBy&&!allowsHit(helper.hitBy,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     const selected=selectHitOverride(helper.hitOverrides||[],attack.hitDef.params,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',unguardable:attack.assertions?.has('unguardable')});
-    if(!selected||selected.miss||!api.collision(attack,helper).contact)continue;
+    if(selected?.miss||!selected&&Number(attack.hitDef.params.p2stateno??-1)<0||!api.collision(attack,helper).contact)continue;
     const result=api.helperOverrideHit?.(attack,helper);
     if(!result)continue;
     helper.lastHitOverride=selected;
     if(result)api.recordCornerPush?.(attack,helper,result);
-    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
-    if(!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
+    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected?.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
+    if(!selected){if(result.customTargetState&&!result.keepState){const provider=result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
+    if(selected&&!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;
    }
   }

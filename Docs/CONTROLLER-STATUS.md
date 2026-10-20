@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.39
+# Coverage accounting checkpoint — 0.25.40
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Helper explicit custom-hit contacts now have an actual recipient path without HitOverride, delayed headers, KeepState contact bookkeeping and live source pause/marker/state consumers. Sixteen spatial fixtures provide partial evidence across own/foreign programs, root/Helper attackers and both recipient slots. Ordinary Helper get-hit, full contact resources/effects and native phases remain Pending. All inventory/certification counts remain unchanged; zero controllers are certified.
 
 Helper TargetState/P1StateNo now consume selected own/foreign state tables, preserve providers through pending initialization and recover through Helper-local SelfState. Own global HitDef metadata is distinguished from foreign current-state metadata. Twelve actual Helper cases and initial complete browser regression provide partial evidence only. Broader provider, scale, VM and scheduler gaps remain documented; zero controllers are certified.
 
