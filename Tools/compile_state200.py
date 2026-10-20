@@ -11,6 +11,7 @@ from size_definition import imported_size_definition
 from motion_constants import imported_motion_constants
 from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
+from state_velocity import import_bundle_velocity, state_velocity
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--source-import', type=Path, default=Path('outputs/venus'))
@@ -98,7 +99,7 @@ def compile_lifecycle_state(state_id):
     if 'anim' in fields:
         compiled['anim'] = fields['anim']
     if 'velset' in fields:
-        compiled['velset'] = [float(value) for value in fields['velset'].split(',')]
+        compiled['velset'] = state_velocity(fields['velset'])
     return compiled
 
 lifecycle_states = {str(state_id): compile_lifecycle_state(state_id)
@@ -118,7 +119,7 @@ for state_id in (200, 210, 230, 240, 400, 410, 430, 440, 600, 610, 630, 640):
         'anim': int(fields['anim']), 'ctrl': int(fields['ctrl']),
         'sprpriority': int(fields['sprpriority']), 'juggle': int(fields['juggle']),
         'poweradd': int(fields.get('poweradd', 0)),
-        'velset': [float(value) for value in fields['velset'].split(',')] if 'velset' in fields else [],
+        'velset': state_velocity(fields['velset']) if 'velset' in fields else [],
         'controllers': [compile_controller(controller) for controller in states['controllers']
                         if controller['state'] == state_id]}
 sweep_hitdef = next(controller for controller in attack_states['440']['controllers'] if controller['type'] == 'HitDef')
@@ -143,7 +144,7 @@ for state_id in special_ids + helper_ids:
     if 'anim' in fields:
         compiled['anim'] = int(fields['anim'])
     if 'velset' in fields:
-        compiled['velset'] = [float(value) for value in fields['velset'].split(',')]
+        compiled['velset'] = state_velocity(fields['velset'])
     (attack_states if state_id in special_ids else helper_states)[str(state_id)] = compiled
 charge_controllers = [compile_controller(controller) for controller in states['controllers']
                       if controller['state'] == -3 and any(re.search(r'(?:var\((?:16|17)\)|v\s*=\s*(?:16|17)\b)', entry['text']) for entry in controller['entries'])]
@@ -243,7 +244,7 @@ for state_id in (5020, 5030, 5035, 5040, 5050, 5070, 5071, 5100, 5101, 5110, 512
     fall_states[str(state_id)] = {'type': fields['type'], 'moveType': fields['movetype'], 'physics': fields['physics'],
                                  'controllers': [compile_controller(controller) for controller in states['controllers'] if controller['state'] == state_id]}
     if 'velset' in fields:
-        fall_states[str(state_id)]['velset'] = [float(value) for value in fields['velset'].split(',')]
+        fall_states[str(state_id)]['velset'] = state_velocity(fields['velset'])
     for field in ('anim', 'ctrl'):
         if field in fields:
             fall_states[str(state_id)][field] = int(fields[field])
@@ -334,5 +335,6 @@ bundle.update(imported_data_constants(root))
 bundle.update(imported_size_definition(root))
 bundle.update(imported_motion_constants(root))
 import_bundle_persistence(bundle, states['states'])
+import_bundle_velocity(bundle, states['states'])
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

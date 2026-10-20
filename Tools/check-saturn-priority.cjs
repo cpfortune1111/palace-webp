@@ -40,6 +40,39 @@ const server=http.createServer((request,response)=>{
   const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy];try{runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy]=saved}})()`);
   assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,1,true,0,.25]);
   console.log('Actual numeric expression types preserve native integer division, float32 arithmetic and int32 wrapping through real VelSet parameters');
+  const stateVelocityActual=await run(`(()=>{
+   const data=characterProfiles.get(battleCharacters[0]).battle,number=991510,foreign='StateVelocityForeignFixture';
+   const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount],p2:{...p2},owners:[...customStateOwners],foreign:characterProfiles.get(foreign),state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],targets:[...throwTargets],bindings:[...throwBindings]};
+   try{
+    const expression='Ctrl + (StateNo = '+number+'), Anim + Vel X + 2, Vel Y + 3 + Time',definition={type:'S',physics:'N',moveType:'I',ctrl:0,anim:11,velset:expression,controllers:[]};
+    data.states[number]=definition;data.fallStates[number]=definition;data.helperStates[number]={...definition,velset:[]};
+    characterProfiles.set(foreign,{...characterProfiles.get(battleCharacters[0]),battle:{...data,coordinateSystem:{localcoord:[320,240],webWorldWidth:1280}},states:{states:data.states,constants:data.constants}});
+    customStateOwners.fill(null);p1Reaction=null;p1Facing=1;runtimeCtrl=1;current=0;vx=7;vy=8;velZ=9;
+    enterIRState(number);const first=[vx,vy,velZ,runtimeCtrl,current];
+    customStateOwners[1]=foreign;Object.assign(p2,{ctrl:1,anim:0,vx:-7,vy:8,vz:9,facing:-1});
+    enterP2State(number);const second=[p2.vx*p2.facing,p2.vy,p2.vz,p2.ctrl,p2.anim];
+    customStateOwners[0]=foreign;
+    const fighter={...specialRoot(1),state:0,time:9,anim:0,elem:1,elemTick:0,animStartTime:0,ctrl:1,facing:-1,vx:-7,vy:8,vz:9};
+    enterGroundReactionState(fighter,number);const reaction=[fighter.vx*fighter.facing,fighter.vy,fighter.vz,fighter.ctrl,fighter.anim];
+    customStateOwners[0]=null;
+    specialRuntime.dispatch({type:'Helper',params:{id:number,stateno:number}},null,null,{},specialRoot(1),1);
+    const helper=specialRuntime.entities.at(-1);Object.assign(helper,{ctrl:1,anim:0,facing:-1,vx:-7,vy:8,vz:9,stateOwner:foreign});data.helperStates[number].velset=expression;
+    specialRuntime.enterState(helper,number);const helperEntry=[helper.vx*helper.facing,helper.vy,helper.vz,helper.ctrl,helper.anim];
+    definition.velset='1.0/4';runtimeCtrl=1;current=0;vx=7;vy=8;velZ=9;enterIRState(number);const omitted=[vx,vy,velZ];
+    definition.velset='1/4, ifelse(Ctrl, 2, 3), Vel Y + 3';runtimeCtrl=1;current=0;enterIRState(number);const integer=[vx,vy,velZ];
+    delete definition.velset;vx=7;vy=8;velZ=9;enterIRState(number);const absent=[vx,vy,velZ];
+    return [first,second,reaction,helperEntry,omitted,integer,absent];
+   }finally{
+    for(const entity of specialRuntime.entities){forgetHelperCommandInput(entity);nativeHitStates.delete(hitDefinitionOwnerKey(entity))}
+    [state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount]=saved.root;
+    for(const key of Object.keys(p2))if(!(key in saved.p2))delete p2[key];Object.assign(p2,saved.p2);
+    customStateOwners.splice(0,2,...saved.owners);if(saved.foreign)characterProfiles.set(foreign,saved.foreign);else characterProfiles.delete(foreign);
+    for(const [key,value]of [['states',saved.state],['fallStates',saved.fall],['helperStates',saved.helper]]){if(value===undefined)delete data[key][number];else data[key][number]=value}
+    specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);nativeHitCounters.restore(saved.counts);rootGuardHitDefs.splice(0,2,...saved.guards);throwTargets.splice(0,2,...saved.targets);throwBindings.splice(0,2,...saved.bindings);
+   }
+  })()`);
+  assert.deepEqual(stateVelocityActual,[[2,4,7,0,11],[8,16,28,0,11],[8,16,28,0,11],[8,16,28,0,11],[.25,8,9],[0,2,5],[7,8,9]]);
+  console.log('Actual P1/P2/reaction/Helper StateDef velocity observes entering Time/StateNo, old Ctrl/Anim, sequential XYZ, native caller units and omitted axes');
   const movementCoordinatesActual=await run(`(()=>{
    const data=characterProfiles.get(battleCharacters[0]).battle,number=991508,foreign='MovementCoordinatesForeignFixture';
    const saved={p2:{...p2},reaction:p1Reaction,velocity:[vx,vy,velZ],targets:[...combatTargets],camera:cameraX,owners:[...customStateOwners],foreign:characterProfiles.get(foreign),definition:data.helperStates[number],globals:data.globalControllers,entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),tick:combatTraceTick,pauses:{normal:[...specialRuntime.pauses.normal],super:[...specialRuntime.pauses.super]}};

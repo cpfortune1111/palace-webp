@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {applyStateDefVelocity} from '../Engine/state-def-velocity.js';
+import {evaluateTypedNumericAST} from '../Engine/expression-numeric-types.js';
+
+const source=readFileSync(new URL('../index.html',import.meta.url),'utf8'),parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexOf('function queryValue(')),evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
+const velocity={x:10,y:20,z:30},parent={query:name=>name.toLowerCase()==='vel x'?9:0},helper={query:name=>name.toLowerCase()==='vel y'?4:0},testContext={vars:[],fvars:[],sysvars:[],sysfvars:[],query:name=>name.toLowerCase()==='ctrl'?1:velocity[name.slice(-1).toLowerCase()]??0,redirect:()=>parent,helperContext:()=>helper};
+const context=vm.createContext({evaluateTypedNumericAST,animElemTime:()=>0,testContext});
+vm.runInContext(parser+'\n'+evaluator,context);
+const api={expressions:expression=>{context.sourceExpression=expression;return vm.runInContext('parseExprAST(sourceExpression,{list:true})',context)},evaluate:expression=>{context.expressionAST=expression;return vm.runInContext('evalAST(expressionAST,testContext)',context)},setVelocity:(axis,value)=>{velocity[axis]=value}};
+applyStateDefVelocity({velset:'1/4, Vel X + 2, Vel Y + 3'},api);
+assert.deepEqual(velocity,{x:0,y:2,z:5});
+applyStateDefVelocity({velset:'1.0/4, ifelse(ctrl, 2, 3), Vel Y + 4'},api);
+assert.deepEqual(velocity,{x:.25,y:2,z:6});
+applyStateDefVelocity({velset:'Parent, Vel X, Helper(7), Vel Y, Vel Y + 1'},api);
+assert.deepEqual(velocity,{x:9,y:4,z:5});
+applyStateDefVelocity({velset:'1,2,'},api);
+assert.deepEqual(velocity,{x:1,y:2,z:5});
+assert.throws(()=>applyStateDefVelocity({velset:'1,2,3,'},api),/arity/);
+assert.throws(()=>applyStateDefVelocity({velset:'1,2,3,4'},api),/arity/);
+assert.throws(()=>applyStateDefVelocity({velset:'1,,2'},api),/AST/);
+context.sourceExpression='1,2';
+assert.throws(()=>vm.runInContext('parseExprAST(sourceExpression)',context),/trailing/);
+console.log('Actual expression parser preserves XYZ boundaries, nested function commas, redirects, sequential reads and native trailing-comma arity');

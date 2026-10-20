@@ -1,3 +1,7 @@
+## 0.25.30 — StateDef velocity expressions and entry consumers (partial)
+
+StateDef velocity preserves original expression text across all five exporters and existing character payloads. Shared P1/P2/reaction/Helper entry applies XYZ sequentially, retains omitted axes and reads prior Ctrl/Anim in the correct velocity phase. Live velocity queries convert into original caller units. Native component/redirect/comma fixtures, actual entry consumers and complete initial browser regression pass. The Node sweep passes 172/177 checks; five known harness setup failures remain documented. Other StateDef fields, expression/type fidelity and native action/version phases remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.
+
 ## 0.25.29 — Shared XYZ movement coordinates (partial)
 
 Real root/reaction/Helper position and velocity consumers now bridge XYZ together with foreign/own-program units and redirected recipient scales. TargetVelSet/Add preserve live local/world conversion, P1 depth, source expressions and pinned cumulative multi-target behavior. Helper fall writers use their own state provider; XYZ RedirectID is sampled once and projectile entity IDs are not actor recipients. Focused tests and actual fixtures cover these paths. Bound-position/action timing, StateDef initialization, full GetHit ownership and native/version parity remain Pending. All 163 controller rows remain uncertified. Deployment is verified separately.

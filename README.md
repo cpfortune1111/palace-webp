@@ -1,3 +1,7 @@
+## 0.25.30 — StateDef velocity expressions and entry consumers (partial)
+
+Five importers preserve original StateDef velocity expressions instead of forcing numeric pairs. P1/P2/reaction/Helper entry evaluates XYZ sequentially before incoming control/animation, retains omitted axes and converts native units. Velocity queries use original caller units, with live per-component reads. Source comparisons, actual entry fixtures and browser regression cover these paths. Other StateDef fields/order, full expression and native/version semantics remain Pending; zero controllers are certified complete. Five existing harness setup failures remain documented. Deployment is verified separately.
+
 ## 0.25.29 — Shared XYZ movement coordinates (partial)
 
 PosSet/Add and velocity controllers now share root/Helper XYZ coordinate bindings instead of splitting depth into a second dispatch. Foreign and own-program units, camera/ground origins and redirected facing/scales are preserved. TargetVelSet/Add use live coordinate bindings, including P1 depth and pinned cumulative target scaling; Helper fall writes use their own state provider. Actual fixtures also check single RedirectID sampling and non-actor exclusion. Bound-position phases, StateDef initialization and complete GetHit/native/version semantics remain Pending; zero controllers are certified complete. Deployment is verified separately.

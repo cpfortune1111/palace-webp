@@ -4,6 +4,7 @@ import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
 import {applyStatePersistence} from '../../Engine/state-persistence.js';
+import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js';
 import {characterLocalCoord} from '../../Engine/clsn-coordinate-scale.js';
 import {applyHelperSizeOverrides,projectileSpriteScale} from '../../Engine/size-constants.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
@@ -85,10 +86,10 @@ export function createSpecialRuntime(api){
    clearMoveHit:()=>{entity.moveContact=0;entity.moveHit=0;entity.moveGuarded=0;api.transitionMoveContact?.(entity,{hitcountpersist:1,movehitpersist:0})},
    clearHitDef:()=>{entity.guardHitDef=null;entity.activeHitDef=null}
   });
+  applyStateDefVelocity(definition,{expressions:source=>{if(!api.stateVelocityExpressions)throw Error('Missing StateDef velocity expression parser');return api.stateVelocityExpressions(source)},evaluate:expression=>expression&&typeof expression==='object'?api.evalAST(expression,context(entity)):api.eval(String(expression),context(entity)),setVelocity:(axis,value)=>{const scale=api.stateVelocityScale?.(entity)??1;entity['v'+axis]=Math.fround(Math.fround(value*scale)*(axis==='x'?entity.facing:1))}});
   entity.ctrl=definition.ctrl??entity.ctrl;
   entity.controllerSchedule=createControllerSchedule();
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
-  if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
  }
  function spawn(params,owner,player,kind){

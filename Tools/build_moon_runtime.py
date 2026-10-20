@@ -11,6 +11,7 @@ from size_definition import imported_size_definition
 from motion_constants import imported_motion_constants
 from attack_distance_constants import update_attack_distance_constants
 from state_persistence import import_state_persistence
+from state_velocity import import_bundle_velocity, state_velocity
 
 from compile_moon_states import DISABLED_ACTIONS, build, compile_controller, fields
 
@@ -52,7 +53,7 @@ def compile_runtime(imported, output):
         if state_id == 1101:
             state['anim'] = 1110
         if 'velset' in values:
-            state['velset'] = [float(value) for value in values['velset'].split(',')]
+            state['velset'] = state_velocity(values['velset'])
         for controller in raw['controllers']:
             if controller['file'] != definition['file'] or not definition['line'] < controller['line'] < boundary:
                 continue
@@ -170,6 +171,7 @@ def compile_runtime(imported, output):
     bundle.update(imported_data_constants(imported))
     bundle.update(imported_size_definition(imported))
     bundle.update(imported_motion_constants(imported))
+    import_bundle_velocity(bundle, definitions, {1101: 1110})
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Moon runtime:', len(states), 'states;', len(commands), 'command definitions')
 
