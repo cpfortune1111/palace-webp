@@ -8,6 +8,7 @@ from character_coordinates import imported_coordinates
 from custom_constants import imported_custom_constants
 from data_constants import imported_data_constants
 from size_definition import imported_size_definition
+from motion_constants import imported_motion_constants
 from attack_distance_constants import update_attack_distance_constants
 from state_persistence import import_state_persistence
 
@@ -173,6 +174,7 @@ def compile_runtime(imported, output):
     bundle.update(imported_custom_constants(imported))
     bundle.update(imported_data_constants(imported))
     bundle.update(imported_size_definition(imported))
+    bundle.update(imported_motion_constants(imported))
     output.write_text(json.dumps(bundle, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     print('Saturn runtime:', len(states), 'states;', len(commands), 'command definitions')
 

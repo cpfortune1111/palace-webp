@@ -278,427 +278,427 @@
     {
       "name": "velocity.air.gethit.airrecover.add.x",
       "opcode": "OC_const_velocity_air_gethit_airrecover_add_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.add.y",
       "opcode": "OC_const_velocity_air_gethit_airrecover_add_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.back",
       "opcode": "OC_const_velocity_air_gethit_airrecover_back",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.down",
       "opcode": "OC_const_velocity_air_gethit_airrecover_down",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.fwd",
       "opcode": "OC_const_velocity_air_gethit_airrecover_fwd",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.mul.x",
       "opcode": "OC_const_velocity_air_gethit_airrecover_mul_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.mul.y",
       "opcode": "OC_const_velocity_air_gethit_airrecover_mul_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.airrecover.up",
       "opcode": "OC_const_velocity_air_gethit_airrecover_up",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.groundrecover.x",
       "opcode": "OC_const_velocity_air_gethit_groundrecover_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.groundrecover.y",
       "opcode": "OC_const_velocity_air_gethit_groundrecover_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.ko.add.x",
       "opcode": "OC_const_velocity_air_gethit_ko_add_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.ko.add.y",
       "opcode": "OC_const_velocity_air_gethit_ko_add_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.air.gethit.ko.ymin",
       "opcode": "OC_const_velocity_air_gethit_ko_ymin",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.back.x",
       "opcode": "OC_const_velocity_airjump_back_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.down.x",
       "opcode": "OC_const_velocity_airjump_down_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.down.y",
       "opcode": "OC_const_velocity_airjump_down_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.down.z",
       "opcode": "OC_const_velocity_airjump_down_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.fwd.x",
       "opcode": "OC_const_velocity_airjump_fwd_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.neu.x",
       "opcode": "OC_const_velocity_airjump_neu_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.up.x",
       "opcode": "OC_const_velocity_airjump_up_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.up.y",
       "opcode": "OC_const_velocity_airjump_up_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.up.z",
       "opcode": "OC_const_velocity_airjump_up_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.airjump.y",
       "opcode": "OC_const_velocity_airjump_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.ground.gethit.ko.add.x",
       "opcode": "OC_const_velocity_ground_gethit_ko_add_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.ground.gethit.ko.add.y",
       "opcode": "OC_const_velocity_ground_gethit_ko_add_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.ground.gethit.ko.xmul",
       "opcode": "OC_const_velocity_ground_gethit_ko_xmul",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.ground.gethit.ko.ymin",
       "opcode": "OC_const_velocity_ground_gethit_ko_ymin",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.back.x",
       "opcode": "OC_const_velocity_jump_back_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.down.x",
       "opcode": "OC_const_velocity_jump_down_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.down.y",
       "opcode": "OC_const_velocity_jump_down_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.down.z",
       "opcode": "OC_const_velocity_jump_down_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.fwd.x",
       "opcode": "OC_const_velocity_jump_fwd_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.neu.x",
       "opcode": "OC_const_velocity_jump_neu_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.up.x",
       "opcode": "OC_const_velocity_jump_up_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.up.y",
       "opcode": "OC_const_velocity_jump_up_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.up.z",
       "opcode": "OC_const_velocity_jump_up_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.jump.y",
       "opcode": "OC_const_velocity_jump_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.back.x",
       "opcode": "OC_const_velocity_run_back_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.back.y",
       "opcode": "OC_const_velocity_run_back_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.down.x",
       "opcode": "OC_const_velocity_run_down_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.down.y",
       "opcode": "OC_const_velocity_run_down_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.down.z",
       "opcode": "OC_const_velocity_run_down_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.fwd.x",
       "opcode": "OC_const_velocity_run_fwd_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.fwd.y",
       "opcode": "OC_const_velocity_run_fwd_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.up.x",
       "opcode": "OC_const_velocity_run_up_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.up.y",
       "opcode": "OC_const_velocity_run_up_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.run.up.z",
       "opcode": "OC_const_velocity_run_up_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.back.x",
       "opcode": "OC_const_velocity_runjump_back_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.back.y",
       "opcode": "OC_const_velocity_runjump_back_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.down.x",
       "opcode": "OC_const_velocity_runjump_down_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.down.y",
       "opcode": "OC_const_velocity_runjump_down_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.down.z",
       "opcode": "OC_const_velocity_runjump_down_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.fwd.x",
       "opcode": "OC_const_velocity_runjump_fwd_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.up.x",
       "opcode": "OC_const_velocity_runjump_up_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.up.y",
       "opcode": "OC_const_velocity_runjump_up_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.up.z",
       "opcode": "OC_const_velocity_runjump_up_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.runjump.y",
       "opcode": "OC_const_velocity_runjump_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.back.x",
       "opcode": "OC_const_velocity_walk_back_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.down.x",
       "opcode": "OC_const_velocity_walk_down_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.down.y",
       "opcode": "OC_const_velocity_walk_down_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.down.z",
       "opcode": "OC_const_velocity_walk_down_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.fwd.x",
       "opcode": "OC_const_velocity_walk_fwd_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.up.x",
       "opcode": "OC_const_velocity_walk_up_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.up.y",
       "opcode": "OC_const_velocity_walk_up_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "velocity.walk.up.z",
       "opcode": "OC_const_velocity_walk_up_z",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.airjump.num",
       "opcode": "OC_const_movement_airjump_num",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.airjump.height",
       "opcode": "OC_const_movement_airjump_height",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.yaccel",
       "opcode": "OC_const_movement_yaccel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.stand.friction",
       "opcode": "OC_const_movement_stand_friction",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.crouch.friction",
       "opcode": "OC_const_movement_crouch_friction",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.stand.friction.threshold",
       "opcode": "OC_const_movement_stand_friction_threshold",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.crouch.friction.threshold",
       "opcode": "OC_const_movement_crouch_friction_threshold",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.groundlevel",
       "opcode": "OC_const_movement_air_gethit_groundlevel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.groundrecover.ground.threshold",
       "opcode": "OC_const_movement_air_gethit_groundrecover_ground_threshold",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.groundrecover.groundlevel",
       "opcode": "OC_const_movement_air_gethit_groundrecover_groundlevel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.airrecover.threshold",
       "opcode": "OC_const_movement_air_gethit_airrecover_threshold",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.airrecover.yaccel",
       "opcode": "OC_const_movement_air_gethit_airrecover_yaccel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.air.gethit.trip.groundlevel",
       "opcode": "OC_const_movement_air_gethit_trip_groundlevel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.bounce.offset.x",
       "opcode": "OC_const_movement_down_bounce_offset_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.bounce.offset.y",
       "opcode": "OC_const_movement_down_bounce_offset_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.bounce.yaccel",
       "opcode": "OC_const_movement_down_bounce_yaccel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.bounce.groundlevel",
       "opcode": "OC_const_movement_down_bounce_groundlevel",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.gethit.offset.x",
       "opcode": "OC_const_movement_down_gethit_offset_x",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.gethit.offset.y",
       "opcode": "OC_const_movement_down_gethit_offset_y",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     },
     {
       "name": "movement.down.friction.threshold",
       "opcode": "OC_const_movement_down_friction_threshold",
-      "status": "Pending complete semantic evidence"
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
     }
   ]
 }

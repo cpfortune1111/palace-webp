@@ -35,6 +35,15 @@ class SizeDefinitionImportTests(unittest.TestCase):
         size['standbox'][0] = 99
         self.assertEqual(size['crouchbox'][0], -16)
 
+    def test_localcoord_scales_defaults_before_explicit_fields(self):
+        size = size_definition('[Size]\nground.front=40\nhead.pos=,-300', 1280)
+        self.assertEqual(size['standbox'], [-64, -240, 40, 0])
+        self.assertEqual(size['headPosition'], [-20, -300])
+        self.assertEqual(size['attackDistance']['y'], [4000, 4000])
+        self.assertEqual(size['projectileAttackDistance']['z'], [40, 40])
+        self.assertEqual(size['xscale'], 1)
+        self.assertEqual(size['weight'], 100)
+
     def test_legacy_boxes_before_explicit_partial_overrides(self):
         size = size_definition('[Size]\nheight=100\nground.back=20\nground.front=30\nair.back=12\nair.front=14\nstand.sizebox=,-150,,3\ncrouch.sizebox=-25,-50,26,4\nair.sizebox=,,15\n[Size]\nheight=999')
         self.assertEqual(size['standbox'], [-20, -150, 30, 3])

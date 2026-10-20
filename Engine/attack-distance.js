@@ -1,6 +1,7 @@
 export function characterGuardDistance(data,{projectile=false}={}){
  const constants={...data.sizeConstants,...data.constants},prefix='size.'+(projectile?'proj.':'')+'attack.dist';
- const range={x:projectile?[90,0]:[data.guardDistance?.front??160,data.guardDistance?.back??0],y:[1000,1000],z:projectile?[10,10]:[4,4]};
+ const original=projectile?data.sizeDefinition?.projectileAttackDistance:data.sizeDefinition?.attackDistance;
+ const range=original?{x:[...original.x],y:[...original.y],z:[...original.z]}:{x:projectile?[90,0]:[data.guardDistance?.front??160,data.guardDistance?.back??0],y:[1000,1000],z:projectile?[10,10]:[4,4]};
  if(constants[prefix]!==undefined)range.x[0]=Number(constants[prefix]);
  for(const [name,axis] of [['width','x'],['height','y'],['depth','z']]){
   const value=constants[prefix+'.'+name];

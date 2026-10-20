@@ -3,6 +3,11 @@ import {characterGuardDistance,applyAttackDistanceController,withinAttackGuardDi
 
 assert.deepEqual(characterGuardDistance({}),{x:[160,0],y:[1000,1000],z:[4,4]});
 assert.deepEqual(characterGuardDistance({},{projectile:true}),{x:[90,0],y:[1000,1000],z:[10,10]});
+const scaledDefaults={sizeDefinition:{attackDistance:{x:[640,0],y:[4000,4000],z:[16,16]},projectileAttackDistance:{x:[360,0],y:[4000,4000],z:[40,40]}},constants:{'size.proj.attack.dist.depth.y':12}};
+assert.deepEqual(characterGuardDistance(scaledDefaults),{x:[640,0],y:[4000,4000],z:[16,16]});
+assert.deepEqual(characterGuardDistance(scaledDefaults,{projectile:true}),{x:[360,0],y:[4000,4000],z:[40,12]});
+characterGuardDistance(scaledDefaults).y[0]=1;
+assert.equal(scaledDefaults.sizeDefinition.attackDistance.y[0],4000);
 const sizeData={guardDistance:{front:300,back:20},constants:{'size.attack.dist':200,'size.attack.dist.width.x':240,'size.attack.dist.width.y':30,'size.attack.dist.height.x':50,'size.attack.dist.height.y':60,'size.attack.dist.depth.x':7,'size.attack.dist.depth.y':8,'size.proj.attack.dist.width.x':80,'size.proj.attack.dist.width.y':10,'size.proj.attack.dist.height.x':25,'size.proj.attack.dist.depth.y':12}};
 assert.deepEqual(characterGuardDistance(sizeData),{x:[240,30],y:[50,60],z:[7,8]});
 assert.deepEqual(characterGuardDistance(sizeData,{projectile:true}),{x:[80,10],y:[25,1000],z:[10,12]});

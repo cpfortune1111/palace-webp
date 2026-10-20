@@ -8,6 +8,7 @@ from character_coordinates import imported_coordinates
 from custom_constants import imported_custom_constants
 from data_constants import imported_data_constants
 from size_definition import imported_size_definition
+from motion_constants import imported_motion_constants
 from attack_distance_constants import attack_distance_constants
 from state_persistence import import_bundle_persistence
 
@@ -331,6 +332,7 @@ bundle.update(imported_coordinates(root))
 bundle.update(imported_custom_constants(root))
 bundle.update(imported_data_constants(root))
 bundle.update(imported_size_definition(root))
+bundle.update(imported_motion_constants(root))
 import_bundle_persistence(bundle, states['states'])
 arguments.output.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding='utf-8')
 print('Compiled State 200 controllers:', len(controllers), 'AIR collision actions:', len(actions))

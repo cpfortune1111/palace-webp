@@ -1,8 +1,9 @@
 from custom_constants import first_ini_section, float32_json, imported_cns_text, native_atof
+from character_coordinates import imported_coordinates
 from data_constants import read_i32
 
 
-def size_definition(text):
+def size_definition(text, localcoord=320):
     values = first_ini_section(text, 'size') or {}
     size = {
         'xscale': 1, 'yscale': 1,
@@ -14,6 +15,15 @@ def size_definition(text):
         'shadowOffset': 0, 'drawOffset': [0, 0], 'depth': [4, 4],
         'attackDepth': [4, 4], 'weight': 100, 'pushFactor': 1
     }
+
+    ratio = float32_json(float32_json(localcoord) / 320)
+    for key in ('standbox', 'crouchbox', 'airbox', 'downbox', 'headPosition',
+                'midPosition', 'drawOffset', 'depth', 'attackDepth'):
+        size[key] = [float32_json(value * ratio) for value in size[key]]
+    for key in ('attackDistance', 'projectileAttackDistance'):
+        for axis in ('x', 'y', 'z'):
+            size[key][axis] = [float32_json(value * ratio) for value in size[key][axis]]
+    size['shadowOffset'] = float32_json(size['shadowOffset'] * ratio)
 
     def read(key, previous):
         result = list(previous)
@@ -57,4 +67,5 @@ def size_definition(text):
 
 
 def imported_size_definition(imported):
-    return {'sizeDefinition': size_definition(imported_cns_text(imported))}
+    width = imported_coordinates(imported)['coordinateSystem']['localcoord'][0]
+    return {'sizeDefinition': size_definition(imported_cns_text(imported), width)}
