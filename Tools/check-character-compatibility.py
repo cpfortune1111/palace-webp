@@ -1,4 +1,5 @@
 import importlib.util
+import json
 from pathlib import Path
 import unittest
 
@@ -9,6 +10,14 @@ spec.loader.exec_module(module)
 
 
 class CompatibilityTests(unittest.TestCase):
+    def test_venus_runtime_metadata(self):
+        root = Path(__file__).resolve().parents[1]
+        bundle = json.loads((root / 'Char/Venus/venus_battle200.json').read_text(encoding='utf-8'))
+        self.assertEqual(bundle['compatibility'], 'mugen')
+        self.assertEqual(bundle['engineVersions'], {'mugen': [1, 0], 'ikemen': [0, 0, 0]})
+        compiler = (root / 'Tools/compile_state200.py').read_text(encoding='utf-8')
+        self.assertIn('bundle.update(imported_compatibility(root))', compiler)
+
     def test_native_versions(self):
         read = module.definition_compatibility
         self.assertEqual(read('[Info]\nmugenversion=1.0')['engineVersions']['mugen'], [1, 0])

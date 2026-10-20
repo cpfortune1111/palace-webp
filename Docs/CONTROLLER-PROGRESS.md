@@ -1,3 +1,7 @@
+## 0.25.34 — Custom contacts and live Target redirection (partial)
+
+Both-root custom-state contacts now share normal damage, pause, facing, power, HitOnce, counts and juggle consumers. Target(id,index) selects live targets and evaluates arguments in the original caller context. Actual fixtures, the full browser suite, two original Moon throw cases and the Venus compatibility exporter test provide partial evidence. Node checks pass 176/181 with the same five existing harness failures. Jupiter S1300 requires absent source AIR actions; the explicit diagnostic remains failing and is not counted as implemented behavior. Full native phases, Helper victims, arbitrary dynamic animation loading and VM/version parity remain Pending; all 163 controllers remain uncertified. Deployment is verified separately. See CUSTOM-CONTACT-WIP.md.
+
 ## 0.25.33 — Native juggle cost and contact budgets (partial)
 
 StateDef juggle expressions now feed real per-actor costs. Shared collision gates and accepted contacts use per-source budgets, player/projectile version rules, Helper inheritance and NoJuggleCheck; guarded/overridden contacts do not incorrectly debit cost. Source import, idle/pause reset, recovery and target-drop cleanup have executable coverage. Custom throws, exact same-frame/native phase ordering and broader version/query parity remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.

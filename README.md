@@ -1,3 +1,7 @@
+## 0.25.34 — Custom contacts and live Target redirection (partial)
+
+HitDefs with both custom StateNo parameters now use the normal root contact pipeline, retaining damage, power, pauses, facing, HitOnce, counts and juggle budgets. Target(id,index) uses live hit IDs and original caller arguments instead of stale throw pointers. Actual fixtures and original Moon throws in both root slots cover the consumers. Venus now imports archived DEF engine versions; StateDef animation expressions join the existing preload variants. Jupiter S1300 references absent original AIR actions and remains a documented failing source-asset diagnostic. Full native phases, Helper victims and broader VM/version parity remain Pending; all 163 controller rows remain uncertified. Deployment is verified separately.
+
 ## 0.25.33 — Native juggle cost and contact budgets (partial)
 
 StateDef juggle expressions now feed real per-actor costs. Shared collision gates and accepted contacts use per-source budgets, player/projectile version rules, Helper inheritance and NoJuggleCheck; guarded/overridden contacts do not incorrectly debit cost. Source import, idle/pause reset, recovery and target-drop cleanup have executable coverage. Custom throws, exact same-frame/native phase ordering and broader version/query parity remain Pending. All 163 controllers remain uncertified. Deployment is verified separately.

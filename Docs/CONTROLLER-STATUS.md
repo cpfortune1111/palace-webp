@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.33
+# Coverage accounting checkpoint — 0.25.34
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Custom-state root contacts and live Target(id,index) redirection now have partial real-runtime evidence; original Moon throws recover in both slots. Jupiter's absent original throw animations remain an explicitly failing diagnostic, not a completed consumer. Venus version metadata is imported from its archived DEF. See CUSTOM-CONTACT-WIP.md for evidence and boundaries; none of these changes certify a controller or establish a completion percentage.
 
 Additional GetHitVar query-name audit: 89 native names/aliases, zero absent name dispatches as of this checkpoint. Supplemental MoveHitVar audit: ten native names/aliases, zero absent live name hooks; helper cornerpush and broader consumers remain partial. All recognized query rows remain semantically uncertified; this separate query inventory does not alter controller certification counts or prove overall parameter completion.
 
