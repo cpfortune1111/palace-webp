@@ -17,4 +17,7 @@ assert.throws(()=>pending.request('helper',{state:400},()=>{throw Error('selecti
 assert.equal(pending.get('helper').state,300);pending.cancel('helper');assert.equal(pending.has('helper'),false);
 assert.throws(()=>pending.initialize('helper',{}),/actual state initialization phase/);
 pending.restore(saved);pending.clear();assert.deepEqual(pending.snapshot(),[]);assert.equal(saved[0][1].state,200);
+pending.request('global',{state:200,selectedTick:15},()=>{});assert.equal(pending.initialize('global',{paused:false,hitPause:false,tick:14,allowSameTick:true,initialize:()=>{}}),false);
+assert.equal(pending.initialize('global',{paused:true,hitPause:false,tick:15,allowSameTick:true,initialize:()=>{}}),false);
+assert.equal(pending.initialize('global',{paused:false,hitPause:false,tick:15,allowSameTick:true,initialize:()=>{}}),true);
 console.log('Real state selection is distinct from once-only header initialization, waits for live action eligibility and a later action tick, and handles replacement, cancellation and snapshots');

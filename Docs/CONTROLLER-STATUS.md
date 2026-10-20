@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.41
+# Coverage accounting checkpoint — 0.25.42
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Helper general state phases, numeric animation/control order and SelfState readplayerid now have real consumers with focused own/foreign/root/Helper evidence. Same-state re-entry uses entry identity rather than a state-number comparison. Actual legacy P2 idle controllers execute while Ctrl is false instead of relying on a hardcoded override. RedirectID/continue/prefixes, special paths and complete native VM/scheduler parity remain Pending; all 163 controller certifications remain Pending.
 
 Ordinary Helper get-hit, hit/down clocks, NoGetUpFromLieDown and imported common recovery now have partial actual-runtime evidence across eight trajectories. Common sound prefixes, actor-isolated landing dispatch and HitFallDamage have real consumers. The native legacy ForceFeedback Helper exclusion is explicitly bounded; root/new-API output remains unimplemented. Broader native action/version/VM and complete effects/controller parity remain Pending. Certification counts remain 0/163; no total percentage is asserted.
 

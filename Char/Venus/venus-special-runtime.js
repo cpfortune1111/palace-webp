@@ -38,7 +38,7 @@ import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engin
 import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
-import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js';
+import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js?v=02542';
 import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
@@ -84,7 +84,7 @@ export function createSpecialRuntime(api){
  function helperDefinition(entity,state,provider=entity.stateOwner){const data=provider?api.stateData?.(provider):api.data(entity.player);if(!data)throw Error('Unknown Helper state provider '+provider);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state,{selected=false}={}){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
-  if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
+  if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
   applyStateDefTypes(definition,{set:(name,value)=>{entity[name]=value}});
   if(state===5110){entity.getHit??={};if(entity.getHit['down.recovertime']===undefined){if(!api.downRecoveryDefault)throw Error('Missing actual Helper down recovery default');entity.getHit['down.recovertime']=api.downRecoveryDefault(entity)}}
   api.initializeStateJuggle?.(entity);
@@ -101,18 +101,18 @@ export function createSpecialRuntime(api){
   if(definition.anim!==undefined){const anim=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(anim!==-1){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}
   applyStateDefControlPower(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setControl:value=>{entity.ctrl=Number(value)},addPower:amount=>{if(!api.stateDefPowerAdd)throw Error('Missing StateDef power consumer');api.stateDefPowerAdd(entity,amount)}});
  }
- function selectState(entity,state,{provider=entity.stateOwner}={}){
+ function selectState(entity,state,{provider=entity.stateOwner,phase='external'}={}){
   if(!helperDefinition(entity,state,provider))throw Error('Unknown helper state '+state);
   const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(api.data(entity.player)).ikemen;
-  return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider},()=>{
-   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,time:0,animStartTime:-age,once:new Set()});
+  return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider,phase},()=>{
+   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});
    if(!resetAfterPause)entity.controllerSchedule=createControllerSchedule();
   });
  }
  function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule=createControllerSchedule();pending.resetAfterPause=false}}
  function initializeSelectedState(entity){
   const pending=stateChanges.get(entity.key);if(pending&&pending.state!==entity.state){stateChanges.cancel(entity.key);return false}
-  return stateChanges.initialize(entity.key,{paused:blocked(entity.player,entity),hitPause:entity.hitPause>0,tick:api.tick(),initialize:entry=>{resetSelectedSchedule(entity);enter(entity,entry.state,{selected:true})}});
+  return stateChanges.initialize(entity.key,{paused:blocked(entity.player,entity),hitPause:entity.hitPause>0,tick:api.tick(),allowSameTick:pending?.phase==='global'||pending?.phase==='current',initialize:entry=>{resetSelectedSchedule(entity);enter(entity,entry.state,{selected:true})}});
  }
  function spawn(params,owner,player,kind){
   const sourceContext=context({...owner,player,key:owner.key||'root'+player});
@@ -168,15 +168,24 @@ export function createSpecialRuntime(api){
    case 'HitBy':case 'NotHitBy':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
-   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>selectState(entity,state,{phase:global?'global':'current'}),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+  }
+ }
+ function runHelperCurrentState(entity){
+  for(let transitions=0;transitions<=2500;transitions++){
+   initializeSelectedState(entity);if(entity.destroyed||stateChanges.has(entity.key))return;
+   const entrySerial=entity.entrySerial,controllers=helperDefinition(entity,entity.state).controllers;
+   for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.entrySerial!==entrySerial)break}
+   if(entity.destroyed||entity.entrySerial===entrySerial)return;
   }
  }
  function helperGlobalState(entity,stateNo){
   const data=api.ownData?.(entity.player)??api.data(entity.player);
   const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
+  const entrySerial=entity.entrySerial;
   for(const [index,controller]of controllers.entries()){
    helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
-   if(entity.destroyed)return;
+   if(entity.destroyed||entity.entrySerial!==entrySerial)return;
   }
  }
  function helperGlobals(entity){
@@ -224,8 +233,8 @@ export function createSpecialRuntime(api){
     if(entity.kind==='helper'){
      helperGlobalState(entity,-4);if(entity.destroyed)continue;
      helperGlobals(entity);if(entity.destroyed)continue;
-     const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
-     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
+     const previous=entity.state,entrySerial=entity.entrySerial,controllers=helperDefinition(entity,previous).controllers;
+     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.entrySerial!==entrySerial)break}
     }
     api.finishHitFrame?.(entity);entity.hitPause--;if(entity.kind==='helper'){if(entity.hitShake>0)entity.hitShake--;resetSelectedSchedule(entity)};continue;
    }
@@ -236,11 +245,8 @@ export function createSpecialRuntime(api){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
     helperGlobals(entity);if(entity.destroyed)continue;
     initializeSelectedState(entity);if(stateChanges.has(entity.key))continue;
-    const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
-    for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
-    if(entity.destroyed)continue;
-    if(entity.state!==previous)continue;
-    if(canGetUpFromLieDown(entity,{paused:false,alive:api.alive?.(entity)??entity.life>0,hit:entity.getHit||{}})){enter(entity,5120);continue}
+    runHelperCurrentState(entity);if(entity.destroyed||stateChanges.has(entity.key))continue;
+    if(canGetUpFromLieDown(entity,{paused:false,alive:api.alive?.(entity)??entity.life>0,hit:entity.getHit||{}})){selectState(entity,5120,{phase:'current'});runHelperCurrentState(entity);if(entity.destroyed||stateChanges.has(entity.key))continue}
    }else if(!entity.removing){
     const invisible=entity.scale.every(value=>value===0);
     if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}
