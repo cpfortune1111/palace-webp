@@ -1,3 +1,7 @@
+## 0.25.29 — Shared XYZ movement coordinates (partial)
+
+PosSet/Add and velocity controllers now share root/Helper XYZ coordinate bindings instead of splitting depth into a second dispatch. Foreign and own-program units, camera/ground origins and redirected facing/scales are preserved. TargetVelSet/Add use live coordinate bindings, including P1 depth and pinned cumulative target scaling; Helper fall writes use their own state provider. Actual fixtures also check single RedirectID sampling and non-actor exclusion. Bound-position phases, StateDef initialization and complete GetHit/native/version semantics remain Pending; zero controllers are certified complete. Deployment is verified separately.
+
 ## 0.25.28 — Original Velocity/Movement constants and velocity coordinates (partial)
 
 All 85 Velocity/Movement Const names now read original root/Helper metadata with native jump inheritance, float32 values and caller units. Shared XY velocity controllers bridge borrowed-state and redirected recipient coordinates while preserving dimensionless multipliers and explicit own-program units. Original Size/motion defaults now scale to DEF localcoord before CNS overrides; guard defaults retain that scale. Source imports, actual 85-name/consumer fixtures and complete regression pass. All 138 builtin Const names have partial adapters, but native/version semantics and downstream consumers remain incomplete; zero controllers are certified complete. Deployment is verified separately.

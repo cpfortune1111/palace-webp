@@ -1,3 +1,7 @@
+## 0.25.29 — Shared XYZ movement coordinates (partial)
+
+Real root/reaction/Helper position and velocity consumers now bridge XYZ together with foreign/own-program units and redirected recipient scales. TargetVelSet/Add preserve live local/world conversion, P1 depth, source expressions and pinned cumulative multi-target behavior. Helper fall writers use their own state provider; XYZ RedirectID is sampled once and projectile entity IDs are not actor recipients. Focused tests and actual fixtures cover these paths. Bound-position/action timing, StateDef initialization, full GetHit ownership and native/version parity remain Pending. All 163 controller rows remain uncertified. Deployment is verified separately.
+
 ## 0.25.28 — Original Velocity/Movement constants and velocity coordinates (partial)
 
 The remaining 85 builtin Velocity/Movement names have original import and live own-root/Helper/caller-unit adapters. A real borrowed-state VelSet test exposed missing world-coordinate conversion; the shared XY velocity consumer now bridges state/global program and redirected recipient units. Default Size/motion initialization also scales dimensional values to DEF localcoord before explicit overrides. Seven Size and seven motion import tests, all five builders, actual 85-name/consumer fixtures and complete regression pass. All 138 builtin Const names remain uncertified, as do all 163 controller rows. Broader movement/GetHit/StateDef consumers, parser/VM and native/version parity remain Pending. Deployment is verified separately.

@@ -40,6 +40,71 @@ const server=http.createServer((request,response)=>{
   const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy];try{runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy]=saved}})()`);
   assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,1,true,0,.25]);
   console.log('Actual numeric expression types preserve native integer division, float32 arithmetic and int32 wrapping through real VelSet parameters');
+  const movementCoordinatesActual=await run(`(()=>{
+   const data=characterProfiles.get(battleCharacters[0]).battle,number=991508,foreign='MovementCoordinatesForeignFixture';
+   const saved={p2:{...p2},reaction:p1Reaction,velocity:[vx,vy,velZ],targets:[...combatTargets],camera:cameraX,owners:[...customStateOwners],foreign:characterProfiles.get(foreign),definition:data.helperStates[number],globals:data.globalControllers,entities:specialRuntime.entities.splice(0),counts:nativeHitCounters.snapshot(),tick:combatTraceTick,pauses:{normal:[...specialRuntime.pauses.normal],super:[...specialRuntime.pauses.super]}};
+   try{
+    cameraX=100;p1Reaction=null;customStateOwners.fill(null);specialRuntime.pauses.normal.fill(null);specialRuntime.pauses.super.fill(null);
+    data.globalControllers={};
+    data.helperStates[number]={type:'S',physics:'N',moveType:'I',ctrl:0,anim:0,controllers:[{type:'PosSet',params:{x:'10',y:'-20',z:'3'},triggerall:[],triggers:{1:['Time = 0']}},{type:'VelSet',params:{x:'2',y:'-3',z:'4'},triggerall:[],triggers:{1:['Time = 0']}}]};
+    characterProfiles.set(foreign,{...characterProfiles.get(battleCharacters[0]),battle:{...data,coordinateSystem:{localcoord:[320,240],webWorldWidth:1280}}});
+    customStateOwners[1]=foreign;p2.facing=-1;
+    runP2ControllerM1({type:'PosSet',params:{x:'10',y:'-20',z:'3'}});
+    const set=[p2.x,p2.y,p2.z];
+    runP2ControllerM1({type:'PosAdd',params:{x:'2',y:'3',z:'-1'}});
+    const add=[p2.x,p2.y,p2.z];
+    runController({type:'PosAdd',params:{redirectid:2,x:'5',y:'2',z:'7'}});
+    const redirected=[p2.x,p2.y,p2.z];
+    runP2ControllerM1({type:'VelSet',params:{x:'2',y:'-3',z:'4'}});
+    const velocity=[p2.vx*p2.facing,p2.vy,p2.vz];
+    runController({type:'VelAdd',params:{redirectid:2,x:'2',y:'1',z:'3'}});
+    const velocityAdd=[p2.vx*p2.facing,p2.vy,p2.vz];
+    runController({type:'VelMul',params:{redirectid:2,x:'.5',y:'2',z:'-1'}});
+    const multiplied=[p2.vx*p2.facing,p2.vy,p2.vz],root=specialRoot(2),ownContext=fighterExpressionContext(root,specialRoot(1),{},{...root,expressionLocalCoord:1280});
+    runP2ControllerM1({type:'PosSet',params:{x:'10',y:'-20',z:'3'}},{},ownContext);
+    const own=[p2.x,p2.y,p2.z];
+    specialRuntime.dispatch({type:'Helper',params:{id:number,stateno:number}},null,null,{},specialRoot(1),1);
+    const helper=specialRuntime.entities.at(-1);helper.stateOwner=foreign;helper.facing=-1;
+    combatTraceTick++;specialRuntime.step();
+    const helperStep=[helper.x,helper.y,helper.z,helper.vx,helper.vy,helper.vz];
+    combatTargets.clear();helper.stateOwner=null;combatTargetList(specialRoot(2)).add(helper.instanceId);
+    runP2ControllerM1({type:'TargetVelSet',params:{x:'2',y:'-3',z:'4'}});
+    const targetSet=[helper.vx*helper.facing,helper.vy,helper.vz];
+    runController({type:'TargetVelAdd',params:{redirectid:2,x:'2',y:'1',z:'3'}});
+    const targetAdd=[helper.vx*helper.facing,helper.vy,helper.vz];
+    combatTargetList(specialRoot(2)).clear();combatTargetList(specialRoot(2)).add(1);
+    runP2ControllerM1({type:'TargetVelSet',params:{x:'2',y:'-3',z:'4'}});
+    const targetRoot=[vx,vy,velZ];
+    combatTargetList(specialRoot(2)).clear();combatTargetList(specialRoot(2)).add(helper.instanceId);combatTargetList(specialRoot(2)).add(1);
+    runP2ControllerM1({type:'TargetVelSet',params:{x:'2',y:'-3',z:'4'}});
+    const cumulative=[[helper.vx*helper.facing,helper.vy,helper.vz],[vx,vy,velZ]];
+    combatTargetList(specialRoot(2)).clear();combatTargetList(specialRoot(2)).add(1);
+    runP2ControllerM1({type:'TargetVelSet',params:{x:'2',y:'-3',z:'4'}},{},ownContext);
+    const targetOwn=[vx,vy,velZ];
+    helper.stateOwner=foreign;writeFallVelocity(helper,'x',2);writeFallVelocity(helper,'y',-6);writeFallVelocity(helper,'z',5);
+    specialRuntime.entities.push({kind:'projectile',instanceId:number+5,player:1,key:'movement-nonactor-fixture',destroyed:false});
+    const descriptor=Object.getOwnPropertyDescriptor(runtimeVar,'58'),floatDescriptor=Object.getOwnPropertyDescriptor(runtimeFVar,'39');let redirectReads=0,positionReads,velocityReads,invalidAxisReads=0;
+    try{
+     Object.defineProperty(runtimeVar,'58',{get:()=>{redirectReads++;return 2},configurable:true});
+     runController({type:'PosSet',params:{redirectid:'var(58)',x:'1',y:'2',z:'3'}});positionReads=redirectReads;redirectReads=0;
+     runController({type:'VelSet',params:{redirectid:'var(58)',x:'1',y:'2',z:'3'}});velocityReads=redirectReads;
+     Object.defineProperty(runtimeFVar,'39',{get:()=>{invalidAxisReads++;return 1},configurable:true});
+     for(const type of ['PosSet','PosAdd','VelSet','VelAdd','VelMul','HitVelSet','TargetVelSet','TargetVelAdd'])runController({type,params:{redirectid:number+5,x:'fvar(39)',y:'fvar(39)',z:'fvar(39)'}});
+    }finally{if(descriptor)Object.defineProperty(runtimeVar,'58',descriptor);else delete runtimeVar[58];if(floatDescriptor)Object.defineProperty(runtimeFVar,'39',floatDescriptor);else delete runtimeFVar[39]}
+    return [set,add,redirected,velocity,velocityAdd,multiplied,own,helperStep,targetSet,targetAdd,targetRoot,cumulative,targetOwn,[helper.vx*helper.facing,helper.vy,helper.vz],[positionReads,velocityReads],invalidAxisReads];
+   }finally{
+    for(const entity of specialRuntime.entities){forgetHelperCommandInput(entity);nativeHitStates.delete(hitDefinitionOwnerKey(entity))}
+    for(const key of Object.keys(p2))if(!(key in saved.p2))delete p2[key];
+    Object.assign(p2,saved.p2);cameraX=saved.camera;customStateOwners.splice(0,2,...saved.owners);
+    if(saved.foreign)characterProfiles.set(foreign,saved.foreign);else characterProfiles.delete(foreign);
+    if(saved.definition===undefined)delete data.helperStates[number];else data.helperStates[number]=saved.definition;
+    data.globalControllers=saved.globals;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);nativeHitCounters.restore(saved.counts);combatTraceTick=saved.tick;
+    [vx,vy,velZ]=saved.velocity;p1Reaction=saved.reaction;combatTargets.clear();for(const [key,list] of saved.targets)combatTargets.set(key,list);
+    for(const slot of ['normal','super'])specialRuntime.pauses[slot].splice(0,2,...saved.pauses[slot]);
+   }
+  })()`);
+  assert.deepEqual(movementCoordinatesActual,[[140,-80,12],[132,-68,8],[127,-66,15],[8,-12,16],[10,-11,19],[5,-22,-19],[110,-20,3],[132,-92,28,-8,-12,16],[8,-12,16],[10,-11,19],[8,-12,16],[[8,-12,16],[32,-48,64]],[2,-3,4],[8,-24,20],[1,1],0]);
+  console.log('Actual XYZ PosSet/Add and velocity controllers bridge root/Helper foreign and own-program units, camera origin, recipient facing and redirected state scales');
   const motionFixture=JSON.parse(fs.readFileSync(path.join(__dirname,'fixtures/motion-constants.json'),'utf8')).originalMotionConstants;
   const motionNames=Object.keys(motionFixture),motionUnscaled=new Set(['velocity.air.gethit.airrecover.mul.x','velocity.air.gethit.airrecover.mul.y','velocity.ground.gethit.ko.xmul','movement.stand.friction','movement.crouch.friction','movement.airjump.num']);
   const motionActual=await run(`(()=>{
