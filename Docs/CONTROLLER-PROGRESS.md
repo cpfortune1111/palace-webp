@@ -1,3 +1,7 @@
+## 0.25.50 — Comparison and intrinsic query semantics (partial)
+
+Real comparison/query consumers now preserve boolean/integer result tags through arithmetic; native string equality and legacy AnimElem event handling remain distinct. Query IDs sample once in original caller scope, reject undefined, apply optional -1 defaults and fix native nonpositive Helper/all-effect counting. All 198 Node tools pass; comparison and expanded intrinsic browser cases cover real Helpers, Explods and a registered target. Final complete regression/deployment are separate gates. Flags/providers/arity/warnings/version/VM/native phases and all controller certifications remain Pending.
+
 ## 0.25.49 — Native query types, ranges and logical undefined (partial)
 
 Real parser/evaluator/controller consumers now preserve 41 existing native query tags and typed interval promotion/results, including pinned compiler/runtime undefined distinctions. MUGEN-profile evaluated logical bottom no longer normalizes into valid boolean values. All 196 Node checks and focused actual actor cases pass; complete final regression/deployment are separate gates. Remaining query values/versions, RNG timing, bottom/storage, constants, VM/native phases and parameters remain Pending. Whole-controller certifications stay 0/163.

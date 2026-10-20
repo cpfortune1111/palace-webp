@@ -1,3 +1,7 @@
+## 0.25.50 — Comparison and intrinsic query consumers (partial)
+
+State/name comparisons and eight intrinsic query families retain native result tags through real parameters. Caller-scoped ID sampling, undefined rejection, optional defaults and nonpositive Helper/all-effect counts have actual root/Helper evidence. All 198 Node checks and focused actor suites pass; final combined regression/deployment are separate gates. Full flags/providers/arity/version/VM/native phases and controller parameter semantics remain Pending. No controller certification changes. See COMPARISON-RESULT-TYPES-WIP.md and INTRINSIC-QUERY-TYPES-WIP.md.
+
 ## 0.25.49 — Query, interval and logical undefined consumers (partial)
 
 Forty-one existing queries now retain source-checked integer/boolean/float tags through real parameters. Typed intervals preserve promoted precision, boolean arithmetic and native runtime-versus-folded undefined behavior. Evaluated MUGEN logical undefined values no longer disappear into normal truth values. All 196 Node checks and focused root/Helper scenarios pass; final combined-browser/deployment gates are separate. Full query values, RNG timing, bottom/storage/compiler/native phases and controller parameters remain Pending. No controller is certified complete. See QUERY-NUMERIC-TYPES-WIP.md, INTERVAL-NUMERIC-WIP.md and LOGICAL-UNDEFINED-WIP.md.

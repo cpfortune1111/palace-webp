@@ -1,3 +1,7 @@
+# Coverage accounting checkpoint — 0.25.50
+
+Comparison results and intrinsic query calls have typed real consumers, source-backed ID/default semantics and expanded nonzero root/Helper/effect/target evidence. All 198 Node checks and focused actor suites pass. Final complete regression and deployment are separate gates. Complete providers/flags/arity/warnings/query values/compiler/VM/version/native-phase and controller parameter semantics remain Pending. Whole-controller certification remains 0/163; no overall percentage is asserted.
+
 # Coverage accounting checkpoint — 0.25.49
 
 Forty-one native query tags, typed intervals and evaluated logical undefined now have real consumers and focused actual-root/Helper evidence. Source inventory checks and all 196 Node tools pass. Final combined-browser/deployment evidence is separate. This is not full query/VM/undefined/storage/compiler/version/native-phase or parameter coverage. All 163 controller certifications remain Pending; no overall percentage is asserted.

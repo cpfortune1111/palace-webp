@@ -40,7 +40,7 @@ export function createLifecycleRuntime(api){
     if(!(key in values))throw Error('Unsupported lifecycle query '+name);
     return values[key];
    },
-   numHelper:id=>helpers.filter(helper=>helper.kind==='helper'&&helper.player===fighter.player&&!helper.destroyed&&(id===undefined||helper.id===id)).length,
+   numHelper:id=>helpers.filter(helper=>helper.kind==='helper'&&helper.player===fighter.player&&!helper.destroyed&&(id===undefined||id<=0||helper.id===id)).length,
    playerIDExist:id=>[fighter,opponent,...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].some(entity=>(entity.instanceId??(entity.kind==='helper'?undefined:entity.id??entity.player))===id),
    redirect(name,index=0){
     if(name.toLowerCase()==='partner')return null;

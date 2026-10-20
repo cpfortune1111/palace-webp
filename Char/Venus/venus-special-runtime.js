@@ -78,7 +78,7 @@ export function createSpecialRuntime(api){
   if(!helperCommandAllowed(entity))commands={};
   const base=api.context(entity,root(entity.player===1?2:1),commands,expressionOwner);
   return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
-   numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
+   numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&(id<0||effect.id===id)).length,
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
  function helperDefinition(entity,state,provider=entity.stateOwner){const data=provider?api.stateData?.(provider):api.data(entity.player);if(!data)throw Error('Unknown Helper state provider '+provider);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
