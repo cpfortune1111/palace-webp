@@ -79,7 +79,7 @@ export function createSpecialRuntime(api){
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
- function helperDefinition(entity,state){const data=api.data(entity.player);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
+ function helperDefinition(entity,state,provider=entity.stateOwner){const data=provider?api.stateData?.(provider):api.data(entity.player);if(!data)throw Error('Unknown Helper state provider '+provider);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state,{selected=false}={}){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
   if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
@@ -98,11 +98,11 @@ export function createSpecialRuntime(api){
   if(definition.anim!==undefined){const anim=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(anim!==-1){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}
   applyStateDefControlPower(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setControl:value=>{entity.ctrl=Number(value)},addPower:amount=>{if(!api.stateDefPowerAdd)throw Error('Missing StateDef power consumer');api.stateDefPowerAdd(entity,amount)}});
  }
- function selectState(entity,state){
-  if(!helperDefinition(entity,state))throw Error('Unknown helper state '+state);
+ function selectState(entity,state,{provider=entity.stateOwner}={}){
+  if(!helperDefinition(entity,state,provider))throw Error('Unknown helper state '+state);
   const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(api.data(entity.player)).ikemen;
-  return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause},()=>{
-   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});
+  return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider},()=>{
+   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,time:0,animStartTime:-age,once:new Set()});
    if(!resetAfterPause)entity.controllerSchedule=createControllerSchedule();
   });
  }
@@ -150,7 +150,8 @@ export function createSpecialRuntime(api){
  function helperController(entity,controller,index,global=false){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
-  const ctx=context(entity,undefined,global?{...entity,expressionLocalCoord:characterLocalCoord(api.ownData?.(entity.player)??api.data(entity.player))}:entity);
+  const ownData=api.ownData?.(entity.player)??api.data(entity.player),ctx=context(entity,undefined,global?{...entity,stateOwner:null,expressionLocalCoord:characterLocalCoord(ownData)}:entity);
+  if(global)Object.assign(ctx,{stateOwner:ownData.character,foreignStateOwner:false});
   if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
   if(!global){entity.controllerSchedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;

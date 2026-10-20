@@ -1,3 +1,11 @@
+## 0.25.39 — Helper foreign program selection and SelfState (partial)
+
+Helper TargetState/P1StateNo can now retain a selected foreign character's real state table while initialization is delayed. A conflicting own state proves that the foreign StateDef/body executes after caller recovery. Helper SelfState returns to its own table without clearing the root's custom-state provider; own -2 HitDefs retain own-program snapshots during foreign states. Four live source/target/recipient cases and the prior eight own-program cases pass. Initial complete browser regression passes; final gates and publication are verified separately. General provider snapshots, broader global metadata, coordinate/animation prefixes, Helper hit recipients and native scheduler parity remain Pending; zero controllers are certified. See HELPER-FOREIGN-STATE-WIP.md.
+
+## Unpublished — Own-program Helper TargetState (partial)
+
+Actual TargetState root controllers now select same-character Helper recipients through the real Helper pending-header buffer instead of always throwing. Eight player/profile/source-target cases pass with pause/animation retention, first-body Time=0, shared power and versioned persistent timing. Root target regression and original Moon throws also pass. The later foreign-program checkpoint supersedes the initial explicit foreign-provider rejection; complete Helper hit/native scheduler/provider semantics remain Pending. This checkpoint is not published and no controller is certified. See HELPER-TARGET-STATE-WIP.md.
+
 ## 0.25.38 — Root target selection and deferred initialization (partial)
 
 Root P2StateNo/custom-hit recipients and TargetState now use the actual pending-header buffer rather than assigning incoming header fields immediately. P2StateNo forces H/no-control at selection; TargetState clears control without forcing H. Both slots pass twelve live profile/controller/contact cases, and original Moon throws plus the root-source regression pass. Existing TargetState regression reads the root facade while retaining its ownership/GetHit/control assertions. Complete initial browser regression passes; release verification remains separate. Helper recipients, broader contact/provider coverage, general transitions and the native scheduler remain Pending; zero controllers are certified. See TARGET-STATE-CHANGE-WIP.md.

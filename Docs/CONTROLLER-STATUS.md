@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.38
+# Coverage accounting checkpoint — 0.25.39
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Helper TargetState/P1StateNo now consume selected own/foreign state tables, preserve providers through pending initialization and recover through Helper-local SelfState. Own global HitDef metadata is distinguished from foreign current-state metadata. Twelve actual Helper cases and initial complete browser regression provide partial evidence only. Broader provider, scale, VM and scheduler gaps remain documented; zero controllers are certified.
 
 Root P2StateNo and TargetState now have real delayed-header consumers, distinct selection H/control phases, twelve actual profile/root/contact cases and an initial passing full browser regression. TARGET-STATE-CHANGE-WIP.md records broader provider/Helper/general-transition and native scheduler gaps. All 163 controller certifications remain Pending; this is not an overall completion percentage.
 

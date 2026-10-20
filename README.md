@@ -1,3 +1,7 @@
+## 0.25.39 — Helper own/foreign state programs (partial)
+
+Helper TargetState now selects real own/foreign programs through deferred header initialization. Foreign P1StateNo sources retain their provider, Helper SelfState returns to its own table without altering its root, and own -2 HitDefs snapshot own-program metadata. Twelve live Helper cases and initial complete browser regression provide partial evidence. Native program identity/scaling, Helper custom-hit recipients, VM and scheduler parity remain Pending; all 163 controllers remain uncertified. See HELPER-FOREIGN-STATE-WIP.md and HELPER-TARGET-STATE-WIP.md. Final gates/deployment are verified separately.
+
 ## 0.25.38 — Root target selected-state initialization (partial)
 
 P2StateNo and TargetState now defer real root headers through the recipient's pause, preserving old animation and velocity. Their distinct H/control selection rules have twelve actual profile/root/contact cases. Initial full browser regression, root-source checks and original Moon throws pass. Helper recipients, broader providers, general transitions and full native scheduling remain Pending; no controller is certified complete. See TARGET-STATE-CHANGE-WIP.md. Deployment is verified separately.
