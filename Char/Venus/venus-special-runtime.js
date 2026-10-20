@@ -37,6 +37,7 @@ import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485'
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
 import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js';
+import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
  const projectileContacts=new Map(),moveTimes=new Map(),stateChanges=createStateChangeBuffer();
@@ -82,7 +83,7 @@ export function createSpecialRuntime(api){
  function enter(entity,state,{selected=false}={}){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
   if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
-  for(const name of ['type','physics','moveType'])if(definition[name]!==undefined&&definition[name]!=='U')entity[name]=definition[name];
+  applyStateDefTypes(definition,{set:(name,value)=>{entity[name]=value}});
   api.initializeStateJuggle?.(entity);
   applyStatePersistence(definition,{
    evaluate:value=>api.eval(String(value),context(entity)),

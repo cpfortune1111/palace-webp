@@ -29,6 +29,7 @@ const server=http.createServer((request,response)=>{
    data.helperStates[oldState]={type:'S',physics:'N',moveType:'I',anim:0,ctrl:1,sprpriority:2,controllers:[{type:'VarSet',params:{v:9,value:1,persistent:0},triggers:{1:['1']},triggerall:[]}]};
    data.helperStates[newState]={type:'A',physics:'N',moveType:'A',anim:'IfElse(Var(2),20,0)',ctrl:1,sprpriority:'7+Var(2)',velset:'4+Var(2),-6,2',juggle:9,poweradd:'10+Var(2)',controllers:[{type:'VarAdd',params:{v:2,value:1,persistent:0,ignorehitpause:1},triggers:{1:['1']},triggerall:[]},{type:'VarSet',params:{v:3,value:'Time'},triggers:{1:['Time=0']},triggerall:[]}]};
    data.helperStates[991542]={type:'U',physics:'U',moveType:'U',anim:'-1',controllers:[]};
+   data.helperStates[991543]={anim:'-1',controllers:[]};
    for(const ikemen of [false,true]){
     specialRuntime.reset();p1Power=0;p1Life=p2.life=1000;lifecycleRuntime.rounds.state=2;modifiedAILevels.splice(0,2,0,0);
     data.engineVersions={mugen:[1,0],ikemen:ikemen?[1,0,0]:[0,0,0]};
@@ -41,7 +42,8 @@ const server=http.createServer((request,response)=>{
     specialRuntime.dispatch({type:'Pause',params:{time:2,movetime:0,pausebg:0}},null,null,{},specialRoot(2),2);step();const firstBlocked=snapshot();step();const secondBlocked=snapshot();step();const initialized=snapshot();
     const replacement=specialRuntime.stateChangePending?(()=>{helper.hitPause=1;applySourceHitState(helper,{p1stateno:oldState},{guarded:false});specialRuntime.enterState(helper,0);return [specialRuntime.stateChangePending(helper),helper.state]})():[true,-1];
     Object.assign(helper,{type:'C',physics:'C',moveType:'H',anim:20,elem:4,elemTick:2,time:7,animStartTime:2});nativeJuggle.set(helper.key,12);specialRuntime.enterState(helper,991542);const retained=[helper.type,helper.physics,helper.moveType,helper.anim,helper.elem,helper.elemTick,helper.animStartTime,nativeJuggle.cost(helper.key)];
-    results.push({ikemen,oldRan,accepted,selected,age,firstPause,pauseEnded,firstBlocked,secondBlocked,initialized,timeZero:helper.vars[3],replacement,retained});
+    specialRuntime.enterState(helper,991543);const defaults=[helper.type,helper.moveType,helper.physics,helper.anim];
+    results.push({ikemen,oldRan,accepted,selected,age,firstPause,pauseEnded,firstBlocked,secondBlocked,initialized,timeZero:helper.vars[3],replacement,retained,defaults});
    }
    return results;
   })()`);
@@ -52,6 +54,7 @@ const server=http.createServer((request,response)=>{
    for(const row of [result.firstPause,result.pauseEnded,result.firstBlocked,result.secondBlocked])assert.deepEqual(row,paused);
    assert.deepEqual(result.initialized,[991541,991540,1,'A','A',result.ikemen?20:0,1,result.ikemen?5:4,-6,2,result.ikemen?8:7,9,result.ikemen?11:10,1,false]);
    assert.equal(result.timeZero,0);assert.deepEqual(result.replacement,[false,0]);assert.deepEqual(result.retained,['C','C','H',20,4,2,-5,0]);
+   assert.deepEqual(result.defaults,['S','I','N',20]);
   }
   assert.deepEqual(errors,[]);
   console.log('Real Helper P1StateNo selection preserves old fields/animation age through hitpause and global pause, initializes StateDef once on resume and honors versioned persistent timing and replacement');

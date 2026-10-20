@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.36
+# Coverage accounting checkpoint — 0.25.37
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Root P1StateNo source requests now have real delayed-header consumers and live own-pause, reaction-origin, result-path, Time=0, clock-write and intrinsic-default evidence. ROOT-STATE-CHANGE-WIP.md identifies remaining immediate target/general paths and incomplete index/provider/scheduler semantics. Inventory counts and all 163 pending controller certifications are unchanged; no overall percentage is asserted.
 
 Helper P1StateNo selection now controls a real delayed StateDef consumer, with actual pause/version/expression/Time=0 evidence and a normal collision test. STATE-CHANGE-BUFFER-WIP.md distinguishes this supported source path from still-immediate roots and unconnected target/general transition phases. No whole controller, stchtmp export or ghvset pipeline is certified; all inventory and certification counts stay unchanged.
 

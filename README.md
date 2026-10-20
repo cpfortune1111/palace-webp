@@ -1,3 +1,7 @@
+## 0.25.37 — Root selected-state and deferred initialization (partial)
+
+P1/P2 P1StateNo sources now select metadata immediately but initialize their real headers after their own pauses, including reaction-origin P1 sources and post-combat execution. P2 no longer waits for P1's unrelated pause. Actual fixtures exercise incoming expression timing, Time=0, GetHit clocks, replacement, U/-1 retention, intrinsic defaults and old-cost/new-header separation. Browser regression and original Moon throws pass; Node checks pass 179/184 with five existing failures. Target/general transitions, persistent-index/-1 ordering, foreign helpers and complete native scheduler/ghvset remain Pending; all 163 controllers remain uncertified. See ROOT-STATE-CHANGE-WIP.md. Deployment is verified separately.
+
 ## 0.25.36 — Helper selected-state and deferred initialization (partial)
 
 Helper P1StateNo now selects the state immediately but defers its real StateDef header through hitpause/global pause until a later eligible action. Old fields remain live; covered Mugen/Ikemen persistent timing, first-body Time=0, evaluated animation, U/-1 retention, replacement and intrinsic juggle reset have actual evidence. A real collision fixture distinguishes selection from header execution. Roots, target states, general hitpause transitions, exact index/provider/scaling and native scheduler completion remain Pending; all 163 controllers remain uncertified. See STATE-CHANGE-BUFFER-WIP.md. Deployment is verified separately.
