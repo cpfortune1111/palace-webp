@@ -1,3 +1,13 @@
+export function assignExpressionVariable(binding,family,index,value,{unlimited=false}={}){
+ const key={var:'vars',fvar:'fvars',sysvar:'sysvars',sysfvar:'sysfvars'}[family];
+ if(!key||!binding?.[key])throw Error('Missing assignment storage '+family);
+ const variables=binding[key],slot=Math.trunc(Number(index))|0;
+ const converted=family.includes('fvar')?Math.fround(Number(value)):Math.trunc(Number(value))|0;
+ if(slot<0||!unlimited&&slot>=variables.length)return NaN;
+ variables[slot]=converted;
+ return converted;
+}
+
 export function applyVariableController(controller, binding, evaluate, options={}){
  const originalType=controller.type.toLowerCase();
  const ownership=originalType.startsWith('parentvar')?'parent':originalType.startsWith('rootvar')?'root':null;

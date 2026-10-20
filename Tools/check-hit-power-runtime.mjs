@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {createSpecialRuntime} from '../Char/Venus/venus-special-runtime.js';
 
 const reads=[];
-const runtime=createSpecialRuntime({data:player=>({constants:{'default.attack.lifetopowermul':player===2?0.25:0.7}}),pair:value=>String(value).split(','),eval:value=>{reads.push(value);return ({damage:101,attack:11,guard:3,receive:9})[value]??Number(value)}});
+const runtime=createSpecialRuntime({root:player=>({player,teamSide:player}),data:player=>({engineVersions:{mugen:[1,1],ikemen:[0,0]},constants:{'default.attack.lifetopowermul':player===2?0.25:0.7}}),pair:value=>String(value).split(','),eval:value=>{reads.push(value);return ({damage:101,attack:11,guard:3,receive:9})[value]??Number(value)}});
 const defaults=runtime.numeric({attr:'S, NA',damage:'damage,0'},{player:2});
 assert.equal(defaults.damage,'101,0');
 assert.equal(defaults.getpower,'25,12');

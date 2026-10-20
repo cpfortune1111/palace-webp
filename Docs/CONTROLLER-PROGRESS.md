@@ -1,3 +1,15 @@
+## 0.25.45 — Semantic fixture contracts restored
+
+The five longstanding Node failures now have source-reviewed fixture repairs: required root/version metadata, two-version entity coverage and actual root physics in the result test instead of a stale airborne-state hold expectation. Original assertions are retained except the source-backed native S52 landing correction. The complete Node sweep passes 189/189 with zero failures; the complete combined animation/assignment browser suite also passes. The separate legacy browser suite still needs its Opponent/random context fixture reviewed. No controller is certified; deployment verification is separate. See SEMANTIC-FIXTURE-CONTRACTS.md.
+
+## 0.25.45 — Reaction animation headers and assignment syntax (partial)
+
+Reaction anim headers evaluate numeric expressions once, retain omitted/-1 frames/age and restart explicit animations before control. Forty-four reaction cases include side-effect evidence; the actual parser/evaluator now consumes four typed variable-assignment families rather than rejecting :=. Native caller-scoped redirected operands have focused tests. Prefixes, complete VM/types/undefined/version semantics and other entry phases remain Pending. Full combined regression and publication are separate gates; zero controllers are certified. See REACTION-ANIMATION-WIP.md.
+
+## 0.25.45 — Reaction SelfState consumers (partial)
+
+Reaction SelfState now reuses actual numeric parameter sampling and has a recipient-preserving destination adapter, rather than dropping ctrl/anim/continue/readplayerid. Selected own/other programs execute in their own scope, and ending physics is looked up in the selected provider rather than the abandoned borrowed one. Twenty-four reaction-runner cases pass, including failing-before continuation/provider fixtures. Redirects/prefixes, hitpause/selected-header phases, non-reaction destinations and full VM/native ordering remain Pending; zero controllers are certified. See REACTION-SELF-STATE-WIP.md. Broader regression and publishing are separate gates.
+
 ## 0.25.44 — Root current-body frames and feedback consumers (partial)
 
 Reaction current-body transitions additionally execute the original incoming body and use its ending physics instead of an animation-only preload. Twelve reaction cases include a failing-then-fixed first-action aerial-gravity defect. Source-backed movement/guard/recipient trace fixtures and the complete final browser suite pass (outputs/root-reaction-final-physics-regression.log). The legacy runtime fixture now progresses through mirrored collision after supplying a real HitDef/source identity and crouching stance, but later fails Opponent/random context; it is not claimed passing. Publication is verified separately. See REACTION-CURRENT-BODY-WIP.md.

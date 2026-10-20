@@ -9,6 +9,7 @@ function numericType(node){
  let type=null;
  if(node.t==='num')type=node.numericType??(Number.isInteger(node.v)?'int':'float');
  else if(node.t==='call'&&node.args.length===1&&Object.hasOwn(variables,node.name.toLowerCase()))type=variables[node.name.toLowerCase()];
+ else if(node.t==='assign'&&node.target.t==='call')type=variables[node.target.name.toLowerCase()]??null;
  else if(node.t==='un'&&numericType(node.a))type=node.op==='!'?'bool':numericType(node.a);
  else if(node.t==='bin'){
   const first=numericType(node.a),second=numericType(node.b);
@@ -27,6 +28,7 @@ export function evaluateTypedNumericAST(node,api){
  function evaluate(current){
   const type=numericType(current);
   if(current.t==='num')return type==='float'?Math.fround(current.v):integer(Math.max(-2147483648,Math.min(2147483647,current.v)));
+  if(current.t==='assign')return api.assign(current.target,current.value);
   if(current.t==='call'){
    const value=api.variable(current.name.toLowerCase(),current.args[0]);
    return type==='float'?Math.fround(Number(value)):integer(value);
