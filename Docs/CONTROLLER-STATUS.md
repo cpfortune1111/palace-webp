@@ -1,3 +1,7 @@
+# Coverage accounting checkpoint — 0.25.47
+
+Bitwise expression/query consumers now have actual parser and root/Helper evidence for both engine profiles and player slots. Typed undefined arithmetic/comparison and modulo float distinctions have focused regressions; relational precedence is repaired. All 192 Node tools pass. Full bottom/query/VM/constant-folding/native-phase and parameter semantics remain Pending. Certification remains 0/163; no total implementation percentage is asserted. Publication and complete final regression are separate gates.
+
 # Coverage accounting checkpoint — 0.25.46
 
 Conditional and logical expressions now have actual parameter consumers for native branch order/scope, selected supported numeric tags, engine-profile operand values, logical XOR, precedence/assignment boundaries and CNS grouping/constant folds. All 191 Node tools pass and real root/Helper/controller fixtures cover the new paths. Combined browser/deployment gates are recorded separately; the legacy Opponent/random-context fixture is not counted passing. Full VM/query/undefined/version/constant-folding behavior, ZSS, other operators/native phases and remaining parameters stay Pending. All 163 controller rows remain uncertified; no total completion percentage is asserted.

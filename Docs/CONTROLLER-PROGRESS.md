@@ -1,3 +1,7 @@
+## 0.25.47 — Bitwise/query numeric consumers (partial)
+
+The actual parser, typed evaluator and VarSet consumers now handle bitwise operations, selected integer/float queries, relational/equality precedence, profile-specific float modulo and typed undefined arithmetic/comparisons. All 192 Node tools pass; eight bitwise and eight logical profile/player/root/Helper browser cases pass. Full final regression and deployment remain separate gates. Native query coverage, full bottom/VM/constants/ZSS and other parameters remain Pending; no controller is certified. See BITWISE-EXPRESSION-WIP.md.
+
 ## 0.25.46 — Logical XOR and CNS chain grouping (partial)
 
 Final combined browser regression exits 0 (outputs/logical-xor-full-browser.log), and all 191 Node tools pass. A post-version focused gate and deployment verification are separate. These passing suites do not certify whole controllers or complete the native VM/parameter goal.

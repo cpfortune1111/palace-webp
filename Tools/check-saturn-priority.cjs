@@ -38,9 +38,11 @@ const server=http.createServer((request,response)=>{
   phase='character loading';
   console.log('Runtime initialized; loading character atlas resources');
   await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
-  const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy];try{runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy]=saved}})()`);
-  assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,1,true,0,.25]);
+  for(const profile of ['mugen11','ikemen']){
+  const numericTypesActual=await run(`(()=>{const saved=[p2.vx,p2.vy,combatEngineProfile];try{combatEngineProfile=${JSON.stringify(profile)};runP2ControllerM1({type:'VelSet',params:{x:'1/4',y:'1.0/4.0'}});return [evalM1('1/4'),evalM1('1.0/4'),evalM1('(5/2)*2'),evalM1('2147483647+1'),evalM1('65536*65536'),evalM1('5.9%2.1'),evalM1('(16777216.0+1.0)=16777216.0'),p2.vx*p2.facing,p2.vy]}finally{[p2.vx,p2.vy,combatEngineProfile]=saved}})()`);
+  assert.deepEqual(numericTypesActual,[0,.25,4,-2147483648,0,profile==='ikemen'?1:NaN,true,0,.25]);
   console.log('Actual numeric expression types preserve native integer division, float32 arithmetic and int32 wrapping through real VelSet parameters');
+  }
   const juggleActual=await run(`(()=>{
    const data=characterProfiles.get(battleCharacters[0]).battle,number=991513;
    const saved={root:[state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,posX,posY,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount,p1HitPause],p2:{...p2},versions:data.engineVersions,state:data.states[number],fall:data.fallStates[number],helper:data.helperStates[number],collision:data.collision[number],owners:[...customStateOwners],entities:specialRuntime.entities.splice(0),juggle:nativeJuggle.snapshot(),targets:[...combatTargets].map(([key,value])=>[key,value.ids()]),flags:rootAssertions.map(flags=>[...flags]),counts:nativeHitCounters.snapshot(),guards:[...rootGuardHitDefs],throwTargets:[...throwTargets],bindings:[...throwBindings],overrides:[...rootHitOverrides],tick:combatTraceTick,roundEnabled:roundFlow.enabled};
