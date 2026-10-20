@@ -1,3 +1,17 @@
+## 0.25.46 — Logical XOR and CNS chain grouping (partial)
+
+Final combined browser regression exits 0 (outputs/logical-xor-full-browser.log), and all 191 Node tools pass. A post-version focused gate and deployment verification are separate. These passing suites do not certify whole controllers or complete the native VM/parameter goal.
+
+The actual parser/evaluator now accepts logical XOR, evaluates both operands and retains its normalized numeric result through runtime-query arithmetic. Assignment RHS boundaries follow the comparison level after the precedence update. Native CNS AND/OR chain grouping now preserves operand values and constant folds without ignoring explicit parentheses. Eight actual profile/player/root-or-Helper cases pass fourteen parameter expressions each. Bottom/undefined, other operators, ZSS, full tags/native VM phases and remaining controllers/parameters stay Pending. Complete regression/publication are separate gates; no controller is certified. See LOGICAL-XOR-WIP.md.
+
+## 0.25.46 — Engine-profile logical operands (partial)
+
+The real engine profile now selects normalized MUGEN results versus pinned Ikemen CNS dynamic operand values/tags. Constant folds and cached AST/profile changes have focused tests; eight actual root/Helper floating-parameter cases pass, including runtime queries. ZSS, full query/undefined/type/constant-folding and native VM phases remain Pending. The preceding complete conditional browser suite passes; the newer combined regression and publishing remain separate gates. No controller is certified. See LOGICAL-PROFILES-WIP.md.
+
+## 0.25.46 — Conditional expressions and selected numeric tags (partial)
+
+Actual IfElse now eagerly evaluates both branches in native order, while Cond remains selective. Original actor scope is separate from script coordinate ownership so redirected conditional assignments use the native caller/recipient distinction. Selected supported int/float tags survive enclosing arithmetic. Actual parser/evaluator tests and four live root/Helper controller cases pass; broader query/VM/undefined/redirection/version semantics remain Pending. Complete regression and publishing are separate gates, and zero controllers are certified. See CONDITIONAL-EXPRESSION-WIP.md.
+
 ## 0.25.45 — Semantic fixture contracts restored
 
 The five longstanding Node failures now have source-reviewed fixture repairs: required root/version metadata, two-version entity coverage and actual root physics in the result test instead of a stale airborne-state hold expectation. Original assertions are retained except the source-backed native S52 landing correction. The complete Node sweep passes 189/189 with zero failures; the complete combined animation/assignment browser suite also passes. The separate legacy browser suite still needs its Opponent/random context fixture reviewed. No controller is certified; deployment verification is separate. See SEMANTIC-FIXTURE-CONTRACTS.md.

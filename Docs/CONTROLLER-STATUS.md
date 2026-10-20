@@ -1,4 +1,6 @@
-# Coverage accounting checkpoint — 0.25.45
+# Coverage accounting checkpoint — 0.25.46
+
+Conditional and logical expressions now have actual parameter consumers for native branch order/scope, selected supported numeric tags, engine-profile operand values, logical XOR, precedence/assignment boundaries and CNS grouping/constant folds. All 191 Node tools pass and real root/Helper/controller fixtures cover the new paths. Combined browser/deployment gates are recorded separately; the legacy Opponent/random-context fixture is not counted passing. Full VM/query/undefined/version/constant-folding behavior, ZSS, other operators/native phases and remaining parameters stay Pending. All 163 controller rows remain uncertified; no total completion percentage is asserted.
 
 Reaction SelfState and numeric animation retention/expression consumers now have 44 focused cases, including conflicting providers and one-evaluation side effects. Four typed variable-assignment families execute through the actual parser/storage, with redirected operands sampled in original caller context. The complete combined browser suite passes. Five stale fixture contracts are repaired and all 189 Node checks pass; the separate legacy browser suite still has an unresolved Opponent/random-context fixture and is not counted passing. No controller is certified: all 163 rows remain Pending. Full redirects/prefixes, VM/undefined/version semantics and native pause/negative/lifecycle/entry phases still require real consumers and broader evidence.
 
