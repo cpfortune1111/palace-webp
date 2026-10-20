@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.34
+# Coverage accounting checkpoint — 0.25.35
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Same-pass gethit/throw-recipient and P1StateNo-source rejection now have real root/entity/reversal consumer evidence. Phase-owner identity, normal/negative/later-pass distinctions and missed-contact effects are exercised. Full deferred state-change export, ghvset suppression and native scheduler ordering remain Pending; HIT-CONTACT-PHASE-WIP.md explicitly records these boundaries. Certification and inventory counts are unchanged.
 
 Custom-state root contacts and live Target(id,index) redirection now have partial real-runtime evidence; original Moon throws recover in both slots. Jupiter's absent original throw animations remain an explicitly failing diagnostic, not a completed consumer. Venus version metadata is imported from its archived DEF. See CUSTOM-CONTACT-WIP.md for evidence and boundaries; none of these changes certify a controller or establish a completion percentage.
 

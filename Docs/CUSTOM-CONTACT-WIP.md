@@ -15,4 +15,6 @@ Verification:
 
 The Node sweep passes 176/181 with the same five existing harness setup failures. Venus compatibility tests and an actual compiler export also pass. Versioned browser and original-program release gates and deployment are verified separately; this ledger does not itself prove a deployment.
 
+0.25.35 adds two native gethit-dependent rejection gates to the live accepted-contact paths: an already-hit source cannot activate P1StateNo, and an already-thrown recipient rejects another same-pass contact. Ordinary sources/recipients and later passes remain independent. HIT-CONTACT-PHASE-WIP.md records actual evidence and the remaining native phase boundaries; this is not a complete ghvset/stchtmp implementation.
+
 Full native custom-state phases, ghvset ordering, Helper victims, reversal ordering, arbitrary dynamic animation loading, version parity and every controller/parameter remain Pending. No controller is certified complete.

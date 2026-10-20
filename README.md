@@ -1,3 +1,7 @@
+## 0.25.35 — Native same-pass contact rejection (partial)
+
+Already-hit P1StateNo sources and recipients already hit by a throw now reject prohibited same-pass contacts through real root, Helper, projectile-owner and reversal gates. Ordinary counter contacts, later passes and negative type-None contacts remain eligible; misses retain life, power, states, counters, effects and hit availability. Actual fixtures and full browser regression cover the two native rules. Contact fixtures explicitly isolate phase state without weakening expected results. Native deferred state selection, stchtmp/ghvset ordering and the unified action/collision scheduler remain Pending; all 163 controller rows remain uncertified. See HIT-CONTACT-PHASE-WIP.md. Deployment is verified separately.
+
 ## 0.25.34 — Custom contacts and live Target redirection (partial)
 
 HitDefs with both custom StateNo parameters now use the normal root contact pipeline, retaining damage, power, pauses, facing, HitOnce, counts and juggle budgets. Target(id,index) uses live hit IDs and original caller arguments instead of stale throw pointers. Actual fixtures and original Moon throws in both root slots cover the consumers. Venus now imports archived DEF engine versions; StateDef animation expressions join the existing preload variants. Jupiter S1300 references absent original AIR actions and remains a documented failing source-asset diagnostic. Full native phases, Helper victims and broader VM/version parity remain Pending; all 163 controller rows remain uncertified. Deployment is verified separately.
