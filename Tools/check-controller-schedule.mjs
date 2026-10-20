@@ -39,3 +39,26 @@ for(const stateNo of [-1,-2,-3]){
 }
 console.log('All MUGEN negative state origins ignore persistent counters');
 
+for(const player of [1,2]){
+ const schedules=createActorControllerSchedules();
+ const oldBody=schedules.capture(player,10);
+ const oldVisit=oldBody.prepare(controller);
+ assert.equal(oldVisit.eligible,true);oldVisit.executed();
+ const newBody=schedules.capture(player,11);
+ const newVisit=newBody.prepare(controller);
+ assert.equal(newVisit.eligible,true);newVisit.executed();
+ assert.equal(oldBody.prepare({...controller}).eligible,false);
+ assert.equal(newBody.prepare({...controller}).eligible,false);
+ assert.equal(schedules.prepare(player,11,controller).eligible,false);
+ const tail={source:{file:'test.cns',line:13},params:{persistent:'2'}};
+ const tailVisit=oldBody.prepare(tail);
+ assert.equal(tailVisit.eligible,true);tailVisit.executed();
+ assert.equal(oldBody.prepare(tail).eligible,false);
+ assert.equal(oldBody.prepare(tail,{hitPause:true}).eligible,false);
+ assert.equal(oldBody.prepare(tail).eligible,true);
+ assert.equal(newBody.prepare(tail).eligible,true);
+ assert.equal(oldBody.prepare(controller,{global:true}).eligible,true);
+ assert.equal(schedules.prepare(player,99,controller,{global:true}).eligible,true);
+ assert.equal(schedules.prepare(player,11,controller).eligible,false);
+}
+console.log('Captured old-body schedules survive nested entries without replacing current-body counters');

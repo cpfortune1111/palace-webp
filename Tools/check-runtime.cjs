@@ -10,7 +10,7 @@ const server=http.createServer((request,response)=>{
  if(filename.startsWith('vendor/')){const base=path.resolve('outputs/three-r180'),file=path.resolve(base,filename.slice(7));if(!file.startsWith(base+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}response.setHeader('Content-Type','text/javascript');response.end(fs.readFileSync(file));return}
  const file=path.join('work',decodeURIComponent(filename));
  if(!fs.existsSync(file)){response.writeHead(404);response.end();return}
- let content=fs.readFileSync(file);
+ let content=fs.readFileSync(filename==='index.html'&&process.env.RUNTIME_TEST_INDEX?process.env.RUNTIME_TEST_INDEX:file);
  if(filename==='index.html'){
   let html=content.toString().replaceAll('https://cdn.jsdelivr.net/npm/three@0.180.0/','/vendor/').replaceAll('requestAnimationFrame(loop);','');
   html=html.replace('</script></body>',"window.runtimeTest={run:source=>eval(source),step:()=>{simStep();updateCamera();updateDebugHud();r.render(s,c);draw();drawMars();drawSourceExplods();drawCollision()},snapshot:()=>({state,fi,current,p1Facing,posX,posY,vx,vy,cameraX,stateTicks,p1TurnTime,p2:{...p2},runtimeFailed})};</script></body>");
@@ -87,10 +87,13 @@ const server=http.createServer((request,response)=>{
    }
   }
   const backdash=battleDat.playerCommands.find(controller=>Number(controller.params.value)===105);
+  const savedOpponentState=p2.state,savedOpponentType=p2.type;
   for(const [stateNo,opponentState,contact,allowed] of [[200,0,1,true],[200,0,0,false],[440,5070,1,true],[440,5000,1,false],[441,5070,1,false]]){
+   p2.state=opponentState;p2.type='A';
    const fighter={state:stateNo,type:'S',ctrl:0,moveType:'A',moveContact:contact,moveGuarded:0};
-   expect(controllerTriggered(backdash,fighterExpressionContext(fighter,{state:opponentState,type:'A'},{BB:true}))===allowed,'source backdash cancel');
+   expect(controllerTriggered(backdash,fighterExpressionContext(fighter,{state:opponentState,type:'A'},{BB:true}))===allowed,'source backdash cancel '+JSON.stringify({stateNo,opponentState,contact,allowed,liveState:state,liveMoveContact:moveContact,p2State:p2.state}));
   }
+  p2.state=savedOpponentState;p2.type=savedOpponentType;
   resetPlayerInput();return checks;
  })()`);console.log(JSON.stringify({commandChecks}));
  const liveCancelChecks=await run(`(()=>{
@@ -122,7 +125,7 @@ const server=http.createServer((request,response)=>{
    for(let tick=0;tick<5;tick++){simStep();rows.push([[state,current,fi+1,stateTicks],[p2.state,p2.anim,p2.elem,p2.time]]);checks++}
    for(const player of [0,1]){
     const sequence=rows.map(row=>row[player]);
-    const expected=[[12,12,1,0],[12,12,2,1],[12,12,2,2],[12,12,2,3],[0,0,1,0]];
+    const expected=[[12,12,1,0],[12,12,2,1],[12,12,2,2],[12,12,2,3],[0,0,1,1]];
     if(JSON.stringify(sequence)!==JSON.stringify(expected))throw Error('A12 boundary / player parity '+player+' '+JSON.stringify(sequence));
    }
   }
@@ -146,13 +149,14 @@ const server=http.createServer((request,response)=>{
  const cross=await step();assert.equal(cross.p1Facing,1);assert.equal(cross.p2.facing,1);
  await run('p2.facing=-1');const opponentTurn=await step();assert.equal(opponentTurn.p2.anim,5);assert.equal(opponentTurn.p2.facing,1);assert.equal(opponentTurn.p1Facing,1);
  const edges=[];
- for(const direction of [-1,1]){
+ await run('globalThis.runtimeBoundaryCamera={update:updateCamera,zoom:cameraZoom};updateCamera=()=>{};cameraZoom=1');
+ try{for(const direction of [-1,1]){
   const camera=direction*2850;
   const axis=camera+direction*580;
   await run(`resetPlayerInput();cameraX=${camera};posX=${axis};p1Facing=${-direction};posY=0;vx=-8;vy=-40;enterIRState(50);p2.x=${camera-direction*580};p2.facing=${direction};enterP2State(0);p2.vx=0;`);
   const positions=[];for(let tick=0;tick<60;tick++){const frame=await step();positions.push(frame.posX);assert.equal(frame.p1Facing,-direction);assert.ok(!frame.runtimeFailed)}
   assert.ok(positions.every(value=>Math.abs(value-axis)<0.0001),JSON.stringify(positions));edges.push({direction,axis,last:positions.at(-1)});
- }
+ }}finally{await run('updateCamera=globalThis.runtimeBoundaryCamera.update;cameraZoom=globalThis.runtimeBoundaryCamera.zoom;delete globalThis.runtimeBoundaryCamera')}
  await run("resetPlayerInput();cameraX=0;posX=-200;posY=0;p1Facing=1;enterIRState(0);enterP2State(0);p2.x=200;p2.facing=-1;");
  await page.keyboard.down('ArrowRight');await step();await step();assert.ok((await step()).posX>-200);await page.keyboard.up('ArrowRight');
  await page.keyboard.down('KeyZ');const attack=await step();assert.equal(attack.state,200);await page.keyboard.up('KeyZ');
@@ -180,7 +184,7 @@ const server=http.createServer((request,response)=>{
  for(let tick=0;tick<30;tick++)await step();assert.equal((await step()).p2.life,1000);
  for(const [button,target] of [['jump',40],['down',10]]){
   await run(`resetPlayerInput();p1HitPause=0;enterIRState(200);stateTicks=9;fi=4;input.${button}=true;p2.getHit=null;p2.x=400;`);
-  const cancelled=await step();assert.equal(cancelled.state,target);assert.equal(cancelled.stateTicks,0);
+  const cancelled=await step();assert.equal(cancelled.state,target);assert.equal(cancelled.stateTicks,1,JSON.stringify({button,target,state:cancelled.state,time:cancelled.stateTicks,anim:cancelled.current,element:cancelled.fi}));
  }
  await run("resetPlayerInput();enterIRState(200);stateTicks=9;fi=4;runtimeMoveType='I';consumedXPress=false;input.x=true;p2.x=400;p2.getHit=null");
  const reentry=await step();assert.equal(reentry.state,200);assert.equal(reentry.stateTicks,0);assert.equal(reentry.fi,0);
@@ -229,8 +233,8 @@ const server=http.createServer((request,response)=>{
   for(let tick=0;tick<35;tick++){const frame=await step();assert.ok(Math.abs(frame.p2.x-direction*3430)<0.00001)}
   assert.equal(await run('cornerPushVelocity'),0);
  }
- await run("cameraX=0;p2.x=570;p2.vx=16;p2.moveType='H';p2.type='S';p2.getHit={attackerId:1};cornerPushVelocity=-24;cornerPushMultiplier=.7");
- assert.deepEqual(await run('checkCornerPushM1()'),{distance:-14,multiplier:.7});
+ await run("cameraX=0;cameraZoom=1;p2.x=570;p2.vx=16;p2.moveType='H';p2.type='S';p2.getHit={playerid:hitSourceIdentity(specialRoot(1)).playerid,projid:-1};cornerPushVelocity=-24;cornerPushMultiplier=.7");
+ assert.deepEqual(await run('checkCornerPushM1()'),{distance:-14,multiplier:Math.fround(.7)});
  await run('p2.x=200');assert.equal(await run('checkCornerPushM1().distance'),0);
  await run("p2.moveType='I'");assert.equal(await run('checkCornerPushM1().multiplier'),0);
  for(const direction of [-1,1]){
@@ -248,7 +252,8 @@ const server=http.createServer((request,response)=>{
  await run("combatTraceTick=0;combatTraceCount=0;resetPlayerInput();p1HitPause=0;cornerPushVelocity=0;cameraX=0;posX=0;posY=0;p1Facing=1;p2.x=140;p2.y=0;p2.facing=-1;p2.life=1000;p2.lastHitKey=null;p2.getHit=null;document.querySelector('#p2Guard').value='none';enterP2State(0);enterIRState(200)");
  for(let tick=0;tick<12;tick++)await step();
  const trace=await run('combatTraceExport()');
- assert.equal(trace.version,'0.23.46');assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
+ const runtimeVersion=(await page.title()).match(/^Prototype (\d+\.\d+\.\d+) /)?.[1];
+ assert.ok(runtimeVersion);assert.equal(trace.version,runtimeVersion);assert.equal(trace.tickRate,60);assert.equal(trace.frames.length,12);
  assert.deepEqual(trace.frames.map(frame=>frame.tick),Array.from({length:12},(_,index)=>index));
  assert.equal(trace.frames[3].after.p2.life,980);
  assert.equal(trace.frames.filter(frame=>frame.before.p1.hitPause>0).length,8);
@@ -259,9 +264,9 @@ const server=http.createServer((request,response)=>{
  await run('p2.life=777');
  assert.equal(await run('combatTraceExport().frames[3].after.p2.life'),980);
  const downloadEvent=page.waitForEvent('download');await page.locator('#dbgTrace').click();const download=await downloadEvent;
- assert.equal(download.suggestedFilename(),'palace-0.23.46-trace.json');
+ assert.equal(download.suggestedFilename(),'palace-'+runtimeVersion+'-trace.json');
  const downloaded=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
- assert.deepEqual(downloaded,trace);
+ assert.deepEqual(downloaded,JSON.parse(JSON.stringify(trace)));
  const pausedCount=await run('combatTraceTick');await run('simPaused=true;draw();drawMars();drawSourceExplods();drawCollision()');
  assert.equal(await run('combatTraceTick'),pausedCount);await run('simPaused=false');
  await run('for(let tick=0;tick<605;tick++)simStep()');
@@ -274,21 +279,21 @@ const server=http.createServer((request,response)=>{
   for(const facing of [-1,1]){
    const fighter={state:5071,anim:5070,time:20,animStartTime:0,elem:4,elemTick:0,x:0,y:60,vx:10,vy:20,facing,life:500,hitTime:-1,getHit:{fall:1,yaccel:1.4,'fall.yvel':-18,'fall.damage':0,'fall.kill':1},vars:[],sysvars:[],fallExecuted:new Set()};
    stepSourceFallM1(fighter);
-   if(fighter.state!==5110||fighter.anim!==5070||fighter.elem!==4||fighter.animStartTime!==-20)throw Error('Trip inherited E4/clock');
-   if(fighter.x!==10||Math.abs(fighter.y-81.4)>.001||Math.abs(fighter.vy-21.4)>.001)throw Error('Trip transition skipped travel');
+   if(fighter.state!==5110||fighter.anim!==5170||fighter.elem!==1||fighter.time!==1||fighter.animStartTime!==0)throw Error('Trip incoming Time=0 body/clock');
+   if(fighter.x!==8.5||fighter.y!==0||fighter.vy!==0)throw Error('Trip incoming position/velocity/friction');
    const sequence=[];for(let tick=0;tick<6;tick++){stepSourceFallM1(fighter);sequence.push([fighter.anim,fighter.elem])}
-   if(JSON.stringify(sequence)!==JSON.stringify([[5170,1],[5170,2],[5170,2],[5170,2],[5110,2],[5110,3]]))throw Error('Trip terminal frames '+JSON.stringify(sequence));
+   if(JSON.stringify(sequence)!==JSON.stringify([[5170,2],[5170,2],[5170,2],[5110,2],[5110,3],[5110,3]]))throw Error('Trip terminal frames '+JSON.stringify(sequence));
   }
   for(const id of [1,2])for(const facing of [-1,1])for(const mode of ['none','stand','crouch']){
-   const attacker={id,facing},defender={id:3-id,life:1000,ctrl:1,moveType:'I',state:0,type:'S',y:0,anim:0,elem:1,x:facing*140,facing:-facing};
+   const attacker={id,facing},defender={id:3-id,life:1000,ctrl:1,moveType:'I',state:0,type:mode==='crouch'?'C':'S',y:0,anim:0,elem:1,x:facing*140,facing:-facing};
    const original=JSON.stringify({attacker,defender});
    const result=resolveGroundHitM1(attacker,defender,params,mode),guarded=mode!=='none';
    if(result.life!==(guarded?1000:980)||result.getHit.attackerId!==id||result.getHit.attackerFacing!==facing)throw Error('Shared receiver identity/damage');
    if(result.getHit.xvel!==facing*(guarded?24:16)||result.getHit.slidetime!==(guarded?16:11)||result.getHit.hittime!==(guarded?22:15))throw Error('Shared source gethit values');
    if(result.cornerPushVelocity!==facing*(guarded?-28:-24)||result.attackerPause!==8||result.defenderPause!==8)throw Error('Shared source pause/push');
-   if(result.state!==(mode==='crouch'?152:guarded?150:5000)||result.sound!==params[guarded?'guardsound':'hitsound'])throw Error('Shared state/sound');
+   if(result.state!==(mode==='crouch'?152:guarded?150:5000)||result.sound!==params[guarded?'guardsound':'hitsound'])throw Error('Shared state/sound '+JSON.stringify({id,facing,mode,state:result.state,sound:result.sound,expectedSound:params[guarded?'guardsound':'hitsound']}));
    if(JSON.stringify({attacker,defender})!==original)throw Error('Shared resolver mutated contexts');
-   const frame={anim:200,elem:4,x:0,y:0,facing,hitDef:{}};
+   const frame={player:id,id,state:200,type:'S',moveType:'A',anim:200,elem:4,x:0,y:0,facing,hitDef:{params:{...params}}};
    if(!resolveFighterCollisionM1(frame,defender).contact)throw Error('Shared mirrored collision');
    if(resolveFighterCollisionM1(frame,{...defender,x:facing*1000}).contact)throw Error('Shared mirrored whiff');
    if(resolveFighterCollisionM1({...frame,hitDef:null},defender).contact)throw Error('Inactive HitDef collided');

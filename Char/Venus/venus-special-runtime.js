@@ -1,5 +1,4 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
-import {excludesLegacyHelperFeedback} from '../../Engine/helper-force-feedback.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
@@ -37,7 +36,7 @@ import {createHitBySlots,tickHitBySlots} from '../../Engine/hit-by.js?v=02485';
 import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engine/hit-override.js?v=02485';
 import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
-import {createControllerSchedule} from '../../Engine/controller-schedule.js';
+import {createControllerSchedule} from '../../Engine/controller-schedule.js?v=02544';
 import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js?v=02542';
 import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
@@ -160,7 +159,6 @@ export function createSpecialRuntime(api){
   if(!api.trigger(controller,ctx))return;
   if(!global){schedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
-  if(excludesLegacyHelperFeedback(controller,entity,{evaluate:expression=>api.eval(String(expression),ctx),split:api.pair,findActor:id=>entities.find(actor=>actor.instanceId===id&&!actor.destroyed)||[root(1),root(2)].find(actor=>actor.id===id),opponent:actor=>root(actor.player===1?2:1)}))return;
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};activateJuggle(entity,entity.activeHitDef.params);entity.hitSpent=false;api.activateHitDef?.(entity);break;
    case 'ReversalDef':{const definition=prepareReversalDefinition(params);entity.activeHitDef={reversal:true,hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,definition,ctx),params:numeric(definition,ctx)};activateJuggle(entity,entity.activeHitDef.params);entity.hitSpent=false;api.activateHitDef?.(entity);break;}

@@ -1,4 +1,6 @@
-# Coverage accounting checkpoint — 0.25.43
+# Coverage accounting checkpoint — 0.25.44
+
+Root generic/source/attack/locomotion and reaction current-body frames now have real stop/continue/same-generation consumers, captured schedules and incoming-body clock evidence. Ending reaction physics includes first-action gravity. The 56 root/12 reaction fixtures, original Moon throws, Helper regressions and complete final Saturn suite pass. Old/new ForceFeedback requests reach browser motor consumers; physical hardware and input remapping remain uncertified. Node checks pass 183/188 with five existing failures. The separate legacy runtime suite has reviewed fixtures but still fails Opponent/random context and is not counted passing. Native pause/negative/lifecycle phases, reaction SelfState, redirects/providers, VM and complete parameter semantics remain Pending. All controller certification counts remain 0/163; no overall completion percentage is asserted.
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
 

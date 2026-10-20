@@ -26,12 +26,22 @@ export function createActorControllerSchedules(){
   if(!identities.has(controller))identities.set(controller,++serial);
   return identities.get(controller);
  }
- function prepare(actor,generation,controller,options={}){
-  if(options.global)return {eligible:!options.hitPause||!!Number(controller.params?.ignorehitpause??0),executed:()=>{}};
+ function entryFor(actor,generation){
   let entry=actors.get(actor);
   if(!entry||entry.generation!==generation){entry={generation,schedule:createControllerSchedule()};actors.set(actor,entry)}
+  return entry;
+ }
+ function prepareEntry(entry,controller,options={}){
+  if(options.global)return {eligible:!options.hitPause||!!Number(controller.params?.ignorehitpause??0),executed:()=>{}};
   const key=controllerKey(controller),params=controller.params||controller;
   return {eligible:entry.schedule.before(key,params,options),executed:()=>entry.schedule.executed(key,params)};
  }
- return {prepare,reset:()=>actors.clear()};
+ function prepare(actor,generation,controller,options={}){
+  return prepareEntry(options.global?null:entryFor(actor,generation),controller,options);
+ }
+ function capture(actor,generation){
+  const entry=entryFor(actor,generation);
+  return {prepare:(controller,options={})=>prepareEntry(entry,controller,options)};
+ }
+ return {prepare,capture,reset:()=>actors.clear()};
 }
