@@ -36,9 +36,10 @@ import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engin
 import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
 import {createControllerSchedule} from '../../Engine/controller-schedule.js';
+import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
- const projectileContacts=new Map(),moveTimes=new Map();
+ const projectileContacts=new Map(),moveTimes=new Map(),stateChanges=createStateChangeBuffer();
  const moveTimeKey=actor=>actor.kind==='helper'?actor.key:'root'+(actor.player??actor.id);
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
@@ -78,9 +79,11 @@ export function createSpecialRuntime(api){
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
  function helperDefinition(entity,state){const data=api.data(entity.player);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
- function enter(entity,state){
+ function enter(entity,state,{selected=false}={}){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
-  Object.assign(entity,{prevState:entity.state,state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,animStartTime:0,once:new Set()});
+  if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
+  for(const name of ['type','physics','moveType'])if(definition[name]!==undefined&&definition[name]!=='U')entity[name]=definition[name];
+  api.initializeStateJuggle?.(entity);
   applyStatePersistence(definition,{
    evaluate:value=>api.eval(String(value),context(entity)),
    clearHitCount:()=>{entity.hitCount=0;entity.guardCount=0;api.transitionMoveContact?.(entity,{hitcountpersist:0,movehitpersist:1})},
@@ -91,9 +94,21 @@ export function createSpecialRuntime(api){
   if(definition.facep2!==undefined){if(!api.stateDefFacing)throw Error('Missing StateDef facing consumer');api.stateDefFacing(definition,()=>entity,value=>{entity.facing=value})}
   if(definition.juggle!==undefined){if(!api.stateDefJuggle)throw Error('Missing StateDef juggle consumer');api.stateDefJuggle(definition,()=>entity)}
   applyStateDefVelocity(definition,{expressions:source=>{if(!api.stateVelocityExpressions)throw Error('Missing StateDef velocity expression parser');return api.stateVelocityExpressions(source)},evaluate:expression=>expression&&typeof expression==='object'?api.evalAST(expression,context(entity)):api.eval(String(expression),context(entity)),setVelocity:(axis,value)=>{const scale=api.stateVelocityScale?.(entity)??1;entity['v'+axis]=Math.fround(Math.fround(value*scale)*(axis==='x'?entity.facing:1))}});
-  entity.controllerSchedule=createControllerSchedule();
-  if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
+  if(definition.anim!==undefined){const anim=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(anim!==-1){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}
   applyStateDefControlPower(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setControl:value=>{entity.ctrl=Number(value)},addPower:amount=>{if(!api.stateDefPowerAdd)throw Error('Missing StateDef power consumer');api.stateDefPowerAdd(entity,amount)}});
+ }
+ function selectState(entity,state){
+  if(!helperDefinition(entity,state))throw Error('Unknown helper state '+state);
+  const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(api.data(entity.player)).ikemen;
+  return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause},()=>{
+   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});
+   if(!resetAfterPause)entity.controllerSchedule=createControllerSchedule();
+  });
+ }
+ function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule=createControllerSchedule();pending.resetAfterPause=false}}
+ function initializeSelectedState(entity){
+  const pending=stateChanges.get(entity.key);if(pending&&pending.state!==entity.state){stateChanges.cancel(entity.key);return false}
+  return stateChanges.initialize(entity.key,{paused:blocked(entity.player,entity),hitPause:entity.hitPause>0,tick:api.tick(),initialize:entry=>{resetSelectedSchedule(entity);enter(entity,entry.state,{selected:true})}});
  }
  function spawn(params,owner,player,kind){
   const sourceContext=context({...owner,player,key:owner.key||'root'+player});
@@ -206,7 +221,7 @@ export function createSpecialRuntime(api){
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     }
-    api.finishHitFrame?.(entity);entity.hitPause--;continue;
+    api.finishHitFrame?.(entity);entity.hitPause--;if(entity.kind==='helper')resetSelectedSchedule(entity);continue;
    }
    if(entity.kind==='helper'){entity.depthBoundFlags=createDepthBoundFlags(entity.helperType===2);entity.depthModifiers=createDepthModifiers();entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
    if(entity.kind==='helper'){helperGlobalState(entity,-4);if(entity.destroyed)continue}
@@ -214,6 +229,7 @@ export function createSpecialRuntime(api){
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
     helperGlobals(entity);if(entity.destroyed)continue;
+    initializeSelectedState(entity);if(stateChanges.has(entity.key))continue;
     const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
@@ -228,7 +244,7 @@ export function createSpecialRuntime(api){
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    if(entity.kind==='helper')api.finishHitFrame?.(entity);api.reversalContacts?.();hit(entity);
    if(entity.kind==='helper')api.stepCornerPush?.(entity);
-   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}entity.time++;api.advance(entity);
+if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}if(entity.kind==='helper'&&stateChanges.has(entity.key))entity.animStartTime--;else entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
@@ -260,7 +276,7 @@ export function createSpecialRuntime(api){
    }
   }
   for(const [helper,nextState] of overrides){enter(helper,nextState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)}
-  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper')api.forgetHitState?.(entities[index]);entities.splice(index,1)}
+  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper'){stateChanges.cancel(entities[index].key);api.forgetHitState?.(entities[index])}entities.splice(index,1)}
  }
  function finishTick(){
   api.finishPaletteEffects?.();
@@ -268,10 +284,10 @@ export function createSpecialRuntime(api){
   const superActive=pauses.super.some(pause=>pause?.remaining>0);
   for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
  }
- return {entities,pauses,moveTimes,setMoveTime:(actor,slot,value)=>{const key=moveTimeKey(actor),times=moveTimes.get(key)||{};times[slot]=value;moveTimes.set(key,times)},stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
+ return {entities,pauses,moveTimes,stateChanges,stateChangePending:entity=>stateChanges.has(entity.key),selectState,setMoveTime:(actor,slot,value)=>{const key=moveTimeKey(actor),times=moveTimes.get(key)||{};times[slot]=value;moveTimes.set(key,times)},stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
   numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
-  reset:()=>{entities.length=0;projectileContacts.clear();moveTimes.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
+  reset:()=>{entities.length=0;stateChanges.clear();projectileContacts.clear();moveTimes.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
 }

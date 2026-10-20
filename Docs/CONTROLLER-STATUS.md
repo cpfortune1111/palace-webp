@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.35
+# Coverage accounting checkpoint — 0.25.36
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Helper P1StateNo selection now controls a real delayed StateDef consumer, with actual pause/version/expression/Time=0 evidence and a normal collision test. STATE-CHANGE-BUFFER-WIP.md distinguishes this supported source path from still-immediate roots and unconnected target/general transition phases. No whole controller, stchtmp export or ghvset pipeline is certified; all inventory and certification counts stay unchanged.
 
 Same-pass gethit/throw-recipient and P1StateNo-source rejection now have real root/entity/reversal consumer evidence. Phase-owner identity, normal/negative/later-pass distinctions and missed-contact effects are exercised. Full deferred state-change export, ghvset suppression and native scheduler ordering remain Pending; HIT-CONTACT-PHASE-WIP.md explicitly records these boundaries. Certification and inventory counts are unchanged.
 

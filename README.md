@@ -1,3 +1,7 @@
+## 0.25.36 — Helper selected-state and deferred initialization (partial)
+
+Helper P1StateNo now selects the state immediately but defers its real StateDef header through hitpause/global pause until a later eligible action. Old fields remain live; covered Mugen/Ikemen persistent timing, first-body Time=0, evaluated animation, U/-1 retention, replacement and intrinsic juggle reset have actual evidence. A real collision fixture distinguishes selection from header execution. Roots, target states, general hitpause transitions, exact index/provider/scaling and native scheduler completion remain Pending; all 163 controllers remain uncertified. See STATE-CHANGE-BUFFER-WIP.md. Deployment is verified separately.
+
 ## 0.25.35 — Native same-pass contact rejection (partial)
 
 Already-hit P1StateNo sources and recipients already hit by a throw now reject prohibited same-pass contacts through real root, Helper, projectile-owner and reversal gates. Ordinary counter contacts, later passes and negative type-None contacts remain eligible; misses retain life, power, states, counters, effects and hit availability. Actual fixtures and full browser regression cover the two native rules. Contact fixtures explicitly isolate phase state without weakening expected results. Native deferred state selection, stchtmp/ghvset ordering and the unified action/collision scheduler remain Pending; all 163 controller rows remain uncertified. See HIT-CONTACT-PHASE-WIP.md. Deployment is verified separately.
