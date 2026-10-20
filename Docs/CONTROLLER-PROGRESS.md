@@ -1,3 +1,7 @@
+## 0.25.51 — Self animation and clipboard real consumers (partial)
+
+Actor-owned SelfAnimExist now uses complete imported IDs and preserves redirected caller ID scope through foreign state/animation providers. Clipboard display/append/clear execute through actual common controller dispatch and visible HUD output, including redirected recipients and caller-only parameter writes. Supported numeric formatting has exact float32 coefficients, profile-specific ties and native diagnostic samples; sixty independent CRT observations are explicitly bounded, not whole-engine certification. All 201 Node tools and focused actor/HUD tests pass. Full final regression/deployment are separate gates; no controller certification changes.
+
 ## 0.25.50 — Comparison and intrinsic query semantics (partial)
 
 Real comparison/query consumers now preserve boolean/integer result tags through arithmetic; native string equality and legacy AnimElem event handling remain distinct. Query IDs sample once in original caller scope, reject undefined, apply optional -1 defaults and fix native nonpositive Helper/all-effect counting. All 198 Node tools pass; comparison and expanded intrinsic browser cases cover real Helpers, Explods and a registered target. Final complete regression/deployment are separate gates. Flags/providers/arity/warnings/version/VM/native phases and all controller certifications remain Pending.

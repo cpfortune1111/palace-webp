@@ -10,7 +10,7 @@ const parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexO
 const evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
 const calls=[];
 const count=family=>id=>{calls.push({family,id});return 5};
-const actor={vars:Array(60).fill(0),fvars:[],sysvars:[],sysfvars:[],elemTime:count('animelemtime'),numHelper:count('numhelper'),numProj:count('numprojid'),numExplod:count('numexplod'),numTarget:count('numtarget'),playerIDExist:id=>{calls.push({family:'playeridexist',id});return true},assertions:new Set(['noautoturn'])};
+const actor={selfAnimExist:anim=>anim===0,vars:Array(60).fill(0),fvars:[],sysvars:[],sysfvars:[],elemTime:count('animelemtime'),numHelper:count('numhelper'),numProj:count('numprojid'),numExplod:count('numexplod'),numTarget:count('numtarget'),playerIDExist:id=>{calls.push({family:'playeridexist',id});return true},assertions:new Set(['noautoturn'])};
 const context=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpression,assignExpressionVariable,testContext:actor,framesFor:anim=>anim===0?[{time:1}]:[],actorAssertionFlags});
 vm.runInContext(parser+'\n'+evaluator,context);
 const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',context);

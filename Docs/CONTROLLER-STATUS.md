@@ -1,3 +1,7 @@
+# Coverage accounting checkpoint — 0.25.51
+
+Own-animation lookup and three clipboard controllers now have real actor/parameter/HUD consumers instead of the former clipboard no-op. All 201 Node checks and focused actor/HUD scenarios pass. Native CRT numeric reference cases are explicitly not full MUGEN executable verification. Full printf/configuration/legacy inventories/providers/VM/version/native phases and parameter semantics remain Pending. All 163 controller certifications remain Pending; no overall percentage is asserted. Final complete regression/deployment are separate gates.
+
 # Coverage accounting checkpoint — 0.25.50
 
 Comparison results and intrinsic query calls have typed real consumers, source-backed ID/default semantics and expanded nonzero root/Helper/effect/target evidence. All 198 Node checks and focused actor suites pass. Final complete regression and deployment are separate gates. Complete providers/flags/arity/warnings/query values/compiler/VM/version/native-phase and controller parameter semantics remain Pending. Whole-controller certification remains 0/163; no overall percentage is asserted.

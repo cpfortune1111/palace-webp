@@ -1,3 +1,7 @@
+## 0.25.51 — Own animation queries and debug clipboard consumers (partial)
+
+SelfAnimExist now checks the selected actor's own complete imported action inventory, independently of borrowed providers or preloaded graphics. Display/Append/ClearClipboard now execute, keep actor-isolated buffers and render in the debug HUD instead of silently doing nothing. Supported float32 formatting has exact numeric rounding and independent CRT observations. All 201 Node checks and focused actor/HUD suites pass; final complete regression/deployment are separate gates. Full printf, legacy animation/value/version/native phases and controller certifications remain Pending. See SELF-ANIMATION-QUERY-WIP.md and DEBUG-CLIPBOARD-WIP.md.
+
 ## 0.25.50 — Comparison and intrinsic query consumers (partial)
 
 State/name comparisons and eight intrinsic query families retain native result tags through real parameters. Caller-scoped ID sampling, undefined rejection, optional defaults and nonpositive Helper/all-effect counts have actual root/Helper evidence. All 198 Node checks and focused actor suites pass; final combined regression/deployment are separate gates. Full flags/providers/arity/version/VM/native phases and controller parameter semantics remain Pending. No controller certification changes. See COMPARISON-RESULT-TYPES-WIP.md and INTRINSIC-QUERY-TYPES-WIP.md.
