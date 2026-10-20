@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.42
+# Coverage accounting checkpoint — 0.25.43
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Helper continue now controls real body execution rather than being merely parsed: current, SelfState, hitpause and own-global consumers retain old schedules and execute multiple tail instructions in tested order. Thirty Helper cases and eight generic root entry/control checks provide partial evidence. Root/special continuation, redirects and full VM/persistent/native phase parity remain Pending. All controller certifications remain 0/163.
 
 Helper general state phases, numeric animation/control order and SelfState readplayerid now have real consumers with focused own/foreign/root/Helper evidence. Same-state re-entry uses entry identity rather than a state-number comparison. Actual legacy P2 idle controllers execute while Ctrl is false instead of relying on a hardcoded override. RedirectID/continue/prefixes, special paths and complete native VM/scheduler parity remain Pending; all 163 controller certifications remain Pending.
 

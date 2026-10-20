@@ -43,6 +43,7 @@ import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
  const projectileContacts=new Map(),moveTimes=new Map(),stateChanges=createStateChangeBuffer();
+ let helperChangeNest=0;
  const moveTimeKey=actor=>actor.kind==='helper'?actor.key:'root'+(actor.player??actor.id);
  const root=player=>api.root(player);
  const blocked=(player,entity=null)=>{
@@ -150,14 +151,14 @@ export function createSpecialRuntime(api){
   }
  }
  function activateJuggle(entity,params){if(params['air.juggle']!==undefined){if(!api.setHitDefJuggle)throw Error('Missing HitDef juggle consumer');api.setHitDefJuggle(entity,params)}}
- function helperController(entity,controller,index,global=false){
+ function helperController(entity,controller,index,global=false,schedule=entity.controllerSchedule){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ownData=api.ownData?.(entity.player)??api.data(entity.player),ctx=context(entity,undefined,global?{...entity,stateOwner:null,expressionLocalCoord:characterLocalCoord(ownData)}:entity);
   if(global)Object.assign(ctx,{stateOwner:ownData.character,foreignStateOwner:false});
-  if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!entity.controllerSchedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
+  if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!schedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
-  if(!global){entity.controllerSchedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
+  if(!global){schedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   if(excludesLegacyHelperFeedback(controller,entity,{evaluate:expression=>api.eval(String(expression),ctx),split:api.pair,findActor:id=>entities.find(actor=>actor.instanceId===id&&!actor.destroyed)||[root(1),root(2)].find(actor=>actor.id===id),opponent:actor=>root(actor.player===1?2:1)}))return;
   switch(controller.type){
@@ -168,24 +169,36 @@ export function createSpecialRuntime(api){
    case 'HitBy':case 'NotHitBy':api.controller(controller,entity,ctx,{owner:entity,player:entity.player,schedulingApplied:true});break;
    case 'AssertSpecial':if(api.damageAssertion?.(controller,entity,ctx))break;if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
    case 'DestroySelf':entity.destroyed=true;break;
-   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>selectState(entity,state,{phase:global?'global':'current'}),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','facing','sprPriority','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});return api.controller(controller,binding,ctx,{player:entity.player,owner:entity,schedulingApplied:global,changeState:state=>changeHelperState(entity,state,global),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
   }
  }
- function runHelperCurrentState(entity){
-  for(let transitions=0;transitions<=2500;transitions++){
-   initializeSelectedState(entity);if(entity.destroyed||stateChanges.has(entity.key))return;
-   const entrySerial=entity.entrySerial,controllers=helperDefinition(entity,entity.state).controllers;
-   for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.entrySerial!==entrySerial)break}
-   if(entity.destroyed||entity.entrySerial===entrySerial)return;
+ function helperStateBody(entity){
+  const schedule=entity.controllerSchedule,controllers=helperDefinition(entity,entity.state).controllers;let entrySerial=entity.entrySerial;
+  for(let index=0;index<controllers.length;index++){
+   const outcome=helperController(entity,controllers[index],index,false,schedule);
+   if(entity.destroyed)return true;
+   if(outcome?.stateTransition){if(outcome.continueBody){entrySerial=entity.entrySerial;continue}return true}
+   if(entity.entrySerial!==entrySerial)return true;
   }
+  return false;
+ }
+ function changeHelperState(entity,state,global){
+  selectState(entity,state,{phase:global?'global':'current'});
+  if(global||entity.hitPause>0||blocked(entity.player,entity)||helperChangeNest>0)return;
+  try{while(stateChanges.has(entity.key)&&helperChangeNest<2500){if(!initializeSelectedState(entity))break;helperChangeNest++;if(!helperStateBody(entity))break}}finally{helperChangeNest=0}
+ }
+ function runHelperCurrentState(entity){
+  initializeSelectedState(entity);if(entity.destroyed||stateChanges.has(entity.key))return;
+  helperStateBody(entity);
  }
  function helperGlobalState(entity,stateNo){
   const data=api.ownData?.(entity.player)??api.data(entity.player);
   const controllers=stateNo===-1?(data.playerCommands??data.globalControllers?.['-1']??[]):data.globalControllers?.[String(stateNo)]??[];
-  const entrySerial=entity.entrySerial;
+  let entrySerial=entity.entrySerial;
   for(const [index,controller]of controllers.entries()){
-   helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
-   if(entity.destroyed||entity.entrySerial!==entrySerial)return;
+   const outcome=helperController(entity,{...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},index,true);
+   if(entity.destroyed||outcome?.stateTransition&&!outcome.continueBody)return;
+   if(entity.entrySerial!==entrySerial){if(!outcome?.continueBody)return;entrySerial=entity.entrySerial}
   }
  }
  function helperGlobals(entity){
@@ -233,8 +246,7 @@ export function createSpecialRuntime(api){
     if(entity.kind==='helper'){
      helperGlobalState(entity,-4);if(entity.destroyed)continue;
      helperGlobals(entity);if(entity.destroyed)continue;
-     const previous=entity.state,entrySerial=entity.entrySerial,controllers=helperDefinition(entity,previous).controllers;
-     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.entrySerial!==entrySerial)break}
+     helperStateBody(entity);
     }
     api.finishHitFrame?.(entity);entity.hitPause--;if(entity.kind==='helper'){if(entity.hitShake>0)entity.hitShake--;resetSelectedSchedule(entity)};continue;
    }

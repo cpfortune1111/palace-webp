@@ -1,3 +1,7 @@
+## 0.25.43 — Helper state-controller continuation (partial)
+
+Helper ChangeState/SelfState consume continue with real old/new body ordering: immediate incoming body before the old tail, or eligible old-tail execution before a delayed header during hitpause/globals. Old body schedules survive nested changes and multiple tail instructions continue correctly. Thirty Helper cases, eight generic root entry/control checks, readplayerid and original Moon regressions pass. Root/special continuation, redirected stop behavior and complete VM/persistent/scheduler fidelity remain Pending; no controller is certified. See STATE-CONTINUE-WIP.md. Final browser/deployment gates are verified separately.
+
 ## 0.25.42 — General state transition phases and parameters (partial)
 
 Helper current/same-state transitions execute the incoming Time=0 body in the same action; hitpause and global-phase changes use distinct real pending-header eligibility. Generic ChangeState/SelfState now sample numeric anim/ctrl before mutation and apply animation/control before the incoming header. SelfState readplayerid selects the requested actor's own table rather than a borrowed program. Twenty-two Helper transition cases, eight root entry/control checks and twenty read-ID cases pass; original Moon throws recover after actual legacy P2 idle-body dispatch is restored. RedirectID/continue/prefixes and complete VM/version/scheduler parity remain Pending; no controller is certified. See HELPER-GENERAL-STATE-WIP.md. Final regression/deployment gates are verified separately.
