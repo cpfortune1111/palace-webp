@@ -1,3 +1,7 @@
+# Coverage accounting checkpoint — 0.25.48
+
+Typed exponent/math and recognized numeric redirects now have actual parser and root/Helper parameter consumers with native-profile overflow/promotion and caller-scope evidence. All 194 Node checks and focused actor scenarios pass; full combined-browser/deployment gates are recorded separately. Complete query/undefined/VM/constants/version/native-phase and parameter semantics remain Pending. Whole-controller certifications remain 0/163; no overall percentage is asserted.
+
 # Coverage accounting checkpoint — 0.25.47
 
 Bitwise expression/query consumers now have actual parser and root/Helper evidence for both engine profiles and player slots. Typed undefined arithmetic/comparison and modulo float distinctions have focused regressions; relational precedence is repaired. All 192 Node tools pass. Full bottom/query/VM/constant-folding/native-phase and parameter semantics remain Pending. Certification remains 0/163; no total implementation percentage is asserted. Publication and complete final regression are separate gates.

@@ -1,3 +1,7 @@
+## 0.25.48 — Typed math and redirection consumers (partial)
+
+Actual parser/evaluator/controller consumers now execute exponentiation, typed unary and multi-argument math, and selected numeric redirects. Source-backed profile rules cover overflow, negative integer promotion, caller argument scope and eager writes. Failing-before integer redirection fixtures now retain native division. All 194 Node checks pass; eight exponent and eight math actor cases cover 12 and 28 parameters respectively. Final combined-browser/deployment gates are separate. Full VM/undefined/query/constants/native-phase and parameter semantics remain Pending; no controller certification changes.
+
 ## 0.25.47 — Bitwise/query numeric consumers (partial)
 
 The actual parser, typed evaluator and VarSet consumers now handle bitwise operations, selected integer/float queries, relational/equality precedence, profile-specific float modulo and typed undefined arithmetic/comparisons. All 192 Node tools pass; eight bitwise and eight logical profile/player/root/Helper browser cases pass. Full final regression and deployment remain separate gates. Native query coverage, full bottom/VM/constants/ZSS and other parameters remain Pending; no controller is certified. See BITWISE-EXPRESSION-WIP.md.

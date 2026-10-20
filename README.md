@@ -1,3 +1,7 @@
+## 0.25.48 — Typed math and numeric redirects (partial)
+
+Exponentiation, unary and multi-argument math now have actual typed parameter consumers, native-profile overflow/promotion rules and caller-scoped argument evaluation. Recognized numeric redirects preserve selected actor tags through arithmetic instead of silently using JavaScript division. All 194 Node checks and eight exponent/eight expanded math actor scenarios pass; final regression and deployment are separate gates. Full undefined/query/constant-folding/native phases and all 163 controller certifications remain Pending. See EXPONENT-EXPRESSION-WIP.md and MATH-FUNCTION-TYPES-WIP.md.
+
 ## 0.25.47 — Bitwise and numeric query consumers (partial)
 
 Actual expressions now execute ~, &, ^ and | with tested precedence, eager operands and engine-specific float handling. Selected native integer/float query tags survive enclosing arithmetic. Typed undefined arithmetic/comparisons and float modulo distinguish documented MUGEN from pinned Ikemen behavior; relational operators bind above equality. All 192 Node checks and both profile/player/root/Helper focused suites pass. Complete regression and deployment are verified separately. Full bottom/VM/query/constant-folding semantics and all 163 controller certifications remain Pending. See BITWISE-EXPRESSION-WIP.md.

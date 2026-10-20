@@ -1,10 +1,12 @@
 const cachedTypes=new WeakMap();
 const variables={var:'int',sysvar:'int',fvar:'float',sysfvar:'float'};
 const comparisons=new Set(['=','==','!=','>','<','>=','<=']);
-const arithmetic=new Set(['+','-','*','/','%']);
+const arithmetic=new Set(['+','-','*','/','%','**']);
 const bitwise=new Set(['&','|','^']);
 const integerQueries=new Set(['time','stateno','life','lifemax']);
 const floatQueries=new Set(['pos x','pos y','vel x','vel y','vel z']);
+const unaryMath=new Set(['abs','floor','ceil','ln','sin','cos','tan','asin','acos','atan','exp','sign','rad','deg']);
+const multiMath={log:2,max:2,min:2,round:2,atan2:2,clamp:3,lerp:3};
 
 export function isConstantNumericExpression(node){
  if(node.t==='num')return true;
@@ -14,7 +16,7 @@ export function isConstantNumericExpression(node){
  if(node.t!=='call')return false;
  const name=node.name.toLowerCase();
  if(['ifelse','cond'].includes(name))return node.args.length===3&&node.args.every(isConstantNumericExpression);
- return ['abs','floor','ln','sin','cos','tan','asin','acos','atan','exp'].includes(name)&&node.args.length===1&&node.args.every(isConstantNumericExpression);
+ return (unaryMath.has(name)&&node.args.length===1||Object.hasOwn(multiMath,name)&&node.args.length===multiMath[name])&&node.args.every(isConstantNumericExpression);
 }
 
 function numericType(node){
@@ -22,8 +24,11 @@ function numericType(node){
  if(cachedTypes.has(node))return cachedTypes.get(node);
  let type=null;
  if(node.t==='num')type=node.numericType??(Number.isInteger(node.v)?'int':'float');
+ else if(['redirect','helperRedirect','indexedRedirect'].includes(node.t)&&numericType(node.expr))type='dynamic';
  else if(node.t==='id')type=integerQueries.has(node.name.toLowerCase())?'int':floatQueries.has(node.name.toLowerCase())?'float':null;
  else if(node.t==='call'&&node.args.length===1&&Object.hasOwn(variables,node.name.toLowerCase()))type=variables[node.name.toLowerCase()];
+ else if(node.t==='call'&&node.args.length===1&&unaryMath.has(node.name.toLowerCase())&&numericType(node.args[0]))type=['abs','floor','ceil'].includes(node.name.toLowerCase())?'dynamic':node.name.toLowerCase()==='sign'?'int':'float';
+ else if(node.t==='call'&&Object.hasOwn(multiMath,node.name.toLowerCase())&&node.args.length===multiMath[node.name.toLowerCase()]&&node.args.every(argument=>numericType(argument)))type='float';
  else if(node.t==='assign'&&node.target.t==='call')type=variables[node.target.name.toLowerCase()]??null;
  else if(node.t==='call'&&['ifelse','cond'].includes(node.name.toLowerCase())&&node.args.length===3&&numericType(node.args[1])&&numericType(node.args[2]))type='dynamic';
  else if(node.t==='un'&&numericType(node.a))type=node.op==='!'?'bool':node.op==='~'?'int':numericType(node.a);
@@ -33,6 +38,7 @@ function numericType(node){
   if(first&&second){
    if(comparisons.has(node.op))type='bool';
    else if(bitwise.has(node.op))type='int';
+   else if(node.op==='**')type='dynamic';
    else if(node.op==='&&'||node.op==='||')type=isConstantNumericExpression(node)?'bool':'dynamic';
    else if(arithmetic.has(node.op))type=node.op==='%'?'int':first==='dynamic'||second==='dynamic'?'dynamic':first==='float'||second==='float'?'float':'int';
   }
@@ -46,6 +52,7 @@ export function evaluateTypedNumericAST(node,api){
  const integer=value=>Math.trunc(Number(value))|0;
  function evaluate(current){
   const type=numericType(current);
+  if(['redirect','helperRedirect','indexedRedirect'].includes(current.t))return api.redirected(current);
   if(current.t==='num')return {type,value:type==='float'?Math.fround(current.v):integer(Math.max(-2147483648,Math.min(2147483647,current.v)))};
   if(current.t==='id'){
    const value=Number(api.query(current.name));
@@ -54,6 +61,32 @@ export function evaluateTypedNumericAST(node,api){
   if(current.t==='assign')return {type,value:api.assign(current.target,current.value)};
   if(current.t==='call'){
    if(['ifelse','cond'].includes(current.name.toLowerCase()))return api.conditional(current);
+   const name=current.name.toLowerCase();
+   if(Object.hasOwn(multiMath,name)){
+    const args=api.mathArguments?api.mathArguments(current):current.args.map(evaluate);
+    if(args.some(argument=>Number.isNaN(argument.value)))return {type:'float',value:NaN};
+    const [first,second,third]=args.map(argument=>Number(argument.value));
+    let value;
+    if(name==='log')value=first<=0||second<=0?NaN:Math.log(second)/Math.log(first);
+    else if(name==='max')value=Math.max(first,second);
+    else if(name==='min')value=Math.min(first,second);
+    else if(name==='atan2')value=Math.atan2(first,second);
+    else if(name==='round'){const shift=Math.pow(10,second);value=Math.floor(first*shift+.5)/shift;}
+    else if(name==='clamp')value=first<=second?second:first>=third?third:first;
+    else value=first+(second-first)*Math.min(1,Math.max(0,third));
+    return {type:'float',value:Math.fround(value)};
+   }
+   if(unaryMath.has(name)){
+    const argument=api.mathArguments?api.mathArguments(current)[0]:evaluate(current.args[0]);
+    if(Number.isNaN(argument.value))return {type:argument.type,value:NaN};
+    if(name==='abs')return {type:argument.type,value:argument.type==='float'?Math.fround(Math.abs(argument.value)):integer(Math.abs(argument.value))};
+    if(name==='floor'||name==='ceil')return argument.type==='float'?{type:'int',value:integer(Math[name](argument.value))}:argument;
+    if(name==='ln')return {type:'float',value:argument.value<=0?NaN:Math.fround(Math.log(argument.value))};
+    if(name==='sign')return {type:'int',value:argument.value<0?-1:argument.value>0?1:0};
+    if(name==='rad')return {type:'float',value:Math.fround(argument.value*Math.PI/180)};
+    if(name==='deg')return {type:'float',value:Math.fround(argument.value*180/Math.PI)};
+    return {type:'float',value:Math.fround(Math[name](argument.value))};
+   }
    const value=api.variable(current.name.toLowerCase(),current.args[0]);
    return {type,value:type==='float'?Math.fround(Number(value)):integer(value)};
   }
@@ -91,6 +124,17 @@ export function evaluateTypedNumericAST(node,api){
   if(current.op==='>=')return {type:'bool',value:left>=right};
   if(current.op==='<=')return {type:'bool',value:left<=right};
   if(current.op==='%')return {type:'int',value:!api.logicalOperands&&floating||integer(second.value)===0?NaN:integer(integer(first.value)%integer(second.value))};
+  if(current.op==='**'){
+   if(floating||right<0||!api.logicalOperands&&left<0)return {type:'float',value:Math.fround(Math.pow(left,right))};
+   let exponent=right,base=left,value=1;
+   const multiply=api.logicalOperands?Math.imul:(first,second)=>Math.min(2147483647,first*second);
+   while(exponent>0){
+    if(exponent%2===1)value=multiply(value,base);
+    exponent=Math.floor(exponent/2);
+    if(exponent>0)base=multiply(base,base);
+   }
+   return {type:'int',value};
+  }
   const outputType=floating?'float':'int';
   if(current.op==='/')return {type:outputType,value:right===0?NaN:floating?Math.fround(left/right):integer(left/right)};
   if(current.op==='*')return {type:outputType,value:floating?Math.fround(left*right):Math.imul(left,right)};
