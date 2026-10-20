@@ -1,5 +1,5 @@
 export const damageAssertionFlags=new Set(['nohitdamage','noguarddamage','noredlifedamage','nodizzypointsdamage','noguardpointsdamage']);
-export const actorAssertionFlags=new Set([...damageAssertionFlags,'nowalk','noautoturn','nofacep2','noturntarget','nojugglecheck','nostandguard','nocrouchguard','noairguard','unguardable','noko','noguardko','nokofall','nokovelocity','nocornerpush','nofallhitflag']);
+export const actorAssertionFlags=new Set([...damageAssertionFlags,'nowalk','noautoturn','nofacep2','noturntarget','nojugglecheck','nostandguard','nocrouchguard','noairguard','unguardable','noko','noguardko','nokofall','nokovelocity','nocornerpush','nofallhitflag','nogetupfromliedown']);
 
 export function applyDamageAssertion(controller,actor,api){
  if(controller.type.toLowerCase()!=='assertspecial')return false;

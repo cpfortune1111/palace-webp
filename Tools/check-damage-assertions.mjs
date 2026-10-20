@@ -33,4 +33,6 @@ run({flag:'NoFaceP2',flag2:'NoTurnTarget',redirectid:'7',enabled:'0'});
 assert.equal(other.assertions.has('nofacep2'),false);assert.equal(other.assertions.has('noturntarget'),false);
 run({flag:'NoJuggleCheck',redirectid:'7'});assert.equal(other.assertions.has('nojugglecheck'),true);
 run({flag:'NoJuggleCheck',redirectid:'7',enabled:0});assert.equal(other.assertions.has('nojugglecheck'),false);
+run({flag:'NoGetUpFromLieDown',redirectid:7});assert.equal(other.assertions.has('nogetupfromliedown'),true);
+run({flag:'NoGetUpFromLieDown',redirectid:7,enabled:0});assert.equal(other.assertions.has('nogetupfromliedown'),false);
 console.log('Damage assertion flags, multi-flag slots, enabled, redirects and explicit unsupported mixtures passed');

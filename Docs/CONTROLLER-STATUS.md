@@ -1,6 +1,8 @@
-# Coverage accounting checkpoint — 0.25.40
+# Coverage accounting checkpoint — 0.25.41
 
 Reference inventory: CONTROLLER-AUDIT.md, pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d.
+
+Ordinary Helper get-hit, hit/down clocks, NoGetUpFromLieDown and imported common recovery now have partial actual-runtime evidence across eight trajectories. Common sound prefixes, actor-isolated landing dispatch and HitFallDamage have real consumers. The native legacy ForceFeedback Helper exclusion is explicitly bounded; root/new-API output remains unimplemented. Broader native action/version/VM and complete effects/controller parity remain Pending. Certification counts remain 0/163; no total percentage is asserted.
 
 Helper explicit custom-hit contacts now have an actual recipient path without HitOverride, delayed headers, KeepState contact bookkeeping and live source pause/marker/state consumers. Sixteen spatial fixtures provide partial evidence across own/foreign programs, root/Helper attackers and both recipient slots. Ordinary Helper get-hit, full contact resources/effects and native phases remain Pending. All inventory/certification counts remain unchanged; zero controllers are certified.
 

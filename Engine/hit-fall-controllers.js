@@ -1,7 +1,11 @@
 export function applyHitFallController(controller,caller,api){
- const type=String(controller.type).toLowerCase();if(type!=='hitfallset'&&type!=='hitfallvel')return false;
+ const type=String(controller.type).toLowerCase();if(type!=='hitfallset'&&type!=='hitfallvel'&&type!=='hitfalldamage')return false;
  const params=controller.params||{};if(type==='hitfallset'&&params.zvel!==undefined)throw Error('HitFallSet zvel is not compiled by pinned native reference');const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);if(!owner)return true;
  const hit=api.getHit(owner);
+ if(type==='hitfalldamage'){
+  if(owner.moveType==='H'){api.lifeAdd(owner,-Number(hit['fall.damage']??0),{kill:!!hit['fall.kill']});hit['fall.damage']=0}
+  return true;
+ }
  if(type==='hitfallvel'){
   if(owner.moveType==='H')for(const axis of ['x','y','z']){const value=hit['fall.'+axis+'vel'];if(axis==='y'||value!==null&&value!==undefined&&!Number.isNaN(value))api.writeVelocity(owner,axis,Math.fround(Number(value??0)))}
   return true;

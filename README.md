@@ -1,3 +1,7 @@
+## 0.25.41 — Helper ordinary get-hit and recovery (partial)
+
+Ordinary Helper contacts now execute imported common standing/air/fall/get-up programs with live hitshake, hit-time and down-recovery clocks. Eight actual cases include NoGetUpFromLieDown blocking/release; two simultaneous Helper landings dispatch independently. Common PlaySnd prefixes and HitFallDamage now reach real consumers, while the pinned legacy Helper ForceFeedback exclusion does not mask root/new-API output requirements. Broader KO/guard trajectories, native scheduling and complete audio/haptic/controller parity remain Pending; zero controllers are certified. See HELPER-ORDINARY-HIT-WIP.md. Full release gates/deployment are verified separately.
+
 ## 0.25.40 — Helper custom-hit recipient entry (partial)
 
 Explicit HitDef P2StateNo contacts now enter real Helper recipient programs without requiring HitOverride, preserving old fields through hitpause before header execution. KeepState retains state/control while contact targets/counts still update. Sixteen actual spatial cases cover both slots, root/Helper sources and own/foreign snapshots, including live source pause/markers and Helper P1StateNo selection. Ordinary Helper get-hit, complete contact effects/resources, HitOverride phases and native scheduler parity remain Pending; no controller is certified. See HELPER-CUSTOM-HIT-WIP.md. Full release gates and deployment are verified separately.

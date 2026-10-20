@@ -10,3 +10,7 @@ target.hit['fall.xvel']=NaN;target.hit['fall.zvel']=null;applyHitFallController(
 applyHitFallController({type:'HitFallSet',params:{redirectid:99,value:'bad'}},caller,api);
 console.log('HitFallSet native targeted gate/default flag and HitFallVel hit-movetype/unspecified-axis/redirection policy passed');
 assert.throws(()=>applyHitFallController({type:'HitFallSet',params:{zvel:1}},caller,api),/not compiled/);
+const damageCalls=[];api.lifeAdd=(actor,value,options)=>damageCalls.push([actor,value,options]);caller.hit['fall.damage']=9;target.hit['fall.damage']=50;target.hit['fall.kill']=0;
+applyHitFallController({type:'HitFallDamage'},caller,api);assert.equal(caller.hit['fall.damage'],9);assert.equal(damageCalls.length,0);
+applyHitFallController({type:'HitFallDamage',params:{redirectid:2}},caller,api);assert.deepEqual(damageCalls,[[target,-50,{kill:false}]]);assert.equal(target.hit['fall.damage'],0);
+applyHitFallController({type:'HitFallDamage',params:{redirectid:99}},caller,api);assert.equal(damageCalls.length,1);

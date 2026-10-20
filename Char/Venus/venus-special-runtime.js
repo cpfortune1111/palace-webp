@@ -1,4 +1,6 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
+import {excludesLegacyHelperFeedback} from '../../Engine/helper-force-feedback.js';
+import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
@@ -84,6 +86,7 @@ export function createSpecialRuntime(api){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
   if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
   applyStateDefTypes(definition,{set:(name,value)=>{entity[name]=value}});
+  if(state===5110){entity.getHit??={};if(entity.getHit['down.recovertime']===undefined){if(!api.downRecoveryDefault)throw Error('Missing actual Helper down recovery default');entity.getHit['down.recovertime']=api.downRecoveryDefault(entity)}}
   api.initializeStateJuggle?.(entity);
   applyStatePersistence(definition,{
    evaluate:value=>api.eval(String(value),context(entity)),
@@ -156,6 +159,7 @@ export function createSpecialRuntime(api){
   if(!api.trigger(controller,ctx))return;
   if(!global){entity.controllerSchedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
+  if(excludesLegacyHelperFeedback(controller,entity,{evaluate:expression=>api.eval(String(expression),ctx),split:api.pair,findActor:id=>entities.find(actor=>actor.instanceId===id&&!actor.destroyed)||[root(1),root(2)].find(actor=>actor.id===id),opponent:actor=>root(actor.player===1?2:1)}))return;
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};activateJuggle(entity,entity.activeHitDef.params);entity.hitSpent=false;api.activateHitDef?.(entity);break;
    case 'ReversalDef':{const definition=prepareReversalDefinition(params);entity.activeHitDef={reversal:true,hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,definition,ctx),params:numeric(definition,ctx)};activateJuggle(entity,entity.activeHitDef.params);entity.hitSpent=false;api.activateHitDef?.(entity);break;}
@@ -223,7 +227,7 @@ export function createSpecialRuntime(api){
      const previous=entity.state,controllers=helperDefinition(entity,previous).controllers;
      for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     }
-    api.finishHitFrame?.(entity);entity.hitPause--;if(entity.kind==='helper')resetSelectedSchedule(entity);continue;
+    api.finishHitFrame?.(entity);entity.hitPause--;if(entity.kind==='helper'){if(entity.hitShake>0)entity.hitShake--;resetSelectedSchedule(entity)};continue;
    }
    if(entity.kind==='helper'){entity.depthBoundFlags=createDepthBoundFlags(entity.helperType===2);entity.depthModifiers=createDepthModifiers();entity.heightModifiers=[0,0];entity.widthModifiers=createWidthModifiers();entity.screenBoundFlags=createScreenBoundFlags(entity.helperType===2);entity.playerPushState=createPlayerPushState(entity.helperType===2&&(api.roundState?.()??2)>0&&(api.roundState?.()??2)<4)}
    if(entity.kind==='helper'){helperGlobalState(entity,-4);if(entity.destroyed)continue}
@@ -236,6 +240,7 @@ export function createSpecialRuntime(api){
     for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
     if(entity.destroyed)continue;
     if(entity.state!==previous)continue;
+    if(canGetUpFromLieDown(entity,{paused:false,alive:api.alive?.(entity)??entity.life>0,hit:entity.getHit||{}})){enter(entity,5120);continue}
    }else if(!entity.removing){
     const invisible=entity.scale.every(value=>value===0);
     if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}
@@ -246,7 +251,7 @@ export function createSpecialRuntime(api){
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    if(entity.kind==='helper')api.finishHitFrame?.(entity);api.reversalContacts?.();hit(entity);
    if(entity.kind==='helper')api.stepCornerPush?.(entity);
-if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}if(entity.kind==='helper'&&stateChanges.has(entity.key))entity.animStartTime--;else entity.time++;api.advance(entity);
+if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kind==='helper'){const constants=api.data(entity.player).constants||api.data(entity.player).locomotionConstants||{},standFriction=api.movementFriction?.(entity,'S')??movementHitFriction(entity,constants,'S'),crouchFriction=api.movementFriction?.(entity,'C')??movementHitFriction(entity,constants,'C'),standThreshold=Number(api.data(entity.player).coordinateSystem?.webWorldWidth??1280)/320*(api.nativeGameWidth?.()??320)/320,result=stepZPhysics(entity.z??0,entity.vz??0,{physics:entity.physics,frozen:!!entity.positionFrozen,standFriction,crouchFriction,standThreshold});if(entity.physics==='S'||entity.physics==='C')entity.vx=stepZPhysics(0,entity.vx,{physics:entity.physics,frozen:true,standFriction,crouchFriction,standThreshold}).velocity;entity.z=result.position;entity.vz=result.velocity;api.depthBound?.(entity)}if(entity.kind==='helper')advanceDownRecovery(entity.getHit||{},{state:entity.state,paused:false});if(entity.kind==='helper'&&!(entity.hitShake>0)&&entity.hitTime>=0)entity.hitTime--;if(entity.kind==='helper'&&stateChanges.has(entity.key))entity.animStartTime--;else entity.time++;api.advance(entity);
    if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
   }
   const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
@@ -267,13 +272,13 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
     if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     if(helper.hitBy&&!allowsHit(helper.hitBy,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;
     const selected=selectHitOverride(helper.hitOverrides||[],attack.hitDef.params,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',unguardable:attack.assertions?.has('unguardable')});
-    if(selected?.miss||!selected&&Number(attack.hitDef.params.p2stateno??-1)<0||!api.collision(attack,helper).contact)continue;
+    if(selected?.miss||!api.collision(attack,helper).contact)continue;
     const result=api.helperOverrideHit?.(attack,helper);
     if(!result)continue;
     helper.lastHitOverride=selected;
     if(result)api.recordCornerPush?.(attack,helper,result);
-    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected?.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
-    if(!selected){if(result.customTargetState&&!result.keepState){const provider=result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
+    if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.hitShake=result.defenderPause;if(!result.keepState)helper.hitTime=result.getHit.hittime;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected?.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
+    if(!selected){if(!result.keepState){const provider=!result.guarded&&result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
     if(selected&&!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;
    }
