@@ -34,6 +34,7 @@ function numericType(node){
  else if(node.t==='range'&&[node.a,node.lower,node.upper].every(argument=>numericType(argument)))type='bool';
  else if(['redirect','helperRedirect','indexedRedirect'].includes(node.t)&&numericType(node.expr))type='dynamic';
  else if(node.t==='id')type=numericQueryType(node.name);
+ else if(node.t==='call'&&node.name.toLowerCase()==='map'&&node.args.length===1&&node.args[0].t==='str')type='dynamic';
  else if(node.t==='call'&&Object.hasOwn(intrinsicCalls,node.name.toLowerCase())){
   const contract=intrinsicCalls[node.name.toLowerCase()];
   if(node.args.length>=contract.min&&node.args.length<=contract.max)type=contract.type;
@@ -41,7 +42,7 @@ function numericType(node){
  else if(node.t==='call'&&node.args.length===1&&Object.hasOwn(variables,node.name.toLowerCase()))type=variables[node.name.toLowerCase()];
  else if(node.t==='call'&&node.args.length===1&&unaryMath.has(node.name.toLowerCase())&&numericType(node.args[0]))type=['abs','floor','ceil'].includes(node.name.toLowerCase())?'dynamic':node.name.toLowerCase()==='sign'?'int':'float';
  else if(node.t==='call'&&Object.hasOwn(multiMath,node.name.toLowerCase())&&node.args.length===multiMath[node.name.toLowerCase()]&&node.args.every(argument=>numericType(argument)))type='float';
- else if(node.t==='assign'&&node.target.t==='call')type=variables[node.target.name.toLowerCase()]??null;
+ else if(node.t==='assign'&&node.target.t==='call')type=node.target.name.toLowerCase()==='map'?'dynamic':variables[node.target.name.toLowerCase()]??null;
  else if(node.t==='call'&&['ifelse','cond'].includes(node.name.toLowerCase())&&node.args.length===3&&numericType(node.args[1])&&numericType(node.args[2]))type='dynamic';
  else if(node.t==='un'&&numericType(node.a))type=node.op==='!'?'bool':node.op==='~'?'int':numericType(node.a);
  else if(node.t==='bin'&&node.op==='^^')type='bool';
@@ -63,13 +64,15 @@ function numericType(node){
 export function evaluateTypedNumericAST(node,api){
  if(!numericType(node))return {handled:false};
  const integer=value=>Math.trunc(Number(value))|0;
+ const numeric=operand=>operand.type==='string'?0:Number(operand.value);
+ const truth=operand=>operand.type!=='string'&&!!operand.value;
  function evaluate(current){
   const type=numericType(current);
   if(current.t==='range'){
    const operands=[current.a,current.lower,current.upper].map(evaluate);
    if(operands.some(operand=>Number.isNaN(operand.value))&&(!api.logicalOperands||!isConstantNumericExpression(current)))return {type:'bool',value:NaN};
    const floating=operands.some(operand=>operand.type==='float'&&!Number.isNaN(operand.value));
-   const [value,lower,upper]=operands.map(operand=>Number.isNaN(operand.value)?0:floating?Math.fround(Number(operand.value)):integer(operand.value));
+   const [value,lower,upper]=operands.map(operand=>Number.isNaN(operand.value)?0:floating?Math.fround(numeric(operand)):integer(numeric(operand)));
    const inside=(current.includeLower?value>=lower:value>lower)&&(current.includeUpper?value<=upper:value<upper);
    return {type:'bool',value:current.op==='!='?!inside:inside};
   }
@@ -79,10 +82,11 @@ export function evaluateTypedNumericAST(node,api){
    const value=Number(api.query(current.name));
    return {type,value:Number.isNaN(value)?NaN:type==='bool'?!!value:type==='float'?Math.fround(value):integer(value)};
   }
-  if(current.t==='assign')return {type,value:api.assign(current.target,current.value)};
+  if(current.t==='assign')return current.target.name.toLowerCase()==='map'?api.mapAssignment(current.target,current.value):{type,value:api.assign(current.target,current.value)};
   if(current.t==='call'){
    if(['ifelse','cond'].includes(current.name.toLowerCase()))return api.conditional(current);
    const name=current.name.toLowerCase();
+   if(name==='map')return api.mapValue(current);
    if(Object.hasOwn(intrinsicCalls,name)){
     const value=Number(api.intrinsicCall(current));
     return {type,value:Number.isNaN(value)?NaN:type==='bool'?!!value:integer(value)};
@@ -90,7 +94,7 @@ export function evaluateTypedNumericAST(node,api){
    if(Object.hasOwn(multiMath,name)){
     const args=api.mathArguments?api.mathArguments(current):current.args.map(evaluate);
     if(args.some(argument=>Number.isNaN(argument.value)))return {type:'float',value:NaN};
-    const [first,second,third]=args.map(argument=>Number(argument.value));
+    const [first,second,third]=args.map(numeric);
     let value;
     if(name==='log')value=first<=0||second<=0?NaN:Math.log(second)/Math.log(first);
     else if(name==='max')value=Math.max(first,second);
@@ -102,7 +106,8 @@ export function evaluateTypedNumericAST(node,api){
     return {type:'float',value:Math.fround(value)};
    }
    if(unaryMath.has(name)){
-    const argument=api.mathArguments?api.mathArguments(current)[0]:evaluate(current.args[0]);
+    let argument=api.mathArguments?api.mathArguments(current)[0]:evaluate(current.args[0]);
+    if(argument.type==='string')argument={type:'int',value:0};
     if(Number.isNaN(argument.value))return {type:argument.type,value:NaN};
     if(name==='abs')return {type:argument.type,value:argument.type==='float'?Math.fround(Math.abs(argument.value)):integer(Math.abs(argument.value))};
     if(name==='floor'||name==='ceil')return argument.type==='float'?{type:'int',value:integer(Math[name](argument.value))}:argument;
@@ -122,36 +127,40 @@ export function evaluateTypedNumericAST(node,api){
     if(!api.logicalOperands||current.op==='+')return {type:result.type,value:NaN};
     return {type:'int',value:current.op==='~'?-1:0};
    }
-   if(current.op==='!')return {type:'bool',value:!result.value};
-   if(current.op==='~')return {type:'int',value:!api.logicalOperands&&(result.type==='float'||Number.isNaN(result.value))?NaN:~integer(result.value)};
+   if(current.op==='!')return {type:'bool',value:!truth(result)};
+   if(current.op==='~')return {type:'int',value:!api.logicalOperands&&(result.type==='float'||Number.isNaN(result.value))?NaN:~integer(numeric(result))};
    if(current.op==='+')return result;
-   return {type:result.type,value:result.type==='float'?Math.fround(-Number(result.value)):integer(-Number(result.value))};
+   return {type:result.type==='string'?'int':result.type,value:result.type==='float'?Math.fround(-numeric(result)):integer(-numeric(result))};
   }
   if(current.op==='^^')return {type:'bool',value:api.logicalXor(current)};
   if(comparisons.has(current.op)&&(!numericType(current.a)||!numericType(current.b)))return {type:'bool',value:api.comparison(current)};
   const first=evaluate(current.a);
   if(current.op==='&&'||current.op==='||'){
    if(!api.logicalOperands&&Number.isNaN(first.value))return {type:'bool',value:NaN};
-   const selected=current.op==='&&'?(first.value?evaluate(current.b):first):(first.value?first:evaluate(current.b));
+   const selected=current.op==='&&'?(truth(first)?evaluate(current.b):first):(truth(first)?first:evaluate(current.b));
    if(!api.logicalOperands&&Number.isNaN(selected.value))return {type:'bool',value:NaN};
-   return api.logicalOperands&&!isConstantNumericExpression(current)?selected:{type:'bool',value:!!selected.value};
+   return api.logicalOperands&&!isConstantNumericExpression(current)?selected:{type:'bool',value:truth(selected)};
   }
   const second=evaluate(current.b);
+  if(['=','==','!='].includes(current.op)&&(first.type==='string'||second.type==='string')){
+   const equal=first.type==='string'&&second.type==='string'&&first.value.toLowerCase()===second.value.toLowerCase();
+   return {type:'bool',value:current.op==='!='?!equal:equal};
+  }
   if(!api.logicalOperands&&(Number.isNaN(first.value)||Number.isNaN(second.value)))return {type,value:NaN};
   const floating=first.type==='float'&&!Number.isNaN(first.value)||second.type==='float'&&!Number.isNaN(second.value);
   if(bitwise.has(current.op)){
    if(!api.logicalOperands&&(floating||Number.isNaN(first.value)||Number.isNaN(second.value)))return {type:'int',value:NaN};
-   const left=integer(first.value),right=integer(second.value);
+   const left=integer(numeric(first)),right=integer(numeric(second));
    return {type:'int',value:current.op==='&'?left&right:current.op==='|'?left|right:left^right};
   }
-  const left=Number.isNaN(first.value)?0:floating?Math.fround(Number(first.value)):integer(first.value),right=Number.isNaN(second.value)?0:floating?Math.fround(Number(second.value)):integer(second.value);
+  const left=Number.isNaN(first.value)?0:floating?Math.fround(numeric(first)):integer(numeric(first)),right=Number.isNaN(second.value)?0:floating?Math.fround(numeric(second)):integer(numeric(second));
   if(current.op==='='||current.op==='==')return {type:'bool',value:left===right};
   if(current.op==='!=')return {type:'bool',value:left!==right};
   if(current.op==='>')return {type:'bool',value:left>right};
   if(current.op==='<')return {type:'bool',value:left<right};
   if(current.op==='>=')return {type:'bool',value:left>=right};
   if(current.op==='<=')return {type:'bool',value:left<=right};
-  if(current.op==='%')return {type:'int',value:!api.logicalOperands&&floating||integer(second.value)===0?NaN:integer(integer(first.value)%integer(second.value))};
+  if(current.op==='%')return {type:'int',value:!api.logicalOperands&&floating||integer(numeric(second))===0?NaN:integer(integer(numeric(first))%integer(numeric(second)))};
   if(current.op==='**'){
    if(floating||right<0||!api.logicalOperands&&left<0)return {type:'float',value:Math.fround(Math.pow(left,right))};
    let exponent=right,base=left,value=1;

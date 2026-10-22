@@ -48,4 +48,9 @@ for(const type of ['AngleSet','AngleMul']){
  assert.deepEqual(observed,['2','angle']);
 }
 console.log('AngleSet/AngleMul sample supplied operands before committing any axis and do not evaluate omitted defaults');
+for(const name of ['scale','pivot']){
+ const before=snapshotAngleState(actor.angleState);
+ assert.throws(()=>run('AngleDraw',{value:'42',[name]:'1,2,3'}),/at most two/);
+ assert.deepEqual(actor.angleState,before);
+}
 

@@ -10,6 +10,11 @@ export function applyAngleController(controller,actor,api){
  const type=controller.type.toLowerCase();
  if(!['angleset','angleadd','anglemul','angledraw'].includes(type))return false;
  const params=controller.params||controller;
+ const pairs={};
+ if(type==='angledraw')for(const name of ['scale','pivot'])if(params[name]!==undefined){
+  pairs[name]=api.split(params[name]);
+  if(pairs[name].length>2)throw Error('AngleDraw '+name+' expects at most two values');
+ }
  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
  if(!target)return true;
  const state=target.angleState;
@@ -24,8 +29,8 @@ export function applyAngleController(controller,actor,api){
  for(const [axis,value] of pending)state[axis]=type==='anglemul'?Math.fround(state[axis]*value):value;
  if(type==='angledraw'){
   for(const name of ['scale','pivot'])if(params[name]!==undefined){
-   const pair=api.split(params[name]);
-   for(let axis=0;axis<Math.min(2,pair.length);axis++){
+   const pair=pairs[name];
+   for(let axis=0;axis<pair.length;axis++){
     const value=controllerFloat32(api.evaluate(pair[axis]));
     state[name][axis]=name==='scale'?Math.fround(state[name][axis]*value):value;
    }

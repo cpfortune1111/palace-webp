@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {applyMapController} from '../Engine/map-controllers.js';
+import {writeStoredMapValue,readStoredMapValue} from '../Engine/map-value-types.js';
 
 const createActor=()=>({maps:new Map(),mapDefaults:new Map([['default',5],['restored',6]])});
 const root=createActor(),parent=createActor(),child=createActor(),partner=createActor(),enemy=createActor();
@@ -33,3 +34,17 @@ assert.deepEqual([...child.maps].sort(),[['default',5],['restored',6]]);
 run('ParentMapSet',{map:'"unused"',value:'1'},root);assert.equal(root.maps.has('unused'),false);
 assert.equal(run('Null',{}),false);
 console.log('All nine map controllers: ownership, case, strings, redirect IDs, reset defaults and exclusions passed');
+const typed=createActor(),typedApi={...api,sample:expression=>({type:String(expression).includes('.')?'float':'int',value:Number(expression)})};
+applyMapController({type:'MapSet',params:{map:'"typed"',value:'1.0'}},typed,typedApi);
+applyMapController({type:'MapAdd',params:{map:'"typed"',value:'2147483647'}},typed,typedApi);
+assert.equal(typed.maps.get('typed'),2147483648);
+applyMapController({type:'MapAdd',params:{map:'"unset"',value:'1'}},typed,typedApi);
+applyMapController({type:'MapAdd',params:{map:'"unset"',value:'2147483647'}},typed,typedApi);
+assert.equal(typed.maps.get('unset'),2147483648);
+writeStoredMapValue(typed.mapDefaults,'default.float',{type:'float',value:3});
+typed.maps.set('default.float',99);
+applyMapController({type:'MapReset',params:{}},typed,typedApi);
+assert.deepEqual(readStoredMapValue(typed.maps,'default.float'),{type:'float',value:3});
+typed.maps.delete('default.float');
+applyMapController({type:'MapReset',params:{}},typed,typedApi);
+assert.deepEqual(readStoredMapValue(typed.maps,'default.float'),{type:'float',value:3});

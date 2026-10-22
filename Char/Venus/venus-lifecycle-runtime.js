@@ -1,4 +1,5 @@
 import {rootEnemyList} from '../../Engine/enemy-selection.js';
+import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
 export function createLifecycleRuntime(api){
  const rounds={state:2,number:1,existed:0,match:1};
  const canonicalTypes={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet'};
@@ -15,7 +16,7 @@ export function createLifecycleRuntime(api){
  }
  function globalState(fighter,context,stateNo,{hitPause=false}={}){
   for(const controller of api.data(fighter.player).globalControllers?.[String(stateNo)]??[]){
-   if(hitPause&&Number(controller.params.ignorehitpause??0)!==1)continue;
+   if(hitPause&&!parseCnsIntegerLiteral(controller.params.ignorehitpause??0))continue;
    execute({...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},fighter,context);
   }
  }

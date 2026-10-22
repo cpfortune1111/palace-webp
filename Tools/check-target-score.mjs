@@ -27,4 +27,11 @@ console.log('ScoreAdd redirected float32 writes, NoScore and missing actors pass
 const normalHelper={kind:'helper',helperType:1,player:1};
 applyScoreController({type:'ScoreAdd',params:{value:0.5}},normalHelper,{...api,isPlayerType:()=>false});assert.equal(score.snapshot().roundScores[0],0.5);
 applyScoreController({type:'ScoreAdd',params:{value:0}},normalHelper,{...api,add:()=>{throw Error('Zero must not add score')}});assert.equal(score.snapshot().roundScores[0],0.5);
-
+for(const raw of [NaN,'3','Moon']){
+ score.resetMatch();score.addNative(2,5);
+ const invalid={...api,evaluate:expression=>expression==='operand'?raw:Number(expression)};
+ applyScoreController({type:'ScoreAdd',params:{redirectid:2,value:'operand'}},owner,invalid);
+ applyTargetScoreController({type:'TargetScoreAdd',params:{value:'operand'}},owner,invalid);
+ assert.deepEqual(score.snapshot().roundScores,[0,5]);
+ assert.deepEqual(score.snapshot().totals,[0,5]);
+}

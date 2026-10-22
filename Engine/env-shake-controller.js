@@ -1,11 +1,13 @@
+import {controllerFloat32} from './controller-value-conversion.js';
+
 export function applyEnvShake(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='envshake')return false;
  api.start(null);
  const params=controller.params||{},shake={freq:60,phase:NaN,ampl:-4,mul:1,dir:0,diradd:0,decay:0};let time=0;
  for(const name of ['time','ampl','phase','freq','mul','dir','diradd','decay']){
   if(params[name]===undefined)continue;
-  let value=Number(api.evaluate(params[name]));
-  if(name==='time'||name==='ampl')value=Math.trunc(value)|0;
+  const raw=api.evaluate(params[name]);
+  let value=name==='time'||name==='ampl'?(typeof raw==='string'?0:Math.trunc(Number(raw))|0):controllerFloat32(raw);
   if(name==='time'){time=value;continue}
   value=Math.fround(value);
   if(name==='ampl')value=Math.trunc(Math.fround(value*Math.fround(api.nativeLocalScale(caller))))|0;

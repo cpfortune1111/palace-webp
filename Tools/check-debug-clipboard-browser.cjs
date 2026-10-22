@@ -24,6 +24,7 @@ const server=http.createServer((request,response)=>{
   const run=source=>page.evaluate(source=>window.contactPhaseTest.run(source),source);
   await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
   await run("prepareCharacters(['SailorSaturn','SailorMoon'])");
+  await run("import('./Engine/map-value-types.js').then(module=>window.mapValueTest=module)");
   const results=await run(`(()=>{
    const rows=[],saved=combatEngineProfile;
    try{for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper']){
@@ -44,6 +45,53 @@ const server=http.createServer((request,response)=>{
     }
     resetAngleDraw(caller.angleState);
     angleResults.push([context.query('angle'),context.query('xangle'),context.query('yangle')]);
+    const angleArity=[];
+    for(const name of ['scale','pivot']){
+     caller.vars[8]=0;const before=JSON.stringify(caller.angleState);let rejected=false;
+     try{executeControllerM1({type:'AngleDraw',params:{value:'Var(8):=42',[name]:'1,2,3'}},caller,context,adapter);}catch(error){rejected=error.message.includes('at most two');}
+     angleArity.push(rejected,caller.vars[8]===0,JSON.stringify(caller.angleState)===before);
+    }
+    const mapResult=[];
+    for(const [name,value] of [['__test.float','1.0'],['__test.int','1'],['__test.unset',null]]){
+     caller.maps.delete(name);
+     if(value!==null)executeControllerM1({type:'MapSet',params:{map:JSON.stringify(name),value}},caller,context,adapter);
+     else executeControllerM1({type:'MapAdd',params:{map:JSON.stringify(name),value:'1'}},caller,context,adapter);
+     executeControllerM1({type:'MapAdd',params:{map:JSON.stringify(name),value:'2147483647'}},caller,context,adapter);
+     mapResult.push(caller.maps.get(name));
+    }
+    for(const [name,value] of [['__test.readint','3'],['__test.readfloat','3.0'],['__test.readtext','"3"']])executeControllerM1({type:'MapSet',params:{map:JSON.stringify(name),value}},caller,context,adapter);
+    executeControllerM1({type:'AngleSet',params:{value:'Map("__test.readint")/2',xangle:'Map("__test.readfloat")/2',yangle:'Map("__test.readtext")+2'}},caller,context,adapter);
+    const mapQueryResult=[caller.angleState.value,caller.angleState.xangle,caller.angleState.yangle,evalM1('Map("__test.readtext")=3',context),evalM1('!Map("__test.readtext")',context)];
+    executeControllerM1({type:'MapSet',params:{map:'"__test.undefined"',value:'1/0'}},caller,context,adapter);
+    const triggerResult=[];caller.vars[10]=0;
+    for(const [triggerall,triggers] of [[['Map("__test.readtext")'],{1:['1']}],[[],{1:['Map("__test.readtext")']}],[[],{1:['Map("__test.readtext")'],2:['Map("__test.readint")']}],[[],{1:['Map("__test.undefined")']}],[[],{1:['Map("__test.missing")']}]]){
+     executeControllerM1({type:'VarAdd',params:{v:'10',value:'1'},triggerall,triggers},caller,context,adapter);
+     triggerResult.push(caller.vars[10]);
+    }
+    executeControllerM1({type:'AngleSet',params:{value:'(Map("__assign.int"):=3)/2',xangle:'(Map("__assign.float"):=3.0)/2',yangle:'(Map("__assign.text"):="3")+2'}},caller,context,adapter);
+    const mapAssignmentResult=[caller.angleState.value,caller.angleState.xangle,caller.angleState.yangle];
+    const selected=specialRoot(3-player),savedVariables=[caller.vars[9],selected.vars[9]];
+    try{
+     caller.vars[9]=5;selected.vars[9]=99;caller.maps.delete('__assign.redirect');selected.maps.delete('__assign.redirect');
+     executeControllerM1({type:'AngleSet',params:{value:'EnemyNear, (Map("__assign.redirect") := (Var(9):=Var(9)+1))'}},caller,context,adapter);
+     mapAssignmentResult.push(caller.angleState.value,caller.vars[9],selected.vars[9],selected.maps.get('__assign.redirect'),caller.maps.has('__assign.redirect'));
+    }finally{[caller.vars[9],selected.vars[9]]=savedVariables;}
+    const mapModule=window.mapValueTest,mapResetResult=[];
+    const oldMaps=[...caller.maps.keys()].map(name=>[name,mapModule.readStoredMapValue(caller.maps,name)]),oldDefaults=[...caller.mapDefaults.keys()].map(name=>[name,mapModule.readStoredMapValue(caller.mapDefaults,name)]);
+    try{
+     mapModule.writeStoredMapValue(caller.mapDefaults,'__reset.float',{type:'float',value:3});
+     executeControllerM1({type:'MapSet',params:{map:'"__reset.float"',value:'99'}},caller,context,adapter);
+     executeControllerM1({type:'MapReset',params:{}},caller,context,adapter);
+     mapResetResult.push(evalM1('Map("__reset.float")/2',context));
+     caller.maps.delete('__reset.float');
+     executeControllerM1({type:'MapReset',params:{}},caller,context,adapter);
+     mapResetResult.push(evalM1('Map("__reset.float")/2',context));
+     executeControllerM1({type:'MapSet',params:{map:'"__keep.float"',value:'3.0'}},caller,context,adapter);
+     executeControllerM1({type:'MapReset',params:{exclude:'"__keep"'}},caller,context,adapter);
+     mapResetResult.push(evalM1('Map("__keep.float")/2',context));
+    }finally{
+     for(const [storage,saved] of [[caller.maps,oldMaps],[caller.mapDefaults,oldDefaults]]){storage.clear();mapModule.clearStoredMapTypes(storage);for(const [name,sample] of saved)mapModule.writeStoredMapValue(storage,name,sample);}
+    }
     const defense=defenseActor(player,caller).defenseState;
     defense.customDefense=3;defense.onHit=false;
     const defenseBefore=context.query('defence');
@@ -103,9 +151,12 @@ const server=http.createServer((request,response)=>{
     movement.push([liveBinding.x===positionBefore[0],liveBinding.y===positionBefore[1]]);
     executeControllerM1({type:'PosSet',params:{x:'Name',y:'1/0',z:'1/0'}},liveBinding,context,adapter);
     movement.push([Number.isFinite(liveBinding.x),Number.isFinite(liveBinding.y),movementControllerBinding(liveBinding,caller,context).z]);
-    const targets=combatTargetList(caller),savedTargets=targets.ids(),targetMovement=[],targetLifeFlags=[],targetRedLifeOrder=[];
+    const targets=combatTargetList(caller),savedTargets=targets.ids(),targetMovement=[],targetLifeFlags=[],targetRedLifeOrder=[],scoreResult={};
     try{
      targets.clear();targets.add(3-player);
+     scoreRuntime.addNative(player,0.5);scoreResult.before=scoreRuntime.snapshot().roundScores;
+     for(const value of ['1/0','Name'])for(const type of ['ScoreAdd','TargetScoreAdd'])executeControllerM1({type,params:{value}},liveBinding,context,adapter);
+     scoreResult.after=scoreRuntime.snapshot().roundScores;
      const victim=findMovementActor(3-player);victim.vx=8;victim.vy=9;
      for(const type of ['TargetVelAdd','TargetVelSet']){
       executeControllerM1({type,params:{x:'Name',y:'1/0'}},liveBinding,context,adapter);
@@ -147,6 +198,12 @@ const server=http.createServer((request,response)=>{
     specialRuntime.dispatch({type:'Helper',params:{stateno:991675,id:991675}},caller,context,{},caller,player);
     const entered=specialRuntime.entities.at(-1),stateVelocity=[entered.vx,entered.vy,entered.vz].map(value=>Number.isFinite(value)&&value===0);
     entered.destroyed=true;
+    const previousShake=fallShake,shakeResult=[];
+    try{
+     executeControllerM1({type:'EnvShake',params:{time:'2',freq:'90',phase:'1/0',mul:'Name',dir:'Name',diradd:'1/0',decay:'1/0'}},liveBinding,context,adapter);
+     for(const name of ['phase','mul','dir','diradd','decay'])shakeResult.push(fallShake.params[name]);
+     shakeResult.push(fallShake.params.freq,Number.isFinite(fallShake.params.ampl));
+    }finally{setEnvShakeState(previousShake);}
     executeControllerM1({type:'DisplayToClipboard',params:{text:'"n=%d/%d"',params:'Var(3):=7,Var(3):=Var(3)+1'}},caller,context,adapter);
     executeControllerM1({type:'AppendToClipboard',params:{text:'"!"'}},caller,context,adapter);
     const own=debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player));
@@ -175,7 +232,7 @@ const server=http.createServer((request,response)=>{
     executeControllerM1({type:'ClearClipboard',params:{redirectid:3-player}},caller,context,adapter);
     const cleared=!debugClipboard.entries().some(entry=>entry.key==='root'+(3-player));
     executeControllerM1({type:'DisplayToClipboard',params:{redirectid:999999,text:'"%d"',params:'Var(3):=100'}},caller,context,adapter);
-    rows.push({profile,player,kind,targetHealingResults,targetRedLifeOrder,targetLifeFlags,pointOrder,stateVelocity,deadLifeResults,healingResults,redLifeOrder,lifeOrder,targetMovement,movement,conversions,versionResults,defenseResult,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
+    rows.push({profile,player,kind,triggerResult,mapAssignmentResult,mapResetResult,mapQueryResult,mapResult,shakeResult,angleArity,scoreResult,targetHealingResults,targetRedLifeOrder,targetLifeFlags,pointOrder,stateVelocity,deadLifeResults,healingResults,redLifeOrder,lifeOrder,targetMovement,movement,conversions,versionResults,defenseResult,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
     executeControllerM1({type:'ClearClipboard',params:{}},caller,context,adapter);
     updateDebugHud();
     if(act.textContent.includes('n=7/8')||act.textContent.includes('bad=')||act.textContent.includes('v=1.2'))throw Error('Cleared clipboard still visible');
@@ -183,6 +240,7 @@ const server=http.createServer((request,response)=>{
    return rows;
   })()`);
   for(const row of results){
+   assert.ok(row.scoreResult.before.every(Number.isFinite));assert.deepEqual(row.scoreResult.after,row.scoreResult.before);
    assert.deepEqual(row.defenseResult,{before:300,multiplier:2,onHit:true});
    assert.deepEqual(row.versionResults,[[2,false],[0.5,true],[0.5,true]]);
    assert.deepEqual(row.healingResults,[505,510,510]);
@@ -198,6 +256,13 @@ const server=http.createServer((request,response)=>{
    assert.deepEqual(row.lifeOrder,[480,2]);
    assert.deepEqual(row.redLifeOrder,[7,2]);
    assert.deepEqual(row.angleResults,[[2,10,0,Math.fround(10/3)],[20,200,0,Math.fround(200/3)],[0,0,0]]);
+   assert.deepEqual(row.angleArity,[true,true,true,true,true,true]);
+   assert.deepEqual(row.shakeResult,[0,0,0,0,0,90,true]);
+   assert.deepEqual(row.mapResult,[2147483648,-2147483648,2147483648]);
+   assert.deepEqual(row.mapQueryResult,[1,1.5,2,false,true]);
+   assert.deepEqual(row.mapResetResult,[1.5,1.5,1.5]);
+   assert.deepEqual(row.mapAssignmentResult,[1,1.5,2,6,6,99,6,false]);
+   assert.deepEqual(row.triggerResult,[0,0,1,1,1]);
    assert.deepEqual(row.lines,row.profile==='ikemen'?['n=7/8!']:['n=7/8','!']);
    assert.equal(row.visible,true);assert.equal(row.cleared,true);
    assert.equal(row.floatVisible,true);

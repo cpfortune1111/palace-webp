@@ -6,6 +6,7 @@ import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
 import {applyStatePersistence} from '../../Engine/state-persistence.js';
 import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js?v=02554';
+import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
 import {applyStateDefPriority,applyStateDefControlPower} from '../../Engine/state-def-scalars.js';
 import {characterLocalCoord} from '../../Engine/clsn-coordinate-scale.js';
 import {applyHelperSizeOverrides,projectileSpriteScale} from '../../Engine/size-constants.js';
@@ -36,7 +37,7 @@ import {createHitBySlots,tickHitBySlots} from '../../Engine/hit-by.js?v=02485';
 import {createHitOverrides,selectHitOverride,tickHitOverrides} from '../../Engine/hit-override.js?v=02485';
 import {excludesHit,allowsHit} from '../../Engine/hit-attribute-mask.js?v=02485';
 import {createAngleState,resetAngleDraw} from '../../Engine/angle-controllers.js';
-import {createControllerSchedule} from '../../Engine/controller-schedule.js?v=02544';
+import {createControllerSchedule} from '../../Engine/controller-schedule.js?v=02555';
 import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js?v=02542';
 import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
@@ -155,7 +156,7 @@ export function createSpecialRuntime(api){
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ownData=api.ownData?.(entity.player)??api.data(entity.player),ctx=context(entity,undefined,global?{...entity,stateOwner:null,expressionLocalCoord:characterLocalCoord(ownData)}:entity);
   if(global)Object.assign(ctx,{stateOwner:ownData.character,foreignStateOwner:false});
-  if(global?(entity.hitPause>0&&!Number(controller.params.ignorehitpause??0)):!schedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
+  if(global?(entity.hitPause>0&&!parseCnsIntegerLiteral(controller.params.ignorehitpause??0)):!schedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
   if(!global){schedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;

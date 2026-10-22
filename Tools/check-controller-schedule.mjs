@@ -62,3 +62,13 @@ for(const player of [1,2]){
  assert.equal(schedules.prepare(player,11,controller).eligible,false);
 }
 console.log('Captured old-body schedules survive nested entries without replacing current-body counters');
+for(const [literal,expected] of [['2 + 5',[0,2,4]],['var(8)',[0]],['0.5',[0]],['2147483648',[0,1,2,3,4,5]]]){
+ const schedule=createControllerSchedule(),executions=[];
+ for(let tick=0;tick<6;tick++)if(schedule.before(0,{persistent:literal})){executions.push(tick);schedule.executed(0,{persistent:literal});}
+ assert.deepEqual(executions,expected,literal);
+}
+for(const [literal,expected] of [['1 + 0',true],['0.5',false],['-0.9',false],['var(8)',false]]){
+ assert.equal(createControllerSchedule().before(0,{ignorehitpause:literal},{hitPause:true}),expected,literal);
+ assert.equal(createActorControllerSchedules().prepare(1,1,{params:{ignorehitpause:literal}},{global:true,hitPause:true}).eligible,expected,literal);
+}
+
