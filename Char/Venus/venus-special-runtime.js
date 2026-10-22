@@ -5,7 +5,7 @@ import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
 import {applyStatePersistence} from '../../Engine/state-persistence.js';
-import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js';
+import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js?v=02554';
 import {applyStateDefPriority,applyStateDefControlPower} from '../../Engine/state-def-scalars.js';
 import {characterLocalCoord} from '../../Engine/clsn-coordinate-scale.js';
 import {applyHelperSizeOverrides,projectileSpriteScale} from '../../Engine/size-constants.js';

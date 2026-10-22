@@ -39,3 +39,21 @@ run('LifeAdd',{value:'-100',absolute:'1'});assert.equal(root.redLife,300);
 helper.redLife=75;
 run('LifeSet',{value:'0',redirectid:'1001'});assert.equal(helper.redLife,0);assert.equal(root.redLife,300);
 console.log('Life/power defaults, defense, rounding, limits, ownership and redirection passed');
+const ordered=[];
+root.life=500;compatibility='ikemen';
+applyResourceController({type:'LifeAdd',params:{value:'amount',absolute:'absolute',kill:'kill'}},root,{...api,evaluate:expression=>{ordered.push(expression);return expression==='amount'?-100:expression==='kill'?1:0}});
+assert.deepEqual(ordered,['absolute','kill','amount']);
+assert.equal(root.life,450);
+ordered.length=0;
+applyResourceController({type:'LifeAdd',params:{value:'amount'}},root,{...api,evaluate:expression=>{ordered.push(expression);return -10}});
+assert.deepEqual(ordered,['amount']);
+for(const [ikemen,expected] of [[[0,0,9],510],[[0,99,0],505]]){
+ root.life=500;
+ applyResourceController({type:'LifeAdd',params:{value:10,absolute:0}},root,{...api,compatibility:()=>ikemen[1]?'mugen':'ikemen',versionData:{engineVersions:{mugen:[1,1],ikemen}}});
+ assert.equal(root.life,expected);
+}
+for(const [ikemen,expected] of [[[0,0,0],1],[[0,99,0],0]]){
+ other.life=0;
+ applyResourceController({type:'LifeAdd',params:{redirectid:2,value:-1,absolute:1,kill:0}},root,{...api,compatibility:()=>ikemen[1]?'mugen':'ikemen',targetVersionData:()=>({engineVersions:{mugen:[1,1],ikemen}})});
+ assert.equal(other.life,expected);
+}

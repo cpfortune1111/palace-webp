@@ -17,4 +17,12 @@ applyTargetRedLifeController({type:'TargetRedLifeAdd',params:{value:10}},owner,{
 target.life=100;
 applyTargetRedLifeController({type:'TargetRedLifeAdd',params:{redirectid:1,value:20}},owner,{...api,compatibility:actor=>actor===owner?'mugen':'ikemen'});assert.equal(writes.at(-1),20);
 console.log('TargetRedLifeAdd selection, native healing compatibility, defence and nonlethal limits passed');
-
+const ordered=[];
+applyTargetRedLifeController({type:'TargetRedLifeAdd',params:{id:'id',absolute:'flag',value:'zero'}},owner,{...api,evaluate:expression=>{ordered.push(expression);return expression==='id'?7:expression==='flag'?1:0}});
+assert.deepEqual(ordered,['id','flag','zero']);
+applyTargetRedLifeController({type:'TargetRedLifeAdd',params:{value:-20,absolute:'flag'}},owner,{...api,evaluate:expression=>expression==='flag'?NaN:Number(expression)});
+assert.equal(writes.at(-1),-10);
+for(const [ikemen,expected] of [[[0,0,9],20],[[0,99,0],10]]){
+ applyTargetRedLifeController({type:'TargetRedLifeAdd',params:{value:20,absolute:0}},owner,{...api,compatibility:()=>ikemen[1]?'mugen':'ikemen',versionData:{engineVersions:{mugen:[1,1],ikemen}}});
+ assert.equal(writes.at(-1),expected);
+}

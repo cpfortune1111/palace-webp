@@ -1,4 +1,6 @@
-import {synchronizeLifeRedLife} from './redlife-controllers.js';
+import {synchronizeLifeRedLife} from './redlife-controllers.js?v=02554';
+import {controllerBoolean} from './controller-value-conversion.js';
+import {hitPauseVersionProfile} from './hit-pause-version.js';
 
 const supported=new Set(['lifeadd','lifeset','poweradd','powerset']);
 const integer=value=>Math.trunc(Number(value))|0;
@@ -13,6 +15,11 @@ export function applyResourceController(controller,actor,api){
  const target=params.redirectid===undefined?actor:api.findActor(integer(evaluate(params.redirectid)));
  if(!target)return true;
  if(params.value===undefined)throw Error('Missing '+controller.type+' value');
+ let absolute=false,kill=true;
+ if(type==='lifeadd'){
+  if(params.absolute!==undefined)absolute=controllerBoolean(evaluate(params.absolute));
+  if(params.kill!==undefined)kill=controllerBoolean(evaluate(params.kill));
+ }
  const value=integer(evaluate(params.value));
  if(type.startsWith('power')){
   const owner=api.powerOwner(target);
@@ -24,10 +31,11 @@ export function applyResourceController(controller,actor,api){
   if(!(target.life>0&&api.noDamage?.(target))){target.life=clamp(value,target.lifeMax);synchronizeLifeRedLife(target,target.life,api.redLifeEnabled?.(target)??true)}
   return true;
  }
- const kill=params.kill===undefined||!!evaluate(params.kill);
- const absolute=!!evaluate(params.absolute??0)||(api.compatibility?.(actor)==='mugen'&&value>0);
+ const legacyHealing=api.versionData?!hitPauseVersionProfile(api.versionData).ikemen:api.compatibility?.(actor)==='mugen';
+ if(legacyHealing&&value>0)absolute=true;
  target.getHit??={};target.getHit.kill=kill;
- executeLifeAddition(target,value,{kill,absolute,compatibility:api.compatibility?.(actor),noDamage:!!api.noDamage?.(target),redLifeEnabled:api.redLifeEnabled?.(target)??true});
+ const targetVersion=api.targetVersionData?.(target),compatibility=targetVersion?(hitPauseVersionProfile(targetVersion).ikemen?'ikemen':'mugen'):api.compatibility?.(target);
+ executeLifeAddition(target,value,{kill,absolute,compatibility,noDamage:!!api.noDamage?.(target),redLifeEnabled:api.redLifeEnabled?.(target)??true});
  return true;
 }
 export function executeLifeAddition(target,value,{kill=true,absolute=false,compatibility='mugen',noDamage=false,redLifeEnabled=true}={}){
@@ -42,3 +50,4 @@ export function executeLifeAddition(target,value,{kill=true,absolute=false,compa
  if(delta<0)target.receivedDamage=(target.receivedDamage||0)+Math.min(previous,-delta);
  if(!(previous>0&&noDamage)){target.life=clamp(life,target.lifeMax);synchronizeLifeRedLife(target,target.life,redLifeEnabled)}
 }
+

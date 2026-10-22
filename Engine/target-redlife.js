@@ -1,4 +1,6 @@
-import {targetLifeDamage} from './target-life.js';
+import {targetLifeDamage} from './target-life.js?v=02554';
+import {controllerBoolean} from './controller-value-conversion.js';
+import {hitPauseVersionProfile} from './hit-pause-version.js';
 
 export function applyTargetRedLifeController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetredlifeadd')return false;
@@ -6,8 +8,11 @@ export function applyTargetRedLifeController(controller,caller,api){
  if(params.value===undefined)throw Error('Missing TargetRedLifeAdd value');
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;
- const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index),value=integer(params.value);
- const absolute=params.absolute!==undefined&&Number(api.evaluate(params.absolute))!==0||value>0&&api.compatibility(caller)==='mugen';
+ const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index);
+ let absolute=params.absolute!==undefined&&controllerBoolean(api.evaluate(params.absolute));
+ const value=integer(params.value);
+ const legacyHealing=api.versionData?!hitPauseVersionProfile(api.versionData).ikemen:api.compatibility(caller)==='mugen';
+ if(value>0&&legacyHealing)absolute=true;
  if(value===0)return true;
  for(const id of api.targets(owner).select(hitId,index,api.findActor)){
   const target=api.findActor(id);
@@ -17,4 +22,3 @@ export function applyTargetRedLifeController(controller,caller,api){
  }
  return true;
 }
-

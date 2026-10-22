@@ -51,7 +51,7 @@ const server=http.createServer((request,response)=>{
     const defenseResult={before:defenseBefore,multiplier:defense.customDefense,onHit:defense.onHit};
     const foreign=battleCharacters[2-player],foreignData=characterProfiles.get(foreign).battle;
     const ownVersions=data.engineVersions,foreignVersions=foreignData.engineVersions;
-    const previousOwner=kind==='helper'?caller.stateOwner:customStateOwners[player-1],versionResults=[];
+    const previousOwner=kind==='helper'?caller.stateOwner:customStateOwners[player-1],versionResults=[],healingResults=[],deadLifeResults=[],targetHealingResults=[];
     try{
      data.engineVersions={mugen:[1,1],ikemen:[0,0,0]};foreignData.engineVersions={mugen:[1,1],ikemen:[0,99,0]};
      if(kind==='helper')caller.stateOwner=foreign;else customStateOwners[player-1]=foreign;
@@ -59,6 +59,29 @@ const server=http.createServer((request,response)=>{
      for(const controllerStateNo of [5000,-2,-1]){
       executeControllerM1({type:'DefenceMulSet',controllerStateNo,params:{value:'2'}},caller,foreignContext,adapter);
       versionResults.push([defense.customDefense,defense.onHit]);
+      const healing=resourceActor(player,caller),savedLife=healing.life;
+      defense.customDefense=2;defense.onHit=false;healing.life=500;
+      executeControllerM1({type:'LifeAdd',controllerStateNo,params:{value:'10',absolute:'0'}},caller,foreignContext,adapter);
+      healingResults.push(healing.life);
+      healing.life=0;
+      executeControllerM1({type:'LifeAdd',controllerStateNo,params:{value:'-1',absolute:'1',kill:'0'}},caller,foreignContext,adapter);
+      const selfDead=healing.life;healing.life=savedLife;
+      const victim=resourceActor(3-player),savedVictimLife=victim.life;
+      try{
+       victim.life=0;
+       executeControllerM1({type:'LifeAdd',controllerStateNo,params:{redirectid:3-player,value:'-1',absolute:'1',kill:'0'}},caller,foreignContext,adapter);
+       deadLifeResults.push([selfDead,victim.life]);
+      }finally{victim.life=savedVictimLife;}
+      const list=combatTargetList(caller),oldTargets=list.ids(),victimDefense=defenseActor(3-player).defenseState;
+      const oldResources=[victim.life,victim.redLife,victimDefense.customDefense,victimDefense.onHit,combatResourceFeatures.redLife];
+      try{
+       list.clear();list.add(3-player);victim.life=100;victim.redLife=500;victimDefense.customDefense=2;victimDefense.onHit=false;combatResourceFeatures.redLife=true;
+       executeControllerM1({type:'TargetRedLifeAdd',controllerStateNo,params:{value:'20',absolute:'0'}},caller,foreignContext,adapter);
+       targetHealingResults.push(victim.redLife);
+      }finally{
+       [victim.life,victim.redLife,victimDefense.customDefense,victimDefense.onHit,combatResourceFeatures.redLife]=oldResources;
+       list.clear();for(const id of oldTargets)list.add(id);
+      }
      }
     }finally{
      data.engineVersions=ownVersions;foreignData.engineVersions=foreignVersions;
@@ -80,7 +103,7 @@ const server=http.createServer((request,response)=>{
     movement.push([liveBinding.x===positionBefore[0],liveBinding.y===positionBefore[1]]);
     executeControllerM1({type:'PosSet',params:{x:'Name',y:'1/0',z:'1/0'}},liveBinding,context,adapter);
     movement.push([Number.isFinite(liveBinding.x),Number.isFinite(liveBinding.y),movementControllerBinding(liveBinding,caller,context).z]);
-    const targets=combatTargetList(caller),savedTargets=targets.ids(),targetMovement=[];
+    const targets=combatTargetList(caller),savedTargets=targets.ids(),targetMovement=[],targetLifeFlags=[],targetRedLifeOrder=[];
     try{
      targets.clear();targets.add(3-player);
      const victim=findMovementActor(3-player);victim.vx=8;victim.vy=9;
@@ -88,7 +111,42 @@ const server=http.createServer((request,response)=>{
       executeControllerM1({type,params:{x:'Name',y:'1/0'}},liveBinding,context,adapter);
       targetMovement.push([victim.vx,victim.vy]);
      }
+     const resource=resourceActor(3-player),points=pointActor(3-player),victimDefense=defenseActor(3-player).defenseState;
+     const saved=[resource.life,resource.redLife,points.dizzyPoints,victimDefense.customDefense,victimDefense.onHit,combatResourceFeatures.redLife,combatResourceFeatures.dizzyPoints];
+     try{
+      resource.life=500;resource.redLife=900;points.dizzyPoints=800;victimDefense.customDefense=2;victimDefense.onHit=false;
+      combatResourceFeatures.redLife=true;combatResourceFeatures.dizzyPoints=true;
+      executeControllerM1({type:'TargetLifeAdd',params:{value:'-100',absolute:'Name',kill:'1/0',dizzy:'Name',redlife:'1/0'}},liveBinding,context,adapter);
+      targetLifeFlags.push(resource.life,resource.redLife,points.dizzyPoints,resource.getHit.kill);
+     }finally{
+      [resource.life,resource.redLife,points.dizzyPoints,victimDefense.customDefense,victimDefense.onHit,combatResourceFeatures.redLife,combatResourceFeatures.dizzyPoints]=saved;
+     }
+     caller.vars[7]=0;
+     executeControllerM1({type:'TargetRedLifeAdd',params:{absolute:'Var(7):=1',value:'(Var(7):=Var(7)+1)*0'}},liveBinding,context,adapter);
+     targetRedLifeOrder.push(caller.vars[7]);
     }finally{targets.clear();for(const id of savedTargets)targets.add(id);}
+    const lifeActor=resourceActor(player,caller),oldLife=lifeActor.life;
+    lifeActor.life=500;defense.customDefense=1;defense.onHit=false;
+    executeControllerM1({type:'LifeAdd',params:{absolute:'Var(4):=0',kill:'Var(4):=Var(4)+1',value:'-10*(Var(4):=Var(4)+1)'}},liveBinding,context,adapter);
+    const lifeOrder=[lifeActor.life,caller.vars[4]];
+    lifeActor.life=oldLife;
+    caller.vars[5]=0;
+    executeControllerM1({type:'RedLifeAdd',params:{absolute:'Var(5):=7',value:'0'}},liveBinding,context,adapter);
+    const redLifeOrder=[caller.vars[5]];
+    executeControllerM1({type:'RedLifeAdd',params:{absolute:'Var(5):=1',value:'(Var(5):=Var(5)+1)*0'}},liveBinding,context,adapter);
+    redLifeOrder.push(caller.vars[5]);
+    const pointOrder=[];
+    for(const type of ['DizzyPointsAdd','GuardPointsAdd']){
+     caller.vars[6]=0;
+     executeControllerM1({type,params:{absolute:'Var(6):=7',value:'0'}},liveBinding,context,adapter);
+     pointOrder.push(caller.vars[6]);
+     executeControllerM1({type,params:{absolute:'Var(6):=1',value:'(Var(6):=Var(6)+1)*0'}},liveBinding,context,adapter);
+     pointOrder.push(caller.vars[6]);
+    }
+    data.helperStates[991675]={type:'S',physics:'N',moveType:'I',anim:0,velset:['1/0','Name','1/0'],controllers:[]};
+    specialRuntime.dispatch({type:'Helper',params:{stateno:991675,id:991675}},caller,context,{},caller,player);
+    const entered=specialRuntime.entities.at(-1),stateVelocity=[entered.vx,entered.vy,entered.vz].map(value=>Number.isFinite(value)&&value===0);
+    entered.destroyed=true;
     executeControllerM1({type:'DisplayToClipboard',params:{text:'"n=%d/%d"',params:'Var(3):=7,Var(3):=Var(3)+1'}},caller,context,adapter);
     executeControllerM1({type:'AppendToClipboard',params:{text:'"!"'}},caller,context,adapter);
     const own=debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player));
@@ -117,7 +175,7 @@ const server=http.createServer((request,response)=>{
     executeControllerM1({type:'ClearClipboard',params:{redirectid:3-player}},caller,context,adapter);
     const cleared=!debugClipboard.entries().some(entry=>entry.key==='root'+(3-player));
     executeControllerM1({type:'DisplayToClipboard',params:{redirectid:999999,text:'"%d"',params:'Var(3):=100'}},caller,context,adapter);
-    rows.push({profile,player,kind,targetMovement,movement,conversions,versionResults,defenseResult,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
+    rows.push({profile,player,kind,targetHealingResults,targetRedLifeOrder,targetLifeFlags,pointOrder,stateVelocity,deadLifeResults,healingResults,redLifeOrder,lifeOrder,targetMovement,movement,conversions,versionResults,defenseResult,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
     executeControllerM1({type:'ClearClipboard',params:{}},caller,context,adapter);
     updateDebugHud();
     if(act.textContent.includes('n=7/8')||act.textContent.includes('bad=')||act.textContent.includes('v=1.2'))throw Error('Cleared clipboard still visible');
@@ -127,9 +185,18 @@ const server=http.createServer((request,response)=>{
   for(const row of results){
    assert.deepEqual(row.defenseResult,{before:300,multiplier:2,onHit:true});
    assert.deepEqual(row.versionResults,[[2,false],[0.5,true],[0.5,true]]);
+   assert.deepEqual(row.healingResults,[505,510,510]);
+   assert.deepEqual(row.deadLifeResults,[[0,0],[1,0],[1,0]]);
+   assert.deepEqual(row.stateVelocity,[true,true,true]);
+   assert.deepEqual(row.pointOrder,[7,2,7,2]);
    assert.deepEqual(row.conversions,[0,0,0,0,0,0,0,false,0,0]);
    assert.deepEqual(row.movement,[[8,9],[8,9],[0,0],[0,0],[true,true],[true,true,0]]);
    assert.deepEqual(row.targetMovement,[[8,9],[0,0]]);
+   assert.deepEqual(row.targetLifeFlags,[450,900,800,false]);
+   assert.deepEqual(row.targetRedLifeOrder,[2]);
+   assert.deepEqual(row.targetHealingResults,[510,520,520]);
+   assert.deepEqual(row.lifeOrder,[480,2]);
+   assert.deepEqual(row.redLifeOrder,[7,2]);
    assert.deepEqual(row.angleResults,[[2,10,0,Math.fround(10/3)],[20,200,0,Math.fround(200/3)],[0,0,0]]);
    assert.deepEqual(row.lines,row.profile==='ikemen'?['n=7/8!']:['n=7/8','!']);
    assert.equal(row.visible,true);assert.equal(row.cleared,true);

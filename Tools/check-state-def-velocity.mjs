@@ -15,3 +15,8 @@ assert.deepEqual(values,{x:Math.fround(.1),y:-2,z:6.5});
 assert.throws(()=>applyStateDefVelocity({velset:[1,2,3,4]},api),/three components/);
 assert.throws(()=>applyStateDefVelocity({velset:[null]},api),/empty component/);
 console.log('StateDef velocity evaluates/writes XYZ sequentially, retains omitted axes, preserves explicit zero and rounds to float32');
+for(const raw of [NaN,'3','Moon']){
+ applyStateDefVelocity({velset:['invalid']},{...api,evaluate:()=>raw});
+ assert.equal(values.x,0);
+ assert.deepEqual([values.y,values.z],[-2,6.5]);
+}

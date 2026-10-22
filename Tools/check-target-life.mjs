@@ -32,3 +32,9 @@ assert.deepEqual(effects,[['sync',87],['red',-13*0.75],['dizzy',-13*1.8]]);
 effects.length=0;executeTargetLifeAddition(-25,resource,{kill:false,absolute:true,redlife:false,dizzy:true},{...resourceApi,noDamage:true,noDizzyDamage:true});
 assert.deepEqual([resource.life,resource.receivedDamage,resource.getHit.kill],[87,38,false]);assert.deepEqual(effects,[]);
 console.log('TargetLifeAdd caller integers, flag defaults/booleans, index/redirection and zero exclusion passed');
+for(const raw of [NaN,'0','Moon']){
+ const observed=[];
+ applyTargetLifeController({type:'TargetLifeAdd',params:{id:7,value:-25,absolute:'flag',kill:'flag',dizzy:'flag',redlife:'flag'}},owner,{...api,evaluate:expression=>expression==='flag'?raw:Number(expression),lifeAdd:(target,value,options)=>observed.push(options)});
+ assert.deepEqual(observed,[{owner,absolute:false,kill:false,dizzy:false,redlife:false}]);
+}
+assert.throws(()=>applyTargetLifeController({type:'TargetLifeAdd',params:{}},owner,api),/Missing TargetLifeAdd value/);

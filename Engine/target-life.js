@@ -1,3 +1,5 @@
+import {controllerBoolean} from './controller-value-conversion.js';
+
 export function targetLifeMultipliers(attribute,constants={}){
  const hyper=String(attribute??'').split(',').slice(1).some(value=>['ha','ht','hp','aa','at','ap','h','a'].includes(value.trim().toLowerCase()));
  const prefix=hyper?'super':'default';
@@ -40,9 +42,11 @@ export function applyTargetLifeController(controller,caller,api){
  const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;
+ if(params.value===undefined)throw Error('Missing TargetLifeAdd value');
  const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index);
- const options={absolute:params.absolute===undefined?false:Number(api.evaluate(params.absolute))!==0,kill:params.kill===undefined?true:Number(api.evaluate(params.kill))!==0,dizzy:params.dizzy===undefined?true:Number(api.evaluate(params.dizzy))!==0,redlife:params.redlife===undefined?true:Number(api.evaluate(params.redlife))!==0};
- const value=integer(params.value??0);
+ const flag=(name,fallback)=>params[name]===undefined?fallback:controllerBoolean(api.evaluate(params[name]));
+ const options={absolute:flag('absolute',false),kill:flag('kill',true),dizzy:flag('dizzy',true),redlife:flag('redlife',true)};
+ const value=integer(params.value);
  if(value===0)return true;
  for(const id of api.targets(owner).select(hitId,index,api.findActor)){const target=api.findActor(id);if(target)api.lifeAdd(target,value,{...options,owner})}
  return true;

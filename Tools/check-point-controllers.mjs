@@ -25,3 +25,15 @@ consumeHitPoints(actor,'guardPoints',-1000,true,false);assert.equal(actor.guardP
 consumeHitPoints(actor,'dizzyPoints',100,false,false);assert.equal(actor.dizzyPoints,799);
 consumeHitPoints(actor,'dizzyPoints',100,true,true);assert.equal(actor.dizzyPoints,799);
 console.log('Dizzy/guard point bounds, defense rounding, absolute, integer values, redirects and gates passed');
+enabled=true;noDamage=false;
+for(const [type,field] of [['DizzyPointsAdd','dizzyPoints'],['GuardPointsAdd','guardPoints']]){
+ const sampled=[];
+ applyPointController({type,params:{absolute:'flag',value:'zero'}},actor,{...api,evaluate:expression=>{sampled.push(expression);return expression==='flag'?1:0}});
+ assert.deepEqual(sampled,['flag','zero']);
+ sampled.length=0;
+ applyPointController({type,params:{value:'zero'}},actor,{...api,evaluate:expression=>{sampled.push(expression);return 0}});
+ assert.deepEqual(sampled,['zero']);
+ actor[field]=400;
+ applyPointController({type,params:{absolute:'flag',value:'amount'}},actor,{...api,evaluate:expression=>expression==='flag'?NaN:-100});
+ assert.equal(actor[field],350);
+}
