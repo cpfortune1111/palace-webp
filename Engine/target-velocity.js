@@ -1,3 +1,5 @@
+import {controllerFloat32} from './controller-value-conversion.js';
+
 export function applyTargetVelocityController(controller,caller,api){
  const type=String(controller.type).toLowerCase();
  if(type!=='targetvelset'&&type!=='targetveladd')return false;
@@ -6,7 +8,7 @@ export function applyTargetVelocityController(controller,caller,api){
  if(!owner)return true;
  const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index);
  const scale=api.scale||(()=>1),ratio=Math.fround(scale(caller)/scale(owner)),values={};
- for(const axis of ['x','y','z'])if(params[axis]!==undefined)values[axis]=Math.fround(Math.fround(Number(api.evaluate(params[axis])))*ratio);
+ for(const axis of ['x','y','z'])if(params[axis]!==undefined)values[axis]=Math.fround(controllerFloat32(api.evaluate(params[axis]))*ratio);
  const targets=api.targets(owner).select(hitId,index,api.findActor);
  for(const axis of ['x','y','z']){
   if(values[axis]===undefined)continue;

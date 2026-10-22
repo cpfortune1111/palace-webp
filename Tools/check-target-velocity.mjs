@@ -23,3 +23,11 @@ assert.equal(actors.get(1).vx,2.5);assert.deepEqual(expressions,['var(8)',7,0,'v
 let axesEvaluated=false;applyTargetVelocityController({type:'TargetVelSet',params:{redirectid:999,x:'missing'}},caller,{...api,evaluate:value=>{if(value==='missing')axesEvaluated=true;return Number(value)}});
 assert.equal(axesEvaluated,false);
 console.log('TargetVelSet/Add axis omission, caller redirection, index and pinned cumulative scale behavior passed');
+for(const operand of [NaN,'3','Moon']){
+ const invalidApi={...api,evaluate:expression=>expression==='operand'?operand:Number(expression)};
+ actors.get(1).vx=12;
+ applyTargetVelocityController({type:'TargetVelAdd',params:{id:7,index:0,x:'operand'}},owner,invalidApi);
+ assert.equal(actors.get(1).vx,12);
+ applyTargetVelocityController({type:'TargetVelSet',params:{id:7,index:0,x:'operand'}},owner,invalidApi);
+ assert.equal(actors.get(1).vx,0);
+}

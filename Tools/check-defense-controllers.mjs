@@ -23,3 +23,17 @@ assert.throws(()=>compileDefenseMulType('2147483648'),/Invalid/);
 assert.throws(()=>compileDefenseMulType('-2147483648'),/Invalid/);
 assert.throws(()=>run({}),/Missing/);
 console.log('Defense native version defaults, delay, reciprocal/direct multiplier and redirection passed');
+caller.defenseState.customDefense=3;
+const sampled=[];
+const ordered={...api,evaluate:expression=>{sampled.push(expression);return expression==='olddefense'?Number(caller.defenseState.customDefense===3):Number(expression)}};
+applyDefenseController({type:'DefenceMulSet',params:{value:'2',onhit:'olddefense'}},caller,ordered);
+assert.deepEqual(caller.defenseState,{customDefense:2,onHit:true});
+assert.deepEqual(sampled,['2','olddefense']);
+sampled.length=0;
+applyDefenseController({type:'DefenceMulSet',params:{value:'4'}},caller,ordered);
+assert.deepEqual(sampled,['4']);
+assert.deepEqual(caller.defenseState,{customDefense:4,onHit:false});
+for(const [ikemen,expected] of [[[0,0,9],{customDefense:0.5,onHit:true}],[[0,99,0],{customDefense:2,onHit:false}]]){
+ applyDefenseController({type:'DefenceMulSet',params:{value:'2'}},caller,{...api,compatibility:ikemen[1]?'mugen':'ikemen',versionData:{engineVersions:{mugen:[1,1],ikemen}}});
+ assert.deepEqual(caller.defenseState,expected);
+}

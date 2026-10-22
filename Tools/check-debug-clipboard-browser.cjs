@@ -44,6 +44,51 @@ const server=http.createServer((request,response)=>{
     }
     resetAngleDraw(caller.angleState);
     angleResults.push([context.query('angle'),context.query('xangle'),context.query('yangle')]);
+    const defense=defenseActor(player,caller).defenseState;
+    defense.customDefense=3;defense.onHit=false;
+    const defenseBefore=context.query('defence');
+    executeControllerM1({type:'DefenceMulSet',params:{value:'2',multype:'1',onhit:'Defence > 250'}},caller,context,adapter);
+    const defenseResult={before:defenseBefore,multiplier:defense.customDefense,onHit:defense.onHit};
+    const foreign=battleCharacters[2-player],foreignData=characterProfiles.get(foreign).battle;
+    const ownVersions=data.engineVersions,foreignVersions=foreignData.engineVersions;
+    const previousOwner=kind==='helper'?caller.stateOwner:customStateOwners[player-1],versionResults=[];
+    try{
+     data.engineVersions={mugen:[1,1],ikemen:[0,0,0]};foreignData.engineVersions={mugen:[1,1],ikemen:[0,99,0]};
+     if(kind==='helper')caller.stateOwner=foreign;else customStateOwners[player-1]=foreign;
+     const foreignContext=specialRuntime.context(caller);
+     for(const controllerStateNo of [5000,-2,-1]){
+      executeControllerM1({type:'DefenceMulSet',controllerStateNo,params:{value:'2'}},caller,foreignContext,adapter);
+      versionResults.push([defense.customDefense,defense.onHit]);
+     }
+    }finally{
+     data.engineVersions=ownVersions;foreignData.engineVersions=foreignVersions;
+     if(kind==='helper')caller.stateOwner=previousOwner;else customStateOwners[player-1]=previousOwner;
+    }
+    executeControllerM1({type:'AngleSet',params:{value:'1/0',xangle:'Name'}},caller,context,adapter);
+    executeControllerM1({type:'AttackMulSet',params:{value:'1/0',damage:'Name'}},caller,context,adapter);
+    executeControllerM1({type:'DefenceMulSet',params:{value:'1/0',multype:'1',onhit:'Name'}},caller,context,adapter);
+    executeControllerM1({type:'AttackDist',params:{width:'1/0,Name'}},caller,context,adapter);
+    const conversions=[caller.angleState.value,caller.angleState.xangle,...Object.values(caller.attackState),defense.customDefense,defense.onHit,...guardHitDefActor(player,caller).hitDef.guardDistance.x];
+    const liveBinding=findMovementActor(kind==='helper'?caller.instanceId:player),movement=[];
+    liveBinding.vx=8;liveBinding.vy=9;
+    for(const type of ['HitVelSet','VelAdd','VelMul','VelSet']){
+     executeControllerM1({type,params:{x:'1/0',y:'Name'}},liveBinding,context,adapter);
+     movement.push([liveBinding.vx,liveBinding.vy]);
+    }
+    const positionBefore=[liveBinding.x,liveBinding.y];
+    executeControllerM1({type:'PosAdd',params:{x:'Name',y:'1/0'}},liveBinding,context,adapter);
+    movement.push([liveBinding.x===positionBefore[0],liveBinding.y===positionBefore[1]]);
+    executeControllerM1({type:'PosSet',params:{x:'Name',y:'1/0',z:'1/0'}},liveBinding,context,adapter);
+    movement.push([Number.isFinite(liveBinding.x),Number.isFinite(liveBinding.y),movementControllerBinding(liveBinding,caller,context).z]);
+    const targets=combatTargetList(caller),savedTargets=targets.ids(),targetMovement=[];
+    try{
+     targets.clear();targets.add(3-player);
+     const victim=findMovementActor(3-player);victim.vx=8;victim.vy=9;
+     for(const type of ['TargetVelAdd','TargetVelSet']){
+      executeControllerM1({type,params:{x:'Name',y:'1/0'}},liveBinding,context,adapter);
+      targetMovement.push([victim.vx,victim.vy]);
+     }
+    }finally{targets.clear();for(const id of savedTargets)targets.add(id);}
     executeControllerM1({type:'DisplayToClipboard',params:{text:'"n=%d/%d"',params:'Var(3):=7,Var(3):=Var(3)+1'}},caller,context,adapter);
     executeControllerM1({type:'AppendToClipboard',params:{text:'"!"'}},caller,context,adapter);
     const own=debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player));
@@ -72,7 +117,7 @@ const server=http.createServer((request,response)=>{
     executeControllerM1({type:'ClearClipboard',params:{redirectid:3-player}},caller,context,adapter);
     const cleared=!debugClipboard.entries().some(entry=>entry.key==='root'+(3-player));
     executeControllerM1({type:'DisplayToClipboard',params:{redirectid:999999,text:'"%d"',params:'Var(3):=100'}},caller,context,adapter);
-    rows.push({profile,player,kind,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
+    rows.push({profile,player,kind,targetMovement,movement,conversions,versionResults,defenseResult,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
     executeControllerM1({type:'ClearClipboard',params:{}},caller,context,adapter);
     updateDebugHud();
     if(act.textContent.includes('n=7/8')||act.textContent.includes('bad=')||act.textContent.includes('v=1.2'))throw Error('Cleared clipboard still visible');
@@ -80,6 +125,11 @@ const server=http.createServer((request,response)=>{
    return rows;
   })()`);
   for(const row of results){
+   assert.deepEqual(row.defenseResult,{before:300,multiplier:2,onHit:true});
+   assert.deepEqual(row.versionResults,[[2,false],[0.5,true],[0.5,true]]);
+   assert.deepEqual(row.conversions,[0,0,0,0,0,0,0,false,0,0]);
+   assert.deepEqual(row.movement,[[8,9],[8,9],[0,0],[0,0],[true,true],[true,true,0]]);
+   assert.deepEqual(row.targetMovement,[[8,9],[0,0]]);
    assert.deepEqual(row.angleResults,[[2,10,0,Math.fround(10/3)],[20,200,0,Math.fround(200/3)],[0,0,0]]);
    assert.deepEqual(row.lines,row.profile==='ikemen'?['n=7/8!']:['n=7/8','!']);
    assert.equal(row.visible,true);assert.equal(row.cleared,true);
@@ -91,6 +141,31 @@ const server=http.createServer((request,response)=>{
    assert.deepEqual(row.redirected,['r=9']);assert.equal(row.source,9);assert.equal(row.target,99);
   }
   console.log('Actual Display/Append/ClearClipboard root/Helper consumers, visible HUD, redirected output and caller-only parameter writes pass in eight scenarios');
+  console.log('Actual DefenceMulSet onhit reads the previous Defence trigger before committing the new multiplier in eight actor scenarios');
+  const distances=await run(`(()=>{
+   const rows=[],saved=combatEngineProfile;
+   try{for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper']){
+    combatEngineProfile=profile;specialRuntime.reset();p1Reaction=null;
+    posX=-100;posY=0;p1Facing=1;runtimeMoveType='A';
+    p2.x=100;p2.y=0;p2.facing=-1;p2.moveType='A';
+    let caller=specialRoot(player);
+    if(kind==='helper'){
+     const data=characterProfiles.get(battleCharacters[player-1]).battle;
+     data.helperStates[991672]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991672,id:991672}},caller,specialRuntime.context(caller),{},caller,player);
+     caller=specialRuntime.entities.at(-1);
+    }
+    const context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+    const target=guardHitDefActor(3-player);
+    target.hitDef.guardDistance={x:[10,0],y:[1000,1000],z:[10,10]};
+    const before=context.query('inguarddist');
+    executeControllerM1({type:'AttackDist',params:{redirectid:3-player,width:'1000,IfElse(InGuardDist,20,30)'}},caller,context,adapter);
+    rows.push({profile,player,kind,before,after:context.query('inguarddist'),range:[...target.hitDef.guardDistance.x]});
+   }}finally{combatEngineProfile=saved}
+   return rows;
+  })()`);
+  for(const row of distances){assert.equal(row.before,false);assert.equal(row.after,true);assert.deepEqual(row.range,[1000,20]);}
+  console.log('Actual redirected AttackDist commits front distance before back expression observes InGuardDist in eight profile/player/root-or-Helper scenarios');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

@@ -1,3 +1,5 @@
+import {controllerFloat32} from './controller-value-conversion.js';
+
 export function characterGuardDistance(data,{projectile=false}={}){
  const constants={...data.sizeConstants,...data.constants},prefix='size.'+(projectile?'proj.':'')+'attack.dist';
  const original=projectile?data.sizeDefinition?.projectileAttackDistance:data.sizeDefinition?.attackDistance;
@@ -17,18 +19,12 @@ export function applyAttackDistanceController(controller,actor,api){
  const params=controller.params||controller;
  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
  if(!target)return true;
- const scale=(actor.localScale??1)/(target.localScale??1);
- const changes=[];
+ const scale=Math.fround((actor.localScale??1)/(target.localScale??1));
  for(const [parameter,axis] of [['value','x'],['width','x'],['height','y'],['depth','z']]){
   if(params[parameter]===undefined)continue;
   const expressions=api.splitPair(params[parameter]);
   if(expressions.length>2)throw Error('AttackDist '+parameter+' expects at most two values');
-  const values=expressions.map(expression=>Math.max(0,Math.fround(Math.fround(Number(api.evaluate(expression)))*scale)));
-  changes.push([axis,values]);
- }
- for(const [axis,values] of changes){
-  target.hitDef.guardDistance[axis][0]=values[0];
-  if(values.length>1)target.hitDef.guardDistance[axis][1]=values[1];
+  for(let index=0;index<expressions.length;index++)target.hitDef.guardDistance[axis][index]=Math.max(0,Math.fround(controllerFloat32(api.evaluate(expressions[index]))*scale));
  }
  return true;
 }

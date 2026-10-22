@@ -1,3 +1,5 @@
+import {controllerFloat32} from './controller-value-conversion.js';
+
 export function createAngleState(){return {value:0,xangle:0,yangle:0,enabled:false,scale:[1,1],pivot:[0,0]}}
 
 export function snapshotAngleState(state){return {...state,scale:[...state.scale],pivot:[...state.pivot]}}
@@ -15,7 +17,7 @@ export function applyAngleController(controller,actor,api){
  const pending=[];
  for(const axis of ['value','xangle','yangle']){
   if(params[axis]===undefined&&(type==='angleadd'||type==='angledraw'))continue;
-  const value=params[axis]===undefined?0:Math.fround(Number(api.evaluate(params[axis])));
+  const value=params[axis]===undefined?0:controllerFloat32(api.evaluate(params[axis]));
   if(type==='angleset'||type==='anglemul')pending.push([axis,value]);
   else state[axis]=type==='angleadd'?Math.fround(state[axis]+value):value;
  }
@@ -24,7 +26,7 @@ export function applyAngleController(controller,actor,api){
   for(const name of ['scale','pivot'])if(params[name]!==undefined){
    const pair=api.split(params[name]);
    for(let axis=0;axis<Math.min(2,pair.length);axis++){
-    const value=Math.fround(Number(api.evaluate(pair[axis])));
+    const value=controllerFloat32(api.evaluate(pair[axis]));
     state[name][axis]=name==='scale'?Math.fround(state[name][axis]*value):value;
    }
   }

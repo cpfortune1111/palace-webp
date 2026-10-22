@@ -1,3 +1,7 @@
+## 0.25.53 — Controller extraction and native write ordering (partial)
+
+AttackDist writes components before later expressions read guard distance. DefenceMulSet stages onhit before committing defense and uses native own/foreign code-version defaults. Selected angle/attack/defense/distance/position/velocity/target-velocity consumers map undefined/string operands at extraction, without changing expression propagation. Actual actor/query/target cases pass; 204 Node checks passed before metadata changes. Final versioned combined regression and verified publication remain separate gates. Full parameter/VM/version/scheduling/rendering compatibility and all 163 controller certifications remain Pending. See CONTROLLER-VALUE-CONVERSION-WIP.md, ATTACK-DISTANCE-EVALUATION-WIP.md and DEFENSE-EVALUATION-WIP.md.
+
 ## 0.25.52 — Angle staging and clipboard formats (partial)
 
 AngleSet/AngleMul now sample operands before committing axes; selected Angle/XAngle/YAngle queries have float tags and respect AngleDraw enablement. Eight actual profile/player/root-or-Helper scenarios cover these consumers. Clipboard string/default/quote, integer bases, Unicode and exact float32 binary/hex formats have focused checks and actual HUD coverage. All 203 Node checks pass before version metadata changes; final versioned regression and verified deployment are separate gates. Complete formatting grammar, native version/scheduling/rendering and all 163 controller certifications remain Pending.
