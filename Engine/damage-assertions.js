@@ -1,3 +1,5 @@
+import {controllerBoolean} from './controller-value-conversion.js';
+
 export const damageAssertionFlags=new Set(['nohitdamage','noguarddamage','noredlifedamage','nodizzypointsdamage','noguardpointsdamage']);
 export const actorAssertionFlags=new Set([...damageAssertionFlags,'nowalk','noautoturn','nofacep2','noturntarget','nojugglecheck','nostandguard','nocrouchguard','noairguard','unguardable','noko','noguardko','nokofall','nokovelocity','nocornerpush','nofallhitflag','nogetupfromliedown']);
 
@@ -8,9 +10,10 @@ export function applyDamageAssertion(controller,actor,api){
  if(!flags.some(flag=>actorAssertionFlags.has(flag)))return false;
  if(params.flag===undefined)throw Error('AssertSpecial flag not specified');
  for(const flag of flags)if(!actorAssertionFlags.has(flag))throw Error('Unsupported mixed actor assertion '+flag);
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ let target=actor;
+ if(params.redirectid!==undefined){const value=api.evaluate(params.redirectid),id=typeof value==='string'||value===undefined||Number.isNaN(Number(value))?0:Math.trunc(Number(value))|0;target=api.findActor(id)}
  if(!target)return true;
- const enabled=Number(api.evaluate(params.enabled??1))!==0;
+ const enabled=controllerBoolean(api.evaluate(params.enabled??1));
  for(const flag of flags)if(enabled)target.assertions.add(flag);else target.assertions.delete(flag);
  return true;
 }

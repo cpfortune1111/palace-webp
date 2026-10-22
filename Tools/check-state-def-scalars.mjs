@@ -16,3 +16,6 @@ assert.deepEqual(events,['eval:0','ctrl','eval:0']);
 applyStateDefControlPower({ctrl:-2,poweradd:-4.9},api);
 assert.deepEqual([state.ctrl,state.power],[1,206]);
 console.log('StateDef scalar fields evaluate once, retain absence, preserve integer/boolean types and apply control before power without zero callbacks');
+const layerEvents=[];
+applyStateDefPriority({sprpriority:'4'},{evaluate:value=>{layerEvents.push('evaluate');return Number(value)},setPriority:value=>layerEvents.push(['priority',value]),setLayer:value=>layerEvents.push(['layer',value])});
+assert.deepEqual(layerEvents,['evaluate',['priority',4],['layer',0]]);

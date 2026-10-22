@@ -1,3 +1,7 @@
+## 0.25.60 — Actor/effect layer consumers (partial)
+
+Root/Helper layers reach actual battle passes. Afterimages retain historical layers and priority clamps; ordinary Explods consume ONTOP/under/layerno and syncid/synclayer with native-style grouped ordering. All 214 Node checks, focused actor/pixel/scheduling browsers and complete battle regression pass before versioning. Final versioned regression and verified publication remain separate gates. Nonzero SprPriority and full lifecycle/compiler/ModifyExplod/syncparams/reflection/HUD semantics remain Pending; no whole-controller certification is claimed.
+
 ## 0.25.59 — Status/bound extraction and real movement consumers (partial)
 
 DizzySet/GuardBreakSet and ScreenBound/DepthBound/PosFreeze/PlayerPush preserve native boolean extraction; reviewed redirect/priority operands reject runtime numeric strings. Status queries retain boolean arithmetic and ScreenBound camera flags commit sequentially. Root push uses each character's own widths instead of Venus constants. Actual root/Helper writes, Root XY and Helper XYZ freeze, push distances and source-backed fixture contracts have executable coverage. All 213 Node checks and focused browser cases pass before final versioning. Final versioned regression/publication remain separate gates. Full compiler/integer/vector/diagnostic/pause/native-phase/team semantics and all 163 whole-controller certifications remain Pending.

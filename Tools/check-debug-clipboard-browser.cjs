@@ -120,6 +120,41 @@ const server=http.createServer((request,response)=>{
     }
     const angleResults=[];
     if(kind==='root'){
+     const layerBinding=findMovementActor(player),layerSaved=[...rootSpriteLayers],layerPriority=layerBinding.sprPriority;
+     try{
+      layerBinding.layerNo=1;
+      if(actorSpriteLayer(specialRoot(player))!==1||rootSpriteLayers[player-1]!==1)throw Error('Root layer live binding did not reach actor storage');
+      let ownerReads=0;
+      applyStateDefPriorityM1({sprpriority:'4'},()=>{ownerReads++;return specialRoot(player)},value=>{layerBinding.sprPriority=value});
+      if(rootSpriteLayers[player-1]!==0||layerBinding.layerNo!==0||layerBinding.sprPriority!==4||ownerReads!==1)throw Error('Root StateDef priority did not reset layer once after priority');
+      layerBinding.layerNo=-1;
+      applyStateDefPriorityM1({},()=>{throw Error('Missing StateDef priority sampled owner')},()=>{throw Error('Missing priority wrote value')});
+      if(layerBinding.layerNo!==-1)throw Error('Absent normalized StateDef priority reset root layer');
+     }finally{rootSpriteLayers.splice(0,rootSpriteLayers.length,...layerSaved);layerBinding.sprPriority=layerPriority;}
+    }
+    const propertyBinding=kind==='helper'?caller:findMovementActor(player),propertyTarget=findMovementActor(3-player),propertySaved={ctrl:propertyBinding.ctrl,priority:propertyBinding.sprPriority,targetCtrl:propertyTarget.ctrl,targetPriority:propertyTarget.sprPriority,variable:caller.vars[8]},propertyFlags=assertionActor(player,caller).assertions,propertyFlagsSaved=[...propertyFlags];
+    try{
+     caller.vars[8]=3;
+     executeControllerM1({type:'CtrlSet',params:{value:'1'}},propertyBinding,context,adapter);
+     if(propertyBinding.ctrl!==1||evalM1('Ctrl',specialRuntime.context(kind==='helper'?caller:specialRoot(player)))!==true)throw Error('CtrlSet did not update live control/query');
+     for(const operand of ['"1"','Var(8)/0']){
+      executeControllerM1({type:'CtrlSet',params:{value:operand}},propertyBinding,context,adapter);
+      executeControllerM1({type:'SprPriority',params:{value:operand,layerno:operand}},propertyBinding,context,adapter);
+      executeControllerM1({type:'AssertSpecial',params:{flag:'NoHitDamage',enabled:'1'}},propertyBinding,context,adapter);
+      if(!propertyFlags.has('nohitdamage'))throw Error('Actor assertion numeric setup failed');
+      executeControllerM1({type:'AssertSpecial',params:{flag:'NoHitDamage',enabled:operand}},propertyBinding,context,adapter);
+      if(propertyBinding.ctrl!==0||propertyBinding.sprPriority!==0||propertyFlags.has('nohitdamage')||evalM1('Ctrl',specialRuntime.context(kind==='helper'?caller:specialRoot(player)))!==false)throw Error('Live control/priority/assertion extraction accepted text/undefined');
+     }
+     for(const type of ['CtrlSet','SprPriority']){
+      executeControllerM1({type,params:{redirectid:JSON.stringify(String(3-player)),value:'Var(8):=99'}},propertyBinding,context,adapter);
+      if(caller.vars[8]!==3)throw Error('State property string redirect executed RHS');
+     }
+     executeControllerM1({type:'AssertSpecial',params:{flag:'NoHitDamage',redirectid:JSON.stringify(String(3-player)),enabled:'Var(8):=99'}},propertyBinding,context,adapter);
+     if(caller.vars[8]!==3||propertyTarget.ctrl!==propertySaved.targetCtrl||propertyTarget.sprPriority!==propertySaved.targetPriority)throw Error('Actor assertion or state property changed invalid redirect recipient');
+    }finally{
+     propertyBinding.ctrl=propertySaved.ctrl;propertyBinding.sprPriority=propertySaved.priority;propertyTarget.ctrl=propertySaved.targetCtrl;propertyTarget.sprPriority=propertySaved.targetPriority;caller.vars[8]=propertySaved.variable;propertyFlags.clear();for(const flag of propertyFlagsSaved)propertyFlags.add(flag);
+    }
+    if(kind==='root'){
      const pushRootSaved=[posX,posY,p1Facing,p1Life,p1HitPause,p1Reaction,cameraX,cameraZoom],pushP2Saved={...p2},pushStatesSaved=rootPlayerPushStates.map(value=>({...value})),pushWidthsSaved=rootWidthModifiers.map(value=>({player:[...value.player],edge:[...value.edge]})),pushUntilSaved=[...playerPushDisabledUntil],pushData=[1,2].map(owner=>characterProfiles.get(battleCharacters[owner-1]).battle),pushConstantsSaved=pushData.map(owner=>owner.constants);
      try{
       pushData[0].constants={...pushData[0].constants,'size.ground.front':100,'size.ground.back':60};
@@ -515,6 +550,106 @@ const server=http.createServer((request,response)=>{
   })()`);
   for(const row of distances){assert.equal(row.before,false);assert.equal(row.after,true);assert.deepEqual(row.range,[1000,20]);}
   console.log('Actual redirected AttackDist commits front distance before back expression observes InGuardDist in eight profile/player/root-or-Helper scenarios');
+  assert.deepEqual(errors,[]);
+  const actorLayerRecords=await run(`(()=>{
+   const layers=[...rootSpriteLayers],saved=[current,fi,simPaused],savedP2={...p2},helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedHelper=helper?{...helper}:null;
+   if(!helper)throw Error('Missing actual Helper for layer draw coverage');
+   try{
+    current=0;fi=0;simPaused=false;p2.anim=0;p2.elem=1;helper.anim=0;helper.elem=1;
+    const rows=[];
+    for(const layer of [-1,0,1,2]){
+     transDrawQueue.reset();rootSpriteLayers.splice(0,2,layer,1-layer);helper.layerNo=layer;
+     draw();drawMars();drawSourceExplods();
+     const entries=transDrawQueue.ordered(),first=entries.find(entry=>entry.kind==='root1'),second=entries.find(entry=>entry.kind==='root2'),helpers=entries.filter(entry=>entry.kind==='helper');
+     if(!first||!second||!helpers.length)throw Error('Actual actor sprites did not reach layer draw queue');
+     rows.push([first.layer,second.layer,helpers.map(entry=>entry.layer)]);
+    }
+    return rows;
+   }finally{
+    rootSpriteLayers.splice(0,rootSpriteLayers.length,...layers);[current,fi,simPaused]=saved;Object.assign(p2,savedP2);Object.assign(helper,savedHelper);transDrawQueue.reset();
+   }
+  })()`);
+  assert.deepEqual(actorLayerRecords,[[-1,2,[-1]],[0,1,[0]],[1,0,[1]],[2,-1,[2]]]);
+  console.log('Actual P1/P2 and Helper sprite draw records preserve changing independent layers across four consecutive draws');
+  const afterImageLayers=await run(`(()=>{
+   const savedLayers=[...rootSpriteLayers],savedTrails=[...afterImages],saved=[current,fi,p2.anim,p2.elem];
+   try{
+    current=0;fi=0;p2.anim=0;p2.elem=1;
+    for(const player of [1,2])afterImages[player-1]={remaining:10,gap:1,length:4,frames:[],transState:null};
+    rootSpriteLayers.splice(0,2,-1,1);stepAfterImages();
+    rootSpriteLayers.splice(0,2,1,-1);stepAfterImages();
+    rootSpriteLayers.fill(0);transDrawQueue.reset();
+    drawAfterImages(ctx,1);drawAfterImages(mctx,2);
+    return {stored:afterImages.map(trail=>trail.frames.map(frame=>frame.layerNo)),drawn:transDrawQueue.ordered().filter(entry=>entry.kind==='afterimage').map(entry=>entry.layer)};
+   }finally{rootSpriteLayers.splice(0,2,...savedLayers);afterImages.splice(0,2,...savedTrails);[current,fi,p2.anim,p2.elem]=saved;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(afterImageLayers.stored,[[-1,1],[1,-1]]);
+  assert.deepEqual(afterImageLayers.drawn.sort(),[-1,-1,1,1]);
+  console.log('Actual afterimage capture and drawing retain historical layers independently of current root layers');
+  const afterImagePriorities=await run(`(()=>{
+   const savedTrail=afterImages[1],savedPriority=p2.sprPriority;
+   try{
+    afterImages[1]={length:2,transState:null,frames:[10,30].map(priority=>({...specialRoot(2),anim:0,elem:1,sprPriority:priority,layerNo:0}))};
+    const rows=[];
+    for(const priority of [20,-10,50]){
+     p2.sprPriority=priority;transDrawQueue.reset();drawAfterImages(mctx,2);
+     rows.push(transDrawQueue.ordered().filter(entry=>entry.kind==='afterimage').map(entry=>entry.priority));
+    }
+    return rows;
+   }finally{afterImages[1]=savedTrail;p2.sprPriority=savedPriority;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(afterImagePriorities,[[8,17],[-13,-12],[-13,-12]]);
+  console.log('Actual afterimage priorities retain capture offsets, clamp below current actors and do not rebound when actor priority rises');
+  const explodLayers=await run(`(()=>{
+   const savedEffects=[...sourceExplods],savedLayers=[...rootSpriteLayers],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedHelperLayer=helper?.layerNo;
+   if(!helper)throw Error('Missing live Helper for Explod inheritance');
+   try{
+    sourceExplods.length=0;rootSpriteLayers.splice(0,2,-1,1);helper.layerNo=-1;
+    for(const owner of [specialRoot(1),specialRoot(2),helper]){
+     for(const ontop of [undefined,'0','1']){
+      const params={anim:'0',pos:'0,0',removetime:'-1'};if(ontop!==undefined)params.ontop=ontop;
+      spawnSourceExplod(params,owner,owner.player);
+     }
+    }
+    const stored=sourceExplods.map(effect=>effect.layerno);
+    rootSpriteLayers.fill(0);helper.layerNo=0;transDrawQueue.reset();drawSourceExplods();
+    const drawn=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>entry.layer);
+    sourceExplods.length=0;
+    for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',sprpriority:'9',ontop:'1',under:'1',layerno:'-8',syncid:'-1',synclayer:'-3'},owner,owner.player);
+    const overrides=sourceExplods.map(effect=>[effect.layerno,effect.sprpriority,effect.ontop,effect.under]);
+    transDrawQueue.reset();drawSourceExplods();
+    const overrideDraws=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>[entry.layer,entry.priority,entry.ontop,entry.under]);
+    const synchronization=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>[entry.syncId,entry.syncLayer]);
+    return {stored,drawn,overrides,overrideDraws,synchronization,helperId:helper.instanceId};
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);rootSpriteLayers.splice(0,2,...savedLayers);helper.layerNo=savedHelperLayer;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(explodLayers.stored,[-1,0,1,1,0,1,-1,0,1]);
+  assert.deepEqual(explodLayers.drawn.sort(),[-1,-1,0,0,0,1,1,1,1]);
+  assert.deepEqual(explodLayers.overrides,Array.from({length:3},()=>[-1,0,true,true]));
+  assert.deepEqual(explodLayers.overrideDraws,Array.from({length:3},()=>[-1,0,true,true]));
+  assert.deepEqual(explodLayers.synchronization,[[1,-3],[2,-3],[explodLayers.helperId,-3]]);
+  console.log('Actual Root/Helper Explods inherit creation layers, preserve snapshots and respect explicit ONTOP layer overrides');
+  const layerPixels=await run(`(()=>{
+   const canvas=()=>{const surface=document.createElement('canvas');surface.width=surface.height=1;return surface.getContext('2d',{willReadFrequently:true})},target=canvas(),scratch=canvas(),savedBackgrounds=[...stageBackgrounds.entries],savedPalette=[bgPalFx.enabled,allPalFx.enabled],filter=filterCanvas.getContext('2d'),filterCopy=document.createElement('canvas');filterCopy.width=filterCanvas.width;filterCopy.height=filterCanvas.height;filterCopy.getContext('2d').drawImage(filterCanvas,0,0);
+   const source=color=>{const context=canvas();context.fillStyle=color;context.fillRect(0,0,1,1);return context.canvas},rows=[];
+   try{
+    bgPalFx.enabled=false;allPalFx.enabled=false;filter.save();filter.setTransform(1,0,0,1,0,0);filter.clearRect(0,0,filterCanvas.width,filterCanvas.height);filter.restore();
+    const cases=[{foreground:true,sprites:[['lime',{layer:0,priority:999}]]},{foreground:true,sprites:[['white',{ontop:true,priority:-999}]]},{foreground:true,sprites:[['lime',{layer:-1}]]},{foreground:true,sprites:[['magenta',{layer:2}]]},{foreground:false,sprites:[['lime',{layer:0,under:true,priority:999}],['yellow',{layer:0,priority:-999}]]},{foreground:false,sprites:[['white',{layer:-1}]]},{foreground:true,sprites:[['white',{layer:1,under:true}]]},{background:false,foreground:false,stage:'transparent',sprites:[['white',{layer:-1}]]},{background:false,foreground:false,stage:'blue',sprites:[['white',{layer:-1}]]},{background:false,foreground:false,stage:'blue',sprites:[['lime',{layer:0}]]}];
+    cases.push({foreground:false,sprites:[['white',{layer:1,ontop:true,priority:0}],['lime',{layer:1,priority:5}]]},{foreground:false,sprites:[['red',{layer:1,priority:5}],['lime',{layer:1,priority:5}]]});
+    cases.push({foreground:false,sprites:[['white',{layer:1,syncId:7,syncLayer:-1}],['yellow',{layer:1}],['red',{layer:1,syncId:7,syncLayer:2}]]});
+    for(const test of cases){
+     stageBackgrounds.replace([{layer:0,visible:test.background!==false,draw:context=>{context.fillStyle='red';context.fillRect(0,0,1,1)}},{layer:1,visible:test.foreground,draw:context=>{context.fillStyle='blue';context.fillRect(0,0,1,1)}}]);
+     transDrawQueue.reset();scratch.setTransform(1,0,0,1,0,0);scratch.globalAlpha=1;scratch.globalCompositeOperation='source-over';
+     for(const [color,settings] of test.sprites)transDrawQueue.record(scratch,source(color),[0,0],settings);
+     renderBattleTransCandidate(target,scratch,test.stage?source(test.stage):r.domElement);rows.push([...target.getImageData(0,0,1,1).data]);
+    }
+   }finally{
+    stageBackgrounds.entries.splice(0,stageBackgrounds.entries.length,...savedBackgrounds);[bgPalFx.enabled,allPalFx.enabled]=savedPalette;filter.save();filter.setTransform(1,0,0,1,0,0);filter.clearRect(0,0,filterCanvas.width,filterCanvas.height);filter.drawImage(filterCopy,0,0);filter.restore();transDrawQueue.reset();
+   }
+   return rows;
+  })()`);
+  assert.deepEqual(layerPixels,[[0,0,255,255],[255,255,255,255],[0,0,255,255],[0,0,255,255],[255,255,0,255],[255,0,0,255],[255,255,255,255],[255,255,255,255],[0,0,255,255],[0,255,0,255],[0,255,0,255],[255,0,0,255],[255,0,0,255]]);
+  console.log('Actual battle compositor pixels verify foreground occlusion, ontop layer one, exact layer selection and zero-layer under ordering');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

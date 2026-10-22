@@ -1,13 +1,16 @@
+import {controllerBoolean} from './controller-value-conversion.js';
+
 export function applyStatePropertyController(controller,actor,api){
  const type=controller.type.toLowerCase();
  if(!['ctrlset','statetypeset','turn','sprpriority'].includes(type))return false;
  const params=controller.params||controller;
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
+ const number=expression=>{const value=api.evaluate(expression);return typeof value==='string'||value===undefined||Number.isNaN(Number(value))?0:Number(value)};
+ const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(number(params.redirectid)));
  if(!target)return true;
  if(type==='sprpriority'){
-  const layer=Math.trunc(Number(api.evaluate(params.layerno??0)))|0;
+  const layer=Math.trunc(number(params.layerno??0))|0;
   if(layer!==0)throw Error('SprPriority nonzero layerno rendering is not implemented');
-  target.sprPriority=Math.trunc(Number(api.evaluate(params.value??0)))|0;
+  target.sprPriority=Math.trunc(number(params.value??0))|0;
   return true;
  }
  if(type==='turn'){
@@ -18,7 +21,7 @@ export function applyStatePropertyController(controller,actor,api){
  }
  if(type==='ctrlset'){
   if(params.value===undefined)throw Error('Missing CtrlSet value');
-  target.ctrl=Number(api.evaluate(params.value))!==0?1:0;
+  target.ctrl=controllerBoolean(api.evaluate(params.value))?1:0;
   return true;
  }
  const fields=[['type',params.statetype??params.value,'SCAL'],['moveType',params.movetype??params.moveType,'IAH'],['physics',params.physics,'SCAN']];

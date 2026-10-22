@@ -4,6 +4,7 @@ const integer=value=>Math.trunc(Number(value))|0;
 export function applyStateDefPriority(definition,api){
  if(!present(definition?.sprpriority))return false;
  api.setPriority(integer(api.evaluate(definition.sprpriority)));
+ api.setLayer?.(0);
  return true;
 }
 

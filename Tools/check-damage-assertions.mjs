@@ -36,3 +36,11 @@ run({flag:'NoJuggleCheck',redirectid:'7',enabled:0});assert.equal(other.assertio
 run({flag:'NoGetUpFromLieDown',redirectid:7});assert.equal(other.assertions.has('nogetupfromliedown'),true);
 run({flag:'NoGetUpFromLieDown',redirectid:7,enabled:0});assert.equal(other.assertions.has('nogetupfromliedown'),false);
 console.log('Damage assertion flags, multi-flag slots, enabled, redirects and explicit unsupported mixtures passed');
+for(const operand of ['1',NaN,undefined]){
+ actor.assertions.add('nohitdamage');
+ applyDamageAssertion({type:'AssertSpecial',params:{flag:'NoHitDamage',enabled:'operand'}},actor,{...api,evaluate:()=>operand});
+ assert.equal(actor.assertions.has('nohitdamage'),false);
+ const ids=[],reads=[];
+ applyDamageAssertion({type:'AssertSpecial',params:{flag:'NoHitDamage',redirectid:'redirect',enabled:'rhs'}},actor,{...api,evaluate:expression=>{reads.push(expression);return expression==='redirect'?operand:1},findActor:id=>{ids.push(id);return null}});
+ assert.deepEqual(ids,[0]);assert.deepEqual(reads,['redirect']);
+}

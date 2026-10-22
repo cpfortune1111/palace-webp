@@ -32,5 +32,18 @@ run('SprPriority',{});assert.equal(caller.sprPriority,0);
 run('SprPriority',{redirectid:'99',value:'22'});assert.equal(caller.sprPriority,0);
 assert.throws(()=>run('SprPriority',{layerno:'1'}),/layerno rendering/);
 console.log('Sprite priority defaults, integer conversion, ownership and redirection passed');
+for(const operand of ['1',NaN,undefined]){
+ const sampleApi={...api,evaluate:()=>operand};
+ caller.ctrl=1;
+ applyStatePropertyController({type:'CtrlSet',params:{value:'operand'}},caller,sampleApi);
+ assert.equal(caller.ctrl,0);
+ applyStatePropertyController({type:'SprPriority',params:{layerno:'operand',value:'operand'}},caller,sampleApi);
+ assert.equal(caller.sprPriority,0);
+ for(const type of ['CtrlSet','StateTypeSet','Turn','SprPriority']){
+  const ids=[],reads=[];
+  applyStatePropertyController({type,params:{redirectid:'redirect',value:'rhs'}},caller,{...api,evaluate:expression=>{reads.push(expression);return expression==='redirect'?operand:1},findActor:id=>{ids.push(id);return null}});
+  assert.deepEqual(ids,[0]);assert.deepEqual(reads,['redirect']);
+ }
+}
 
 

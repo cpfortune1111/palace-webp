@@ -11,12 +11,20 @@ for(const player of [1,2]){
  const runtime=createSpecialRuntime({
   root:()=>root,context:()=>({query:()=>0}),commands:()=>({}),
   eval:Number,pair:value=>String(value).split(','),effects:[],tick:()=>0,
-  data:()=>({helperStates:{1:{type:'S',physics:'N',anim:0,controllers:[]}},lifecycleHelpers:{}}),
+  data:()=>({helperStates:{1:{type:'S',physics:'N',anim:0,controllers:[]},2:{type:'S',physics:'N',anim:0,sprpriority:'4',controllers:[]},3:{type:'S',physics:'N',anim:0,controllers:[]}},lifecycleHelpers:{}}),
   trigger:()=>true,controller:()=>{},advance:()=>{},frames:()=>[{time:1}],duration:()=>1000,
   collision:()=>({contact:false}),attack:()=>null,background:()=>{}
  });
  runtime.dispatch({type:'Helper',params:{id:'1',stateno:'1'}},null,null,{},root,player);
  const helper=runtime.entities[0];
+ assert.equal(helper.layerNo,0);
+ helper.layerNo=1;
+ runtime.enterState(helper,2);
+ assert.equal(helper.sprPriority,4);
+ assert.equal(helper.layerNo,0);
+ helper.layerNo=1;
+ runtime.enterState(helper,3);
+ assert.equal(helper.layerNo,1);
  assert.notEqual(helper.maps,defaults);
  assert.notEqual(helper.mapDefaults,defaults);
  assert.notEqual(helper.maps,helper.mapDefaults);
