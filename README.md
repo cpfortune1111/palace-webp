@@ -1,3 +1,7 @@
+## 0.25.59 — Status/bound extraction and real movement consumers (partial)
+
+DizzySet/GuardBreakSet and ScreenBound/DepthBound/PosFreeze/PlayerPush preserve native boolean extraction; reviewed redirect/priority operands reject runtime numeric strings. Status queries retain boolean arithmetic and ScreenBound camera flags commit sequentially. Root push uses each character's own widths instead of Venus constants. Actual root/Helper writes, Root XY and Helper XYZ freeze, push distances and source-backed fixture contracts have executable coverage. All 213 Node checks and focused browser cases pass before final versioning. Final versioned regression/publication remain separate gates. Full compiler/integer/vector/diagnostic/pause/native-phase/team semantics and all 163 whole-controller certifications remain Pending.
+
 ## 0.25.58 — ModifyPlayer extraction and AI query consumers (partial)
 
 ModifyPlayer boolean/float/integer operands reject runtime string and undefined coercion. Actual root/Helper cases cover resource maxima, move-contact queries, KO/control/AI writes and timer edge cases. AILevel/MoveCountered preserve integer arithmetic; AILevelF retains float values and native noAILevel integer-zero tags. Legacy no-context AILevelF now respects the selected player. All 211 Node checks and focused actor cases pass before final versioning. Final versioned regression and verified publication remain separate gates. Full integer overflow/compiler/version/frame-phase/team/parameter semantics and all 163 whole-controller certifications remain Pending.

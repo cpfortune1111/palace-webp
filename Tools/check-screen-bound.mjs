@@ -7,4 +7,7 @@ assert.deepEqual(screenBoundInterval(owner.flags,{left:-100,right:100},{left:-50
 owner.flags.screenBound=false;assert.deepEqual(screenBoundInterval(owner.flags,{left:-100,right:100},{left:-50,right:50}),{left:-Infinity,right:Infinity});
 assert.deepEqual(createScreenBoundFlags(false),{screenBound:false,stageBound:true,moveCamera:[false,false]});
 console.log('ScreenBound native defaults, redirected booleans, optional stage flag and intervals passed');
-
+const ordered={flags:{screenBound:false,stageBound:true,moveCamera:[false,false]}},reads=[];
+applyScreenBoundController({type:'ScreenBound',params:{value:'enable',movecamera:'first,second',stagebound:'stage'}},ordered,{...api,evaluate:expression=>{reads.push([expression,ordered.flags.screenBound,...ordered.flags.moveCamera]);return expression==='enable'||expression==='first'?1:expression==='second'?ordered.flags.moveCamera[0]:ordered.flags.moveCamera[1]}});
+assert.deepEqual(ordered.flags,{screenBound:true,stageBound:true,moveCamera:[true,true]});
+assert.deepEqual(reads,[['enable',false,false,false],['first',true,false,false],['second',true,true,false],['stage',true,true,true]]);

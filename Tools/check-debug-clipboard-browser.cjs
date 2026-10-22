@@ -119,6 +119,81 @@ const server=http.createServer((request,response)=>{
      for(const [name,had,sample] of syntaxSaved){if(had)syntaxModule.writeStoredMapValue(caller.maps,name,sample);else{caller.maps.delete(name);syntaxModule.forgetStoredMapValue(caller.maps,name);}}
     }
     const angleResults=[];
+    if(kind==='root'){
+     const pushRootSaved=[posX,posY,p1Facing,p1Life,p1HitPause,p1Reaction,cameraX,cameraZoom],pushP2Saved={...p2},pushStatesSaved=rootPlayerPushStates.map(value=>({...value})),pushWidthsSaved=rootWidthModifiers.map(value=>({player:[...value.player],edge:[...value.edge]})),pushUntilSaved=[...playerPushDisabledUntil],pushData=[1,2].map(owner=>characterProfiles.get(battleCharacters[owner-1]).battle),pushConstantsSaved=pushData.map(owner=>owner.constants);
+     try{
+      pushData[0].constants={...pushData[0].constants,'size.ground.front':100,'size.ground.back':60};
+      pushData[1].constants={...pushData[1].constants,'size.ground.front':30,'size.ground.back':20};
+      p1Reaction=null;posY=0;p1Facing=1;p1Life=1000;p1HitPause=0;cameraX=0;cameraZoom=1;
+      Object.assign(p2,{y:0,facing:-1,life:1000,hitPause:0,attackPause:0,playerPush:true});playerPushDisabledUntil.fill(0);
+      rootWidthModifiers.splice(0,2,createWidthModifiers(),createWidthModifiers());
+      for(const [value,distance] of [['1',130],['"1"',70],['Var(8)/0',70]]){
+       rootPlayerPushStates.splice(0,2,createPlayerPushState(),createPlayerPushState());posX=0;p2.x=70;
+       executeControllerM1({type:'PlayerPush',params:{value}},caller,context,adapter);playerPushM1();
+       if(Math.abs(p2.x-posX-distance)>0.000001)throw Error('Actual PlayerPush ignored flag or actor-owned widths: '+JSON.stringify([profile,player,value,posX,p2.x,distance]));
+      }
+     }finally{
+      [posX,posY,p1Facing,p1Life,p1HitPause,p1Reaction,cameraX,cameraZoom]=pushRootSaved;Object.assign(p2,pushP2Saved);rootPlayerPushStates.splice(0,rootPlayerPushStates.length,...pushStatesSaved);rootWidthModifiers.splice(0,rootWidthModifiers.length,...pushWidthsSaved);playerPushDisabledUntil.splice(0,playerPushDisabledUntil.length,...pushUntilSaved);pushData.forEach((owner,index)=>{owner.constants=pushConstantsSaved[index];});
+     }
+    }
+    if(kind==='root'){
+     const freezeRootSaved=[posX,posY,vx,vy,p1Facing,p1Reaction],freezeP2Saved={...p2},freezeFlagsSaved=[...rootPositionFrozen];
+     try{
+      p1Reaction=null;
+      for(const facing of [1,-1])for(const [value,frozen] of [['1',true],['"1"',false],['Var(8)/0',false]]){
+       if(player===1){posX=10;posY=-50;vx=3;vy=2;p1Facing=facing;}else Object.assign(p2,{x:10,y:-50,vx:3*facing,vy:2,physics:'N',facing});
+       executeControllerM1({type:'PosFreeze',params:{value}},caller,context,adapter);
+       if(player===1)applyPhysics({physics:'N'});else applyP2SourcePhysics();
+       const actual=player===1?[posX,posY,vx,vy]:[p2.x,p2.y,p2.vx,p2.vy],expected=[10+(frozen?0:3*facing),frozen?-50:-48,player===1?3:3*facing,2];
+       if(JSON.stringify(actual)!==JSON.stringify(expected))throw Error('Actual root PosFreeze physics mismatch: '+JSON.stringify(actual));
+      }
+     }finally{
+      [posX,posY,vx,vy,p1Facing,p1Reaction]=freezeRootSaved;Object.assign(p2,freezeP2Saved);rootPositionFrozen.splice(0,rootPositionFrozen.length,...freezeFlagsSaved);
+     }
+    }
+    const boundScreen=screenFlagsFor(caller),boundDepth=depthBoundFlagsFor(caller),boundPush=playerPushStateFor(caller),boundSaved={screen:{...boundScreen,moveCamera:[...boundScreen.moveCamera]},depth:{...boundDepth},push:{...boundPush},frozen:kind==='helper'?caller.positionFrozen:rootPositionFrozen[player-1]},boundVar=caller.vars[8];
+    try{
+     caller.vars[8]=3;
+     for(const [value,expected] of [['1',true],['"1"',false],['Var(8)/0',false]]){
+      executeControllerM1({type:'ScreenBound',params:{value,movecamera:value+','+value,stagebound:value}},caller,context,adapter);
+      executeControllerM1({type:'DepthBound',params:{value,movecamera:value}},caller,context,adapter);
+      executeControllerM1({type:'PosFreeze',params:{value}},caller,context,adapter);
+      executeControllerM1({type:'PlayerPush',params:{value}},caller,context,adapter);
+      const actual=[boundScreen.screenBound,boundScreen.stageBound,...boundScreen.moveCamera,boundDepth.enabled,boundDepth.moveCamera,boundPush.enabled,kind==='helper'?caller.positionFrozen:rootPositionFrozen[player-1]];
+      if(actual.some(flag=>flag!==expected))throw Error('Actual bound/freeze/push boolean extraction mismatch: '+JSON.stringify(actual));
+     }
+     for(const type of ['ScreenBound','DepthBound','PosFreeze','PlayerPush']){
+      executeControllerM1({type,params:{redirectid:JSON.stringify(String(3-player)),value:'Var(8):=99'}},caller,context,adapter);
+      if(caller.vars[8]!==3)throw Error('Bound/freeze/push numeric-string redirect executed caller RHS');
+     }
+     executeControllerM1({type:'PlayerPush',params:{priority:'"7"'}},caller,context,adapter);
+     if(boundPush.priority!==0||boundPush.enabled!==false)throw Error('PlayerPush integer extraction accepted text or rewrote omitted value');
+     boundScreen.stageBound=true;
+     executeControllerM1({type:'ScreenBound',params:{}},caller,context,adapter);
+     executeControllerM1({type:'DepthBound',params:{}},caller,context,adapter);
+     executeControllerM1({type:'PosFreeze',params:{}},caller,context,adapter);
+     if(boundScreen.screenBound||!boundScreen.stageBound||boundScreen.moveCamera.some(Boolean)||boundDepth.enabled||boundDepth.moveCamera||!(kind==='helper'?caller.positionFrozen:rootPositionFrozen[player-1]))throw Error('Actual bound/freeze omitted defaults mismatch');
+    }finally{
+     Object.assign(boundScreen,boundSaved.screen);Object.assign(boundDepth,boundSaved.depth);Object.assign(boundPush,boundSaved.push);if(kind==='helper')caller.positionFrozen=boundSaved.frozen;else rootPositionFrozen[player-1]=boundSaved.frozen;caller.vars[8]=boundVar;
+    }
+    const statusSaved=rootStatusFlags.map(flags=>({...flags})),statusHelper={dizzy:caller.dizzy,guardBreak:caller.guardBreak},statusVar=caller.vars[8],statusTarget=specialRoot(3-player),statusTargetContext=specialRuntime.context(statusTarget);
+    try{
+     for(const [type,query] of [['DizzySet','Dizzy'],['GuardBreakSet','GuardBreak']]){
+      caller.vars[8]=4;
+      executeControllerM1({type,params:{value:'1'}},caller,context,adapter);
+      if(evalM1(query,context)!==true||evalM1(query+'/2',context)!==0)throw Error('Actual status flag/query lost boolean type');
+      for(const value of ['"1"','Var(8)/0','0']){
+       executeControllerM1({type,params:{value}},caller,context,adapter);
+       if(evalM1(query,context)!==false)throw Error('Status controller accepted string/undefined as true');
+      }
+      executeControllerM1({type,params:{redirectid:String(3-player),value:'Var(8):=Var(8)+1'}},caller,context,adapter);
+      if(caller.vars[8]!==5||evalM1(query,statusTargetContext)!==true||evalM1(query,context)!==false)throw Error('Status redirect changed operand caller or wrong flag recipient');
+      executeControllerM1({type,params:{redirectid:JSON.stringify(String(3-player)),value:'Var(8):=99'}},caller,context,adapter);
+      if(caller.vars[8]!==5)throw Error('Status string redirect executed RHS');
+     }
+    }finally{
+     rootStatusFlags.forEach((flags,index)=>Object.assign(flags,statusSaved[index]));caller.dizzy=statusHelper.dizzy;caller.guardBreak=statusHelper.guardBreak;caller.vars[8]=statusVar;
+    }
     const contactKey=hitDefinitionOwnerKey(caller),contactHad=reversedMoveClocks.has(contactKey),contactSaved={...reversedMoveClocks.get(contactKey)},counterHad=moveCounteredFlags.has(contactKey),counterSaved=moveCounteredFlags.get(contactKey);
     try{
      const readContacts=()=>['movecontact','movehit','moveguarded','movereversed','movecountered'].map(name=>evalM1(name,context));

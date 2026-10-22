@@ -60,3 +60,15 @@ for(const type of ['int','float']){
  assert.equal(Object.is(result.value,-0),type==='float');
  assert.equal(reads,1);
 }
+for(const name of ['Dizzy','GuardBreak']){
+ queryValue=1;
+ assert.equal(numericQueryType(name),'bool');
+ assert.equal(execute(name+'/2'),0);
+ queryValue=0;
+ assert.equal(execute(name),false);
+}
+if(existsSync(reference)){
+ const native=readFileSync(reference,'utf8');
+ assert.match(native,/case OC_ex_dizzy:\s*sys.bcStack.PushB\(c.scf\(SCF_dizzy\)\)/);
+ assert.match(native,/case OC_ex_guardbreak:\s*sys.bcStack.PushB\(c.scf\(SCF_guardbreak\)\)/);
+}

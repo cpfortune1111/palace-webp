@@ -4,7 +4,7 @@ const comparisons=new Set(['=','==','!=','>','<','>=','<=']);
 const arithmetic=new Set(['+','-','*','/','%','**']);
 const bitwise=new Set(['&','|','^']);
 const integerQueries=new Set(['ailevel','movecountered','time','stateno','life','lifemax','anim','animtime','facing','backedgebodydist','backedgedist','frontedgebodydist','frontedgedist','gametime','hitcount','hitpausetime','id','movecontact','moveguarded','movehit','movereversed','numenemy','numpartner','numproj','power','powermax','prevstateno','random','roundstate','teamside','uniqhitcount']);
-const booleanQueries=new Set(['alive','canrecover','ctrl','hitfall','hitover','hitshakeover','inguarddist']);
+const booleanQueries=new Set(['dizzy','guardbreak','alive','canrecover','ctrl','hitfall','hitover','hitshakeover','inguarddist']);
 const floatQueries=new Set(['ailevelf','pos x','pos y','vel x','vel y','vel z','angle','xangle','yangle']);
 const unaryMath=new Set(['abs','floor','ceil','ln','sin','cos','tan','asin','acos','atan','exp','sign','rad','deg']);
 const multiMath={log:2,max:2,min:2,round:2,atan2:2,clamp:3,lerp:3};

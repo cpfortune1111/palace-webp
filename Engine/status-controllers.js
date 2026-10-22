@@ -1,10 +1,13 @@
+import {controllerBoolean} from './controller-value-conversion.js';
+
 export function applyStatusController(controller,caller,api){
  const field={dizzyset:'dizzy',guardbreakset:'guardBreak'}[String(controller.type).toLowerCase()];
  if(!field)return false;
  const params=controller.params||{};
  if(params.value===undefined)throw Error('Missing '+controller.type+' value');
- const target=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ let target=caller;
+ if(params.redirectid!==undefined){const value=api.evaluate(params.redirectid),id=typeof value==='string'||value===undefined||Number.isNaN(Number(value))?0:Math.trunc(Number(value))|0;target=api.findActor(id)}
  if(!target)return true;
- api.setFlag(target,field,Number(api.evaluate(params.value))!==0);
+ api.setFlag(target,field,controllerBoolean(api.evaluate(params.value)));
  return true;
 }
