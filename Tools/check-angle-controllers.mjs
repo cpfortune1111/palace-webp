@@ -38,3 +38,14 @@ other.angleState.scale[0]=7;other.angleState.pivot[1]=11;other.angleState.value=
 assert.deepEqual(saved.scale,savedScale);assert.deepEqual(saved.pivot,savedPivot);assert.equal(saved.value,savedValue);assert.equal(saved.enabled,true);
 console.log('Afterimage angle snapshots remain independent of later ticks');
 
+for(const type of ['AngleSet','AngleMul']){
+ actor.angleState.value=10;actor.angleState.xangle=20;actor.angleState.yangle=30;
+ const observed=[];
+ applyAngleController({type,params:{value:'2',xangle:'angle'}},actor,{...api,evaluate:expression=>{observed.push(expression);return expression==='angle'?actor.angleState.value:Number(expression)}});
+ assert.equal(actor.angleState.value,type==='AngleSet'?2:20);
+ assert.equal(actor.angleState.xangle,type==='AngleSet'?10:200);
+ assert.equal(actor.angleState.yangle,0);
+ assert.deepEqual(observed,['2','angle']);
+}
+console.log('AngleSet/AngleMul sample supplied operands before committing any axis and do not evaluate omitted defaults');
+

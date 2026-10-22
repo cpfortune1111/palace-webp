@@ -12,11 +12,14 @@ export function applyAngleController(controller,actor,api){
  if(!target)return true;
  const state=target.angleState;
  if(!state)throw Error('Missing actor angle storage');
+ const pending=[];
  for(const axis of ['value','xangle','yangle']){
   if(params[axis]===undefined&&(type==='angleadd'||type==='angledraw'))continue;
-  const value=Math.fround(Number(api.evaluate(params[axis]??0)));
-  state[axis]=type==='angleadd'?Math.fround(state[axis]+value):type==='anglemul'?Math.fround(state[axis]*value):value;
+  const value=params[axis]===undefined?0:Math.fround(Number(api.evaluate(params[axis])));
+  if(type==='angleset'||type==='anglemul')pending.push([axis,value]);
+  else state[axis]=type==='angleadd'?Math.fround(state[axis]+value):value;
  }
+ for(const [axis,value] of pending)state[axis]=type==='anglemul'?Math.fround(state[axis]*value):value;
  if(type==='angledraw'){
   for(const name of ['scale','pivot'])if(params[name]!==undefined){
    const pair=api.split(params[name]);

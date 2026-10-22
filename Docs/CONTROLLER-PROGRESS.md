@@ -1,3 +1,7 @@
+## 0.25.52 — Angle staging and clipboard formats (partial)
+
+AngleSet/AngleMul now sample operands before committing axes; selected Angle/XAngle/YAngle queries have float tags and respect AngleDraw enablement. Eight actual profile/player/root-or-Helper scenarios cover these consumers. Clipboard string/default/quote, integer bases, Unicode and exact float32 binary/hex formats have focused checks and actual HUD coverage. All 203 Node checks pass before version metadata changes; final versioned regression and verified deployment are separate gates. Complete formatting grammar, native version/scheduling/rendering and all 163 controller certifications remain Pending.
+
 ## 0.25.51 — Self animation and clipboard real consumers (partial)
 
 Actor-owned SelfAnimExist now uses complete imported IDs and preserves redirected caller ID scope through foreign state/animation providers. Clipboard display/append/clear execute through actual common controller dispatch and visible HUD output, including redirected recipients and caller-only parameter writes. Supported numeric formatting has exact float32 coefficients, profile-specific ties and native diagnostic samples; sixty independent CRT observations are explicitly bounded, not whole-engine certification. All 201 Node tools and focused actor/HUD tests pass. Full final regression/deployment are separate gates; no controller certification changes.

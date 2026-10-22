@@ -1,3 +1,7 @@
+## 0.25.52 — Angle staging and clipboard formats (partial)
+
+AngleSet/AngleMul now sample operands before committing axes; selected Angle/XAngle/YAngle queries have float tags and respect AngleDraw enablement. Eight actual profile/player/root-or-Helper scenarios cover these consumers. Clipboard string/default/quote, integer bases, Unicode and exact float32 binary/hex formats have focused checks and actual HUD coverage. All 203 Node checks pass before version metadata changes; final versioned regression and verified deployment are separate gates. Complete formatting grammar, native version/scheduling/rendering and all 163 controller certifications remain Pending.
+
 # Coverage accounting checkpoint — 0.25.51
 
 Own-animation lookup and three clipboard controllers now have real actor/parameter/HUD consumers instead of the former clipboard no-op. All 201 Node checks and focused actor/HUD scenarios pass. Native CRT numeric reference cases are explicitly not full MUGEN executable verification. Full printf/configuration/legacy inventories/providers/VM/version/native phases and parameter semantics remain Pending. All 163 controller certifications remain Pending; no overall percentage is asserted. Final complete regression/deployment are separate gates.

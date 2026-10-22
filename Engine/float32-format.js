@@ -43,6 +43,32 @@ export function shortestFloat32(value){
  throw Error('No round-trip float32 representation');
 }
 
+export function formatFloat32Base(value,{verb='x',precision=-1,alternate=false}={}){
+ floatBits.setFloat32(0,Math.abs(value));
+ const bits=floatBits.getUint32(0),field=(bits>>>23)&255;
+ let exponent=field?field-127:-126,mantissa=BigInt((bits&8388607)+(field?8388608:0));
+ if(verb==='b'){const power=exponent-23;return mantissa+'p'+(power>=0?'+':'')+power;}
+ if(mantissa===0n)exponent=0;
+ else while(mantissa<8388608n){mantissa<<=1n;exponent--;}
+ mantissa<<=37n;
+ const limit=(1n<<60n)-1n;
+ if(precision>=0&&precision<15){
+  const shift=BigInt(precision*4),extra=(mantissa<<shift)&limit;
+  let rounded=mantissa>>(60n-shift);
+  if((extra|(rounded&1n))>1n<<59n)rounded++;
+  mantissa=rounded<<(60n-shift);
+  if(mantissa&(1n<<61n)){mantissa>>=1n;exponent++;}
+ }
+ let fraction=mantissa&limit,digits='';
+ for(let index=0;precision<0?fraction!==0n:index<precision;index++){
+  digits+=(fraction>>56n).toString(16);fraction=(fraction<<4n)&limit;
+ }
+ if(alternate&&verb==='x'&&precision<0)digits=digits.padEnd(4,'0');
+ let result='0x'+((mantissa>>60n)&1n)+(digits||alternate?'.'+digits:'')+'p'+(exponent<0?'-':'+')+String(Math.abs(exponent)).padStart(2,'0');
+ if(verb==='X')result=result.toUpperCase();
+ return result;
+}
+
 export function formatFloat32(value,{verb='f',precision=6,alternate=false,rounding='even'}={}){
  const decimal=decimalValue(value),kind=verb.toLowerCase();
  if(kind==='f'){

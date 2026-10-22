@@ -36,6 +36,14 @@ const server=http.createServer((request,response)=>{
      caller=specialRuntime.entities.at(-1);
     }
     const context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+    const angleResults=[];
+    for(const type of ['AngleSet','AngleMul']){
+     executeControllerM1({type:'AngleDraw',params:{value:'10',xangle:'20',yangle:'30'}},caller,context,adapter);
+     executeControllerM1({type,params:{value:'2',xangle:'Angle'}},caller,context,adapter);
+     angleResults.push([context.query('angle'),context.query('xangle'),context.query('yangle'),evalM1('XAngle/3',context)]);
+    }
+    resetAngleDraw(caller.angleState);
+    angleResults.push([context.query('angle'),context.query('xangle'),context.query('yangle')]);
     executeControllerM1({type:'DisplayToClipboard',params:{text:'"n=%d/%d"',params:'Var(3):=7,Var(3):=Var(3)+1'}},caller,context,adapter);
     executeControllerM1({type:'AppendToClipboard',params:{text:'"!"'}},caller,context,adapter);
     const own=debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player));
@@ -45,25 +53,41 @@ const server=http.createServer((request,response)=>{
     updateDebugHud();const floatVisible=act.textContent.includes(floating[0]);
     executeControllerM1({type:'DisplayToClipboard',params:{text:'"bad=%d"',params:'1.25'}},caller,context,adapter);
     const mismatch=debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player)).lines;
+    const strings=[],bases=[];
+    if(profile==='ikemen'){
+     for(const [text,params] of [['"name=%s"','Name'],['"quoted=%q"','Name'],['"v=%v"','1.2']]){
+      executeControllerM1({type:'DisplayToClipboard',params:{text,params}},caller,context,adapter);
+      strings.push(debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player)).lines[0]);
+     }
+     updateDebugHud();if(!act.textContent.includes('v=1.2'))throw Error('Default-value string not visible');
+     for(const [text,params] of [['"%#08x"','15'],['"%c"','26376'],['"%b"','1.5'],['"%x"','1.5'],['"%x"','Name'],['"%#U"','39'],['"%#x"','1.5']]){
+      executeControllerM1({type:'DisplayToClipboard',params:{text,params}},caller,context,adapter);
+      bases.push(debugClipboard.entries().find(entry=>entry.key===(caller.key||'root'+player)).lines[0]);
+     }
+     updateDebugHud();if(!act.textContent.includes(bases.at(-1)))throw Error('Hexadecimal string not visible');
+    }
     const target=specialRoot(3-player);target.vars[3]=99;
     executeControllerM1({type:'DisplayToClipboard',params:{redirectid:3-player,text:'"r=%d"',params:'Var(3):=Var(3)+1'}},caller,context,adapter);
     const redirected=debugClipboard.entries().find(entry=>entry.key==='root'+(3-player));
     executeControllerM1({type:'ClearClipboard',params:{redirectid:3-player}},caller,context,adapter);
     const cleared=!debugClipboard.entries().some(entry=>entry.key==='root'+(3-player));
     executeControllerM1({type:'DisplayToClipboard',params:{redirectid:999999,text:'"%d"',params:'Var(3):=100'}},caller,context,adapter);
-    rows.push({profile,player,kind,lines:own.lines,visible,floating,floatVisible,mismatch,redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
+    rows.push({profile,player,kind,angleResults,lines:own.lines,visible,floating,floatVisible,mismatch,strings,bases,name:context.query('name'),redirected:redirected.lines,cleared,source:caller.vars[3],target:target.vars[3]});
     executeControllerM1({type:'ClearClipboard',params:{}},caller,context,adapter);
     updateDebugHud();
-    if(act.textContent.includes('n=7/8')||act.textContent.includes('bad='))throw Error('Cleared clipboard still visible');
+    if(act.textContent.includes('n=7/8')||act.textContent.includes('bad=')||act.textContent.includes('v=1.2'))throw Error('Cleared clipboard still visible');
    }}finally{combatEngineProfile=saved;debugClipboard.clear()}
    return rows;
   })()`);
   for(const row of results){
+   assert.deepEqual(row.angleResults,[[2,10,0,Math.fround(10/3)],[20,200,0,Math.fround(200/3)],[0,0,0]]);
    assert.deepEqual(row.lines,row.profile==='ikemen'?['n=7/8!']:['n=7/8','!']);
    assert.equal(row.visible,true);assert.equal(row.cleared,true);
    assert.equal(row.floatVisible,true);
    assert.deepEqual(row.floating,[row.profile==='ikemen'?'ties=2/1.12':'ties=3/1.13']);
    assert.deepEqual(row.mismatch,[row.profile==='ikemen'?'bad=%!d(float32=1.25)':'bad=1.250000']);
+   assert.deepEqual(row.strings,row.profile==='ikemen'?['name='+row.name,'quoted='+JSON.stringify(row.name),'v=1.2']:[]);
+   assert.deepEqual(row.bases,row.profile==='ikemen'?['0x0000000f','月','12582912p-23','0x1.8p+00',Buffer.from(row.name).toString('hex'),"U+0027 '''",'0x1.8000p+00']:[]);
    assert.deepEqual(row.redirected,['r=9']);assert.equal(row.source,9);assert.equal(row.target,99);
   }
   console.log('Actual Display/Append/ClearClipboard root/Helper consumers, visible HUD, redirected output and caller-only parameter writes pass in eight scenarios');

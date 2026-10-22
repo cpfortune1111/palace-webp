@@ -1,3 +1,7 @@
+## 0.25.52 — Angle staging and clipboard formats (partial)
+
+AngleSet/AngleMul now sample operands before committing axes; selected Angle/XAngle/YAngle queries have float tags and respect AngleDraw enablement. Eight actual profile/player/root-or-Helper scenarios cover these consumers. Clipboard string/default/quote, integer bases, Unicode and exact float32 binary/hex formats have focused checks and actual HUD coverage. All 203 Node checks pass before version metadata changes; final versioned regression and verified deployment are separate gates. Complete formatting grammar, native version/scheduling/rendering and all 163 controller certifications remain Pending.
+
 ## 0.25.51 — Own animation queries and debug clipboard consumers (partial)
 
 SelfAnimExist now checks the selected actor's own complete imported action inventory, independently of borrowed providers or preloaded graphics. Display/Append/ClearClipboard now execute, keep actor-isolated buffers and render in the debug HUD instead of silently doing nothing. Supported float32 formatting has exact numeric rounding and independent CRT observations. All 201 Node checks and focused actor/HUD suites pass; final complete regression/deployment are separate gates. Full printf, legacy animation/value/version/native phases and controller certifications remain Pending. See SELF-ANIMATION-QUERY-WIP.md and DEBUG-CLIPBOARD-WIP.md.
