@@ -1,3 +1,7 @@
+## 0.25.58 — ModifyPlayer extraction and AI query consumers (partial)
+
+ModifyPlayer boolean/float/integer operands reject runtime string and undefined coercion. Actual root/Helper cases cover resource maxima, move-contact queries, KO/control/AI writes and timer edge cases. AILevel/MoveCountered preserve integer arithmetic; AILevelF retains float values and native noAILevel integer-zero tags. Legacy no-context AILevelF now respects the selected player. All 211 Node checks and focused actor cases pass before final versioning. Final versioned regression and verified publication remain separate gates. Full integer overflow/compiler/version/frame-phase/team/parameter semantics and all 163 whole-controller certifications remain Pending.
+
 ## 0.25.57 — Map static syntax and routing (partial)
 
 Map controller names and reset exclusions preserve native static text instead of evaluating expressions. Embedded assignment syntax and literal whitespace have focused and real actor coverage. TeamMap now respects modified team side in the current two-player engine. Redirect operands retain caller scope and single evaluation; string/undefined IDs extract as zero and invalid targets warn without RHS writes. All 211 Node checks passed before the latest extraction/metadata changes; newer focused actor gates pass. Final versioned full regression/publication are separate gates. Simul/attached populations, complete compiler/diagnostics/native integer conversion and all 163 whole-controller certifications remain Pending.

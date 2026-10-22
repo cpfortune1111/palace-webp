@@ -49,6 +49,43 @@ const server=http.createServer((request,response)=>{
      }
     }
     const context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+    const modifyKey=hitDefinitionOwnerKey(caller),modifyFlags=[moveCounteredFlags,actorKoFlags,actorOverKoFlags],modifySaved=modifyFlags.map(storage=>[storage.has(modifyKey),storage.get(modifyKey)]),modifyAI=modifiedAILevels[player-1],modifyControl={helper:caller.ctrl,p1:runtimeCtrl,p2:p2.ctrl,reaction:p1Reaction?.ctrl},modifyVar=caller.vars[8],modifyBases=modifiedCombatBase.map(base=>({...base})),modifySides=[...modifiedTeamSides],modifyHelper={id:caller.id,side:caller.teamSide};
+    try{
+     caller.vars[8]=3;
+     executeControllerM1({type:'ModifyPlayer',params:{ailevel:'3.75'}},caller,context,adapter);
+     const aiRootContext=specialRuntime.context(specialRoot(player)),aiValues=['AILevel','AILevelF','AILevel/2','AILevelF/2'].map(name=>evalM1(name,aiRootContext));
+     if(JSON.stringify(aiValues)!==JSON.stringify([3,3.75,1,1.875]))throw Error('ModifyPlayer AI query/result tag mismatch: '+JSON.stringify(aiValues));
+     const otherAI=modifiedAILevels[2-player];
+     try{
+      modifiedAILevels[2-player]=7.25;
+      const scoped=withCharacter(player,()=>['AILevel','AILevelF','AILevel/2','AILevelF/2'].map(name=>evalM1(name)));
+      if(JSON.stringify(scoped)!==JSON.stringify([3,3.75,1,1.875]))throw Error('Legacy no-context AI query escaped selected player scope: '+JSON.stringify(scoped));
+     }finally{modifiedAILevels[2-player]=otherAI;}
+     const aiFlags=aiRootContext.assertions,aiMaskHad=aiFlags.has('noailevel');
+     try{
+      aiFlags.add('noailevel');
+      const masked=evalNumericAST(parseExprAST('AILevelF'),aiRootContext),negated=evalNumericAST(parseExprAST('-AILevelF'),aiRootContext);
+      if(masked.type!=='int'||masked.value!==0||negated.type!=='int'||Object.is(negated.value,-0)||evalM1('AILevel',aiRootContext)!==0)throw Error('noAILevel did not return native integer-zero AI query tag');
+     }finally{if(!aiMaskHad)aiFlags.delete('noailevel');}
+     if(kind==='helper'&&collisionActorData(caller).engineVersions?.mugen?.[0]===1&&(evalM1('AILevel',context)!==0||evalM1('AILevelF',context)!==0))throw Error('MUGEN-1 Helper AI query must remain zero');
+     for(const operand of ['"1"','Var(8)/0']){
+      executeControllerM1({type:'ModifyPlayer',params:{attack:operand,defence:operand,teamside:operand,'helpervar.id':operand}},caller,context,adapter);
+      if(modifiedCombatBase[player-1].attack!==0||modifiedCombatBase[player-1].defence!==0||(kind==='helper'?caller.teamSide:modifiedTeamSides[player-1])!==0||kind==='helper'&&caller.id!==0)throw Error('Actual ModifyPlayer integer fields accepted string/undefined');
+      executeControllerM1({type:'ModifyPlayer',params:{movecountered:'1',alive:'1',ailevel:'3.75'}},caller,context,adapter);
+      actorOverKoFlags.set(modifyKey,true);
+      executeControllerM1({type:'ModifyPlayer',params:{movecountered:operand,alive:operand,ailevel:operand}},caller,context,adapter);
+      const control=kind==='helper'?caller.ctrl:player===1?runtimeCtrl:p2.ctrl;
+      if(moveCounteredFlags.get(modifyKey)!==false||actorKoFlags.get(modifyKey)!==true||modifiedAILevels[player-1]!==0||control!==0)throw Error('Actual ModifyPlayer extraction accepted string/undefined flags or AI level');
+      executeControllerM1({type:'ModifyPlayer',params:{alive:'1'}},caller,context,adapter);
+      if(actorKoFlags.get(modifyKey)!==false||actorOverKoFlags.has(modifyKey))throw Error('ModifyPlayer alive did not clear KO/over-KO flags');
+     }
+     executeControllerM1({type:'ModifyPlayer',params:{redirectid:JSON.stringify(String(3-player)),attack:'Var(8):=99'}},caller,context,adapter);
+     if(caller.vars[8]!==3||JSON.stringify(modifiedCombatBase[2-player])!==JSON.stringify(modifyBases[2-player]))throw Error('ModifyPlayer string redirect selected a numeric actor ID or executed RHS');
+    }finally{
+     modifyFlags.forEach((storage,index)=>{const [had,value]=modifySaved[index];if(had)storage.set(modifyKey,value);else storage.delete(modifyKey);});
+     modifiedAILevels[player-1]=modifyAI;caller.vars[8]=modifyVar;caller.ctrl=modifyControl.helper;runtimeCtrl=modifyControl.p1;p2.ctrl=modifyControl.p2;if(p1Reaction)p1Reaction.ctrl=modifyControl.reaction;
+     modifiedCombatBase.splice(0,modifiedCombatBase.length,...modifyBases);modifiedTeamSides.splice(0,modifiedTeamSides.length,...modifySides);caller.id=modifyHelper.id;caller.teamSide=modifyHelper.side;
+    }
     const teamMapModule=window.mapValueTest,teamKey='__team.route',teamSnapshots=rootMaps.map(storage=>[storage.has(teamKey),teamMapModule.readStoredMapValue(storage,teamKey)]),oldTeamSides=[...modifiedTeamSides],oldHelperSide=caller.teamSide,oldTeamVar=caller.vars[9];
     try{
      for(const storage of rootMaps){storage.delete(teamKey);teamMapModule.forgetStoredMapValue(storage,teamKey);}
@@ -82,6 +119,50 @@ const server=http.createServer((request,response)=>{
      for(const [name,had,sample] of syntaxSaved){if(had)syntaxModule.writeStoredMapValue(caller.maps,name,sample);else{caller.maps.delete(name);syntaxModule.forgetStoredMapValue(caller.maps,name);}}
     }
     const angleResults=[];
+    const contactKey=hitDefinitionOwnerKey(caller),contactHad=reversedMoveClocks.has(contactKey),contactSaved={...reversedMoveClocks.get(contactKey)},counterHad=moveCounteredFlags.has(contactKey),counterSaved=moveCounteredFlags.get(contactKey);
+    try{
+     const readContacts=()=>['movecontact','movehit','moveguarded','movereversed','movecountered'].map(name=>evalM1(name,context));
+     executeControllerM1({type:'ModifyPlayer',params:{movehit:'9',movecountered:'1'}},caller,context,adapter);
+     if(JSON.stringify(readContacts())!==JSON.stringify([9,9,0,0,9]))throw Error('ModifyPlayer movehit/countered did not reach actual queries');
+     if(evalM1('MoveCountered/2',context)!==4)throw Error('MoveCountered lost native integer arithmetic');
+     executeControllerM1({type:'ModifyPlayer',params:{moveguarded:'7'}},caller,context,adapter);
+     if(JSON.stringify(readContacts())!==JSON.stringify([7,0,7,0,7]))throw Error('ModifyPlayer moveguarded did not replace shared contact clock');
+     executeControllerM1({type:'ModifyPlayer',params:{movereversed:'5'}},caller,context,adapter);
+     if(JSON.stringify(readContacts())!==JSON.stringify([0,0,0,5,5]))throw Error('ModifyPlayer movereversed/countered queries mismatch');
+     executeControllerM1({type:'ModifyPlayer',params:{movecountered:'0'}},caller,context,adapter);
+     if(evalM1('movecountered',context)!==0)throw Error('ModifyPlayer movecountered flag did not clear query');
+    }finally{
+     if(contactHad)reversedMoveClocks.set(contactKey,contactSaved);else reversedMoveClocks.delete(contactKey);
+     if(counterHad)moveCounteredFlags.set(contactKey,counterSaved);else moveCounteredFlags.delete(contactKey);
+    }
+    specialRuntime.dispatch({type:'Helper',params:{stateno:991671,id:991673}},caller,context,{},caller,player);
+    const timerHelper=specialRuntime.entities.at(-1),timerKey=hitDefinitionOwnerKey(timerHelper),timerContext=specialRuntime.context(timerHelper),timerAdapter={owner:timerHelper,player,schedulingApplied:true};
+    try{
+     timerHelper.vars[8]=3;
+     for(const operand of ['"7"','Var(8)/0']){
+      executeControllerM1({type:'ModifyPlayer',params:{unhittabletime:'7',movehit:'9'}},timerHelper,timerContext,timerAdapter);
+      if(actorUnhittableTime.remaining(timerKey)!==7||reversedMoveClocks.get(timerKey)?.time!==9||reversedMoveClocks.get(timerKey)?.type!=='hit')throw Error('ModifyPlayer numeric timer/contact setup failed');
+      executeControllerM1({type:'ModifyPlayer',params:{unhittabletime:operand,movehit:operand,moveguarded:operand,movereversed:operand}},timerHelper,timerContext,timerAdapter);
+      if(actorUnhittableTime.remaining(timerKey)!==0||reversedMoveClocks.get(timerKey)?.time!==0||reversedMoveClocks.get(timerKey)?.type!=='reversed')throw Error('Actual ModifyPlayer unhittable/contact integer extraction mismatch');
+     }
+    }finally{
+     timerHelper.destroyed=true;reversedMoveClocks.delete(timerKey);actorUnhittableTime.set(timerKey,0,combatTraceTick);actorUnhittableTime.prepare(timerKey,combatTraceTick+1);
+    }
+    const modifyResource=resourceActor(player,caller),modifyPower=kind==='helper'?caller:modifyResource,modifyPointHad=Object.hasOwn(caller,'pointResources'),modifyPoints=pointActor(player,caller),modifyLifeSnapshot={life:modifyResource.life,lifeMax:modifyResource.lifeMax},modifyPowerSnapshot={power:modifyPower.power,powerMax:modifyPower.powerMax},modifyPointSnapshot=Object.fromEntries(['dizzyPoints','dizzyPointsMax','guardPoints','guardPointsMax'].map(name=>[name,modifyPoints[name]])),modifyMaximumSnapshot=[...modifiedPowerMax],modifyHitPauseSnapshot=[caller.hitPause,p1HitPause,p2.attackPause],modifyMoveKey=kind==='helper'?caller.key:'root'+player,modifyMoveHad=specialRuntime.moveTimes.has(modifyMoveKey),modifyMoveSaved={...specialRuntime.moveTimes.get(modifyMoveKey)};
+    try{
+     for(const operand of ['"7"','Var(8)/0']){
+      modifyResource.lifeMax=1000;modifyResource.life=900;modifyPower.powerMax=1000;modifyPower.power=900;
+      modifyPoints.dizzyPointsMax=1000;modifyPoints.dizzyPoints=700;modifyPoints.guardPointsMax=1000;modifyPoints.guardPoints=400;
+      executeControllerM1({type:'ModifyPlayer',params:{lifemax:operand,powermax:operand,dizzypointsmax:operand,guardpointsmax:operand,hitpausetime:operand,pausemovetime:operand,supermovetime:operand}},caller,context,adapter);
+      const actual=[modifyResource.lifeMax,modifyResource.life,modifyPower.powerMax,modifyPower.power,modifyPoints.dizzyPointsMax,modifyPoints.dizzyPoints,modifyPoints.guardPointsMax,modifyPoints.guardPoints,kind==='helper'?caller.hitPause:player===1?p1HitPause:p2.attackPause,specialRuntime.moveTimes.get(modifyMoveKey)?.normal,specialRuntime.moveTimes.get(modifyMoveKey)?.super];
+      if(JSON.stringify(actual)!==JSON.stringify([1,1,0,0,0,0,0,0,0,0,0]))throw Error('Actual ModifyPlayer resource/timer extraction mismatch: '+JSON.stringify(actual));
+     }
+    }finally{
+     Object.assign(modifyResource,modifyLifeSnapshot);Object.assign(modifyPower,modifyPowerSnapshot);Object.assign(modifyPoints,modifyPointSnapshot);modifiedPowerMax.splice(0,modifiedPowerMax.length,...modifyMaximumSnapshot);
+     if(!modifyPointHad&&kind==='helper')delete caller.pointResources;
+     [caller.hitPause,p1HitPause,p2.attackPause]=modifyHitPauseSnapshot;
+     if(modifyMoveHad)specialRuntime.moveTimes.set(modifyMoveKey,modifyMoveSaved);else specialRuntime.moveTimes.delete(modifyMoveKey);
+    }
     const redirectedMapActor=specialRoot(3-player),redirectedMapKey='__routing.source',redirectedMapModule=window.mapValueTest,redirectedMapVars=[caller.vars[8],redirectedMapActor.vars[8]],redirectedMapSaved=[caller,redirectedMapActor].map(owner=>[owner.maps.has(redirectedMapKey),redirectedMapModule.readStoredMapValue(owner.maps,redirectedMapKey)]);
     try{
      caller.vars[8]=4;redirectedMapActor.vars[8]=88;

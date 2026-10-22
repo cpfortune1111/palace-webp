@@ -28,3 +28,23 @@ applyModifyPlayerController({type:'ModifyPlayer',params:{alive:'-1'}},caller,api
 for(const teamside of ['0','2','3','-1'])applyModifyPlayerController({type:'ModifyPlayer',params:{teamside}},caller,api);assert.deepEqual(sides,[0,2]);
 assert.throws(()=>applyModifyPlayerController({type:'ModifyPlayer',params:{unknown:'1'}},caller,api),/Unsupported ModifyPlayer parameter unknown/);
 console.log('ModifyPlayer partial live adapter: integer/clamped timer, helper redirect and missing redirect pass; unsupported parameters fail explicitly');
+const invalidValues=['1','not a number',NaN,undefined];
+for(const operand of invalidValues){
+ const invalidApi={...api,evaluate:()=>operand};
+ applyModifyPlayerController({type:'ModifyPlayer',params:{movecountered:'operand',alive:'operand',ailevel:'operand'}},caller,invalidApi);
+ assert.equal(counters.at(-1),false);
+ assert.equal(alive.at(-1),false);
+ assert.equal(levels.at(-1),0);
+}
+for(const operand of ['7',NaN,undefined]){
+ const recorded=[],resource={life:900,lifeMax:1000,power:900,powerMax:1000,dizzyPoints:700,dizzyPointsMax:1000,guardPoints:400,guardPointsMax:1000},recipient={kind:'helper',id:44};
+ const numericApi={...api,evaluate:()=>operand,maximumActor:()=>resource,setTeamSide:(_,value)=>recorded.push(['side',value]),setMoveContact:(_,kind,value)=>recorded.push([kind,value]),setHitPauseTime:(_,value)=>recorded.push(['hitpause',value]),setPauseMoveTime:(_,kind,value)=>recorded.push([kind,value]),setUnhittableTime:(_,value)=>recorded.push(['unhittable',value]),setBase:(_,kind,value)=>recorded.push([kind,value])};
+ const params=Object.fromEntries(['lifemax','powermax','dizzypointsmax','guardpointsmax','teamside','helpervar.id','movehit','moveguarded','movereversed','hitpausetime','pausemovetime','supermovetime','unhittabletime','attack','defence'].map(name=>[name,'operand']));
+ applyModifyPlayerController({type:'ModifyPlayer',params},recipient,numericApi);
+ assert.deepEqual(resource,{life:1,lifeMax:1,power:0,powerMax:0,dizzyPoints:0,dizzyPointsMax:0,guardPoints:0,guardPointsMax:0});
+ assert.equal(recipient.id,0);
+ assert.deepEqual(recorded,[['side',0],['hit',0],['guarded',0],['reversed',0],['hitpause',0],['normal',0],['super',0],['unhittable',0],['attack',0],['defence',0]]);
+ const ids=[];
+ applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'operand',attack:'operand'}},recipient,{...numericApi,findActor:id=>{ids.push(id);return null}});
+ assert.deepEqual(ids,[0]);
+}

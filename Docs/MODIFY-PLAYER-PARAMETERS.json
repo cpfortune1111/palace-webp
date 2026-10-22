@@ -4,6 +4,6 @@
  "certifiedParameters":0,
  "partial":["redirectid","lifemax","powermax","dizzypointsmax","guardpointsmax","helpervar.id","movehit","moveguarded","movereversed","movecountered","hitpausetime","unhittabletime","attack","defence","pausemovetime","supermovetime","ailevel","helpername","displayname","lifebarname","alive","teamside"],
  "unimplemented":[],
- "tests":["check-modify-player.mjs","check-saturn-priority.cjs"],
+ "tests":["check-modify-player.mjs","check-debug-clipboard-browser.cjs","check-saturn-priority.cjs"],
  "pending":["All 22 parameter hooks require complete semantic certification","Cross-version scheduling and ownership","Native single hitpause counter equivalence","State-change-pending and initializer ordering","Round and cached-character persistence","Team PowerShare and team changes"]
 }
