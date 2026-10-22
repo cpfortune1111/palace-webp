@@ -1,4 +1,5 @@
 import {normalizeMapValue,readStoredMapValue,writeStoredMapValue,forgetStoredMapValue} from './map-value-types.js';
+import {controllerFloat32} from './controller-value-conversion.js';
 export {readStoredMapValue,clearStoredMapTypes,writeStoredMapValue} from './map-value-types.js';
 
 const types=new Set(['mapset','mapadd','parentmapset','parentmapadd','rootmapset','rootmapadd','teammapset','teammapadd','mapreset']);
@@ -31,7 +32,7 @@ export function applyMapController(controller,actor,api){
  const keyExpression=assignments.length?assignments[0].trim().slice(4,-1):params.map;
  const valueExpression=assignments.length?params[assignments[0]]:params.value;
  if(keyExpression===undefined||valueExpression===undefined)throw Error('Missing map name or value');
- const name=String(api.evaluate(keyExpression)).toLowerCase(),sample=normalizeMapValue(api.sample?api.sample(valueExpression):{value:api.evaluate(valueExpression)}),value=sample.value;
+ const name=String(api.evaluate(keyExpression)).toLowerCase(),rawSample=api.sample?api.sample(valueExpression):{value:api.evaluate(valueExpression)},sample=normalizeMapValue(rawSample.constant&&typeof rawSample.value!=='string'?{type:'float',value:controllerFloat32(rawSample.value)}:rawSample),value=sample.value;
  if(!name)throw Error('Map name cannot be empty');
  const targets=type.startsWith('parent')?[api.parentActor(target)]:type.startsWith('root')?[api.rootActor(target)]:type.startsWith('team')?api.teamActors(target):[target];
  for(const owner of targets.filter(Boolean)){

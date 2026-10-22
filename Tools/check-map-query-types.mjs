@@ -13,8 +13,9 @@ const context=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpress
 vm.runInContext(parser+'\n'+evaluator,context);
 const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',context);
 const sample=expression=>vm.runInContext('evalNumericAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',context);
-const api={evaluate:execute,sample:expression=>{const result=sample(expression);return result.handled?result:{value:execute(expression)}},findActor:()=>null};
-for(const [name,value] of [['integer','3'],['floating','3.0'],['text','"3"'],['case','"MOON"'],['case2','"moon"'],['undefined','1/0']])applyMapController({type:'MapSet',params:{map:JSON.stringify(name),value}},actor,api);
+const api={evaluate:execute,sample:expression=>{const result=sample(expression),constant=vm.runInContext('isConstantNumericExpression(parseExprAST('+JSON.stringify(expression)+'))',context);return result.handled?{...result,constant}:{value:execute(expression),constant}},findActor:()=>null};
+actor.vars[0]=3;
+for(const [name,value] of [['integer','Var(0)'],['floating','3.0'],['constant','3'],['constantUndefined','1/0'],['text','"3"'],['case','"MOON"'],['case2','"moon"'],['undefined','Var(0)/0']])applyMapController({type:'MapSet',params:{map:JSON.stringify(name),value}},actor,api);
 for(const profile of ['mugen11','ikemen']){
  actor.engineProfile=profile;
  for(const [expression,expected] of [['Map("integer")/2',1],['Map("floating")/2',1.5],['Map("text")+2',2],['Map("text")=3',false],['Map("case")=Map("case2")',true],['!Map("text")',true],['Map("text")||5',profile==='ikemen'?5:true],['IfElse(1,Map("integer"),Map("floating"))/2',1]])assert.equal(execute(expression),expected,expression);
@@ -22,6 +23,9 @@ for(const profile of ['mugen11','ikemen']){
  assert.equal(sample('Map("missing")').type,'float');
  assert.equal(sample('Map("integer")').type,'int');
  assert.equal(sample('Map("floating")').type,'float');
+ assert.equal(sample('Map("constant")').type,'float');
+ assert.equal(execute('Map("constant")/2'),1.5);
+ assert.equal(execute('Map("constantundefined")'),0);
 }
 console.log('Actual Map producer/query parser consumers preserve integer/float tags, unset float zero, string arithmetic/equality and undefined reads');
 assert.equal(execute('(Map("assigned"):=3)/2'),1);

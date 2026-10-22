@@ -6,6 +6,7 @@ from pathlib import Path
 from character_compatibility import imported_compatibility
 from character_coordinates import imported_coordinates
 from custom_constants import imported_custom_constants
+from map_defaults import imported_map_defaults
 from data_constants import imported_data_constants
 from size_definition import imported_size_definition
 from motion_constants import imported_motion_constants
@@ -27,7 +28,7 @@ def compile_saturn_controller(controller):
     return compile_controller(controller)
 
 
-def compile_runtime(imported, output):
+def compile_runtime(imported, output, language=None):
     audit = build(imported, disabled_actions=set())
     raw = json.loads((imported / 'state_sections.json').read_text(encoding='utf-8'))
     definitions = raw['states']
@@ -174,6 +175,7 @@ def compile_runtime(imported, output):
     bundle.update(imported_compatibility(imported))
     bundle.update(imported_coordinates(imported))
     bundle.update(imported_custom_constants(imported))
+    bundle.update(imported_map_defaults(imported, language))
     bundle.update(imported_data_constants(imported))
     bundle.update(imported_size_definition(imported))
     bundle.update(imported_motion_constants(imported))
@@ -187,5 +189,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--imported', type=Path, default=Path('outputs/saturn'))
     parser.add_argument('--output', type=Path, default=Path('work/Char/Saturn/Battle/saturn_runtime.json'))
+    parser.add_argument('--language', default=None)
     arguments = parser.parse_args()
-    compile_runtime(arguments.imported, arguments.output)
+    compile_runtime(arguments.imported, arguments.output, arguments.language)

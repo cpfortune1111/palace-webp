@@ -1,4 +1,5 @@
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
+import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
 import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
@@ -120,7 +121,7 @@ export function createSpecialRuntime(api){
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
   const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
-   life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:new Map(owner.mapDefaults||[]),mapDefaults:new Map(owner.mapDefaults||[]),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:kind==='projectile'?Number(params.projsprpriority??-1):0,supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
+   life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:cloneStoredMapValues(owner.mapDefaults),mapDefaults:cloneStoredMapValues(owner.mapDefaults),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:kind==='projectile'?Number(params.projsprpriority??-1):0,supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileOwnerActor=owner.kind==='helper'?owner:null;entity.projectileId=entity.id}
   if(kind==='helper'&&api.sizeGuardDistances)entity.sizeGuardDistances=api.sizeGuardDistances(owner);
   if(kind==='helper'&&api.sizeDefinition){const inherited=api.sizeDefinition(owner);if(inherited.definition){entity.sizeDefinition=applyHelperSizeOverrides(inherited.definition,params,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.sizeLocalCoord=inherited.localCoord}}

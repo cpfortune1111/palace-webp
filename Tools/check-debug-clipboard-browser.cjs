@@ -32,9 +32,21 @@ const server=http.createServer((request,response)=>{
     const data=characterProfiles.get(battleCharacters[player-1]).battle;
     data.helperStates[991671]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
     let caller=specialRoot(player);
+    const inheritedMapResult=[];
     if(kind==='helper'){
-     specialRuntime.dispatch({type:'Helper',params:{stateno:991671,id:991671}},caller,specialRuntime.context(caller),{},caller,player);
-     caller=specialRuntime.entities.at(-1);
+     const owner=caller,module=window.mapValueTest,name='__inherit.float',had=owner.mapDefaults.has(name),saved=module.readStoredMapValue(owner.mapDefaults,name);
+     try{
+      module.writeStoredMapValue(owner.mapDefaults,name,{type:'float',value:3});
+      specialRuntime.dispatch({type:'Helper',params:{stateno:991671,id:991671}},caller,specialRuntime.context(caller),{},caller,player);
+      caller=specialRuntime.entities.at(-1);
+      inheritedMapResult.push(module.readStoredMapValue(caller.maps,name).type,evalM1('Map("__inherit.float")/2',specialRuntime.context(caller)));
+      executeControllerM1({type:'MapSet',params:{map:'"__inherit.float"',value:'99'}},caller,specialRuntime.context(caller),{owner:caller,player,schedulingApplied:true});
+      executeControllerM1({type:'MapReset',params:{}},caller,specialRuntime.context(caller),{owner:caller,player,schedulingApplied:true});
+      inheritedMapResult.push(evalM1('Map("__inherit.float")/2',specialRuntime.context(caller)),module.readStoredMapValue(owner.mapDefaults,name).value);
+      if(JSON.stringify(inheritedMapResult)!==JSON.stringify(['float',1.5,1.5,3]))throw Error('Actual Helper lost inherited Map float type: '+JSON.stringify(inheritedMapResult));
+     }finally{
+      if(had)module.writeStoredMapValue(owner.mapDefaults,name,saved);else{owner.mapDefaults.delete(name);module.forgetStoredMapValue(owner.mapDefaults,name);}
+     }
     }
     const context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
     const angleResults=[];
@@ -51,18 +63,21 @@ const server=http.createServer((request,response)=>{
      try{executeControllerM1({type:'AngleDraw',params:{value:'Var(8):=42',[name]:'1,2,3'}},caller,context,adapter);}catch(error){rejected=error.message.includes('at most two');}
      angleArity.push(rejected,caller.vars[8]===0,JSON.stringify(caller.angleState)===before);
     }
-    const mapResult=[];
-    for(const [name,value] of [['__test.float','1.0'],['__test.int','1'],['__test.unset',null]]){
+    const mapResult=[],savedMapVariables=[caller.vars[11],caller.vars[12]];
+    caller.vars[11]=1;caller.vars[12]=2147483647;
+    for(const [name,value] of [['__test.float','1.0'],['__test.int','Var(11)'],['__test.unset',null]]){
      caller.maps.delete(name);
      if(value!==null)executeControllerM1({type:'MapSet',params:{map:JSON.stringify(name),value}},caller,context,adapter);
      else executeControllerM1({type:'MapAdd',params:{map:JSON.stringify(name),value:'1'}},caller,context,adapter);
-     executeControllerM1({type:'MapAdd',params:{map:JSON.stringify(name),value:'2147483647'}},caller,context,adapter);
+     executeControllerM1({type:'MapAdd',params:{map:JSON.stringify(name),value:name==='__test.int'?'Var(12)':'2147483647'}},caller,context,adapter);
      mapResult.push(caller.maps.get(name));
     }
-    for(const [name,value] of [['__test.readint','3'],['__test.readfloat','3.0'],['__test.readtext','"3"']])executeControllerM1({type:'MapSet',params:{map:JSON.stringify(name),value}},caller,context,adapter);
+    caller.vars[11]=3;
+    for(const [name,value] of [['__test.readint','Var(11)'],['__test.readfloat','3.0'],['__test.constant','3'],['__test.readtext','"3"']])executeControllerM1({type:'MapSet',params:{map:JSON.stringify(name),value}},caller,context,adapter);
+    [caller.vars[11],caller.vars[12]]=savedMapVariables;
     executeControllerM1({type:'AngleSet',params:{value:'Map("__test.readint")/2',xangle:'Map("__test.readfloat")/2',yangle:'Map("__test.readtext")+2'}},caller,context,adapter);
-    const mapQueryResult=[caller.angleState.value,caller.angleState.xangle,caller.angleState.yangle,evalM1('Map("__test.readtext")=3',context),evalM1('!Map("__test.readtext")',context)];
-    executeControllerM1({type:'MapSet',params:{map:'"__test.undefined"',value:'1/0'}},caller,context,adapter);
+    const mapQueryResult=[caller.angleState.value,caller.angleState.xangle,caller.angleState.yangle,evalM1('Map("__test.readtext")=3',context),evalM1('!Map("__test.readtext")',context),evalM1('Map("__test.constant")/2',context)];
+    executeControllerM1({type:'MapSet',params:{map:'"__test.undefined"',value:'Var(0)/0'}},caller,context,adapter);
     const triggerResult=[];caller.vars[10]=0;
     for(const [triggerall,triggers] of [[['Map("__test.readtext")'],{1:['1']}],[[],{1:['Map("__test.readtext")']}],[[],{1:['Map("__test.readtext")'],2:['Map("__test.readint")']}],[[],{1:['Map("__test.undefined")']}],[[],{1:['Map("__test.missing")']}]]){
      executeControllerM1({type:'VarAdd',params:{v:'10',value:'1'},triggerall,triggers},caller,context,adapter);
@@ -259,7 +274,7 @@ const server=http.createServer((request,response)=>{
    assert.deepEqual(row.angleArity,[true,true,true,true,true,true]);
    assert.deepEqual(row.shakeResult,[0,0,0,0,0,90,true]);
    assert.deepEqual(row.mapResult,[2147483648,-2147483648,2147483648]);
-   assert.deepEqual(row.mapQueryResult,[1,1.5,2,false,true]);
+   assert.deepEqual(row.mapQueryResult,[1,1.5,2,false,true,1.5]);
    assert.deepEqual(row.mapResetResult,[1.5,1.5,1.5]);
    assert.deepEqual(row.mapAssignmentResult,[1,1.5,2,6,6,99,6,false]);
    assert.deepEqual(row.triggerResult,[0,0,1,1,1]);

@@ -7,6 +7,7 @@ from pathlib import Path
 from character_compatibility import imported_compatibility
 from character_coordinates import imported_coordinates
 from custom_constants import imported_custom_constants
+from map_defaults import imported_map_defaults
 from data_constants import imported_data_constants
 from size_definition import imported_size_definition
 from motion_constants import imported_motion_constants
@@ -18,6 +19,7 @@ from state_scalars import STATE_SCALAR_FIELDS, import_bundle_state_scalars, stat
 parser = argparse.ArgumentParser()
 parser.add_argument('--source-import', type=Path, default=Path('outputs/venus'))
 parser.add_argument('--output', type=Path, default=Path('work/venus_battle200.json'))
+parser.add_argument('--language', default=None)
 arguments = parser.parse_args()
 root = arguments.source_import
 source = root / 'original'
@@ -334,6 +336,7 @@ bundle = {'powerMaximum': power_maximum, 'attackStates': attack_states, 'attackC
 bundle.update(imported_compatibility(root))
 bundle.update(imported_coordinates(root))
 bundle.update(imported_custom_constants(root))
+bundle.update(imported_map_defaults(root, arguments.language))
 bundle.update(imported_data_constants(root))
 bundle.update(imported_size_definition(root))
 bundle.update(imported_motion_constants(root))

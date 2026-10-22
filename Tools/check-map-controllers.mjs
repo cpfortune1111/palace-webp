@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {applyMapController} from '../Engine/map-controllers.js';
-import {writeStoredMapValue,readStoredMapValue} from '../Engine/map-value-types.js';
+import {writeStoredMapValue,readStoredMapValue,cloneStoredMapValues} from '../Engine/map-value-types.js';
 
 const createActor=()=>({maps:new Map(),mapDefaults:new Map([['default',5],['restored',6]])});
 const root=createActor(),parent=createActor(),child=createActor(),partner=createActor(),enemy=createActor();
 let warnings=0;
-const api={evaluate:expression=>typeof expression==='string'&&expression.startsWith('"')?JSON.parse(expression):Number(expression),findActor:id=>id===3?child:null,parentActor:actor=>actor===child?parent:null,rootActor:actor=>actor===root?null:root,teamActors:()=>[root,partner],warn:()=>warnings++};
+const read=expression=>expression==='dynamic.max'?2147483647:expression==='dynamic.one'?1:typeof expression==='string'&&expression.startsWith('"')?JSON.parse(expression):Number(expression);
+const api={evaluate:read,sample:expression=>{const value=read(expression);return {value,constant:/^[+-]?\d+(?:\.\d*)?$/.test(String(expression))}},findActor:id=>id===3?child:null,parentActor:actor=>actor===child?parent:null,rootActor:actor=>actor===root?null:root,teamActors:()=>[root,partner],warn:()=>warnings++};
 const run=(type,params,actor=child)=>applyMapController({type,params},actor,api);
 run('MapSet',{map:'"MiXeD"',value:'2'});assert.equal(child.maps.get('mixed'),2);
 run('MapAdd',{map:'"mixed"',value:'3'});assert.equal(child.maps.get('mixed'),5);
@@ -20,7 +21,7 @@ run('MapReset',{exclude:'"KEEP"'});assert.deepEqual([...child.maps].sort(),[['de
 run('MapSet',{redirectid:'3',map:'"redirected"',value:'8'},root);assert.equal(child.maps.get('redirected'),8);
 run('MapReset',{redirectid:'3'},root);assert.deepEqual([...child.maps].sort(),[['default',5],['restored',6]]);
 run('MapSet',{map:'"float"',value:'1.25'});run('MapAdd',{map:'"float"',value:'2'});assert.equal(child.maps.get('float'),3.25);
-run('MapSet',{map:'"integer"',value:'2147483647'});run('MapAdd',{map:'"integer"',value:'1'});assert.equal(child.maps.get('integer'),-2147483648);
+run('MapSet',{map:'"integer"',value:'dynamic.max'});run('MapAdd',{map:'"integer"',value:'dynamic.one'});assert.equal(child.maps.get('integer'),-2147483648);
 const exclusions={};
 for(let index=1;index<=8;index++){
  const name='preserve'+index;
@@ -34,7 +35,7 @@ assert.deepEqual([...child.maps].sort(),[['default',5],['restored',6]]);
 run('ParentMapSet',{map:'"unused"',value:'1'},root);assert.equal(root.maps.has('unused'),false);
 assert.equal(run('Null',{}),false);
 console.log('All nine map controllers: ownership, case, strings, redirect IDs, reset defaults and exclusions passed');
-const typed=createActor(),typedApi={...api,sample:expression=>({type:String(expression).includes('.')?'float':'int',value:Number(expression)})};
+const typed=createActor(),typedApi={...api,sample:expression=>({type:String(expression).includes('.')?'float':'int',value:Number(expression),constant:true})};
 applyMapController({type:'MapSet',params:{map:'"typed"',value:'1.0'}},typed,typedApi);
 applyMapController({type:'MapAdd',params:{map:'"typed"',value:'2147483647'}},typed,typedApi);
 assert.equal(typed.maps.get('typed'),2147483648);
@@ -48,3 +49,10 @@ assert.deepEqual(readStoredMapValue(typed.maps,'default.float'),{type:'float',va
 typed.maps.delete('default.float');
 applyMapController({type:'MapReset',params:{}},typed,typedApi);
 assert.deepEqual(readStoredMapValue(typed.maps,'default.float'),{type:'float',value:3});
+const inherited={maps:cloneStoredMapValues(typed.mapDefaults),mapDefaults:cloneStoredMapValues(typed.mapDefaults)};
+assert.deepEqual(readStoredMapValue(inherited.maps,'default.float'),{type:'float',value:3});
+writeStoredMapValue(inherited.maps,'default.float',{type:'int',value:99});
+applyMapController({type:'MapReset',params:{}},inherited,typedApi);
+assert.deepEqual(readStoredMapValue(inherited.maps,'default.float'),{type:'float',value:3});
+assert.deepEqual(readStoredMapValue(typed.mapDefaults,'default.float'),{type:'float',value:3});
+assert.equal(cloneStoredMapValues().size,0);
