@@ -15,7 +15,7 @@ run('ParentMapAdd',{map:'"count"',value:'2'});assert.equal(parent.maps.get('coun
 run('RootMapSet',{map:'"count"',value:'10'});run('RootMapAdd',{map:'"count"',value:'2'});assert.equal(root.maps.get('count'),12);
 run('TeamMapSet',{map:'"team"',value:'4'});run('TeamMapAdd',{map:'"team"',value:'3'});
 assert.equal(root.maps.get('team'),7);assert.equal(partner.maps.get('team'),7);assert.equal(enemy.maps.size,0);assert.equal(child.maps.has('team'),false);
-run('MapSet',{'map("name")':'"text"'});run('MapAdd',{map:'"name"',value:'3'});assert.equal(child.maps.get('name'),'text');assert.equal(warnings,1);
+run('MapSet',{'map(name)':'"text"'});run('MapAdd',{map:'"name"',value:'3'});assert.equal(child.maps.get('name'),'text');assert.equal(warnings,1);
 run('MapSet',{map:'"default"',value:'10'});run('MapSet',{map:'"keep.value"',value:'11'});
 run('MapReset',{exclude:'"KEEP"'});assert.deepEqual([...child.maps].sort(),[['default',5],['keep.value',11],['restored',6]]);
 run('MapSet',{redirectid:'3',map:'"redirected"',value:'8'},root);assert.equal(child.maps.get('redirected'),8);
@@ -56,3 +56,6 @@ applyMapController({type:'MapReset',params:{}},inherited,typedApi);
 assert.deepEqual(readStoredMapValue(inherited.maps,'default.float'),{type:'float',value:3});
 assert.deepEqual(readStoredMapValue(typed.mapDefaults,'default.float'),{type:'float',value:3});
 assert.equal(cloneStoredMapValues().size,0);
+writeStoredMapValue(typed.maps,'nan.float',{type:'float',value:NaN});
+applyMapController({type:'MapAdd',params:{map:'"nan.float"',value:'2'}},typed,typedApi);
+assert.deepEqual(readStoredMapValue(typed.maps,'nan.float'),{type:'float',value:2});

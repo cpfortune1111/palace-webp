@@ -49,7 +49,53 @@ const server=http.createServer((request,response)=>{
      }
     }
     const context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+    const teamMapModule=window.mapValueTest,teamKey='__team.route',teamSnapshots=rootMaps.map(storage=>[storage.has(teamKey),teamMapModule.readStoredMapValue(storage,teamKey)]),oldTeamSides=[...modifiedTeamSides],oldHelperSide=caller.teamSide,oldTeamVar=caller.vars[9];
+    try{
+     for(const storage of rootMaps){storage.delete(teamKey);teamMapModule.forgetStoredMapValue(storage,teamKey);}
+     caller.vars[9]=77;
+     if(kind==='helper')caller.teamSide=3-player;else modifiedTeamSides[player-1]=3-player;
+     executeControllerM1({type:'TeamMapSet',params:{map:'"__team.route"',value:'Var(9)'}},caller,context,adapter);
+     executeControllerM1({type:'TeamMapAdd',params:{map:'"__team.route"',value:'1'}},caller,context,adapter);
+     if(rootMaps[player-1].has(teamKey)||rootMaps[2-player].get(teamKey)!==78)throw Error('TeamMap ignored modified team side');
+     if(kind==='helper')caller.teamSide=0;else modifiedTeamSides[player-1]=0;
+     executeControllerM1({type:'TeamMapSet',params:{map:'"__team.route"',value:'999'}},caller,context,adapter);
+     if(rootMaps[player-1].has(teamKey)||rootMaps[2-player].get(teamKey)!==78)throw Error('Neutral TeamMap changed regular player slots');
+    }finally{
+     modifiedTeamSides.splice(0,modifiedTeamSides.length,...oldTeamSides);caller.teamSide=oldHelperSide;caller.vars[9]=oldTeamVar;
+     rootMaps.forEach((storage,index)=>{const [had,sample]=teamSnapshots[index];if(had)teamMapModule.writeStoredMapValue(storage,teamKey,sample);else{storage.delete(teamKey);teamMapModule.forgetStoredMapValue(storage,teamKey);}});
+    }
+    const syntaxModule=window.mapValueTest,syntaxNames=['__syntax.embedded','var(8)','8',' padded '],syntaxSaved=syntaxNames.map(name=>[name,caller.maps.has(name),syntaxModule.readStoredMapValue(caller.maps,name)]),syntaxVariable=caller.vars[8];
+    try{
+     caller.vars[8]=4;
+     executeControllerM1({type:'MapSet',params:{map:'Map(__syntax.embedded) := Var(8):=Var(8)+1',value:'999'}},caller,context,adapter);
+     const embeddedResult=[caller.maps.get('__syntax.embedded'),caller.vars[8],evalM1('Map("__syntax.embedded")/2',context)];
+     executeControllerM1({type:'MapSet',params:{'map(Var(8))':'7'}},caller,context,adapter);
+     executeControllerM1({type:'MapSet',params:{map:'Var(8):=9',value:'999'}},caller,context,adapter);
+     executeControllerM1({type:'MapSet',params:{map:'map = " padded "',value:'11'}},caller,context,adapter);
+     const actual=[...embeddedResult,caller.maps.get('var(8)'),caller.maps.get('8'),caller.maps.get(' padded '),caller.vars[8]];
+     if(JSON.stringify(actual)!==JSON.stringify([5,5,2,7,9,11,5]))throw Error('Actual Map syntax/caller side-effect mismatch: '+JSON.stringify(actual));
+     let rejected=false;
+     try{executeControllerM1({type:'MapSet',params:{map:'""',value:'Var(8):=99'}},caller,context,adapter);}catch(error){rejected=error.message.includes('empty');}
+     if(!rejected||caller.vars[8]!==5)throw Error('Invalid Map name evaluated its RHS');
+    }finally{
+     caller.vars[8]=syntaxVariable;
+     for(const [name,had,sample] of syntaxSaved){if(had)syntaxModule.writeStoredMapValue(caller.maps,name,sample);else{caller.maps.delete(name);syntaxModule.forgetStoredMapValue(caller.maps,name);}}
+    }
     const angleResults=[];
+    const redirectedMapActor=specialRoot(3-player),redirectedMapKey='__routing.source',redirectedMapModule=window.mapValueTest,redirectedMapVars=[caller.vars[8],redirectedMapActor.vars[8]],redirectedMapSaved=[caller,redirectedMapActor].map(owner=>[owner.maps.has(redirectedMapKey),redirectedMapModule.readStoredMapValue(owner.maps,redirectedMapKey)]);
+    try{
+     caller.vars[8]=4;redirectedMapActor.vars[8]=88;
+     caller.maps.delete(redirectedMapKey);
+     for(const type of ['MapSet','MapAdd'])executeControllerM1({type,params:{redirectid:String(3-player),map:'"__routing.source"',value:'Var(8):=Var(8)+1'}},caller,context,adapter);
+     if(caller.vars[8]!==6||redirectedMapActor.vars[8]!==88||redirectedMapActor.maps.get(redirectedMapKey)!==11||caller.maps.has(redirectedMapKey))throw Error('Map redirect changed operand caller or sampled RHS twice');
+     for(const redirectid of ['-123',JSON.stringify(String(3-player)),'Var(8)/0']){
+      executeControllerM1({type:'MapSet',params:{redirectid,map:'"__routing.source"',value:'Var(8):=99'}},caller,context,adapter);
+      if(caller.vars[8]!==6||redirectedMapActor.maps.get(redirectedMapKey)!==11)throw Error('Missing/string/undefined Map redirect evaluated RHS or selected a numeric-string ID');
+     }
+    }finally{
+     [caller.vars[8],redirectedMapActor.vars[8]]=redirectedMapVars;
+     [caller,redirectedMapActor].forEach((owner,index)=>{const [had,sample]=redirectedMapSaved[index];if(had)redirectedMapModule.writeStoredMapValue(owner.maps,redirectedMapKey,sample);else{owner.maps.delete(redirectedMapKey);redirectedMapModule.forgetStoredMapValue(owner.maps,redirectedMapKey);}});
+    }
     for(const type of ['AngleSet','AngleMul']){
      executeControllerM1({type:'AngleDraw',params:{value:'10',xangle:'20',yangle:'30'}},caller,context,adapter);
      executeControllerM1({type,params:{value:'2',xangle:'Angle'}},caller,context,adapter);
