@@ -1,0 +1,13 @@
+# Target controller operand extraction (partial, unpublished)
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, bytecode.go getRedirectedChar and Target controller Run methods. Native redirect IDs, hit IDs, target indices and integer payloads use evalI. TargetScoreAdd payload remains evalF; velocity and binding coordinates remain float parameters. TargetDrop keepone and TargetDizzyPointsAdd/TargetGuardPointsAdd absolute use evalB.
+
+The shared integer extractor now replaces JavaScript Number coercion in TargetState, TargetFacing, TargetDrop, TargetPowerAdd, TargetLifeAdd, TargetScoreAdd, TargetVelSet/Add, TargetRedLifeAdd, TargetDizzyPointsAdd/TargetGuardPointsAdd and TargetBind. This includes all integer fields routed through their existing local integer functions, without changing float payload conversion. TargetDrop keepone and both point-controller absolute flags now use controllerBoolean.
+
+Independent failing-before checks reproduce numeric-string redirect acceptance and numeric-string keepone being incorrectly true (outputs/target-integer-extraction-before.log and outputs/target-boolean-extraction-before.log). check-target-integer-extraction.mjs covers twelve types, missing-recipient early return, hit-ID/index zero extraction, TargetDrop exclusion/boolean extraction and point damage consumers distinguishing absolute from defense-scaled amounts.
+
+Actual browser dispatch in both named profiles and P1/P2 directions rejects quoted root redirect IDs before Target payload side effects (outputs/target-integer-extraction-browser.log). This does not establish actual target-selection timing/order or complete native binding/resource/state equivalence. Existing Target list and point tests also pass.
+
+Actual TargetVelSet consumer fixtures now register two live Helper recipients and a real root Target list. Quoted ID/index values select hit-ID zero/index zero, while numeric controls select the hit-ID-seven Helper; only the selected Helper's Y velocity changes using the actual coordinate bridge. Actual TargetDrop quoted excludeid/keepone retains both zero-hit-ID Helpers rather than filtering for seven or selecting only one. Both profiles/player directions pass (outputs/target-integer-boolean-consumers-browser.log). Target lists, entity registry and profile are restored in finally blocks. These are registered consumer fixtures, not full Helper spawning or contact generation tests.
+
+All 228 Node checks pass (outputs/target-integer-extraction-node.log). Remaining full target semantics, native compiler/version/diagnostic/nonfinite behavior, combined regression and publication remain Pending. No whole-controller certification changes.

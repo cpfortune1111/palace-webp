@@ -14,7 +14,7 @@ export function applyScoreController(controller,caller,api){
 
 export function applyTargetScoreController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetscoreadd')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  if(params.value===undefined)throw Error('Missing TargetScoreAdd value');
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;

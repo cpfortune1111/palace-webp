@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 export function targetBindingMatchesHit(binding,hit){
  return !!binding&&!!hit&&(binding.ownerId!==undefined&&hit.attackerId===binding.ownerId||binding.binderKey!==undefined&&hit.snapBinderKey===binding.binderKey);
 }
@@ -33,7 +34,7 @@ export function stepTargetBinding(target,{binderPaused=false,binderWasHit=false,
 
 export function applyTargetBindController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetbind')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;
  const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index),time=params.time===undefined?1:integer(params.time);
@@ -48,4 +49,3 @@ export function applyTargetBindController(controller,caller,api){
  }
  return true;
 }
-

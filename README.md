@@ -1,3 +1,7 @@
+## 0.25.73 — Target operand extraction (partial)
+
+Twelve Target controller types now share native-style integer extraction for redirect IDs, hit IDs, indices and integer payload fields. TargetDrop keepone and point-controller absolute flags use native boolean extraction. Actual root/Helper consumer tests distinguish quoted-string IDs from numeric controls through changed velocity and retained target lists, with both profile/player directions covered. Full target/native diagnostics/version semantics and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.72 — Additional native redirect extraction (partial)
 
 Twenty-one collision/drawing/input/hit/score/feedback/clipboard controller types and the legacy Helper feedback gate now share native-style integer extraction for explicit redirect IDs. Actual quoted-ID browser fixtures preserve RHS side-effect isolation in both profiles and player directions; AttackDist's adapted recipient lookup rejects disabled Characters. Remaining ID/index consumers, full parameter/native diagnostics/version behavior and whole-controller certification remain Pending. Final versioned regression and verified publication are separate gates.

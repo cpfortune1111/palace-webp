@@ -1,4 +1,12 @@
+## 0.25.73 — Target integer and boolean extraction (partial, publication pending)
+
+Actual TargetVelSet and TargetDrop consumer tests now verify selected Helper velocity and retained Target-list contents, not just lookup calls; numeric controls distinguish hit-ID seven from quoted-string zero extraction. Both profile/player directions and all 228 Node checks pass (outputs/target-integer-boolean-consumers-browser.log and outputs/target-integer-extraction-node.log). Full target semantics and final versioned regression/publication remain Pending.
+
+Twelve Target types now share native-style integer extraction for redirect IDs, target selection and their integer payload fields. TargetDrop keepone and point-controller absolute flags use native boolean extraction. Failing-before integer/boolean cases and focused consumers pass; actual quoted-ID dispatch coverage passes in both profiles and player directions (outputs/target-integer-extraction-browser.log). Full target semantics, combined regression and publication remain Pending. See TARGET-INTEGER-EXTRACTION-WIP.md; no whole-controller certification changes.
+
 ## 0.25.72 — additional controller redirect extraction (partial, publication pending)
+
+Publication subsequently verified at commit 4537cbd43c91584473b2a74070f1d93ddfddc950: 227 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 39910989278 and twenty-four normalized live file comparisons passed. Receipt: outputs/release-02572-verification.json. Earlier pending statements are historical and do not establish full compatibility.
 
 The expanded feedback/clipboard actual-browser fixture and all 227 Node checks pass (outputs/secondary-redirect-extraction-final-browser.log and outputs/secondary-redirect-extraction-node.log). Full battle baseline and final versioned gates remain separate requirements; no whole-controller certification changes.
 

@@ -1072,6 +1072,10 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
       ...['DisplayToClipboard','AppendToClipboard','ClearClipboard'].map(type=>({type,params:{text:'"%d"',params:secondaryRedirectPayload}}))
      ];
      for(const controller of secondaryControllers)executeControllerM1({...controller,params:{...controller.params,redirectid:'"'+player+'"'}},binding,context,adapter);
+     for(const type of ['TargetState','TargetFacing','TargetDrop','TargetPowerAdd','TargetLifeAdd','TargetScoreAdd','TargetVelSet','TargetVelAdd','TargetRedLifeAdd','TargetDizzyPointsAdd','TargetGuardPointsAdd','TargetBind']){
+      const field=type==='TargetDrop'?'excludeid':type==='TargetBind'?'time':type==='TargetVelSet'||type==='TargetVelAdd'?'x':'value';
+      executeControllerM1({type,params:{redirectid:'"'+player+'"',[field]:secondaryRedirectPayload}},binding,context,adapter);
+     }
      rows.push({engineProfile,player,priorResolverWrites,writes:caller.vars[55],projectileDizzy:projectile.dizzy===true,disabledDizzy:disabledHelper.dizzy===true});
      specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
      for(let index=0;index<2;index++){for(const key of Object.keys(rootStatusFlags[index]))delete rootStatusFlags[index][key];Object.assign(rootStatusFlags[index],flags[index])}
@@ -1086,6 +1090,34 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(characterLookupRows.length,4);
   for(const row of characterLookupRows){assert.equal(row.priorResolverWrites,1,JSON.stringify(row));assert.equal(row.writes,0,JSON.stringify(row));assert.equal(row.projectileDizzy,false);assert.equal(row.disabledDizzy,false)}
   console.log('Actual root dispatch skips redirected RHS for projectile, disabled and destroyed registry recipients in both profiles and player directions');
+  const targetSelectionRows=await run(`(()=>{
+   const entities=[...specialRuntime.entities],profile=combatEngineProfile,savedTargets=[...combatTargets].map(([key,list])=>({key,list,ids:list.ids()})),rows=[];
+   try{
+    for(const engineProfile of ['mugen11','ikemen'])for(const player of [1,2]){
+     combatEngineProfile=engineProfile;
+     const caller=specialRoot(player),binding=player===1?p1LifecycleBinding:p2,context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+     const first={...specialRoot(3-player),kind:'helper',key:'target-extraction-first',instanceId:991841,getHit:{hitid:0},vx:0,vy:0};
+     const second={...specialRoot(3-player),kind:'helper',key:'target-extraction-second',instanceId:991842,getHit:{hitid:7},vx:0,vy:0};
+     specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities,first,second);
+     const targets=combatTargetList(caller);targets.clear();targets.add(first.instanceId);targets.add(second.instanceId);
+     const scale=actorVelocityWorldScale(caller,context);
+     executeControllerM1({type:'TargetVelSet',params:{id:'"7"',index:'"8"',y:'3'}},binding,context,adapter);
+     const quoted=[first.vy,second.vy];first.vy=0;second.vy=0;
+     executeControllerM1({type:'TargetVelSet',params:{id:'7',index:'0',y:'5'}},binding,context,adapter);
+     const numeric=[first.vy,second.vy];second.getHit.hitid=0;
+     executeControllerM1({type:'TargetDrop',params:{excludeid:'"7"',keepone:'"1"'}},binding,context,adapter);
+     rows.push({engineProfile,player,quoted,numeric,retained:targets.ids(),expectedQuoted:Math.fround(3*scale),expectedNumeric:Math.fround(5*scale)});
+    }
+    return rows;
+   }finally{
+    combatEngineProfile=profile;specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
+    combatTargets.clear();for(const saved of savedTargets){saved.list.clear();for(const id of saved.ids)saved.list.add(id);combatTargets.set(saved.key,saved.list)}
+   }
+  })()`);
+  assert.equal(targetSelectionRows.length,4);
+  for(const row of targetSelectionRows){assert.deepEqual(row.quoted,[row.expectedQuoted,0],JSON.stringify(row));assert.deepEqual(row.numeric,[0,row.expectedNumeric],JSON.stringify(row));assert.deepEqual(row.retained,[991841,991842],JSON.stringify(row))}
+  console.log('Actual TargetVelSet quoted ID/index select the hit-ID-zero Helper while numeric controls select hit-ID-seven, in both profiles and player directions');
+  console.log('Actual TargetDrop quoted excludeid and keepone preserve both hit-ID-zero Helpers instead of selecting seven or retaining only one');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

@@ -1,10 +1,11 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {targetLifeDamage} from './target-life.js?v=02554';
 import {controllerBoolean} from './controller-value-conversion.js';
 import {hitPauseVersionProfile} from './hit-pause-version.js';
 
 export function applyTargetRedLifeController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetredlifeadd')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  if(params.value===undefined)throw Error('Missing TargetRedLifeAdd value');
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;

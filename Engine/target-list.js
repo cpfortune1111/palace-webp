@@ -1,3 +1,4 @@
+import {controllerInteger,controllerBoolean} from './controller-value-conversion.js';
 export function createTargetList(){
  const targets=[];
  function add(id){if(!targets.includes(id))targets.push(id)}
@@ -35,7 +36,7 @@ export function createTargetList(){
 
 export function applyTargetFacingController(controller,owner,api){
  if(String(controller.type).toLowerCase()!=='targetfacing')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  if(params.redirectid!==undefined)owner=api.findActor(integer(params.redirectid));
  if(!owner)return true;
  const hitId=params.id===undefined?-1:integer(params.id),index=params.index===undefined?-1:integer(params.index),value=integer(params.value??0);
@@ -47,9 +48,9 @@ export function applyTargetFacingController(controller,owner,api){
 
 export function applyTargetDropController(controller,owner,api){
  if(String(controller.type).toLowerCase()!=='targetdrop')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  if(params.redirectid!==undefined)owner=api.findActor(integer(params.redirectid));
  if(!owner)return true;
- api.targets(owner).drop({excludeId:params.excludeid===undefined?-1:integer(params.excludeid),keepOne:params.keepone===undefined?true:Number(api.evaluate(params.keepone))!==0,lookup:api.findActor,choose:api.choose,onDrop:(id,reason)=>api.onDrop(owner,id,reason)});
+ api.targets(owner).drop({excludeId:params.excludeid===undefined?-1:integer(params.excludeid),keepOne:params.keepone===undefined?true:controllerBoolean(api.evaluate(params.keepone)),lookup:api.findActor,choose:api.choose,onDrop:(id,reason)=>api.onDrop(owner,id,reason)});
  return true;
 }

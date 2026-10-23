@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 export function helperTypeParameter(value='normal',{zss=false}={}){
  const type=String(value).toLowerCase();
  if(type==='normal')return 1;
@@ -15,7 +16,7 @@ export function executeTargetPowerAddition(target,value,api){
 
 export function applyTargetPowerController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetpoweradd')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  if(params.value===undefined)throw Error('Missing TargetPowerAdd value');
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;
@@ -24,4 +25,3 @@ export function applyTargetPowerController(controller,caller,api){
  for(const id of api.targets(owner).select(hitId,index,api.findActor)){const target=api.findActor(id);if(target&&api.isPlayerType(target))executeTargetPowerAddition(target,value,api)}
  return true;
 }
-

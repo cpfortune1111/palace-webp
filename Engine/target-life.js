@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {controllerBoolean} from './controller-value-conversion.js';
 
 export function targetLifeMultipliers(attribute,constants={}){
@@ -39,7 +40,7 @@ export function executeTargetLifeAddition(value,actor,options,api){
 
 export function applyTargetLifeController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='targetlifeadd')return false;
- const params=controller.params||{},integer=value=>Math.trunc(Number(api.evaluate(value)))|0;
+ const params=controller.params||{},integer=value=>controllerInteger(api.evaluate(value));
  const owner=params.redirectid===undefined?caller:api.findActor(integer(params.redirectid));
  if(!owner)return true;
  if(params.value===undefined)throw Error('Missing TargetLifeAdd value');
