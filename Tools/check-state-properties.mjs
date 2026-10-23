@@ -30,7 +30,13 @@ run('SprPriority',{value:'5.8'});assert.equal(caller.sprPriority,5);
 run('SprPriority',{redirectid:'7',value:'-3.9'});assert.equal(target.sprPriority,-3);
 run('SprPriority',{});assert.equal(caller.sprPriority,0);
 run('SprPriority',{redirectid:'99',value:'22'});assert.equal(caller.sprPriority,0);
-assert.throws(()=>run('SprPriority',{layerno:'1'}),/layerno rendering/);
+run('SprPriority',{layerno:'1'});assert.equal(caller.layerNo,1);assert.equal(caller.sprPriority,0);
+applyStatePropertyController({type:'SprPriority',params:{}},caller,{...api,evaluate:()=>{throw Error('Omitted SprPriority operand evaluated')}});
+assert.equal(caller.layerNo,0);assert.equal(caller.sprPriority,0);
+target.layerNo=-1;target.sprPriority=9;
+const staged=[];
+applyStatePropertyController({type:'SprPriority',params:{redirectid:'target',layerno:'layer',value:'priority'}},caller,{...api,evaluate:expression=>{staged.push([expression,target.layerNo,target.sprPriority]);return {target:7,layer:1,priority:4}[expression]}});
+assert.deepEqual(staged,[['target',-1,9],['layer',-1,9],['priority',-1,9]]);assert.equal(target.layerNo,1);assert.equal(target.sprPriority,4);
 console.log('Sprite priority defaults, integer conversion, ownership and redirection passed');
 for(const operand of ['1',NaN,undefined]){
  const sampleApi={...api,evaluate:()=>operand};

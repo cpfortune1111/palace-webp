@@ -1,3 +1,7 @@
+## 0.25.64 — Sprite layers, reflection phases and PlayerID (partial)
+
+SprPriority nonzero layers and live integer LayerNo queries now reach actual roots/Helpers. Stage-controlled reflections have separate negative/zero passes, native priority/tie ordering and literal settings import. PlayerID expression redirection resolves live character instance IDs, preserves original index scope and redirects the complete expression. Focused pixels, real actors and parser tests cover these paths. Native diagnostics, full rendering/VM/version semantics and whole-controller certification remain Pending. Final versioned regression and verified publication are separate gates.
+
 ## 0.25.63 — TransformSprite window/shear consumers (partial)
 
 TransformSprite window/xshear reach actual redirected P1/P2/Helper drawing and synchronized Explods. Tests cover caller-scoped writes, native coordinate ratios, transient preparation/pause behavior and real body/effect matrices. A failing 27-case fixture fixed native localscl versus WEB rendering-width confusion. Focallength/projection remain explicitly unsupported; compiler/diagnostic/phase/GPU equivalence and all whole-controller certifications remain Pending. Final versioned checks and verified publication are separate gates.

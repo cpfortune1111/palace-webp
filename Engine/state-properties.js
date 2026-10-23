@@ -8,9 +8,10 @@ export function applyStatePropertyController(controller,actor,api){
  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(number(params.redirectid)));
  if(!target)return true;
  if(type==='sprpriority'){
-  const layer=Math.trunc(number(params.layerno??0))|0;
-  if(layer!==0)throw Error('SprPriority nonzero layerno rendering is not implemented');
-  target.sprPriority=Math.trunc(number(params.value??0))|0;
+  const layer=params.layerno===undefined?0:Math.trunc(number(params.layerno))|0;
+  const priority=params.value===undefined?0:Math.trunc(number(params.value))|0;
+  target.sprPriority=priority;
+  target.layerNo=layer;
   return true;
  }
  if(type==='turn'){

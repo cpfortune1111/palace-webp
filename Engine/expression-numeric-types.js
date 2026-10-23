@@ -12,6 +12,7 @@ const intrinsicCalls={numhelper:{type:'int',min:0,max:1},numprojid:{type:'int',m
 
 export function numericQueryType(name){
  const key=name.toLowerCase().replace(/\s+/g,' ');
+ if(key==='layerno')return 'int';
  return integerQueries.has(key)?'int':booleanQueries.has(key)?'bool':floatQueries.has(key)?'float':null;
 }
 

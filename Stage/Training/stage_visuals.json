@@ -38,7 +38,8 @@
   "reflection": {
     "intensity": 50,
     "xscale": 1,
-    "yscale": 1
+    "yscale": 1,
+    "layerno": 0
   },
   "source": {
     "defSHA256": "ac044c65d89ae4a02322ff136545f88bfd6c26f270b60abf1c90ce966d138e43",

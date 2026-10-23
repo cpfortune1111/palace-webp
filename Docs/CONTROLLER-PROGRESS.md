@@ -1,4 +1,18 @@
-## 0.25.63 — TransformSprite window/shear consumers (partial, publication unverified)
+## 0.25.64 — SprPriority, reflection phases and PlayerID (partial, publication pending)
+
+The complete battle regression now exits 0 (outputs/priority-reflection-full-browser-recheck.log). Its presentation fixture distinguishes clearing Trans while stage reflections still require composition from an inactive scene with no queued draws. This is evidence for the current rendering batch, not full native compatibility. Subsequent LayerNo query changes have separate focused validation and still require the final combined release gate.
+
+LayerNo now reads the live root/Helper layer with the pinned native integer result type (bytecode OC_ex2_layerno). Actual P1/P2 root layers -1/0/1/2 and Helper layer -3 preserve integer division in expressions; focused browser and numeric-expression checks pass (outputs/layer-query-browser.log). No whole-controller certification changes; version gating and publication remain pending.
+
+Additional actual EnemyNear LayerNo expressions read the opponent's layer, while redirected VarSet samples LayerNo in caller scope and writes the recipient's variable (outputs/layer-query-redirect-browser.log). Attempting PlayerID(id) expression redirection exposed a separate parser gap: it currently fails with AST trailing comma. PlayerID expression redirection is therefore explicitly Pending, not covered by these passing EnemyNear cases; redirectid controller targeting is a different path.
+
+That PlayerID parser gap now has real parser, typed/untyped evaluator and live root/Helper lookup consumers. Focused actual tests cover P1/P2, Helper instance IDs, integer LayerNo division, original-caller index scope under EnemyNear, and missing-target undefined/side-effect short circuit (outputs/playerid-redirect-browser.log). Lifecycle tests exclude destroyed Helpers, projectile IDs and Helper resource IDs. Native console diagnostics, complete expression/compiler/VM/version semantics and final combined release gates remain Pending; this supersedes only the parser-gap status above, not full compatibility certification.
+
+Nonzero SprPriority layers now use staged caller-scoped operands and live root/Helper priority/layer writes. Actual body records and final pass pixels cover the supported paths. Stage-controlled reflections now draw in separate negative/zero phases, with real stage import/default/clamp/X-scale consumers. Nonzero priority independently activates final composition in scenes without reflections or palette/transparency triggers. Native HUD/shadow/EnvColor/default bypass/version/lifecycle/GPU semantics remain Pending; no whole-controller certification changes. See SPRITE-LAYER-WIP.md and REFLECTION-PASSES-WIP.md. This batch is not published.
+
+## 0.25.63 — TransformSprite window/shear consumers (partial, publication verified)
+
+Publication verified at commit 351b9b920b25b486f80f7fc1d1e0eac7a7f9ee66: 220 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39883951643 and thirteen normalized live file comparisons passed. Local receipt: outputs/release-02563-verification.json. Delivery is verified, not full native compatibility.
 
 TransformSprite window/xshear now have redirected caller-scoped sequential writes and real P1/P2/Helper drawing. Actual controller-to-synchronized-Explod cases retain value snapshots after syncparams is disabled. Helper/root preparation tests cover active frames, local hitpause, blocking global pause and resumption. Focallength/projection fail explicitly rather than silently no-op. Full compiler/diagnostic/redirect/coordinate/scheduler/projection/GPU fidelity remains Pending; all whole-controller certifications remain Pending. See TRANSFORM-SPRITE-WIP.md. This batch is not published.
 

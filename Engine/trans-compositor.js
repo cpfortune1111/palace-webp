@@ -55,9 +55,9 @@ export function compositeOpaqueTransLayers(destination,layers){
  return result;
 }
 
-export function renderOpaqueTransQueue(destination,scratch,queue,{grayscale,shader,layer,under}={}){
+export function renderOpaqueTransQueue(destination,scratch,queue,{grayscale,shader,layer,under,phase}={}){
  if(destination.canvas.width!==scratch.canvas.width||destination.canvas.height!==scratch.canvas.height)throw Error('Trans draw queue surfaces must have matching sizes');
- for(const entry of queue.ordered({layer,under})){
+ for(const entry of queue.ordered({layer,under,phase})){
   queue.rasterize(entry,scratch);
   if(!entry.state||entry.state.type==='default'){
    destination.save();destination.setTransform(1,0,0,1,0,0);destination.globalAlpha=1;destination.globalCompositeOperation=entry.composite;destination.drawImage(scratch.canvas,0,0);destination.restore();

@@ -44,6 +44,7 @@ export function createLifecycleRuntime(api){
    numHelper:id=>helpers.filter(helper=>helper.kind==='helper'&&helper.player===fighter.player&&!helper.destroyed&&(id===undefined||id<=0||helper.id===id)).length,
    playerIDExist:id=>[fighter,opponent,...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].some(entity=>(entity.instanceId??(entity.kind==='helper'?undefined:entity.id??entity.player))===id),
    redirect(name,index=0){
+    if(name.toLowerCase()==='playerid')return [api.root(1),api.root(2),...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].find(actor=>(actor.instanceId??(actor.kind==='helper'?undefined:actor.id??actor.player))===index)??null;
     if(name.toLowerCase()==='partner')return null;
     if(['enemy','enemynear'].includes(name.toLowerCase()))return index<0?null:enemies(name.toLowerCase()==='enemynear')[index]??null;
     if(['root','parent'].includes(name.toLowerCase()))return api.root(fighter.player);

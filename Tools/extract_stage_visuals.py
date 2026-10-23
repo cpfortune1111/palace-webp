@@ -1,18 +1,17 @@
 import argparse
 import hashlib
 import json
-import re
 import shutil
 from pathlib import Path
 from PIL import Image
 from export_venus_turn import export
+from stage_reflection import parse_stage_reflection
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--stage-source', type=Path, default=Path(r'F:\Ikemen_GO-dev-windows\Moon Palace\stages'))
 source = parser.parse_args().stage_source
 definition = (source / 'StageTraining.def').read_text(encoding='utf-8-sig')
-reflection = re.search(r'\[Reflection\]([^\[]+)', definition, re.I)[1]
-intensity = int(re.search(r'^intensity\s*=\s*(\d+)', reflection, re.M | re.I)[1])
+reflection = parse_stage_reflection(definition)
 scratch = Path('work/stage-visual-source')
 scratch.mkdir(parents=True, exist_ok=True)
 shutil.copyfile(source / 'StageTraining.sff', scratch / 'StageTraining.sff')
@@ -30,7 +29,7 @@ assert Image.open('work/stage_filter.webp').convert('RGBA').tobytes() == visible
 config = {'filter': {'file': 'stage_filter.webp', 'width': 1280, 'height': 720,
                      'axisX': 640, 'axisY': 0, 'originalSprite': sprite, 'sourceCrop': [left, top, 1280, 720], 'start': [0, 0], 'delta': [0, 0],
                      'layerno': 1, 'trans': 'none', 'mask': 1, 'sprite': [1, 0]},
-          'reflection': {'intensity': intensity, 'xscale': 1, 'yscale': 1},
+          'reflection': reflection,
           'source': {'defSHA256': hashlib.sha256((source / 'StageTraining.def').read_bytes()).hexdigest(),
                      'sffSHA256': hashlib.sha256((source / 'StageTraining.sff').read_bytes()).hexdigest(),
                      'glbSHA256': hashlib.sha256((source / 'StageTraining.glb').read_bytes()).hexdigest()}}

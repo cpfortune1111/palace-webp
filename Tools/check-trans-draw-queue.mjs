@@ -51,4 +51,10 @@ assert.deepEqual(synchronized.ordered({layer:1}).map(entry=>entry.serial),[5,3,1
 assert.deepEqual(queue.bounds({...entries[1],source:{width:3,height:4},args:[0,0]},100,100),{x:3,y:19,width:8,height:10});
 assert.deepEqual(queue.bounds({...entries[1],matrix:[1,0,0,1,200,200],source:{width:3,height:4},args:[0,0]},100,100),{x:199,y:199,width:0,height:0});
 queue.reset();assert.deepEqual(queue.ordered(),[]);
+const phases=createTransDrawQueue();
+phases.record(context,source,[0,0],{kind:'reflection',layer:0,priority:9,syncId:7,syncLayer:0});
+phases.record(context,source,[0,0],{layer:0,priority:-999});
+phases.record(context,source,[0,0],{kind:'reflection',layer:0,priority:9,syncId:7,syncLayer:99});
+assert.deepEqual(phases.ordered({layer:0,phase:'reflection'}).map(entry=>entry.serial),[2,0]);
+assert.deepEqual(phases.ordered({layer:0,phase:'sprite'}).map(entry=>entry.serial),[1]);
 console.log('Trans draw queue preserves transforms, snapshots, stable priorities and ontop ordering');
