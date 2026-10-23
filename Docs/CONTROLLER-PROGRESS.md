@@ -1,4 +1,22 @@
-## 0.25.68 — Variable negative-index and stored-float boundaries (partial, publication pending)
+## 0.25.69 — ModifyReflection root drawing consumers (partial, publication pending)
+
+The earlier color baseline terminated during runtime initialization after many loopback module requests failed with net::ERR_NETWORK_CHANGED (outputs/modify-reflection-color-full-browser.log). This is a failed gate, not a passing regression. Final versioned 224 Node checks, Python stage parsing, actor fixtures and scheduling pass; a fresh complete battle run uses the original timeout/assertions and must finish successfully before publication. No source behavior or assertions were weakened to bypass the initialization failure.
+
+Root drawing and supported parameter consumers are not whole-controller compatibility. Both roots' geometry/rotation/color and parser-driven fallback fixtures have focused coverage; final versioned Node/actor/scheduling/combined gates and verified publication remain required. Helper/projectile recipients and other unsupported parameters still fail explicitly. No whole-controller certification changes.
+
+Root reflection color now has staged/clamped operands and actual PalFX multiplier composition, preserving actor effects before AllPalFX without mutation. Both recipients pass known-RGBA compositor probes, including own/global composition yielding [53,15,0,255], and parser-produced red stage fallback (outputs/modify-reflection-color-import-browser.log). Root reflection records now carry actor PalFX instead of losing it. Stage RGB literals/default white have parser checks and unchanged Training metadata; no images were regenerated. Updated color-phase and current final combined gates remain required. Full GPU/palette/lifecycle semantics and remaining parameters/recipients remain Pending.
+
+Stage Z/X/Y angle literals now have a production import-to-render test: Python parser output is loaded into the actual stage reflection fixture and both roots' fallback matrices pass (outputs/modify-reflection-import-angle-browser.log). Native zero defaults and float32 storage have Python checks; Training JSON now makes zero angles explicit. No original image/audio assets were regenerated or uploaded. Complete native stage parser/version/nonfinite behavior remains Pending.
+
+keeptransform and Z/X/Y angles now have real orthographic drawing consumers, native operand order and source/custom/stage rotation composition with signed-facing adaptation. Eight actual root matrix cases cover custom composition, source/stage exclusion, stage fallback and negative source angles while retaining scale/pivot data (outputs/modify-reflection-angle-browser.log). Nonzero stage-angle import, full native projection/geometry/GPU behavior and remaining parameters/recipients remain Pending. See MODIFY-REFLECTION-WIP.md; no whole-controller certification changes.
+
+Actual geometry/alpha tests now cover both root recipient directions. Actual preparation-helper tests cover local-hitpause clearing, blocked-global-pause retention and resumed clearing for both roots (outputs/modify-reflection-phase-browser.log). Shared scheduler metadata is accepted by the new local validator, while empty native no-change controllers avoid storage lookup. Final combined/versioned gates, complete phase fidelity and remaining parameters/recipients remain Pending.
+
+redirectid/intensity/offset/xscale/yscale now have actual root reflection drawing consumers, float32 coordinate bridging and transient preparation resets. A real P2-to-P1 fixture verifies changed alpha/matrices/displacement, unaffected P2, zero-intensity omission, zero-scale stage inheritance and reset defaults (outputs/modify-reflection-actual-browser.log). Unsupported parameters and Helper/projectile recipients fail explicitly rather than silently no-op. Full recipients/rendering/animation/projection/lifecycle semantics and delegated x/y/z reference issues remain Pending. See MODIFY-REFLECTION-WIP.md; no whole-controller certification changes.
+
+## 0.25.68 — Variable negative-index and stored-float boundaries (partial, publication verified)
+
+Publication verified at commit 9974e8b2b3e22bc8fc1cd3a58bd364800de7d4c6: 223 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39897907287 and nine normalized live file comparisons passed. Local receipt: outputs/release-02568-verification.json. This confirms partial checkpoint delivery, not complete native compatibility.
 
 All 223 Node checks and the named mugen11/ikemen actual actor fixture pass before versioning (outputs/variable-boundary-named-profile-browser.log). Final versioned combined regression and verified publication remain separate gates. No whole-controller certification changes.
 

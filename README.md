@@ -1,3 +1,7 @@
+## 0.25.69 — Root reflection override consumers (partial)
+
+ModifyReflection root intensity, RGB, offset, signed scale, keeptransform and orthographic rotation parameters reach actual drawing, palette composition and transient preparation resets. Production stage parser output drives color/angle fallback tests; no original image/audio assets are regenerated. Both roots have real matrix, pause/reset and controlled compositor pixel coverage. Remaining animation/window/shear/projection parameters, Helper/projectile reflection drawing and full native compatibility remain Pending. Final versioned regression and verified publication are separate gates.
+
 ## 0.25.68 — Variable undefined and stored-float boundaries (partial)
 
 Negative variable reads now return undefined and family-specific warnings, including integer-query paths. Stored float NaN and negative zero survive reads, and VarAdd preserves an existing NaN. Real parser and P1/P2 root/Helper fixtures exercise both named engine profiles and actual P1 lifecycle bindings. Complete native warning/VM/version/bounds fidelity remains Pending; final versioned regression and verified publication are separate gates.

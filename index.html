@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.68 Controller Integration</title>
+<title>Prototype 0.25.69 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.68 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD variable-boundaries-02568-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.69 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD reflection-overrides-02569-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -93,6 +93,7 @@ import {explodVerticalFacing,explodDrawingAngle,explodTrueFacing} from './Engine
 import {compileExplodAngles} from './Engine/explod-angles.js?v=02562';
 import {compileExplodShear,applyExplodShear} from './Engine/explod-shear.js?v=02562';
 import {applyTransformSprite} from './Engine/transform-sprite.js?v=02563';
+import {applyModifyReflection,createReflectionOverride,resetReflectionOverride,reflectionAngleState,reflectionPaletteEffect} from './Engine/modify-reflection.js?v=02569';
 import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02559';
 import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02559';
 import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02559';
@@ -280,7 +281,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.68 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.69 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -320,7 +321,14 @@ function drawStageVisuals(){
   const frame=framesFor(fighter.anim,index+1)[Math.max(0,fighter.elem-1)],sprite=frame&&spriteFor(frame),source=frame&&spriteCanvasFor(frame);if(!sprite||!source||frame.empty)continue;
   const scale=fit*cameraZoom;
   const drawPosition=offsetDrawingPosition([fighter.x,fighter.y],rootDrawOffsets[index]),flip=spriteFacingFor(fighter.anim,fighter.facing)<0,px=viewX+worldScreenX(drawPosition[0]+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
-reflected.save();reflected.translate(px,ground-drawPosition[1]*stageVisuals.reflection.yscale*scale);reflected.scale((flip?-1:1)*scale*(stageVisuals.reflection.xscale??1),-stageVisuals.reflection.yscale*scale);transformAngleDrawing(reflected,rootAngleStates[index]);drawTransSprite(reflected,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy],{state:reflectionTransState(rootTransStates[index],stageVisuals.reflection.intensity,airTransState(frame.blend)),opacity:1,priority:fighter.sprPriority,layer:Number(stageVisuals.reflection.layerno??0)<0?-1:0,kind:'reflection'});reflected.restore();
+  const reflection=rootReflectionOverrides[index],intensity=reflection.intensity<0?stageVisuals.reflection.intensity:reflection.intensity;
+  if(intensity<=0)continue;
+  const reflectionX=reflection.xscale===0?(stageVisuals.reflection.xscale??1):reflection.xscale,reflectionY=reflection.yscale===0?stageVisuals.reflection.yscale:reflection.yscale;
+  const offsetUnit=collisionWorldRatio(characterProfiles.get(battleCharacters[index])?.battle||battleDat);
+  reflected.save();reflected.globalAlpha=intensity/255;
+  reflected.translate(px+reflection.offset[0]*offsetUnit*scale,ground-drawPosition[1]*reflectionY*scale+reflection.offset[1]*offsetUnit*scale);
+  reflected.scale((flip?-1:1)*scale*reflectionX,-reflectionY*scale);transformAngleDrawing(reflected,reflectionAngleState(rootAngleStates[index],reflection,stageVisuals.reflection,fighter.facing));
+  drawTransSprite(reflected,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy],{state:reflectionTransState(rootTransStates[index],intensity,airTransState(frame.blend)),paletteEffect:reflectionPaletteEffect(actorPaletteEffect(specialRoot(index+1)),reflection,stageVisuals.reflection),opacity:1,priority:fighter.sprPriority,layer:Number(stageVisuals.reflection.layerno??0)<0?-1:0,kind:'reflection'});reflected.restore();
  }
  reflected.restore();filtered.drawImage(stageFilterImage,viewX,viewY,1280*fit,720*fit);
 }
@@ -481,6 +489,7 @@ const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0),runtimeFVar=A
 let p1SprPriority=0,p1Life=1000,p1LifeMax=1000;
 const rootSpriteLayers=[0,0];
 const rootSpriteWindows=[Array(4).fill(0),Array(4).fill(0)];
+const rootReflectionOverrides=[createReflectionOverride(),createReflectionOverride()];
 const rootSpriteShears=[0,0];
 function actorSpriteLayer(actor){return actor.kind==='helper'?actor.layerNo??0:rootSpriteLayers[fighterPlayer(actor)-1]}
 function setActorSpriteLayer(actor,value){if(actor.kind==='helper')actor.layerNo=value;else rootSpriteLayers[fighterPlayer(actor)-1]=value}
@@ -799,6 +808,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  }
  transDrawQueue.resetActorSync();
  rootSpriteWindows.forEach(window=>window.fill(0));
+ rootReflectionOverrides.forEach(resetReflectionOverride);
  rootSpriteShears.fill(0);
  customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);rootHitBySlots.splice(0,2,createHitBySlots(),createHitBySlots());
  for(const [index,character] of players.entries()){if(!characterProfiles.has(character))throw Error('Unsupported character '+character);battleCharacters[index]=character;resetCommandList(index+1)}
@@ -1145,7 +1155,7 @@ function hitOverridesFor(actor){return actor.kind==='helper'?(actor.hitOverrides
 function matchingHitOverride(attacker,defender,params){return selectHitOverride(hitOverridesFor(defender),params,{attackerState:attacker.type||specialRoot(attacker.player||attacker.id).type,projectile:attacker.kind==='projectile',unguardable:attacker.assertions?.has('unguardable')})}
 function resetRootHitOverrides(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&((characterProfiles.get(battleCharacters[player-1])?.battle?.compatibility??'mugen')==='mugen'||!(player===1?p1HitPause>0:p2.hitPause>0||p2.hitShake>0||p2.attackPause>0)))tickHitOverrides(rootHitOverrides[player-1])}
 function resetRootTrans(){for(const player of [1,2])if(!specialRuntime.blocked(player))rootTransStates[player-1]=null}
-function resetRootDrawOffsets(){for(const player of [1,2])if(!specialRuntime.blocked(player)){rootDrawOffsets[player-1]=[0,0];rootSpriteWindows[player-1].fill(0);rootSpriteShears[player-1]=0}}
+function resetRootDrawOffsets(){for(const player of [1,2])if(!specialRuntime.blocked(player)){rootDrawOffsets[player-1]=[0,0];rootSpriteWindows[player-1].fill(0);rootSpriteShears[player-1]=0;resetReflectionOverride(rootReflectionOverrides[player-1])}}
 function isPositionFrozen(actor){return actor.kind==='helper'?!!actor.positionFrozen:rootPositionFrozen[fighterPlayer(actor)-1]}
 function resetRootPositionFreeze(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootPositionFrozen[player-1]=false}
 function resetRootAssertions(){resetRootDepthBoundFlags();resetRootDepthModifiers();resetRootClsnOverrides();resetRootWidths();resetRootHeights();resetRootScreenBounds();resetRootPlayerPush();resetRootPositionFreeze();resetRootDrawOffsets();resetRootTrans();resetRootHitOverrides();resetRootHitBySlots();for(const player of [1,2])if(!specialRuntime.blocked(player)){previousRootAssertions[player-1].clear();for(const flag of rootAssertions[player-1])previousRootAssertions[player-1].add(flag);rootAssertions[player-1].clear()}}
@@ -1364,6 +1374,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  const params=controller.params||controller;
  const value=expression=>Number(evalM1(expression,context));
 if(applyTransformSprite(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,split:splitExpressionPairM1,localScale:actor=>320/collisionLocalCoord(actor),window:actor=>actor.kind==='helper'?(actor.window??=Array(4).fill(0)):rootSpriteWindows[fighterPlayer(actor)-1],setShear:(actor,value)=>{if(actor.kind==='helper')actor.xshear=value;else rootSpriteShears[fighterPlayer(actor)-1]=value},warn:message=>console.warn(message)}))return;
+if(applyModifyReflection(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,split:splitExpressionPairM1,localScale:actor=>320/collisionLocalCoord(actor),state:actor=>{if(actor.kind==='helper'||actor.kind==='projectile')throw Error('ModifyReflection Helper/projectile rendering is not implemented');return rootReflectionOverrides[fighterPlayer(actor)-1]}}))return;
  if(debugClipboard.execute(controller,adapter.owner||specialRoot(player),{profile:combatEngineProfile,key:actor=>actor.key||'root'+fighterPlayer(actor),findActor:combatTargetActor,evaluate:expression=>evalM1(expression,context),expressions:expression=>parseExprAST(String(expression),{list:true,maxComponents:100}),sample:expression=>{const result=evalNumericAST(expression,context);if(result.handled)return result;const value=evalAST(expression,context);return {type:typeof value==='string'?'string':'untyped',value}}}))return;
  if(String(controller.type).toLowerCase()==='forcefeedback'){
   forceFeedback.execute(params,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:combatTargetActor,opponent:p2EnemyActor,controllerKey:actor=>fighterPlayer(actor)});
@@ -2592,7 +2603,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.68',build:'variable-boundaries-02568-20261023-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.69',build:'reflection-overrides-02569-20261023-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2600,7 +2611,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.68-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.69-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

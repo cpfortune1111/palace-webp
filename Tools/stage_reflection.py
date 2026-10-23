@@ -20,12 +20,27 @@ def parse_stage_reflection(definition):
             raise ValueError('Unsupported reflection integer syntax: ' + name)
         return int(values[name])
 
-    def scalar(name):
-        return struct.unpack('<f', struct.pack('<f', float(values.get(name, 1))))[0]
+    def scalar(name, default=1):
+        return struct.unpack('<f', struct.pack('<f', float(values.get(name, default))))[0]
+
+    color = [255, 255, 255]
+    if 'color' in values:
+        components = values['color'].split(',')
+        if len(components) > 3:
+            raise ValueError('Unsupported reflection color component count')
+        color = [0, 0, 0]
+        for channel, component in enumerate(components):
+            if not re.fullmatch(r'[+-]?\d+', component.strip()):
+                raise ValueError('Unsupported reflection color integer syntax')
+            color[channel] = max(0, min(255, int(component)))
 
     return {
         'intensity': max(0, min(255, integer('intensity', 0))),
+        'color': color,
         'xscale': scalar('xscale'),
         'yscale': scalar('yscale'),
         'layerno': max(-1, min(0, integer('layerno', 0))),
+        'angle': scalar('angle', 0),
+        'xangle': scalar('xangle', 0),
+        'yangle': scalar('yangle', 0),
     }
