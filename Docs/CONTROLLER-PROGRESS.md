@@ -1,4 +1,10 @@
+## 0.25.70 — controller Character lookup isolation (partial, publication pending)
+
+Forty direct controller findActor adapters and Target/NumTarget expression lookups now distinguish native Characters from the general combat entity registry. Projectiles, destroyed actors and disabled recipients are excluded before redirected RHS evaluation; collision/source lookup remains unchanged. Focused lookup/status checks and the existing actual-browser controller suite pass (outputs/controller-character-lookup-browser.log). Dedicated new actual-browser invalid-recipient fixtures, remaining custom adapters, full regression and publication remain Pending. See CONTROLLER-CHARACTER-LOOKUP-WIP.md. No whole-controller certification changes.
+
 ## 0.25.69 — ModifyReflection root drawing consumers (partial, publication pending)
+
+Publication subsequently verified at commit 3ad107de04f273612c7dc013c4f010b126f6bab5: 224 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 39903297055 and eleven normalized live file comparisons passed. Receipt: outputs/release-02569-verification.json. Earlier pending statements below are historical; this verifies delivery, not complete native compatibility.
 
 The earlier color baseline terminated during runtime initialization after many loopback module requests failed with net::ERR_NETWORK_CHANGED (outputs/modify-reflection-color-full-browser.log). This is a failed gate, not a passing regression. Final versioned 224 Node checks, Python stage parsing, actor fixtures and scheduling pass; a fresh complete battle run uses the original timeout/assertions and must finish successfully before publication. No source behavior or assertions were weakened to bypass the initialization failure.
 

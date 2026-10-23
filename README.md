@@ -1,3 +1,7 @@
+## 0.25.70 — Character ID lookup isolation (partial)
+
+Controller redirects, Target queries and lifecycle PlayerID/PlayerIDExist distinguish root/Helper Characters from combat projectiles and reject destroyed/disabled recipients. Forty direct and four custom adapters use the shared resolver. Actual P1/P2 tests in both profiles include a prior-resolver negative control, side-effect isolation and unchanged collision/source lookup. Complete native diagnostics, remaining adapters and all-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.69 — Root reflection override consumers (partial)
 
 ModifyReflection root intensity, RGB, offset, signed scale, keeptransform and orthographic rotation parameters reach actual drawing, palette composition and transient preparation resets. Production stage parser output drives color/angle fallback tests; no original image/audio assets are regenerated. Both roots have real matrix, pause/reset and controlled compositor pixel coverage. Remaining animation/window/shear/projection parameters, Helper/projectile reflection drawing and full native compatibility remain Pending. Final versioned regression and verified publication are separate gates.

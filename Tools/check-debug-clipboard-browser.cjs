@@ -1024,6 +1024,48 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.deepEqual(reflectionOverrides.colors.pixel,[53,15,0,255]);
   }
   console.log('Actual redirected ModifyReflection changes intensity/geometry/rotation and color pixels with actor/global PalFX composition for both roots, while preserving transient defaults');
+  const characterLookupRows=await run(`(()=>{
+   const entities=[...specialRuntime.entities],flags=rootStatusFlags.map(value=>({...value})),variables=[specialRoot(1).vars[55],specialRoot(2).vars[55]],profile=combatEngineProfile,rows=[];
+   try{
+    for(const engineProfile of ['mugen11','ikemen'])for(const player of [1,2]){
+     combatEngineProfile=engineProfile;
+     const caller=specialRoot(player),binding=player===1?p1LifecycleBinding:p2,context=specialRuntime.context(caller),adapter={owner:caller,player,schedulingApplied:true};
+     const projectile={kind:'projectile',instanceId:991801,player},disabledHelper={kind:'helper',instanceId:991802,player,disabled:true},destroyedHelper={kind:'helper',instanceId:991803,player,destroyed:true};
+     specialRuntime.entities.push(projectile,disabledHelper,destroyedHelper);
+     rootStatusFlags[2-player].disabled=true;
+     caller.vars[55]=0;
+     const characterResolver=controllerCharacterActor;
+     let priorResolverWrites;
+     try{
+      controllerCharacterActor=combatTargetActor;
+      executeControllerM1({type:'DizzySet',params:{redirectid:String(projectile.instanceId),value:'(var(55):=var(55)+1)'}},binding,context,adapter);
+      priorResolverWrites=caller.vars[55];
+     }finally{controllerCharacterActor=characterResolver;caller.vars[55]=0;delete projectile.dizzy;rootStatusFlags[player-1].dizzy=flags[player-1].dizzy}
+     for(const target of [projectile,disabledHelper,destroyedHelper,{instanceId:3-player}]){
+      for(const controller of [
+       {type:'DizzySet',params:{value:'(var(55):=var(55)+1)'}},
+       {type:'TransformSprite',params:{xshear:'(var(55):=var(55)+1)'}},
+       {type:'ModifyReflection',params:{intensity:'(var(55):=var(55)+1)'}},
+       {type:'VelSet',params:{x:'(var(55):=var(55)+1)'}},
+       {type:'PosAdd',params:{x:'(var(55):=var(55)+1)'}},
+       {type:'HitAdd',params:{value:'(var(55):=var(55)+1)'}},
+       {type:'TargetVelSet',params:{x:'(var(55):=var(55)+1)'}}
+      ])executeControllerM1({...controller,params:{...controller.params,redirectid:String(target.instanceId)}},binding,context,adapter);
+     }
+     rows.push({engineProfile,player,priorResolverWrites,writes:caller.vars[55],projectileDizzy:projectile.dizzy===true,disabledDizzy:disabledHelper.dizzy===true});
+     specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
+     for(let index=0;index<2;index++){for(const key of Object.keys(rootStatusFlags[index]))delete rootStatusFlags[index][key];Object.assign(rootStatusFlags[index],flags[index])}
+    }
+    return rows;
+   }finally{
+    combatEngineProfile=profile;
+    specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
+    for(let index=0;index<2;index++){for(const key of Object.keys(rootStatusFlags[index]))delete rootStatusFlags[index][key];Object.assign(rootStatusFlags[index],flags[index]);specialRoot(index+1).vars[55]=variables[index]}
+   }
+  })()`);
+  assert.equal(characterLookupRows.length,4);
+  for(const row of characterLookupRows){assert.equal(row.priorResolverWrites,1,JSON.stringify(row));assert.equal(row.writes,0,JSON.stringify(row));assert.equal(row.projectileDizzy,false);assert.equal(row.disabledDizzy,false)}
+  console.log('Actual root dispatch skips redirected RHS for projectile, disabled and destroyed registry recipients in both profiles and player directions');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

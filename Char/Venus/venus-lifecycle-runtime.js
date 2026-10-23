@@ -1,5 +1,6 @@
 import {rootEnemyList} from '../../Engine/enemy-selection.js';
 import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
+import {lookupControllerCharacter} from '../../Engine/controller-character-lookup.js';
 export function findParentActor(actor,helpers,root){
  if(actor.kind!=='helper')return null;
  if(!actor.parentKey)return root(actor.player);
@@ -36,6 +37,7 @@ export function createLifecycleRuntime(api){
   }
  }
  function queries(fighter,opponent,helpers=[]){
+  const character=id=>api.character?api.character(id):lookupControllerCharacter(id,targetId=>[api.root(1),api.root(2),...helpers.filter(helper=>helper.kind==='helper')].find(actor=>(actor.instanceId??(actor.kind==='helper'?undefined:actor.id??actor.player))===targetId));
   const p2=()=>api.p2?api.p2(fighter):opponent;
   const enemies=near=>rootEnemyList(fighter,[api.root(1),api.root(2)],{near,distance:api.enemyDistance});
   return {
@@ -48,9 +50,9 @@ export function createLifecycleRuntime(api){
     return values[key];
    },
    numHelper:id=>helpers.filter(helper=>helper.kind==='helper'&&helper.player===fighter.player&&!helper.destroyed&&(id===undefined||id<=0||helper.id===id)).length,
-   playerIDExist:id=>[fighter,opponent,...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].some(entity=>(entity.instanceId??(entity.kind==='helper'?undefined:entity.id??entity.player))===id),
+   playerIDExist:id=>!!character(id),
    redirect(name,index=0){
-    if(name.toLowerCase()==='playerid')return [api.root(1),api.root(2),...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].find(actor=>(actor.instanceId??(actor.kind==='helper'?undefined:actor.id??actor.player))===index)??null;
+    if(name.toLowerCase()==='playerid')return character(index);
     if(name.toLowerCase()==='partner')return null;
     if(['enemy','enemynear'].includes(name.toLowerCase()))return index<0?null:enemies(name.toLowerCase()==='enemynear')[index]??null;
     if(name.toLowerCase()==='parent')return findParentActor(fighter,helpers,api.root);
