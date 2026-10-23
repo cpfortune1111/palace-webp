@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.71 Controller Integration</title>
+<title>Prototype 0.25.72 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.71 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD redirect-extraction-02571-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.72 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD secondary-redirect-02572-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -51,7 +51,7 @@ import {consumeGetHitResources,prepareGetHitResourceQueue,queueGetHitResources} 
 import {applyResourceController,executeLifeAddition} from './Engine/resource-controllers.js?v=02554';
 import {guardContactAllowed,guardContactParameters} from './Engine/guard-contact.js?v=02514';
 import {applyDamageAssertion,actorAssertionFlags} from './Engine/damage-assertions.js?v=02560';
-import {createDebugClipboard} from './Engine/debug-clipboard.js?v=02552';
+import {createDebugClipboard} from './Engine/debug-clipboard.js?v=02572';
 const debugClipboard=createDebugClipboard({rowLimit:8});
 import {applyStateDefFacing,shouldFaceStateOpponent} from './Engine/state-def-facing.js';
 import {juggleBudget,juggleContactAllowed,inheritJuggleCandidate,inheritJuggleContact,consumeJuggleContact,applyStateDefJuggle,createJuggleState} from './Engine/juggle-state.js';
@@ -66,27 +66,27 @@ import {createStageBackgroundRegistry} from './Engine/stage-backgrounds.js?v=025
 import {compositeOpaqueTransCanvas} from './Engine/trans-compositor.js?v=02564';
 import {applyAllPalFxController,applyBgPalFxController} from './Engine/global-palfx-controller.js?v=02514';
 import {stackPalFx} from './Engine/palfx-stack.js?v=02514';
-import {applyClsnTransformController,createClsnTransforms,transformedClsnBoxes} from './Engine/clsn-transform.js?v=02514';
+import {applyClsnTransformController,createClsnTransforms,transformedClsnBoxes} from './Engine/clsn-transform.js?v=02572';
 import {stepZPhysics} from './Engine/z-physics.js?v=02514';
 import {createDepthCameraState,updateDepthCamera} from './Engine/depth-camera.js?v=02514';
 import {applyDepthBoundController,createDepthBoundFlags,boundedDepthPosition} from './Engine/depth-bound.js?v=02559';
-import {applyDepthController,createDepthModifiers} from './Engine/depth-controller.js?v=02514';
+import {applyDepthController,createDepthModifiers} from './Engine/depth-controller.js?v=02572';
 import {depthIntervalsOverlap} from './Engine/depth-overlap.js?v=02514';
 import {projectileCollisionSettings,projectileCollisionBoxes} from './Engine/projectile-collision-geometry.js?v=02514';
 import {characterLocalCoord,collisionWorldRatio,animationCollisionScale,collisionBoxesToWorld,scaledAnimationBoxes} from './Engine/clsn-coordinate-scale.js?v=02514';
 import {worldClsnBox,clsnWorldOverlap,rotatedClsnCorners} from './Engine/clsn-world-geometry.js?v=02514';
-import {applyClsnOverrideController,createClsnOverrides,overriddenClsnBoxes} from './Engine/clsn-override.js?v=02514';
-import {applyHeightController} from './Engine/height-controller.js?v=02514';
+import {applyClsnOverrideController,createClsnOverrides,overriddenClsnBoxes} from './Engine/clsn-override.js?v=02572';
+import {applyHeightController} from './Engine/height-controller.js?v=02572';
 import {sizeCollisionBox} from './Engine/size-collision-box.js?v=02514';
 import {hitDefCollisionBoxes} from './Engine/hitdef-collision-group.js?v=02514';
 import {createHitBySlots,applyHitByController,hitByAllows,tickHitBySlots} from './Engine/hit-by.js?v=02514';
 import {createHitOverrides,applyHitOverrideController,selectHitOverride,tickHitOverrides} from './Engine/hit-override.js?v=02514';
-import {applyPalFxController} from './Engine/palfx-controller.js?v=02514';
+import {applyPalFxController} from './Engine/palfx-controller.js?v=02572';
 import {palFxPixels} from './Engine/palfx-pixels.js?v=02514';
 import {transBlendPasses} from './Engine/trans-blend.js?v=02514';
 import {createPalFxRuntime,stepPalFx,samplePalFx} from './Engine/palfx-runtime.js?v=02514';
-import {applyTransController,compileTransParameters} from './Engine/trans-controller.js?v=02514';
-import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02514';
+import {applyTransController,compileTransParameters} from './Engine/trans-controller.js?v=02572';
+import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02572';
 import {applyExplodLayers,synchronizeExplodPriorityFacing} from './Engine/explod-layers.js?v=02563';
 import {compileSpriteWindow,spriteWindowRect,clipSpriteWindow} from './Engine/sprite-window.js?v=02562';
 import {explodVerticalFacing,explodDrawingAngle,explodTrueFacing} from './Engine/explod-facing.js?v=02562';
@@ -98,11 +98,11 @@ import {applyModifyReflection,createReflectionOverride,resetReflectionOverride,r
 import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02559';
 import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02559';
 import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02559';
-import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02514';
+import {applyWidthController,createWidthModifiers,widthWorldExtents} from './Engine/width-controller.js?v=02572';
 import {applyFamilyBindController} from './Engine/family-bind.js?v=02514';
 import {applyBindToTargetController} from './Engine/bind-to-target.js?v=02514';
 import {applyTargetBindController,updateTargetBinding,stepTargetBinding,targetBindingMatchesHit} from './Engine/target-bind.js?v=02514';
-import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02555';
+import {applyTargetScoreController,applyScoreController} from './Engine/target-score.js?v=02572';
 import {applyTargetRedLifeController} from './Engine/target-redlife.js?v=02554';
 import {applyTargetPointController} from './Engine/target-points.js?v=02514';
 import {executeTargetPowerAddition,applyTargetPowerController} from './Engine/target-power.js?v=02514';
@@ -120,20 +120,20 @@ import {fallRecoveryParameters,canRecover,advanceFallRecovery} from './Engine/fa
 import {downHitParameters} from './Engine/down-hit.js?v=02514';
 import {hitStanceParameters,forcedHitStance} from './Engine/hit-stance.js?v=02514';
 import {hitDefCount,getHitContactCounts} from './Engine/hit-count.js?v=02514';
-import {characterGuardDistance,applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02553';
+import {characterGuardDistance,applyAttackDistanceController,withinAttackGuardDistance,applyHitDefGuardDistance,createProjectileGuardDistance} from './Engine/attack-distance.js?v=02572';
 import {createDefenseState,effectiveCustomDefense,applyDefenseController} from './Engine/defense-controllers.js?v=02571';
 import {applyStatePropertyController} from './Engine/state-properties.js?v=02571';
 import {hitFrictionValue,movementHitFriction} from './Engine/hit-friction.js?v=02514';
-import {applyGetHitVarSet} from './Engine/get-hit-var-set.js?v=02514';
+import {applyGetHitVarSet} from './Engine/get-hit-var-set.js?v=02572';
 import {compileSoundReference} from './Engine/sound-reference.js';
-import {createForceFeedback,browserRumble} from './Engine/force-feedback.js?v=02544';
+import {createForceFeedback,browserRumble} from './Engine/force-feedback.js?v=02572';
 import {contactDownRecovery,canGetUpFromLieDown,advanceDownRecovery} from './Engine/down-recovery.js';
 import {getHitScalar} from './Engine/get-hit-scalar.js?v=02514';
 import {getHitQueryScale} from './Engine/get-hit-query-scale.js?v=02514';
 import {getHitAttributeString,getHitAttributeMatches} from './Engine/get-hit-attribute.js?v=02514';
 import {guardFlagString,guardFlagMatches} from './Engine/get-hit-guard-flag.js?v=02514';
 import {hitSourceIdentity} from './Engine/hit-source-identity.js?v=02514';
-import {applyFallEnvShake} from './Engine/fall-env-shake.js?v=02514';
+import {applyFallEnvShake} from './Engine/fall-env-shake.js?v=02572';
 import {stepEnvShake} from './Engine/env-shake-step.js?v=02514';
 import {applyEnvShake} from './Engine/env-shake-controller.js?v=02555';
 import {hitFallShakeData} from './Engine/hit-fall-shake-data.js?v=02514';
@@ -168,9 +168,9 @@ import {reversalHitData} from './Engine/reversal-hit-data.js';
 import {prepareReversalDefinition} from './Engine/reversal-definition.js';
 import {createReversalContactCache} from './Engine/reversal-contact-cache.js';
 import {orderedHitContactCandidates} from './Engine/hit-contact-order.js';
-import {applyAssertInputController,createAssertInputState,mergeAssertedCommandInput} from './Engine/assert-input.js';
+import {applyAssertInputController,createAssertInputState,mergeAssertedCommandInput} from './Engine/assert-input.js?v=02572';
 const assertedInputState=createAssertInputState();
-import {applyShiftInputController,createShiftInputState,shiftCommandInput} from './Engine/shift-input.js';
+import {applyShiftInputController,createShiftInputState,shiftCommandInput} from './Engine/shift-input.js?v=02572';
 const shiftedInputState=createShiftInputState();
 import {createSocdInputState} from './Engine/socd-input.js';
 import {helperCommandAllowed} from './Engine/helper-key-control.js';
@@ -204,7 +204,7 @@ import {createMoveHitData,markMoveHitData,finishMoveHitData,getMoveHitVar} from 
 import {powerTimingProfile} from './Engine/combat-engine-profile.js';
 import {createMoveContactClock,markMoveContact,moveContactQuery,advanceMoveContact,finishMoveContact} from './Engine/move-contact-clock.js';
 import {hitDefAcceleration} from './Engine/hitdef-acceleration.js?v=02514';
-import {applyHitFallController} from './Engine/hit-fall-controllers.js?v=02541';
+import {applyHitFallController} from './Engine/hit-fall-controllers.js?v=02572';
 import {applyPositionController} from './Engine/position-controllers.js?v=02571';
 import {applyVelocityController} from './Engine/velocity-controllers.js?v=02571';
 import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02555';
@@ -282,7 +282,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.71 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.72 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -1407,7 +1407,7 @@ if(applyTargetStateController(controller,adapter.owner||specialRoot(player),{eva
   teamActors:actor=>{const side=actorTeamSide(actor);return side===1||side===2?[specialRoot(side)]:[]},warn:message=>console.warn(message)
  }))return;
  if(runDamageAssertion(controller,adapter.owner||binding,context,player))return;
- if(applyAttackDistanceController(controller,guardHitDefActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1,findActor:id=>{if(id===1||id===2)return guardHitDefActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?guardHitDefActor(helper.player,helper):null}}))return;
+if(applyAttackDistanceController(controller,guardHitDefActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1,findActor:id=>{const target=controllerCharacterActor(id);return target?guardHitDefActor(fighterPlayer(target),target):null}}))return;
  if(applyAttackController(controller,attackActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),findActor:id=>{const target=controllerCharacterActor(id);return target?attackActor(fighterPlayer(target),target):null}}))return;
  if(applyDefenseController(controller,defenseActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),versionData:characterProfiles.get(controller.controllerStateNo<0?battleCharacters[player-1]:context?.stateOwner??(adapter.owner?.kind==='helper'?adapter.owner.stateOwner:customStateOwners[player-1])??battleCharacters[player-1])?.battle??profileFor(player)?.battle,compatibility:profileFor(player)?.battle?.compatibility??'mugen',findActor:id=>{const target=controllerCharacterActor(id);return target?defenseActor(fighterPlayer(target),target):null}}))return;
  if(applyRedLifeController(controller,resourceActor(player,adapter.owner),{evaluate:expression=>evalM1(expression,context),enabled:()=>combatResourceFeatures.redLife,noDamage:()=>roundFlow.noDamage(),findActor:id=>{if(id===1||id===2)return resourceActor(id);const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed&&entity.instanceId===id);return helper?resourceActor(helper.player,helper):null}}))return;
@@ -2605,7 +2605,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.71',build:'redirect-extraction-02571-20261023-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.72',build:'secondary-redirect-02572-20261023-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2613,7 +2613,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.71-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.72-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

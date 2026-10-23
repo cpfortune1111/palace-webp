@@ -1,10 +1,11 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {compileCollisionGroup} from './hitdef-collision-group.js';
 
 export function createClsnOverrides(){return [[],[],[],[]]}
 
 export function applyClsnOverrideController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='overrideclsn')return false;
- const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  const group=params.group===undefined?0:compileCollisionGroup(params.group),index=params.index===undefined?0:Math.trunc(Number(api.evaluate(params.index)))|0;
  const ratio=Math.fround(api.localCoord(owner)/api.localCoord(caller)),expressions=params.rect===undefined?[]:api.split(params.rect);

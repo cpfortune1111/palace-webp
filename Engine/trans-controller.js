@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 const defaults={default:['default',255,0],none:['none',255,0],add:['add',255,255],add1:['add',255,128],addalpha:['add',255,0],sub:['sub',255,255],subadd:['subadd',255,255]};
 
 export function compileTransParameters(params,{strict=true,mugen=false,split=value=>String(value).split(',')}={}){
@@ -15,7 +16,7 @@ export function compileTransParameters(params,{strict=true,mugen=false,split=val
 export function applyTransController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='trans')return false;
  const params=controller.params||{},compiled=compileTransParameters(params,api.compilerOptions);
- const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner||!compiled)return true;
  const alpha=compiled.alpha.map(value=>Math.max(0,Math.min(255,Math.trunc(Number(api.evaluate(value)))|0)));
  api.set(owner,{type:compiled.type,alpha});

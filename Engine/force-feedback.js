@@ -1,8 +1,9 @@
+import {controllerInteger} from './controller-value-conversion.js';
 function unsigned16(value){return (Math.trunc(Number(value))|0)&65535}
 export function createForceFeedback(output){
  const legacy=new Map();
  function execute(params,caller,api){
-  let target=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+  let target=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
   if(!target)return;
   const waveform=String(params.waveform??'sine').toLowerCase();
   const time=(Math.trunc(Number(api.evaluate(params.time??60)))|0)>>>0;

@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 const physicalFlags=new Set(['U','D','L','R','a','b','c','x','y','z','s','d','w','m']);
 
 export function applyAssertInputController(controller,caller,api){
@@ -10,7 +11,7 @@ export function applyAssertInputController(controller,caller,api){
   flags.push(value);
  }
  if(!flags.length)throw Error('Must specify at least one AssertInput flag');
- const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  const resolved=flags.map(flag=>flag==='B'?(owner.facing>=0?'L':'R'):flag==='F'?(owner.facing>=0?'R':'L'):flag);
  api.assert(owner,resolved);return true;

@@ -1,10 +1,11 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {controllerFloat32} from './controller-value-conversion.js';
 
 export function applyScoreController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='scoreadd')return false;
  const params=controller.params||{};
  if(params.value===undefined)throw Error('Missing ScoreAdd value');
- const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  const value=controllerFloat32(api.evaluate(params.value));
  if(value!==0&&!api.excluded(owner))api.add(owner,value);

@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 export function createPalFxDefinition(){
  return {time:0,color:1,hue:0,add:[0,0,0],mul:[256,256,256],sinadd:[0,0,0],sinmul:[0,0,0],sincolor:0,sinhue:0,cycleTime:[0,0,0,0],invertall:false,invertblend:0};
 }
@@ -21,7 +22,7 @@ export function evaluatePalFxDefinition(params,evaluate,{split=value=>String(val
 
 export function applyPalFxController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='palfx')return false;
- const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner||!api.ownsPalette(owner))return true;
  api.set(owner,evaluatePalFxDefinition(params,api.evaluate,api.compilerOptions));
  return true;

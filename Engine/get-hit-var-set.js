@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {compileAttackAttribute} from './attack-attribute.js';
 
 const fields=[
@@ -8,7 +9,7 @@ export const getHitVarSetFields=Object.freeze(fields.map(field=>Object.freeze([.
 
 export function applyGetHitVarSet(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='gethitvarset')return false;
- const params=controller.params||{},recipient=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const params=controller.params||{},recipient=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!recipient)return true;
  const hit=api.getHit(recipient),ratio=Math.fround(api.localScale(caller)/api.localScale(recipient));
  for(const [name,type,destination=name] of fields){

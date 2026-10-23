@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {controllerFloat32} from './controller-value-conversion.js';
 
 export function characterGuardDistance(data,{projectile=false}={}){
@@ -17,7 +18,7 @@ export function characterGuardDistance(data,{projectile=false}={}){
 export function applyAttackDistanceController(controller,actor,api){
  if(controller.type.toLowerCase()!=='attackdist')return false;
  const params=controller.params||controller;
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!target)return true;
  const scale=Math.fround((actor.localScale??1)/(target.localScale??1));
  for(const [parameter,axis] of [['value','x'],['width','x'],['height','y'],['depth','z']]){

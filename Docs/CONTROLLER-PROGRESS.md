@@ -1,4 +1,12 @@
+## 0.25.72 — additional controller redirect extraction (partial, publication pending)
+
+The expanded feedback/clipboard actual-browser fixture and all 227 Node checks pass (outputs/secondary-redirect-extraction-final-browser.log and outputs/secondary-redirect-extraction-node.log). Full battle baseline and final versioned gates remain separate requirements; no whole-controller certification changes.
+
+Twenty-one additional controller types and the legacy Helper feedback exclusion gate now share native-style integer extraction for explicit redirect IDs. Independent failing-before cases reproduce numeric-string acceptance; standalone checks pass and initial actual seventeen-type quoted-ID fixtures pass. AttackDist's storage adapter also rejects disabled Characters. Final expanded feedback/clipboard browser coverage, combined regression and publication remain Pending. See SECONDARY-REDIRECT-EXTRACTION-WIP.md; no whole-controller certification changes.
+
 ## 0.25.71 — controller redirect integer extraction (partial, publication pending)
+
+Publication subsequently verified at commit 9024e07532bc01a44da9bddc43e08e566bd5c107: 226 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 39908904410 and thirteen normalized live file comparisons passed. Receipt: outputs/release-02571-verification.json. Historical pending statements below do not supersede this delivery evidence or establish whole-controller compatibility.
 
 The shared extraction correction now covers sixteen controller types, including angles, multipliers and state properties. Four associated actual Character/storage adapters also reject disabled recipients. Failing-before AngleSet evidence, the expanded actual browser fixture and all 226 Node checks pass (outputs/controller-redirect-extraction-additional-before.log, outputs/controller-redirect-extraction-additional-browser.log, outputs/controller-redirect-extraction-node.log). Full battle regression is running; publication and whole-controller certification remain Pending.
 

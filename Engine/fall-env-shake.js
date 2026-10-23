@@ -1,6 +1,7 @@
+import {controllerInteger} from './controller-value-conversion.js';
 export function applyFallEnvShake(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='fallenvshake')return false;
- const params=controller.params||{},recipient=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const params=controller.params||{},recipient=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!recipient)return true;
  const hit=api.getHit(recipient),time=Math.trunc(Number(hit['fall.envshake.time']??0))|0;
  if(time<=0)return true;

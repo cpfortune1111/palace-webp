@@ -1,10 +1,11 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {compileCollisionGroup} from './hitdef-collision-group.js';
 
 export function createClsnTransforms(){return [[],[],[],[]]}
 
 export function applyClsnTransformController(controller,caller,api){
  if(String(controller.type).toLowerCase()!=='transformclsn')return false;
- const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const params=controller.params||{},owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  const group=params.group===undefined?-1:compileCollisionGroup(params.group),index=params.index===undefined?-1:Math.trunc(Number(api.evaluate(params.index)))|0,ratio=Math.fround(api.localCoord(owner)/api.localCoord(caller));
  const pair=(expression,defaults,factor)=>{const values=expression===undefined?[]:api.split(expression);return defaults.map((fallback,component)=>values[component]===undefined?fallback:Math.fround(Math.fround(Number(api.evaluate(values[component])))*factor))};

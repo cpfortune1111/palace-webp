@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 const keys=['U','D','L','R','a','b','c','x','y','z','s','d','w','m'];
 
 function inputKey(value){
@@ -12,7 +13,7 @@ export function applyShiftInputController(controller,caller,api){
  const params=controller.params||{};
  if(params.input===undefined||params.output===undefined)throw Error('ShiftInput requires input and output');
  const source=inputKey(params.input),destination=inputKey(params.output);
- const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  if(source===null){if(destination===null)api.clear(caller);return true}
  api.set(owner,source,destination);return true;

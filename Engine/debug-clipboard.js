@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 import {formatFloat32,shortestFloat32,formatFloat32Base} from './float32-format.js?v=02552';
 import {formatClipboardString,quoteClipboardRune,padClipboardString} from './clipboard-string-format.js?v=02552';
 import {formatClipboardInteger} from './clipboard-integer-format.js?v=02552';
@@ -87,7 +88,7 @@ export function createDebugClipboard({rowLimit=8}={}){
   const type=String(controller.type).toLowerCase();
   if(!['displaytoclipboard','appendtoclipboard','clearclipboard'].includes(type))return false;
   const params=controller.params||controller;
-  const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+  const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
   if(!target)return true;
   const key=api.key(target);
   if(type==='clearclipboard'){buffers.delete(key);return true}

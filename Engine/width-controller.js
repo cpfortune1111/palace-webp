@@ -1,3 +1,4 @@
+import {controllerInteger} from './controller-value-conversion.js';
 export function createWidthModifiers(){return {player:[0,0],edge:[0,0]}}
 
 export function applyWidthController(controller,caller,api){
@@ -5,7 +6,7 @@ export function applyWidthController(controller,caller,api){
  const params=controller.params||{};
  const explicit=params.edge!==undefined||params.player!==undefined;
  if(!explicit&&params.value===undefined)throw Error('Missing Width value');
- const owner=params.redirectid===undefined?caller:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid)))|0);
+ const owner=params.redirectid===undefined?caller:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!owner)return true;
  const scale=Math.fround(api.localCoord(owner)/api.localCoord(caller));
  const pair=expression=>{const values=api.split(expression);return [0,0].map((fallback,index)=>values[index]===undefined?fallback:Math.fround(Math.fround(Number(api.evaluate(values[index])))*scale))};
@@ -19,4 +20,3 @@ export function widthWorldExtents(front,back,facing,modifiers=[0,0],normalize=tr
  if(normalize&&-rear>forward)[forward,rear]=[-rear,-forward];
  return facing>0?{left:rear,right:forward}:{left:forward,right:rear};
 }
-

@@ -1055,6 +1055,23 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      }
      for(const type of ['PosSet','PosAdd','VelSet','VelAdd','VelMul','HitVelSet'])executeControllerM1({type,params:{redirectid:'"'+player+'"',x:'(var(55):=var(55)+1)'}},binding,context,adapter);
      for(const type of ['AngleSet','AngleAdd','AngleMul','AngleDraw','AttackMulSet','DefenceMulSet','CtrlSet','SprPriority'])executeControllerM1({type,params:{redirectid:'"'+player+'"',value:'(var(55):=var(55)+1)'}},binding,context,adapter);
+     const secondaryRedirectPayload='(var(55):=var(55)+1)';
+     const secondaryControllers=[
+      ...['AttackDist','Depth','Height','ScoreAdd','Width'].map(type=>({type,params:{value:secondaryRedirectPayload}})),
+      {type:'AssertInput',params:{flag:'a'}},
+      {type:'OverrideClsn',params:{rect:secondaryRedirectPayload+',0,0,0'}},
+      {type:'TransformClsn',params:{scale:secondaryRedirectPayload+',1'}},
+      {type:'FallEnvShake',params:{}},
+      {type:'GetHitVarSet',params:{damage:secondaryRedirectPayload}},
+      ...['HitFallSet','HitFallVel','HitFallDamage'].map(type=>({type,params:{}})),
+      {type:'Offset',params:{x:secondaryRedirectPayload}},
+      {type:'PalFX',params:{time:secondaryRedirectPayload}},
+      {type:'ShiftInput',params:{input:'a',output:'b'}},
+      {type:'Trans',params:{trans:'addalpha',alpha:secondaryRedirectPayload+',0'}},
+      {type:'ForceFeedback',params:{time:secondaryRedirectPayload}},
+      ...['DisplayToClipboard','AppendToClipboard','ClearClipboard'].map(type=>({type,params:{text:'"%d"',params:secondaryRedirectPayload}}))
+     ];
+     for(const controller of secondaryControllers)executeControllerM1({...controller,params:{...controller.params,redirectid:'"'+player+'"'}},binding,context,adapter);
      rows.push({engineProfile,player,priorResolverWrites,writes:caller.vars[55],projectileDizzy:projectile.dizzy===true,disabledDizzy:disabledHelper.dizzy===true});
      specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
      for(let index=0;index<2;index++){for(const key of Object.keys(rootStatusFlags[index]))delete rootStatusFlags[index][key];Object.assign(rootStatusFlags[index],flags[index])}
