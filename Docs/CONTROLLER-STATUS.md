@@ -1,3 +1,7 @@
+## 0.25.63 checkpoint — No new whole-controller certification
+
+TransformSprite window/xshear now have actual redirected root/Helper body and synchronized-effect consumers, phase/reset fixtures and native local-coordinate scaling. Focallength/projection remain explicitly rejected; full compiler/diagnostic/scheduler/projection/GPU fidelity remains Pending. Certification remains 0/163. Final versioned regression and publishing are separate gates. See TRANSFORM-SPRITE-WIP.md.
+
 ## 0.25.62 checkpoint — No new whole-controller certification
 
 Ordinary Explod window/reflection/angle/shear operands now have real draw/clip consumers with actual actor matrices and clip pixels. All 218 Node checks pass before versioning. Native perspective/interpolation/redirect/compiler/diagnostic/lifecycle/GPU equivalence and remaining parameters stay Pending; certification remains 0/163. Final full/versioned regression and publication are separate gates. See SPRITE-WINDOW-WIP.md and EXPLOD-SHEAR-WIP.md.

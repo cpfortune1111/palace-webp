@@ -60,3 +60,10 @@ for(const [value,expected] of [[1,true],[-1,true],[0,false],[NaN,false],['1',fal
 const skipped=[];
 assert.equal(synchronizeExplodPriorityFacing({syncId:999},()=>null,{trans:()=>skipped.push('trans'),palette:()=>skipped.push('palette'),transform:()=>skipped.push('transform'),register:()=>skipped.push('register')}),false);
 assert.deepEqual(skipped,[]);
+const actorWindow=[1,2,3,4];live.syncParams=true;
+synchronizeExplodPriorityFacing(live,()=>actor,{window:()=>actorWindow});
+assert.deepEqual(live.window,[1,2,3,4]);assert.notEqual(live.window,actorWindow);
+actorWindow[0]=99;live.syncParams=false;synchronizeExplodPriorityFacing(live,()=>actor,{window:()=>actorWindow});
+assert.deepEqual(live.window,[1,2,3,4]);
+live.syncParams=true;synchronizeExplodPriorityFacing(live,()=>actor,{shear:()=>.5});assert.equal(live.xshear,.5);
+live.syncParams=false;synchronizeExplodPriorityFacing(live,()=>actor,{shear:()=>0});assert.equal(live.xshear,.5);

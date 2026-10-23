@@ -1,3 +1,7 @@
+## 0.25.63 — TransformSprite window/shear consumers (partial)
+
+TransformSprite window/xshear reach actual redirected P1/P2/Helper drawing and synchronized Explods. Tests cover caller-scoped writes, native coordinate ratios, transient preparation/pause behavior and real body/effect matrices. A failing 27-case fixture fixed native localscl versus WEB rendering-width confusion. Focallength/projection remain explicitly unsupported; compiler/diagnostic/phase/GPU equivalence and all whole-controller certifications remain Pending. Final versioned checks and verified publication are separate gates.
+
 ## 0.25.62 — Ordinary Explod window/geometry consumers (partial)
 
 Explod window, relative facing/VFACING, angle/Y/X and xshear now reach actual clipping and affine drawing. Fixtures cover 96 stage-window, 48 screen-window, 36 rotation and 192 shear/reflection/scale cases, plus immediate/resolved clip pixels. All 218 Node checks and focused actor cases pass before versioning; complete/versioned regression and verified publication remain separate gates. Native perspective/interpolation/redirect/compiler/lifecycle/GPU equivalence and whole-controller certification remain Pending.

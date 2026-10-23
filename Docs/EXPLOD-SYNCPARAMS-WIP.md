@@ -1,5 +1,7 @@
 # Explod syncparams consumers (partial, unpublished)
 
+Synchronized window copying now reaches actual clipping through TransformSprite root/Helper consumers. Window vectors copy by value and remain independent after disabling syncparams, unlike the intentionally shared PalFX pointer. The real browser chain verifies controller writes, effect snapshots and retained clip dimensions; complete native coordinate/phase/window behavior remains Pending. See TRANSFORM-SPRITE-WIP.md.
+
 Supplemental extraction checks assert compiler-relative ordering synclayer, syncparams, syncid, ONTOP, under, layerno; native-style true/false extraction rejects runtime numeric strings, NaN and undefined. Missing synchronization targets skip every copy/registration callback. This only proves ordering within this extracted subset; the surrounding Explod compiler order is still incomplete.
 
 Synchronized color output now has pixel evidence beyond metadata. The actual Root/Helper draw records from synchronization tests are passed through the real renderOpaqueTransQueue and paletteShaderForDraw using a controlled opaque 60/30/90 source over 100/100/100. Independent expected RGBA assertions are 61/40/70/255 for add alpha 128/64 with PalFX +12 red, 16/70/10/255 for subtract with +24 red, and 83/40/70/255 when the retained root palette pointer changes to +55 after synchronization is disabled. The fixture normalizes source geometry to one pixel while retaining actual produced Trans/alpha/PalFX, so this verifies color composition rather than whole scene geometry or native GPU equivalence.

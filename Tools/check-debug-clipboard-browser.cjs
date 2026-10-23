@@ -827,6 +827,96 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(screenWindows.length,48);
   for(const row of screenWindows){assert.equal(row.screen,true);assert.deepEqual(row.clip,row.expected);assert.equal(row.horizontal,row.facing);assert.equal(row.vertical,row.vfacing);}
   console.log('Actual left/right screen Explod windows preserve both reflection signs and ignore stage camera zoom');
+  const transformedActors=await run(`(()=>{
+   const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedWindows=rootSpriteWindows.map(window=>[...window]),savedHelper=[helper.window,helper.anim,helper.elem],saved=[current,fi,simPaused,p2.anim,p2.elem],rows=[];
+   try{
+    current=0;fi=0;simPaused=false;p2.anim=0;p2.elem=1;helper.anim=0;helper.elem=1;
+    for(const target of [specialRoot(1),specialRoot(2),helper]){
+     const id=target.kind==='helper'?target.instanceId:target.player,caller=specialRoot(id===1?2:1),savedVariables=[caller.vars[8],target.vars[8]];
+     try{
+      caller.vars[8]=5;target.vars[8]=99;
+      executeControllerM1({type:'TransformSprite',params:{redirectid:String(id),window:Array(4).fill('Var(8):=Var(8)+1').join(',')}},caller,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true});
+      const stored=target.kind==='helper'?helper.window:rootSpriteWindows[target.player-1];
+      transDrawQueue.reset();draw();drawMars();drawSourceExplods();
+      const record=transDrawQueue.ordered().find(entry=>entry.actorId===id);
+      rows.push({stored:[...stored],caller:caller.vars[8],target:target.vars[8],clipped:!!record?.clip});
+     }finally{[caller.vars[8],target.vars[8]]=savedVariables}
+    }
+    resetRootDrawOffsets();return {rows,reset:rootSpriteWindows.map(window=>[...window])};
+   }finally{rootSpriteWindows.forEach((window,index)=>window.splice(0,4,...savedWindows[index]));[helper.window,helper.anim,helper.elem]=savedHelper;[current,fi,simPaused,p2.anim,p2.elem]=saved;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(transformedActors.rows,Array.from({length:3},()=>({stored:[6,7,8,9],caller:9,target:99,clipped:true})));
+  assert.deepEqual(transformedActors.reset,[[0,0,0,0],[0,0,0,0]]);
+  console.log('Actual TransformSprite redirects retain original caller side effects and reach both root and Helper clip records; root frame reset clears windows');
+  const synchronizedWindows=await run(`(()=>{
+   const savedEffects=[...sourceExplods],savedWindows=rootSpriteWindows.map(window=>[...window]),savedShears=[...rootSpriteShears],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedHelperWindow=helper.window?[...helper.window]:helper.window,savedHelperShear=helper.xshear;
+   try{
+    sourceExplods.length=0;const caller=specialRoot(1);
+    for(const [target,window,shear] of [[specialRoot(2),'-20,-40,20,0',-.25],[helper,'-10,-10,10,10',.5]]){
+     executeControllerM1({type:'TransformSprite',params:{redirectid:String(target.kind==='helper'?target.instanceId:2),window,xshear:String(shear)}},caller,specialRuntime.context(caller),{owner:caller,player:1,schedulingApplied:true});
+     spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',syncid:'-1'},target,target.player);
+    }
+    const capture=()=>{transDrawQueue.reset();drawSourceExplods();const records=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').sort((left,right)=>left.syncId-right.syncId);return {windows:sourceExplods.map(effect=>[...effect.window]),shears:sourceExplods.map(effect=>effect.xshear),clips:records.map(entry=>[entry.clip.width,entry.clip.height]),matrices:records.map(entry=>entry.matrix)}};
+    const first=capture();for(const effect of sourceExplods)effect.syncParams=false;
+    rootSpriteWindows[1].fill(0);helper.window.fill(0);rootSpriteShears[1]=0;helper.xshear=0;const retained=capture();
+    for(const effect of sourceExplods)effect.xshear=0;const zero=capture();return {first,retained,zeroMatrices:zero.matrices};
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);rootSpriteWindows.forEach((window,index)=>window.splice(0,4,...savedWindows[index]));rootSpriteShears.splice(0,2,...savedShears);helper.window=savedHelperWindow;helper.xshear=savedHelperShear;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(synchronizedWindows.first.windows,[[-20,-40,20,0],[-10,-10,10,10]]);
+  assert.deepEqual(synchronizedWindows.retained,synchronizedWindows.first);
+  assert.deepEqual(synchronizedWindows.first.shears,[-.25,.5]);
+  synchronizedWindows.first.matrices.forEach((matrix,index)=>assert.notDeepEqual(matrix,synchronizedWindows.zeroMatrices[index]));
+  for(const clip of synchronizedWindows.first.clips)assert.ok(clip[0]>0&&clip[1]>0);
+  console.log('Actual TransformSprite root/Helper windows propagate to synchronized Explod clips and remain independent after syncparams is disabled');
+  const rootWindowPhases=await run(`(()=>{
+   const windows=rootSpriteWindows.map(window=>[...window]),offsets=rootDrawOffsets.map(offset=>[...offset]),pauses={normal:[...specialRuntime.pauses.normal],super:[...specialRuntime.pauses.super]},moveTimes=[1,2].map(player=>['root'+player,specialRuntime.moveTimes.has('root'+player),specialRuntime.moveTimes.get('root'+player)]),hitPause=[p1HitPause,p2.attackPause];
+   try{
+    specialRuntime.pauses.normal.fill(null);specialRuntime.pauses.super.fill(null);p1HitPause=2;p2.attackPause=2;
+    rootSpriteWindows.forEach(window=>window.splice(0,4,1,2,3,4));resetRootDrawOffsets();const local=rootSpriteWindows.map(window=>[...window]);
+    specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};
+    for(const player of [1,2])specialRuntime.moveTimes.set('root'+player,{normal:0});
+    rootSpriteWindows.forEach(window=>window.splice(0,4,5,6,7,8));resetRootDrawOffsets();const global=rootSpriteWindows.map(window=>[...window]);
+    specialRuntime.pauses.normal.fill(null);resetRootDrawOffsets();return {local,global,resumed:rootSpriteWindows.map(window=>[...window])};
+   }finally{rootSpriteWindows.forEach((window,index)=>window.splice(0,4,...windows[index]));rootDrawOffsets.splice(0,2,...offsets);specialRuntime.pauses.normal.splice(0,2,...pauses.normal);specialRuntime.pauses.super.splice(0,2,...pauses.super);for(const [key,had,value] of moveTimes){if(had)specialRuntime.moveTimes.set(key,value);else specialRuntime.moveTimes.delete(key)}[p1HitPause,p2.attackPause]=hitPause}
+  })()`);
+  assert.deepEqual(rootWindowPhases,{local:[[0,0,0,0],[0,0,0,0]],global:[[5,6,7,8],[5,6,7,8]],resumed:[[0,0,0,0],[0,0,0,0]]});
+  console.log('Actual P1/P2 window preparation clears during local hitpause, retains through blocking global pause and clears after resuming');
+  const transformedShears=await run(`(()=>{
+   const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedShears=[...rootSpriteShears],savedAngles=rootAngleStates.map(snapshotAngleState),savedHelper=[helper.angleState,helper.xshear,helper.anim,helper.elem,helper.facing],saved=[current,fi,simPaused,p2.anim,p2.elem,p1Facing,p2.facing],rows=[];
+   try{
+    current=0;fi=0;simPaused=false;p2.anim=0;p2.elem=1;p1Facing=1;p2.facing=1;helper.anim=0;helper.elem=1;helper.facing=1;
+    for(const target of [specialRoot(1),specialRoot(2),helper])for(const angle of [0,90]){
+     const id=target.kind==='helper'?target.instanceId:target.player,state=target.kind==='helper'?(helper.angleState=createAngleState()):rootAngleStates[target.player-1];
+     Object.assign(state,createAngleState(),{enabled:angle!==0,value:angle});
+     const capture=value=>{const caller=specialRoot(id===1?2:1);executeControllerM1({type:'TransformSprite',params:{redirectid:String(id),xshear:String(value)}},caller,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true});transDrawQueue.reset();draw();drawMars();drawSourceExplods();return transDrawQueue.ordered().find(entry=>entry.actorId===id).matrix.slice(0,4)};
+     const baseline=capture(0);
+     for(const shear of [-.5,.5]){const matrix=capture(shear),coefficient=shear*cameraZoom*(angle===0?-1:1),expected=[...baseline];expected[0]+=coefficient*baseline[1];expected[2]+=coefficient*baseline[3];rows.push({matrix,expected,shear,stored:target.kind==='helper'?helper.xshear:rootSpriteShears[target.player-1]})}
+    }
+    return rows;
+   }finally{rootSpriteShears.splice(0,2,...savedShears);rootAngleStates.forEach((angle,index)=>Object.assign(angle,savedAngles[index]));[helper.angleState,helper.xshear,helper.anim,helper.elem,helper.facing]=savedHelper;[current,fi,simPaused,p2.anim,p2.elem,p1Facing,p2.facing]=saved;transDrawQueue.reset()}
+  })()`);
+  assert.equal(transformedShears.length,12);
+  for(const row of transformedShears){assert.equal(row.stored,row.shear);row.matrix.forEach((value,index)=>assert.ok(Math.abs(value-row.expected[index])<1e-6,JSON.stringify(row)));}
+  console.log('Actual redirected TransformSprite xshear reaches P1/P2/Helper body matrices with opposite native rotated and unrotated signs');
+  const redirectedWindowCoordinates=await run(`(()=>{
+   const helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),profiles=battleCharacters.map(character=>characterProfiles.get(character).battle),coordinates=profiles.map(profile=>profile.coordinateSystem),savedWindows=rootSpriteWindows.map(window=>[...window]),savedHelper=[helper.localCoord,helper.window?[...helper.window]:helper.window],rows=[];
+   try{
+    for(const widths of [[320,1280],[1280,320],[640,640]]){
+     profiles.forEach((profile,index)=>profile.coordinateSystem={...coordinates[index],localcoord:[widths[index],720],webWorldWidth:index===0?1280:640});helper.localCoord=640;
+     const actors=[specialRoot(1),specialRoot(2),helper];
+     for(const caller of actors)for(const target of actors){
+      const id=target.kind==='helper'?target.instanceId:target.player;
+      executeControllerM1({type:'TransformSprite',params:{redirectid:String(id),window:'1,2,3,4'}},caller,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true});
+      const callerCoord=caller.kind==='helper'?640:widths[caller.player-1],targetCoord=target.kind==='helper'?640:widths[target.player-1],ratio=Math.fround(targetCoord/callerCoord);
+      rows.push({actual:[...(target.kind==='helper'?helper.window:rootSpriteWindows[target.player-1])],expected:[1,2,3,4].map(value=>Math.fround(value*ratio))});
+     }
+    }
+    return rows;
+   }finally{profiles.forEach((profile,index)=>profile.coordinateSystem=coordinates[index]);rootSpriteWindows.forEach((window,index)=>window.splice(0,4,...savedWindows[index]));[helper.localCoord,helper.window]=savedHelper;transDrawQueue.reset()}
+  })()`);
+  assert.equal(redirectedWindowCoordinates.length,27);
+  for(const row of redirectedWindowCoordinates)assert.deepEqual(row.actual,row.expected);
+  console.log('Actual TransformSprite root/Helper redirects use native local-coordinate ratios independently of WEB rendering width');
   const preparedSynchronization=await run(`(async()=>{
    transDrawQueue.reset();transDrawQueue.enableActorSync(1);transDrawQueue.enableActorSync(2);
    const source=document.createElement('canvas');source.width=source.height=1;

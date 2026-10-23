@@ -238,7 +238,7 @@ export function createSpecialRuntime(api){
   for(const entity of [...entities]){
    if(entity.destroyed||entity.kind==='helper'&&entity.disabled)continue;
    if(blocked(entity.player,entity)){if(entity.kind==='helper')helperGlobalState(entity,-4);continue}
-   if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.transState=null}
+   if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.window=Array(4).fill(0);entity.xshear=0;entity.transState=null}
    if(entity.kind==='helper')for(const slot of [...(entity.clsnOverrides||[]),...(entity.clsnTransforms||[])])slot.length=0;
    entity.assertions?.clear();
    if(entity.kind==='helper'&&!(entity.hitPause>0))tickHitBySlots(entity.hitBySlots??=createHitBySlots());

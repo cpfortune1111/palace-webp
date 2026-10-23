@@ -18,7 +18,7 @@ export function applyExplodLayers(effect,params,inheritedLayer,evaluate,ownerId)
  }
 }
 
-export function synchronizeExplodPriorityFacing(effect,findActor,{trans,palette,transform,register}={}){
+export function synchronizeExplodPriorityFacing(effect,findActor,{trans,palette,transform,register,window,shear}={}){
  if(!(effect.syncId>0))return false;
  const target=findActor(effect.syncId);
  if(!target||target.kind==='projectile')return false;
@@ -28,6 +28,8 @@ export function synchronizeExplodPriorityFacing(effect,findActor,{trans,palette,
   effect.facing=target.facing;
   if(trans){const value=trans(target);effect.transState=value?{type:value.type,alpha:[...value.alpha]}:null}
   if(palette)effect.syncedPalFx=palette(target);
+  if(window)effect.window=[...window(target)];
+  if(shear)effect.xshear=shear(target);
   if(transform){const value=transform(target);effect.scale=[...value.scale];effect.angleState={...value.angleState,scale:[...value.angleState.scale],pivot:[...value.angleState.pivot]}}
  }
  return true;

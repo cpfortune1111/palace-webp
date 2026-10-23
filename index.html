@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.62 Controller Integration</title>
+<title>Prototype 0.25.63 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.62 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD sprite-geometry-02562-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.63 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD transform-sprite-02563-20261023-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -87,11 +87,12 @@ import {transBlendPasses} from './Engine/trans-blend.js?v=02514';
 import {createPalFxRuntime,stepPalFx,samplePalFx} from './Engine/palfx-runtime.js?v=02514';
 import {applyTransController,compileTransParameters} from './Engine/trans-controller.js?v=02514';
 import {applyOffsetController,offsetDrawingPosition} from './Engine/offset-controller.js?v=02514';
-import {applyExplodLayers,synchronizeExplodPriorityFacing} from './Engine/explod-layers.js?v=02561';
+import {applyExplodLayers,synchronizeExplodPriorityFacing} from './Engine/explod-layers.js?v=02563';
 import {compileSpriteWindow,spriteWindowRect,clipSpriteWindow} from './Engine/sprite-window.js?v=02562';
 import {explodVerticalFacing,explodDrawingAngle,explodTrueFacing} from './Engine/explod-facing.js?v=02562';
 import {compileExplodAngles} from './Engine/explod-angles.js?v=02562';
 import {compileExplodShear,applyExplodShear} from './Engine/explod-shear.js?v=02562';
+import {applyTransformSprite} from './Engine/transform-sprite.js?v=02563';
 import {applyPosFreezeController} from './Engine/pos-freeze.js?v=02559';
 import {applyPlayerPushController,createPlayerPushState,playerPushShares} from './Engine/player-push.js?v=02559';
 import {applyScreenBoundController,createScreenBoundFlags,screenBoundInterval} from './Engine/screen-bound.js?v=02559';
@@ -279,7 +280,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.62 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.63 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -287,7 +288,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02560';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02563';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02555';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -369,7 +370,7 @@ function lifecycleEffectFrame(effect){
 }
 function drawSourceExplods(){
  transDrawQueue.retainActorSync([1,2,...specialRuntime.entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed).map(entity=>entity.instanceId)]);
- for(const effect of sourceExplods)synchronizeExplodPriorityFacing(effect,combatTargetActor,{register:(actor,id)=>transDrawQueue.enableActorSync(id),trans:actor=>actor.kind==='helper'?actor.transState:rootTransStates[fighterPlayer(actor)-1],palette:actorPaletteRuntime,transform:actor=>{
+for(const effect of sourceExplods)synchronizeExplodPriorityFacing(effect,combatTargetActor,{register:(actor,id)=>transDrawQueue.enableActorSync(id),shear:actor=>actor.kind==='helper'?actor.xshear??0:rootSpriteShears[fighterPlayer(actor)-1],window:actor=>actor.kind==='helper'?actor.window??[0,0,0,0]:rootSpriteWindows[fighterPlayer(actor)-1],trans:actor=>actor.kind==='helper'?actor.transState:rootTransStates[fighterPlayer(actor)-1],palette:actorPaletteRuntime,transform:actor=>{
   const definition=actorSizeSnapshot(actor).definition,angle=actor.angleState||rootAngleStates[fighterPlayer(actor)-1];
   return {scale:[Math.fround((definition?.xscale??1)*angle.scale[0]),Math.fround((definition?.yscale??1)*angle.scale[1])],angleState:{...createAngleState(),enabled:angle.enabled,value:angle.enabled?angle.value:0,xangle:angle.enabled?angle.xangle:0,yangle:angle.enabled?angle.yangle:0}};
  }});
@@ -390,7 +391,7 @@ for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible
   const windowUnit=(effect.screen?1:cameraZoom)*fit*collisionWorldRatio(characterProfiles.get(battleCharacters[effect.player-1])?.battle||battleDat);
   const windowClip=spriteWindowRect(effect.window,{origin:[viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit],scale:[windowUnit*drawingFacing,windowUnit*(effect.vfacing??1)],pixelRatio:devicePixelRatio});
   const sizeDrawing=effect.entity&&effect.kind==='helper'?helperSizeDrawing(effect.sizeDefinition,{localCoord:effect.sizeLocalCoord??1280,worldWidth:Number((characterProfiles.get(battleCharacters[effect.player-1])?.battle||battleDat).coordinateSystem?.webWorldWidth??1280),facing:effect.facing}):{scale:[1,1],offset:[0,0]};
-drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate((offset[0]+sizeDrawing.offset[0])*cameraZoom*fit,(offset[1]+sizeDrawing.offset[1])*cameraZoom*fit)}if(!effect.entity)applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):effect.syncedPalFx?.enabled?samplePalFx(effect.syncedPalFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod'});drawing.restore();
+drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate((offset[0]+sizeDrawing.offset[0])*cameraZoom*fit,(offset[1]+sizeDrawing.offset[1])*cameraZoom*fit)}if(!effect.entity||effect.kind==='helper')applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(effect.angleState?.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):effect.syncedPalFx?.enabled?samplePalFx(effect.syncedPalFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod'});drawing.restore();
  }
 }
 function playSourceSound(value,channel=-1,player=characterScopePlayer){
@@ -463,6 +464,7 @@ function drawMarsForCharacter(){
  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+fighter.y*scale;
  mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[1]);mctx.translate(offset[0]*scale,offset[1]*scale);
+ if(rootSpriteShears[1]){mctx.translate(px,ground+fighter.y*scale);applyExplodShear(mctx,{value:rootSpriteShears[1],zoom:cameraZoom,verticalScale:scale*rootAngleStates[1].scale[1],height:sp.h,axisY:sp.axisY,angle:rootAngleStates[1]});mctx.translate(-px,-(ground+fighter.y*scale))}
  const src=spriteCanvasFor(f);
  if(src){
  if(rootAngleStates[1].enabled){mctx.translate(px,ground+fighter.y*scale);mctx.scale((flip?-1:1)*scale,scale);transformAngleDrawing(mctx,rootAngleStates[1]);drawTransSprite(mctx,src,[-sp.axisX+f.ox,-sp.axisY+f.oy],{state:resolveSpriteTrans(rootTransStates[1],f.blend),paletteEffect:actorPaletteEffect(specialRoot(2)),priority:fighter.sprPriority,kind:'root2'})}
@@ -478,6 +480,8 @@ const rootMaps=[new Map(),new Map()],rootMapDefaults=[new Map(),new Map()];
 const runtimeVar=Array(60).fill(0),runtimeSysVar=Array(10).fill(0),runtimeFVar=Array(40).fill(0),runtimeSysFVar=Array(5).fill(0);
 let p1SprPriority=0,p1Life=1000,p1LifeMax=1000;
 const rootSpriteLayers=[0,0];
+const rootSpriteWindows=[Array(4).fill(0),Array(4).fill(0)];
+const rootSpriteShears=[0,0];
 function actorSpriteLayer(actor){return actor.kind==='helper'?actor.layerNo??0:rootSpriteLayers[fighterPlayer(actor)-1]}
 function setActorSpriteLayer(actor,value){if(actor.kind==='helper')actor.layerNo=value;else rootSpriteLayers[fighterPlayer(actor)-1]=value}
 let p1Reaction=null,p2PunchRequested=false,p1LastHitKey=null;
@@ -743,7 +747,12 @@ function renderBattleTransCandidate(target,scratch,stageSource=r.domElement){
  target.save();target.setTransform(1,0,0,1,0,0);if(bgPalFx.enabled||allPalFx.enabled){scratch.save();scratch.setTransform(1,0,0,1,0,0);scratch.clearRect(0,0,width,height);scratch.drawImage(filterCanvas,0,0,width,height);const filterPixels=scratch.getImageData(0,0,width,height);filterPixels.data.set(palFxPixels(filterPixels.data,backgroundPaletteEffect()));scratch.putImageData(filterPixels,0,0);scratch.restore();target.drawImage(scratch.canvas,0,0,width,height)}else target.drawImage(filterCanvas,0,0,width,height);target.restore()
 }
 function backgroundPaletteEffect(){return stackPalFx(bgPalFx.enabled?samplePalFx(bgPalFx):null,allPalFx.enabled?samplePalFx(allPalFx):null,'none',[255,0])}
-function drawTransSprite(context,source,args,settings){if(settings.kind==='root1'||settings.kind==='root2')settings={...settings,layer:rootSpriteLayers[settings.kind==='root1'?0:1],actorId:settings.kind==='root1'?1:2};if(allPalFx.enabled)settings={...settings,paletteEffect:stackPalFx(settings.paletteEffect,samplePalFx(allPalFx),settings.state?.type||'none',settings.state?.alpha||[255,0])};transDrawQueue.record(context,source,args,settings);if(settings.clip){context.save();clipSpriteWindow(context,settings.clip);context.drawImage(source,...args);context.restore()}else context.drawImage(source,...args)}
+function rootSpriteWindow(player){
+ const actor=specialRoot(player),width=visualViewport?.width||innerWidth,height=visualViewport?.height||innerHeight,fit=Math.min(width/1280,height/720),position=offsetDrawingPosition([actor.x,actor.y],rootDrawOffsets[player-1]);
+ const unit=fit*cameraZoom*collisionWorldRatio(characterProfiles.get(battleCharacters[player-1])?.battle||battleDat);
+ return spriteWindowRect(rootSpriteWindows[player-1],{origin:[(width-1280*fit)/2+worldScreenX(position[0])*fit,(height-720*fit)/2+worldScreenY(position[1])*fit],scale:[unit*actor.facing,unit],pixelRatio:devicePixelRatio});
+}
+function drawTransSprite(context,source,args,settings){if(settings.kind==='root1'||settings.kind==='root2')settings={...settings,layer:rootSpriteLayers[settings.kind==='root1'?0:1],actorId:settings.kind==='root1'?1:2,clip:rootSpriteWindow(settings.kind==='root1'?1:2)};if(allPalFx.enabled)settings={...settings,paletteEffect:stackPalFx(settings.paletteEffect,samplePalFx(allPalFx),settings.state?.type||'none',settings.state?.alpha||[255,0])};transDrawQueue.record(context,source,args,settings);if(settings.clip){context.save();clipSpriteWindow(context,settings.clip);context.drawImage(source,...args);context.restore()}else context.drawImage(source,...args)}
 const controllerTargetBindings=new Map(),rootBindFacing=[0,0],rootWidthModifiers=[createWidthModifiers(),createWidthModifiers()],rootScreenBoundFlags=[createScreenBoundFlags(),createScreenBoundFlags()],rootPlayerPushStates=[createPlayerPushState(),createPlayerPushState()],rootDepthBoundFlags=[createDepthBoundFlags(),createDepthBoundFlags()],rootDepthModifiers=[createDepthModifiers(),createDepthModifiers()],rootClsnTransforms=[createClsnTransforms(),createClsnTransforms()],rootClsnOverrides=[createClsnOverrides(),createClsnOverrides()],rootHeightModifiers=[[0,0],[0,0]],rootPositionFrozen=[false,false],rootDrawOffsets=[[0,0],[0,0]],rootTransStates=[null,null],rootPalFx=[null,null],rootHitOverrides=[createHitOverrides(),createHitOverrides()],rootHitBySlots=[createHitBySlots(),createHitBySlots()],allPalFx=createPalFxRuntime(undefined,{allowNegative:false}),bgPalFx=createPalFxRuntime(undefined,{allowNegative:false}),stageBackgrounds=createStageBackgroundRegistry();
 const customAnimationOwners=[null,null],customStateOwners=[null,null],throwTargets=[null,null],throwBindings=[null,null],throwHitData=[null,null];
 let characterScopePlayer=1;
@@ -789,6 +798,8 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},animationIds:new Set(Object.keys(all.actions)),data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
  transDrawQueue.resetActorSync();
+ rootSpriteWindows.forEach(window=>window.fill(0));
+ rootSpriteShears.fill(0);
  customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);rootHitBySlots.splice(0,2,createHitBySlots(),createHitBySlots());
  for(const [index,character] of players.entries()){if(!characterProfiles.has(character))throw Error('Unsupported character '+character);battleCharacters[index]=character;resetCommandList(index+1)}
  const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;
@@ -1134,7 +1145,7 @@ function hitOverridesFor(actor){return actor.kind==='helper'?(actor.hitOverrides
 function matchingHitOverride(attacker,defender,params){return selectHitOverride(hitOverridesFor(defender),params,{attackerState:attacker.type||specialRoot(attacker.player||attacker.id).type,projectile:attacker.kind==='projectile',unguardable:attacker.assertions?.has('unguardable')})}
 function resetRootHitOverrides(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&((characterProfiles.get(battleCharacters[player-1])?.battle?.compatibility??'mugen')==='mugen'||!(player===1?p1HitPause>0:p2.hitPause>0||p2.hitShake>0||p2.attackPause>0)))tickHitOverrides(rootHitOverrides[player-1])}
 function resetRootTrans(){for(const player of [1,2])if(!specialRuntime.blocked(player))rootTransStates[player-1]=null}
-function resetRootDrawOffsets(){for(const player of [1,2])if(!specialRuntime.blocked(player))rootDrawOffsets[player-1]=[0,0]}
+function resetRootDrawOffsets(){for(const player of [1,2])if(!specialRuntime.blocked(player)){rootDrawOffsets[player-1]=[0,0];rootSpriteWindows[player-1].fill(0);rootSpriteShears[player-1]=0}}
 function isPositionFrozen(actor){return actor.kind==='helper'?!!actor.positionFrozen:rootPositionFrozen[fighterPlayer(actor)-1]}
 function resetRootPositionFreeze(){for(const player of [1,2])if(!specialRuntime.blocked(player)&&!(player===1?p1HitPause>0:p2.hitPause>0||p2.attackPause>0))rootPositionFrozen[player-1]=false}
 function resetRootAssertions(){resetRootDepthBoundFlags();resetRootDepthModifiers();resetRootClsnOverrides();resetRootWidths();resetRootHeights();resetRootScreenBounds();resetRootPlayerPush();resetRootPositionFreeze();resetRootDrawOffsets();resetRootTrans();resetRootHitOverrides();resetRootHitBySlots();for(const player of [1,2])if(!specialRuntime.blocked(player)){previousRootAssertions[player-1].clear();for(const flag of rootAssertions[player-1])previousRootAssertions[player-1].add(flag);rootAssertions[player-1].clear()}}
@@ -1352,6 +1363,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
  scheduling?.executed();
  const params=controller.params||controller;
  const value=expression=>Number(evalM1(expression,context));
+if(applyTransformSprite(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:combatTargetActor,split:splitExpressionPairM1,localScale:actor=>320/collisionLocalCoord(actor),window:actor=>actor.kind==='helper'?(actor.window??=Array(4).fill(0)):rootSpriteWindows[fighterPlayer(actor)-1],setShear:(actor,value)=>{if(actor.kind==='helper')actor.xshear=value;else rootSpriteShears[fighterPlayer(actor)-1]=value},warn:message=>console.warn(message)}))return;
  if(debugClipboard.execute(controller,adapter.owner||specialRoot(player),{profile:combatEngineProfile,key:actor=>actor.key||'root'+fighterPlayer(actor),findActor:combatTargetActor,evaluate:expression=>evalM1(expression,context),expressions:expression=>parseExprAST(String(expression),{list:true,maxComponents:100}),sample:expression=>{const result=evalNumericAST(expression,context);if(result.handled)return result;const value=evalAST(expression,context);return {type:typeof value==='string'?'string':'untyped',value}}}))return;
  if(String(controller.type).toLowerCase()==='forcefeedback'){
   forceFeedback.execute(params,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:combatTargetActor,opponent:p2EnemyActor,controllerKey:actor=>fighterPlayer(actor)});
@@ -2579,7 +2591,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.62',build:'sprite-geometry-02562-20261023-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.63',build:'transform-sprite-02563-20261023-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2587,7 +2599,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.62-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.63-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -2747,6 +2759,7 @@ function drawForCharacter(){
  let frames=framesFor(drawAnim);if(!frames.length)frames=framesFor(0);if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=spriteFor(f);if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(posX+hitShakeOffset(displayP1()))*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
  const src=spriteCanvasFor(f);if(!src)return;ctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[0]);ctx.translate(offset[0]*scale,offset[1]*scale);
+ if(rootSpriteShears[0]){ctx.translate(px,ground+posY*scale);applyExplodShear(ctx,{value:rootSpriteShears[0],zoom:cameraZoom,verticalScale:scale*rootAngleStates[0].scale[1],height:sp.h,axisY:sp.axisY,angle:rootAngleStates[0]});ctx.translate(-px,-(ground+posY*scale))}
  if(rootAngleStates[0].enabled){ctx.save();ctx.translate(px,ground+posY*scale);ctx.scale(spriteFacingFor(drawAnim,p1Facing)*scale,scale);transformAngleDrawing(ctx,rootAngleStates[0]);drawTransSprite(ctx,src,[-sp.axisX+f.ox,-sp.axisY+f.oy],{state:resolveSpriteTrans(rootTransStates[0],f.blend),paletteEffect:actorPaletteEffect(specialRoot(1)),priority:displayP1().sprPriority,kind:'root1'});ctx.restore()}
  else if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);drawTransSprite(ctx,src,[0,dy,sp.w*scale,sp.h*scale],{state:resolveSpriteTrans(rootTransStates[0],f.blend),paletteEffect:actorPaletteEffect(specialRoot(1)),priority:displayP1().sprPriority,kind:'root1'});ctx.restore()}
  else drawTransSprite(ctx,src,[dx,dy,sp.w*scale,sp.h*scale],{state:resolveSpriteTrans(rootTransStates[0],f.blend),paletteEffect:actorPaletteEffect(specialRoot(1)),priority:displayP1().sprPriority,kind:'root1'});ctx.restore();

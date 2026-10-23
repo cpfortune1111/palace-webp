@@ -1,4 +1,10 @@
-## 0.25.62 — Ordinary Explod window/geometry consumers (partial, publication unverified)
+## 0.25.63 — TransformSprite window/shear consumers (partial, publication unverified)
+
+TransformSprite window/xshear now have redirected caller-scoped sequential writes and real P1/P2/Helper drawing. Actual controller-to-synchronized-Explod cases retain value snapshots after syncparams is disabled. Helper/root preparation tests cover active frames, local hitpause, blocking global pause and resumption. Focallength/projection fail explicitly rather than silently no-op. Full compiler/diagnostic/redirect/coordinate/scheduler/projection/GPU fidelity remains Pending; all whole-controller certifications remain Pending. See TRANSFORM-SPRITE-WIP.md. This batch is not published.
+
+## 0.25.62 — Ordinary Explod window/geometry consumers (partial, publication verified)
+
+Publication verified at commit 8b2d84180b0540073b45f0f16fcce5088b84d09c: 218 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39880679235 and sixteen normalized live file comparisons passed. Local receipt: outputs/release-02562-verification.json. Checkpoint delivery is verified, not whole-controller compatibility.
 
 Coverage now also includes relative facing/VFACING, direct angle/Y/X operands and xshear with rotated-axis compensation. Actual fixtures cover 96 stage-space window/reflection cases, 48 left/right screen-window cases, 36 orthographic rotation cases and 192 shear/zoom/reflection/scale cases. Ordinary output uses real clipping, reflection signs, rotation and shear transforms, not retained metadata alone. All 218 Node checks pass before versioning; full/versioned regression and publication remain separate gates. Full native projection/interpolation/redirect/binding/compiler/diagnostic semantics remain Pending; no whole-controller certification changes. See SPRITE-WINDOW-WIP.md and EXPLOD-SHEAR-WIP.md.
 
