@@ -1,4 +1,12 @@
-## 0.25.61 — Explod synchronization consumers (partial, publication unverified)
+## 0.25.62 — Ordinary Explod window/geometry consumers (partial, publication unverified)
+
+Coverage now also includes relative facing/VFACING, direct angle/Y/X operands and xshear with rotated-axis compensation. Actual fixtures cover 96 stage-space window/reflection cases, 48 left/right screen-window cases, 36 orthographic rotation cases and 192 shear/zoom/reflection/scale cases. Ordinary output uses real clipping, reflection signs, rotation and shear transforms, not retained metadata alone. All 218 Node checks pass before versioning; full/versioned regression and publication remain separate gates. Full native projection/interpolation/redirect/binding/compiler/diagnostic semantics remain Pending; no whole-controller certification changes. See SPRITE-WINDOW-WIP.md and EXPLOD-SHEAR-WIP.md.
+
+Explod four-value windows now reach immediate drawing and queue rasterization as independent absolute clips. Twenty-four actual P1/P2/Helper cases cover both facings, 320/1280 local-coordinate widths and sprite-scale independence; pixel cases verify clipping and rectangle snapshot retention. Zero vectors disable clipping, while nonzero zero-width rectangles remain empty clips. Redirected/borrowed-provider/screen/vfacing/depth/synchronized-window/compiler/diagnostic/native-integer boundaries remain Pending. See SPRITE-WINDOW-WIP.md. This batch is not published and no whole-controller certification changes.
+
+## 0.25.61 — Explod synchronization consumers (partial, publication verified)
+
+Publication verified at commit 84f7c6f583ebed7bc11cc038fca98a5919cbe62e: all 214 Node checks, final versioned actor/scheduling/full battle browsers, successful exact-head Pages run 39877079210 and ten normalized live file comparisons passed. Local receipt: outputs/release-02561-verification.json. This confirms delivery of the partial checkpoint, not full native compatibility.
 
 Ordinary Explod synchronization now copies live priority/facing, Trans/alpha snapshots, shared PalFX references and supported size/AngleDraw transforms. Target bodies join synchronization groups even with syncparams=false. Character preparation clears prior registrations; destroyed Helper registrations are pruned and destroyed entities no longer leak a draw record. Actual browser coverage verifies value/reference retention, transform matrices, body grouping, preparation and a failing-before/fixed destruction case. Window/shear/projection/shader/afterimage copying, complete lifecycle/compiler/frame ordering and whole-controller certification remain Pending. See EXPLOD-SYNCPARAMS-WIP.md. This batch is not published.
 

@@ -1,3 +1,7 @@
+## 0.25.62 checkpoint — No new whole-controller certification
+
+Ordinary Explod window/reflection/angle/shear operands now have real draw/clip consumers with actual actor matrices and clip pixels. All 218 Node checks pass before versioning. Native perspective/interpolation/redirect/compiler/diagnostic/lifecycle/GPU equivalence and remaining parameters stay Pending; certification remains 0/163. Final full/versioned regression and publication are separate gates. See SPRITE-WINDOW-WIP.md and EXPLOD-SHEAR-WIP.md.
+
 ## 0.25.61 checkpoint — No new whole-controller certification
 
 Explod synchronization now has actual Root/Helper draw, color-pixel, transform, body-grouping and lifecycle consumers for the documented tested subset. All 214 Node checks and focused actor/scheduling tests pass before versioning; complete/versioned regression and publication remain separate. Remaining window/shear/projection/shader/afterimage/compiler/native-phase semantics keep syncparams and Explod incomplete. Certification remains zero of 163; no ignored or metadata-only parameter is promoted to implemented. See EXPLOD-SYNCPARAMS-WIP.md and CONTROLLER-PROGRESS.md.

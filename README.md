@@ -1,3 +1,7 @@
+## 0.25.62 — Ordinary Explod window/geometry consumers (partial)
+
+Explod window, relative facing/VFACING, angle/Y/X and xshear now reach actual clipping and affine drawing. Fixtures cover 96 stage-window, 48 screen-window, 36 rotation and 192 shear/reflection/scale cases, plus immediate/resolved clip pixels. All 218 Node checks and focused actor cases pass before versioning; complete/versioned regression and verified publication remain separate gates. Native perspective/interpolation/redirect/compiler/lifecycle/GPU equivalence and whole-controller certification remain Pending.
+
 ## 0.25.61 — Explod synchronization consumers (partial)
 
 Ordinary Explods synchronize supported priority/facing, Trans/alpha, shared PalFX and size/AngleDraw transforms with real drawing and color-pixel coverage. Root/Helper body grouping, preparation cleanup and destroyed-Helper draw suppression have actual browser tests. All 214 Node checks and focused actor/scheduling browsers pass before versioning. Complete battle regression, final versioned gates and verified publication remain separate. Full syncparams/window/shear/projection/shader/afterimage/compiler/lifecycle semantics and all whole-controller certifications remain Pending.

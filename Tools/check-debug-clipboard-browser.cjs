@@ -740,6 +740,93 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   })()`);
   assert.deepEqual(layerPixels,[[0,0,255,255],[255,255,255,255],[0,0,255,255],[0,0,255,255],[255,255,0,255],[255,0,0,255],[255,255,255,255],[255,255,255,255],[0,0,255,255],[0,255,0,255],[0,255,0,255],[255,0,0,255],[255,0,0,255]]);
   console.log('Actual battle compositor pixels verify foreground occlusion, ontop layer one, exact layer selection and zero-layer under ordering');
+  const clippedPixels=await run(`(()=>{
+   const surface=()=>{const canvas=document.createElement('canvas');canvas.width=3;canvas.height=1;return canvas.getContext('2d',{willReadFrequently:true})};
+   const immediate=surface(),scratch=surface(),resolved=surface(),source=surface(),clip={x:1,y:0,width:1,height:1};
+   source.fillStyle='white';source.fillRect(0,0,3,1);immediate.fillStyle='black';immediate.fillRect(0,0,3,1);
+   transDrawQueue.reset();immediate.translate(1,0);drawTransSprite(immediate,source.canvas,[0,0],{clip,layer:0,kind:'window-fixture'});
+   const first=[...immediate.getImageData(0,0,3,1).data];clip.width=3;
+   resolved.fillStyle='black';resolved.fillRect(0,0,3,1);renderOpaqueTransQueue(resolved,scratch,transDrawQueue,{layer:0});
+   const second=[...resolved.getImageData(0,0,3,1).data];transDrawQueue.reset();return [first,second];
+  })()`);
+  assert.deepEqual(clippedPixels,Array.from({length:2},()=>[0,0,0,255,255,255,255,255,0,0,0,255]));
+  console.log('Actual immediate and resolved sprite drawing preserve absolute clip windows independently of sprite transforms and later rectangle mutation');
+  const actorWindows=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),profiles=[...new Set(battleCharacters.map(character=>characterProfiles.get(character).battle))],savedCoordinates=profiles.map(profile=>profile.coordinateSystem),rows=[];
+   const width=visualViewport?.width||innerWidth,height=visualViewport?.height||innerHeight,fit=Math.min(width/1280,height/720),left=(width-1280*fit)/2,top=(height-720*fit)/2;
+   try{
+    for(const localcoord of [320,1280]){
+     for(const profile of profiles)profile.coordinateSystem={...profile.coordinateSystem,localcoord:[localcoord,720],webWorldWidth:1280};
+     for(const actor of [specialRoot(1),specialRoot(2),helper])for(const facing of [-1,1])for(const relativeFacing of [-1,1])for(const vfacing of [-1,1])for(const scale of ['1,1','3,4']){
+      sourceExplods.length=0;const owner={...actor,facing};
+      spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',window:'-5,-7,15,9',facing:String(relativeFacing),vfacing:String(vfacing),scale},owner,owner.player);
+      transDrawQueue.reset();drawSourceExplods();const effect=sourceExplods[0],entry=transDrawQueue.ordered().find(entry=>entry.kind==='explod'),unit=fit*cameraZoom*1280/localcoord;
+      const origin=[left+worldScreenX(effect.x)*fit,top+worldScreenY(effect.y)*fit];
+      const trueFacing=facing*relativeFacing;
+      const expected={x:Math.trunc((origin[0]+(trueFacing<0?-15:-5)*unit)*devicePixelRatio)|0,y:Math.trunc((origin[1]+(vfacing<0?-9:-7)*unit)*devicePixelRatio)|0,width:Math.trunc(20*unit*devicePixelRatio)|0,height:Math.trunc(16*unit*devicePixelRatio)|0};
+      rows.push({window:effect.window,clip:entry.clip,expected,vfacing:effect.vfacing,expectedFacing:vfacing,verticalSign:Math.sign(entry.matrix[3]),relative:effect.relativeFacing,expectedRelative:relativeFacing,horizontalSign:Math.sign(entry.matrix[0]),expectedHorizontal:trueFacing});
+     }
+    }
+    return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);profiles.forEach((profile,index)=>profile.coordinateSystem=savedCoordinates[index]);transDrawQueue.reset()}
+  })()`);
+  assert.equal(actorWindows.length,96);
+  for(const row of actorWindows){assert.deepEqual(row.window,[-5,-7,15,9]);assert.deepEqual(row.clip,row.expected);assert.equal(row.vfacing,row.expectedFacing);assert.equal(row.verticalSign,row.expectedFacing);assert.equal(row.relative,row.expectedRelative);assert.equal(row.horizontalSign,row.expectedHorizontal);}
+  console.log('Actual P1/P2/Helper Explod windows and vertical matrices preserve both facings and 320/1280 coordinate ratios independently of sprite scale');
+  const actorAngles=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),rows=[];
+   try{
+    for(const actor of [specialRoot(1),specialRoot(2),helper])for(const facing of [-1,1])for(const vfacing of [-1,1]){
+     const owner={...actor,facing:1};
+     const capture=angles=>{sourceExplods.length=0;spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',facing:String(facing),vfacing:String(vfacing),...angles},owner,owner.player);transDrawQueue.reset();drawSourceExplods();return {matrix:transDrawQueue.ordered().find(entry=>entry.kind==='explod').matrix.slice(0,4),stored:[sourceExplods[0].angleState.value,sourceExplods[0].angleState.xangle,sourceExplods[0].angleState.yangle]}};
+     const baseline=capture({angle:'0'}).matrix,unitX=baseline[0]/facing,unitY=baseline[3]/vfacing,sign=facing===vfacing?1:-1;
+     for(const [parameters,expected,stored] of [[{angle:'90'},[0,-vfacing*sign,facing*sign,0],[90,0,0]],[{xangle:'60'},[facing,0,0,vfacing*.5],[0,60,0]],[{yangle:'60'},[facing*.5,0,0,vfacing],[0,0,60]]]){
+      const result=capture(parameters);rows.push({matrix:result.matrix.map((value,index)=>value/(index%2===0?unitX:unitY)),expected,stored:result.stored,expectedStored:stored});
+     }
+    }
+    return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);transDrawQueue.reset()}
+  })()`);
+  assert.equal(actorAngles.length,36);
+  for(const row of actorAngles){assert.deepEqual(row.stored,row.expectedStored);row.matrix.forEach((value,index)=>assert.ok(Math.abs(value-row.expected[index])<1e-6,JSON.stringify(row)));}
+  console.log('Actual P1/P2/Helper Explod angle/X/Y parameters reach orthographic drawing across both reflection axes without mutating stored angles');
+  const actorShears=await run(`(()=>{
+   const savedEffects=[...sourceExplods],savedZoom=cameraZoom,helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),rows=[];
+   try{
+    for(const actor of [specialRoot(1),specialRoot(2),helper])for(const zoom of [.75,1.25])for(const angle of [0,90])for(const facing of [-1,1])for(const vfacing of [-1,1])for(const scale of ['1,1','2,3']){
+     cameraZoom=zoom;const owner={...actor,facing:1};
+     const capture=(shear,rotation=angle)=>{sourceExplods.length=0;spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',angle:String(rotation),xshear:String(shear),facing:String(facing),vfacing:String(vfacing),scale},owner,owner.player);transDrawQueue.reset();drawSourceExplods();return transDrawQueue.ordered().find(entry=>entry.kind==='explod').matrix};
+     const verticalScale=capture(0,0)[3],baseline=capture(0),frame=framesFor(0,owner.player)[0],sprite=spriteFor(frame);
+     for(const shear of [-.5,.5]){
+      const actual=capture(shear),coefficient=shear*zoom,expected=[...baseline];
+      expected[0]+=(angle===0?-coefficient:coefficient)*baseline[1];expected[2]+=(angle===0?-coefficient:coefficient)*baseline[3];
+      if(angle!==0)expected[4]-=coefficient*verticalScale*(sprite.h-sprite.axisY);
+      rows.push({actual,expected,stored:sourceExplods[0].xshear,shear});
+     }
+    }
+    return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);cameraZoom=savedZoom;transDrawQueue.reset()}
+  })()`);
+  assert.equal(actorShears.length,192);
+  for(const row of actorShears){assert.equal(row.stored,row.shear);row.actual.forEach((value,index)=>assert.ok(Math.abs(value-row.expected[index])<1e-5,JSON.stringify(row)));}
+  console.log('Actual P1/P2/Helper Explod shears reach unrotated and rotated matrices with native-style axis compensation at two camera zooms');
+  const screenWindows=await run(`(()=>{
+   const savedEffects=[...sourceExplods],savedZoom=cameraZoom,helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),rows=[];
+   const width=visualViewport?.width||innerWidth,height=visualViewport?.height||innerHeight,fit=Math.min(width/1280,height/720),left=(width-1280*fit)/2,top=(height-720*fit)/2;
+   try{
+    for(const actor of [specialRoot(1),specialRoot(2),helper])for(const postype of ['left','right'])for(const zoom of [.5,2])for(const facing of [-1,1])for(const vfacing of [-1,1]){
+     cameraZoom=zoom;sourceExplods.length=0;
+     spawnSourceExplod({anim:'0',pos:'50,100',postype,removetime:'-1',window:'1,2,11,22',facing:String(facing),vfacing:String(vfacing),scale:'3,4'},actor,actor.player);
+     transDrawQueue.reset();drawSourceExplods();const effect=sourceExplods[0],entry=transDrawQueue.ordered().find(entry=>entry.kind==='explod'),data=characterProfiles.get(battleCharacters[actor.player-1]).battle,unit=fit*1280/data.coordinateSystem.localcoord[0];
+     const expected={x:Math.trunc((left+((postype==='right'?1280:0)+50)*fit+(facing<0?-11:1)*unit)*devicePixelRatio)|0,y:Math.trunc((top+100*fit+(vfacing<0?-22:2)*unit)*devicePixelRatio)|0,width:Math.trunc(10*unit*devicePixelRatio)|0,height:Math.trunc(20*unit*devicePixelRatio)|0};
+     rows.push({screen:effect.screen,clip:entry.clip,expected,horizontal:Math.sign(entry.matrix[0]),vertical:Math.sign(entry.matrix[3]),facing,vfacing});
+    }
+    return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);cameraZoom=savedZoom;transDrawQueue.reset()}
+  })()`);
+  assert.equal(screenWindows.length,48);
+  for(const row of screenWindows){assert.equal(row.screen,true);assert.deepEqual(row.clip,row.expected);assert.equal(row.horizontal,row.facing);assert.equal(row.vertical,row.vfacing);}
+  console.log('Actual left/right screen Explod windows preserve both reflection signs and ignore stage camera zoom');
   const preparedSynchronization=await run(`(async()=>{
    transDrawQueue.reset();transDrawQueue.enableActorSync(1);transDrawQueue.enableActorSync(2);
    const source=document.createElement('canvas');source.width=source.height=1;

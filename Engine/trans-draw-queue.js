@@ -1,3 +1,5 @@
+import {clipSpriteWindow} from './sprite-window.js';
+
 export function createTransDrawQueue(){
  const entries=[],enabledActors=new Set();
  return {
@@ -5,10 +7,10 @@ export function createTransDrawQueue(){
   resetActorSync(){enabledActors.clear();for(const entry of entries)if(entry.actorId>0){entry.syncId=0;entry.syncLayer=0}},
   retainActorSync(ids){const active=new Set(ids);for(const id of enabledActors)if(!active.has(id))enabledActors.delete(id)},
   enableActorSync(id){if(!(id>0))return;enabledActors.add(id);for(const entry of entries)if(entry.actorId===id){entry.syncId=id;entry.syncLayer=0}},
-  record(context,source,args,{state=null,paletteEffect=null,priority=0,ontop=false,layer=ontop?1:0,under=false,actorId=0,syncId=0,syncLayer=0,kind='sprite',opacity=context.globalAlpha}={}){
+  record(context,source,args,{state=null,paletteEffect=null,priority=0,ontop=false,layer=ontop?1:0,under=false,actorId=0,syncId=0,syncLayer=0,clip=null,kind='sprite',opacity=context.globalAlpha}={}){
    if(actorId>0&&enabledActors.has(actorId)){syncId=actorId;syncLayer=0}
    const matrix=context.getTransform();
-   entries.push({source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],state:state?{type:state.type,alpha:[...state.alpha]}:null,paletteEffect:paletteEffect?{...paletteEffect,add:[...paletteEffect.add],mul:[...paletteEffect.mul]}:null,priority,ontop,layer,under,actorId,syncId,syncLayer,kind,opacity,composite:context.globalCompositeOperation,serial:entries.length});
+   entries.push({source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],state:state?{type:state.type,alpha:[...state.alpha]}:null,paletteEffect:paletteEffect?{...paletteEffect,add:[...paletteEffect.add],mul:[...paletteEffect.mul]}:null,priority,ontop,layer,under,actorId,syncId,syncLayer,clip:clip?{...clip}:null,kind,opacity,composite:context.globalCompositeOperation,serial:entries.length});
   },
   ordered({layer,under}={}){
    const selected=entries.filter(entry=>(layer===undefined||entry.layer===layer)&&(layer!==0||under===undefined||entry.under===under));
@@ -30,7 +32,7 @@ export function createTransDrawQueue(){
    return {x,y,width:Math.max(0,right-x),height:Math.max(0,bottom-y)};
   },
   rasterize(entry,context){
-   context.save();context.setTransform(1,0,0,1,0,0);context.clearRect(0,0,context.canvas.width,context.canvas.height);context.setTransform(...entry.matrix);context.globalAlpha=entry.opacity;context.globalCompositeOperation='source-over';context.drawImage(entry.source,...entry.args);context.restore();
+   context.save();context.setTransform(1,0,0,1,0,0);context.clearRect(0,0,context.canvas.width,context.canvas.height);context.setTransform(...entry.matrix);clipSpriteWindow(context,entry.clip);context.globalAlpha=entry.opacity;context.globalCompositeOperation='source-over';context.drawImage(entry.source,...entry.args);context.restore();
   },
  };
 }
