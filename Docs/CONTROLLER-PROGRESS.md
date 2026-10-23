@@ -1,4 +1,12 @@
+## 0.25.74 — Helper reflection drawing consumers (partial, publication pending)
+
+NoShadow is now accepted by the actor-local AssertSpecial path and reaches root/Helper reflection drawing. Actual positive-intensity visible/restored checks supersede the earlier masked disabled/noshadow tests; controller-driven suppression passes (outputs/helper-reflection-no-shadow-browser.log). The first complete battle baseline passes before that later assertion change, so final combined/versioned regression remains required. See NO-SHADOW-WIP.md; all whole-controller certifications remain Pending.
+
+Live visible Helpers now contribute stage reflection records and consume supported ModifyReflection parameters through actual alpha/geometry/palette drawing. Normal spawning initializes independent overrides; active preparation resets them during local hitpause and blocked global pause retains them. Actual spawn/controller/draw/reset fixtures pass before an opposite-facing fixture update. Root-only fixtures now isolate entities, while the stage phase test explicitly includes its visible Helper. Full remaining native rendering/parameters and final regression/publication remain Pending. See HELPER-REFLECTION-WIP.md; no whole-controller certification changes.
+
 ## 0.25.73 — Target integer and boolean extraction (partial, publication pending)
+
+Publication subsequently verified at commit 39bb7528d15c460561d6374fc87aad3cee85c3a9: 228 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 39913456621 and fifteen normalized live file comparisons passed. Receipt: outputs/release-02573-verification.json. Earlier pending statements are historical, not complete native compatibility claims.
 
 Actual TargetVelSet and TargetDrop consumer tests now verify selected Helper velocity and retained Target-list contents, not just lookup calls; numeric controls distinguish hit-ID seven from quoted-string zero extraction. Both profile/player directions and all 228 Node checks pass (outputs/target-integer-boolean-consumers-browser.log and outputs/target-integer-extraction-node.log). Full target semantics and final versioned regression/publication remain Pending.
 

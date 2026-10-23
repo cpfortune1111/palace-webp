@@ -1,3 +1,4 @@
+import {createReflectionOverride,resetReflectionOverride} from '../../Engine/modify-reflection.js';
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
@@ -123,6 +124,7 @@ export function createSpecialRuntime(api){
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0),
    life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:cloneStoredMapValues(owner.mapDefaults),mapDefaults:cloneStoredMapValues(owner.mapDefaults),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,layerNo:0,sprPriority:kind==='projectile'?Number(params.projsprpriority??-1):0,supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileOwnerActor=owner.kind==='helper'?owner:null;entity.projectileId=entity.id}
+  if(kind==='helper')entity.reflectionOverride=createReflectionOverride();
   if(kind==='helper'&&api.sizeGuardDistances)entity.sizeGuardDistances=api.sizeGuardDistances(owner);
   if(kind==='helper'&&api.sizeDefinition){const inherited=api.sizeDefinition(owner);if(inherited.definition){entity.sizeDefinition=applyHelperSizeOverrides(inherited.definition,params,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.sizeLocalCoord=inherited.localCoord}}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
@@ -239,6 +241,7 @@ export function createSpecialRuntime(api){
    if(entity.destroyed||entity.kind==='helper'&&entity.disabled)continue;
    if(blocked(entity.player,entity)){if(entity.kind==='helper')helperGlobalState(entity,-4);continue}
    if(entity.kind==='helper'&&(api.data(entity.player).compatibility==='mugen'||!(entity.hitPause>0)))tickHitOverrides(entity.hitOverrides??=createHitOverrides());resetAngleDraw(entity.angleState);if(entity.kind==='helper'){entity.drawOffset=[0,0];entity.window=Array(4).fill(0);entity.xshear=0;entity.transState=null}
+   if(entity.kind==='helper')resetReflectionOverride(entity.reflectionOverride??=createReflectionOverride());
    if(entity.kind==='helper')for(const slot of [...(entity.clsnOverrides||[]),...(entity.clsnTransforms||[])])slot.length=0;
    entity.assertions?.clear();
    if(entity.kind==='helper'&&!(entity.hitPause>0))tickHitBySlots(entity.hitBySlots??=createHitBySlots());

@@ -1,5 +1,7 @@
 # ModifyReflection real consumers (partial, unpublished)
 
+Helper recipient/drawing support now supersedes earlier blanket Helper unsupported notes for the already supported color/intensity/offset/scales/orthographic-angle operands only. Real normal-spawn Helper fixtures cover alpha, geometry, color, preparation resets and visibility gates; unsupported animation/window/shear/projection fields still fail explicitly. See HELPER-REFLECTION-WIP.md and NO-SHADOW-WIP.md. No complete controller certification is implied.
+
 Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go modifyReflection, bytecode.go modifyReflection.Run, char.go preparation/reflection sprite creation and anim.go ReflectionList.draw.
 
 Supported root-character operands now reach real reflection drawing: redirectid, intensity, offset, xscale and yscale. Recipient lookup precedes caller-scoped RHS sampling. Intensity uses native signed integer extraction and clamp 0..255; offsets use sequential float32 writes and caller/recipient localscl ratio; scalar scales do not use that ratio. A short offset retains its omitted component. Override scale zero means inherit stage scale, not collapse the reflection.

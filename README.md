@@ -1,3 +1,7 @@
+## 0.25.74 — Helper reflection consumers (partial)
+
+Visible Helpers now cast stage reflections and consume supported ModifyReflection alpha/color/geometry parameters. Normal Helper spawning initializes independent overrides; active preparation clears them during local hitpause while blocked global pause retains them. Actor-local AssertSpecial NoShadow suppresses root/Helper reflection with controller-driven visible/restored tests. Remaining reflection animation/window/shear/projection, shadow/rendering/stage/phase fidelity and whole-controller compatibility remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.73 — Target operand extraction (partial)
 
 Twelve Target controller types now share native-style integer extraction for redirect IDs, hit IDs, indices and integer payload fields. TargetDrop keepone and point-controller absolute flags use native boolean extraction. Actual root/Helper consumer tests distinguish quoted-string IDs from numeric controls through changed velocity and retained target lists, with both profile/player directions covered. Full target/native diagnostics/version semantics and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
