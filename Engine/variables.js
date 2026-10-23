@@ -1,8 +1,12 @@
+import {controllerFloat32} from './controller-value-conversion.js';
+
+function variableInteger(value){return typeof value==='string'||value===undefined||Number.isNaN(Number(value))?0:Math.trunc(Number(value))|0}
+
 export function assignExpressionVariable(binding,family,index,value,{unlimited=false}={}){
  const key={var:'vars',fvar:'fvars',sysvar:'sysvars',sysfvar:'sysfvars'}[family];
  if(!key||!binding?.[key])throw Error('Missing assignment storage '+family);
- const variables=binding[key],slot=Math.trunc(Number(index))|0;
- const converted=family.includes('fvar')?Math.fround(Number(value)):Math.trunc(Number(value))|0;
+ const variables=binding[key],slot=variableInteger(index);
+ const converted=family.includes('fvar')?controllerFloat32(value):variableInteger(value);
  if(slot<0||!unlimited&&slot>=variables.length)return NaN;
  variables[slot]=converted;
  return converted;
@@ -14,17 +18,17 @@ export function applyVariableController(controller, binding, evaluate, options={
  const type=ownership?originalType.replace(ownership,''):originalType;
  if(!['varset','varadd','varrandom','varrangeset'].includes(type))return false;
  const params=controller.params||controller;
- if(params.redirectid!==undefined){binding=options.findActor?.(Math.trunc(Number(evaluate(params.redirectid))));if(!binding)return true}
- const integer=expression=>Math.trunc(Number(evaluate(expression)))|0;
+ const integer=expression=>variableInteger(evaluate(expression));
+ if(params.redirectid!==undefined){binding=options.findActor?.(integer(params.redirectid));if(!binding)return true}
  const unlimited=options.compatibility==='ikemen';
  if(type==='varrangeset'){
-  const floating=params.fvalue!==undefined,variables=floating?binding.fvars:binding.vars;
+  const floating=params.value===undefined&&params.fvalue!==undefined,variables=floating?binding.fvars:binding.vars;
   if(!variables)throw Error('Missing VarRangeSet storage');
   const first=integer(params.first??0),last=integer(params.last??(unlimited?59:variables.length-1));
-  if(first<0||first>last)return true;
   const expression=floating?params.fvalue:params.value;
   if(expression===undefined)throw Error('Missing VarRangeSet value');
-  const value=floating?Math.fround(Number(evaluate(expression))):integer(expression);
+  const value=floating?controllerFloat32(evaluate(expression)):integer(expression);
+  if(first<0||first>last)return true;
   if(unlimited&&value===0){
    const keys=Object.keys(variables).map(Number).filter(index=>Number.isInteger(index)&&index>=first&&index<=last).sort((firstIndex,lastIndex)=>firstIndex-lastIndex);
    const clearingAll=first===0&&last===2147483647;
@@ -46,20 +50,21 @@ export function applyVariableController(controller, binding, evaluate, options={
  }
  let kind,indexExpression;
  const target=String(params.target||'').match(/^(sysvar|sysfvar|fvar|var)\((.*)\)$/i);
+ const selectors=[['v','var'],['fv','fvar'],['sysv','sysvar'],['sysfv','sysfvar']].filter(([name])=>params[name]!==undefined);
+ if(selectors.length+(target?1:0)>1)throw Error('VarSet can only set one variable at a time');
  if(target){kind=target[1].toLowerCase();indexExpression=target[2]}
- else if(params.fv!==undefined){kind='fvar';indexExpression=params.fv}
- else if(params.v!==undefined){kind='var';indexExpression=params.v}
+ else if(selectors.length){kind=selectors[0][1];indexExpression=params[selectors[0][0]]}
  else throw Error('Missing variable controller target');
- const index=Math.trunc(Number(evaluate(indexExpression)));
+ const index=integer(indexExpression);
  if(params.value===undefined)throw Error('Missing variable controller value');
- const result=Number(evaluate(params.value));
+ const result=evaluate(params.value);
  if(ownership)binding=ownership==='parent'?options.parentActor?.(binding):options.rootActor?.(binding);
  if(!binding)return true;
  const variables=binding[{var:'vars',fvar:'fvars',sysvar:'sysvars',sysfvar:'sysfvars'}[kind]];
  if(!variables)throw Error('Missing '+kind+' storage');
  if(!Number.isFinite(index)||index<0||!unlimited&&index>=variables.length)return true;
  const floating=kind==='fvar'||kind==='sysfvar';
- const value=floating?Math.fround(result):Math.trunc(result)|0;
+ const value=floating?controllerFloat32(result):variableInteger(result);
  const combined=type==='varadd'?(variables[index]||0)+value:value;
  variables[index]=floating?Math.fround(combined):combined|0;
  return true;

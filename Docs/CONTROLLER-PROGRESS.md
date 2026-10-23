@@ -1,4 +1,20 @@
-## 0.25.66 — Parent immediate-Helper redirection (partial, publication pending)
+## 0.25.67 — Variable-controller extraction and system selectors (partial, publication pending)
+
+Pre-publication adapter review found missing system-variable arrays on P1's actual lifecycle/current/global binding. Replacing the root snapshot fixture with the real execution binding reproduced Missing sysvar storage; live runtime system arrays are now exposed and the eight-scenario fixture passes (outputs/variable-lifecycle-binding-browser.log). The prior unpublished candidate is superseded; fresh final gates and blob/commit validation remain required before main is updated.
+
+All 223 Node checks and the actual Helper/root independence fixture pass before versioning (outputs/variable-system-independent-browser.log). The final versioned combined regression and verified publication remain separate gates; no whole-controller certification changes.
+
+Legacy sysv/sysfv selectors now reach live system-variable storage, and ambiguous selectors fail explicitly in the supported strict mode. Actual tests exposed missing Helper sysfvars construction; each new Helper now receives independent zero-filled storage. P1/P2 root/Helper system-selector arithmetic passes (outputs/variable-system-selector-browser.log); added independence assertions and current full release gates remain to run. Lenient compiler/error policy and complete VM/lifecycle semantics remain Pending.
+
+The read-index path is now covered as well: actual actors previously read slot twelve for a string index, but native integer extraction requires slot zero. The failing-before browser fixture now passes (outputs/variable-index-browser.log); real-parser checks cover four families, signed wrapping and exactly one index side effect. Prior read-index Pending notes are superseded only for these cases, not full query/VM/diagnostic compatibility. Pre-assignment-change full battle baseline passed (outputs/variable-extraction-full-browser.log); fresh combined release validation remains required.
+
+Direct assignment storage now shares the native string/undefined zero extraction for RHS values and indices. A second failing-before independent assertion reproduced numeric-string coercion. Actual eight-scenario expression cases cover returned float zero values, undefined assignments and string-index slot-zero writes (outputs/variable-extraction-assignment-browser.log). Variable-read indices, overflow and full VM/compiler/version behavior remain Pending; these new assignment checks supersede only the prior statement that assignment storage had no coverage.
+
+VarSet/VarAdd controller values and indices now apply native string/undefined zero extraction; float values use float32. VarRangeSet now prioritizes value over fvalue as the pinned compiler does, and samples RHS before invalid-bound rejection. A failing-before independent test and eight actual profile/player/root-or-Helper scenarios pass (outputs/variable-extraction-browser.log). Separate assignment storage, full compiler/version/overflow/lifecycle semantics and final combined/versioned release gates remain Pending. See VARIABLE-CONTROLLER-EXTRACTION-WIP.md; no whole-controller certification changes.
+
+## 0.25.66 — Parent immediate-Helper redirection (partial, publication verified)
+
+Publication verified at commit b1cfa37664ca5d403fd47605038e67f59b2c0f10: 221 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39892480641 and eight normalized live file comparisons passed. Local receipt: outputs/release-02566-verification.json. Delivery is verified, not complete native compatibility.
 
 Pre-version baseline full battle regression passes (outputs/parent-redirect-full-browser.log). The later shared controller-adapter changes have focused actual coverage and 221 passing Node checks; final versioned combined regression and verified publication remain separate gates.
 

@@ -1,3 +1,7 @@
+## 0.25.67 — Variable extraction and system selectors (partial)
+
+Variable controllers, expression assignments and read indices now preserve native string/undefined zero extraction. VarRangeSet honors value/fvalue precedence and invalid-range RHS evaluation. Legacy sysv/sysfv selectors reach system storage, and Helpers now own independent system-float arrays. Real parser and eight profile/player/root-or-Helper scenarios cover these paths. Full compiler/error-mode/overflow/VM/lifecycle compatibility remains Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.66 — Live parent ancestry and family controllers (partial)
 
 Parent queries now distinguish immediate Helper parents from Root and return undefined for roots or destroyed parents. Shared ancestry lookup also fixes first-generation BindToParent and supplies both variable-controller adapters. Actual P1/P2 fixtures cover two Helper generations, binding owners, ParentVarSet/RootVarSet isolation and missing-parent refusal. Native coordinate/version/diagnostic/lifecycle equivalence remains Pending; final versioned regression and verified publication are separate gates.
