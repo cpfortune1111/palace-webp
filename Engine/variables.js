@@ -65,7 +65,7 @@ export function applyVariableController(controller, binding, evaluate, options={
  if(!Number.isFinite(index)||index<0||!unlimited&&index>=variables.length)return true;
  const floating=kind==='fvar'||kind==='sysfvar';
  const value=floating?controllerFloat32(result):variableInteger(result);
- const combined=type==='varadd'?(variables[index]||0)+value:value;
+ const combined=type==='varadd'?(variables[index]??0)+value:value;
  variables[index]=floating?Math.fround(combined):combined|0;
  return true;
 }

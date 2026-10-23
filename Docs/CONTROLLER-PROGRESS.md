@@ -1,4 +1,12 @@
-## 0.25.67 — Variable-controller extraction and system selectors (partial, publication pending)
+## 0.25.68 — Variable negative-index and stored-float boundaries (partial, publication pending)
+
+All 223 Node checks and the named mugen11/ikemen actual actor fixture pass before versioning (outputs/variable-boundary-named-profile-browser.log). Final versioned combined regression and verified publication remain separate gates. No whole-controller certification changes.
+
+Negative reads now produce undefined plus family-specific warning bodies, and typed integer variable results preserve that undefined value. Stored NaN/negative zero survive reads; float VarAdd no longer replaces stored NaN with zero. Independent failing-before tests and actual eight root/Helper profile/player cases pass before a fixture profile-name correction (outputs/variable-boundary-browser.log). The fixtures now explicitly name mugen11/ikemen; fresh named-profile and final combined gates remain required. See VARIABLE-BOUNDARIES-WIP.md. Full warning/VM/version/bounds semantics and whole-controller certification remain Pending.
+
+## 0.25.67 — Variable-controller extraction and system selectors (partial, publication verified)
+
+Publication verified at commit 157df2c8f88d8b2a4e99cae5deb1d7dcda8e1930: 223 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39896123946 and nine normalized live file comparisons passed. Local receipt: outputs/release-02567-verification.json. This confirms delivery of the current candidate, not full native compatibility; the earlier unpublished candidate was not promoted.
 
 Pre-publication adapter review found missing system-variable arrays on P1's actual lifecycle/current/global binding. Replacing the root snapshot fixture with the real execution binding reproduced Missing sysvar storage; live runtime system arrays are now exposed and the eight-scenario fixture passes (outputs/variable-lifecycle-binding-browser.log). The prior unpublished candidate is superseded; fresh final gates and blob/commit validation remain required before main is updated.
 

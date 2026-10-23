@@ -1,3 +1,7 @@
+## 0.25.68 — Variable undefined and stored-float boundaries (partial)
+
+Negative variable reads now return undefined and family-specific warnings, including integer-query paths. Stored float NaN and negative zero survive reads, and VarAdd preserves an existing NaN. Real parser and P1/P2 root/Helper fixtures exercise both named engine profiles and actual P1 lifecycle bindings. Complete native warning/VM/version/bounds fidelity remains Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.67 — Variable extraction and system selectors (partial)
 
 Variable controllers, expression assignments and read indices now preserve native string/undefined zero extraction. VarRangeSet honors value/fvalue precedence and invalid-range RHS evaluation. Legacy sysv/sysfv selectors reach system storage, and Helpers now own independent system-float arrays. Real parser and eight profile/player/root-or-Helper scenarios cover these paths. Full compiler/error-mode/overflow/VM/lifecycle compatibility remains Pending; final versioned regression and verified publication are separate gates.

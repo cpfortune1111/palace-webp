@@ -119,7 +119,7 @@ export function evaluateTypedNumericAST(node,api){
     return {type:'float',value:Math.fround(Math[name](argument.value))};
    }
    const value=api.variable(current.name.toLowerCase(),current.args[0]);
-   return {type,value:type==='float'?Math.fround(Number(value)):integer(value)};
+   return {type,value:Number.isNaN(Number(value))?NaN:type==='float'?Math.fround(Number(value)):integer(value)};
   }
   if(current.t==='un'){
    const result=evaluate(current.a);

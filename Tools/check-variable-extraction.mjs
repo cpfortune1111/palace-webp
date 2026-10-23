@@ -37,4 +37,7 @@ applyVariableController({type:'VarAdd',params:{sysfv:'2',value:'1.25'}},assignme
 assert.equal(assignment.sysvars[3],10);
 assert.equal(assignment.sysfvars[2],10.25);
 assert.throws(()=>applyVariableController({type:'VarSet',params:{v:'1',fv:'2',value:'3'}},assignment,Number),/one variable/);
+assignment.fvars[3]=NaN;
+applyVariableController({type:'VarAdd',params:{fv:'3',value:'1'}},assignment,Number);
+assert.ok(Number.isNaN(assignment.fvars[3]));
 console.log('Variable controller extraction maps string/undefined operands to zero, preserves value precedence, signed indices and invalid-range RHS evaluation');
