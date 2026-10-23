@@ -1049,9 +1049,12 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
        {type:'VelSet',params:{x:'(var(55):=var(55)+1)'}},
        {type:'PosAdd',params:{x:'(var(55):=var(55)+1)'}},
        {type:'HitAdd',params:{value:'(var(55):=var(55)+1)'}},
+       ...['AngleSet','AngleAdd','AngleMul','AngleDraw','AttackMulSet','DefenceMulSet','CtrlSet','SprPriority'].map(type=>({type,params:{value:'(var(55):=var(55)+1)'}})),
        {type:'TargetVelSet',params:{x:'(var(55):=var(55)+1)'}}
       ])executeControllerM1({...controller,params:{...controller.params,redirectid:String(target.instanceId)}},binding,context,adapter);
      }
+     for(const type of ['PosSet','PosAdd','VelSet','VelAdd','VelMul','HitVelSet'])executeControllerM1({type,params:{redirectid:'"'+player+'"',x:'(var(55):=var(55)+1)'}},binding,context,adapter);
+     for(const type of ['AngleSet','AngleAdd','AngleMul','AngleDraw','AttackMulSet','DefenceMulSet','CtrlSet','SprPriority'])executeControllerM1({type,params:{redirectid:'"'+player+'"',value:'(var(55):=var(55)+1)'}},binding,context,adapter);
      rows.push({engineProfile,player,priorResolverWrites,writes:caller.vars[55],projectileDizzy:projectile.dizzy===true,disabledDizzy:disabledHelper.dizzy===true});
      specialRuntime.entities.splice(0,specialRuntime.entities.length,...entities);
      for(let index=0;index<2;index++){for(const key of Object.keys(rootStatusFlags[index]))delete rootStatusFlags[index][key];Object.assign(rootStatusFlags[index],flags[index])}

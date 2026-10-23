@@ -1,4 +1,4 @@
-import {controllerFloat32} from './controller-value-conversion.js';
+import {controllerFloat32,controllerInteger} from './controller-value-conversion.js';
 
 export function createAngleState(){return {value:0,xangle:0,yangle:0,enabled:false,scale:[1,1],pivot:[0,0]}}
 
@@ -15,7 +15,7 @@ export function applyAngleController(controller,actor,api){
   pairs[name]=api.split(params[name]);
   if(pairs[name].length>2)throw Error('AngleDraw '+name+' expects at most two values');
  }
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
+ const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!target)return true;
  const state=target.angleState;
  if(!state)throw Error('Missing actor angle storage');

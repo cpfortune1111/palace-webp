@@ -1,3 +1,7 @@
+## 0.25.71 — Native redirect integer extraction (partial)
+
+Sixteen position/velocity/angle/multiplier/state-property controller types now reject numeric strings as redirect IDs and preserve signed integer extraction. Actual angle/attack/defense/state adapters also reject disabled recipients before adapting storage. Focused checks include failing-before examples and actual P1/P2 browser cases in both profiles. Remaining integer consumers, native version/compiler/diagnostic behavior and whole-controller compatibility remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.70 — Character ID lookup isolation (partial)
 
 Controller redirects, Target queries and lifecycle PlayerID/PlayerIDExist distinguish root/Helper Characters from combat projectiles and reject destroyed/disabled recipients. Forty direct and four custom adapters use the shared resolver. Actual P1/P2 tests in both profiles include a prior-resolver negative control, side-effect isolation and unchanged collision/source lookup. Complete native diagnostics, remaining adapters and all-controller certification remain Pending; final versioned regression and verified publication are separate gates.

@@ -1,5 +1,5 @@
 import {hitPauseVersionProfile} from './hit-pause-version.js';
-import {controllerFloat32,controllerBoolean} from './controller-value-conversion.js';
+import {controllerFloat32,controllerBoolean,controllerInteger} from './controller-value-conversion.js';
 
 export function createDefenseState(){return {customDefense:1,onHit:false}}
 
@@ -16,7 +16,7 @@ export function compileDefenseMulType(value){
 export function applyDefenseController(controller,actor,api){
  if(controller.type.toLowerCase()!=='defencemulset')return false;
  const params=controller.params||controller;
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
+ const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!target)return true;
  if(params.value===undefined)throw Error('Missing DefenceMulSet value');
  const mugen=api.versionData?!hitPauseVersionProfile(api.versionData).ikemen:api.compatibility==='mugen';

@@ -1,4 +1,4 @@
-import {controllerFloat32,controllerBoolean} from './controller-value-conversion.js';
+import {controllerFloat32,controllerBoolean,controllerInteger} from './controller-value-conversion.js';
 
 const types=new Set(['velset','veladd','velmul','hitvelset']);
 
@@ -6,7 +6,7 @@ export function applyVelocityController(controller,actor,api){
  const type=controller.type.toLowerCase();
  if(!types.has(type))return false;
  const params=controller.params||controller;
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
+ const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!target)return true;
  if(type==='hitvelset'){
   for(const axis of ['x','y','z'])if(params[axis]!==undefined&&controllerBoolean(api.evaluate(params[axis]))){

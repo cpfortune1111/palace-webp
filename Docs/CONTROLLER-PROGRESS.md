@@ -1,4 +1,12 @@
+## 0.25.71 — controller redirect integer extraction (partial, publication pending)
+
+The shared extraction correction now covers sixteen controller types, including angles, multipliers and state properties. Four associated actual Character/storage adapters also reject disabled recipients. Failing-before AngleSet evidence, the expanded actual browser fixture and all 226 Node checks pass (outputs/controller-redirect-extraction-additional-before.log, outputs/controller-redirect-extraction-additional-browser.log, outputs/controller-redirect-extraction-node.log). Full battle regression is running; publication and whole-controller certification remain Pending.
+
+PosSet/PosAdd and velocity-family redirect IDs now use native string/undefined zero extraction and signed integer wrapping rather than JavaScript numeric coercion. A failing-before numeric-string case and initial focused/browser checks reproduce and cover the difference. Final expanded six-controller fixture, combined regression and publication remain Pending. See MOVEMENT-REDIRECT-EXTRACTION-WIP.md; no whole-controller certification changes.
+
 ## 0.25.70 — controller Character lookup isolation (partial, publication pending)
+
+Publication subsequently verified at commit 320296fe82f78e276ee4cf5b39a38ed9795ddccc: 225 Node checks, Python stage parsing, final actor/scheduling/full battle suites, successful exact-head Pages run 39906742850 and eight normalized live file comparisons passed. Receipt: outputs/release-02570-verification.json. Pending statements below are historical, not a claim of complete compatibility.
 
 Forty direct controller findActor adapters and Target/NumTarget expression lookups now distinguish native Characters from the general combat entity registry. Projectiles, destroyed actors and disabled recipients are excluded before redirected RHS evaluation; collision/source lookup remains unchanged. Focused lookup/status checks and the existing actual-browser controller suite pass (outputs/controller-character-lookup-browser.log). Dedicated new actual-browser invalid-recipient fixtures, remaining custom adapters, full regression and publication remain Pending. See CONTROLLER-CHARACTER-LOOKUP-WIP.md. No whole-controller certification changes.
 

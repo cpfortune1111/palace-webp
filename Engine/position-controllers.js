@@ -1,10 +1,10 @@
-import {controllerFloat32} from './controller-value-conversion.js';
+import {controllerFloat32,controllerInteger} from './controller-value-conversion.js';
 
 export function applyPositionController(controller,actor,api){
  const type=controller.type.toLowerCase();
  if(!['posset','posadd'].includes(type))return false;
  const params=controller.params||controller;
- const target=params.redirectid===undefined?actor:api.findActor(Math.trunc(Number(api.evaluate(params.redirectid))));
+ const target=params.redirectid===undefined?actor:api.findActor(controllerInteger(api.evaluate(params.redirectid)));
  if(!target)return true;
  const ratio=Math.fround((actor.localScale??1)/(target.localScale??1));
  for(const axis of ['x','y','z'])if(params[axis]!==undefined){

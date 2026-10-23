@@ -1,3 +1,8 @@
+export function controllerInteger(value){
+ if(typeof value==='string'||value===undefined||Number.isNaN(Number(value)))return 0;
+ return Math.trunc(Number(value))|0;
+}
+
 export function controllerFloat32(value){
  if(typeof value==='string'||value===undefined||Number.isNaN(Number(value)))return 0;
  return Math.fround(Number(value));
