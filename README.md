@@ -1,3 +1,7 @@
+## 0.25.65 — PlayerID native operand scope correction (partial)
+
+Deeper pinned compiler review corrects the 0.25.64 whole-expression scope claim: PlayerID redirects one following operand. Binary operands outside that value retain caller scope. The pinned compiler rejects nonconstant parenthesized queries inside redirection; tested constant groups remain accepted. Standalone and actual P1/P2/Helper tests cover these distinctions. Complete native compiler/diagnostic/version fidelity remains Pending; final release validation and verified publication are separate gates.
+
 ## 0.25.64 — Sprite layers, reflection phases and PlayerID (partial)
 
 SprPriority nonzero layers and live integer LayerNo queries now reach actual roots/Helpers. Stage-controlled reflections have separate negative/zero passes, native priority/tie ordering and literal settings import. PlayerID expression redirection resolves live character instance IDs, preserves original index scope and redirects the complete expression. Focused pixels, real actors and parser tests cover these paths. Native diagnostics, full rendering/VM/version semantics and whole-controller certification remain Pending. Final versioned regression and verified publication are separate gates.

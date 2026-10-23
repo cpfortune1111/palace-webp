@@ -1,4 +1,10 @@
-## 0.25.64 — SprPriority, reflection phases and PlayerID (partial, publication pending)
+## 0.25.65 — PlayerID native operand scope correction (partial, publication pending)
+
+Reviewing the body of pinned compiler.go expValue exposed an incorrect 0.25.64 assumption: it compiles a single value, while the parenthesis branch calls expBoolOr and rejects nonconstant redirected parentheses. PlayerID now redirects one operand, not the remaining whole expression, and rejects the tested grouped dynamic query with native diagnostic text. The standalone test distinguishes recipient-plus-caller arithmetic from recipient-only arithmetic, accepts a constant group, and avoids invalid grouped nested redirection. Actual P1/P2/Helper cases pass (outputs/playerid-native-operand-browser.log). Full combined/versioned regression and publication of this correction remain Pending. See PLAYERID-REDIRECT-WIP.md; the earlier whole-expression claim is superseded.
+
+## 0.25.64 — SprPriority, reflection phases and PlayerID (partial, publication verified)
+
+Publication verified at commit cd6069b318abdcd56520d32e32288b9da1c665c0: 221 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39889379714 and twenty-one normalized live file comparisons passed. Local receipt: outputs/release-02564-verification.json. The following native operand-scope correction was discovered after this checkpoint; passing release checks did not establish complete native compatibility.
 
 The complete battle regression now exits 0 (outputs/priority-reflection-full-browser-recheck.log). Its presentation fixture distinguishes clearing Trans while stage reflections still require composition from an inactive scene with no queued draws. This is evidence for the current rendering batch, not full native compatibility. Subsequent LayerNo query changes have separate focused validation and still require the final combined release gate.
 
