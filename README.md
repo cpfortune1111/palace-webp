@@ -1,3 +1,7 @@
+## 0.25.61 — Explod synchronization consumers (partial)
+
+Ordinary Explods synchronize supported priority/facing, Trans/alpha, shared PalFX and size/AngleDraw transforms with real drawing and color-pixel coverage. Root/Helper body grouping, preparation cleanup and destroyed-Helper draw suppression have actual browser tests. All 214 Node checks and focused actor/scheduling browsers pass before versioning. Complete battle regression, final versioned gates and verified publication remain separate. Full syncparams/window/shear/projection/shader/afterimage/compiler/lifecycle semantics and all whole-controller certifications remain Pending.
+
 ## 0.25.60 — Actor/effect layer consumers (partial)
 
 Root/Helper layers reach actual battle passes. Afterimages retain historical layers and priority clamps; ordinary Explods consume ONTOP/under/layerno and syncid/synclayer with native-style grouped ordering. All 214 Node checks, focused actor/pixel/scheduling browsers and complete battle regression pass before versioning. Final versioned regression and verified publication remain separate gates. Nonzero SprPriority and full lifecycle/compiler/ModifyExplod/syncparams/reflection/HUD semantics remain Pending; no whole-controller certification is claimed.

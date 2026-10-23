@@ -1,3 +1,7 @@
+## 0.25.61 checkpoint — No new whole-controller certification
+
+Explod synchronization now has actual Root/Helper draw, color-pixel, transform, body-grouping and lifecycle consumers for the documented tested subset. All 214 Node checks and focused actor/scheduling tests pass before versioning; complete/versioned regression and publication remain separate. Remaining window/shear/projection/shader/afterimage/compiler/native-phase semantics keep syncparams and Explod incomplete. Certification remains zero of 163; no ignored or metadata-only parameter is promoted to implemented. See EXPLOD-SYNCPARAMS-WIP.md and CONTROLLER-PROGRESS.md.
+
 ## 0.25.59 — Status/bound extraction and real movement consumers (partial)
 
 DizzySet/GuardBreakSet and ScreenBound/DepthBound/PosFreeze/PlayerPush preserve native boolean extraction; reviewed redirect/priority operands reject runtime numeric strings. Status queries retain boolean arithmetic and ScreenBound camera flags commit sequentially. Root push uses each character's own widths instead of Venus constants. Actual root/Helper writes, Root XY and Helper XYZ freeze, push distances and source-backed fixture contracts have executable coverage. All 213 Node checks and focused browser cases pass before final versioning. Final versioned regression/publication remain separate gates. Full compiler/integer/vector/diagnostic/pause/native-phase/team semantics and all 163 whole-controller certifications remain Pending.

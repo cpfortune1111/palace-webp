@@ -1,4 +1,10 @@
-## 0.25.60 — Actor/effect layer consumers (partial, publication unverified)
+## 0.25.61 — Explod synchronization consumers (partial, publication unverified)
+
+Ordinary Explod synchronization now copies live priority/facing, Trans/alpha snapshots, shared PalFX references and supported size/AngleDraw transforms. Target bodies join synchronization groups even with syncparams=false. Character preparation clears prior registrations; destroyed Helper registrations are pruned and destroyed entities no longer leak a draw record. Actual browser coverage verifies value/reference retention, transform matrices, body grouping, preparation and a failing-before/fixed destruction case. Window/shear/projection/shader/afterimage copying, complete lifecycle/compiler/frame ordering and whole-controller certification remain Pending. See EXPLOD-SYNCPARAMS-WIP.md. This batch is not published.
+
+## 0.25.60 — Actor/effect layer consumers (partial, publication verified)
+
+Publication verified at commit fba70504b95d833d30be704fb4c2242e3577c359: all 214 Node checks, final versioned actor/scheduling/full battle browsers, successful exact-head Pages run 39873525477 and nineteen normalized live file comparisons passed. Local verification receipt: outputs/release-02560-verification.json. This verifies the checkpoint delivery, not full controller compatibility.
 
 Root and Helper sprite layer storage now reaches actual battle draw passes; explicit StateDef priority resets selected actor layers. Root afterimages retain historical layers and native-style captured priority offsets/downward clamps. Ordinary Explods inherit creator layers and consume ONTOP/under/layerno plus syncid/synclayer; exact-layer sorting follows priority, synchronization groups/layers and reverse insertion ties. Actual Root/Helper draw records, historical snapshots and thirteen final-compositor pixel cases pass. All 214 Node checks, focused actor/CNS scheduling browsers and complete battle regression pass before versioning; final versioned regression and publishing remain separate gates. Nonzero SprPriority remains explicitly rejected pending complete lifecycle/output wiring. Full compiler/order/version/syncparams/ModifyExplod/reflection/HUD semantics and all 163 whole-controller certifications remain Pending. See SPRITE-LAYER-WIP.md.
 

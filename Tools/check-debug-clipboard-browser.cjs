@@ -615,7 +615,7 @@ const server=http.createServer((request,response)=>{
     rootSpriteLayers.fill(0);helper.layerNo=0;transDrawQueue.reset();drawSourceExplods();
     const drawn=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>entry.layer);
     sourceExplods.length=0;
-    for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',sprpriority:'9',ontop:'1',under:'1',layerno:'-8',syncid:'-1',synclayer:'-3'},owner,owner.player);
+for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',sprpriority:'9',ontop:'1',under:'1',layerno:'-8',syncid:'-1',synclayer:'-3',syncparams:'0'},owner,owner.player);
     const overrides=sourceExplods.map(effect=>[effect.layerno,effect.sprpriority,effect.ontop,effect.under]);
     transDrawQueue.reset();drawSourceExplods();
     const overrideDraws=transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>[entry.layer,entry.priority,entry.ontop,entry.under]);
@@ -629,6 +629,96 @@ const server=http.createServer((request,response)=>{
   assert.deepEqual(explodLayers.overrideDraws,Array.from({length:3},()=>[-1,0,true,true]));
   assert.deepEqual(explodLayers.synchronization,[[1,-3],[2,-3],[explodLayers.helperId,-3]]);
   console.log('Actual Root/Helper Explods inherit creation layers, preserve snapshots and respect explicit ONTOP layer overrides');
+  const syncParameterRows=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedP2=[p2.sprPriority,p2.facing],savedHelper=[helper.sprPriority,helper.facing];
+   try{
+    sourceExplods.length=0;
+    for(const owner of [specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',sprpriority:'9',syncid:'-1'},owner,owner.player);
+    const rows=[];
+    for(const [priority,facing] of [[-5,-1],[12,1]]){
+     p2.sprPriority=priority;p2.facing=facing;helper.sprPriority=priority+1;helper.facing=-facing;
+     transDrawQueue.reset();drawSourceExplods();
+     rows.push({effects:sourceExplods.map(effect=>[effect.sprpriority,effect.facing]),draws:transDrawQueue.ordered().filter(entry=>entry.kind==='explod').map(entry=>entry.priority)});
+    }
+    for(const effect of sourceExplods)effect.syncParams=false;
+    p2.sprPriority=99;helper.sprPriority=98;drawSourceExplods();
+    rows.push(sourceExplods.map(effect=>effect.sprpriority));return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);[p2.sprPriority,p2.facing]=savedP2;[helper.sprPriority,helper.facing]=savedHelper;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(syncParameterRows,[{effects:[[-5,-1],[-4,1]],draws:[-5,-4]},{effects:[[12,1],[13,-1]],draws:[12,13]},[12,13]]);
+  console.log('Actual root/Helper syncparams updates priority and facing on every draw and explicit false retains the last values');
+  const syncTransRows=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedRoot=[rootTransStates[1],rootPalFx[1]],savedHelper=[helper.transState,helper.palFx];
+   try{
+    sourceExplods.length=0;rootTransStates[1]={type:'add',alpha:[128,64]};helper.transState={type:'sub',alpha:[255,255]};
+    rootPalFx[1]=createPalFxRuntime();helper.palFx=createPalFxRuntime();
+    for(const [runtime,amount] of [[rootPalFx[1],12],[helper.palFx,24]]){runtime.definition.time=-1;runtime.definition.add=[amount,0,0];stepPalFx(runtime)}
+    for(const owner of [specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',syncid:'-1'},owner,owner.player);
+    const rows=[];
+    const sample=()=>{
+     transDrawQueue.reset();drawSourceExplods();
+     return transDrawQueue.ordered().filter(entry=>entry.kind==='explod').sort((left,right)=>left.syncId-right.syncId).map(entry=>{
+      const surface=()=>{const canvas=document.createElement('canvas');canvas.width=canvas.height=1;return canvas.getContext('2d',{willReadFrequently:true})};
+      const target=surface(),scratch=surface(),source=surface(),queue=createTransDrawQueue();
+      target.fillStyle='rgb(100,100,100)';target.fillRect(0,0,1,1);source.fillStyle='rgb(60,30,90)';source.fillRect(0,0,1,1);
+      queue.record(scratch,source.canvas,[0,0],{state:entry.state,paletteEffect:entry.paletteEffect,layer:0,opacity:1});
+      renderOpaqueTransQueue(target,scratch,queue,{layer:0,shader:paletteShaderForDraw});
+      return [entry.state?.type,entry.state?.alpha,entry.paletteEffect?.add,[...target.getImageData(0,0,1,1).data]];
+     });
+    };
+    rows.push(sample());
+    for(const effect of sourceExplods)effect.syncParams=false;
+    rootTransStates[1].alpha[0]=1;helper.transState=null;
+    rootPalFx[1].definition.add=[55,0,0];stepPalFx(rootPalFx[1]);
+    rows.push(sample());return rows;
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);[rootTransStates[1],rootPalFx[1]]=savedRoot;[helper.transState,helper.palFx]=savedHelper;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(syncTransRows,[[['add',[128,64],[12,0,0],[61,40,70,255]],['sub',[255,255],[24,0,0],[16,70,10,255]]],[['add',[128,64],[55,0,0],[83,40,70,255]],['sub',[255,255],[24,0,0],[16,70,10,255]]]]);
+  console.log('Actual root/Helper synchronization copies Trans/alpha snapshots and retains the native shared PalFX reference when synchronization is disabled');
+  const syncTransform=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),saved=[helper.sizeDefinition,helper.angleState,helper.facing];
+   try{
+    sourceExplods.length=0;helper.facing=1;helper.sizeDefinition={...helper.sizeDefinition,xscale:1,yscale:1};helper.angleState=createAngleState();
+    spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',syncid:'-1'},helper,helper.player);
+    const capture=()=>{transDrawQueue.reset();drawSourceExplods();return transDrawQueue.ordered().find(entry=>entry.kind==='explod').matrix.slice(0,4)};
+    const baseline=capture();helper.sizeDefinition.xscale=2;helper.sizeDefinition.yscale=3;
+    Object.assign(helper.angleState,{enabled:true,value:90,scale:[1.5,.5],pivot:[8,9]});
+    const rotated=capture(),effect=sourceExplods[0],snapshot={scale:[...effect.scale],angle:effect.angleState.value,pivot:[...effect.angleState.pivot]};
+    effect.syncParams=false;helper.angleState.value=0;helper.sizeDefinition.xscale=9;
+    const retained=capture();return {snapshot,rotated:rotated.map((value,index)=>value/(index%2===0?baseline[0]:baseline[3])),retained:retained.map((value,index)=>value/(index%2===0?baseline[0]:baseline[3]))};
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);[helper.sizeDefinition,helper.angleState,helper.facing]=saved;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(syncTransform.snapshot,{scale:[3,1.5],angle:90,pivot:[0,0]});
+  for(const row of [syncTransform.rotated,syncTransform.retained])for(const [index,expected] of [0,-1.5,3,0].entries())assert.ok(Math.abs(row[index]-expected)<1e-6,JSON.stringify(row));
+  console.log('Actual synchronized Helper size and AngleDraw affect effect matrices once, omit actor pivot and retain copied transforms when disabled');
+  const bodySynchronization=await run(`(()=>{
+   const savedEffects=[...sourceExplods],saved=[current,fi,simPaused,p2.anim,p2.elem],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedHelper=[helper.anim,helper.elem];
+   try{
+    sourceExplods.length=0;current=0;fi=0;simPaused=false;p2.anim=0;p2.elem=1;helper.anim=0;helper.elem=1;
+    for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',syncid:'-1',syncparams:'0'},owner,owner.player);
+    const capture=()=>{transDrawQueue.reset();draw();drawMars();drawSourceExplods();return transDrawQueue.ordered().filter(entry=>entry.actorId>0).sort((left,right)=>left.actorId-right.actorId).map(entry=>[entry.actorId,entry.syncId,entry.syncLayer])};
+    const first=capture();sourceExplods.length=0;return {first,retained:capture(),helperId:helper.instanceId};
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);[current,fi,simPaused,p2.anim,p2.elem]=saved;[helper.anim,helper.elem]=savedHelper;transDrawQueue.reset()}
+  })()`);
+  const expectedBodySync=[[1,1,0],[2,2,0],[bodySynchronization.helperId,bodySynchronization.helperId,0]];
+  assert.deepEqual(bodySynchronization.first,expectedBodySync);assert.deepEqual(bodySynchronization.retained,expectedBodySync);
+  console.log('Actual Root/Helper bodies join synchronization at layer zero even with syncparams disabled and retain registration after effect removal');
+  const destroyedSynchronization=await run(`(()=>{
+   const savedEffects=[...sourceExplods],helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),saved=[helper.anim,helper.elem,helper.destroyed];
+   try{
+    sourceExplods.length=0;helper.anim=0;helper.elem=1;
+    spawnSourceExplod({anim:'0',pos:'0,0',removetime:'-1',syncid:'-1'},helper,helper.player);
+    transDrawQueue.reset();drawSourceExplods();
+    const before=transDrawQueue.ordered().find(entry=>entry.actorId===helper.instanceId)?.syncId;
+    const retained=sourceExplods[0].sprpriority;helper.destroyed=true;transDrawQueue.reset();drawSourceExplods();
+    const bodies=transDrawQueue.ordered().filter(entry=>entry.actorId===helper.instanceId).length;
+    const source=document.createElement('canvas');source.width=source.height=1;transDrawQueue.record(ctx,source,[0,0],{actorId:helper.instanceId,kind:'probe'});
+    const after=transDrawQueue.ordered().find(entry=>entry.kind==='probe').syncId;
+    return {registered:before===helper.instanceId,bodies,after,retained:sourceExplods[0].sprpriority===retained};
+   }finally{sourceExplods.splice(0,sourceExplods.length,...savedEffects);[helper.anim,helper.elem,helper.destroyed]=saved;transDrawQueue.reset()}
+  })()`);
+  assert.deepEqual(destroyedSynchronization,{registered:true,bodies:0,after:0,retained:true});
+  console.log('Destroyed actual Helpers leave no body draw or sync registration while surviving Explods retain their last synchronized values');
   const layerPixels=await run(`(()=>{
    const canvas=()=>{const surface=document.createElement('canvas');surface.width=surface.height=1;return surface.getContext('2d',{willReadFrequently:true})},target=canvas(),scratch=canvas(),savedBackgrounds=[...stageBackgrounds.entries],savedPalette=[bgPalFx.enabled,allPalFx.enabled],filter=filterCanvas.getContext('2d'),filterCopy=document.createElement('canvas');filterCopy.width=filterCanvas.width;filterCopy.height=filterCanvas.height;filterCopy.getContext('2d').drawImage(filterCanvas,0,0);
    const source=color=>{const context=canvas();context.fillStyle=color;context.fillRect(0,0,1,1);return context.canvas},rows=[];
@@ -650,6 +740,18 @@ const server=http.createServer((request,response)=>{
   })()`);
   assert.deepEqual(layerPixels,[[0,0,255,255],[255,255,255,255],[0,0,255,255],[0,0,255,255],[255,255,0,255],[255,0,0,255],[255,255,255,255],[255,255,255,255],[0,0,255,255],[0,255,0,255],[0,255,0,255],[255,0,0,255],[255,0,0,255]]);
   console.log('Actual battle compositor pixels verify foreground occlusion, ontop layer one, exact layer selection and zero-layer under ordering');
+  const preparedSynchronization=await run(`(async()=>{
+   transDrawQueue.reset();transDrawQueue.enableActorSync(1);transDrawQueue.enableActorSync(2);
+   const source=document.createElement('canvas');source.width=source.height=1;
+   for(const actorId of [1,2])transDrawQueue.record(ctx,source,[0,0],{actorId});
+   const before=transDrawQueue.ordered().map(entry=>entry.syncId);
+   await prepareCharacters([...battleCharacters]);
+   const after=transDrawQueue.ordered().map(entry=>entry.syncId);
+   transDrawQueue.reset();for(const actorId of [1,2])transDrawQueue.record(ctx,source,[0,0],{actorId});
+   const next=transDrawQueue.ordered().map(entry=>entry.syncId);transDrawQueue.reset();return {before,after,next};
+  })()`);
+  assert.deepEqual(preparedSynchronization,{before:[1,2],after:[0,0],next:[0,0]});
+  console.log('Actual character preparation clears prior body sync registrations for queued and subsequent root draws');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}
