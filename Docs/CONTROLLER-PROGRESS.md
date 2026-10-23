@@ -1,4 +1,14 @@
+## 0.25.75 — reflection window drawing consumers (partial, publication pending)
+
+All 230 Node checks and Python stage parser checks pass (outputs/reflection-window-import-node.log); actual parser-to-clip and controlled queued raster fixtures pass (outputs/reflection-window-import-pixels-browser.log). Final versioned combined regression and verified publication remain separate gates. No whole-controller certification changes.
+
+Stage window import now supplies supported float32 literal vectors through the production parser into actual root/Helper fallback clips. Parser tests, a missing-field failing-before case and controlled queued raster probes verify import plus inside/outside pixels (outputs/reflection-window-import-before.log and outputs/reflection-window-import-pixels-browser.log). Training metadata retains an explicit unchanged zero window; no source assets were regenerated. Full native parsing/other-stage coordinates/rendering and final combined gates remain Pending.
+
+ModifyReflection window now reaches root/Helper clip records with native arity, caller/recipient scaling, transient reset, stage-origin anchoring and reflected-Y sign. Actual normally spawned Helper/root fixtures pass, including actor-motion independence and manually supplied stage fallback. A separate failing-before case catches the stage-intensity-zero override bypass; the reflection-list gate is fixed. Stage window import, full renderer/compiler/version fidelity, combined regression and publication remain Pending. See REFLECTION-WINDOW-WIP.md; no whole-controller certification changes.
+
 ## 0.25.74 — Helper reflection drawing consumers (partial, publication pending)
+
+Publication subsequently verified at commit a30e9521e6a73473c390db8885941bcd9c1f16c2: 229 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 39915962063 and eleven normalized live file comparisons passed. The first live comparison failed while deployment was queued; only the post-success comparison passed. Receipt: outputs/release-02574-verification.json. Earlier pending statements are historical, not full compatibility claims.
 
 NoShadow is now accepted by the actor-local AssertSpecial path and reaches root/Helper reflection drawing. Actual positive-intensity visible/restored checks supersede the earlier masked disabled/noshadow tests; controller-driven suppression passes (outputs/helper-reflection-no-shadow-browser.log). The first complete battle baseline passes before that later assertion change, so final combined/versioned regression remains required. See NO-SHADOW-WIP.md; all whole-controller certifications remain Pending.
 

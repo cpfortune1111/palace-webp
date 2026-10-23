@@ -9,6 +9,7 @@ const python=process.env.PALACE_PYTHON||'C:/Users/jeffy/.cache/codex-runtimes/co
 const parseReflectionFixture=definition=>JSON.parse(execFileSync(python,['-c','import sys,json;sys.path.insert(0,sys.argv[1]);from stage_reflection import parse_stage_reflection;print(json.dumps(parse_stage_reflection(sys.argv[2])))',__dirname,definition],{encoding:'utf8',timeout:30000}));
 const importedReflection=parseReflectionFixture('[Reflection]\nintensity=50\nxscale=1\nyscale=1\nangle=7\nxangle=2\nyangle=3');
 const importedColorReflection=parseReflectionFixture('[Reflection]\nintensity=128\ncolor=255,0,0');
+const importedWindowReflection=parseReflectionFixture('[Reflection]\nintensity=50\nwindow=-20,-40,20,0');
 const server=http.createServer((request,response)=>{
  const pathname=decodeURIComponent(new URL(request.url,'http://localhost').pathname),base=pathname.startsWith('/vendor/')?vendor:root,file=path.resolve(base,pathname.startsWith('/vendor/')?pathname.slice(8):'.'+(pathname==='/'?'/index.html':pathname));
  if(!file.startsWith(base+path.sep)||!fs.existsSync(file)){response.writeHead(404);response.end();return}
@@ -933,7 +934,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
     specialRuntime.pauses.normal.fill(null);resetRootDrawOffsets();return {local,global,resumed:rootSpriteWindows.map(window=>[...window]),reflections:{local:localReflections,global:globalReflections,resumed:snapshot()}};
    }finally{rootReflectionOverrides.splice(0,2,...reflections);rootSpriteWindows.forEach((window,index)=>window.splice(0,4,...windows[index]));rootDrawOffsets.splice(0,2,...offsets);specialRuntime.pauses.normal.splice(0,2,...pauses.normal);specialRuntime.pauses.super.splice(0,2,...pauses.super);for(const [key,had,value] of moveTimes){if(had)specialRuntime.moveTimes.set(key,value);else specialRuntime.moveTimes.delete(key)}[p1HitPause,p2.attackPause]=hitPause}
   })()`);
-  const emptyReflection=()=>({intensity:-1,color:[-1,-1,-1],xscale:0,yscale:0,offset:[0,0],keeptransform:true,angle:0,xangle:0,yangle:0});
+  const emptyReflection=()=>({intensity:-1,color:[-1,-1,-1],xscale:0,yscale:0,offset:[0,0],window:[0,0,0,0],keeptransform:true,angle:0,xangle:0,yangle:0});
   assert.deepEqual(rootWindowPhases,{local:[[0,0,0,0],[0,0,0,0]],global:[[5,6,7,8],[5,6,7,8]],resumed:[[0,0,0,0],[0,0,0,0]],reflections:{local:Array.from({length:2},emptyReflection),global:Array.from({length:2},()=>({...emptyReflection(),intensity:201,color:[4,5,6],xscale:4,yscale:5,offset:[6,7]})),resumed:Array.from({length:2},emptyReflection)}});
   console.log('Actual P1/P2 window preparation clears during local hitpause, retains through blocking global pause and clears after resuming');
   const transformedShears=await run(`(()=>{
@@ -1119,6 +1120,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   console.log('Actual TargetVelSet quoted ID/index select the hit-ID-zero Helper while numeric controls select hit-ID-seven, in both profiles and player directions');
   console.log('Actual TargetDrop quoted excludeid and keepone preserve both hit-ID-zero Helpers instead of selecting seven or retaining only one');
   const helperReflectionRows=await run(`(()=>{
+   const importedWindow=${JSON.stringify(importedWindowReflection)}.window;
    const saved={entities:[...specialRuntime.entities],stage:activeStage,reflection:{...stageVisuals.reflection},normal:[...specialRuntime.pauses.normal],super:[...specialRuntime.pauses.super],moveTimes:[...specialRuntime.moveTimes],assertions:rootAssertions.map(flags=>[...flags])},rows=[];
    try{
     activeStage='training';Object.assign(stageVisuals.reflection,{intensity:50,xscale:1,yscale:1,layerno:0});specialRuntime.pauses.normal.fill(null);specialRuntime.pauses.super.fill(null);
@@ -1132,7 +1134,18 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
       const execute=params=>executeControllerM1({type:'ModifyReflection',params:{redirectid:String(helper.instanceId),...params}},binding,context,adapter);
       const records=()=>{transDrawQueue.reset();drawStageVisuals();return transDrawQueue.ordered({phase:'reflection'})},capture=()=>records().find(record=>record.priority===12345);
       const before=capture();execute({intensity:'128',offset:'12,-8',color:'255,0,0'});const offset=capture();execute({xscale:'2',yscale:'-3'});const changed=capture();
+      const stageIntensity=stageVisuals.reflection.intensity;stageVisuals.reflection.intensity=0;const stageSuppressed=records().length===0;stageVisuals.reflection.intensity=stageIntensity;
       const fit=Math.min((visualViewport?.width||innerWidth)/1280,(visualViewport?.height||innerHeight)/720),ratio=(320/collisionLocalCoord(caller))/(320/collisionLocalCoord(helper)),unit=collisionWorldRatio(collisionActorData(helper));
+      const viewportWidth=visualViewport?.width||innerWidth,viewportHeight=visualViewport?.height||innerHeight,viewX=(viewportWidth-1280*fit)/2,viewY=(viewportHeight-720*fit)/2;
+      const expectedWindow=(window,yscale)=>{const zoom=fit*cameraZoom,horizontal=[window[0]*zoom,window[2]*zoom],vertical=[-window[1]*Math.sign(yscale)*zoom,-window[3]*Math.sign(yscale)*zoom];return {x:Math.trunc((viewX+worldScreenX(0)*fit+Math.min(...horizontal))*devicePixelRatio)|0,y:Math.trunc((viewY+worldScreenY(0)*fit+Math.min(...vertical))*devicePixelRatio)|0,width:Math.trunc(Math.abs(horizontal[1]-horizontal[0])*devicePixelRatio)|0,height:Math.trunc(Math.abs(vertical[1]-vertical[0])*devicePixelRatio)|0}};
+      execute({window:'-100,-200,100,0',yscale:'1'});const positiveRecord=capture(),positiveClip=positiveRecord.clip,expectedPositive=expectedWindow(helper.reflectionOverride.window,1);helper.x=150;const movedClip=capture().clip;helper.x=0;
+      const probe=document.createElement('canvas'),solid=document.createElement('canvas');probe.width=positiveClip.width+8;probe.height=positiveClip.height+8;solid.width=4;solid.height=4;solid.getContext('2d').fillStyle='#c86432';solid.getContext('2d').fillRect(0,0,4,4);
+      const probeContext=probe.getContext('2d');transDrawQueue.rasterize({...positiveRecord,source:solid,args:[0,0,positiveClip.width+4,positiveClip.height+4],matrix:[1,0,0,1,2,2],clip:{...positiveClip,x:4,y:4},opacity:1},probeContext);
+      const clipPixels={inside:[...probeContext.getImageData(5,5,1,1).data],outside:[...probeContext.getImageData(3,5,1,1).data]};
+      execute({yscale:'-1'});const negativeClip=capture().clip,expectedNegative=expectedWindow(helper.reflectionOverride.window,-1);
+      const stageWindow=stageVisuals.reflection.window;execute({window:'0,0,0,0',yscale:'1'});stageVisuals.reflection.window=importedWindow;const fallbackClip=capture().clip,expectedFallback=expectedWindow(stageVisuals.reflection.window,1);if(stageWindow===undefined)delete stageVisuals.reflection.window;else stageVisuals.reflection.window=stageWindow;
+      const rootReflection=rootReflectionOverrides[player-1],rootWindow=[...rootReflection.window];let rootClip,expectedRoot;
+      try{executeControllerM1({type:'ModifyReflection',params:{redirectid:String(player),window:'-100,-200,100,0'}},binding,context,adapter);rootClip=records().filter(record=>record.priority!==12345)[player-1].clip;expectedRoot=expectedWindow(rootReflection.window,rootReflection.yscale===0?1:rootReflection.yscale)}finally{rootReflection.window=rootWindow}
       execute({intensity:'0'});const hidden=!capture();execute({intensity:'128'});const visible=!!capture();helper.disabled=true;const disabled=!capture();helper.disabled=false;
       const assertShadow=(id,enabled)=>executeControllerM1({type:'AssertSpecial',params:{redirectid:String(id),flag:'NoShadow',enabled:String(enabled)}},binding,context,adapter);
       assertShadow(helper.instanceId,1);const noShadow=!capture();assertShadow(helper.instanceId,0);const visibleRestored=!!capture(),withRoots=records().length;
@@ -1140,7 +1153,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
       execute({intensity:'201'});helper.hitPause=2;specialRuntime.step();const local=structuredClone(helper.reflectionOverride);
       execute({intensity:'202'});specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};specialRuntime.moveTimes.set(helper.key,{normal:0});specialRuntime.step();const global=helper.reflectionOverride.intensity;
       specialRuntime.pauses.normal.fill(null);specialRuntime.step();const resumed=helper.reflectionOverride.intensity;
-      rows.push({player,before:before.matrix,offset:offset.matrix,changed:changed.matrix,alpha:changed.state.alpha,mul:changed.paletteEffect.mul,expectedShift:[12*ratio*unit*cameraZoom*fit,-8*ratio*unit*cameraZoom*fit],hidden,visible,disabled,noShadow,visibleRestored,rootNoShadow,rootRestored,local,global,resumed});
+      rows.push({player,before:before.matrix,offset:offset.matrix,changed:changed.matrix,alpha:changed.state.alpha,mul:changed.paletteEffect.mul,expectedShift:[12*ratio*unit*cameraZoom*fit,-8*ratio*unit*cameraZoom*fit],stageSuppressed,clipPixels,positiveClip,expectedPositive,movedClip,negativeClip,expectedNegative,fallbackClip,expectedFallback,rootClip,expectedRoot,hidden,visible,disabled,noShadow,visibleRestored,rootNoShadow,rootRestored,local,global,resumed});
      }finally{data.globalControllers=globals;if(definition===undefined)delete data.helperStates[991891];else data.helperStates[991891]=definition}
     }
     return rows;
@@ -1154,6 +1167,8 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
    assert.equal(row.alpha[0],128);assert.equal(row.mul[1],0);assert.equal(row.mul[2],0);
    for(const [axis,factor]of [[0,2],[3,-3]])assert.ok(Math.abs(row.changed[axis]-row.before[axis]*factor)<1e-5,JSON.stringify(row));
    for(const axis of [0,1])assert.ok(Math.abs(row.offset[axis+4]-row.before[axis+4]-row.expectedShift[axis])<1e-5,JSON.stringify(row));
+   assert.equal(row.stageSuppressed,true);assert.deepEqual(row.positiveClip,row.expectedPositive);assert.deepEqual(row.movedClip,row.expectedPositive);assert.deepEqual(row.negativeClip,row.expectedNegative);assert.deepEqual(row.fallbackClip,row.expectedFallback);assert.deepEqual(row.rootClip,row.expectedRoot);
+   assert.deepEqual(row.clipPixels.inside,[200,100,50,255]);assert.deepEqual(row.clipPixels.outside,[0,0,0,0]);
    assert.equal(row.hidden,true);assert.equal(row.visible,true);assert.equal(row.disabled,true);assert.equal(row.noShadow,true);assert.equal(row.visibleRestored,true);assert.equal(row.rootNoShadow,true);assert.equal(row.rootRestored,true);assert.deepEqual(row.local,emptyReflection());assert.equal(row.global,202);assert.equal(row.resumed,-1);
   }
   console.log('Spawned Helpers consume redirected ModifyReflection geometry/color/alpha and native preparation reset, retaining through global pause in both player directions');

@@ -34,6 +34,14 @@ def parse_stage_reflection(definition):
                 raise ValueError('Unsupported reflection color integer syntax')
             color[channel] = max(0, min(255, int(component)))
 
+    window = [0, 0, 0, 0]
+    if 'window' in values:
+        components = values['window'].split(',')
+        if len(components) > 4:
+            raise ValueError('Unsupported reflection window component count')
+        for index, component in enumerate(components):
+            window[index] = struct.unpack('<f', struct.pack('<f', float(component)))[0]
+
     return {
         'intensity': max(0, min(255, integer('intensity', 0))),
         'color': color,
@@ -43,4 +51,5 @@ def parse_stage_reflection(definition):
         'angle': scalar('angle', 0),
         'xangle': scalar('xangle', 0),
         'yangle': scalar('yangle', 0),
+        'window': window,
     }

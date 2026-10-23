@@ -1,7 +1,8 @@
 from stage_reflection import parse_stage_reflection
 
 
-angles = {'angle': 0, 'xangle': 0, 'yangle': 0, 'color': [255, 255, 255]}
+assert parse_stage_reflection('[Reflection]\nwindow=-20,-40,20,0')['window'] == [-20, -40, 20, 0]
+angles = {'angle': 0, 'xangle': 0, 'yangle': 0, 'color': [255, 255, 255], 'window': [0, 0, 0, 0]}
 assert parse_stage_reflection('') == {'intensity': 0, 'xscale': 1, 'yscale': 1, 'layerno': 0, **angles}
 assert parse_stage_reflection('[Reflection]\nintensity=50') == {'intensity': 50, 'xscale': 1, 'yscale': 1, 'layerno': 0, **angles}
 assert parse_stage_reflection('[reflection]\nintensity=999\nlayerno=-8\nxscale=-2\nyscale=0') == {'intensity': 255, 'xscale': -2, 'yscale': 0, 'layerno': -1, **angles}
@@ -25,4 +26,13 @@ except ValueError:
     pass
 else:
     raise AssertionError('Invalid reflection integer syntax was silently accepted')
-print('Stage reflection import preserves native defaults, clamped layer/intensity/RGB and float32 scales/angles for supported literal syntax')
+assert parse_stage_reflection('[Reflection]\nwindow=1,2')['window'] == [1, 2, 0, 0]
+assert parse_stage_reflection('[Reflection]\nwindow=.1')['window'] == [0.10000000149011612, 0, 0, 0]
+for invalid in ['1,2,3,4,5', '1,bad,3,4']:
+    try:
+        parse_stage_reflection('[Reflection]\nwindow=' + invalid)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('Invalid reflection window was silently accepted')
+print('Stage reflection import preserves native defaults, clamped layer/intensity/RGB and float32 scales/angles/windows for supported literal syntax')

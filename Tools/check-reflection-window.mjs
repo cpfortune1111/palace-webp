@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import * as reflection from '../Engine/modify-reflection.js';
+
+const caller={scale:1,state:reflection.createReflectionOverride()},target={scale:.25,state:reflection.createReflectionOverride()},reads=[],warnings=[];
+const api={evaluate:expression=>{reads.push(expression);return Number(expression)},split:expression=>String(expression).split(','),findActor:id=>id===2?target:null,state:actor=>actor.state,localScale:actor=>actor.scale,warn:message=>warnings.push(message)};
+reflection.applyModifyReflection({type:'ModifyReflection',params:{redirectid:2,window:'1,2,3,4'}},caller,api);
+assert.deepEqual(target.state.window,[4,8,12,16]);
+assert.deepEqual(reads,[2,'1','2','3','4']);
+reads.length=0;
+reflection.applyModifyReflection({type:'ModifyReflection',params:{window:'1,2,3'}},caller,api);
+assert.deepEqual(caller.state.window,[0,0,0,0]);assert.deepEqual(reads,[]);assert.deepEqual(warnings,['invalid ModifyReflection window']);
+assert.throws(()=>reflection.applyModifyReflection({type:'ModifyReflection',params:{window:'1,2,3,4,5'}},caller,api),/at most four/);
+reflection.resetReflectionOverride(target.state);assert.deepEqual(target.state.window,[0,0,0,0]);assert.notEqual(target.state.window,caller.state.window);
+const options={origin:[640,660],scale:2,pixelRatio:1,yscale:1};
+assert.deepEqual(reflection.reflectionWindowRect([-10,-20,30,40],null,options),{x:620,y:580,width:80,height:120});
+assert.deepEqual(reflection.reflectionWindowRect([-10,-20,30,40],null,{...options,yscale:-1}),{x:620,y:620,width:80,height:120});
+assert.deepEqual(reflection.reflectionWindowRect([0,0,0,0],[2,3,4,5],options),{x:644,y:650,width:4,height:4});
+assert.equal(reflection.reflectionWindowRect([0,0,0,0],[0,0,0,0],options),null);
+assert.deepEqual(reflection.reflectionWindowRect([30,40,-10,-20],null,options),{x:620,y:580,width:80,height:120});
+console.log('ModifyReflection window has native arity, coordinate extraction, reset, stage fallback and stage-origin reflected-Y geometry');

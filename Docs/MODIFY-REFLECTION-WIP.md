@@ -1,5 +1,7 @@
 # ModifyReflection real consumers (partial, unpublished)
 
+Window now has a real root/Helper clip consumer with native caller/recipient extraction, transient reset, stage-origin anchoring, reflected-Y sign and stage fallback. Production stage parser output drives actual fallback fixtures; a controlled queued-raster probe verifies clipping pixels. Earlier unsupported-window notes are superseded only for this path; projection/shear/animation replacement and full native behavior remain Pending. See REFLECTION-WINDOW-WIP.md.
+
 Helper recipient/drawing support now supersedes earlier blanket Helper unsupported notes for the already supported color/intensity/offset/scales/orthographic-angle operands only. Real normal-spawn Helper fixtures cover alpha, geometry, color, preparation resets and visibility gates; unsupported animation/window/shear/projection fields still fail explicitly. See HELPER-REFLECTION-WIP.md and NO-SHADOW-WIP.md. No complete controller certification is implied.
 
 Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go modifyReflection, bytecode.go modifyReflection.Run, char.go preparation/reflection sprite creation and anim.go ReflectionList.draw.

@@ -1,3 +1,7 @@
+## 0.25.75 — Reflection window consumers (partial)
+
+ModifyReflection window now reaches root/Helper clipping with caller/recipient scaling, transient reset and native stage-origin/reflected-Y rules. Supported stage window literals pass through the production parser into live fallback clips; controlled queued raster tests prove inside/outside pixels. Stage intensity zero now suppresses all reflections even with positive actor overrides. Remaining stage coordinate systems, parser/compiler/version behavior and full renderer/controller compatibility remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.74 — Helper reflection consumers (partial)
 
 Visible Helpers now cast stage reflections and consume supported ModifyReflection alpha/color/geometry parameters. Normal Helper spawning initializes independent overrides; active preparation clears them during local hitpause while blocked global pause retains them. Actor-local AssertSpecial NoShadow suppresses root/Helper reflection with controller-driven visible/restored tests. Remaining reflection animation/window/shear/projection, shadow/rendering/stage/phase fidelity and whole-controller compatibility remain Pending; final versioned regression and verified publication are separate gates.

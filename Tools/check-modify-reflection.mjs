@@ -15,7 +15,7 @@ assert.equal(target.state.intensity,0);assert.equal(target.state.xscale,0);
 const before=samples.length;
 applyModifyReflection({type:'ModifyReflection',params:{redirectid:999,offset:'1,2'}},caller,api);
 assert.deepEqual(samples.slice(before),[999]);
-assert.throws(()=>applyModifyReflection({type:'ModifyReflection',params:{window:'1,2,3,4'}},caller,api),/not implemented/);
+assert.throws(()=>applyModifyReflection({type:'ModifyReflection',params:{projection:'perspective'}},caller,api),/not implemented/);
 assert.throws(()=>applyModifyReflection({type:'ModifyReflection',params:{offset:'1,2,3'}},caller,api),/at most two/);
 resetReflectionOverride(target.state);
 assert.deepEqual(target.state,createReflectionOverride());
