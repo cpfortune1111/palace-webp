@@ -1,3 +1,7 @@
+## 0.25.66 — Live parent ancestry and family controllers (partial)
+
+Parent queries now distinguish immediate Helper parents from Root and return undefined for roots or destroyed parents. Shared ancestry lookup also fixes first-generation BindToParent and supplies both variable-controller adapters. Actual P1/P2 fixtures cover two Helper generations, binding owners, ParentVarSet/RootVarSet isolation and missing-parent refusal. Native coordinate/version/diagnostic/lifecycle equivalence remains Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.65 — PlayerID native operand scope correction (partial)
 
 Deeper pinned compiler review corrects the 0.25.64 whole-expression scope claim: PlayerID redirects one following operand. Binary operands outside that value retain caller scope. The pinned compiler rejects nonconstant parenthesized queries inside redirection; tested constant groups remain accepted. Standalone and actual P1/P2/Helper tests cover these distinctions. Complete native compiler/diagnostic/version fidelity remains Pending; final release validation and verified publication are separate gates.

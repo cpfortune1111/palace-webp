@@ -1,5 +1,11 @@
 import {rootEnemyList} from '../../Engine/enemy-selection.js';
 import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
+export function findParentActor(actor,helpers,root){
+ if(actor.kind!=='helper')return null;
+ if(!actor.parentKey)return root(actor.player);
+ if(actor.parentKey==='root1'||actor.parentKey==='root2')return root(Number(actor.parentKey.slice(-1)));
+ return helpers.find(helper=>helper.kind==='helper'&&helper.key===actor.parentKey&&!helper.destroyed)??null;
+}
 export function createLifecycleRuntime(api){
  const rounds={state:2,number:1,existed:0,match:1};
  const canonicalTypes={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet'};
@@ -47,7 +53,8 @@ export function createLifecycleRuntime(api){
     if(name.toLowerCase()==='playerid')return [api.root(1),api.root(2),...helpers.filter(helper=>helper.kind==='helper'&&!helper.destroyed)].find(actor=>(actor.instanceId??(actor.kind==='helper'?undefined:actor.id??actor.player))===index)??null;
     if(name.toLowerCase()==='partner')return null;
     if(['enemy','enemynear'].includes(name.toLowerCase()))return index<0?null:enemies(name.toLowerCase()==='enemynear')[index]??null;
-    if(['root','parent'].includes(name.toLowerCase()))return api.root(fighter.player);
+    if(name.toLowerCase()==='parent')return findParentActor(fighter,helpers,api.root);
+    if(name.toLowerCase()==='root')return api.root(fighter.player);
     throw Error('Unsupported lifecycle redirect '+name);
    }
   };

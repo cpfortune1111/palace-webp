@@ -1,0 +1,11 @@
+# Parent expression redirection (partial, unpublished)
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, char.go Char.parent and bytecode.go OC_parent. Root characters have no parent. Helpers retain their actual parent identity; a destroyed parent does not silently become the root. Native failure produces undefined and skips the redirected expression.
+
+WEB lifecycle queries previously mapped both Parent and Root to the root character. They now resolve a Helper's stored parentKey to its live immediate parent, use the root only for root-created Helpers, and return no context for a root caller or missing/destroyed parent. Root redirection remains independent.
+
+A failing-before lifecycle assertion reproduced the root-Parent error. Independent tests cover root-created Helpers, nested Helpers and destroyed-parent lookup. Actual P1/P2 fixtures create two Helper generations through normal dispatch, assign distinct root/parent/child layers, and verify Parent reads 7 while Root reads 3; root Parent and a destroyed parent yield undefined. Evidence: outputs/parent-redirect-browser.log.
+
+Full MUGEN legacy slot-reuse behavior, native warning/log policy, reparenting and complete Helper lifecycle/VM/profile semantics remain Pending. ParentVarSet and binding controllers have separate target-selection paths and are not certified by these expression tests. Full combined regression, versioning and verified publication are separate gates.
+
+Controller integration review found that BindToParent recognized explicit root1/root2 keys but not the null parentKey produced by normal first-generation Helper creation. A shared findParentActor resolver now supplies expression queries, both variable-controller adapters and family-binding dispatch, retaining existing explicit root keys and rejecting destroyed Helper parents. Actual normal-dispatch P1/P2 fixtures bind first-generation Helpers to their roots, nested Helpers to their immediate parents, write ParentVarSet only to the parent and RootVarSet only to the root, and refuse a new bind after parent destruction (outputs/parent-controller-browser.log). These are additional real controller consumers, not certification of every binding/variable parameter or lifecycle phase.

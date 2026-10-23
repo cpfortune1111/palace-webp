@@ -1,4 +1,14 @@
-## 0.25.65 — PlayerID native operand scope correction (partial, publication pending)
+## 0.25.66 — Parent immediate-Helper redirection (partial, publication pending)
+
+Pre-version baseline full battle regression passes (outputs/parent-redirect-full-browser.log). The later shared controller-adapter changes have focused actual coverage and 221 passing Node checks; final versioned combined regression and verified publication remain separate gates.
+
+Controller adapter review additionally fixed first-generation BindToParent: the normal null parentKey representation now resolves the root instead of producing no binding. A shared resolver is used by lifecycle queries, both variable adapters and family-binding dispatch. Actual P1/P2 two-generation binding owners, ParentVarSet/RootVarSet isolation and destroyed-parent refusal pass (outputs/parent-controller-browser.log). This extends real consumers; full family-controller/native coordinate/compiler/diagnostic/lifecycle semantics remain Pending.
+
+The lifecycle Parent query no longer aliases Root. Root callers have no parent; nested Helpers select their live immediate parent and destroyed-parent lookup yields undefined. A failing-before lifecycle case and actual two-generation P1/P2 Helper dispatch fixtures distinguish Parent layer 7 from Root layer 3 (outputs/parent-redirect-browser.log). Full profile/legacy slot reuse/diagnostics/lifecycle equivalence and controller-specific parent targets remain Pending. See PARENT-REDIRECT-WIP.md. No whole-controller certification changes.
+
+## 0.25.65 — PlayerID native operand scope correction (partial, publication verified)
+
+Publication verified at commit 59635e6eec46304a7aac3f43ce220aca684af952: 221 Node checks, final versioned actor/scheduling/full battle suites, exact-head successful Pages run 39890705929 and six normalized live file comparisons passed. Local receipt: outputs/release-02565-verification.json. This verifies delivery of the correction, not complete native compatibility.
 
 Reviewing the body of pinned compiler.go expValue exposed an incorrect 0.25.64 assumption: it compiles a single value, while the parenthesis branch calls expBoolOr and rejects nonconstant redirected parentheses. PlayerID now redirects one operand, not the remaining whole expression, and rejects the tested grouped dynamic query with native diagnostic text. The standalone test distinguishes recipient-plus-caller arithmetic from recipient-only arithmetic, accepts a constant group, and avoids invalid grouped nested redirection. Actual P1/P2/Helper cases pass (outputs/playerid-native-operand-browser.log). Full combined/versioned regression and publication of this correction remain Pending. See PLAYERID-REDIRECT-WIP.md; the earlier whole-expression claim is superseded.
 
