@@ -151,8 +151,8 @@ Completion requires each controller and parameter to have native defaults, expre
 | rootmapset | map, redirectid, value | map(KEY) assignment syntax requires semantic parsing | Pending |
 | rootvaradd | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
 | rootvarset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
-| roundtimeadd | redirectid, value | Review delegated parser/defaults | Pending |
-| roundtimeset | redirectid, value | Review delegated parser/defaults | Pending |
+| roundtimeadd | redirectid, value | Actual shared HUD ticks, int32 addition wrap, bounds and unlimited-expression gate tested; pinned runtime ignores redirectid (not counted as implemented redirection); ROUND-TIME-WIP.md | Pending |
+| roundtimeset | redirectid, value | Actual shared HUD ticks, bounds and unlimited-expression gate tested; pinned runtime ignores redirectid (not counted as implemented redirection); ROUND-TIME-WIP.md | Pending |
 | savefile | maps, maps.include, path, redirectid, savedata | Review delegated parser/defaults | Pending |
 | savestate | None extracted; verify reference | Review delegated parser/defaults | Pending |
 | scoreadd | redirectid, value | Review delegated parser/defaults | Pending |

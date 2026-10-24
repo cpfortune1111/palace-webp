@@ -580,6 +580,23 @@ const server=http.createServer((request,response)=>{
   for(const row of variableBoundaries.rows)assert.deepEqual(row,[true,true,true,true,true,true]);
   assert.deepEqual(variableBoundaries.warnings,Array.from({length:8},()=>['var','fvar','sysvar','sysfvar'].map(family=>family+' index -1 must be positive')).flat());
   console.log('Actual root/Helper variable boundaries preserve negative-index undefined/warnings, stored NaN through addition and float negative zero');
+  const roundTimeConsumers=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={time:fightHud.roundTime(),entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991999]),variables:[specialRoot(1).vars[17],specialRoot(2).vars[17]]},rows=[];
+   try{
+    for(const value of data)value.helperStates[991999]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2])for(const kind of ['root','helper']){
+     fightHud.setMode('99');specialRuntime.entities.length=0;const root=specialRoot(player);let actor=root;if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991999,id:991999}},root,specialRuntime.context(root),{},root,player);actor=specialRuntime.entities.at(-1)}actor.vars[17]=1;
+     const dispatch=(type,value)=>executeControllerM1({type,params:{value,redirectid:'(var(17) := 777)'}},kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch('RoundTimeSet','(var(17) := var(17)+1)*60');const set=fightHud.roundTime().current,variable=actor.vars[17];dispatch('RoundTimeAdd','-30');const added=fightHud.roundTime().current,display=fightHud.remaining(),exact=fightHud.remainingExact();fightHud.step(true);const active=fightHud.roundTime().current;fightHud.step(false);const inactive=fightHud.roundTime().current;dispatch('RoundTimeSet','99999');const capped=fightHud.roundTime().current;dispatch('RoundTimeSet','0');const expired=fightHud.remaining(),timeouts=[];
+     const flow=createRoundFlow({config:{startWait:0,controlWait:0},rounds:{},setTimer:mode=>fightHud.setMode(mode),reset:()=>{},initialize:()=>{},message:()=>{},lock:()=>{},fade:()=>{},stepPresentation:()=>{},introComplete:()=>true,voiceReady:()=>true,announcerReady:()=>true,sound:()=>{},fight:()=>{},life:()=>[900,1000],alive:()=>[true,true],remaining:()=>fightHud.remaining(),stopCombat:()=>{}});
+     for(const type of ['RoundTimeSet','RoundTimeAdd']){flow.begin('vs','99');for(let tick=0;flow.snapshot().phase!=='fight'&&tick<128;tick++)flow.step();const before=flow.snapshot().phase;dispatch(type,type==='RoundTimeSet'?'0':'-5940');flow.step();const result=flow.snapshot();timeouts.push({type,before,phase:result.phase,reason:result.reason,winner:result.winner,state:result.round.state})}
+     fightHud.setMode('infinite');actor.vars[17]=10;dispatch('RoundTimeAdd','(var(17) := 99)');rows.push({player,kind,set,variable,added,display,exact,active,inactive,capped,expired,timeouts,infinite:fightHud.roundTime(),skipped:actor.vars[17]});
+    }
+    return rows;
+   }finally{fightHud.setMode(saved.time.maximum<0?'infinite':String(saved.time.maximum/60));fightHud.setRoundTime(saved.time.current);specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){specialRoot(index+1).vars[17]=saved.variables[index];if(saved.definitions[index]===undefined)delete data[index].helperStates[991999];else data[index].helperStates[991999]=saved.definitions[index]}}
+  })()`);
+  assert.equal(roundTimeConsumers.length,4);for(const row of roundTimeConsumers){assert.equal(row.set,120);assert.equal(row.variable,2);assert.equal(row.added,90);assert.equal(row.display,2);assert.equal(row.exact,1.5);assert.equal(row.active,89);assert.equal(row.inactive,89);assert.equal(row.capped,5940);assert.equal(row.expired,0);for(const result of row.timeouts)assert.deepEqual(result,{type:result.type,before:'fight',phase:'result',reason:'time',winner:2,state:3});assert.deepEqual(row.infinite,{maximum:-1,current:-1});assert.equal(row.skipped,10)}
+  console.log('Actual RoundTimeSet/Add root/normal-Helper consumers update real HUD ticks/display/countdown and skip unlimited expressions');
   const assertedCommandConsumers=await run(`(()=>{
    const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991995]),roots:[playerCommandLists[1],playerCommandLists[2]],helpers:[...helperCommandLists],variables:[specialRoot(1).vars[19],specialRoot(2).vars[19]]},rows=[];
    try{

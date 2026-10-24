@@ -1,4 +1,10 @@
+## 0.25.85 — RoundTimeSet/Add consumers (partial, publication pending)
+
+The shared controller path now updates real HUD countdown ticks without resetting mode or life-animation state. Signed value/Add wrapping, configured bounds and unlimited expression skipping follow pinned Run semantics. Four actual root/normal-Helper cases verify ticks/display/countdown; eight production round-flow integration cases verify time-over result transitions. Eighty controller-specific scheduling groups pass in both profiles/player directions. The pinned compiler accepts redirectid but Run ignores it; no implemented-redirection or whole-controller certification credit is claimed. Full native timing/configuration/compiler/version fidelity and final versioned gates/publication remain required. See ROUND-TIME-WIP.md.
+
 ## 0.25.84 — AssertCommand consumers (partial, publication pending)
+
+Publication subsequently verified at commit bdbd50c0649699908af1cb0bb609ee126e3800f2: 254 Node checks, Python stage/metadata checks, final actor/scheduling/full battle gates, exact-head successful Pages run 40102357756 and nine normalized live files matched. Receipt: outputs/release-02584-verification.json. Earlier pending statements are historical.
 
 AssertCommand now updates actual command buffers, preserving quoted/case-sensitive names, signed overwrite/default buffer.time, duplicate names and grouped random fallback. Normal keyctrl Helpers have independent storage; disabled-keyctrl Helpers share root buffers while their command query remains gated. Six actual recipient cases cover caller expression ownership, already-created contexts, zero/negative clearing and sampler expiry. Forty controller-specific scheduling groups pass. The first complete battle run's browser process crashed; the corrected current-state rerun passes, but final versioned gates/publication remain required. Native foreign-state command tables, RNG/compiler/version fidelity and whole-controller certification remain Pending. See ASSERT-COMMAND-WIP.md.
 

@@ -1,3 +1,7 @@
+## 0.25.85 — Round time consumers (partial)
+
+RoundTimeSet/Add now change actual HUD countdown ticks, preserving signed arithmetic, configured bounds and unlimited-expression skipping. Actual root/Helper timer/display checks, production round-flow Time Over integrations and eighty controller-specific scheduling groups pass. The pinned native runtime ignores redirectid; this is recorded, not counted as implemented redirection. Full native timing/configuration/compiler/version fidelity and final versioned regression/publication remain Pending.
+
 ## 0.25.84 — AssertCommand consumers (partial)
 
 AssertCommand now writes real signed command buffers with native name/default/random-time rules and root/Helper ownership. Explicit assertions are visible to already-created expression contexts and expire through normal input sampling; nonasserted AI behavior is retained. Actual recipient, clear/expiry and forty scheduling groups pass. Full foreign-state command tables, native RNG/compiler/version fidelity and final versioned regression/publication remain Pending.
