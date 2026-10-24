@@ -1,4 +1,22 @@
+## 0.25.92 — Explod random and ModifyExplod motion (partial, release pending)
+
+Forty real ModifyExplod scheduling groups subsequently pass in both profiles/player directions, including root current/global/lifecycle and normal Helper current/global hitpause/persistence/global-pause allowance paths. The expanded ten-controller matrix has 400 groups. Final versioned gates/publication and full native compatibility remain required.
+
+ModifyExplod friction now reaches actual unlocked XYZ motion, preserves the native move/multiply/add order and small-speed stop threshold, and defaults omitted friction axes to zero. The sixteen consumer cases and independent float32 motion checks pass. Full remaining native semantics and final gates/publication remain Pending.
+
+ModifyExplod now also consumes XYZ pos/velocity/accel and partial XY scale. Sixteen real consumer cases verify effect-step motion/acceleration, MUGEN field locks versus unlocked scale, partial-component preservation and actual drawing matrices. Float32 motion integration is restricted to modified effects, leaving unmodified legacy effects unchanged. Full remaining parameters/native fidelity and final publishing remain Pending.
+
+ModifyExplod now reaches actual owned source effects for ID/index/redirection and random/postype=p1. Sixteen real root/Helper/profile/player/character-version cases verify one shared XYZ sample across selected effects, no-match/version evaluation gates, MUGEN postype resets, index isolation and drawing. Other parameters/postypes fail explicitly. Full native fidelity and final regression/publication remain Pending; see MODIFY-EXPLOD-WIP.md.
+
+## Unreleased — Explod own-animation random consumers (partial)
+
+Common F(n)/Fn Explods now use the complete common atlas and native optional XYZ RandF placement, facing/binding and default hitpause/bindtime. Sixteen expanded real own/common consumer cases pass; literal round/hardware resources retain their legacy route. Unsupported common parameters/postypes fail explicitly. Full Explod/ModifyExplod fidelity and final regression/publication remain Pending.
+
+Own-animation source Explods now consume native interleaved float32 XYZ RandF offsets from the shared stream. Relative facing and initial binding preserve those offsets; omission does not sample. Eight actual root/Helper/profile/player cases and independent extraction checks pass. Other Explod branches, ModifyExplod and full native fidelity remain Pending; see EXPLOD-RANDOM-WIP.md.
+
 ## 0.25.91 — Native random consumers (partial, release pending)
+
+Publication subsequently verified at commit b562b7a0edf6ad4d7f1ae078ae215b320b578267: 266 Node checks, Python stage/five sound tests, final random/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40126839080 and fourteen live text file comparisons. No new media or original source files were uploaded. Receipt: outputs/release-02591-verification.json. Earlier pending statements are historical; full compatibility remains incomplete.
 
 RandomRange now reaches the typed expression engine and native shared stream as a two-bound integer intrinsic. Independent and actual root/Helper/profile/player checks cover fractional/reversed bounds, caller-side assignments, undefined propagation without sampling and lazy Cond exclusion. Full compiler/string/foreign-expression/version fidelity remains Pending.
 

@@ -1,3 +1,7 @@
+## 0.25.92 — Explod random and ModifyExplod motion (partial, release pending)
+
+Own/common Explods now consume native XYZ random offsets and preserve relative facing/binding. ModifyExplod has real selection, random/pos/velocity/accel/friction/scale consumers, native MUGEN locks/reset rules and float32 motion. Sixteen actual mixed-effect cases plus forty controller-specific scheduling groups pass; the expanded matrix has 400 groups. Other parameters/postypes, full native fidelity and final regression/deployment remain Pending. No whole-controller certification changes; no original assets included.
+
 ## 0.25.91 — Native controller random consumers (partial, release pending)
 
 VarRandom, GameMakeAnim, AssertCommand and TargetDrop now share pinned integer/float32 random operations. Random samples per occurrence; RandomRange is a typed integer intrinsic with undefined/lazy-branch gates. Actual root/Helper/player/profile interleavings and boundary checks pass. Full RNG consumer unification, configured seeding/replay lifecycle and compiler/version fidelity remain Pending; no whole-controller certification changes. Final regression/deployment remain required; character recoloring stays excluded.
