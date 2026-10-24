@@ -1,7 +1,7 @@
 import {controllerBoolean} from './controller-value-conversion.js';
 
 export const damageAssertionFlags=new Set(['nohitdamage','noguarddamage','noredlifedamage','nodizzypointsdamage','noguardpointsdamage']);
-export const actorAssertionFlags=new Set([...damageAssertionFlags,'nowalk','noautoturn','nofacep2','noturntarget','nojugglecheck','nostandguard','nocrouchguard','noairguard','unguardable','noko','noguardko','nokofall','nokovelocity','nocornerpush','nofallhitflag','nogetupfromliedown','noshadow']);
+export const actorAssertionFlags=new Set([...damageAssertionFlags,'nowalk','noautoturn','nofacep2','noturntarget','nojugglecheck','nostandguard','nocrouchguard','noairguard','unguardable','noko','noguardko','nokofall','nokovelocity','nocornerpush','nofallhitflag','nogetupfromliedown','noshadow','nomakedust']);
 
 export function applyDamageAssertion(controller,actor,api){
  if(controller.type.toLowerCase()!=='assertspecial')return false;

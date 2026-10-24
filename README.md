@@ -1,3 +1,7 @@
+## 0.25.88 — MakeDust consumers (partial, release pending)
+
+MakeDust now uses the actual compressed F120 animation, actor-owned spacing clocks, redirected positions, NoMakeDust suppression, native hitpause playback and real root/Helper drawing. Helper binding and enabled-stage Z projection have actual simulation/drawing checks. Sixteen focused browser cases and forty controller-specific scheduling groups pass. Complete native fidelity and final versioned deployment remain Pending; character recoloring remains excluded.
+
 ## 0.25.87 — EnvColor consumers and scope update (partial, release pending)
 
 EnvColor now fills the actual fight-screen compositor with native signed RGB/defaults, layer rules and simulation duration. Sixteen root/Helper/profile/player pixel cases and forty controller-specific scheduling groups pass. Character recoloring/RemapPal expansion is excluded by user request; unused indexed assets no longer preload automatically, while existing gameplay color effects remain. Full native controller compatibility and final versioned deployment remain Pending.

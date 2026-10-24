@@ -1,4 +1,10 @@
+## 0.25.88 — MakeDust consumers (partial, publication pending)
+
+Shared root/Helper MakeDust now reaches true common F120 assets, real particles, recipient spacing clocks, caller-context redirected XYZ positions, NoMakeDust, native layer/priority and lifetime. Moving-Helper binding, actual Z drawing and local/global pause behavior have focused consumer checks. Sixteen actual browser cases and forty controller-specific scheduling groups pass; the expanded eight-controller matrix has 320 groups. Common effect timing no longer accidentally samples a character animation with the same action number. Native compiler/version/limits/rounding/binding/depth import parity, final combined regression and verified publishing remain Pending. No whole-controller certification changes; recoloring stays excluded. See MAKE-DUST-WIP.md.
+
 ## 0.25.87 — user scope change and EnvColor consumers (partial, publication pending)
+
+Publication subsequently verified at commit 5ab6bd1bc367c69b47843f387d8dee235fae11bd: 259 Node checks, stage parsing/five sound metadata tests, final EnvColor/actor/scheduling/full battle gates, successful exact-head Pages run 40117965344 and all eleven live text files matched. No new images or original SFF/SND were uploaded. Receipt: outputs/release-02587-verification.json. Earlier pending statements are historical; broader compatibility remains incomplete.
 
 The user no longer requires character recoloring or further RemapPal integration. Normal character preparation stops automatically downloading unused indexed palette assets; historical compatibility tests opt in explicitly. RemapPal is excluded from requested completion, never promoted to certified/implemented. EnvColor now has real global signed/default parameter writes, a simulation timer and opaque renderer layering. Sixteen actual root/normal-Helper/profile/player/under pixel cases pass, including positive expiry, negative persistence and no unsolicited recoloring preload. Full native fidelity and final combined gates remain Pending; see ENVIRONMENT-COLOR-WIP.md.
 
