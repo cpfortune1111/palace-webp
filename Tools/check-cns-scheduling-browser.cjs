@@ -60,6 +60,42 @@ const server=http.createServer((request,response)=>{
    return rows;
   })()`);
   for(const row of results)assert.deepEqual(row.observed,row.kind==='helper-current/global'?[1,0,1,1,0,1]:[1,0,1],JSON.stringify(row));
+  const gravityResults=await run(`(()=>{
+   const saved={profile:combatEngineProfile,velocity:[vy,p2.vy],reaction:p1Reaction,paused:[p1HitPause,p2.hitShake,p2.attackPause]},rows=[];
+   try{
+    p1Reaction=null;
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2]){
+     combatEngineProfile=profile;specialRuntime.reset();p1HitPause=1;p2.hitShake=1;p2.attackPause=1;
+     const caller=specialRoot(player),context=specialRuntime.context(caller),binding=player===1?p1LifecycleBinding:p2,data=characterProfiles.get(battleCharacters[player-1]).battle;
+     const old={globals:data.globalControllers,commands:data.playerCommands,acceleration:data.originalMotionConstants['movement.yaccel'],definition:data.helperStates[991921]};
+     const increment=Math.fround(.25*Math.fround(Number(data.coordinateSystem.webWorldWidth??1280)/Number(data.coordinateSystem.localcoord[0])));
+     try{
+      data.originalMotionConstants['movement.yaccel']=.25;
+      for(const global of [false,true]){
+       const observed=[];
+       for(const literal of ['1 + 0','0.5','-2']){
+        if(player===1)vy=0;else p2.vy=0;
+        executeControllerM1({type:'Gravity',controllerStateNo:global?-2:0,params:{ignorehitpause:literal}},binding,context,{owner:caller,player,schedulingApplied:false});
+        observed.push(player===1?vy:p2.vy);
+       }
+       rows.push({profile,player,kind:global?'gravity-root-global':'gravity-root-current',observed,expected:[increment,0,increment]});
+      }
+      const controllers=()=>['1 + 0','0.5','-2'].map(ignorehitpause=>({type:'Gravity',params:{ignorehitpause},triggers:{1:['1']},triggerall:[]}));
+      data.globalControllers={'-2':controllers()};data.playerCommands=[];data.helperStates[991921]={type:'S',physics:'N',moveType:'I',anim:0,controllers:controllers()};
+      if(player===1)vy=0;else p2.vy=0;
+      lifecycleRuntime.globalState(caller,context,-2,{hitPause:true});
+      rows.push({profile,player,kind:'gravity-root-lifecycle',observed:[player===1?vy:p2.vy],expected:[Math.fround(increment*2)]});
+      specialRuntime.dispatch({type:'Helper',params:{stateno:991921,id:991921,keyctrl:'2'}},caller,context,{},caller,player);
+      const helper=specialRuntime.entities.at(-1);helper.vy=0;helper.hitPause=2;specialRuntime.step();
+      rows.push({profile,player,kind:'gravity-helper-current/global',observed:[helper.vy],expected:[Math.fround(increment*4)]});
+     }finally{data.globalControllers=old.globals;data.playerCommands=old.commands;data.originalMotionConstants['movement.yaccel']=old.acceleration;if(old.definition===undefined)delete data.helperStates[991921];else data.helperStates[991921]=old.definition;specialRuntime.reset()}
+    }
+    return rows;
+   }finally{combatEngineProfile=saved.profile;[vy,p2.vy]=saved.velocity;p1Reaction=saved.reaction;[p1HitPause,p2.hitShake,p2.attackPause]=saved.paused}
+  })()`);
+  assert.equal(gravityResults.length,16);
+  for(const row of gravityResults)assert.deepEqual(row.observed,row.expected,JSON.stringify(row));
+  console.log('Actual Gravity root-current/global/lifecycle and normal-spawn Helper current/global hitpause scheduling preserve native literal gates in both profiles and player directions');
   assert.deepEqual(errors,[]);
   console.log('Actual P1/P2 root-current/root-global and Helper current/global hitpause gates use CNS Atoi literal prefixes and nonzero flags');
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

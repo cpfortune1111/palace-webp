@@ -1,4 +1,14 @@
+## 0.25.76 — Gravity controller consumer (partial, publication pending)
+
+All 231 Node checks pass (outputs/gravity-consumers-node.log). Actual coordinate/ownership and Gravity-specific scheduling consumers have separate passing browser gates. Final versioned combined regression and verified publication remain required; no whole-controller certification changes.
+
+Actual foreign-state coordinate testing caught and fixed an adapter bug: collisionActorData followed the foreign state provider, so Gravity read the wrong acceleration/own scale. A dedicated own-character data path now preserves native ownership. Sixteen actual normal-spawn Helper/root coordinate/ownership cases and sixteen Gravity-specific current/global/lifecycle hitpause scheduling cases pass in both profiles/player directions (outputs/gravity-coordinate-consumers-fixed-browser.log and outputs/gravity-scheduling-browser.log). Complete native lifecycle/compiler/version parity and final combined regression remain Pending; no whole-controller certification changes.
+
+Gravity no longer falls through to unsupported dispatch: a shared consumer applies recipient-owned acceleration with float32 current-state coordinate scaling through real velocity bindings. A failing-before actual root fixture, independent controller checks and both root recipient directions pass (outputs/gravity-controller-before.log and outputs/gravity-controller-root-browser.log). Actual Helper/custom-coordinate/profile/lifecycle coverage, full regression and publication remain Pending. See GRAVITY-CONTROLLER-WIP.md; no whole-controller certification changes.
+
 ## 0.25.75 — reflection window drawing consumers (partial, publication pending)
+
+Publication subsequently verified at commit 5a6c756865f5aa7dfbdac3ca03570c9045d7098a: 230 Node checks, Python stage parsing, fresh actor/scheduling/full battle gates, exact-head successful Pages run 40068894582 and thirteen normalized live file comparisons passed. A prior recheck failed on loopback ERR_NETWORK_CHANGED and unchanged initialization timeout; only a fresh terminal-zero run was accepted. Receipt: outputs/release-02575-verification.json. Earlier pending statements are historical, not full compatibility claims.
 
 All 230 Node checks and Python stage parser checks pass (outputs/reflection-window-import-node.log); actual parser-to-clip and controlled queued raster fixtures pass (outputs/reflection-window-import-pixels-browser.log). Final versioned combined regression and verified publication remain separate gates. No whole-controller certification changes.
 

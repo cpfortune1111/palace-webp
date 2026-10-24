@@ -38,7 +38,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | fallenvshake | redirectid | Review delegated parser/defaults | Pending |
 | forcefeedback | ampl, freq, hi, lo, redirectid, self, time, waveform | Review delegated parser/defaults | Pending |
 | gamemakeanim | pos, random, redirectid, under, value | Review delegated parser/defaults | Pending |
-| gravity | redirectid | Review delegated parser/defaults | Pending |
+| gravity | redirectid | Real shared consumer and executable extraction/velocity tests; see GRAVITY-CONTROLLER-WIP.md; full native fidelity review pending | Pending |
 | helper | clsnproxy, extendsmap, facing, helpertype, id, immortal, inheritchannels, inheritjuggle, keyctrl, kovelocity, name, ownclsnscale, ownpal, ownprojectile, pausemovetime, pos, postype, preserve, redirectid, remappal, size.air.back, size.air.front, size.depth, size.ground.back, size.ground.front, size.head.pos, size.height, size.mid.pos, size.proj.doscale, size.pushfactor, size.shadowoffset, size.weight, size.xscale, size.yscale, standby, stateno, supermovetime | Review delegated parser/defaults | Pending |
 | hitadd | redirectid, value | Review delegated parser/defaults | Pending |
 | hitby | attr, clsn.group, clsn.index, playerid, playerno, redirectid, slot, stack, time, value, value2 | Review delegated parser/defaults | Pending |

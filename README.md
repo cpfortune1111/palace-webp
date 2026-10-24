@@ -1,3 +1,7 @@
+## 0.25.76 — Gravity controller consumer (partial)
+
+Gravity now executes through shared root/Helper dispatch, using recipient-owned acceleration and float32 current-state coordinate conversion. A dedicated own-character data path prevents foreign states from supplying the wrong constant. Actual normal-spawn Helper/root tests cover both profiles, ownership directions and 320/640 coordinates; Gravity-specific hitpause scheduling tests cover current/global/lifecycle adapters. Full native persistence/pause/compiler/version fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.75 — Reflection window consumers (partial)
 
 ModifyReflection window now reaches root/Helper clipping with caller/recipient scaling, transient reset and native stage-origin/reflected-Y rules. Supported stage window literals pass through the production parser into live fallback clips; controlled queued raster tests prove inside/outside pixels. Stage intensity zero now suppresses all reflections even with positive actor overrides. Remaining stage coordinate systems, parser/compiler/version behavior and full renderer/controller compatibility remain Pending; final versioned regression and verified publication are separate gates.

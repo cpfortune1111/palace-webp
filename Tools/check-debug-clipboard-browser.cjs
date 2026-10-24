@@ -1172,6 +1172,50 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
    assert.equal(row.hidden,true);assert.equal(row.visible,true);assert.equal(row.disabled,true);assert.equal(row.noShadow,true);assert.equal(row.visibleRestored,true);assert.equal(row.rootNoShadow,true);assert.equal(row.rootRestored,true);assert.deepEqual(row.local,emptyReflection());assert.equal(row.global,202);assert.equal(row.resumed,-1);
   }
   console.log('Spawned Helpers consume redirected ModifyReflection geometry/color/alpha and native preparation reset, retaining through global pause in both player directions');
+  const rootGravity=await run(`(()=>{
+   const savedVelocity=[vy,p2.vy],reaction=p1Reaction,data=[1,2].map(player=>collisionActorData(specialRoot(player))),constants=data.map(value=>value.originalMotionConstants['movement.yaccel']),rows=[];
+   try{
+    p1Reaction=null;data[0].originalMotionConstants['movement.yaccel']=1.25;data[1].originalMotionConstants['movement.yaccel']=3.75;
+    for(const player of [1,2]){
+     vy=2.5;p2.vy=2.5;
+     const target=specialRoot(player),caller=specialRoot(3-player),context=specialRuntime.context(caller),binding=3-player===1?p1LifecycleBinding:p2;
+     executeControllerM1({type:'Gravity',params:{redirectid:String(player)}},binding,context,{owner:caller,player:3-player,schedulingApplied:true});
+     rows.push({player,actual:player===1?vy:p2.vy,other:player===1?p2.vy:vy,expected:Math.fround(2.5+Math.fround((player===1?1.25:3.75)*collisionWorldRatio(data[player-1])))});
+    }
+    return rows;
+   }finally{[vy,p2.vy]=savedVelocity;p1Reaction=reaction;for(let index=0;index<2;index++)data[index].originalMotionConstants['movement.yaccel']=constants[index]}
+  })()`);
+  for(const row of rootGravity){assert.equal(row.actual,row.expected,JSON.stringify(row));assert.equal(row.other,2.5)}
+  console.log('Actual redirected Gravity changes only recipient root velocity using its own acceleration constant');
+  const gravityCoordinates=await run(`(()=>{
+   const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={profile:combatEngineProfile,entities:[...specialRuntime.entities],owners:[...customStateOwners],velocity:[vy,p2.vy],reaction:p1Reaction,data:data.map(value=>({coordinate:value.coordinateSystem.localcoord,acceleration:value.originalMotionConstants['movement.yaccel'],definition:value.helperStates[991920]}))},rows=[];
+   try{
+    p1Reaction=null;data[0].coordinateSystem.localcoord=[320,240];data[1].coordinateSystem.localcoord=[640,480];data[0].originalMotionConstants['movement.yaccel']=.25;data[1].originalMotionConstants['movement.yaccel']=.75;
+    for(const value of data)value.helperStates[991920]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const foreign of [false,true]){
+     combatEngineProfile=profile;specialRuntime.entities.length=0;customStateOwners.fill(null);vy=3.125;p2.vy=3.125;
+     let actor=specialRoot(player);
+     if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991920,id:991920}},actor,specialRuntime.context(actor),{},actor,player);actor=specialRuntime.entities.at(-1);actor.vy=3.125}
+     if(foreign){if(kind==='helper')actor.stateOwner=battleCharacters[2-player];else customStateOwners[player-1]=battleCharacters[2-player]}
+     const ownCoordinate=player===1?320:640,stateCoordinate=foreign?(player===1?640:320):ownCoordinate,worldWidth=Number(data[player-1].coordinateSystem.webWorldWidth??1280),ownScale=Math.fround(worldWidth/ownCoordinate),stateScale=Math.fround(worldWidth/stateCoordinate);
+     const expected=Math.fround(Math.fround(Math.fround(3.125/stateScale)+Math.fround(Math.fround(player===1?.25:.75)*Math.fround(ownScale/stateScale)))*stateScale);
+     const caller=specialRoot(3-player),binding=3-player===1?p1LifecycleBinding:p2,context=specialRuntime.context(caller),targetId=kind==='helper'?actor.instanceId:player;
+     executeControllerM1({type:'Gravity',params:{redirectid:String(targetId)}},binding,context,{owner:caller,player:3-player,schedulingApplied:true});
+     const actual=kind==='helper'?actor.vy:player===1?vy:p2.vy,roots=[vy,p2.vy];
+     if(kind==='helper')actor.vy=3.125;else if(player===1)vy=3.125;else p2.vy=3.125;
+     executeControllerM1({type:'Gravity',params:{}},kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     const direct=kind==='helper'?actor.vy:player===1?vy:p2.vy;
+     rows.push({profile,player,kind,foreign,actual,direct,expected,roots});
+    }
+    return rows;
+   }finally{
+    combatEngineProfile=saved.profile;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);customStateOwners.splice(0,2,...saved.owners);[vy,p2.vy]=saved.velocity;p1Reaction=saved.reaction;
+    for(let index=0;index<2;index++){data[index].coordinateSystem.localcoord=saved.data[index].coordinate;data[index].originalMotionConstants['movement.yaccel']=saved.data[index].acceleration;if(saved.data[index].definition===undefined)delete data[index].helperStates[991920];else data[index].helperStates[991920]=saved.data[index].definition}
+   }
+  })()`);
+  assert.equal(gravityCoordinates.length,16);
+  for(const row of gravityCoordinates){assert.equal(row.actual,row.expected,JSON.stringify(row));assert.equal(row.direct,row.expected,JSON.stringify(row));assert.equal(row.roots[2-row.player],3.125,JSON.stringify(row));if(row.kind==='helper')assert.deepEqual(row.roots,[3.125,3.125],JSON.stringify(row))}
+  console.log('Actual normal-spawn Helper/root Gravity uses recipient constants and foreign-state coordinate conversion in sixteen profile/player/ownership cases');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}
