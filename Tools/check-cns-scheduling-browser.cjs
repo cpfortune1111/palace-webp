@@ -96,6 +96,60 @@ const server=http.createServer((request,response)=>{
   assert.equal(gravityResults.length,16);
   for(const row of gravityResults)assert.deepEqual(row.observed,row.expected,JSON.stringify(row));
   console.log('Actual Gravity root-current/global/lifecycle and normal-spawn Helper current/global hitpause scheduling preserve native literal gates in both profiles and player directions');
+  const resetResults=await run(`(()=>{
+   const saved={profile:combatEngineProfile,reaction:p1Reaction,p1:[moveContact,moveHit,moveGuarded,p1HitPause],p2:[p2.moveContact,p2.moveHit,p2.moveGuarded,p2.hitShake,p2.attackPause],clocks:[...reversedMoveClocks].map(([key,value])=>({key,value,data:{...value}})),flags:[...moveCounteredFlags]},rows=[];
+   const seed=actor=>{Object.assign(actor,{moveContact:9,moveHit:4,moveGuarded:2});if(actor.kind!=='helper'){if(fighterPlayer(actor)===1){moveContact=9;moveHit=4;moveGuarded=2}else Object.assign(p2,{moveContact:9,moveHit:4,moveGuarded:2})}const key=hitDefinitionOwnerKey(actor);reversedMoveClocks.set(key,{type:'hit',time:7,countered:true});moveCounteredFlags.set(key,true)};
+   const cleared=actor=>reversedMoveClocks.get(hitDefinitionOwnerKey(actor))?.time===0&&!moveCounteredFlags.get(hitDefinitionOwnerKey(actor));
+   try{
+    p1Reaction=null;
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2]){
+     combatEngineProfile=profile;specialRuntime.reset();p1HitPause=1;p2.hitShake=1;p2.attackPause=1;
+     const caller=specialRoot(player),context=specialRuntime.context(caller),binding=player===1?p1LifecycleBinding:p2,data=characterProfiles.get(battleCharacters[player-1]).battle,old={globals:data.globalControllers,commands:data.playerCommands,definition:data.helperStates[991922]};
+     const controller=params=>({type:'MoveHitReset',params,triggers:{1:['1']},triggerall:[]});
+     try{
+      data.playerCommands=[];
+      for(const kind of ['root-current','root-global','root-lifecycle','helper-current','helper-global']){
+       const observed=[];
+       for(const literal of ['1 + 0','0.5','-2']){
+        const source=controller({ignorehitpause:literal});
+        data.globalControllers=kind==='root-lifecycle'||kind==='helper-global'?{'-2':[source]}:{};
+        if(kind.startsWith('helper')){
+         specialRuntime.reset();data.helperStates[991922]={type:'S',physics:'N',moveType:'I',anim:0,controllers:kind==='helper-current'?[source]:[]};
+         specialRuntime.dispatch({type:'Helper',params:{stateno:991922,id:991922,keyctrl:'2'}},caller,context,{},caller,player);
+         const helper=specialRuntime.entities.at(-1);helper.hitPause=2;seed(helper);specialRuntime.step();observed.push(cleared(helper));
+        }else{
+         seed(caller);
+         if(kind==='root-lifecycle')lifecycleRuntime.globalState(caller,context,-2,{hitPause:true});
+         else executeControllerM1({...source,controllerStateNo:kind==='root-global'?-2:0},binding,context,{owner:caller,player,schedulingApplied:false});
+         observed.push(cleared(caller));
+        }
+       }
+       rows.push({profile,player,kind,observed,expected:[true,false,true]});
+      }
+      for(const global of [false,true]){
+       const source=controller({persistent:'0',ignorehitpause:'1'}),observed=[];
+       for(let attempt=0;attempt<3;attempt++){seed(caller);executeControllerM1({...source,controllerSchedulingKey:source,controllerStateNo:global?-2:0},binding,context,{owner:caller,player,schedulingApplied:false});observed.push(cleared(caller))}
+       rows.push({profile,player,kind:global?'root-global-persistence':'root-current-persistence',observed,expected:global?[true,true,true]:[true,false,false]});
+      }
+      for(const global of [false,true]){
+       specialRuntime.reset();const source=controller({persistent:'0'}),observed=[];data.globalControllers=global?{'-2':[source]}:{};data.helperStates[991922]={type:'S',physics:'N',moveType:'I',anim:0,controllers:global?[]:[source]};
+       specialRuntime.dispatch({type:'Helper',params:{stateno:991922,id:991922,keyctrl:'2'}},caller,context,{},caller,player);const helper=specialRuntime.entities.at(-1);helper.created=combatTraceTick-1;helper.hitPause=0;
+       for(let attempt=0;attempt<3;attempt++){seed(helper);specialRuntime.step();observed.push(cleared(helper))}
+       rows.push({profile,player,kind:global?'helper-global-persistence':'helper-current-persistence',observed,expected:global?[true,true,true]:[true,false,false]});
+      }
+      specialRuntime.reset();data.globalControllers={};data.helperStates[991922]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[controller({})]};specialRuntime.dispatch({type:'Helper',params:{stateno:991922,id:991922,keyctrl:'2'}},caller,context,{},caller,player);
+      const helper=specialRuntime.entities.at(-1);helper.created=combatTraceTick-1;helper.hitPause=0;specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};specialRuntime.moveTimes.set(helper.key,{normal:0});seed(helper);specialRuntime.step();const blocked=cleared(helper);specialRuntime.moveTimes.set(helper.key,{normal:1});seed(helper);specialRuntime.step();
+      rows.push({profile,player,kind:'helper-global-pause-allowance',observed:[blocked,cleared(helper)],expected:[false,true]});
+     }finally{data.globalControllers=old.globals;data.playerCommands=old.commands;if(old.definition===undefined)delete data.helperStates[991922];else data.helperStates[991922]=old.definition;specialRuntime.reset()}
+    }
+    return rows;
+   }finally{
+    combatEngineProfile=saved.profile;p1Reaction=saved.reaction;[moveContact,moveHit,moveGuarded,p1HitPause]=saved.p1;[p2.moveContact,p2.moveHit,p2.moveGuarded,p2.hitShake,p2.attackPause]=saved.p2;reversedMoveClocks.clear();for(const entry of saved.clocks){Object.assign(entry.value,entry.data);reversedMoveClocks.set(entry.key,entry.value)}moveCounteredFlags.clear();for(const [key,value]of saved.flags)moveCounteredFlags.set(key,value);
+   }
+  })()`);
+  assert.equal(resetResults.length,40);
+  for(const row of resetResults)assert.deepEqual(row.observed,row.expected,JSON.stringify(row));
+  console.log('Actual MoveHitReset omitted-recipient root/Helper current/global/lifecycle hitpause, persistence and global-pause allowance cases pass in both profiles and player directions');
   assert.deepEqual(errors,[]);
   console.log('Actual P1/P2 root-current/root-global and Helper current/global hitpause gates use CNS Atoi literal prefixes and nonzero flags');
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

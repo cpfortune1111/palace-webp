@@ -1216,6 +1216,33 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(gravityCoordinates.length,16);
   for(const row of gravityCoordinates){assert.equal(row.actual,row.expected,JSON.stringify(row));assert.equal(row.direct,row.expected,JSON.stringify(row));assert.equal(row.roots[2-row.player],3.125,JSON.stringify(row));if(row.kind==='helper')assert.deepEqual(row.roots,[3.125,3.125],JSON.stringify(row))}
   console.log('Actual normal-spawn Helper/root Gravity uses recipient constants and foreign-state coordinate conversion in sixteen profile/player/ownership cases');
+  const moveResetRows=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={profile:combatEngineProfile,entities:[...specialRuntime.entities],reaction:p1Reaction,p1:[moveContact,moveHit,moveGuarded,p1HitCount],p2:[p2.moveContact,p2.moveHit,p2.moveGuarded,p2.hitCount],clocks:[...reversedMoveClocks].map(([key,value])=>({key,value,data:{...value}})),flags:[...moveCounteredFlags],hitData:[...moveHitDataStore].map(([key,value])=>({key,value,data:{...value}})),definitions:data.map(value=>value.helperStates[991930])},rows=[];
+   try{
+    for(const value of data)value.helperStates[991930]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of player===1?['root','helper','reaction']:['root','helper'])for(const contact of ['hit','guarded','reversed','none']){
+     combatEngineProfile=profile;specialRuntime.entities.length=0;p1Reaction=null;moveContact=9;moveHit=4;moveGuarded=2;p1HitCount=11;Object.assign(p2,{moveContact:9,moveHit:4,moveGuarded:2,hitCount:12});
+     for(const key of ['root1','root2']){reversedMoveClocks.delete(key);moveCounteredFlags.delete(key)}
+     let actor=specialRoot(player);
+     if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991930,id:991930}},actor,specialRuntime.context(actor),{},actor,player);actor=specialRuntime.entities.at(-1);Object.assign(actor,{moveContact:9,moveHit:4,moveGuarded:2,hitCount:13})}
+     if(kind==='reaction'){p1Reaction={...actor,moveContact:9,moveHit:4,moveGuarded:2};actor=specialRoot(1)}
+     const key=hitDefinitionOwnerKey(actor),clock={type:contact==='none'?'hit':contact,time:7,countered:true};if(contact!=='none')reversedMoveClocks.set(key,clock);moveCounteredFlags.set(key,true);Object.assign(moveHitDataFor(actor),{frame:true,overridden:true,playerid:123,playerno:1,sparkx:7,sparky:8});
+     const staleContext=fighterExpressionContext(actor,specialRoot(3-player));
+     const caller=specialRoot(3-player),context=specialRuntime.context(caller),binding=3-player===1?p1LifecycleBinding:p2;
+     executeControllerM1({type:'MoveHitReset',params:{redirectid:String(kind==='helper'?actor.instanceId:player)}},binding,context,{owner:caller,player:3-player,schedulingApplied:true});
+     const target=kind==='helper'?actor:specialRoot(player),query=fighterExpressionContext(target,specialRoot(3-player)),other=fighterExpressionContext(specialRoot(3-player),target),raw=kind==='helper'?[actor.moveContact,actor.moveHit,actor.moveGuarded]:player===1?[moveContact,moveHit,moveGuarded]:[p2.moveContact,p2.moveHit,p2.moveGuarded];
+     rows.push({profile,player,kind,contact,raw,queries:['MoveContact','MoveHit','MoveGuarded','MoveReversed','MoveCountered'].map(name=>evalM1(name,query)),stale:['MoveContact','MoveHit','MoveGuarded','MoveReversed','MoveCountered'].map(name=>evalM1(name,staleContext)),other:['MoveContact','MoveHit','MoveGuarded'].map(name=>evalM1(name,other)),count:kind==='helper'?actor.hitCount:player===1?p1HitCount:p2.hitCount,metadata:structuredClone(moveHitDataFor(actor)),clock:{...reversedMoveClocks.get(key)},reaction:kind==='reaction'?[p1Reaction.moveContact,p1Reaction.moveHit,p1Reaction.moveGuarded]:null});
+    }
+    return rows;
+   }finally{
+    combatEngineProfile=saved.profile;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);p1Reaction=saved.reaction;[moveContact,moveHit,moveGuarded,p1HitCount]=saved.p1;[p2.moveContact,p2.moveHit,p2.moveGuarded,p2.hitCount]=saved.p2;
+    reversedMoveClocks.clear();for(const entry of saved.clocks){Object.assign(entry.value,entry.data);reversedMoveClocks.set(entry.key,entry.value)}moveCounteredFlags.clear();for(const [key,value]of saved.flags)moveCounteredFlags.set(key,value);moveHitDataStore.clear();for(const entry of saved.hitData){Object.assign(entry.value,entry.data);moveHitDataStore.set(entry.key,entry.value)}
+    for(let index=0;index<2;index++)if(saved.definitions[index]===undefined)delete data[index].helperStates[991930];else data[index].helperStates[991930]=saved.definitions[index];
+   }
+  })()`);
+  assert.equal(moveResetRows.length,40);
+  for(const row of moveResetRows){assert.deepEqual(row.raw,[0,0,0],JSON.stringify(row));assert.deepEqual(row.queries,[0,0,0,0,0],JSON.stringify(row));assert.deepEqual(row.stale,[0,0,0,0,0],JSON.stringify(row));assert.deepEqual(row.other,[9,4,2],JSON.stringify(row));assert.equal(row.count,row.kind==='helper'?13:row.player===1?11:12);assert.equal(row.metadata.frame,true);assert.equal(row.metadata.overridden,true);assert.equal(row.metadata.playerid,123);assert.equal(row.metadata.sparkx,7);assert.deepEqual(row.clock,{type:row.contact==='none'?'hit':row.contact,time:0,countered:false});if(row.reaction)assert.deepEqual(row.reaction,[0,0,0])}
+  console.log('Actual MoveHitReset clears live/stale contact queries for roots, reaction roots and normal-spawn Helpers while preserving hit counts and MoveHitVar data in forty cases');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

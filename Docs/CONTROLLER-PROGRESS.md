@@ -1,4 +1,12 @@
+## 0.25.77 — MoveHitReset controller consumer (partial, publication pending)
+
+Forty additional actual scheduling groups cover omitted-recipient root/Helper current/global/lifecycle dispatch, hitpause literal gates, persistent zero current/global behavior and global-pause Helper movement allowance. Nonzero clocks are reseeded before every idempotent reset, and normal Helper persistence uses real source-state steps (outputs/move-hit-reset-scheduling-browser.log). Complete native diagnostics/compiler/version/lifecycle parity and final versioned regression/publication remain Pending.
+
+MoveHitReset now has real shared root/Helper dispatch instead of an unsupported fallback. Native contact time/counter flags clear without resetting counts or MoveHitVar data; P1 reaction storage and already-created expression contexts are covered. A failing-before actual call, independent extraction/clock checks and forty actual profile/player/root-or-normal-spawn-Helper/reaction/contact-kind cases pass (outputs/move-hit-reset-before.log and outputs/move-hit-reset-live-stale-browser.log). Full scheduling/lifecycle/compiler/version fidelity and final regression/publication remain Pending. See MOVE-HIT-RESET-WIP.md; no whole-controller certification changes.
+
 ## 0.25.76 — Gravity controller consumer (partial, publication pending)
+
+Publication subsequently verified at commit ebe2aeca220b2001b9829924285a526fe750c7de: 231 Node checks, Python stage parsing, final actor/scheduling/full battle suites, exact-head successful Pages run 40070904837 and nine normalized live file comparisons passed. Receipt: outputs/release-02576-verification.json. Earlier pending statements are historical, not full native compatibility claims.
 
 All 231 Node checks pass (outputs/gravity-consumers-node.log). Actual coordinate/ownership and Gravity-specific scheduling consumers have separate passing browser gates. Final versioned combined regression and verified publication remain required; no whole-controller certification changes.
 

@@ -1,3 +1,7 @@
+## 0.25.77 — MoveHitReset controller consumer (partial)
+
+MoveHitReset now executes for roots, reaction roots and Helpers, clearing contact time/counter flags without discarding hit counts or MoveHitVar data. Fresh and pre-existing expression contexts observe reset state. Actual source-state tests cover both profiles/player directions, omitted/redirected recipients, hitpause, persistent-zero current/global behavior and global-pause Helper allowance. Full native diagnostics/compiler/version/lifecycle fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.76 — Gravity controller consumer (partial)
 
 Gravity now executes through shared root/Helper dispatch, using recipient-owned acceleration and float32 current-state coordinate conversion. A dedicated own-character data path prevents foreign states from supplying the wrong constant. Actual normal-spawn Helper/root tests cover both profiles, ownership directions and 320/640 coordinates; Gravity-specific hitpause scheduling tests cover current/global/lifecycle adapters. Full native persistence/pause/compiler/version fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
