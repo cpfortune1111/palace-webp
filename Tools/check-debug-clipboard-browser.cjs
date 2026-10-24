@@ -1476,6 +1476,110 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(hitStoppedSounds.length,64);
   for(const row of hitStoppedSounds){assert.equal(row.actualGuard,row.guarded,JSON.stringify(row));assert.deepEqual(row.active,row.guarded||!row.reaction?[true,true,true]:[false,false,true],JSON.stringify(row));assert.deepEqual(row.graphs,row.active);assert.equal(row.opponent,true)}
   console.log('Actual qualified root/Helper hit resolution selects ground/air reaction types and preserves guard/None audio in sixty-four profile/player cases');
+  const decodedLoops=await run(`(async()=>{
+   const {createDecodedSoundFrames}=await import('./Engine/decoded-sound-frames.js'),{createSoundSampleLooper}=await import('./Engine/sound-sample-looper.js'),{decodeNativePcmWave}=await import('./Engine/native-pcm-wave.js'),rows=[];
+   for(const channels of [1,2]){
+    const frames=8,rate=22050,bytes=new ArrayBuffer(44+frames*channels*2),header=new DataView(bytes),word=(offset,value)=>{for(let index=0;index<value.length;index++)header.setUint8(offset+index,value.charCodeAt(index))};
+    word(0,'RIFF');header.setUint32(4,bytes.byteLength-8,true);word(8,'WAVE');word(12,'fmt ');header.setUint32(16,16,true);header.setUint16(20,1,true);header.setUint16(22,channels,true);header.setUint32(24,rate,true);header.setUint32(28,rate*channels*2,true);header.setUint16(32,channels*2,true);header.setUint16(34,16,true);word(36,'data');header.setUint32(40,frames*channels*2,true);
+    for(let frame=0;frame<frames;frame++)for(let channel=0;channel<channels;channel++)header.setInt16(44+(frame*channels+channel)*2,channel===0?frame*2048:-frame*1024,true);
+    const decoder=new OfflineAudioContext(channels,1,rate),browserDecoded=await decoder.decodeAudioData(bytes.slice(0)),decoded=decodeNativePcmWave(bytes,decoder),metadata={sourceSampleRate:rate,sourceFrames:frames,sourceChannels:channels},source=createDecodedSoundFrames(decoded,metadata),loop=createSoundSampleLooper(source,{repeatCount:1,loopStart:2,loopEnd:6}),result=loop.read(12);
+    const context=new OfflineAudioContext(2,64,rate),buffer=context.createBuffer(2,64,rate);for(const [frame,sample]of result.samples.entries()){buffer.getChannelData(0)[frame]=sample[0];buffer.getChannelData(1)[frame]=sample[1]}
+    const output=context.createBufferSource();output.buffer=buffer;output.connect(context.destination);output.start();const rendered=await context.startRendering();
+    const seek=createDecodedSoundFrames(decoded,metadata);seek.seek(3);rows.push({channels,length:result.samples.length,ok:result.ok,left:[...rendered.getChannelData(0)].slice(0,12),right:[...rendered.getChannelData(1)].slice(0,12),seek:seek.read(2).samples,browserFirst:browserDecoded.getChannelData(0)[1],nativeFirst:decoded.getChannelData(0)[1]});
+   }
+   return rows;
+  })()`);
+  assert.equal(decodedLoops.length,2);
+  for(const row of decodedLoops){const sequence=[0,1,2,3,4,5,2,3,4,5];assert.equal(row.length,10);assert.equal(row.ok,false);assert.equal(row.nativeFirst,1/16);assert.ok(Number.isFinite(row.browserFirst));assert.deepEqual(row.left,[...sequence.map(frame=>frame/16),0,0]);assert.deepEqual(row.right,[...sequence.map(frame=>row.channels===1||frame===0?frame/16:-frame/32),0,0]);assert.deepEqual(row.seek,[3,4].map(frame=>[frame/16,row.channels===1?frame/16:-frame/32]))}
+  console.log('Actual WAV decode, native-frame finite-loop/seek and offline waveform rendering preserve exact mono/stereo sample positions');
+  const compressedFrames=await run(`(async()=>{
+   const {createDecodedSoundFrames}=await import('./Engine/decoded-sound-frames.js'),{createNativeSoundLoader}=await import('./Engine/native-sound-loader.js'),rows=[];let requests=0;const loader=createNativeSoundLoader({fetchAudio:url=>{requests++;return fetch(url)}});
+   for(const [character,base]of [['Moon','./Char/Moon/Sound/'],['Jupiter','./Char/Jupiter/Sound/'],['Neptune','./Char/Neptune/Sound/'],['Saturn','./Char/Saturn/Sound/'],['Venus','./Char/Venus/Sound/'],['Common','./Sound/Common/']]){
+    const response=await fetch(base+'sounds.json');if(!response.ok)throw Error('Sound metadata HTTP '+response.status);const sounds=await response.json();
+    for(const [key,metadata]of Object.entries(sounds)){
+     const url=base+(metadata.nativeFile??metadata.file);let decoded;if(rows.length===0){const controller=new AbortController(),cancelled=loader.load(url,metadata,{signal:controller.signal}),shared=loader.load(url,metadata);controller.abort();let aborted=false;try{await cancelled}catch(error){aborted=error.name==='AbortError'}if(!aborted)throw Error('Native sound consumer did not cancel');decoded=await shared}else decoded=await loader.load(url,metadata);if(await loader.load(url,metadata)!==decoded)throw Error('Native sound cache replaced decoded buffer');let validationError=null;try{createDecodedSoundFrames(decoded,metadata)}catch(error){validationError=error.message}
+     rows.push({character,key,nativeVariant:!!metadata.nativeFile,rate:decoded.sampleRate,expectedRate:metadata.sourceSampleRate,frames:decoded.length,expectedFrames:metadata.sourceFrames,channels:decoded.numberOfChannels,expectedChannels:metadata.sourceChannels,validationError});
+    }
+   }
+   if(requests!==338||loader.size()!==338)throw Error('Unexpected native decode cache size/request count');return rows;
+  })()`);
+  console.log('Compressed native-frame mismatch inventory',JSON.stringify(compressedFrames.filter(row=>row.validationError)));
+  assert.equal(compressedFrames.length,338);assert.equal(compressedFrames.filter(row=>row.nativeVariant).length,22);for(const row of compressedFrames){assert.equal(row.rate,row.expectedRate,JSON.stringify(row));assert.equal(row.frames,row.expectedFrames,JSON.stringify(row));assert.equal(row.channels,row.expectedChannels,JSON.stringify(row));assert.equal(row.validationError,null,JSON.stringify(row))}
+  console.log('All 338 existing character/common sounds decode at exact native frame counts/rates/channels with verified PCM/lossless hashes and no padding guesses');
+  const workletStreams=await run(`(async()=>{
+   const cases=[['once',{}],['fast',{freqMul:2}],['half',{freqMul:.5,quality:1}],['seek',{startPosition:3}],['invalid-seek',{startPosition:99}],['loop',{loopCount:2,loopStart:2,loopEnd:6}],['fast-loop',{loopCount:2,loopStart:2,loopEnd:6,freqMul:2}],['endless',{loopCount:-1,loopStart:2,loopEnd:6}],['half-loop',{loopCount:2,loopStart:2,loopEnd:6,freqMul:.5,quality:1}]],rows=[];
+   for(const count of [1,2])for(const [name,params]of cases){
+    const context=new OfflineAudioContext(2,64,22050);await context.audioWorklet.addModule('./Engine/sound-playback-worklet.js');const channels=Array.from({length:count},(_,channel)=>Float32Array.from({length:8},(_,frame)=>channel===0?frame/16:frame===0?0:-frame/32));
+    const node=new AudioWorkletNode(context,'palace-native-sound',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2],processorOptions:{channels,metadata:{sourceSampleRate:22050,sourceFrames:8,sourceChannels:count},params}});let finish;const ended=new Promise(resolve=>{finish=resolve});node.port.onmessage=event=>{if(event.data.type==='ended')finish(event.data.frames)};node.connect(context.destination);const rendered=await context.startRendering();
+    const frames=name==='endless'?null:await Promise.race([ended,new Promise((resolve,reject)=>setTimeout(()=>reject(Error('Missing worklet completion '+name)),2000))]);rows.push({count,name,frames,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)]});node.disconnect();node.port.close();
+   }
+   return rows;
+  })()`);
+  const plain=[0,1,2,3,4,5,6,7],looped=[0,1,2,3,4,5,2,3,4,5],halved=values=>Array.from({length:values.length*2},(_,index)=>{const frame=Math.floor(index/2);return values[frame]+(index%2)*.5*((values[frame+1]??values[frame])-values[frame])}),expectedStreams={once:plain,fast:[0,2,4,6],half:halved(plain),seek:[3,4,5,6,7],'invalid-seek':plain,loop:looped,'fast-loop':[0,2,4,2,4],endless:Array.from({length:64},(_,index)=>index<6?index:2+(index-6)%4),'half-loop':halved(looped)};
+  assert.equal(workletStreams.length,18);
+  for(const row of workletStreams){const values=expectedStreams[row.name];assert.equal(row.frames,row.name==='endless'?null:values.length,JSON.stringify({name:row.name,count:row.count}));for(let frame=0;frame<64;frame++){const value=values[frame]??0;assert.ok(Math.abs(row.left[frame]-value/16)<1e-7,JSON.stringify({name:row.name,count:row.count,frame}));assert.ok(Math.abs(row.right[frame]-(row.count===1?value/16:-value/32))<1e-7,JSON.stringify({name:row.name,count:row.count,frame}))}}
+  console.log('Actual AudioWorklet renders native speed, finite/infinite loop, seek and completion semantics for mono/stereo in eighteen cases');
+  const nativeChannelPlayback=await run(`(async()=>{
+   const {createNativeSoundLoader}=await import('./Engine/native-sound-loader.js'),{createNativeSoundPlayer}=await import('./Engine/native-sound-player.js'),{createCharacterSoundOutput}=await import('./Engine/character-sound-output.js'),metadata=(await (await fetch('./Char/Moon/Sound/sounds.json')).json())['0-25'],url='./Char/Moon/Sound/'+metadata.nativeFile,loader=createNativeSoundLoader(),decoded=await loader.load(url,metadata),rows=[];
+   for(const mode of ['play','cancel','replace']){
+    const context=new OfflineAudioContext(2,64,metadata.sourceSampleRate),channels=createCharacterSoundChannels(),errors=[],output=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null,onError:error=>errors.push(error.message)}),player=createNativeSoundPlayer({loader,isActive:record=>channels.entries().includes(record)});let ended=0;
+    const create=volume=>{const sound=new Audio();sound.volume=volume;let record;record=channels.add('character:1',7,sound,()=>{player.stop(record);output.release(record)});record.nativePlayback=true;output.setPan(record,{pan:0,sourceId:-1},.5);return record};
+    const start=record=>player.play(record,{context:output.contextFor(record),url,metadata,params:{startPosition:metadata.sourceFrames-8},attach:(record,node)=>output.attach(record,node),onEnded:record=>{ended++;channels.release(record)},onError:error=>{errors.push(error.message);channels.release(record)}});
+    const first=create(.25),initial=start(first);let ready,oldReady=null;
+    if(mode==='cancel'){channels.stopOwner('character:1',7);ready=await initial.ready}
+    else if(mode==='replace'){const replacement=create(.5),next=start(replacement);oldReady=await initial.ready;ready=await next.ready}
+    else ready=await initial.ready;
+    const active=channels.entries().length,players=player.size(),graphs=output.size(),rendered=await context.startRendering();if(mode!=='cancel')await new Promise(resolve=>setTimeout(resolve,0));
+    rows.push({mode,ready,oldReady,active,players,graphs,ended,remaining:channels.entries().length,remainingPlayers:player.size(),remainingGraphs:output.size(),errors,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],expectedLeft:[...decoded.getChannelData(0)].slice(-8),expectedRight:[...decoded.getChannelData(1)].slice(-8)});channels.stopAll();
+   }
+   return rows;
+  })()`);
+  assert.equal(nativeChannelPlayback.length,3);
+  for(const row of nativeChannelPlayback){const cancelled=row.mode==='cancel',gain=row.mode==='replace'?.25:.125;assert.equal(row.ready,!cancelled,JSON.stringify(row));if(row.mode==='replace')assert.equal(row.oldReady,false);assert.equal(row.active,cancelled?0:1);assert.equal(row.players,cancelled?0:1);assert.equal(row.graphs,cancelled?0:1);assert.equal(row.ended,cancelled?0:1);assert.equal(row.remaining,0);assert.equal(row.remainingPlayers,0);assert.equal(row.remainingGraphs,0);assert.deepEqual(row.errors,[]);for(let frame=0;frame<64;frame++){assert.equal(row.left[frame],cancelled||frame>=8?0:row.expectedLeft[frame]*gain,JSON.stringify({mode:row.mode,frame}));assert.equal(row.right[frame],cancelled||frame>=8?0:row.expectedRight[frame]*gain,JSON.stringify({mode:row.mode,frame}))}}
+  console.log('Actual native player/registry/mixer renders owned gain, prevents cancelled/replaced late playback and clears finite completion without stale audio');
+  const nullSoundContexts=await run(`(()=>{
+   const before=characterSoundChannels.entries().length,players=[];
+   for(const player of [1,2]){const actor=specialRoot(player);executeControllerM1({type:'PlaySnd',params:{value:'-1,0',loop:'1'}},player===1?p1LifecycleBinding:p2,null,{owner:actor,player,schedulingApplied:true});players.push(player)}
+   return {players,before,after:characterSoundChannels.entries().length};
+  })()`);
+  assert.deepEqual(nullSoundContexts.players,[1,2]);assert.equal(nullSoundContexts.after,nullSoundContexts.before);
+  console.log('Actual PlaySnd accepts omitted expression contexts in both root directions and retains negative-group rejection');
+  const nativePlaySnd=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true])for(const cancel of [false,true])for(const finiteLoop of [false,true]){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     executeControllerM1({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',freqmul:common?'1':'2',startposition:String(metadata.sourceFrames-8),...(finiteLoop?{loopcount:'2',loopstart:String(metadata.sourceFrames-6),loopend:String(metadata.sourceFrames-2)}:{}),abspan:'0',volumescale:'100'}},player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();if(cancel)executeControllerM1({type:'StopSnd',params:{channel:'7'}},player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     const ready=await record.nativeReady,snapshot=characterSoundOutput.snapshot(record),descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();await new Promise(resolve=>setTimeout(resolve,0));
+     const ownVolume=gravityActorData(actor).dataConstants['data.volume'],gain=common?1:Math.min(512,Math.max(0,ownVolume))/256;
+     rows.push({player,common,cancel,finiteLoop,ready,native:!!record.nativePlayback,attached:snapshot?.attached??false,remaining:characterSoundChannels.entries().length,players:nativeSoundPlayer.size(),graphs:characterSoundOutput.size(),gain,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(-8),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(-8)});characterSoundChannels.stopAll();
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(nativePlaySnd.length,16);
+  for(const row of nativePlaySnd){assert.equal(row.ready,!row.cancel);assert.equal(row.native,true);assert.equal(row.attached,!row.cancel);assert.equal(row.remaining,0);assert.equal(row.players,0);assert.equal(row.graphs,0);const sequence=row.finiteLoop?[0,1,2,3,4,5,2,3,4,5]:[0,1,2,3,4,5,6,7],step=row.common?1:2;for(let frame=0;frame<64;frame++){const sourceIndex=sequence[frame*step],detail=JSON.stringify({player:row.player,common:row.common,cancel:row.cancel,finiteLoop:row.finiteLoop,frame});assert.equal(row.left[frame],row.cancel||sourceIndex===undefined?0:Math.fround(row.sourceLeft[sourceIndex]*row.gain),detail);assert.equal(row.right[frame],row.cancel||sourceIndex===undefined?0:Math.fround(row.sourceRight[sourceIndex]*row.gain),detail)}}
+  console.log('Actual PlaySnd own/common dispatch reaches native worklet speed/seek/finite-loop output and StopSnd prevents late playback for P1/P2 in sixteen cases');
+  const infinitePlaySnd=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true]){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',loop:'1',loopstart:String(metadata.sourceFrames-6),loopend:String(metadata.sourceFrames-2),startposition:String(metadata.sourceFrames-8),abspan:'0',volumescale:'100'}});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();const ready=await record.nativeReady,descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();await new Promise(resolve=>setTimeout(resolve,0));
+     const before={channels:characterSoundChannels.entries().length,players:nativeSoundPlayer.size(),graphs:characterSoundOutput.size()};dispatch({type:'StopSnd',params:{channel:'7'}});
+     rows.push({player,common,ready,before,remaining:characterSoundChannels.entries().length,players:nativeSoundPlayer.size(),graphs:characterSoundOutput.size(),gain:common?1:Math.min(512,Math.max(0,gravityActorData(actor).dataConstants['data.volume']))/256,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(-8),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(-8)});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(infinitePlaySnd.length,4);
+  for(const row of infinitePlaySnd){assert.equal(row.ready,true);assert.deepEqual(row.before,{channels:1,players:1,graphs:1});assert.equal(row.remaining,0);assert.equal(row.players,0);assert.equal(row.graphs,0);for(let frame=0;frame<64;frame++){const sourceIndex=frame<6?frame:2+(frame-6)%4,detail=JSON.stringify({player:row.player,common:row.common,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[sourceIndex]*row.gain),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[sourceIndex]*row.gain),detail)}}
+  console.log('Actual infinite PlaySnd loops retain live channels across repeated sample windows and StopSnd releases worklet/mixer ownership for P1/P2 own/common sounds');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

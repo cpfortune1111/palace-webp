@@ -61,7 +61,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | parentvarset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
 | pause | endcmdbuftime, movetime, pausebg, redirectid, time | Review delegated parser/defaults | Pending |
 | playerpush | affectteam, priority, redirectid, value | Review delegated parser/defaults | Pending |
-| playsnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, lowpriority, pan, priority, redirectid, startposition, stoponchangestate, stopongethit, value, volume, volumescale | Owned channels/priority, default/explicit pan, volume and state/hit stop consumers tested; loop/frequency/seek/version fidelity pending; SOUND-PANNING-WIP.md | Pending |
+| playsnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, lowpriority, pan, priority, redirectid, startposition, stoponchangestate, stopongethit, value, volume, volumescale | Owned channels/priority, pan, volume and stop consumers tested; explicit frequency/seek/finite/infinite loop fields reach native worklet with exact sample checks; default-path DSP and full compiler/version/device/scheduling fidelity pending; SOUND-PANNING-WIP.md and SOUND-PLAYBACK-WIP.md | Pending |
 | posadd | redirectid, x, y, z | Review delegated parser/defaults | Pending |
 | posfreeze | redirectid, value | Review delegated parser/defaults | Pending |
 | posset | redirectid, x, y, z | Review delegated parser/defaults | Pending |

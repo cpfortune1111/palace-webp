@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createNativeSoundPlayer} from '../Engine/native-sound-player.js';
+
+const sampleData=new Float32Array([0,.5]),buffer={numberOfChannels:1,getChannelData:()=>sampleData},records=new Set(),nodes=[],events=[],errors=[];let finish,loads=0,modules=0;
+const loader={load:()=>{loads++;return new Promise(resolve=>{finish=resolve})}},context={audioWorklet:{addModule:async()=>{modules++}}};
+const createNode=(context,options)=>{const node={options,messages:[],disconnects:0,closed:0,port:{onmessage:null,postMessage:message=>node.messages.push(message),close:()=>node.closed++},disconnect:()=>node.disconnects++};nodes.push(node);return node};
+const player=createNativeSoundPlayer({loader,isActive:record=>records.has(record),createNode}),options={context,url:'sound.flac',metadata:{},params:{freqMul:2},attach:(record,node)=>{events.push(['attach',record]);return records.has(record)},onEnded:record=>events.push(['end',record]),onError:error=>errors.push(error.message)};
+const first={id:1};records.add(first);const cancelled=player.play(first,options);records.delete(first);player.stop(first);finish(buffer);assert.equal(await cancelled.ready,false);assert.equal(nodes.length,0);assert.equal(player.size(),0);
+const second={id:2};records.add(second);const playing=player.play(second,options);finish(buffer);assert.equal(await playing.ready,true);assert.equal(modules,1);assert.equal(loads,2);assert.equal(nodes.length,1);assert.notEqual(nodes[0].options.channels[0],sampleData);assert.deepEqual(nodes[0].options.channels[0],sampleData);assert.equal(nodes[0].options.params.freqMul,2);
+nodes[0].port.onmessage({data:{type:'ended'}});assert.deepEqual(events,[['attach',second],['end',second]]);assert.equal(player.size(),0);assert.equal(nodes[0].closed,1);assert.equal(nodes[0].disconnects,1);player.stop(second);assert.equal(nodes[0].closed,1);
+const third={id:3};records.add(third);const stale=player.play(third,options);records.delete(third);finish(buffer);assert.equal(await stale.ready,false);assert.equal(nodes.length,1);
+const fourth={id:4};records.add(fourth);const rejected=player.play(fourth,{...options,attach:()=>false});finish(buffer);assert.equal(await rejected.ready,false);assert.equal(nodes.length,2);assert.equal(nodes[1].closed,1);assert.deepEqual(errors,[]);
+console.log('Native sound player prevents stale/aborted attachment, shares worklet module setup, cleans finite completion and releases rejected audio nodes; production registry wiring pending');

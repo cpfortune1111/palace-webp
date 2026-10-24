@@ -46,6 +46,7 @@ export function createCharacterSoundChannels({capacity=32}={}){
   release,
   owned,
   entries:()=>[...records],
+  has:record=>records.has(record),
   stopOwner(owner,channel){for(const record of owned(owner,channel))stop(record)},
   stopOnEvent(owner,event){if(!['hit','state'].includes(event))throw Error('Unsupported character sound event');for(const record of owned(owner))if(record.stopFlags[event])stop(record)},
   stopAll(){for(const record of [...records])stop(record)}
