@@ -104,11 +104,35 @@ const server=http.createServer((request,response)=>{
      executeControllerM1({type:'ModifyExplod',params:{id:'44',friction:'.5,0,2'}},actor,context,adapter);const beforeFriction=sourceExplods.map(effect=>[effect.x,effect.y,effect.z]);stepSourceExplods();
      for(const [index,effect] of sourceExplods.entries())if(effect.x!==Math.fround(beforeFriction[index][0]+5*actor.facing)||effect.y!==Math.fround(beforeFriction[index][1]+7)||effect.z!==Math.fround(beforeFriction[index][2]+9)||JSON.stringify([effect.vx,effect.vy,effect.vz])!==JSON.stringify([3.5*actor.facing,2,21]))throw Error('ModifyExplod friction/acceleration order mismatch');
      executeControllerM1({type:'ModifyExplod',params:{id:'44',friction:'.5'}},actor,context,adapter);stepSourceExplods();for(const effect of sourceExplods)if(JSON.stringify(effect.friction)!=='[0.5,0,0]'||JSON.stringify([effect.vx,effect.vy,effect.vz])!==JSON.stringify([2.75*actor.facing,2,3]))throw Error('Partial ModifyExplod friction did not default missing axes to zero');
-     executeControllerM1({type:'ModifyExplod',params:{id:'44',postype:'p1',velocity:'.1,.1,.1',accel:'0,0,0',friction:'.5,1,-.5'}},actor,context,adapter);stepSourceExplods();for(const effect of sourceExplods)if(effect.vx!==0||effect.vy!==Math.fround(.1)||effect.vz!==0)throw Error('Native small-speed friction stop threshold was lost');modifications++;
+     executeControllerM1({type:'ModifyExplod',params:{id:'44',postype:'p1',velocity:'.1,.1,.1',accel:'0,0,0',friction:'.5,1,-.5'}},actor,context,adapter);stepSourceExplods();for(const effect of sourceExplods)if(effect.vx!==0||effect.vy!==Math.fround(.1)||effect.vz!==0)throw Error('Native small-speed friction stop threshold was lost');
+     executeControllerM1({type:'ModifyExplod',params:{id:'44',postype:'p1',facing:'-1',vfacing:'-1',sprpriority:'7',layerno:'-1',ontop:'1',under:'1'}},actor,context,adapter);
+     const expectedFacing=ikemen||actor.facing>=0?-1:1;
+     for(const effect of sourceExplods)if(effect.relativeFacing!==expectedFacing||effect.vfacing!==-1||effect.sprpriority!==0||effect.layerno!==1||!effect.ontop||!effect.under)throw Error('ModifyExplod visual fields/native priority commit order mismatch');
+     transDrawQueue.reset();drawSourceExplods();let visualEntries=transDrawQueue.ordered().filter(entry=>entry.kind==='explod');if(visualEntries.length!==2||visualEntries.some(entry=>entry.layer!==1||entry.priority!==0||!entry.ontop||!entry.under))throw Error('ModifyExplod layer/priority did not reach draw queue');
+     const commonEntry=visualEntries.find(entry=>entry.source.width<100);if(!commonEntry||Math.sign(commonEntry.matrix[0])!==actor.facing*expectedFacing||Math.sign(commonEntry.matrix[3])!==-1)throw Error('ModifyExplod facing/vfacing did not reach actual draw transform');
+     executeControllerM1({type:'ModifyExplod',params:{id:'44',layerno:'-1',ontop:'0',under:'0'}},actor,context,adapter);for(const effect of sourceExplods)if(effect.layerno!==0||effect.ontop||!effect.under)throw Error('ModifyExplod ontop-off/sticky under native behavior mismatch');
+     executeControllerM1({type:'ModifyExplod',params:{id:'44',sprpriority:'-9',layerno:'2',ontop:'0'}},actor,context,adapter);transDrawQueue.reset();drawSourceExplods();visualEntries=transDrawQueue.ordered().filter(entry=>entry.kind==='explod');if(visualEntries.some(entry=>entry.layer!==1||entry.priority!==-9||entry.ontop))throw Error('Unchanged false ontop reset explicit layer');
+     executeControllerM1({type:'ModifyExplod',params:{id:'44',postype:'p1',facing:'1',vfacing:'1'}},actor,context,adapter);for(const effect of sourceExplods)if(effect.relativeFacing!==(ikemen?1:expectedFacing)||effect.vfacing!==(ikemen?1:-1))throw Error('Native MUGEN left/upside-down flip restriction mismatch');
+     for(const removal of [3,0,-1,-2]){
+      sourceExplods.length=0;executeControllerM1({type:'Explod',params:{id:'45',anim:'F120',pos:'10,-20',bindtime:'0'}},actor,context,adapter);const effect=sourceExplods[0];effect.age=removal===-1?500:removal===-2?26:5;
+      executeControllerM1({type:'ModifyExplod',params:{id:'45',removetime:String(removal)}},actor,context,adapter);const expectedDeadline=ikemen&&removal>0?effect.age+removal:removal;if(effect.removetime!==expectedDeadline||!effect.nativeRemoveTime)throw Error('ModifyExplod native removal deadline mismatch');
+      if(removal===3&&ikemen){stepSourceExplods();stepSourceExplods();if(sourceExplods.length!==1)throw Error('Relative removal deadline expired early');stepSourceExplods();if(sourceExplods.length)throw Error('Relative removal deadline expired late')}
+      else if(removal===-1){stepSourceExplods();if(sourceExplods.length!==1)throw Error('Infinite removal mode expired');transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='explod'))throw Error('Infinite common Explod did not loop its animation');const age=effect.age;specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};stepSourceExplods();if(effect.age!==age)throw Error('Paused removal lifetime advanced');specialRuntime.pauses.normal[0]=null}
+      else{stepSourceExplods();if(sourceExplods.length)throw Error('Absolute/zero/first-loop removal did not expire')}
+     }
+     const pauseCases=[['normal',{pausemovetime:'3'},ikemen?8:5],['super',{supermovetime:'3'},ikemen?8:5],['super',{supermove:'1'},9],['super',{supermove:'1',supermovetime:'0'},5],['super',{supermovetime:'-2'},9],['super',{supermovetime:'-3'},5],['normal',{pausemovetime:'-2'},9],['normal',{pausemovetime:'-3'},5]];
+     for(const [slot,values,expectedAge] of pauseCases){
+      sourceExplods.length=0;executeControllerM1({type:'Explod',params:{id:'46',anim:'F120',pos:'0,-20',bindtime:'0',removetime:'-1'}},actor,context,adapter);const effect=sourceExplods[0];effect.age=5;
+      executeControllerM1({type:'ModifyExplod',params:{id:'46',...values}},actor,context,adapter);if(!effect.nativePauseTime)throw Error('ModifyExplod movement-time fields did not reach effect');
+      specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};if(slot==='super')specialRuntime.pauses.super[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};
+      for(let tick=0;tick<4;tick++)stepSourceExplods();if(effect.age!==expectedAge||sourceExplods.length!==1)throw Error('ModifyExplod pause allowance mismatch '+JSON.stringify({slot,values,ikemen,age:effect.age,expectedAge}));
+      specialRuntime.pauses.normal[0]=null;specialRuntime.pauses.super[0]=null;transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='explod'))throw Error('Paused/allowed Explod stopped drawing');
+     }
+     modifications++;
     }finally{data.compatibility=savedCompatibility}
    }
    if(modifications!==16)throw Error('Incomplete ModifyExplod consumer matrix');return count}finally{variableRandomStream.seed(savedSeed);combatEngineProfile=savedProfile;specialRuntime.reset()}
   })()`);
-  assert.equal(count,16);console.log('Native random/Explod cases pass; sixteen ModifyExplod cases verify selection, version locks, XYZ motion/friction/stop threshold and actual scaling/drawing');
+  assert.equal(count,16);console.log('ModifyExplod motion/visual fixtures, 64 removal modes and 128 Pause/SuperPause movement-time cases pass with actual effects and drawing');
  }finally{await browser?.close();server.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

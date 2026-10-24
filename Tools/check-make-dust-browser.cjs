@@ -153,6 +153,11 @@ const server=http.createServer((request,response)=>{
      stepSourceExplods();if(!sourceExplods.length)throw Error('Own animation expired early under foreign state');stepSourceExplods();if(sourceExplods.length)throw Error('Foreign animation owner corrupted own lifetime');
     }finally{customStateOwners[player-1]=savedOwner;customAnimationOwners[player-1]=savedAnimation;if(savedAction===undefined)delete profile.data.actions['999891'];else profile.data.actions['999891']=savedAction;if(savedForeign===undefined)characterProfiles.delete(foreign);else characterProfiles.set(foreign,savedForeign)}
    }
+   const legacyAction=Object.keys(commonFallDat.actions)[0];
+   for(const age of [0,1000]){
+    sourceExplods.length=0;sourceExplods.push({common:true,anim:Number(legacyAction),player:1,ownerKey:'root1',x:0,y:-30,vx:0,vy:0,facing:1,age,removetime:-1,sprpriority:0,kind:'legacy-common-regression'});
+    transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='legacy-common-regression'))throw Error('Legacy common animation without loopStarts failed to draw');
+   }
    return rows;
    }finally{sourceExplods.length=0;specialRuntime.reset();combatEngineProfile=saved.profile;rootDrawOffsets.splice(0,2,...saved.offsets);[cameraX,cameraY,cameraZoom]=saved.camera;Object.assign(STAGE_CAMERA,saved.config);Object.assign(stageCameraConfig.player,saved.player);p1HitPause=0;p2.attackPause=0}
   })()`);

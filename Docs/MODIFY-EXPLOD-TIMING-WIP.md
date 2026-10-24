@@ -1,0 +1,13 @@
+# ModifyExplod removal timing — partial
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, bytecode.go explod_removetime inside modifyExplod.Run and char.go Explod.update. Positive MUGEN removetime is an absolute effect-age deadline; Ikemen-character writes add current age with int32 wrapping. Zero expires on the next eligible update, -1 persists, and values <= -2 remove at first animation loop end.
+
+The shared consumer now evaluates removetime even when MUGEN positional parameters are locked, commits the native per-effect deadline and reaches actual lifetime removal. An explicit modified-timer flag isolates this behavior from unchanged legacy removal paths. Indefinite AIR frames retain infinite first-loop duration. Common source effects now sample their own loop timeline, so persistent effects keep rendering after the first pass rather than becoming invisible.
+
+Independent timing checks cover signed overflow and negative/zero modes. Sixty-four actual root/normal-Helper/profile/player/character-version removal cases verify absolute/relative deadlines, persistence with real repeated drawing, first-loop expiry and global-pause age freezing (outputs/modify-explod-removal-consumers.log).
+
+Supermove, supermovetime and pausemovetime now reach an explicit modified-effect pause consumer. Native movement thresholds compare against effect age, not elapsed wall time since the system pause; positive Ikemen-character writes add current age. Supermove writes -1/0 before any explicit supermovetime override. SuperPause takes precedence over Pause. Values -1/-2 permit movement; lower values block. Independent timing checks and 128 actual root/Helper/profile/player/character-version cases verify thresholds, override order, negative modes, super precedence and continued drawing (outputs/modify-explod-pause-consumers.log). Unmodified effects retain their existing pause path.
+
+Release preparation exposed a legacy common atlas without loopStarts metadata. Common timeline selection now defaults a missing loop table to loop element zero instead of throwing; two actual legacy-atlas age-zero/age-1000 draw checks pass alongside all modern common-animation checks. All 272 final-version Node checks pass, as do Python stage reflection and five sound metadata tests. Version 0.25.93 is prepared, with final browser/complete battle terminal results and public deployment tracked separately.
+
+The new consumer retains the existing driver's created-this-tick phase gate. Precise original MUGEN versus pinned Ikemen first-created/tickNextFrame/slow-speed timing, finite binding, parent-specific hitpause, all remaining parameters and final regression/publication remain Pending. No whole-controller certification is claimed.

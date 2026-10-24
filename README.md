@@ -1,3 +1,7 @@
+## 0.25.93 — ModifyExplod visual and timing consumers (partial, release pending)
+
+ModifyExplod facing/layer/priority flags now reach real draw transforms and ordering, preserving native MUGEN flip restrictions and sticky under behavior. Removal and pause movement fields consume native versioned effect-age deadlines, negative modes and override order. Sixteen visual fixtures, 64 removal modes and 128 pause cases pass with actual effects/drawing. Full remaining parameters, native phase/lifecycle fidelity and final deployment remain Pending; no whole-controller certification changes.
+
 ## 0.25.92 — Explod random and ModifyExplod motion (partial, release pending)
 
 Own/common Explods now consume native XYZ random offsets and preserve relative facing/binding. ModifyExplod has real selection, random/pos/velocity/accel/friction/scale consumers, native MUGEN locks/reset rules and float32 motion. Sixteen actual mixed-effect cases plus forty controller-specific scheduling groups pass; the expanded matrix has 400 groups. Other parameters/postypes, full native fidelity and final regression/deployment remain Pending. No whole-controller certification changes; no original assets included.

@@ -12,4 +12,6 @@ Forty controller-specific actual scheduling groups now verify root current/globa
 
 All 270 final-version Node checks pass, as do Python stage reflection and five sound metadata tests. Version 0.25.92 is prepared. Final-version focused/animation/actor/scheduling/complete battle terminal results and verified publication remain separate required gates. This release candidate adds no original assets or new media.
 
+Post-0.25.92 real visual and timing consumers are documented separately in MODIFY-EXPLOD-VISUAL-WIP.md and MODIFY-EXPLOD-TIMING-WIP.md. Version 0.25.93 has 272 passing Node checks plus actual visual/removal/pause cases; final regression/publication remain separate gates. Earlier release-pending notes are historical.
+
 This is not full ModifyExplod support. Other parameters and postypes are explicitly rejected instead of ignored. Complete redirected/custom-coordinate/binding/interpolation phase parity, resource limits/native slot reuse, arbitrary foreign states, remaining parameter consumers, diagnostics/compiler/version/lifecycle fidelity and final regression/publication remain Pending. No whole-controller certification is claimed.

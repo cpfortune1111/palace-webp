@@ -1,4 +1,14 @@
+## 0.25.93 — ModifyExplod visual/timing consumers (partial, release pending)
+
+ModifyExplod supermove/supermovetime/pausemovetime now reach effect-age pause thresholds and native versioned deadlines. 128 actual cases pass positive/negative thresholds, explicit override order, SuperPause precedence and visible paused effects. Unmodified effects retain their legacy pause path; exact first-created/parent-hitpause/slow-speed phases and full native fidelity remain Pending.
+
+ModifyExplod removetime now reaches actual native absolute/relative deadlines and zero/negative removal modes. Sixty-four live cases verify removal, persistent common animation looping and pause-frozen age. Independent signed-overflow timing checks pass. Native first-created/slow-speed/binding and remaining parameter fidelity plus final publication remain Pending; see MODIFY-EXPLOD-TIMING-WIP.md.
+
+Facing/vfacing and sprpriority/layerno/ontop/under now have native deferred extraction and actual draw consumers. Sixteen real cases verify MUGEN flip restrictions, Ikemen overrides, priority/layer commit order, sticky under=false behavior and drawing transforms/entries. Full remaining parameters/native fidelity and final gates/publication remain Pending; see MODIFY-EXPLOD-VISUAL-WIP.md.
+
 ## 0.25.92 — Explod random and ModifyExplod motion (partial, release pending)
+
+Publication subsequently verified at commit 9c826ac2e7d7865f8115fca64bc10463e9ea7cdd: 270 Node checks, Python stage/five sound tests, final focused/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40129055610 and sixteen live text file comparisons. No new media/original assets were uploaded. Receipt: outputs/release-02592-verification.json. Earlier pending statements are historical; full compatibility remains incomplete.
 
 Forty real ModifyExplod scheduling groups subsequently pass in both profiles/player directions, including root current/global/lifecycle and normal Helper current/global hitpause/persistence/global-pause allowance paths. The expanded ten-controller matrix has 400 groups. Final versioned gates/publication and full native compatibility remain required.
 
