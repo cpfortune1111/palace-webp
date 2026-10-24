@@ -1,3 +1,7 @@
+## 0.25.78 — Character sound ownership (partial)
+
+PlaySnd/StopSnd now use root/Helper-owned channels, parent/root playback inheritance and native negative-channel selection. Numbered-channel priority, player-pool capacity and automatic-first oldest/slot eviction have executable checks plus actual source/Helper/saturation consumers. Negative sound groups do not allocate media. Remaining sound parameters, audible output, native clock/configuration fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.77 — MoveHitReset controller consumer (partial)
 
 MoveHitReset now executes for roots, reaction roots and Helpers, clearing contact time/counter flags without discarding hit counts or MoveHitVar data. Fresh and pre-existing expression contexts observe reset state. Actual source-state tests cover both profiles/player directions, omitted/redirected recipients, hitpause, persistent-zero current/global behavior and global-pause Helper allowance. Full native diagnostics/compiler/version/lifecycle fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.

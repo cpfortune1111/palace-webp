@@ -61,7 +61,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | parentvarset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
 | pause | endcmdbuftime, movetime, pausebg, redirectid, time | Review delegated parser/defaults | Pending |
 | playerpush | affectteam, priority, redirectid, value | Review delegated parser/defaults | Pending |
-| playsnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, lowpriority, pan, priority, redirectid, startposition, stoponchangestate, stopongethit, value, volume, volumescale | Review delegated parser/defaults | Pending |
+| playsnd | abspan, channel, freqmul, loop, loopcount, loopend, loopstart, lowpriority, pan, priority, redirectid, startposition, stoponchangestate, stopongethit, value, volume, volumescale | Owned channels, Helper inheritance, negative group guard and numbered-channel priority consumers tested; remaining parameters/capacity pending; CHARACTER-SOUND-OWNERSHIP-WIP.md | Pending |
 | posadd | redirectid, x, y, z | Review delegated parser/defaults | Pending |
 | posfreeze | redirectid, value | Review delegated parser/defaults | Pending |
 | posset | redirectid, x, y, z | Review delegated parser/defaults | Pending |
@@ -78,7 +78,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | sndpan | abspan, channel, pan, redirectid | Review delegated parser/defaults | Pending |
 | sprpriority | layerno, redirectid, value | Review delegated parser/defaults | Pending |
 | statetypeset | movetype, physics, redirectid, statetype, value | Review delegated parser/defaults | Pending |
-| stopsnd | channel, redirectid | Review delegated parser/defaults | Pending |
+| stopsnd | channel, redirectid | Owned root/Helper channels, native negative selection and actual redirected/nested-Helper consumers tested; full lifecycle/compiler fidelity pending; CHARACTER-SOUND-OWNERSHIP-WIP.md | Pending |
 | superpause | anim, brightness, darken, endcmdbuftime, movetime, p2defmul, pausebg, pos, poweradd, redirectid, sound, time, unhittable | Review delegated parser/defaults | Pending |
 | targetbind | id, index, pos, redirectid, time | Review delegated parser/defaults | Pending |
 | targetdrop | excludeid, keepone, redirectid | Review delegated parser/defaults | Pending |

@@ -1243,6 +1243,99 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(moveResetRows.length,40);
   for(const row of moveResetRows){assert.deepEqual(row.raw,[0,0,0],JSON.stringify(row));assert.deepEqual(row.queries,[0,0,0,0,0],JSON.stringify(row));assert.deepEqual(row.stale,[0,0,0,0,0],JSON.stringify(row));assert.deepEqual(row.other,[9,4,2],JSON.stringify(row));assert.equal(row.count,row.kind==='helper'?13:row.player===1?11:12);assert.equal(row.metadata.frame,true);assert.equal(row.metadata.overridden,true);assert.equal(row.metadata.playerid,123);assert.equal(row.metadata.sparkx,7);assert.deepEqual(row.clock,{type:row.contact==='none'?'hit':row.contact,time:0,countered:false});if(row.reaction)assert.deepEqual(row.reaction,[0,0,0])}
   console.log('Actual MoveHitReset clears live/stale contact queries for roots, reaction roots and normal-spawn Helpers while preserving hit counts and MoveHitVar data in forty cases');
+  const stoppedSound=await run(`(()=>{
+   const saved={Audio:window.Audio,channels:[...soundChannels],automatic:[...automaticSounds],voice:roundVoiceUntil,registry:typeof characterSoundChannels==='undefined'?null:characterSoundChannels};
+   try{
+    if(saved.registry)characterSoundChannels=createCharacterSoundChannels();soundChannels.clear();automaticSounds.clear();
+    window.Audio=class extends EventTarget{constructor(url){super();this.src=url;this.stops=0;this.paused=true;this.ended=false}play(){this.paused=false;return Promise.resolve()}pause(){this.stops++;this.paused=true}};
+    const soundValue=player=>{const profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value));return key.replace('-',',')};
+    const first=playSourceSound(soundValue(1),0,1),second=playSourceSound(soundValue(2),4,2),caller=specialRoot(1);
+    executeControllerM1({type:'StopSnd',params:{redirectid:'2',channel:'0'}},p1LifecycleBinding,specialRuntime.context(caller),{owner:caller,player:1,schedulingApplied:true});
+    return [first.stops,second.stops];
+   }finally{
+    if(saved.registry){characterSoundChannels.stopAll();characterSoundChannels=saved.registry}window.Audio=saved.Audio;soundChannels.clear();for(const [key,value]of saved.channels)soundChannels.set(key,value);automaticSounds.clear();for(const value of saved.automatic)automaticSounds.add(value);roundVoiceUntil=saved.voice;
+   }
+  })()`);
+  assert.deepEqual(stoppedSound,[0,1]);
+  console.log('Actual StopSnd redirect stops P2 logical channel zero without stopping P1');
+  const negativeSound=await run(`(()=>{
+   const savedAudio=window.Audio,caller=specialRoot(1);let creations=0;
+   try{
+    window.Audio=class extends EventTarget{constructor(){super();creations++}play(){return Promise.resolve()}pause(){}};
+    for(const value of ['-1,0','F-1,0'])executeControllerM1({type:'PlaySnd',params:{value,channel:'9'}},p1LifecycleBinding,specialRuntime.context(caller),{owner:caller,player:1,schedulingApplied:true});
+    return creations;
+   }finally{window.Audio=savedAudio}
+  })()`);
+  assert.equal(negativeSound,0);
+  console.log('Actual PlaySnd negative own/common groups do not allocate media');
+  const helperSounds=await run(`(()=>{
+   const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={Audio:window.Audio,registry:characterSoundChannels,entities:[...specialRuntime.entities],voice:roundVoiceUntil,definitions:data.map(value=>value.helperStates[991940])},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();window.Audio=class extends EventTarget{constructor(url){super();this.src=url;this.stops=0}play(){return Promise.resolve()}pause(){this.stops++}};
+    for(const value of data)value.helperStates[991940]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2])for(const inheritance of [0,1,2]){
+     characterSoundChannels.stopAll();specialRuntime.entities.length=0;const root=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),soundValue=key.replace('-',',');
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991940,id:991940,inheritchannels:'2'}},root,specialRuntime.context(root),{},root,player);const parent=specialRuntime.entities.at(-1);
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991940,id:991940,inheritchannels:String(inheritance)}},parent,specialRuntime.context(parent),{},parent,player);const child=specialRuntime.entities.at(-1);
+     executeControllerM1({type:'PlaySnd',params:{value:soundValue,channel:'7'}},child,specialRuntime.context(child),{owner:child,player,schedulingApplied:true});
+     const record=characterSoundChannels.entries()[0],expected=inheritance===1?parent:inheritance===2?root:child;
+     const stop=actor=>executeControllerM1({type:'StopSnd',params:{channel:'7'}},actor.kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     stop(child);const childStops=record.sound.stops;stop(parent);const parentStops=record.sound.stops;stop(root);
+     rows.push({player,inheritance,created:child.inheritChannels,owner:record.owner,expected:characterSoundIdentity(expected),childStops,parentStops,finalStops:record.sound.stops,resource:record.sound.src===profile.soundBase+profile.sounds[key].file});
+    }
+    return rows;
+   }finally{
+    characterSoundChannels.stopAll();characterSoundChannels=saved.registry;window.Audio=saved.Audio;roundVoiceUntil=saved.voice;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);
+    for(let index=0;index<2;index++){if(saved.definitions[index]===undefined)delete data[index].helperStates[991940];else data[index].helperStates[991940]=saved.definitions[index]}
+   }
+  })()`);
+  assert.equal(helperSounds.length,6);
+  for(const row of helperSounds){assert.equal(row.owner,row.expected,JSON.stringify(row));assert.equal(row.created,row.inheritance);assert.equal(row.childStops,row.inheritance===0?1:0);assert.equal(row.parentStops,row.inheritance===2?0:1);assert.equal(row.finalStops,1);assert.equal(row.resource,true)}
+  console.log('Actual PlaySnd/StopSnd normal-spawn Helpers preserve own resources and nonrecursive parent/root channel inheritance in both player directions');
+  const soundPriorities=await run(`(()=>{
+   const saved={Audio:window.Audio,registry:characterSoundChannels,voice:roundVoiceUntil},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();window.Audio=class extends EventTarget{constructor(){super();this.stops=0;this.plays=0}play(){this.plays++;return Promise.resolve()}pause(){this.stops++}};
+    for(const player of [1,2])for(const common of [false,true]){
+     characterSoundChannels.stopAll();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),value=common?'F7,0':key.replace('-',',');
+     const play=params=>executeControllerM1({type:'PlaySnd',params:{value,channel:'7',...params}},player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     play({priority:'5'});const first=characterSoundChannels.entries()[0];
+     play({priority:'4'});const lowerKept=characterSoundChannels.entries()[0]===first;
+     play({priority:'6',lowpriority:'1'});const lowKept=characterSoundChannels.entries()[0]===first;
+     play({priority:'5',lowpriority:'0'});const replacement=characterSoundChannels.entries()[0];
+     play({priority:'"99"'});const stringKept=characterSoundChannels.entries()[0]===replacement;
+     play({priority:'6',lowpriority:'"1"'});const final=characterSoundChannels.entries()[0];
+     rows.push({player,common,lowerKept,lowKept,stringKept,firstStops:first.sound.stops,replacementStops:replacement.sound.stops,finalPriority:final.priority,finalPlays:final.sound.plays,count:characterSoundChannels.entries().length});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;window.Audio=saved.Audio;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(soundPriorities.length,4);
+  for(const row of soundPriorities){assert.equal(row.lowerKept,true,JSON.stringify(row));assert.equal(row.lowKept,true);assert.equal(row.stringKept,true);assert.equal(row.firstStops,1);assert.equal(row.replacementStops,1);assert.equal(row.finalPriority,6);assert.equal(row.finalPlays,1);assert.equal(row.count,1)}
+  console.log('Actual own/common PlaySnd priority and lowpriority extraction control numbered-channel replacement for P1/P2');
+  const saturatedSounds=await run(`(()=>{
+   const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={Audio:window.Audio,registry:characterSoundChannels,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991950])},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels({capacity:2});window.Audio=class extends EventTarget{constructor(){super();this.stops=0}play(){return Promise.resolve()}pause(){this.stops++}};
+    for(const value of data)value.helperStates[991950]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2]){
+     characterSoundChannels.stopAll();specialRuntime.entities.length=0;const root=specialRoot(player),other=specialRoot(3-player);
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991950,id:991950}},root,specialRuntime.context(root),{},root,player);const helper=specialRuntime.entities.at(-1);
+     const play=(actor,channel,priority,lowpriority=0)=>executeControllerM1({type:'PlaySnd',params:{value:'F7,0',channel:String(channel),priority:String(priority),lowpriority:String(lowpriority)}},actor.kind==='helper'?actor:actor.player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player:actor.player,schedulingApplied:true});
+     play(root,0,5);const first=characterSoundChannels.entries().at(-1);play(helper,-1,0);const automatic=characterSoundChannels.entries().at(-1);play(other,0,0);const opponent=characterSoundChannels.entries().at(-1);
+     play(root,1,4,1);const rejected=automatic.sound.stops===0&&characterSoundChannels.entries().length===3;
+     play(root,1,4);const replacement=characterSoundChannels.entries().at(-1);
+     rows.push({player,rejected,firstStops:first.sound.stops,automaticStops:automatic.sound.stops,opponentStops:opponent.sound.stops,pool:replacement.pool,slot:replacement.slot,counts:[characterSoundChannels.entries().filter(record=>record.pool===player).length,characterSoundChannels.entries().filter(record=>record.pool===3-player).length]});
+    }
+    return rows;
+   }finally{
+    characterSoundChannels.stopAll();characterSoundChannels=saved.registry;window.Audio=saved.Audio;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);
+    for(let index=0;index<2;index++){if(saved.definitions[index]===undefined)delete data[index].helperStates[991950];else data[index].helperStates[991950]=saved.definitions[index]}
+   }
+  })()`);
+  assert.equal(saturatedSounds.length,2);
+  for(const row of saturatedSounds){assert.equal(row.rejected,true,JSON.stringify(row));assert.equal(row.firstStops,0);assert.equal(row.automaticStops,1);assert.equal(row.opponentStops,0);assert.equal(row.pool,row.player);assert.equal(row.slot,1);assert.deepEqual(row.counts,[2,1])}
+  console.log('Actual saturated sound pools share normal Helper/root capacity, reject lowpriority and evict automatic audio without touching the opposing player');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

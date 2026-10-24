@@ -1,3 +1,7 @@
+## 0.25.78 — Character sound ownership and replacement (partial, publication pending)
+
+Shared PlaySnd/StopSnd dispatch now uses actual root/Helper channel ownership, immediate-parent/root playback inheritance, native negative-channel stop selection, negative sound-group rejection and typed priority/lowpriority extraction. Per-player pools implement 32-slot defaults, logical-channel normalization, priority-protected eviction, automatic-channel preference and timestamp/slot ordering. Independent tests and actual redirected/normal-spawn nested Helper, priority-expression and saturated-pool consumers pass. All 233 Node checks passed after slot-order changes. The pre-capacity full battle suite passed; final combined regression/publication still required. Complete sound parameters, native timing/configuration and audible output fidelity remain Pending. See CHARACTER-SOUND-OWNERSHIP-WIP.md. No whole-controller certification changes.
+
 ## 0.25.77 — MoveHitReset controller consumer (partial, publication pending)
 
 Forty additional actual scheduling groups cover omitted-recipient root/Helper current/global/lifecycle dispatch, hitpause literal gates, persistent zero current/global behavior and global-pause Helper movement allowance. Nonzero clocks are reseeded before every idempotent reset, and normal Helper persistence uses real source-state steps (outputs/move-hit-reset-scheduling-browser.log). Complete native diagnostics/compiler/version/lifecycle parity and final versioned regression/publication remain Pending.

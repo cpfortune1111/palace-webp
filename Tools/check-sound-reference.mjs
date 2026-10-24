@@ -7,4 +7,6 @@ assert.deepEqual(compileSoundReference(' f (7), 0 ',api),{common:true,group:7,it
 assert.deepEqual(compileSoundReference('S7, 1',api),{common:false,group:7,item:1});
 assert.deepEqual(compileSoundReference('7.9, -1.9',api),{common:false,group:7,item:-1});
 assert.throws(()=>compileSoundReference('F7',api),/group and item/);
+for(const value of ['7',undefined,NaN])assert.deepEqual(compileSoundReference('group,item',{split:api.split,evaluate:()=>value}),{common:false,group:0,item:0});
+assert.deepEqual(compileSoundReference('group,item',{split:api.split,evaluate:expression=>expression==='group'?4294967297:-4294967297}),{common:false,group:1,item:-1});
 console.log('Common/own sound prefixes route evaluated int32 group/item pairs; full PlaySnd parameters and prefix/version grammar remain uncertified');
