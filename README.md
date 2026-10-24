@@ -1,3 +1,7 @@
+## 0.25.91 — Native controller random consumers (partial, release pending)
+
+VarRandom, GameMakeAnim, AssertCommand and TargetDrop now share pinned integer/float32 random operations. Random samples per occurrence; RandomRange is a typed integer intrinsic with undefined/lazy-branch gates. Actual root/Helper/player/profile interleavings and boundary checks pass. Full RNG consumer unification, configured seeding/replay lifecycle and compiler/version fidelity remain Pending; no whole-controller certification changes. Final regression/deployment remain required; character recoloring stays excluded.
+
 ## 0.25.90 — Common animation resources and ownership (partial, release pending)
 
 GameMakeAnim now loads all 33 compressed project common animations, preserves own animation ownership in foreign states, discards invalid actions without stopping the match and retains indefinite AIR frames while skipping zero-time elements. Real common-frame/lifetime, opaque/A/A1 composited-pixel, foreign-state and held-frame checks pass. Full native library/limits/RNG/compiler/version fidelity and final deployment remain Pending; no whole-controller certification changes. Original SFF/SND/AIR are not included; character recoloring remains excluded.

@@ -45,7 +45,8 @@ export function applyVariableController(controller, binding, evaluate, options={
   if(parts.length===1)parts.unshift('0');
   if(parts.length!==2)throw Error('Invalid VarRandom range');
   const bounds=parts.map(integer),first=Math.min(...bounds),last=Math.max(...bounds);
-  if(index>=0&&(unlimited||index<binding.vars.length))binding.vars[index]=first+Math.floor((options.random||Math.random)()*(last-first+1));
+  const randomized=options.randomInteger?options.randomInteger(bounds[0],bounds[1]):first+Math.floor((options.random||Math.random)()*(last-first+1));
+  if(index>=0&&(unlimited||index<binding.vars.length))binding.vars[index]=randomized;
   return true;
  }
  let kind,indexExpression;

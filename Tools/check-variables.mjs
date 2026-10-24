@@ -27,6 +27,10 @@ applyVariableController({type:'VarRangeSet',params:{redirectid:'2',value:'9'}},b
 assert.ok(redirected.vars.every(value=>value===9));assert.equal(binding.vars[1],7);
 applyVariableController({type:'VarRandom',params:{v:'2',range:'5,9'}},binding,evaluate,{random:()=>0.999999});
 assert.equal(binding.vars[2],9);
+let randomCalls=0;const randomOrder=[];
+for(const index of [-1,60])applyVariableController({type:'VarRandom',params:{v:String(index),range:'5,9'}},binding,expression=>{randomOrder.push(expression);return Number(expression)},{random:()=>{randomCalls++;randomOrder.push('random');return .5}});
+assert.equal(randomCalls,2);assert.deepEqual(randomOrder,['-1','5','9','random','60','5','9','random']);assert.equal(binding.vars[-1],undefined);assert.equal(binding.vars[60],undefined);
+applyVariableController({type:'VarRandom',params:{redirectid:'99',v:'0',range:'5,9'}},binding,evaluate,{findActor:()=>null,random:()=>{randomCalls++;return 0}});assert.equal(randomCalls,2);
 applyVariableController({type:'VarSet',params:{v:'0',value:'2147483647'}},binding,evaluate);
 applyVariableController({type:'VarAdd',params:{v:'0',value:'1'}},binding,evaluate);
 assert.equal(binding.vars[0],-2147483648);

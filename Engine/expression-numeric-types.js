@@ -36,6 +36,7 @@ function numericType(node){
  else if(['redirect','helperRedirect','indexedRedirect'].includes(node.t)&&numericType(node.expr))type='dynamic';
  else if(node.t==='id')type=numericQueryType(node.name);
  else if(node.t==='call'&&node.name.toLowerCase()==='map'&&node.args.length===1&&node.args[0].t==='str')type='dynamic';
+ else if(node.t==='call'&&node.name.toLowerCase()==='randomrange'&&node.args.length===2&&node.args.every(argument=>numericType(argument)))type='int';
  else if(node.t==='call'&&Object.hasOwn(intrinsicCalls,node.name.toLowerCase())){
   const contract=intrinsicCalls[node.name.toLowerCase()];
   if(node.args.length>=contract.min&&node.args.length<=contract.max)type=contract.type;
@@ -88,6 +89,11 @@ export function evaluateTypedNumericAST(node,api){
    if(['ifelse','cond'].includes(current.name.toLowerCase()))return api.conditional(current);
    const name=current.name.toLowerCase();
    if(name==='map')return api.mapValue(current);
+   if(name==='randomrange'){
+    const args=api.mathArguments?api.mathArguments(current):current.args.map(evaluate);
+    if(args.some(argument=>Number.isNaN(argument.value)))return {type:'int',value:NaN};
+    return {type:'int',value:api.randomInteger(...args.map(argument=>integer(numeric(argument))))};
+   }
    if(Object.hasOwn(intrinsicCalls,name)){
     const value=Number(api.intrinsicCall(current));
     return {type,value:Number.isNaN(value)?NaN:type==='bool'?!!value:integer(value)};

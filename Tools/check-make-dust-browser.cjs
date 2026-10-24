@@ -66,9 +66,8 @@ const server=http.createServer((request,response)=>{
    const gameHelper=specialRuntime.entities.at(-1);gameHelper.x=gameOwner.x+200;gameHelper.vx=4;gameHelper.z=30;gameHelper.created=combatTraceTick-1;simStep();
    const gameEffect=sourceExplods.find(effect=>effect.kind==='gamemakeanim'&&effect.ownerKey===gameHelper.key);
    if(!gameEffect||gameEffect.x!==gameHelper.x+5*gameHelper.facing||gameEffect.z!==gameHelper.z+20)throw Error('GameMakeAnim did not bind to moving Helper XYZ');
-   const savedRandom=Math.random;let gameCases=0;
+   const savedRandomSeed=variableRandomStream.state();let gameCases=0;
    try{
-    Math.random=()=>.75;
     for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const redirected of [false,true])for(const own of [false,true]){
      specialRuntime.reset();sourceExplods.length=0;combatEngineProfile=profile;
      const root=specialRoot(player),ownData=characterProfiles.get(battleCharacters[player-1]).battle;let target=root;
@@ -77,15 +76,18 @@ const server=http.createServer((request,response)=>{
       specialRuntime.dispatch({type:'Helper',params:{stateno:991891,id:991891}},root,specialRuntime.context(root),{},root,player);target=specialRuntime.entities.at(-1);target.x+=90;target.y=-30;
      }
      const caller=redirected?specialRoot(3-player):target;caller.vars[7]=11;if(redirected)target.vars[7]=99;
+     variableRandomStream.seed(1);
      const params={value:own?'S0':'120',pos:'Var(7),20,30',random:'8,12,16',...(redirected?{redirectid:String(kind==='helper'?target.instanceId:player)}:{})};
      executeControllerM1({type:'GameMakeAnim',params},caller,specialRuntime.context(caller),{owner:caller,player:fighterPlayer(caller),schedulingApplied:true});
      const effect=sourceExplods[0],unit=collisionWorldRatio(gravityActorData(target)),offset=kind==='helper'?offsetDrawingPosition([0,0],target.drawOffset??[0,0],target.localScale??1):rootDrawOffsets[player-1];
-     const expected=[Math.fround(Math.fround(target.x+Math.fround(13*unit*target.facing))+offset[0]),Math.fround(Math.fround(target.y+Math.fround(23*unit))+offset[1]),Math.fround(Number(target.z??0)+Math.fround(34*unit))];
+     const halves=[4,6,8],samples=[16807,282475249,1622650073],relative=[11,20,30].map((value,index)=>Math.fround(value+Math.fround(-halves[index]+Math.fround(Math.fround(Math.fround(samples[index])*Math.fround(halves[index]*2))/Math.fround(2147483647)))));
+     const expected=[Math.fround(Math.fround(target.x+Math.fround(relative[0]*unit*target.facing))+offset[0]),Math.fround(Math.fround(target.y+Math.fround(relative[1]*unit))+offset[1]),Math.fround(Number(target.z??0)+Math.fround(relative[2]*unit))];
+     if(variableRandomStream.state()!==1622650073)throw Error('GameMakeAnim did not consume three native random components');
      if(sourceExplods.length!==1||JSON.stringify([effect.x,effect.y,effect.z])!==JSON.stringify(expected)||effect.common===own||effect.player!==player||effect.ownerKey!==(kind==='helper'?target.key:'root'+player))throw Error('GameMakeAnim redirected random/recipient mismatch '+JSON.stringify({profile,player,kind,redirected,own}));
      transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');if(!entry||!entry.source.getContext('2d').getImageData(0,0,entry.source.width,entry.source.height).data.some((value,index)=>index%4===3&&value>0))throw Error('GameMakeAnim own/common matrix produced no visible pixels');
      gameCases++;
     }
-   }finally{Math.random=savedRandom}
+   }finally{variableRandomStream.seed(savedRandomSeed)}
    if(gameCases!==32)throw Error('Incomplete GameMakeAnim consumer matrix');
    sourceExplods.length=0;
    const defaultActor=specialRoot(1);executeControllerM1({type:'GameMakeAnim',params:{}},defaultActor,specialRuntime.context(defaultActor),{owner:defaultActor,player:1,schedulingApplied:true});

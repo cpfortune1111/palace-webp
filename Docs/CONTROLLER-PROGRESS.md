@@ -1,4 +1,20 @@
+## 0.25.91 — Native random consumers (partial, release pending)
+
+RandomRange now reaches the typed expression engine and native shared stream as a two-bound integer intrinsic. Independent and actual root/Helper/profile/player checks cover fractional/reversed bounds, caller-side assignments, undefined propagation without sampling and lazy Cond exclusion. Full compiler/string/foreign-expression/version fidelity remains Pending.
+
+Random expressions now draw on each evaluation from the controller stream rather than using one value per tick. Eight real profile/player/root/Helper fixtures verify repeated occurrences, AST operands, controller interleaving and no random sampling during context construction; the fast query route is covered too. Full RNG lifecycle/compiler/regression/publication fidelity remains Pending.
+
+AssertCommand random-name fallback and TargetDrop keepone now share the native controller stream. Eight real profile/player/normal-Helper target tests verify command buffering, retained IDs, one-target sampling and the following VarRandom value. Other query/controller RNG and final regression/publication remain Pending.
+
+VarRandom and GameMakeAnim now share the pinned integer generator; animation random components use native float32 RandF operation order. Thirty-two actual animation cases check known-sample XYZ positions, and four interleavings verify exact sequence advancement across both controllers, including zero-width random components. Other RNG consumers and startup/replay/compiler fidelity remain Pending.
+
+VarRandom now consumes the pinned Random/RandI integer recurrence and signed range mapper through the actual dispatcher. Independent BigInt checks, sixteen rejected-index cases and 24 real boundary/reversed/equal/full-range cases pass. Cross-controller RNG stream unification, configured seeding/replay lifecycle and compiler boundary fidelity remain explicitly Pending; this is not whole-engine random certification.
+
+Pinned native varRandom.Run evaluates RandI before varSet rejects an invalid index. The WEB consumer now preserves that sampling order. Independent tests plus sixteen real profile/player/root/normal-Helper cases verify rejected writes consume a sample and following valid controllers receive the next value. Full native RNG/range/compiler/version/configuration fidelity and final regression/publication remain Pending; no whole-controller certification changes.
+
 ## 0.25.90 — Common animation resources and ownership (partial, release pending)
+
+Publication subsequently verified at commit 23008a3be372714b9fc3baa65908d0bb995b157b: 264 Node checks, stage/five sound tests, final consumer/actor/scheduling/full battle gates, exact-head successful Pages run 40124611881 and eleven live file comparisons. Both generated assets reproduce byte-for-byte; no original SFF/SND/AIR were uploaded. Receipt: outputs/release-02590-verification.json. Earlier pending statements are historical, not full compatibility claims.
 
 GameMakeAnim now retains recipient-owned animation/sprite and loop data in foreign custom states. Actual P1/P2 fixtures verify valid own sprites remain available when the foreign profile lacks that action, and own-duration expiry is preserved. Other effects keep their existing ownership paths. Source frame/blend/lifetime tests still pass; full native fidelity and final publishing remain Pending.
 

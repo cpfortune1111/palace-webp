@@ -34,4 +34,6 @@ Native getSelfAnimSprite resolves the recipient's own animation/sprite data even
 
 All 264 final-version Node checks pass, as do the Python stage-reflection check and five sound metadata tests. Version 0.25.90 is prepared locally. The final-version consumer/scheduling/complete battle process is tracked separately; verified public deployment remains required. The generated common files are reproducible byte-for-byte and only compressed derivatives are eligible for upload.
 
-Actual allocation limits, full resource-prefix and exhaustive invalid-animation behavior, arbitrary common-library import and blend fidelity, exhaustive depth/binding/lifetime/foreign-coordinate parity, native RNG, exhaustive pause/persistence and full MUGEN version semantics plus final regression/publication remain Pending. No whole-controller certification is claimed.
+GameMakeAnim random XYZ now uses native float32 RandF operations and the same seeded controller stream as VarRandom, AssertCommand, TargetDrop and Random/RandomRange queries. Known-sample actual positions and interleavings pass; see VARIABLE-RANDOM-WIP.md. Native seed lifecycle and other RNG consumers are not certified.
+
+Actual allocation limits, full resource-prefix and exhaustive invalid-animation behavior, arbitrary common-library import and blend fidelity, exhaustive depth/binding/lifetime/foreign-coordinate parity, whole-engine RNG lifecycle, exhaustive pause/persistence and full MUGEN version semantics plus final regression/publication remain Pending. No whole-controller certification is claimed.

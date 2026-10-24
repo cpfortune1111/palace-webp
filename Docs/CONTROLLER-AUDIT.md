@@ -93,7 +93,7 @@ User scope change, 2026-10-25: Moon Palace does not require character recoloring
 | trans | alpha, redirectid, trans | Review delegated parser/defaults | Pending |
 | turn | redirectid | Review delegated parser/defaults | Pending |
 | varadd | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
-| varrandom | range, redirectid, v | Review delegated parser/defaults | Pending |
+| varrandom | range, redirectid, v | Real native integer RNG/range mapper, rejected-index sample consumption and shared controller/query stream consumers tested; startup/configuration/compiler/version fidelity unfinished; see VARIABLE-RANDOM-WIP.md | Pending |
 | varrangeset | first, fvalue, last, redirectid, value | Review delegated parser/defaults | Pending |
 | varset | fv, redirectid, sysfv, sysv, v, value | Review delegated parser/defaults | Pending |
 | veladd | redirectid, x, y, z | Review delegated parser/defaults | Pending |
