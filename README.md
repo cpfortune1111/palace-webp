@@ -1,3 +1,7 @@
+## 0.25.79 — SndPan audio consumers (partial)
+
+SndPan now reaches real owned media graphs with native linear stereo gains, typed redirect/channel parameters, relative facing/local-scale capture and absolute pan. Offline sample renders, actual root/normal-Helper coordinate/source tracking, graph reuse/cleanup and forty scheduling groups pass. PlaySnd lowpriority now evaluates before priority. Full sound parameters, native timing/settings/audio-device fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.78 — Character sound ownership (partial)
 
 PlaySnd/StopSnd now use root/Helper-owned channels, parent/root playback inheritance and native negative-channel selection. Numbered-channel priority, player-pool capacity and automatic-first oldest/slot eviction have executable checks plus actual source/Helper/saturation consumers. Negative sound groups do not allocate media. Remaining sound parameters, audible output, native clock/configuration fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.

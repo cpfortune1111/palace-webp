@@ -1306,12 +1306,15 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      play({priority:'"99"'});const stringKept=characterSoundChannels.entries()[0]===replacement;
      play({priority:'6',lowpriority:'"1"'});const final=characterSoundChannels.entries()[0];
      rows.push({player,common,lowerKept,lowKept,stringKept,firstStops:first.sound.stops,replacementStops:replacement.sound.stops,finalPriority:final.priority,finalPlays:final.sound.plays,count:characterSoundChannels.entries().length});
+     characterSoundChannels.stopAll();const binding=player===1?p1LifecycleBinding:p2,savedVariable=binding.vars[17];
+     try{binding.vars[17]=0;play({lowpriority:'(var(17) := 5)',priority:'var(17)'});rows.at(-1).orderedPriority=characterSoundChannels.entries()[0].priority;rows.at(-1).orderedVariable=binding.vars[17]}finally{binding.vars[17]=savedVariable}
     }
     return rows;
    }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;window.Audio=saved.Audio;roundVoiceUntil=saved.voice}
   })()`);
   assert.equal(soundPriorities.length,4);
   for(const row of soundPriorities){assert.equal(row.lowerKept,true,JSON.stringify(row));assert.equal(row.lowKept,true);assert.equal(row.stringKept,true);assert.equal(row.firstStops,1);assert.equal(row.replacementStops,1);assert.equal(row.finalPriority,6);assert.equal(row.finalPlays,1);assert.equal(row.count,1)}
+  for(const row of soundPriorities){assert.equal(row.orderedPriority,5,JSON.stringify(row));assert.equal(row.orderedVariable,5)}
   console.log('Actual own/common PlaySnd priority and lowpriority extraction control numbered-channel replacement for P1/P2');
   const saturatedSounds=await run(`(()=>{
    const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={Audio:window.Audio,registry:characterSoundChannels,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991950])},rows=[];
@@ -1336,6 +1339,53 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(saturatedSounds.length,2);
   for(const row of saturatedSounds){assert.equal(row.rejected,true,JSON.stringify(row));assert.equal(row.firstStops,0);assert.equal(row.automaticStops,1);assert.equal(row.opponentStops,0);assert.equal(row.pool,row.player);assert.equal(row.slot,1);assert.deepEqual(row.counts,[2,1])}
   console.log('Actual saturated sound pools share normal Helper/root capacity, reject lowpriority and evict automatic audio without touching the opposing player');
+  const renderedPan=await run(`(async()=>{
+   const {createLinearSoundPanner}=await import('./Engine/linear-sound-panner.js'),rows=[];
+   for(const channels of [1,2])for(const pan of [-1,0,.5,1]){
+    const context=new OfflineAudioContext(2,128,44100),buffer=context.createBuffer(channels,128,44100);buffer.getChannelData(0).fill(.25);if(channels===2)buffer.getChannelData(1).fill(.125);
+    const source=context.createBufferSource();source.buffer=buffer;const graph=createLinearSoundPanner(context,source);graph.set(pan);graph.output.connect(context.destination);source.start();const result=await context.startRendering();rows.push({channels,pan,left:result.getChannelData(0)[64],right:result.getChannelData(1)[64]});graph.disconnect();
+   }
+   return rows;
+  })()`);
+  assert.equal(renderedPan.length,8);
+  for(const row of renderedPan){assert.ok(Math.abs(row.left-.25*(1-row.pan))<1e-6,JSON.stringify(row));assert.ok(Math.abs(row.right-(row.channels===1?.25:.125)*(1+row.pan))<1e-6,JSON.stringify(row))}
+  console.log('Actual offline Web Audio renders native linear left/right gains for mono upmix and stereo sources in eight cases');
+  const sourcePan=await run(`(()=>{
+   const saved=characterSoundChannels;characterSoundChannels=createCharacterSoundChannels();const root=specialRoot(1),other=specialRoot(2);let first,second;
+   try{
+    first=characterSoundChannels.add(characterSoundIdentity(root),7,new Audio(),()=>characterSoundOutput.release(first));second=characterSoundChannels.add(characterSoundIdentity(other),7,new Audio(),()=>characterSoundOutput.release(second));
+    executeControllerM1({type:'SndPan',params:{redirectid:'2',channel:'7',pan:'90',abspan:'160'}},p1LifecycleBinding,specialRuntime.context(root),{owner:root,player:1,schedulingApplied:true});
+    const firstState=characterSoundOutput.snapshot(first),secondState=characterSoundOutput.snapshot(second),active=characterSoundOutput.size();
+    executeControllerM1({type:'SndPan',params:{redirectid:'2',channel:'7',abspan:'80'}},p1LifecycleBinding,specialRuntime.context(root),{owner:root,player:1,schedulingApplied:true});const repeated=characterSoundOutput.snapshot(second),repeatedCount=characterSoundOutput.size();
+    executeControllerM1({type:'StopSnd',params:{redirectid:'2',channel:'7'}},p1LifecycleBinding,specialRuntime.context(root),{owner:root,player:1,schedulingApplied:true});
+    return {firstState,secondState,active,repeated,repeatedCount,remaining:characterSoundOutput.size(),released:characterSoundOutput.snapshot(second)};
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved}
+  })()`);
+  assert.equal(sourcePan.firstState,null);assert.equal(sourcePan.secondState.sourceId,-1);assert.equal(sourcePan.secondState.pan,160);assert.ok(Math.abs(sourcePan.secondState.lastPan-.3)<1e-6);assert.equal(sourcePan.active,1);assert.equal(sourcePan.remaining,0);assert.equal(sourcePan.released,null);
+  assert.equal(sourcePan.repeatedCount,1);assert.ok(Math.abs(sourcePan.repeated.lastPan-.15)<1e-6);
+  console.log('Actual redirected SndPan attaches real media audio graph only to recipient channel and StopSnd disconnects it');
+  const helperPan=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={registry:characterSoundChannels,entities:[...specialRuntime.entities],camera:[cameraX,cameraZoom],data:data.map(value=>({coordinate:value.coordinateSystem.localcoord,definition:value.helperStates[991960]}))},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();cameraX=80;cameraZoom=2;
+    for(const value of data)value.helperStates[991960]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2])for(const coordinate of [320,640])for(const facing of [-1,1]){
+     characterSoundChannels.stopAll();specialRuntime.entities.length=0;data[player-1].coordinateSystem.localcoord=[coordinate,240];const root=specialRoot(player),caller=specialRoot(3-player);
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991960,id:991960}},root,specialRuntime.context(root),{},root,player);const helper=specialRuntime.entities.at(-1);helper.x=400;helper.facing=facing;
+     let record;record=characterSoundChannels.add(characterSoundIdentity(helper),7,new Audio(),()=>characterSoundOutput.release(record));
+     executeControllerM1({type:'SndPan',params:{redirectid:String(helper.instanceId),channel:'7',pan:'40'}},3-player===1?p1LifecycleBinding:p2,specialRuntime.context(caller),{owner:caller,player:3-player,schedulingApplied:true});
+     const initial=characterSoundOutput.snapshot(record);helper.x=480;characterSoundOutput.update();const moved=characterSoundOutput.snapshot(record);helper.destroyed=true;helper.x=900;characterSoundOutput.update();const removed=characterSoundOutput.snapshot(record);
+     rows.push({player,coordinate,facing,source:initial.sourceId,id:helper.instanceId,offset:initial.pan,initial:initial.lastPan,moved:moved.lastPan,removed:removed.lastPan,retained:removed.sourceX});
+    }
+    return rows;
+   }finally{
+    characterSoundChannels.stopAll();characterSoundChannels=saved.registry;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);[cameraX,cameraZoom]=saved.camera;
+    for(let index=0;index<2;index++){data[index].coordinateSystem.localcoord=saved.data[index].coordinate;if(saved.data[index].definition===undefined)delete data[index].helperStates[991960];else data[index].helperStates[991960]=saved.data[index].definition}
+   }
+  })()`);
+  assert.equal(helperPan.length,8);
+  for(const row of helperPan){const offset=40*320/row.coordinate*row.facing;assert.equal(row.source,row.id);assert.equal(row.offset,offset);assert.ok(Math.abs(row.initial-(100+offset-20)*2*2/320*.3)<1e-6,JSON.stringify(row));assert.ok(Math.abs(row.moved-(120+offset-20)*2*2/320*.3)<1e-6,JSON.stringify(row));assert.equal(row.removed,row.moved);assert.equal(row.retained,120)}
+  console.log('Actual redirected normal-Helper SndPan captures own coordinates/facing, tracks camera/emitter and retains removed position in eight cases');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

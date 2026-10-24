@@ -75,7 +75,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | runstate | playerno, redirectid, value | Review delegated parser/defaults | Pending |
 | screenbound | movecamera, redirectid, stagebound, value | Review delegated parser/defaults | Pending |
 | selfstate | anim, continue, ctrl, readplayerid, redirectid, value | Review delegated parser/defaults | Pending |
-| sndpan | abspan, channel, pan, redirectid | Review delegated parser/defaults | Pending |
+| sndpan | abspan, channel, pan, redirectid | Partial real owned-media graph consumer, typed recipient/channel/pan extraction and offline linear-gain rendering tested; timing/configuration/Helper coverage pending; SOUND-PANNING-WIP.md | Pending |
 | sprpriority | layerno, redirectid, value | Review delegated parser/defaults | Pending |
 | statetypeset | movetype, physics, redirectid, statetype, value | Review delegated parser/defaults | Pending |
 | stopsnd | channel, redirectid | Owned root/Helper channels, native negative selection and actual redirected/nested-Helper consumers tested; full lifecycle/compiler fidelity pending; CHARACTER-SOUND-OWNERSHIP-WIP.md | Pending |

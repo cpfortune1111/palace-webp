@@ -150,6 +150,52 @@ const server=http.createServer((request,response)=>{
   assert.equal(resetResults.length,40);
   for(const row of resetResults)assert.deepEqual(row.observed,row.expected,JSON.stringify(row));
   console.log('Actual MoveHitReset omitted-recipient root/Helper current/global/lifecycle hitpause, persistence and global-pause allowance cases pass in both profiles and player directions');
+  const panResults=await run(`(()=>{
+   const saved={registry:characterSoundChannels,profile:combatEngineProfile,reaction:p1Reaction,paused:[p1HitPause,p2.hitShake,p2.attackPause]},rows=[];
+   const recordFor=actor=>{let record;record=characterSoundChannels.add(characterSoundIdentity(actor),7,new Audio(),()=>characterSoundOutput.release(record));characterSoundOutput.setPan(record,{pan:0,sourceId:-1});return record};
+   const applied=record=>Math.abs(characterSoundOutput.snapshot(record).lastPan-.3)<1e-6;
+   try{
+    characterSoundChannels=createCharacterSoundChannels();p1Reaction=null;
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2]){
+     combatEngineProfile=profile;specialRuntime.reset();p1HitPause=1;p2.hitShake=1;p2.attackPause=1;
+     const actor=specialRoot(player),context=specialRuntime.context(actor),binding=player===1?p1LifecycleBinding:p2,data=characterProfiles.get(battleCharacters[player-1]).battle,old={globals:data.globalControllers,commands:data.playerCommands,definition:data.helperStates[991970]};
+     const controller=params=>({type:'SndPan',params:{channel:'7',abspan:'160',...params},triggers:{1:['1']},triggerall:[]});
+     try{
+      data.playerCommands=[];
+      for(const kind of ['root-current','root-global','root-lifecycle','helper-current','helper-global']){
+       const observed=[];
+       for(const literal of ['1 + 0','0.5','-2']){
+        characterSoundChannels.stopAll();const source=controller({ignorehitpause:literal});data.globalControllers=kind==='root-lifecycle'||kind==='helper-global'?{'-2':[source]}:{};
+        if(kind.startsWith('helper')){
+         specialRuntime.reset();data.helperStates[991970]={type:'S',physics:'N',moveType:'I',anim:0,controllers:kind==='helper-current'?[source]:[]};specialRuntime.dispatch({type:'Helper',params:{stateno:991970,id:991970,keyctrl:'2'}},actor,context,{},actor,player);const helper=specialRuntime.entities.at(-1);helper.hitPause=2;const record=recordFor(helper);specialRuntime.step();observed.push(applied(record));
+        }else{
+         const record=recordFor(actor);if(kind==='root-lifecycle')lifecycleRuntime.globalState(actor,context,-2,{hitPause:true});else executeControllerM1({...source,controllerStateNo:kind==='root-global'?-2:0},binding,context,{owner:actor,player,schedulingApplied:false});observed.push(applied(record));
+        }
+       }
+       rows.push({profile,player,kind,observed,expected:[true,false,true]});
+      }
+      for(const global of [false,true]){
+       characterSoundChannels.stopAll();const source=controller({persistent:'0',ignorehitpause:'1'}),record=recordFor(actor),observed=[];
+       for(let attempt=0;attempt<3;attempt++){characterSoundOutput.setPan(record,{pan:0,sourceId:-1});executeControllerM1({...source,controllerSchedulingKey:source,controllerStateNo:global?-2:0},binding,context,{owner:actor,player,schedulingApplied:false});observed.push(applied(record))}
+       rows.push({profile,player,kind:global?'root-global-persistence':'root-current-persistence',observed,expected:global?[true,true,true]:[true,false,false]});
+      }
+      for(const global of [false,true]){
+       characterSoundChannels.stopAll();specialRuntime.reset();const source=controller({persistent:'0'}),observed=[];data.globalControllers=global?{'-2':[source]}:{};data.helperStates[991970]={type:'S',physics:'N',moveType:'I',anim:0,controllers:global?[]:[source]};
+       specialRuntime.dispatch({type:'Helper',params:{stateno:991970,id:991970,keyctrl:'2'}},actor,context,{},actor,player);const helper=specialRuntime.entities.at(-1);helper.created=combatTraceTick-1;helper.hitPause=0;const record=recordFor(helper);
+       for(let attempt=0;attempt<3;attempt++){characterSoundOutput.setPan(record,{pan:0,sourceId:-1});specialRuntime.step();observed.push(applied(record))}
+       rows.push({profile,player,kind:global?'helper-global-persistence':'helper-current-persistence',observed,expected:global?[true,true,true]:[true,false,false]});
+      }
+      characterSoundChannels.stopAll();specialRuntime.reset();data.globalControllers={};data.helperStates[991970]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[controller({})]};specialRuntime.dispatch({type:'Helper',params:{stateno:991970,id:991970,keyctrl:'2'}},actor,context,{},actor,player);
+      const helper=specialRuntime.entities.at(-1);helper.created=combatTraceTick-1;helper.hitPause=0;const record=recordFor(helper);specialRuntime.pauses.normal[0]={remaining:10,movetime:0,player:1,created:combatTraceTick-1};specialRuntime.moveTimes.set(helper.key,{normal:0});specialRuntime.step();const blocked=applied(record);specialRuntime.moveTimes.set(helper.key,{normal:1});characterSoundOutput.setPan(record,{pan:0,sourceId:-1});specialRuntime.step();
+      rows.push({profile,player,kind:'helper-global-pause-allowance',observed:[blocked,applied(record)],expected:[false,true]});
+     }finally{characterSoundChannels.stopAll();data.globalControllers=old.globals;data.playerCommands=old.commands;if(old.definition===undefined)delete data.helperStates[991970];else data.helperStates[991970]=old.definition;specialRuntime.reset()}
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;combatEngineProfile=saved.profile;p1Reaction=saved.reaction;[p1HitPause,p2.hitShake,p2.attackPause]=saved.paused}
+  })()`);
+  assert.equal(panResults.length,40);
+  for(const row of panResults)assert.deepEqual(row.observed,row.expected,JSON.stringify(row));
+  console.log('Actual SndPan root-current/global/lifecycle and normal-Helper current/global hitpause, persistence and global-pause allowance consumers pass in both profiles/player directions');
   assert.deepEqual(errors,[]);
   console.log('Actual P1/P2 root-current/root-global and Helper current/global hitpause gates use CNS Atoi literal prefixes and nonzero flags');
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}
