@@ -1,3 +1,7 @@
+## 0.25.89 — GameMakeAnim consumers (partial, release pending)
+
+GameMakeAnim now reaches real own/common animation rendering, caller-context redirected XYZ/random positions, native under/priority defaults, omitted own-animation-zero behavior and moving-Helper binding. Thirty-two consumer cases plus depth/default/lifetime checks and forty scheduling groups pass. Full native resources, limits, RNG and version/compiler fidelity remain Pending; no whole-controller certification is claimed. Character recoloring remains excluded.
+
 ## 0.25.88 — MakeDust consumers (partial, release pending)
 
 MakeDust now uses the actual compressed F120 animation, actor-owned spacing clocks, redirected positions, NoMakeDust suppression, native hitpause playback and real root/Helper drawing. Helper binding and enabled-stage Z projection have actual simulation/drawing checks. Sixteen focused browser cases and forty controller-specific scheduling groups pass. Complete native fidelity and final versioned deployment remain Pending; character recoloring remains excluded.

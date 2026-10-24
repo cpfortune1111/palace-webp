@@ -1,4 +1,12 @@
+## Unreleased — GameMakeAnim real consumers (partial)
+
+Forty GameMakeAnim-specific real-emission scheduling groups subsequently pass both profiles/player directions. Matching requires correct effect kind/recipient, with particles cleared between attempts; current/global/lifecycle and normal Helper hitpause/persistence/global-pause allowances are exercised. The expanded nine-controller matrix has 360 groups. Full native timing/compiler/resource fidelity and final regression/publication remain separate gates.
+
+The shared root/Helper dispatcher now reaches source-effect rendering with native common-animation defaults, typed references, caller/recipient local-scale conversion, XYZ random positions, under/layer/priority and independent palette effects. Four actual F120 pixel/lifetime cases, two Z transform cases and a moving normal-Helper XYZ binding case pass alongside sixteen MakeDust regressions. Complete resources, limits, native RNG, compiler/version and scheduling fidelity plus final regression/publication remain Pending. No whole-controller certification changes. See GAME-MAKE-ANIM-WIP.md.
+
 ## 0.25.88 — MakeDust consumers (partial, publication pending)
+
+Publication subsequently verified at commit 4c8ab1e3424f5ee8cd4d076d986686790178ccaa: 261 Node checks, final actor/scheduling/full battle gates, exact-head successful Pages run 40120656208 and fifteen live file comparisons passed. Receipt: outputs/release-02588-verification.json. Earlier pending statements are historical; full compatibility remains unfinished.
 
 Shared root/Helper MakeDust now reaches true common F120 assets, real particles, recipient spacing clocks, caller-context redirected XYZ positions, NoMakeDust, native layer/priority and lifetime. Moving-Helper binding, actual Z drawing and local/global pause behavior have focused consumer checks. Sixteen actual browser cases and forty controller-specific scheduling groups pass; the expanded eight-controller matrix has 320 groups. Common effect timing no longer accidentally samples a character animation with the same action number. Native compiler/version/limits/rounding/binding/depth import parity, final combined regression and verified publishing remain Pending. No whole-controller certification changes; recoloring stays excluded. See MAKE-DUST-WIP.md.
 

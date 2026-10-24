@@ -45,9 +45,55 @@ const server=http.createServer((request,response)=>{
    specialRuntime.reset();sourceExplods.length=0;p1HitPause=0;p2.attackPause=0;cameraX=20;cameraY=0;cameraZoom=1;Object.assign(STAGE_CAMERA,{topz:0,botz:100,ztopscale:.5,zbotscale:1.5,depthtoscreen:2});Object.assign(stageCameraConfig.player,{topbound:-100,botbound:100});
    const actor=specialRoot(1),state=makeDustStateFor(actor),fit=Math.min(innerWidth/1280,innerHeight/720);
    for(const depth of [0,100]){sourceExplods.length=0;state.elapsed=3;executeControllerM1({type:'MakeDust',params:{spacing:'1',pos:'0,-10,'+depth}},actor,specialRuntime.context(actor),{owner:actor,player:1,schedulingApplied:true});const effect=sourceExplods[0],scale=.5+effect.z/100;transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='dust');if(Math.abs(entry.matrix[0]-scale*effect.facing*fit)>1e-6||Math.abs(entry.matrix[5]-worldScreenY(effect.y*scale+effect.z*2)*fit)>1e-6)throw Error('Actual XYZ operand did not change dust transform')}
+   for(const player of [1,2])for(const under of [0,1]){
+    sourceExplods.length=0;const actor=specialRoot(player);
+    executeControllerM1({type:'GameMakeAnim',params:{value:'120',pos:'10,-20,0',under:String(under)}},actor,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+    if(sourceExplods.length!==1)throw Error('GameMakeAnim did not reach source effects');
+    const effect=sourceExplods[0];if(effect.anim!==120||!effect.common||effect.sprpriority!==-2147483648||effect.layerno!==(under?0:1))throw Error('GameMakeAnim defaults/resource/layer mismatch');
+    transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');
+    if(!entry||!entry.source.getContext('2d').getImageData(0,0,entry.source.width,entry.source.height).data.some((value,index)=>index%4===3&&value>0))throw Error('GameMakeAnim produced no visible pixels');
+    for(let tick=0;tick<27;tick++)stepSourceExplods();if(sourceExplods.length)throw Error('GameMakeAnim did not expire');
+   }
+   for(const depth of [0,100]){
+    sourceExplods.length=0;const actor=specialRoot(1);
+    executeControllerM1({type:'GameMakeAnim',params:{value:'120',pos:'0,-10,'+depth}},actor,specialRuntime.context(actor),{owner:actor,player:1,schedulingApplied:true});
+    const effect=sourceExplods[0],scale=.5+effect.z/100;transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');
+    if(!entry||Math.abs(entry.matrix[0]-scale*effect.facing*fit)>1e-6||Math.abs(entry.matrix[5]-worldScreenY(effect.y*scale+effect.z*2)*fit)>1e-6)throw Error('GameMakeAnim Z did not reach drawing');
+   }
+   specialRuntime.reset();sourceExplods.length=0;
+   data.helperStates[991890]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[{type:'GameMakeAnim',params:{value:'120',pos:'5,0,20'},triggers:{1:['1']},triggerall:[]}]};
+   const gameOwner=specialRoot(1);specialRuntime.dispatch({type:'Helper',params:{stateno:991890,id:991890}},gameOwner,specialRuntime.context(gameOwner),{},gameOwner,1);
+   const gameHelper=specialRuntime.entities.at(-1);gameHelper.x=gameOwner.x+200;gameHelper.vx=4;gameHelper.z=30;gameHelper.created=combatTraceTick-1;simStep();
+   const gameEffect=sourceExplods.find(effect=>effect.kind==='gamemakeanim'&&effect.ownerKey===gameHelper.key);
+   if(!gameEffect||gameEffect.x!==gameHelper.x+5*gameHelper.facing||gameEffect.z!==gameHelper.z+20)throw Error('GameMakeAnim did not bind to moving Helper XYZ');
+   const savedRandom=Math.random;let gameCases=0;
+   try{
+    Math.random=()=>.75;
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const redirected of [false,true])for(const own of [false,true]){
+     specialRuntime.reset();sourceExplods.length=0;combatEngineProfile=profile;
+     const root=specialRoot(player),ownData=characterProfiles.get(battleCharacters[player-1]).battle;let target=root;
+     if(kind==='helper'){
+      ownData.helperStates[991891]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+      specialRuntime.dispatch({type:'Helper',params:{stateno:991891,id:991891}},root,specialRuntime.context(root),{},root,player);target=specialRuntime.entities.at(-1);target.x+=90;target.y=-30;
+     }
+     const caller=redirected?specialRoot(3-player):target;caller.vars[7]=11;if(redirected)target.vars[7]=99;
+     const params={value:own?'S0':'120',pos:'Var(7),20,30',random:'8,12,16',...(redirected?{redirectid:String(kind==='helper'?target.instanceId:player)}:{})};
+     executeControllerM1({type:'GameMakeAnim',params},caller,specialRuntime.context(caller),{owner:caller,player:fighterPlayer(caller),schedulingApplied:true});
+     const effect=sourceExplods[0],unit=collisionWorldRatio(gravityActorData(target)),offset=kind==='helper'?offsetDrawingPosition([0,0],target.drawOffset??[0,0],target.localScale??1):rootDrawOffsets[player-1];
+     const expected=[Math.fround(Math.fround(target.x+Math.fround(13*unit*target.facing))+offset[0]),Math.fround(Math.fround(target.y+Math.fround(23*unit))+offset[1]),Math.fround(Number(target.z??0)+Math.fround(34*unit))];
+     if(sourceExplods.length!==1||JSON.stringify([effect.x,effect.y,effect.z])!==JSON.stringify(expected)||effect.common===own||effect.player!==player||effect.ownerKey!==(kind==='helper'?target.key:'root'+player))throw Error('GameMakeAnim redirected random/recipient mismatch '+JSON.stringify({profile,player,kind,redirected,own}));
+     transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');if(!entry||!entry.source.getContext('2d').getImageData(0,0,entry.source.width,entry.source.height).data.some((value,index)=>index%4===3&&value>0))throw Error('GameMakeAnim own/common matrix produced no visible pixels');
+     gameCases++;
+    }
+   }finally{Math.random=savedRandom}
+   if(gameCases!==32)throw Error('Incomplete GameMakeAnim consumer matrix');
+   sourceExplods.length=0;
+   const defaultActor=specialRoot(1);executeControllerM1({type:'GameMakeAnim',params:{}},defaultActor,specialRuntime.context(defaultActor),{owner:defaultActor,player:1,schedulingApplied:true});
+   if(sourceExplods.length!==1||sourceExplods[0].anim!==0||sourceExplods[0].common)throw Error('Omitted GameMakeAnim value must retain own animation zero');
+   transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='gamemakeanim'))throw Error('Default GameMakeAnim animation zero did not render');
    return rows;
    }finally{sourceExplods.length=0;specialRuntime.reset();combatEngineProfile=saved.profile;rootDrawOffsets.splice(0,2,...saved.offsets);[cameraX,cameraY,cameraZoom]=saved.camera;Object.assign(STAGE_CAMERA,saved.config);Object.assign(stageCameraConfig.player,saved.player);p1HitPause=0;p2.attackPause=0}
   })()`);
-  assert.equal(rows.length,16);console.log('Sixteen actual MakeDust root/normal-Helper/profile/player/redirection cases pass F120 visible pixels/timing/lifetime, positions, suppression and per-actor finish clocks; Z changes actual drawing transform');
+  assert.equal(rows.length,16);console.log('Sixteen MakeDust cases and 32 GameMakeAnim own/common/profile/player/root/Helper/redirection random-position pixel cases pass, plus lifetime, Z drawing and moving Helper binding');
  }finally{await browser?.close();server.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

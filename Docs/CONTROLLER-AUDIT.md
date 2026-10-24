@@ -39,7 +39,7 @@ User scope change, 2026-10-25: Moon Palace does not require character recoloring
 | explodbindtime | id, redirectid, time, value | Review delegated parser/defaults | Pending |
 | fallenvshake | redirectid | Review delegated parser/defaults | Pending |
 | forcefeedback | ampl, freq, hi, lo, redirectid, self, time, waveform | Review delegated parser/defaults | Pending |
-| gamemakeanim | pos, random, redirectid, under, value | Review delegated parser/defaults | Pending |
+| gamemakeanim | pos, random, redirectid, under, value | Partial real shared dispatcher, typed references, common F120 pixels/lifetime, XYZ drawing and moving-Helper binding; see GAME-MAKE-ANIM-WIP.md; full native fidelity unfinished | Pending |
 | gravity | redirectid | Real shared consumer and executable extraction/velocity tests; see GRAVITY-CONTROLLER-WIP.md; full native fidelity review pending | Pending |
 | helper | clsnproxy, extendsmap, facing, helpertype, id, immortal, inheritchannels, inheritjuggle, keyctrl, kovelocity, name, ownclsnscale, ownpal, ownprojectile, pausemovetime, pos, postype, preserve, redirectid, remappal, size.air.back, size.air.front, size.depth, size.ground.back, size.ground.front, size.head.pos, size.height, size.mid.pos, size.proj.doscale, size.pushfactor, size.shadowoffset, size.weight, size.xscale, size.yscale, standby, stateno, supermovetime | Review delegated parser/defaults | Pending |
 | hitadd | redirectid, value | Review delegated parser/defaults | Pending |
