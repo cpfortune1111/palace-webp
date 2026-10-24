@@ -2,6 +2,7 @@ export function createNativeSoundPlayer({loader,isActive,createNode=(context,opt
  const active=new Map(),modules=new WeakMap();
  function moduleFor(context){let pending=modules.get(context);if(!pending){pending=context.audioWorklet.addModule(moduleUrl);modules.set(context,pending);pending.catch(()=>{if(modules.get(context)===pending)modules.delete(context)})}return pending}
  return {
+  prepare:moduleFor,
   play(record,{context,url,metadata,params,attach,onEnded,onError}){
    active.get(record)?.stop();const cancellation=new AbortController();let stopped=false,node=null;
    const handle={ready:null,stop(){if(stopped)return;stopped=true;cancellation.abort();if(node){node.port.postMessage({type:'stop'});node.disconnect();node.port.close()}if(active.get(record)===handle)active.delete(record)}};active.set(record,handle);

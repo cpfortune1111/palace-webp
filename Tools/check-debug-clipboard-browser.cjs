@@ -1280,8 +1280,8 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      executeControllerM1({type:'PlaySnd',params:{value:soundValue,channel:'7'}},child,specialRuntime.context(child),{owner:child,player,schedulingApplied:true});
      const record=characterSoundChannels.entries()[0],expected=inheritance===1?parent:inheritance===2?root:child;
      const stop=actor=>executeControllerM1({type:'StopSnd',params:{channel:'7'}},actor.kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
-     stop(child);const childStops=record.sound.stops;stop(parent);const parentStops=record.sound.stops;stop(root);
-     rows.push({player,inheritance,created:child.inheritChannels,owner:record.owner,expected:characterSoundIdentity(expected),childStops,parentStops,finalStops:record.sound.stops,resource:record.sound.src===new URL(profile.soundBase+profile.sounds[key].file,location.href).href});
+     stop(child);const childStops=Number(!characterSoundChannels.has(record));stop(parent);const parentStops=Number(!characterSoundChannels.has(record));stop(root);
+     rows.push({player,inheritance,created:child.inheritChannels,owner:record.owner,expected:characterSoundIdentity(expected),childStops,parentStops,finalStops:Number(!characterSoundChannels.has(record)),resource:record.nativePlayback.url===profile.soundBase+(profile.sounds[key].nativeFile??profile.sounds[key].file)});
     }
     return rows;
    }finally{
@@ -1305,7 +1305,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      play({priority:'5',lowpriority:'0'});const replacement=characterSoundChannels.entries()[0];
      play({priority:'"99"'});const stringKept=characterSoundChannels.entries()[0]===replacement;
      play({priority:'6',lowpriority:'"1"'});const final=characterSoundChannels.entries()[0];
-     rows.push({player,common,lowerKept,lowKept,stringKept,firstStops:first.sound.stops,replacementStops:replacement.sound.stops,finalPriority:final.priority,finalPlays:final.sound.plays,count:characterSoundChannels.entries().length});
+     rows.push({player,common,lowerKept,lowKept,stringKept,firstStops:Number(!characterSoundChannels.has(first)),replacementStops:Number(!characterSoundChannels.has(replacement)),finalPriority:final.priority,finalAllocated:characterSoundChannels.has(final)&&!!final.nativePlayback&&!!final.nativeReady,count:characterSoundChannels.entries().length});
      characterSoundChannels.stopAll();const binding=player===1?p1LifecycleBinding:p2,savedVariable=binding.vars[17];
      try{binding.vars[17]=0;play({lowpriority:'(var(17) := 5)',priority:'var(17)'});rows.at(-1).orderedPriority=characterSoundChannels.entries()[0].priority;rows.at(-1).orderedVariable=binding.vars[17]}finally{binding.vars[17]=savedVariable}
     }
@@ -1313,7 +1313,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
    }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;window.Audio=saved.Audio;roundVoiceUntil=saved.voice}
   })()`);
   assert.equal(soundPriorities.length,4);
-  for(const row of soundPriorities){assert.equal(row.lowerKept,true,JSON.stringify(row));assert.equal(row.lowKept,true);assert.equal(row.stringKept,true);assert.equal(row.firstStops,1);assert.equal(row.replacementStops,1);assert.equal(row.finalPriority,6);assert.equal(row.finalPlays,1);assert.equal(row.count,1)}
+  for(const row of soundPriorities){assert.equal(row.lowerKept,true,JSON.stringify(row));assert.equal(row.lowKept,true);assert.equal(row.stringKept,true);assert.equal(row.firstStops,1);assert.equal(row.replacementStops,1);assert.equal(row.finalPriority,6);assert.equal(row.finalAllocated,true);assert.equal(row.count,1)}
   for(const row of soundPriorities){assert.equal(row.orderedPriority,5,JSON.stringify(row));assert.equal(row.orderedVariable,5)}
   console.log('Actual own/common PlaySnd priority and lowpriority extraction control numbered-channel replacement for P1/P2');
   const saturatedSounds=await run(`(()=>{
@@ -1326,9 +1326,9 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      specialRuntime.dispatch({type:'Helper',params:{stateno:991950,id:991950}},root,specialRuntime.context(root),{},root,player);const helper=specialRuntime.entities.at(-1);
      const play=(actor,channel,priority,lowpriority=0)=>executeControllerM1({type:'PlaySnd',params:{value:'F7,0',channel:String(channel),priority:String(priority),lowpriority:String(lowpriority)}},actor.kind==='helper'?actor:actor.player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player:actor.player,schedulingApplied:true});
      play(root,0,5);const first=characterSoundChannels.entries().at(-1);play(helper,-1,0);const automatic=characterSoundChannels.entries().at(-1);play(other,0,0);const opponent=characterSoundChannels.entries().at(-1);
-     play(root,1,4,1);const rejected=automatic.sound.stops===0&&characterSoundChannels.entries().length===3;
+     play(root,1,4,1);const rejected=characterSoundChannels.has(automatic)&&characterSoundChannels.entries().length===3;
      play(root,1,4);const replacement=characterSoundChannels.entries().at(-1);
-     rows.push({player,rejected,firstStops:first.sound.stops,automaticStops:automatic.sound.stops,opponentStops:opponent.sound.stops,pool:replacement.pool,slot:replacement.slot,counts:[characterSoundChannels.entries().filter(record=>record.pool===player).length,characterSoundChannels.entries().filter(record=>record.pool===3-player).length]});
+     rows.push({player,rejected,firstStops:Number(!characterSoundChannels.has(first)),automaticStops:Number(!characterSoundChannels.has(automatic)),opponentStops:Number(!characterSoundChannels.has(opponent)),pool:replacement.pool,slot:replacement.slot,counts:[characterSoundChannels.entries().filter(record=>record.pool===player).length,characterSoundChannels.entries().filter(record=>record.pool===3-player).length]});
     }
     return rows;
    }finally{
@@ -1562,6 +1562,36 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(nativePlaySnd.length,16);
   for(const row of nativePlaySnd){assert.equal(row.ready,!row.cancel);assert.equal(row.native,true);assert.equal(row.attached,!row.cancel);assert.equal(row.remaining,0);assert.equal(row.players,0);assert.equal(row.graphs,0);const sequence=row.finiteLoop?[0,1,2,3,4,5,2,3,4,5]:[0,1,2,3,4,5,6,7],step=row.common?1:2;for(let frame=0;frame<64;frame++){const sourceIndex=sequence[frame*step],detail=JSON.stringify({player:row.player,common:row.common,cancel:row.cancel,finiteLoop:row.finiteLoop,frame});assert.equal(row.left[frame],row.cancel||sourceIndex===undefined?0:Math.fround(row.sourceLeft[sourceIndex]*row.gain),detail);assert.equal(row.right[frame],row.cancel||sourceIndex===undefined?0:Math.fround(row.sourceRight[sourceIndex]*row.gain),detail)}}
   console.log('Actual PlaySnd own/common dispatch reaches native worklet speed/seek/finite-loop output and StopSnd prevents late playback for P1/P2 in sixteen cases');
+  const repeatedSoundPreparation=await run(`(async()=>{
+   const players=[...battleCharacters],savedFetch=window.fetch,requests=[];
+   await prepareCharacters(players);
+   const before=nativeSoundLoader.size(),resources=[...new Set(players)].flatMap(character=>{const profile=characterProfiles.get(character);return Object.values(profile.sounds).map(metadata=>profile.soundBase+(metadata.nativeFile??metadata.file))}).concat(Object.values(commonSoundManifest).map(metadata=>'./Sound/Common/'+(metadata.nativeFile??metadata.file)));
+   try{
+    window.fetch=(input,...options)=>{const url=String(input?.url??input);if(/\\.(flac|mp3|wav)(\\?|$)/i.test(url))requests.push(url);return savedFetch(input,...options)};
+    await prepareCharacters(players);
+    return {before,after:nativeSoundLoader.size(),resources:new Set(resources).size,requests,players:[...battleCharacters],sampleRate:characterSoundOutput.prepare().sampleRate};
+   }finally{window.fetch=savedFetch}
+  })()`);
+  assert.ok(repeatedSoundPreparation.resources>4);assert.ok(repeatedSoundPreparation.before>=repeatedSoundPreparation.resources);assert.equal(repeatedSoundPreparation.after,repeatedSoundPreparation.before);assert.deepEqual(repeatedSoundPreparation.requests,[]);assert.equal(repeatedSoundPreparation.sampleRate,44100);
+  console.log('Actual repeated character preparation reuses decoded own/common sound caches without new audio fetches');
+  const defaultPlaySnd=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true]){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',abspan:'0',volumescale:'100'}});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();const ready=await record.nativeReady,descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();
+     dispatch({type:'StopSnd',params:{channel:'7'}});
+     rows.push({player,common,ready,params:descriptor.params,remaining:characterSoundChannels.entries().length,players:nativeSoundPlayer.size(),graphs:characterSoundOutput.size(),gain:common?1:Math.min(512,Math.max(0,gravityActorData(actor).dataConstants['data.volume']))/256,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(0,64),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(0,64)});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(defaultPlaySnd.length,4);
+  for(const row of defaultPlaySnd){assert.equal(row.ready,true);assert.deepEqual(row.params,{freqMul:1,loopCount:0,loopStart:0,loopEnd:0,startPosition:0});assert.equal(row.remaining,0);assert.equal(row.players,0);assert.equal(row.graphs,0);assert.equal(row.sourceLeft.length,64);for(let frame=0;frame<64;frame++){const detail=JSON.stringify({player:row.player,common:row.common,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[frame]*row.gain),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[frame]*row.gain),detail)}}
+  console.log('Actual PlaySnd with omitted playback parameters renders exact source-start samples through native defaults for P1/P2 own/common sounds');
   const infinitePlaySnd=await run(`(async()=>{
    const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
    try{

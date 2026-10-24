@@ -14,6 +14,6 @@ export function compilePlaySoundOptions(params,evaluate,channel=-1,versions=null
  if(params.loopcount!==undefined)playback.loopCount=controllerInteger(evaluate(params.loopcount));
  options.stopFlags={hit:params.stopongethit===undefined?channel===0:controllerBoolean(evaluate(params.stopongethit)),state:params.stoponchangestate===undefined?false:controllerBoolean(evaluate(params.stoponchangestate))};
  if(playback.loopCount===0&&looping){playback.loopCount=-1;if(params.volumescale===undefined&&!versions?.ikemen?.[0]&&!versions?.ikemen?.[1])options.volume=100}
- if(['freqmul','loop','loopstart','loopend','startposition','loopcount'].some(name=>params[name]!==undefined))options.playback=playback;
+ options.playback=playback;
  return options;
 }

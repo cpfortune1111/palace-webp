@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.81 Controller Integration</title>
+<title>Prototype 0.25.82 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.81 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD native-playback-02581-20261024-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.82 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD native-defaults-02582-20261024-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -212,14 +212,15 @@ import {applyMoveHitResetController} from './Engine/move-hit-reset.js?v=02577';
 import {createActorControllerSchedules} from './Engine/controller-schedule.js?v=02555';
 import {parseCnsIntegerLiteral} from './Engine/cns-integer-literal.js';
 import {controllerBoolean,controllerInteger} from './Engine/controller-value-conversion.js';
-import {characterSoundIdentity,resolveSoundChannelOwner,createCharacterSoundChannels} from './Engine/character-sound-channels.js?v=02581';
+import {characterSoundIdentity,resolveSoundChannelOwner,createCharacterSoundChannels} from './Engine/character-sound-channels.js?v=02582';
 import {applyStopSoundController} from './Engine/stop-sound-controller.js?v=02578';
 import {applySoundPanController} from './Engine/sound-pan-controller.js?v=02579';
-import {createCharacterSoundOutput} from './Engine/character-sound-output.js?v=02581';
-import {compilePlaySoundOptions} from './Engine/play-sound-options.js?v=02581';
-import {playSoundGain} from './Engine/play-sound-volume.js?v=02581';
-import {createNativeSoundLoader} from './Engine/native-sound-loader.js?v=02581';
-import {createNativeSoundPlayer} from './Engine/native-sound-player.js?v=02581';
+import {createCharacterSoundOutput} from './Engine/character-sound-output.js?v=02582';
+import {compilePlaySoundOptions} from './Engine/play-sound-options.js?v=02582';
+import {playSoundGain} from './Engine/play-sound-volume.js?v=02582';
+import {createNativeSoundLoader} from './Engine/native-sound-loader.js?v=02582';
+import {createNativeSoundPlayer} from './Engine/native-sound-player.js?v=02582';
+import {preloadNativeSounds} from './Engine/native-sound-preload.js?v=02582';
 import {applyVariableController,assignExpressionVariable} from './Engine/variables.js?v=02568';
 import {createPageBackground} from './Engine/page-background.js?v=02374';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
@@ -233,7 +234,7 @@ const resultStateWatchdog=createResultStateWatchdog();
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02581';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02582';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -292,7 +293,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.81 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.82 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -300,7 +301,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02581';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02582';
 import {createLifecycleRuntime,findParentActor} from './Char/Venus/venus-lifecycle-runtime.js?v=02570';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -315,8 +316,8 @@ let characterSoundChannels=createCharacterSoundChannels();
 const nativeSoundLoader=createNativeSoundLoader();
 let nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
 let commonSoundManifest={};
-const legacyNativeSoundsReady=Promise.all(['./Char/Venus/Sound/sounds.json?v=02581','./Sound/Common/sounds.json?v=02581'].map(async url=>{const response=await fetch(url);if(!response.ok)throw Error('Native sound metadata HTTP '+response.status);return response.json()})).then(([venus,common])=>{commonSoundManifest=common;return venus});
-let characterSoundOutput=createCharacterSoundOutput({createContext:()=>new AudioContext(),view:()=>({x:cameraX/4,scale:cameraZoom,width:320,strength:30,stereo:true}),sourcePosition:id=>{const actor=combatTargetActor(id);return actor?actor.x/4:null}});
+const legacyNativeSoundsReady=Promise.all(['./Char/Venus/Sound/sounds.json?v=02582','./Sound/Common/sounds.json?v=02582'].map(async url=>{const response=await fetch(url);if(!response.ok)throw Error('Native sound metadata HTTP '+response.status);return response.json()})).then(([venus,common])=>{commonSoundManifest=common;return venus});
+let characterSoundOutput=createCharacterSoundOutput({createContext:()=>new AudioContext({sampleRate:44100}),view:()=>({x:cameraX/4,scale:cameraZoom,width:320,strength:30,stereo:true}),sourcePosition:id=>{const actor=combatTargetActor(id);return actor?actor.x/4:null}});
 for(const event of ['pointerdown','keydown'])window.addEventListener(event,()=>characterSoundOutput.resume().catch(error=>console.error('Character audio resume',error)));
 const sourceExplods=[];
 const effectCanvas=document.createElement('canvas');effectCanvas.id='sourceEffects';effectCanvas.style.cssText='position:fixed;inset:0;z-index:4;pointer-events:none';document.body.appendChild(effectCanvas);
@@ -826,7 +827,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
  else Object.assign(characterProfiles.get('SailorVenus'),{sounds:venusSounds,soundBase:'./Char/Venus/Sound/'});
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02514'),fetch(base+prefix+'_full.json?v=02514'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02581')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02514'),fetch(base+prefix+'_full.json?v=02514'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02582')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -850,6 +851,10 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   fightHud.setCharacterEmblem(character,data,images);
   characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},animationIds:new Set(Object.keys(all.actions)),data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
  }
+ await Promise.all([nativeSoundPlayer.prepare(characterSoundOutput.prepare()),preloadNativeSounds(nativeSoundLoader,[...new Set(players)].flatMap(character=>{
+  const profile=characterProfiles.get(character);if(!profile)throw Error('Unsupported character '+character);
+  return Object.values(profile.sounds).map(metadata=>({url:profile.soundBase+(metadata.nativeFile??metadata.file),metadata}));
+ }).concat(Object.values(commonSoundManifest).map(metadata=>({url:'./Sound/Common/'+(metadata.nativeFile??metadata.file),metadata}))))]);
  transDrawQueue.resetActorSync();
  rootSpriteWindows.forEach(window=>window.fill(0));
  rootReflectionOverrides.forEach(resetReflectionOverride);
@@ -2658,7 +2663,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.81',build:'native-playback-02581-20261024-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.82',build:'native-defaults-02582-20261024-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2666,7 +2671,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.81-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.82-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

@@ -6,6 +6,7 @@ function node(){const value={connections:[],disconnected:0,levels:[],connect(...
 const context={state:'suspended',currentTime:0,destination:{},resume(){resumes++;return Promise.reject(Error('Test resume rejection'))},createMediaElementSource(sound){sources.push(sound);return node()},createGain:node,createChannelSplitter:node,createChannelMerger:node};
 const output=createCharacterSoundOutput({createContext:()=>{creations++;return context},view:()=>({x:0,scale:1,width:320,strength:100,stereo:true}),sourcePosition:()=>sourceX,onError:error=>errors.push(error.message)}),record={sound:{id:1}},other={sound:{id:2}};
 await output.resume();assert.equal(creations,0);assert.equal(resumes,0);
+assert.equal(output.prepare(),context);assert.equal(output.prepare(),context);assert.equal(creations,1);assert.equal(output.size(),0);assert.equal(sources.length,0);assert.equal(nodes.length,0);assert.equal(resumes,0);
 assert.deepEqual(output.setPan(record,{pan:0,sourceId:1},.5),[.25,.75]);assert.equal(creations,1);assert.deepEqual(sources,[record.sound]);assert.equal(output.size(),1);
 assert.deepEqual(output.setPan(record,{pan:0,sourceId:1}),[.25,.75]);assert.equal(sources.length,1);assert.equal(output.snapshot(record).gain,.5);
 sourceX=160;output.update();assert.equal(output.snapshot(record).lastPan,1);

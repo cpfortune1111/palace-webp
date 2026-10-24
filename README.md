@@ -1,3 +1,7 @@
+## 0.25.82 — Native default playback and readiness (partial)
+
+PlaySnd now uses native playback even when speed/loop/seek fields are omitted. Selected-character preparation awaits decoded own/common sounds and shared worklet setup; repeated preparation reuses the verified cache. The character mixer explicitly requests the pinned 44100-Hz default. Real default-waveform, Helper ownership/priority/capacity, preparation/cache and context-rate checks pass. Full native compiler/version/settings/device/clock fidelity remains Pending; final versioned regression and verified publication remain separate gates.
+
 ## 0.25.81 — Native PlaySnd speed, loops and seek (partial)
 
 Explicit playback parameters now reach a native-frame AudioWorklet stream with source-rate metadata, PCM normalization, bounded/infinite loops, seek and frequency resampling. All 338 current sound entries validate; 22 additional lossless FLAC variants preserve exact original frame counts where MP3 decoding differed. Actual own/common P1/P2 sample renders, cancellation and cleanup checks pass. Default legacy playback, full native timing/configuration/compiler parity and whole-controller certification remain Pending. Final versioned regression and verified publication remain separate gates.

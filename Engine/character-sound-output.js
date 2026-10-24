@@ -7,6 +7,7 @@ export function createCharacterSoundOutput({createContext,view,sourcePosition,on
  function resume(){if(context?.state==='suspended'&&typeof context.startRendering!=='function')return context.resume();return Promise.resolve()}
  function update(record){const output=outputs.get(record);if(!output)return null;if(output.native)output.source.gain.setValueAtTime(record.sound.muted?0:record.sound.volume??1,context.currentTime);return output.graph.set(updateSoundPanState(output.state,view(),sourcePosition),output.gain)}
  return {
+  prepare(){context??=createContext();return context},
   resume,
   setPan(record,params,gain){
    let output=outputs.get(record);
