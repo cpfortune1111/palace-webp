@@ -11,3 +11,6 @@ const normalized=createSoundSampleLooper(source(3),{repeatCount:1,loopStart:9,lo
 const broken=source();broken.seek=()=>Error('Seek failed');const failed=createSoundSampleLooper(broken,{repeatCount:1,loopStart:2,loopEnd:6});assert.deepEqual(failed.read(7),{samples:[0,1,2,3,4,5],ok:true});assert.deepEqual(failed.read(1),{samples:[],ok:false});assert.equal(failed.error(),null);
 assert.throws(()=>createSoundSampleLooper(source(0),{repeatCount:-1}).read(1),/empty/);
 console.log('Source-frame looper preserves native repeat normalization, finite chunk-sensitive tail, infinite loops and seek-failure behavior; production playback remains pending');
+const mutable=createSoundSampleLooper(source());assert.deepEqual(mutable.read(4).samples,[0,1,2,3]);mutable.setLoopPoints(2,6);mutable.setRepeatCount(1);assert.deepEqual(mutable.points(),[2,6]);assert.deepEqual(mutable.read(8),{samples:[4,5,2,3,4,5],ok:false});
+const changed=createSoundSampleLooper(source(),{repeatCount:-1,loopStart:2,loopEnd:6});assert.deepEqual(changed.read(4).samples,[0,1,2,3]);changed.setLoopPoints(1,4);assert.deepEqual(changed.read(5).samples,[1,2,3,1,2]);changed.setRepeatCount(0);assert.deepEqual(changed.read(10).samples,[3,4,5,6,7,8,9]);
+changed.setRepeatCount(-1);changed.setLoopPoints(2,0);assert.throws(()=>changed.read(1),/Nonadvancing/);

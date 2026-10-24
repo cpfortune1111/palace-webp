@@ -2,7 +2,7 @@ export function soundRepeatCount(playCount){return playCount<0?-1:Math.max(0,pla
 
 export function createSoundSampleLooper(source,{repeatCount=0,loopStart=0,loopEnd=0}={}){
  let repeats=repeatCount,failure=null;
- const start=loopStart<0||loopStart>=source.length?0:loopStart,end=loopEnd<=start||loopEnd>=source.length?source.length:loopEnd;
+ let start=loopStart<0||loopStart>=source.length?0:loopStart,end=loopEnd<=start||loopEnd>=source.length?source.length:loopEnd;
  return {
   read(count){
    if(!Number.isInteger(count)||count<0)throw Error('Invalid sound sample read size');
@@ -14,6 +14,7 @@ export function createSoundSampleLooper(source,{repeatCount=0,loopStart=0,loopEn
     const available=end-source.position;
     if(available<=0){
      if(repeats===0)return {samples,ok:false};
+     if(repeats<0&&end<=start)throw Error('Nonadvancing infinite sound loop');
      if(repeats>0)repeats--;
      failure=source.seek(start);if(failure)return {samples,ok:true};
      continue;
@@ -26,6 +27,9 @@ export function createSoundSampleLooper(source,{repeatCount=0,loopStart=0,loopEn
   },
   position:()=>source.position,
   remaining:()=>repeats,
+  points:()=>[start,end],
+  setRepeatCount(value){repeats=value},
+  setLoopPoints(first,last){start=first;end=last},
   error:()=>source.error()
  };
 }

@@ -9,6 +9,7 @@ export function createCharacterSoundOutput({createContext,view,sourcePosition,on
  return {
   prepare(){context??=createContext();return context},
   resume,
+  setGain(record,gain){const output=outputs.get(record);if(!output)return null;output.gain=gain;return update(record)},
   setPan(record,params,gain){
    let output=outputs.get(record);
    if(!output){

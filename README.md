@@ -1,3 +1,7 @@
+## 0.25.83 — ModifySnd consumers and sound grammar (partial)
+
+ModifySnd now reaches owned audio pan/volume/priority/stop flags and native speed/seek/loop updates, with ordered pending commands and audio-thread acknowledgements. Forty exact root waveform cases, six Helper ownership cases and forty actual scheduling groups pass. Sound values support lexical/dynamic string prefixes and omitted item=0; rejected allocations no longer leak menu tracking. Complete compiler/version/device/clock fidelity remains Pending; final versioned regression and verified publication are separate gates.
+
 ## 0.25.82 — Native default playback and readiness (partial)
 
 PlaySnd now uses native playback even when speed/loop/seek fields are omitted. Selected-character preparation awaits decoded own/common sounds and shared worklet setup; repeated preparation reuses the verified cache. The character mixer explicitly requests the pinned 44100-Hz default. Real default-waveform, Helper ownership/priority/capacity, preparation/cache and context-rate checks pass. Full native compiler/version/settings/device/clock fidelity remains Pending; final versioned regression and verified publication remain separate gates.

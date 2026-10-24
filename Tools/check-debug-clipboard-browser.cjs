@@ -1537,6 +1537,23 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(nativeChannelPlayback.length,3);
   for(const row of nativeChannelPlayback){const cancelled=row.mode==='cancel',gain=row.mode==='replace'?.25:.125;assert.equal(row.ready,!cancelled,JSON.stringify(row));if(row.mode==='replace')assert.equal(row.oldReady,false);assert.equal(row.active,cancelled?0:1);assert.equal(row.players,cancelled?0:1);assert.equal(row.graphs,cancelled?0:1);assert.equal(row.ended,cancelled?0:1);assert.equal(row.remaining,0);assert.equal(row.remainingPlayers,0);assert.equal(row.remainingGraphs,0);assert.deepEqual(row.errors,[]);for(let frame=0;frame<64;frame++){assert.equal(row.left[frame],cancelled||frame>=8?0:row.expectedLeft[frame]*gain,JSON.stringify({mode:row.mode,frame}));assert.equal(row.right[frame],cancelled||frame>=8?0:row.expectedRight[frame]*gain,JSON.stringify({mode:row.mode,frame}))}}
   console.log('Actual native player/registry/mixer renders owned gain, prevents cancelled/replaced late playback and clears finite completion without stale audio');
+  const rejectedSoundCleanup=await run(`(()=>{
+   const saved={sound:gameShell.sound,release:gameShell.releaseSound,channels:characterSoundChannels,voice:roundVoiceUntil},rows=[],created=[],released=new Set();
+   try{
+    gameShell.sound=sound=>{created.push(sound);return saved.sound(sound)};gameShell.releaseSound=sound=>{released.add(sound);return saved.release(sound)};
+    for(const player of [1,2])for(const common of [false,true]){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),start=created.length;
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     for(const options of [{priority:'5'},{priority:'4'},{priority:'6',lowpriority:'1'}])dispatch({type:'PlaySnd',params:{value:common?'F7,0':key.replace('-',','),channel:'7',...options}});
+     const media=created.slice(start),before=media.filter(sound=>released.has(sound)).length,active=characterSoundChannels.entries().length;
+     dispatch({type:'StopSnd',params:{channel:'7'}});rows.push({player,common,created:media.length,before,active,after:media.filter(sound=>released.has(sound)).length,remaining:characterSoundChannels.entries().length});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;gameShell.sound=saved.sound;gameShell.releaseSound=saved.release;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(rejectedSoundCleanup.length,4);
+  for(const row of rejectedSoundCleanup){assert.equal(row.created,3);assert.equal(row.before,2,JSON.stringify(row));assert.equal(row.active,1);assert.equal(row.after,3);assert.equal(row.remaining,0)}
+  console.log('Actual rejected PlaySnd allocations release menu tracking while preserving the live higher-priority channel for P1/P2 own/common sounds');
   const nullSoundContexts=await run(`(()=>{
    const before=characterSoundChannels.entries().length,players=[];
    for(const player of [1,2]){const actor=specialRoot(player);executeControllerM1({type:'PlaySnd',params:{value:'-1,0',loop:'1'}},player===1?p1LifecycleBinding:p2,null,{owner:actor,player,schedulingApplied:true});players.push(player)}
@@ -1574,6 +1591,27 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   })()`);
   assert.ok(repeatedSoundPreparation.resources>4);assert.ok(repeatedSoundPreparation.before>=repeatedSoundPreparation.resources);assert.equal(repeatedSoundPreparation.after,repeatedSoundPreparation.before);assert.deepEqual(repeatedSoundPreparation.requests,[]);assert.equal(repeatedSoundPreparation.sampleRate,44100);
   console.log('Actual repeated character preparation reuses decoded own/common sound caches without new audio fetches');
+  const redirectedNativeSound=await run(`(async()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil,volumes:data.map(value=>value.dataConstants['data.volume']),variables:[specialRoot(1).vars[19],specialRoot(2).vars[19]],entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991975])},rows=[];
+   try{
+    for(const value of data)value.helperStates[991975]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const callerPlayer of [1,2])for(const common of [false,true])for(const kind of ['root','helper'])for(const syntax of ['lexical','dynamic','omitted']){
+     specialRuntime.entities.length=0;
+     const targetPlayer=3-callerPlayer,caller=specialRoot(callerPlayer),root=specialRoot(targetPlayer),profile=characterProfiles.get(battleCharacters[targetPlayer-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-0$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     let target=root;if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991975,id:991975}},root,specialRuntime.context(root),{},root,targetPlayer);target=specialRuntime.entities.at(-1)}
+     caller.vars[19]=50;target.vars[19]=120;data[callerPlayer-1].dataConstants['data.volume']=128;data[targetPlayer-1].dataConstants['data.volume']=384;
+     characterSoundChannels=createCharacterSoundChannels();characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const group='var(19)/50*'+key.split('-')[0],value=syntax==='dynamic'?(common?'"F",':'"S",')+group+',0':(common?'F':'S')+group+(syntax==='omitted'?'':',0');
+     executeControllerM1({type:'PlaySnd',params:{redirectid:String(kind==='helper'?target.instanceId:targetPlayer),value,channel:'7',abspan:'0',volumescale:'var(19)'}},callerPlayer===1?p1LifecycleBinding:p2,specialRuntime.context(caller),{owner:caller,player:callerPlayer,schedulingApplied:true});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();const ready=await record.nativeReady,descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();
+     rows.push({callerPlayer,targetPlayer,common,kind,ready,owner:record.owner,expectedOwner:characterSoundIdentity(target),resource:descriptor.url===(common?'./Sound/Common/':profile.soundBase)+(metadata.nativeFile??metadata.file),gain:characterSoundOutput.snapshot(record).gain,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(0,64),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(0,64)});characterSoundChannels.stopAll();
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){data[index].dataConstants['data.volume']=saved.volumes[index];specialRoot(index+1).vars[19]=saved.variables[index];if(saved.definitions[index]===undefined)delete data[index].helperStates[991975];else data[index].helperStates[991975]=saved.definitions[index]}}
+  })()`);
+  assert.equal(redirectedNativeSound.length,24);
+  for(const row of redirectedNativeSound){assert.equal(row.ready,true);assert.equal(row.owner,row.expectedOwner);assert.equal(row.resource,true);const gain=row.common?.5:.75;assert.equal(row.gain,gain);for(let frame=0;frame<64;frame++){const detail=JSON.stringify({caller:row.callerPlayer,common:row.common,kind:row.kind,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[frame]*gain),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[frame]*gain),detail)}}
+  console.log('Twenty-four actual redirected root/normal-Helper PlaySnd waveform cases cover lexical/dynamic prefixes and omitted item defaults in both player directions');
   const defaultPlaySnd=await run(`(async()=>{
    const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
    try{
@@ -1592,6 +1630,85 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(defaultPlaySnd.length,4);
   for(const row of defaultPlaySnd){assert.equal(row.ready,true);assert.deepEqual(row.params,{freqMul:1,loopCount:0,loopStart:0,loopEnd:0,startPosition:0});assert.equal(row.remaining,0);assert.equal(row.players,0);assert.equal(row.graphs,0);assert.equal(row.sourceLeft.length,64);for(let frame=0;frame<64;frame++){const detail=JSON.stringify({player:row.player,common:row.common,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[frame]*row.gain),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[frame]*row.gain),detail)}}
   console.log('Actual PlaySnd with omitted playback parameters renders exact source-start samples through native defaults for P1/P2 own/common sounds');
+  const modifiedHelperOwnership=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={channels:characterSoundChannels,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991985])},rows=[];
+   try{
+    for(const value of data)value.helperStates[991985]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const callerPlayer of [1,2])for(const inheritance of [0,1,2]){
+     characterSoundChannels=createCharacterSoundChannels();specialRuntime.entities.length=0;const caller=specialRoot(callerPlayer),targetRoot=specialRoot(3-callerPlayer);
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991985,id:991985}},targetRoot,specialRuntime.context(targetRoot),{},targetRoot,3-callerPlayer);const parent=specialRuntime.entities.at(-1);
+     specialRuntime.dispatch({type:'Helper',params:{stateno:991985,id:991985,inheritchannels:String(inheritance)}},parent,specialRuntime.context(parent),{},parent,3-callerPlayer);const child=specialRuntime.entities.at(-1);
+     const dispatch=(controller,actor)=>executeControllerM1(controller,actor.kind==='helper'?actor:actor.player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player:actor.player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:'F7,0',channel:'7',abspan:'0',priority:'3'}},caller);const peer=characterSoundChannels.entries().at(-1);
+     dispatch({type:'PlaySnd',params:{value:'F7,0',channel:'7',abspan:'0'}},child);const voice=characterSoundChannels.entries().at(-1);
+     dispatch({type:'ModifySnd',params:{redirectid:String(child.instanceId),abspan:'80',priority:'9',stopongethit:'1',stoponchangestate:'1'}},caller);
+     rows.push({callerPlayer,inheritance,owner:voice.owner,expectedOwner:characterSoundIdentity(inheritance===1?parent:inheritance===2?targetRoot:child),priority:voice.priority,pan:characterSoundOutput.snapshot(voice).pan,flags:voice.stopFlags,peerPriority:peer.priority,peerPan:characterSoundOutput.snapshot(peer).pan,count:characterSoundChannels.entries().length});characterSoundChannels.stopAll();
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){if(saved.definitions[index]===undefined)delete data[index].helperStates[991985];else data[index].helperStates[991985]=saved.definitions[index]}}
+  })()`);
+  assert.equal(modifiedHelperOwnership.length,6);
+  for(const row of modifiedHelperOwnership){assert.equal(row.owner,row.expectedOwner);assert.equal(row.priority,row.inheritance===0?9:0);assert.equal(row.pan,row.inheritance===0?80:0);assert.deepEqual(row.flags,{hit:row.inheritance===0,state:row.inheritance===0});assert.equal(row.peerPriority,3);assert.equal(row.peerPan,0);assert.equal(row.count,2)}
+  console.log('Actual redirected ModifySnd selects only normal-Helper owned channels, never re-inherits parent/root voices or changes opposing audio');
+  const modifiedSoundOutput=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true])for(const mode of ['volume','scale']){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',abspan:'160'}});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();const ready=await record.nativeReady;
+     dispatch({type:'ModifySnd',params:{channel:'7',...(mode==='volume'?{volume:'-128'}:{volumescale:'25'}),priority:'9',stopongethit:'1',stoponchangestate:'0'}});
+     const snapshot=characterSoundOutput.snapshot(record),descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();
+     rows.push({player,common,mode,ready,snapshot,priority:record.priority,flags:record.stopFlags,ownVolume:gravityActorData(actor).dataConstants['data.volume'],left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(0,64),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(0,64)});characterSoundChannels.stopAll();
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(modifiedSoundOutput.length,8);
+  for(const row of modifiedSoundOutput){assert.equal(row.ready,true);assert.equal(row.snapshot.pan,160);assert.equal(row.snapshot.sourceId,-1);assert.equal(row.priority,9);assert.deepEqual(row.flags,{hit:true,state:false});const gain=row.mode==='volume'?1.5:Math.fround(Math.max(0,Math.min(512,Math.trunc((row.ownVolume*25|0)/100)))/256),pan=Math.fround(.3),left=Math.fround(gain*Math.fround(1-pan)),right=Math.fround(gain*Math.fround(1+pan));assert.equal(row.snapshot.gain,gain);for(let frame=0;frame<64;frame++){const detail=JSON.stringify({player:row.player,common:row.common,mode:row.mode,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[frame]*left),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[frame]*right),detail)}}
+  console.log('Eight actual ModifySnd volume/scale waveform cases preserve existing absolute pan and update native priority/stop flags for P1/P2 own/common sounds');
+  const modifiedFrequency=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true])for(const afterReady of [false,true])for(const control of ['frequency','position']){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate),step=control==='frequency'?(common?5:2):1,position=control==='position'?5:0;
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',abspan:'0',volumescale:'100'}});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();if(afterReady)await record.nativeReady;
+     dispatch({type:'ModifySnd',params:{channel:'7',...(control==='frequency'?{freqmul:String(step)}:{position:String(position)})}});
+     let timer;try{await Promise.race([nativeSoundPlayer.settled(record),new Promise((resolve,reject)=>{timer=setTimeout(()=>reject(Error('Native frequency acknowledgement timed out')),5000)})])}finally{clearTimeout(timer)}
+     const ready=await record.nativeReady,descriptor=record.nativePlayback,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();
+     rows.push({player,common,afterReady,control,position,step,ready,gain:characterSoundOutput.snapshot(record).gain,left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(0,320),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(0,320)});characterSoundChannels.stopAll();
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(modifiedFrequency.length,16);
+  for(const row of modifiedFrequency){assert.equal(row.ready,true);for(let frame=0;frame<64;frame++){const detail=JSON.stringify({player:row.player,common:row.common,afterReady:row.afterReady,control:row.control,frame});assert.equal(row.left[frame],Math.fround(row.sourceLeft[frame*row.step+row.position]*row.gain),detail);assert.equal(row.right[frame],Math.fround(row.sourceRight[frame*row.step+row.position]*row.gain),detail)}}
+  console.log('Sixteen actual ModifySnd frequency/position cases reach pending and attached native voices with exact P1/P2 own/common sample output');
+  const modifiedLoops=await run(`(async()=>{
+   const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
+   try{
+    for(const player of [1,2])for(const common of [false,true])for(const afterReady of [false,true])for(const infinite of [false,true]){
+     characterSoundChannels=createCharacterSoundChannels();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=common?'7-0':Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),metadata=common?commonSoundManifest[key]:profile.sounds[key],context=new OfflineAudioContext(2,64,metadata.sourceSampleRate);
+     characterSoundOutput=createCharacterSoundOutput({createContext:()=>context,view:()=>({width:320,strength:30,stereo:true}),sourcePosition:()=>null});nativeSoundPlayer=createNativeSoundPlayer({loader:nativeSoundLoader,isActive:record=>!!record.soundRegistry?.has(record)});
+     const dispatch=controller=>executeControllerM1(controller,player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     dispatch({type:'PlaySnd',params:{value:(common?'F':'')+key.replace('-',','),channel:'7',abspan:'0',volumescale:'100',startposition:String(metadata.sourceFrames-8)}});
+     const record=characterSoundChannels.entries()[0];record.sound.volume=1;characterSoundOutput.update();if(afterReady)await record.nativeReady;
+     dispatch({type:'ModifySnd',params:{channel:'7',loopstart:String(metadata.sourceFrames-6),loopend:String(metadata.sourceFrames-2),...(infinite?{loop:'1'}:{loop:'1',loopcount:'2'})}});
+     let timer;try{await Promise.race([nativeSoundPlayer.settled(record),new Promise((resolve,reject)=>{timer=setTimeout(()=>reject(Error('Native loop acknowledgement timed out')),5000)})])}finally{clearTimeout(timer)}
+     const ready=await record.nativeReady,descriptor=record.nativePlayback,gain=characterSoundOutput.snapshot(record).gain,decoded=await nativeSoundLoader.load(descriptor.url,descriptor.metadata),rendered=await context.startRendering();await new Promise(resolve=>setTimeout(resolve,0));
+     const remaining=characterSoundChannels.entries().length;characterSoundChannels.stopAll();rows.push({player,common,afterReady,infinite,ready,gain,remaining,players:nativeSoundPlayer.size(),graphs:characterSoundOutput.size(),left:[...rendered.getChannelData(0)],right:[...rendered.getChannelData(1)],sourceLeft:[...decoded.getChannelData(0)].slice(-8),sourceRight:[...decoded.getChannelData(metadata.sourceChannels===1?0:1)].slice(-8)});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.channels;characterSoundOutput=saved.output;nativeSoundPlayer=saved.player;roundVoiceUntil=saved.voice}
+  })()`);
+  assert.equal(modifiedLoops.length,16);
+  for(const row of modifiedLoops){assert.equal(row.ready,true);assert.equal(row.remaining,row.infinite?1:0);assert.equal(row.players,0);assert.equal(row.graphs,0);for(let frame=0;frame<64;frame++){const sourceIndex=frame<6?frame:row.infinite||frame<10?2+(frame-6)%4:null,detail=JSON.stringify({player:row.player,common:row.common,afterReady:row.afterReady,infinite:row.infinite,frame});assert.equal(row.left[frame],sourceIndex===null?0:Math.fround(row.sourceLeft[sourceIndex]*row.gain),detail);assert.equal(row.right[frame],sourceIndex===null?0:Math.fround(row.sourceRight[sourceIndex]*row.gain),detail)}}
+  console.log('Sixteen actual ModifySnd finite/infinite loop mutations render exact source windows, preserve loopcount precedence and release native resources');
   const infinitePlaySnd=await run(`(async()=>{
    const saved={channels:characterSoundChannels,output:characterSoundOutput,player:nativeSoundPlayer,voice:roundVoiceUntil},rows=[];
    try{

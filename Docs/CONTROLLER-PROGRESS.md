@@ -1,4 +1,10 @@
+## 0.25.83 — ModifySnd and sound grammar (partial, publication pending)
+
+All pinned ModifySnd parameter names now have real consumers: own-channel selection/redirection, pan/volume/priority/stop fields and native frequency/position/loop changes. Forty root waveform cases, six normally spawned Helper ownership cases and forty actual scheduling groups pass. Pending modifications replay in order; attached updates expose numbered audio-thread acknowledgements. Native source seek preserves buffered resampler tails. Lexical Fvar/Svar, dynamic string prefixes and omitted item=0 now reach actual PlaySnd waveform cases; rejected allocations release menu tracking. Native malformed-loop hangs are not reproduced, and complete compiler/version/device/clock fidelity remains Pending. No whole-controller certification changes. Final versioned gates and publication remain required; see MODIFY-SOUND-WIP.md and SOUND-PLAYBACK-WIP.md.
+
 ## 0.25.82 — Native default playback and readiness (partial, publication pending)
+
+Publication subsequently verified at commit 1930d73b5ff4fb5209a29c25d6f566acdcc2387b: 251 Node checks, Python stage/metadata checks, final actor/scheduling/full battle gates, exact-head successful Pages run 40093719185 and fifteen normalized live files matched. Receipt: outputs/release-02582-verification.json. Earlier pending statements are historical.
 
 All CNS PlaySnd options now include native defaults, removing the explicit-playback-field-only routing limit. Actual P1/P2 own/common source-start samples pass; normal Helper channel inheritance, priorities and saturation inspect actual native ownership. Selected-character readiness preloads decoded sounds with bounded concurrency and warms a shared retryable worklet module. Actual repeated preparation makes no new sound fetches. A failing-before real-context check exposed the browser's 48000-Hz default; production now explicitly requests pinned SampleRate=44100. All 251 Node checks passed before the last rate change; the latest complete actor suite passes. Final combined versioned gates and publication remain required. No whole-controller certification changes.
 
