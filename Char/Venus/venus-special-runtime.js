@@ -1,5 +1,5 @@
 import {createReflectionOverride,resetReflectionOverride} from '../../Engine/modify-reflection.js';
-import {controllerInteger} from '../../Engine/controller-value-conversion.js';
+import {controllerBoolean,controllerInteger} from '../../Engine/controller-value-conversion.js';
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
@@ -131,9 +131,11 @@ export function createSpecialRuntime(api){
   if(kind==='helper'&&api.sizeDefinition){const inherited=api.sizeDefinition(owner);if(inherited.definition){entity.sizeDefinition=applyHelperSizeOverrides(inherited.definition,params,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.sizeLocalCoord=inherited.localCoord}}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
   if(kind==='helper'){entity.inheritJuggle=Math.trunc(Number(api.eval(params.inheritjuggle??0,sourceContext)))|0;entity.keyControl=helperKeyControl(params.keyctrl,{split:api.pair,evaluate:expression=>api.eval(expression,sourceContext)});entity.ownClsnScale=Number(api.eval(params.ownclsnscale??0,sourceContext))!==0;entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
+  if(kind==='helper'&&params.remappal!==undefined){const components=api.pair(params.remappal);if(!components.length||components.length>2)throw Error('Invalid Helper remappal pair');const destination=[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))];api.initializePaletteRemap?.(entity,owner,destination)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=projectileSpriteScale(params,api.sizeDefinition?.(owner)?.definition,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext,owner),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
   else enter(entity,Number(params.stateno));
+  if(kind==='projectile'){const ownPalette=controllerBoolean(api.eval(params.ownpal??0,sourceContext)),components=params.remappal===undefined?[]:api.pair(params.remappal);if(components.length>2)throw Error('Invalid Projectile remappal pair');const destination=components.length?[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))]:[-1,0];api.initializeProjectilePalette?.(entity,owner,ownPalette,destination)}
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
  }

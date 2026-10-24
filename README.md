@@ -1252,3 +1252,7 @@ BUILD `gethit-contact-semantics-m1-20261002-01`。0.23.18 已由使用者 PASS�
 
 下個切片：驗收 0.23.41 裁切／HP／Timer，然後接真正 5900→Intro→RoundState→KO/TimeOver→Win/Lose→下一回合，再完成 Powerbar／姓名／勝利圖示與 AI 驗收。普通必殺技與 command buffer 已接入，不再當成下一個待做切片。未完成 645／投技繼續只作參考，不啟用註解 recovery 入口。
 
+## 0.25.86 — Indexed RemapPal consumers (partial, release pending)
+
+RemapPal now reaches actual indexed drawing, recipient palette ownership and recorded root-afterimage sources. Saturn preloads all 521 indexed battle sprites; 53 truecolor sprites retain their original path. Twenty-four actual ownership/drawing cases, all indexed pixel checks and forty controller-specific scheduling groups pass. Remaining character assets, native formats/versions and complete controller semantics remain unfinished. Final versioned regression and verified publication are pending; original SFF/SND files are not included.
+

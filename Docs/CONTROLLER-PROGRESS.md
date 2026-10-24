@@ -1107,3 +1107,7 @@ Root floating/system-floating storage is shared across expression evaluation, st
 
 Pending: complete parent/root redirection, helper VarRandom unification, variable persistence boundaries across rounds, redirectid, and native system-variable restrictions. No whole-controller certification is claimed yet.
 
+## 0.25.86 — indexed RemapPal consumers (partial, publication pending)
+
+The shared dispatcher consumes source/dest/redirectid and actual root/Helper/Explod/Projectile drawing uses recipient-owned indexed palette state. Root afterimages retain recorded sprite sources/geometry. Saturn now loads all 521 indexed battle sprites through normal character readiness; 53 declared truecolor sprites retain the original path. All 521 source-index/native RGBA and remapped surface checks pass, including page checksums and scratch-canvas release. Twenty-four production-loaded game cases pass ownership, redirection, birth overrides, reset, immutable afterimages, truecolor preservation and explicit missing-index rejection. Remaining characters, source formats/native versions, full scheduler/foreign animation/effect semantics and final combined release gates remain incomplete. No whole-controller certification or public release is claimed; see REMAP-PALETTE-WIP.md.
+
