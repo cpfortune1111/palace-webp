@@ -1,3 +1,7 @@
+## 0.25.87 — user scope change and EnvColor consumers (partial, publication pending)
+
+The user no longer requires character recoloring or further RemapPal integration. Normal character preparation stops automatically downloading unused indexed palette assets; historical compatibility tests opt in explicitly. RemapPal is excluded from requested completion, never promoted to certified/implemented. EnvColor now has real global signed/default parameter writes, a simulation timer and opaque renderer layering. Sixteen actual root/normal-Helper/profile/player/under pixel cases pass, including positive expiry, negative persistence and no unsolicited recoloring preload. Full native fidelity and final combined gates remain Pending; see ENVIRONMENT-COLOR-WIP.md.
+
 ## 0.25.85 — RoundTimeSet/Add consumers (partial, publication pending)
 
 The shared controller path now updates real HUD countdown ticks without resetting mode or life-animation state. Signed value/Add wrapping, configured bounds and unlimited expression skipping follow pinned Run semantics. Four actual root/normal-Helper cases verify ticks/display/countdown; eight production round-flow integration cases verify time-over result transitions. Eighty controller-specific scheduling groups pass in both profiles/player directions. The pinned compiler accepts redirectid but Run ignores it; no implemented-redirection or whole-controller certification credit is claimed. Full native timing/configuration/compiler/version fidelity and final versioned gates/publication remain required. See ROUND-TIME-WIP.md.
@@ -1108,6 +1112,8 @@ Root floating/system-floating storage is shared across expression evaluation, st
 Pending: complete parent/root redirection, helper VarRandom unification, variable persistence boundaries across rounds, redirectid, and native system-variable restrictions. No whole-controller certification is claimed yet.
 
 ## 0.25.86 — indexed RemapPal consumers (partial, publication pending)
+
+Publication subsequently verified at commit 532a7d4120160ef027f2a79eb61b141e1fea8513: 258 Node checks, Python stage/metadata/indexed-source/export checks, corrected final actor/scheduling/full battle gates, successful exact-head Pages run 40113547117 and all 56 live files matched (binary WebP exact, UTF-8 text CRLF normalized). Receipt: outputs/release-02586-verification.json. Earlier pending statements are historical, not complete compatibility claims.
 
 The shared dispatcher consumes source/dest/redirectid and actual root/Helper/Explod/Projectile drawing uses recipient-owned indexed palette state. Root afterimages retain recorded sprite sources/geometry. Saturn now loads all 521 indexed battle sprites through normal character readiness; 53 declared truecolor sprites retain the original path. All 521 source-index/native RGBA and remapped surface checks pass, including page checksums and scratch-canvas release. Twenty-four production-loaded game cases pass ownership, redirection, birth overrides, reset, immutable afterimages, truecolor preservation and explicit missing-index rejection. Remaining characters, source formats/native versions, full scheduler/foreign animation/effect semantics and final combined release gates remain incomplete. No whole-controller certification or public release is claimed; see REMAP-PALETTE-WIP.md.
 

@@ -1,3 +1,7 @@
+## 0.25.87 — EnvColor consumers and scope update (partial, release pending)
+
+EnvColor now fills the actual fight-screen compositor with native signed RGB/defaults, layer rules and simulation duration. Sixteen root/Helper/profile/player pixel cases and forty controller-specific scheduling groups pass. Character recoloring/RemapPal expansion is excluded by user request; unused indexed assets no longer preload automatically, while existing gameplay color effects remain. Full native controller compatibility and final versioned deployment remain Pending.
+
 ## 0.25.85 — Round time consumers (partial)
 
 RoundTimeSet/Add now change actual HUD countdown ticks, preserving signed arithmetic, configured bounds and unlimited-expression skipping. Actual root/Helper timer/display checks, production round-flow Time Over integrations and eighty controller-specific scheduling groups pass. The pinned native runtime ignores redirectid; this is recorded, not counted as implemented redirection. Full native timing/configuration/compiler/version fidelity and final versioned regression/publication remain Pending.

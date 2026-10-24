@@ -22,6 +22,7 @@ const server=http.createServer((request,response)=>{
   await page.waitForFunction(()=>window.paletteBattleTest?.run('!!dat&&!!stateIR&&!!battleDat&&!!lifecycleDat&&!!specialDat&&!!roundCharDat&&!!cmdDat&&!!airDat&&!!fallDat&&!!guardDat&&!!turnDat'),null,{timeout:90000});
   const run=source=>page.evaluate(source=>window.paletteBattleTest.run(source),source);
   await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
+  await run("loadIndexedPaletteAssets(new URL('./Char/Saturn/Battle/Indexed/indexed.json',location.href).href,{createCanvas:(width,height)=>{const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;return canvas}}).then(assets=>characterProfiles.get('SailorSaturn').indexedPalette=assets)");
   assert.equal(await run("Object.keys(characterProfiles.get('SailorSaturn').indexedPalette.metadata.sprites).length"),521);
   const result=await run(`(()=>{
    const results=[],assets=characterProfiles.get('SailorSaturn').indexedPalette;

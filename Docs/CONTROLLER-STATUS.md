@@ -1,3 +1,7 @@
+## 2026-10-25 — Scope change and continuing non-recoloring work
+
+The user has excluded further character recoloring/RemapPal integration. Keep the 163-controller native inventory for traceability, mark RemapPal excluded rather than implemented, and continue the remaining controllers/parameters. Normal character preparation no longer automatically loads Saturn's unused indexed recoloring assets. Existing gameplay PalFX/BGPalFX/AllPalFX and screen effects remain in scope. EnvColor now has partial real dispatcher/timer/compositor consumers and sixteen focused browser cases; final combined gates and whole-controller certification remain separate.
+
 ## 0.25.63 checkpoint — No new whole-controller certification
 
 TransformSprite window/xshear now have actual redirected root/Helper body and synchronized-effect consumers, phase/reset fixtures and native local-coordinate scaling. Focallength/projection remain explicitly rejected; full compiler/diagnostic/scheduler/projection/GPU fidelity remains Pending. Certification remains 0/163. Final versioned regression and publishing are separate gates. See TRANSFORM-SPRITE-WIP.md.
