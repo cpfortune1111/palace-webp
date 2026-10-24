@@ -580,6 +580,27 @@ const server=http.createServer((request,response)=>{
   for(const row of variableBoundaries.rows)assert.deepEqual(row,[true,true,true,true,true,true]);
   assert.deepEqual(variableBoundaries.warnings,Array.from({length:8},()=>['var','fvar','sysvar','sysfvar'].map(family=>family+' index -1 must be positive')).flat());
   console.log('Actual root/Helper variable boundaries preserve negative-index undefined/warnings, stored NaN through addition and float negative zero');
+  const assertedCommandConsumers=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991995]),roots:[playerCommandLists[1],playerCommandLists[2]],helpers:[...helperCommandLists],variables:[specialRoot(1).vars[19],specialRoot(2).vars[19]]},rows=[];
+   try{
+    for(const value of data)value.helperStates[991995]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2])for(const kind of ['root','helper','shared-helper']){
+     specialRuntime.entities.length=0;playerCommandLists[1]=createCommandList(1);playerCommandLists[2]=createCommandList(2);const root=specialRoot(player),caller=specialRoot(3-player);let actor=root;
+     if(kind!=='root'){specialRuntime.dispatch({type:'Helper',params:{stateno:991995,id:991995,keyctrl:kind==='helper'?'1':'0'}},root,specialRuntime.context(root),{},root,player);actor=specialRuntime.entities.at(-1)}
+     const list=assertedCommandList(actor),definition=list.commands.find(command=>command.steps.length===1&&command.steps[0].length===1&&/^[abxy]$/.test(command.steps[0][0].key)&&!command.steps[0][0].hold&&!command.steps[0][0].release).definition,name=definition.name,queryContext=specialRuntime.context(actor);
+     caller.vars[19]=3;actor.vars[19]=99;
+     const assertTime=value=>executeControllerM1({type:'AssertCommand',params:{name:JSON.stringify(name),redirectid:String(kind==='root'?player:actor.instanceId),'buffer.time':value}},3-player===1?p1LifecycleBinding:p2,specialRuntime.context(caller),{owner:caller,player:3-player,schedulingApplied:true});
+     assertTime('var(19)');
+     const query=()=>!!evalM1('command = '+JSON.stringify(name),queryContext),before=query(),rootBefore=commandActive(name,player),peer=commandActive(name,3-player),buffers=list.commands.filter(command=>command.definition.name===name).map(command=>command.buffer),timeline=[];
+     const cleared=[];for(const time of ['0','-2']){const activeContext=specialRuntime.context(actor);assertTime(time);cleared.push(!!evalM1('command = '+JSON.stringify(name),activeContext));assertTime('var(19)')}
+     for(let tick=0;tick<3;tick++){sampleCommandList(player,{},false,kind==='helper'?actor:null);timeline.push(query())}
+     rows.push({player,kind,before,rootBefore,peer,buffers,cleared,timeline});
+    }
+    return rows;
+   }finally{specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){specialRoot(index+1).vars[19]=saved.variables[index];if(saved.definitions[index]===undefined)delete data[index].helperStates[991995];else data[index].helperStates[991995]=saved.definitions[index];if(saved.roots[index]===undefined)delete playerCommandLists[index+1];else playerCommandLists[index+1]=saved.roots[index]}helperCommandLists.clear();for(const entry of saved.helpers)helperCommandLists.set(...entry)}
+  })()`);
+  assert.equal(assertedCommandConsumers.length,6);for(const row of assertedCommandConsumers){assert.equal(row.before,row.kind!=='shared-helper',JSON.stringify(row));assert.equal(row.rootBefore,row.kind!=='helper');assert.equal(row.peer,false);assert.ok(row.buffers.length>0);assert.ok(row.buffers.every(value=>value===3));assert.deepEqual(row.cleared,[false,false]);assert.deepEqual(row.timeline,row.kind==='shared-helper'?[false,false,false]:[true,true,false])}
+  console.log('Actual AssertCommand root/normal-Helper redirects update real command triggers, preserve opposing buffers and expire through the command sampler');
   assert.deepEqual(errors,[]);
   const actorLayerRecords=await run(`(()=>{
    const layers=[...rootSpriteLayers],saved=[current,fi,simPaused],savedPriority=p1SprPriority,savedReactionPriority=p1Reaction?.sprPriority,savedP2={...p2},helper=specialRuntime.entities.find(entity=>entity.kind==='helper'&&!entity.destroyed),savedHelper=helper?{...helper}:null;

@@ -1,4 +1,10 @@
+## 0.25.84 — AssertCommand consumers (partial, publication pending)
+
+AssertCommand now updates actual command buffers, preserving quoted/case-sensitive names, signed overwrite/default buffer.time, duplicate names and grouped random fallback. Normal keyctrl Helpers have independent storage; disabled-keyctrl Helpers share root buffers while their command query remains gated. Six actual recipient cases cover caller expression ownership, already-created contexts, zero/negative clearing and sampler expiry. Forty controller-specific scheduling groups pass. The first complete battle run's browser process crashed; the corrected current-state rerun passes, but final versioned gates/publication remain required. Native foreign-state command tables, RNG/compiler/version fidelity and whole-controller certification remain Pending. See ASSERT-COMMAND-WIP.md.
+
 ## 0.25.83 — ModifySnd and sound grammar (partial, publication pending)
+
+Publication subsequently verified at commit cb315b24edb9b94df3f9ad878f93ce8426a30bc9: 253 Node checks, Python stage/metadata checks, final actor/scheduling/full battle gates, exact-head successful Pages run 40099629779 and twenty-three normalized live files matched. Receipt: outputs/release-02583-verification.json. Earlier pending statements are historical.
 
 All pinned ModifySnd parameter names now have real consumers: own-channel selection/redirection, pan/volume/priority/stop fields and native frequency/position/loop changes. Forty root waveform cases, six normally spawned Helper ownership cases and forty actual scheduling groups pass. Pending modifications replay in order; attached updates expose numbered audio-thread acknowledgements. Native source seek preserves buffered resampler tails. Lexical Fvar/Svar, dynamic string prefixes and omitted item=0 now reach actual PlaySnd waveform cases; rejected allocations release menu tracking. Native malformed-loop hangs are not reproduced, and complete compiler/version/device/clock fidelity remains Pending. No whole-controller certification changes. Final versioned gates and publication remain required; see MODIFY-SOUND-WIP.md and SOUND-PLAYBACK-WIP.md.
 

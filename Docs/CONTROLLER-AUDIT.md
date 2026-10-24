@@ -101,7 +101,7 @@ Completion requires each controller and parameter to have native defaults, expre
 | width | edge, player, redirectid, value | Review delegated parser/defaults | Pending |
 | zoom | camerabound, endlag, lag, pos, scale, stagebound, time | Review delegated parser/defaults | Pending |
 | assertanalogvector | lefttrigger, leftx, lefty, redirectid, righttrigger, rightx, righty | Review delegated parser/defaults | Pending |
-| assertcommand | buffer.time, name, redirectid | Review delegated parser/defaults | Pending |
+| assertcommand | buffer.time, name, redirectid | Real command buffers, static names, signed overwrite/default/random time and root/Helper sharing consumers connected; foreign command tables, scheduling and full native compiler/version fidelity pending; ASSERT-COMMAND-WIP.md | Pending |
 | assertinput | flag, flag2, flag3, flag4, flag5, flag6, flag7, flag8, redirectid | Review delegated parser/defaults | Pending |
 | camera | followid, pos, view | Review delegated parser/defaults | Pending |
 | changemovelist | redirectid, value | Review delegated parser/defaults | Pending |

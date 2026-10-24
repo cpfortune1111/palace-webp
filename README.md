@@ -1,3 +1,7 @@
+## 0.25.84 — AssertCommand consumers (partial)
+
+AssertCommand now writes real signed command buffers with native name/default/random-time rules and root/Helper ownership. Explicit assertions are visible to already-created expression contexts and expire through normal input sampling; nonasserted AI behavior is retained. Actual recipient, clear/expiry and forty scheduling groups pass. Full foreign-state command tables, native RNG/compiler/version fidelity and final versioned regression/publication remain Pending.
+
 ## 0.25.83 — ModifySnd consumers and sound grammar (partial)
 
 ModifySnd now reaches owned audio pan/volume/priority/stop flags and native speed/seek/loop updates, with ordered pending commands and audio-thread acknowledgements. Forty exact root waveform cases, six Helper ownership cases and forty actual scheduling groups pass. Sound values support lexical/dynamic string prefixes and omitted item=0; rejected allocations no longer leak menu tracking. Complete compiler/version/device/clock fidelity remains Pending; final versioned regression and verified publication are separate gates.
