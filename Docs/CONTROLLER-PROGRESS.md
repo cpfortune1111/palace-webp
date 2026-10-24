@@ -1,4 +1,14 @@
-## Unreleased — GameMakeAnim real consumers (partial)
+## 0.25.90 — Common animation resources and ownership (partial, release pending)
+
+GameMakeAnim now retains recipient-owned animation/sprite and loop data in foreign custom states. Actual P1/P2 fixtures verify valid own sprites remain available when the foreign profile lacks that action, and own-duration expiry is preserved. Other effects keep their existing ownership paths. Source frame/blend/lifetime tests still pass; full native fidelity and final publishing remain Pending.
+
+GameMakeAnim first-loop removal now preserves indefinite AIR frames and skips zero-duration elements instead of inheriting the legacy finite-duration approximation. Six actual P1/P2 lifetime/frame-selection/drawing cases and independent duration checks pass; existing common-frame, blend and matrix tests remain green. Other legacy effect lifetimes are untouched. Final combined gates and publication remain Pending.
+
+Native invalid-action handling is now consumed: missing own/common actions invalidate only that effect, rather than throwing and stopping the match. Twelve actual profile/player/action cases verify following valid controllers continue. Missing library readiness and unsupported prefixes still fail explicitly. Source rendering/blend and existing regression cases continue passing; final versioned publishing remains Pending.
+
+Post-0.25.89 work adds lossless derived assets for all 33 project fightfx common animations. The actual browser fixture verifies every source frame and each action lifetime, alongside the 32 consumer cases and sixteen MakeDust cases. Only compressed derived assets are staged; no original SFF/SND/AIR is copied. Native blend/library/RNG/limit/version fidelity and final regression/publication remain Pending.
+
+Version 0.25.89 publication was verified at commit 0698a5476a50f06dd82e649ef83c184ca936f532, exact-head successful Pages run 40122774310 and eleven live file comparisons. Final 263 Node checks, 360 scheduling groups and the complete battle gate passed; older check-runtime fixture failure remains recorded separately. Receipt: outputs/release-02589-verification.json.
 
 Forty GameMakeAnim-specific real-emission scheduling groups subsequently pass both profiles/player directions. Matching requires correct effect kind/recipient, with particles cleared between attempts; current/global/lifecycle and normal Helper hitpause/persistence/global-pause allowances are exercised. The expanded nine-controller matrix has 360 groups. Full native timing/compiler/resource fidelity and final regression/publication remain separate gates.
 

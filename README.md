@@ -1,3 +1,7 @@
+## 0.25.90 — Common animation resources and ownership (partial, release pending)
+
+GameMakeAnim now loads all 33 compressed project common animations, preserves own animation ownership in foreign states, discards invalid actions without stopping the match and retains indefinite AIR frames while skipping zero-time elements. Real common-frame/lifetime, opaque/A/A1 composited-pixel, foreign-state and held-frame checks pass. Full native library/limits/RNG/compiler/version fidelity and final deployment remain Pending; no whole-controller certification changes. Original SFF/SND/AIR are not included; character recoloring remains excluded.
+
 ## 0.25.89 — GameMakeAnim consumers (partial, release pending)
 
 GameMakeAnim now reaches real own/common animation rendering, caller-context redirected XYZ/random positions, native under/priority defaults, omitted own-animation-zero behavior and moving-Helper binding. Thirty-two consumer cases plus depth/default/lifetime checks and forty scheduling groups pass. Full native resources, limits, RNG and version/compiler fidelity remain Pending; no whole-controller certification is claimed. Character recoloring remains excluded.

@@ -91,9 +91,69 @@ const server=http.createServer((request,response)=>{
    const defaultActor=specialRoot(1);executeControllerM1({type:'GameMakeAnim',params:{}},defaultActor,specialRuntime.context(defaultActor),{owner:defaultActor,player:1,schedulingApplied:true});
    if(sourceExplods.length!==1||sourceExplods[0].anim!==0||sourceExplods[0].common)throw Error('Omitted GameMakeAnim value must retain own animation zero');
    transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='gamemakeanim'))throw Error('Default GameMakeAnim animation zero did not render');
+   let commonCases=0;
+   for(const [action,frames] of Object.entries(commonAnimationDat.actions)){
+    sourceExplods.length=0;executeControllerM1({type:'GameMakeAnim',params:{value:action}},defaultActor,specialRuntime.context(defaultActor),{owner:defaultActor,player:1,schedulingApplied:true});
+    const effect=sourceExplods[0];if(!effect?.gameCommon||effect.anim!==Number(action))throw Error('Common action not routed to complete atlas '+action);
+    let age=0;
+    for(const frame of frames){
+     effect.age=age;transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim'),sprite=commonAnimationDat.sprites[frame.group+','+frame.item];
+     if(!entry||entry.source.width!==sprite.w||entry.source.height!==sprite.h||!entry.source.getContext('2d').getImageData(0,0,entry.source.width,entry.source.height).data.some((value,index)=>index%4===3&&value>0))throw Error('Common frame did not render '+action+' at '+age);
+     age+=frame.time;
+    }
+    effect.age=age-1;stepSourceExplods();if(sourceExplods.length)throw Error('Common animation lifetime mismatch '+action);commonCases++;
+   }
+   if(commonCases!==33)throw Error('Incomplete common animation inventory');
+   const blendCases=[{action:'10',age:0,type:'none',alpha:[255,0]},{action:'0',age:0,type:'add',alpha:[255,255]},{action:'3',age:1,type:'add',alpha:[255,128]}];
+   for(const sample of blendCases){
+    sourceExplods.length=0;executeControllerM1({type:'GameMakeAnim',params:{value:sample.action}},defaultActor,specialRuntime.context(defaultActor),{owner:defaultActor,player:1,schedulingApplied:true});sourceExplods[0].age=sample.age;
+    transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');
+    if(entry.state.type!==sample.type||JSON.stringify(entry.state.alpha)!==JSON.stringify(sample.alpha))throw Error('Common AIR blend did not reach compositor state '+sample.action);
+    entry.matrix=[1,0,0,1,200,200];
+    const target=document.createElement('canvas'),scratch=document.createElement('canvas');target.width=scratch.width=512;target.height=scratch.height=512;const targetContext=target.getContext('2d'),scratchContext=scratch.getContext('2d');
+    targetContext.fillStyle='rgb(40,80,120)';targetContext.fillRect(0,0,512,512);transDrawQueue.rasterize(entry,scratchContext);const pixels=scratchContext.getImageData(0,0,512,512).data;let selected=-1;
+    for(let index=3;index<pixels.length;index+=4)if(selected<0||pixels[index]>pixels[selected+3])selected=index-3;
+    if(selected<0||pixels[selected+3]===0)throw Error('Missing blend sample pixels');
+    renderOpaqueTransQueue(targetContext,scratchContext,transDrawQueue,{shader:paletteShaderForDraw});const actual=targetContext.getImageData(0,0,512,512).data,opacity=pixels[selected+3]/255;
+    for(let channel=0;channel<3;channel++){
+     const background=[40,80,120][channel],source=pixels[selected+channel];let expected;
+     if(sample.type==='none')expected=background*(1-opacity)+source*opacity;
+     else if(sample.alpha[1]===255)expected=Math.min(255,background+source*opacity);
+     else expected=Math.min(255,Math.round(background*(1-opacity*(1-128/255)))+source*opacity);
+     if(Math.abs(actual[selected+channel]-expected)>1.1)throw Error('Common animation composited pixel mismatch '+sample.action+' channel '+channel);
+    }
+   }
+   for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const value of ['999999','S999999','-1']){
+    sourceExplods.length=0;combatEngineProfile=profile;const actor=specialRoot(player),context=specialRuntime.context(actor),adapter={owner:actor,player,schedulingApplied:true};
+    executeControllerM1({type:'GameMakeAnim',params:{value}},actor,context,adapter);if(sourceExplods.length)throw Error('Invalid GameMakeAnim animation was committed');
+    executeControllerM1({type:'GameMakeAnim',params:{value:'120'}},actor,context,adapter);if(sourceExplods.length!==1||sourceExplods[0].invalid)throw Error('Invalid animation stopped following valid controller');
+   }
+   for(const player of [1,2])for(const times of [[-1],[2,-1],[0,2,0,3]]){
+    sourceExplods.length=0;const actor=specialRoot(player),actions=characterProfiles.get(battleCharacters[player-1]).data.actions,original=actions['999890'],base=framesFor(0,player)[0],frames=times.map(time=>({...base,time}));actions['999890']=frames;
+    try{
+     executeControllerM1({type:'GameMakeAnim',params:{value:'S999890'}},actor,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});const effect=sourceExplods[0];
+     if(times.includes(-1)){
+      effect.age=500;stepSourceExplods();if(sourceExplods[0]!==effect||lifecycleEffectFrame(effect)!==frames.at(-1))throw Error('Indefinite GameMakeAnim expired or lost held frame');
+      transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='gamemakeanim'))throw Error('Indefinite GameMakeAnim stopped drawing');
+     }else{
+      if(lifecycleEffectFrame(effect)!==frames[1])throw Error('Zero-duration GameMakeAnim element was not skipped');
+      for(let tick=0;tick<4;tick++)stepSourceExplods();if(!sourceExplods.length)throw Error('Finite GameMakeAnim expired too early');stepSourceExplods();if(sourceExplods.length)throw Error('Finite zero-element GameMakeAnim expired late');
+     }
+    }finally{if(original===undefined)delete actions['999890'];else actions['999890']=original}
+   }
+   for(const player of [1,2]){
+    sourceExplods.length=0;const character=battleCharacters[player-1],profile=characterProfiles.get(character),foreign='GameMakeAnimForeignFixture',savedForeign=characterProfiles.get(foreign),savedOwner=customStateOwners[player-1],savedAnimation=customAnimationOwners[player-1],savedAction=profile.data.actions['999891'],ownFrame={...profile.data.actions['0'][0],time:2};
+    frameProfiles.set(ownFrame,character);profile.data.actions['999891']=[ownFrame];characterProfiles.set(foreign,{...profile,data:{...profile.data,actions:{}}});customStateOwners[player-1]=foreign;customAnimationOwners[player-1]=foreign;
+    try{
+     const actor=specialRoot(player);executeControllerM1({type:'GameMakeAnim',params:{value:'S999891'}},actor,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});const effect=sourceExplods[0];
+     if(!effect||effect.invalid||sourceEffectFrames(effect)[0]!==ownFrame)throw Error('GameMakeAnim used foreign state animation owner');
+     transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='gamemakeanim');if(!entry||entry.source.width!==profile.data.sprites[ownFrame.group+','+ownFrame.item].w)throw Error('Own animation did not render inside foreign state');
+     stepSourceExplods();if(!sourceExplods.length)throw Error('Own animation expired early under foreign state');stepSourceExplods();if(sourceExplods.length)throw Error('Foreign animation owner corrupted own lifetime');
+    }finally{customStateOwners[player-1]=savedOwner;customAnimationOwners[player-1]=savedAnimation;if(savedAction===undefined)delete profile.data.actions['999891'];else profile.data.actions['999891']=savedAction;if(savedForeign===undefined)characterProfiles.delete(foreign);else characterProfiles.set(foreign,savedForeign)}
+   }
    return rows;
    }finally{sourceExplods.length=0;specialRuntime.reset();combatEngineProfile=saved.profile;rootDrawOffsets.splice(0,2,...saved.offsets);[cameraX,cameraY,cameraZoom]=saved.camera;Object.assign(STAGE_CAMERA,saved.config);Object.assign(stageCameraConfig.player,saved.player);p1HitPause=0;p2.attackPause=0}
   })()`);
-  assert.equal(rows.length,16);console.log('Sixteen MakeDust cases and 32 GameMakeAnim own/common/profile/player/root/Helper/redirection random-position pixel cases pass, plus lifetime, Z drawing and moving Helper binding');
+  assert.equal(rows.length,16);console.log('Sixteen MakeDust cases, 32 GameMakeAnim cases and all frames/lifetimes of 33 common actions pass; actual none/A/A1 composited pixels, defaults, Z and Helper binding pass');
  }finally{await browser?.close();server.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});
