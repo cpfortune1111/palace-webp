@@ -56,4 +56,7 @@ const reusedRecord=tied.add('root',0,reused,()=>{},{tick:20});assert.equal(reuse
 const tieReplacement=tied.add('root',-1,new Clip(),()=>{},{tick:21});assert.equal(tieReplacement.slot,0);assert.equal(reused.stops,1);assert.equal(right.stops,0);
 tied.stopAll();const newer=new Clip(),older=new Clip();tied.add('root',0,newer,()=>{},{tick:40});tied.add('root',1,older,()=>{},{tick:30});
 assert.equal(tied.add('root',-1,new Clip(),()=>{},{tick:50}).slot,1);assert.deepEqual([newer.stops,older.stops],[0,1]);tied.stopAll();
-console.log('Owned character sound channels isolate roots/Helpers, preserve automatic overlap and implement native StopSnd negative/all-player selection and cleanup');
+const flagged=createCharacterSoundChannels(),voice=new Clip(),persistent=new Clip(),stateSound=new Clip(),opponentVoice=new Clip();
+flagged.add('root1',0,voice,()=>{},{stopFlags:{hit:true}});flagged.add('root1',-1,persistent);flagged.add('root1',7,stateSound,()=>{},{stopFlags:{state:true}});flagged.add('root2',0,opponentVoice,()=>{},{stopFlags:{hit:true,state:true}});
+flagged.stopOnEvent('root1','hit');assert.deepEqual([voice.stops,persistent.stops,stateSound.stops,opponentVoice.stops],[1,0,0,0]);flagged.stopOnEvent('root1','state');assert.deepEqual([voice.stops,persistent.stops,stateSound.stops,opponentVoice.stops],[1,0,1,0]);assert.throws(()=>flagged.stopOnEvent('root1','guard'),/Unsupported/);flagged.stopAll();
+console.log('Owned character sound channels isolate roots/Helpers, preserve automatic overlap and implement native StopSnd selection, flagged-event filtering and cleanup');

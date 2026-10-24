@@ -40,13 +40,14 @@ export function createCharacterSoundChannels({capacity=32}={}){
     if(!victim)return null;slot=victim.slot;stop(victim);
    }
    if(slot===undefined){slot=0;while(occupied.some(record=>record.slot===slot))slot++}
-   const record={owner,channel,sound,onRelease,priority,pool,slot,timeStamp:(options.tick??0)|0};records.add(record);
+   const record={owner,channel,sound,onRelease,priority,pool,slot,timeStamp:(options.tick??0)|0,stopFlags:{...options.stopFlags}};records.add(record);
    sound.addEventListener('ended',()=>release(record),{once:true});sound.addEventListener('error',()=>release(record),{once:true});return record;
   },
   release,
   owned,
   entries:()=>[...records],
   stopOwner(owner,channel){for(const record of owned(owner,channel))stop(record)},
+  stopOnEvent(owner,event){if(!['hit','state'].includes(event))throw Error('Unsupported character sound event');for(const record of owned(owner))if(record.stopFlags[event])stop(record)},
   stopAll(){for(const record of [...records])stop(record)}
  };
 }

@@ -1271,7 +1271,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   const helperSounds=await run(`(()=>{
    const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={Audio:window.Audio,registry:characterSoundChannels,entities:[...specialRuntime.entities],voice:roundVoiceUntil,definitions:data.map(value=>value.helperStates[991940])},rows=[];
    try{
-    characterSoundChannels=createCharacterSoundChannels();window.Audio=class extends EventTarget{constructor(url){super();this.src=url;this.stops=0}play(){return Promise.resolve()}pause(){this.stops++}};
+    characterSoundChannels=createCharacterSoundChannels();window.Audio=function(url){const sound=new saved.Audio(url);sound.stops=0;sound.play=()=>Promise.resolve();sound.pause=()=>{sound.stops++};return sound};
     for(const value of data)value.helperStates[991940]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
     for(const player of [1,2])for(const inheritance of [0,1,2]){
      characterSoundChannels.stopAll();specialRuntime.entities.length=0;const root=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),soundValue=key.replace('-',',');
@@ -1281,7 +1281,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
      const record=characterSoundChannels.entries()[0],expected=inheritance===1?parent:inheritance===2?root:child;
      const stop=actor=>executeControllerM1({type:'StopSnd',params:{channel:'7'}},actor.kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
      stop(child);const childStops=record.sound.stops;stop(parent);const parentStops=record.sound.stops;stop(root);
-     rows.push({player,inheritance,created:child.inheritChannels,owner:record.owner,expected:characterSoundIdentity(expected),childStops,parentStops,finalStops:record.sound.stops,resource:record.sound.src===profile.soundBase+profile.sounds[key].file});
+     rows.push({player,inheritance,created:child.inheritChannels,owner:record.owner,expected:characterSoundIdentity(expected),childStops,parentStops,finalStops:record.sound.stops,resource:record.sound.src===new URL(profile.soundBase+profile.sounds[key].file,location.href).href});
     }
     return rows;
    }finally{
@@ -1295,7 +1295,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   const soundPriorities=await run(`(()=>{
    const saved={Audio:window.Audio,registry:characterSoundChannels,voice:roundVoiceUntil},rows=[];
    try{
-    characterSoundChannels=createCharacterSoundChannels();window.Audio=class extends EventTarget{constructor(){super();this.stops=0;this.plays=0}play(){this.plays++;return Promise.resolve()}pause(){this.stops++}};
+    characterSoundChannels=createCharacterSoundChannels();window.Audio=function(url){const sound=new saved.Audio(url);sound.stops=0;sound.plays=0;sound.play=()=>{sound.plays++;return Promise.resolve()};sound.pause=()=>{sound.stops++};return sound};
     for(const player of [1,2])for(const common of [false,true]){
      characterSoundChannels.stopAll();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),value=common?'F7,0':key.replace('-',',');
      const play=params=>executeControllerM1({type:'PlaySnd',params:{value,channel:'7',...params}},player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
@@ -1319,7 +1319,7 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   const saturatedSounds=await run(`(()=>{
    const data=[1,2].map(player=>collisionActorData(specialRoot(player))),saved={Audio:window.Audio,registry:characterSoundChannels,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991950])},rows=[];
    try{
-    characterSoundChannels=createCharacterSoundChannels({capacity:2});window.Audio=class extends EventTarget{constructor(){super();this.stops=0}play(){return Promise.resolve()}pause(){this.stops++}};
+    characterSoundChannels=createCharacterSoundChannels({capacity:2});window.Audio=function(url){const sound=new saved.Audio(url);sound.stops=0;sound.play=()=>Promise.resolve();sound.pause=()=>{sound.stops++};return sound};
     for(const value of data)value.helperStates[991950]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
     for(const player of [1,2]){
      characterSoundChannels.stopAll();specialRuntime.entities.length=0;const root=specialRoot(player),other=specialRoot(3-player);
@@ -1341,15 +1341,15 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   console.log('Actual saturated sound pools share normal Helper/root capacity, reject lowpriority and evict automatic audio without touching the opposing player');
   const renderedPan=await run(`(async()=>{
    const {createLinearSoundPanner}=await import('./Engine/linear-sound-panner.js'),rows=[];
-   for(const channels of [1,2])for(const pan of [-1,0,.5,1]){
+   for(const channels of [1,2])for(const pan of [-1,0,.5,1])for(const gain of [.5,1,2]){
     const context=new OfflineAudioContext(2,128,44100),buffer=context.createBuffer(channels,128,44100);buffer.getChannelData(0).fill(.25);if(channels===2)buffer.getChannelData(1).fill(.125);
-    const source=context.createBufferSource();source.buffer=buffer;const graph=createLinearSoundPanner(context,source);graph.set(pan);graph.output.connect(context.destination);source.start();const result=await context.startRendering();rows.push({channels,pan,left:result.getChannelData(0)[64],right:result.getChannelData(1)[64]});graph.disconnect();
+    const source=context.createBufferSource();source.buffer=buffer;const graph=createLinearSoundPanner(context,source);graph.set(pan,gain);graph.output.connect(context.destination);source.start();const result=await context.startRendering();rows.push({channels,pan,gain,left:result.getChannelData(0)[64],right:result.getChannelData(1)[64]});graph.disconnect();
    }
    return rows;
   })()`);
-  assert.equal(renderedPan.length,8);
-  for(const row of renderedPan){assert.ok(Math.abs(row.left-.25*(1-row.pan))<1e-6,JSON.stringify(row));assert.ok(Math.abs(row.right-(row.channels===1?.25:.125)*(1+row.pan))<1e-6,JSON.stringify(row))}
-  console.log('Actual offline Web Audio renders native linear left/right gains for mono upmix and stereo sources in eight cases');
+  assert.equal(renderedPan.length,24);
+  for(const row of renderedPan){assert.ok(Math.abs(row.left-.25*Math.min(row.gain*(1-row.pan),2))<1e-6,JSON.stringify(row));assert.ok(Math.abs(row.right-(row.channels===1?.25:.125)*Math.min(row.gain*(1+row.pan),2))<1e-6,JSON.stringify(row))}
+  console.log('Actual offline Web Audio renders native linear left/right gains and clipping for mono/stereo sources in twenty-four cases');
   const sourcePan=await run(`(()=>{
    const saved=characterSoundChannels;characterSoundChannels=createCharacterSoundChannels();const root=specialRoot(1),other=specialRoot(2);let first,second;
    try{
@@ -1386,6 +1386,96 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(helperPan.length,8);
   for(const row of helperPan){const offset=40*320/row.coordinate*row.facing;assert.equal(row.source,row.id);assert.equal(row.offset,offset);assert.ok(Math.abs(row.initial-(100+offset-20)*2*2/320*.3)<1e-6,JSON.stringify(row));assert.ok(Math.abs(row.moved-(120+offset-20)*2*2/320*.3)<1e-6,JSON.stringify(row));assert.equal(row.removed,row.moved);assert.equal(row.retained,120)}
   console.log('Actual redirected normal-Helper SndPan captures own coordinates/facing, tracks camera/emitter and retains removed position in eight cases');
+  const playPan=await run(`(()=>{
+   const saved={registry:characterSoundChannels,voice:roundVoiceUntil,camera:[cameraX,cameraZoom]},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();cameraX=0;cameraZoom=1;
+    for(const player of [1,2])for(const common of [false,true])for(const mode of ['default','relative','absolute']){
+     const absolute=mode==='absolute';characterSoundChannels.stopAll();const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),params={value:common?'F7,0':key.replace('-',','),channel:'7'};if(mode!=='default')params.pan='40';if(absolute)params.abspan='160';
+     executeControllerM1({type:'PlaySnd',params},player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     const record=characterSoundChannels.entries()[0],state=characterSoundOutput.snapshot(record),offset=Math.fround(Math.fround((mode==='default'?0:40)*Math.fround(320/characterLocalCoord(gravityActorData(actor))))*actor.facing);
+     rows.push({player,common,absolute,state,offset,position:actor.x/4,active:characterSoundOutput.size()});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;roundVoiceUntil=saved.voice;[cameraX,cameraZoom]=saved.camera}
+  })()`);
+  assert.equal(playPan.length,12);
+  for(const row of playPan){assert.equal(row.active,1);assert.equal(row.state.sourceId,row.absolute?-1:row.player);assert.equal(row.state.pan,row.absolute?160:row.offset);assert.ok(Math.abs(row.state.lastPan-(row.absolute?.3:(row.position+row.offset)*2/320*.3))<1e-6,JSON.stringify(row))}
+  console.log('Actual own/common PlaySnd pan/abspan create real audio graphs with native recipient position/facing and absolute override for both players');
+  const playedVolumes=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={registry:characterSoundChannels,voice:roundVoiceUntil,owners:[...customStateOwners],volumes:data.map(value=>value.dataConstants['data.volume'])},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();data[0].dataConstants['data.volume']=128;data[1].dataConstants['data.volume']=384;
+    for(const player of [1,2])for(const common of [false,true])for(const foreign of [false,true])for(const mode of ['default','volume','scale','both']){
+     characterSoundChannels.stopAll();customStateOwners.fill(null);if(foreign)customStateOwners[player-1]=battleCharacters[2-player];
+     const actor=specialRoot(player),profile=characterProfiles.get(battleCharacters[player-1]),key=Object.keys(profile.sounds).find(value=>/^[0-9]+-[0-9]+$/.test(value)),params={value:common?'F7,0':key.replace('-',','),channel:'7'},binding=player===1?p1LifecycleBinding:p2;
+     if(mode==='volume'||mode==='both')params.volume='128';if(mode==='scale'||mode==='both')params.volumescale='50';
+     executeControllerM1({type:'PlaySnd',params},binding,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});const record=characterSoundChannels.entries()[0],before=characterSoundOutput.snapshot(record).gain;
+     executeControllerM1({type:'SndPan',params:{channel:'7',abspan:'0'}},binding,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     rows.push({player,common,foreign,mode,before,after:characterSoundOutput.snapshot(record).gain});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;roundVoiceUntil=saved.voice;customStateOwners.splice(0,2,...saved.owners);for(let index=0;index<2;index++)data[index].dataConstants['data.volume']=saved.volumes[index]}
+  })()`);
+  assert.equal(playedVolumes.length,32);
+  for(const row of playedVolumes){const volume=row.mode==='default'?100:row.mode==='volume'?125:50,level=row.common?Math.trunc(volume*64/25):Math.trunc((row.player===1?128:384)*volume/100),expected=Math.min(512,Math.max(0,level))/256;assert.equal(row.before,expected,JSON.stringify(row));assert.equal(row.after,expected,JSON.stringify(row))}
+  console.log('Actual own/common PlaySnd volume/volumescale uses recipient-owned data under foreign states and survives later SndPan in thirty-two cases');
+  const stateStoppedSounds=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={registry:characterSoundChannels,entities:[...specialRuntime.entities],definitions:data.map(value=>[value.helperStates[991980],value.helperStates[991981]])},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();
+    for(const value of data)for(const number of [991980,991981])value.helperStates[number]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const player of [1,2]){
+     characterSoundChannels.stopAll();specialRuntime.entities.length=0;const root=specialRoot(player);specialRuntime.dispatch({type:'Helper',params:{stateno:991980,id:991980}},root,specialRuntime.context(root),{},root,player);const helper=specialRuntime.entities.at(-1);helper.created=combatTraceTick-1;
+     for(const channel of [7,8])executeControllerM1({type:'PlaySnd',params:{value:'F7,0',channel:String(channel),stoponchangestate:channel===7?'1':'0'}},helper,specialRuntime.context(helper),{owner:helper,player,schedulingApplied:true});
+     const records=[...characterSoundChannels.entries()],flagged=records.find(record=>record.channel===7),retained=records.find(record=>record.channel===8);helper.hitPause=2;specialRuntime.selectState(helper,991981,{phase:'current'});const selected=characterSoundChannels.entries().includes(flagged);specialRuntime.step();const paused=characterSoundChannels.entries().includes(flagged);helper.hitPause=0;specialRuntime.step();
+     rows.push({player,selected,paused,stopped:!characterSoundChannels.entries().includes(flagged),retained:characterSoundChannels.entries().includes(retained),graphRemoved:characterSoundOutput.snapshot(flagged)===null,graphRetained:characterSoundOutput.snapshot(retained)!==null});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++)for(const [position,number]of [991980,991981].entries()){if(saved.definitions[index][position]===undefined)delete data[index].helperStates[number];else data[index].helperStates[number]=saved.definitions[index][position]}}
+  })()`);
+  assert.equal(stateStoppedSounds.length,2);
+  for(const row of stateStoppedSounds){assert.equal(row.selected,true,JSON.stringify(row));assert.equal(row.paused,true);assert.equal(row.stopped,true);assert.equal(row.retained,true);assert.equal(row.graphRemoved,true);assert.equal(row.graphRetained,true)}
+  console.log('Actual Helper PlaySnd stoponchangestate waits for deferred initialization after hitpause and disconnects only flagged audio for P1/P2');
+  const rootStateSounds=await run(`(()=>{
+   const saved={registry:characterSoundChannels,tick:combatTraceTick,reaction:p1Reaction,paused:[p1HitPause,p2.hitPause,p2.hitShake,p2.attackPause]},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();
+    for(const player of [1,2])for(const target of [0,5000]){
+     characterSoundChannels.stopAll();rootStateChanges.clear();p1Reaction=null;p1HitPause=0;p2.hitPause=0;p2.hitShake=0;p2.attackPause=0;
+     const actor=specialRoot(player),binding=player===1?p1LifecycleBinding:p2;
+     for(const channel of [7,8])executeControllerM1({type:'PlaySnd',params:{value:'F7,0',channel:String(channel),stoponchangestate:channel===7?'1':'0'}},binding,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true});
+     const flagged=characterSoundChannels.entries().find(record=>record.channel===7),retained=characterSoundChannels.entries().find(record=>record.channel===8);if(player===1)p1HitPause=2;else p2.hitPause=2;
+     selectRootSourceStateM1(player,target);const selected=characterSoundChannels.entries().includes(flagged);combatTraceTick++;initializeRootSourceStateM1(player);const paused=characterSoundChannels.entries().includes(flagged);
+     p1HitPause=0;p2.hitPause=0;initializeRootSourceStateM1(player);
+     rows.push({player,target,selected,paused,stopped:!characterSoundChannels.entries().includes(flagged),retained:characterSoundChannels.entries().includes(retained),pending:rootStateChanges.has('root'+player),graphRemoved:characterSoundOutput.snapshot(flagged)===null});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;rootStateChanges.clear();combatTraceTick=saved.tick;p1Reaction=saved.reaction;[p1HitPause,p2.hitPause,p2.hitShake,p2.attackPause]=saved.paused}
+  })()`);
+  assert.equal(rootStateSounds.length,4);
+  for(const row of rootStateSounds){assert.equal(row.selected,true,JSON.stringify(row));assert.equal(row.paused,true);assert.equal(row.stopped,true);assert.equal(row.retained,true);assert.equal(row.pending,false);assert.equal(row.graphRemoved,true)}
+  console.log('Actual root/reaction deferred StateDef initialization stops only flagged audio after hitpause for P1/P2');
+  const hitStoppedSounds=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={registry:characterSoundChannels,profile:combatEngineProfile,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991995])},rows=[];
+   try{
+    characterSoundChannels=createCharacterSoundChannels();for(const value of data)value.helperStates[991995]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const guarded of [false,true])for(const reaction of [false,true])for(const aerial of [false,true]){
+     combatEngineProfile=profile;characterSoundChannels.stopAll();specialRuntime.entities.length=0;let actor=specialRoot(player);const source=specialRoot(3-player);
+     if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991995,id:991995}},actor,specialRuntime.context(actor),{},actor,player);actor=specialRuntime.entities.at(-1)}
+     for(const channel of [0,7,8]){const params={value:'F7,0',channel:String(channel)};if(channel!==0)params.stopongethit=channel===7?'1':'0';executeControllerM1({type:'PlaySnd',params},kind==='helper'?actor:player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true})}
+     executeControllerM1({type:'PlaySnd',params:{value:'F7,0',channel:'0'}},3-player===1?p1LifecycleBinding:p2,specialRuntime.context(source),{owner:source,player:3-player,schedulingApplied:true});
+     const records=characterSoundChannels.owned(characterSoundIdentity(actor)),opponent=characterSoundChannels.owned(characterSoundIdentity(source))[0],defender={...actor,life:1000,type:aerial?'A':'S',y:aerial?-100:0,moveType:'I',ctrl:1,hitShake:0,hitTime:-1,getHit:{},facing:-source.facing};
+     const params={attr:'S,NA',damage:'10,0',hitflag:'MAFD',guardflag:'MA',pausetime:'0,0',animtype:'light','ground.type':(aerial?!reaction:reaction)?'high':'none','air.type':(aerial?reaction:!reaction)?'high':'none','ground.hittime':10,'air.hittime':10,'ground.velocity':'0,0','air.velocity':'0,0','guard.velocity':'0','guard.hittime':10,fall:0,getpower:'0,0',givepower:'0,0',unhittabletime:'0,0',sparkno:-1,'guard.sparkno':-1};
+     const result=resolveGroundHitM1({...source,id:3-player,type:'S',moveType:'A'},defender,params,guarded?'stand':'none');
+     rows.push({profile,player,kind,guarded,reaction,aerial,actualGuard:result.guarded,active:records.map(record=>characterSoundChannels.entries().includes(record)),graphs:records.map(record=>characterSoundOutput.snapshot(record)!==null),opponent:characterSoundChannels.entries().includes(opponent)});
+    }
+    return rows;
+   }finally{characterSoundChannels.stopAll();characterSoundChannels=saved.registry;combatEngineProfile=saved.profile;specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){if(saved.definitions[index]===undefined)delete data[index].helperStates[991995];else data[index].helperStates[991995]=saved.definitions[index]}}
+  })()`);
+  assert.equal(hitStoppedSounds.length,64);
+  for(const row of hitStoppedSounds){assert.equal(row.actualGuard,row.guarded,JSON.stringify(row));assert.deepEqual(row.active,row.guarded||!row.reaction?[true,true,true]:[false,false,true],JSON.stringify(row));assert.deepEqual(row.graphs,row.active);assert.equal(row.opponent,true)}
+  console.log('Actual qualified root/Helper hit resolution selects ground/air reaction types and preserves guard/None audio in sixty-four profile/player cases');
   assert.deepEqual(errors,[]);
 
  }finally{await browser?.close();server.close();clearTimeout(watchdog)}

@@ -1,3 +1,7 @@
+## 0.25.80 — PlaySnd pan, volume and stop flags (partial)
+
+CNS PlaySnd now supplies default/explicit positional pan, absolute override and recipient-owned volume/volumescale gain through real media graphs. Flagged sounds stop at actual StateDef initialization or real reaction-hit acceptance, not during deferred selection, hitpause, guard or None contact. Actual root/Helper/foreign-state consumers and rendered gain/clipping probes cover these paths. Remaining frequency/loop/seek parameters, legacy version interactions, native timing/settings fidelity and whole-controller certification stay Pending; final regression and verified publication are separate gates.
+
 ## 0.25.79 — SndPan audio consumers (partial)
 
 SndPan now reaches real owned media graphs with native linear stereo gains, typed redirect/channel parameters, relative facing/local-scale capture and absolute pan. Offline sample renders, actual root/normal-Helper coordinate/source tracking, graph reuse/cleanup and forty scheduling groups pass. PlaySnd lowpriority now evaluates before priority. Full sound parameters, native timing/settings/audio-device fidelity and whole-controller certification remain Pending; final versioned regression and verified publication are separate gates.

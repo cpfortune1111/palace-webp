@@ -5,20 +5,20 @@ export function createCharacterSoundOutput({createContext,view,sourcePosition,on
  let context=null;
  const outputs=new Map();
  function resume(){if(context?.state==='suspended')return context.resume();return Promise.resolve()}
- function update(record){const output=outputs.get(record);if(!output)return null;return output.graph.set(updateSoundPanState(output.state,view(),sourcePosition))}
+ function update(record){const output=outputs.get(record);if(!output)return null;return output.graph.set(updateSoundPanState(output.state,view(),sourcePosition),output.gain)}
  return {
   resume,
-  setPan(record,params){
+  setPan(record,params,gain){
    let output=outputs.get(record);
    if(!output){
     context??=createContext();const source=context.createMediaElementSource(record.sound),graph=createLinearSoundPanner(context,source);graph.output.connect(context.destination);
-    output={graph,state:createSoundPanState()};outputs.set(record,output);
+    output={graph,state:createSoundPanState(),gain:1};outputs.set(record,output);
    }
-   setSoundPanState(output.state,params);const levels=update(record);resume().catch(onError);return levels;
+   if(gain!==undefined)output.gain=gain;setSoundPanState(output.state,params);const levels=update(record);resume().catch(onError);return levels;
   },
   update(){for(const record of outputs.keys())update(record)},
   release(record){const output=outputs.get(record);if(!output)return;outputs.delete(record);output.graph.disconnect()},
   size:()=>outputs.size,
-  snapshot(record){const output=outputs.get(record);return output?{...output.state}:null}
+  snapshot(record){const output=outputs.get(record);return output?{...output.state,gain:output.gain}:null}
  };
 }
