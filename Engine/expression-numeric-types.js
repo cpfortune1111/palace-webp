@@ -8,10 +8,11 @@ const booleanQueries=new Set(['dizzy','guardbreak','alive','canrecover','ctrl','
 const floatQueries=new Set(['ailevelf','pos x','pos y','vel x','vel y','vel z','angle','xangle','yangle']);
 const unaryMath=new Set(['abs','floor','ceil','ln','sin','cos','tan','asin','acos','atan','exp','sign','rad','deg']);
 const multiMath={log:2,max:2,min:2,round:2,atan2:2,clamp:3,lerp:3};
-const intrinsicCalls={numhelper:{type:'int',min:0,max:1},numprojid:{type:'int',min:1,max:1},numexplod:{type:'int',min:0,max:1},numtarget:{type:'int',min:0,max:1},animelemtime:{type:'int',min:1,max:1},playeridexist:{type:'bool',min:1,max:1},selfanimexist:{type:'bool',min:1,max:1},isasserted:{type:'bool',min:1,max:1}};
+const intrinsicCalls={projcanceltime:{type:'int',min:1,max:1},projcontacttime:{type:'int',min:1,max:1},projhittime:{type:'int',min:1,max:1},projguardedtime:{type:'int',min:1,max:1},numhelper:{type:'int',min:0,max:1},numprojid:{type:'int',min:1,max:1},numexplod:{type:'int',min:0,max:1},numtarget:{type:'int',min:0,max:1},animelemtime:{type:'int',min:1,max:1},playeridexist:{type:'bool',min:1,max:1},selfanimexist:{type:'bool',min:1,max:1},isasserted:{type:'bool',min:1,max:1}};
 
 export function numericQueryType(name){
  const key=name.toLowerCase().replace(/\s+/g,' ');
+ if(/^proj(contact|hit|guarded)\d*$/.test(key))return 'bool';
  if(key==='layerno')return 'int';
  return integerQueries.has(key)?'int':booleanQueries.has(key)?'bool':floatQueries.has(key)?'float':null;
 }

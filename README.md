@@ -1,3 +1,9 @@
+## 0.26.03 — Owner-scoped Projectile events (partial, release pending)
+
+Real projectile hits, guards, cancellations and Helper-recipient contacts now publish one latest event per owner. Typed Proj*Time queries, basic legacy ProjHit/Guarded/Contact expressions, default/own Helper ownership, reset/destruction and pause-aware clocks have real consumers. Thirty-two browser cases and semantic checks verify these paths. Complete legacy time-comparison syntax, exact native cross-actor phases and remaining Projectile/controller families stay Pending; no whole-controller certification changes. See Docs/PROJECTILE-CONTACT-EVENTS-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.
+
+Previous 0.26.02 publication was verified at ab7212077ca3e68d98dbed854a4299964313197b, successful Pages run 40218636383 and eleven frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.02 — Projectile AfterImage consumers (partial, release pending)
 
 Projectile creation and the real renderer now consume independent histories, with native hitpause/SuperPause recording rules and shared player budgets. Partial ModifyProjectile supports redirect, active owned ID/index selection, projid renaming and deferred per-projectile AfterImage writes without clearing history. Ordinary Helper projectiles now belong to the root unless ownprojectile is enabled; counts and selection follow ownership. Eight real browser combinations and semantic tests cover these paths. Other Projectile/ModifyProjectile families, Helper contact-event triggers and exact native fidelity remain Pending; no whole-controller certification changes. See Docs/PROJECTILE-AFTERIMAGE-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.

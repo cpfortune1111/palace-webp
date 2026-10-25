@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.03 adds owner-scoped latest Projectile contact events and typed time/basic legacy expression consumers, including accepted Helper contacts and native-style cancellation filters. Thirty-two actual browser cases cover ownership, expression types and pause-aware clocks. Exact native per-character phases, full legacy syntax and remaining Projectile families remain Pending; no whole-controller certification changes. See PROJECTILE-CONTACT-EVENTS-WIP.md.
+
 0.26.02 adds real Projectile creation/rendering and partial ModifyProjectile AfterImage consumers, with active ownership/ID/index/redirect selection and native Helper recipient restriction. Default Helper projectile ownership, ownprojectile initialization and owner-filtered counts are corrected. Eight actual browser combinations support these paths; other Projectile/ModifyProjectile families and full ownprojectile/contact-event/native-fidelity coverage remain Pending. See PROJECTILE-AFTERIMAGE-WIP.md. No whole-controller certification changes.
 
 0.26.01 adds real Explod creation/ModifyExplod prefixed AfterImage consumers and configurable per-player sprite budgets. Sixteen own/common/render/RHS/version/player/Helper cases and independent commit-budget checks support these paths. Projectile histories, remaining creation families and exact native cue/phase fidelity remain Pending; no whole-controller certification changes. See NATIVE-AFTERIMAGE-WIP.md.

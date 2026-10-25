@@ -1,6 +1,7 @@
 import {createReflectionOverride,resetReflectionOverride} from '../../Engine/modify-reflection.js';
 import {controllerBoolean,controllerInteger} from '../../Engine/controller-value-conversion.js';
 import {deferredExplodAfterImageWrites as deferredProjectileAfterImageWrites,finishExplodAfterImage as finishProjectileAfterImage} from '../../Engine/native-afterimage.js';
+import {createProjectileContactEvents} from '../../Engine/projectile-contact-events.js';
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
@@ -46,10 +47,13 @@ import {createStateChangeBuffer} from '../../Engine/state-change-buffer.js?v=025
 import {applyStateDefTypes} from '../../Engine/state-def-types.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0},stagePauseFlags={normal:true,super:true};let serial=0;
- const projectileContacts=new Map(),moveTimes=new Map(),stateChanges=createStateChangeBuffer();
+ const projectileContacts=createProjectileContactEvents(),moveTimes=new Map(),stateChanges=createStateChangeBuffer();
  let helperChangeNest=0;
  const moveTimeKey=actor=>actor.kind==='helper'?actor.key:'root'+(actor.player??actor.id);
  const root=player=>api.root(player);
+ const projectileQueryActor=value=>typeof value==='number'?root(value):value;
+ const projectileTime=(actor,id,kind='contact')=>projectileContacts.time(projectileQueryActor(actor),id,kind);
+ const recordProjectileContact=(projectile,kind)=>{const id=projectile.projectileOwnerId??projectile.player;if(id>2&&!entities.some(entity=>entity.kind==='helper'&&entity.instanceId===id&&!entity.destroyed))return;projectileContacts.record(id,projectile.id,kind,api.tick())};
  const ownedProjectileCount=(actor,id)=>actor.kind==='helper'&&!actor.ownProjectile?0:entities.filter(item=>item.kind==='projectile'&&item.player===actor.player&&item.projectileOwnerId===(actor.kind==='helper'?actor.instanceId:actor.player)&&!item.destroyed&&!item.removing&&(id===undefined||item.id===Math.max(0,controllerInteger(id)))).length;
  const blocked=(player,entity=null)=>{
   const slot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal',active=pauses[slot].filter(pause=>pause?.remaining>0&&pause.created!==api.tick());
@@ -229,7 +233,7 @@ export function createSpecialRuntime(api){
   entity.hitPause=result.attackerPause;
   api.sourceHitState?.(entity,contactParams,result);
   if(entity.kind==='projectile'){
-   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
+   recordProjectileContact(entity,result.guarded?'guarded':'hit');
    entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
    if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
    entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
@@ -237,6 +241,7 @@ export function createSpecialRuntime(api){
   }
  }
  function removeProjectile(entity,reason){
+  if(reason==='cancel')recordProjectileContact(entity,'cancel');
   entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
   const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??entity.params.projhitanim??-1;
   if(selected!==undefined){entity.anim=Number(selected);entity.time=0;entity.elem=1;entity.elemTick=0}
@@ -305,6 +310,7 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
     if(!result)continue;
     helper.lastHitOverride=selected;
     if(result)api.recordCornerPush?.(attack,helper,result);
+    if(result&&attack.kind==='projectile')recordProjectileContact(attack,result.guarded?'guarded':'hit');
     if(result){helper.life=result.life;helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.hitShake=result.defenderPause;if(!result.keepState)helper.hitTime=result.getHit.hittime;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected?.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
     if(!selected){if(!result.keepState){const provider=!result.guarded&&result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
     if(selected&&!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
@@ -312,9 +318,10 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
    }
   }
   for(const [helper,nextState] of overrides){enter(helper,nextState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)}
-  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper'){stateChanges.cancel(entities[index].key);api.forgetHitState?.(entities[index])}entities.splice(index,1)}
+  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper'){projectileContacts.forget(entities[index]);stateChanges.cancel(entities[index].key);api.forgetHitState?.(entities[index])}entities.splice(index,1)}
  }
  function finishTick(){
+  for(const actor of [root(1),root(2),...entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)])projectileContacts.advance(actor,api.tick(),{paused:blocked(actor.player,actor.kind==='helper'?actor:null),disabled:!!actor.disabled||!!api.projectileOwnerDisabled?.(actor)});
   api.finishPaletteEffects?.();
   const moveSlot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal';if(pauses[moveSlot].some(pause=>pause?.remaining>0&&pause.created!==api.tick()))for(const value of moveTimes.values())if(value[moveSlot]>0)value[moveSlot]--;
   const superActive=pauses.super.some(pause=>pause?.remaining>0);
@@ -322,8 +329,9 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
  }
  return {entities,pauses,moveTimes,stateChanges,stateChangePending:entity=>stateChanges.has(entity.key),selectState,setMoveTime:(actor,slot,value)=>{const key=moveTimeKey(actor),times=moveTimes.get(key)||{};times[slot]=value;moveTimes.set(key,times)},stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
-  numProj:(player,id)=>ownedProjectileCount(root(player),id),
-  projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
-  projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
+  numProj:(actor,id)=>ownedProjectileCount(projectileQueryActor(actor),id),
+  projectileTime,
+  projectileContact:(actor,id)=>projectileTime(actor,id,'contact'),
+  projectileEvent:(actor,id,kind)=>projectileTime(actor,id,kind)===0,
   reset:()=>{entities.length=0;stateChanges.clear();projectileContacts.clear();moveTimes.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};
 }
