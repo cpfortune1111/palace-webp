@@ -30,6 +30,8 @@ export function applyModifyExplodController(controller,caller,api){
  const ignoreHitPause=params.ignorehitpause===undefined?null:controllerBoolean(api.evaluate(params.ignorehitpause));
  const positionActive=postype!==null||position!==null||!locked&&params.random!==undefined;
  if(!positionActive&&!velocity&&!friction&&!accel&&!spriteScale&&removeTime===null&&!Object.keys(pauseTimes).length&&!Object.keys(visuals).length&&!transState&&ignoreHitPause===null&&removeOnGetHit===null&&removeOnChangeState===null&&!Object.keys(animationControl).length&&!animationReference&&!windowWrite&&!Object.keys(geometry).length)return true;
- for(const effect of effects)api.modify(effect,owner,{spread,postype,position,velocity,friction:friction?[friction[0],friction[1]??0,friction[2]??0]:null,accel,spriteScale,removeTime,pauseTimes,positionActive,visuals,transState,ignoreHitPause,removeOnGetHit,removeOnChangeState,windowWrite,animationReference,animationControl,geometry,ikemen,legacyReset:!ikemen&&postype!==null});
+ const changes={spread,postype,position,velocity,friction:friction?[friction[0],friction[1]??0,friction[2]??0]:null,accel,spriteScale,removeTime,pauseTimes,positionActive,visuals,transState,ignoreHitPause,removeOnGetHit,removeOnChangeState,windowWrite,animationReference,animationControl,geometry,ikemen,legacyReset:!ikemen&&postype!==null};
+ if(api.commitBatch)api.commitBatch(effects,owner,changes);
+ else{if(windowWrite)throw Error('ModifyExplod window requires a batch commit consumer');for(const effect of effects)api.modify(effect,owner,changes)}
  return true;
 }

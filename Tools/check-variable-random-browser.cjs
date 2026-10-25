@@ -76,7 +76,7 @@ const server=http.createServer((request,response)=>{
     sourceExplods.length=0;variableRandomStream.seed(1);executeControllerM1({type:'Explod',params:{anim:common?'F120':'0',pos:'0,0'}},actor,context,adapter);if(sourceExplods.length!==1||variableRandomStream.state()!==1)throw Error('Omitted Explod random consumed native samples');sourceExplods.length=0;explods++;
    }
    if(explods!==16)throw Error('Incomplete Explod native random matrix');
-   let modifications=0,pixelCases=0,hitPauseCases=0,animationCases=0,geometryCases=0;
+   let modifications=0,pixelCases=0,hitPauseCases=0,animationCases=0,geometryCases=0,batchCases=0;
    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const helper of [false,true])for(const ikemen of [false,true]){
     specialRuntime.reset();sourceExplods.length=0;combatEngineProfile=profile;const root=specialRoot(player),data=characterProfiles.get(battleCharacters[player-1]).battle,savedCompatibility=data.compatibility;data.compatibility=ikemen?'ikemen':'mugen';let actor=root;
     try{
@@ -182,12 +182,15 @@ const server=http.createServer((request,response)=>{
       executeControllerM1({type:'ModifyExplod',params:{id:'51',angle:'0',xshear:'0',window:'0,0,0,0'}},actor,context,adapter);transDrawQueue.reset();drawSourceExplods();if(effect.angleState.value!==0||effect.angleState.yangle!==20||effect.angleState.xangle!==10||effect.xshear!==0||transDrawQueue.ordered().find(entry=>entry.kind==='explod').clip!==null)throw Error('Partial geometry reset lost omitted axes or failed to clear clip');geometryCases++;
      }
      sourceExplods.length=0;for(let index=0;index<2;index++)executeControllerM1({type:'Explod',params:{id:'52',anim:'F120',bindtime:'0',removetime:'-1'}},actor,context,adapter);actor.vars[17]=0;executeControllerM1({type:'ModifyExplod',params:{id:'52',angle:'(var(17):=10)',ignorehitpause:'(var(17):=20)',window:Array(4).fill('(var(17):=var(17)+1)').join(',')}},actor,context,adapter);if(actor.vars[17]!==28||JSON.stringify(sourceExplods.map(effect=>effect.window))!=='[[21,22,23,24],[25,26,27,28]]')throw Error('Actual windows were not evaluated per effect after all scalar reads');actor.vars[17]=0;executeControllerM1({type:'ModifyExplod',params:{id:'52',postype:'p1',vel:'2',velocity:'(var(17):=999)'}},actor,context,adapter);if(actor.vars[17]!==0||sourceExplods.some(effect=>effect.vx!==2*collisionWorldRatio(gravityActorData(actor))*effect.facing))throw Error('Native vel-over-velocity compiler precedence was not preserved');geometryCases++;
+     sourceExplods.length=0;for(let index=0;index<2;index++)executeControllerM1({type:'Explod',params:{id:'53',anim:'F120',bindtime:'0',removetime:'-1',sprpriority:String(index+1),angle:String(index+1),ignorehitpause:'0'}},actor,context,adapter);actor.vars[18]=0;const snapshots=[],originalEval=evalM1;
+     try{evalM1=(expression,...args)=>{if(String(expression).trim()==='var(18)')snapshots.push(sourceExplods.filter(effect=>effect.id===53).map(effect=>[effect.sprpriority,effect.angleState.value,effect.ignorehitpause]));return originalEval(expression,...args)};executeControllerM1({type:'ModifyExplod',params:{id:'53',sprpriority:'7',angle:'30',ignorehitpause:'1',window:Array(4).fill('var(18)').join(',')}},actor,context,adapter)}finally{evalM1=originalEval}
+     if(snapshots.length!==8||snapshots.some(snapshot=>JSON.stringify(snapshot)!=='[[7,1,0],[7,2,0]]')||sourceExplods.some(effect=>effect.angleState.value!==30||effect.ignorehitpause!==1))throw Error('Real dispatcher committed complete effects one at a time instead of preserving cross-effect native window visibility '+JSON.stringify(snapshots));batchCases++;
      modifications++;
     }finally{data.compatibility=savedCompatibility}
    }
-   if(modifications!==16||pixelCases!==112||hitPauseCases!==104||animationCases!==32||geometryCases!==48)throw Error('Incomplete ModifyExplod consumer matrix');return count}finally{variableRandomStream.seed(savedSeed);combatEngineProfile=savedProfile;specialRuntime.reset()}
+   if(modifications!==16||pixelCases!==112||hitPauseCases!==104||animationCases!==32||geometryCases!==48||batchCases!==16)throw Error('Incomplete ModifyExplod consumer matrix');return count}finally{variableRandomStream.seed(savedSeed);combatEngineProfile=savedProfile;specialRuntime.reset()}
   })()`);
-  assert.equal(count,16);console.log('ModifyExplod motion/visual/timing and 112 blend pixel probes pass; 104 hitpause, 32 animation and 48 actual geometry/matrix/pixel-clip/deferred-window/compiler-order cases pass');
+  assert.equal(count,16);console.log('ModifyExplod motion/visual/timing and 112 blend pixel probes pass; 104 hitpause, 32 animation, 48 geometry and 16 real cross-effect window commit-visibility cases pass');
   await run("prepareCharacters(['SailorSaturn','SailorMoon'])");
   const resources=await run(`(()=>{
    const profiles=battleCharacters.map(character=>characterProfiles.get(character)),saved={profile:combatEngineProfile,compatibility:profiles.map(profile=>profile.battle.compatibility),owners:[...customStateOwners],definitions:profiles.map(profile=>profile.battle.helperStates[991997])};let cases=0;

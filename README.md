@@ -1,3 +1,7 @@
+## 0.25.97 — ModifyExplod cross-effect commit visibility (partial, release pending)
+
+ModifyExplod now batches its real selected effects around deferred windows. Each window sees all preceding field updates across the collection, without seeing later angles/animation/hitpause flags from earlier effects. Sixteen real evaluator-observation cases accompany independent commit/ownership checks. Binding review exposed this ordering prerequisite; finite binding itself and full native phase/provider/controller coverage remain Pending. No whole-controller certification changes. Recoloring stays excluded; gameplay PalFX is retained. No media/original SFF/SND/AIR are added.
+
 ## 0.25.96 — ModifyExplod geometry/compiler ordering (partial, release pending)
 
 ModifyExplod rotation, orthographic X/Y angles, shear and window clipping now reach actual drawing. Window operands are deferred and written per component/per effect. Native compiler review corrects selector, velocity-synonym and layer/ontop precedence. Forty-eight actual matrix/pixel-clipping/side-effect cases accompany semantic checks. Full native GPU/provider/compiler/phase fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring remains excluded; gameplay PalFX is retained. No media/original SFF/SND/AIR are added.

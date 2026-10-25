@@ -1,4 +1,10 @@
+## 0.25.97 — ModifyExplod cross-effect commit visibility (partial, release pending)
+
+The real dispatcher now batches selected effects so every deferred window sees all preceding writes and no later writes across the collection. Sixteen actual root/normal-Helper/profile/player/character-version cases observe live effects during real CNS window evaluation; independent phase/ownership/array/diagnostic checks also pass. Binding review exposed this prerequisite; bindid/bindtime/finite release remain Pending, not newly implemented. See MODIFY-EXPLOD-COMMIT-WIP.md. Full native compatibility, final versioned regression and publication remain separate requirements; no whole-controller certification changes.
+
 ## 0.25.96 — ModifyExplod geometry/compiler ordering (partial, release pending)
+
+Publication subsequently verified at commit 264d91b1b841d48f95aeabda1e1b5d6238975530: 276 Node checks, Python stage/five sound tests, final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40206725649 and thirteen frozen live text comparisons. No media/original assets were added. Receipt: outputs/release-02596-verification.json. Earlier pending statements below are historical.
 
 Angle/yangle/xangle/xshear/window now reach real drawing matrices and pixel clips. Window expressions run sequentially per effect during commit, not as an early shared value. Pinned compiler/append/run review corrects index-before-ID, vel-over-velocity and layerno-after-ontop ordering. Forty-eight actual geometry/pixel/deferred-window cases and independent semantic tests pass; see MODIFY-EXPLOD-GEOMETRY-WIP.md. Full native GPU/provider/phase/compiler fidelity and final versioned regression/publication remain Pending; no whole-controller certification changes.
 
