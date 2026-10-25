@@ -1,3 +1,9 @@
+## 0.26.01 — Explod AfterImage parameters and player budgets (partial, release pending)
+
+Explod creation and ModifyExplod now consume prefixed AfterImage parameters through the real history renderer. Deferred expressions run per parameter/per effect, active setup happens after the full commit, and changing settings retains old sprite histories and unspecified vector components. Sixteen own/common-resource/root/Helper/version/player combinations cover rendering, RHS side effects, independent histories and the pinned 512-per-player sprite budget. Configurable budget unit checks and shared standalone-controller regressions accompany these consumers. Native cue ordering, other Explod families and Projectile histories remain Pending; no whole-controller certification changes. Character recoloring remains excluded; gameplay PalFX remains. See Docs/NATIVE-AFTERIMAGE-WIP.md.
+
+Previous 0.26.00 publication was verified at 17f6a9dc272784327e485561bc5fe8ec72ea8cd5, successful Pages run 40215261988 and nine frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.00 — Native AfterImage histories and synchronization (partial, release pending)
 
 Actual AfterImage controllers now retain independent root/Helper sprite histories with MUGEN/Ikemen sampling, palette gradients, timing controls and real historical transforms/clipping/priorities. Synchronized effects copy settings while retaining their own history; AfterImageTime preserves recorded frames. Eight real browser combinations include pixel composition and independent effect capture. Full-battle Offset/AngleDraw checks use historical sprite snapshots. Exact native timing, global budgets and remaining creation/provider families stay Pending; no whole-controller certification changes. See Docs/NATIVE-AFTERIMAGE-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.

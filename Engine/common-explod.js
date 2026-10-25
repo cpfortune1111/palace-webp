@@ -2,12 +2,13 @@ import {nativeDataPrefix} from './native-data-prefix.js';
 import {compileAnimationReference} from './animation-reference.js';
 import {controllerFloat32,controllerInteger,controllerBoolean} from './controller-value-conversion.js';
 import {sampleExplodRandom} from './explod-random.js';
+import {nativeAfterImageFields} from './native-afterimage.js';
 
 export function spawnCommonExplod(params,owner,api){
  if(nativeDataPrefix(String(params.anim??'').trim()).prefix!=='f')return false;
  if(/^f\d+$/i.test(String(params.anim))&&api.legacyRound(Number(String(params.anim).slice(1))))return false;
  const allowed=['anim','id','pos','random','vel','velocity','accel','scale','postype','bindtime','removetime','ignorehitpause','persistent','sprpriority','ontop','under','layerno','ownpal','remappal','facing','vfacing','window','angle','xangle','yangle','xshear','syncid','synclayer','syncparams','removeongethit','supermovetime','pausemovetime'];
- for(const name of Object.keys(params))if(!allowed.includes(name))throw Error('Unsupported common Explod parameter: '+name);
+ for(const name of Object.keys(params))if(!allowed.includes(name)&&!nativeAfterImageFields.some(field=>name==='afterimage.'+field))throw Error('Unsupported common Explod parameter: '+name);
  const reference=compileAnimationReference(params.anim,api),position=[0,0,0];
  if(params.pos!==undefined){const parts=api.split(params.pos);if(!parts.length||parts.length>3)throw Error('Invalid common Explod pos');for(const [index,expression] of parts.entries())position[index]=controllerFloat32(api.evaluate(expression))}
  const spread=sampleExplodRandom(params.random,api);for(let index=0;index<3;index++)position[index]=Math.fround(position[index]+spread[index]);

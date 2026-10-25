@@ -1,13 +1,16 @@
 import {clipSpriteWindow} from './sprite-window.js';
 
-export function createTransDrawQueue(){
- const entries=[],enabledActors=new Set();
+export function createTransDrawQueue({afterImageMax=512}={}){
+ // Pinned Ikemen defaultConfig.ini Config.AfterImageMax; shared per playerNo.
+ const entries=[],enabledActors=new Set(),afterImageCounts=new Map();
  return {
-  reset(){entries.length=0},
+  reset(){entries.length=0;afterImageCounts.clear()},
+  remainingAfterImages(player){return Math.max(0,Math.trunc(afterImageMax)-(afterImageCounts.get(player)??0))},
   resetActorSync(){enabledActors.clear();for(const entry of entries)if(entry.actorId>0){entry.syncId=0;entry.syncLayer=0}},
   retainActorSync(ids){const active=new Set(ids);for(const id of enabledActors)if(!active.has(id))enabledActors.delete(id)},
   enableActorSync(id){if(!(id>0))return;enabledActors.add(id);for(const entry of entries)if(entry.actorId===id){entry.syncId=id;entry.syncLayer=0}},
-  record(context,source,args,{state=null,paletteEffect=null,priority=0,ontop=false,layer=ontop?1:0,under=false,actorId=0,syncId=0,syncLayer=0,clip=null,kind='sprite',phase=kind==='reflection'?'reflection':'sprite',opacity=context.globalAlpha}={}){
+  record(context,source,args,{state=null,paletteEffect=null,priority=0,ontop=false,layer=ontop?1:0,under=false,actorId=0,syncId=0,syncLayer=0,clip=null,kind='sprite',phase=kind==='reflection'?'reflection':'sprite',opacity=context.globalAlpha,afterImagePlayer=null}={}){
+   if(kind==='native-afterimage'&&afterImagePlayer!==null){if((afterImageCounts.get(afterImagePlayer)??0)>=afterImageMax)return;afterImageCounts.set(afterImagePlayer,(afterImageCounts.get(afterImagePlayer)??0)+1)}
    if(actorId>0&&enabledActors.has(actorId)){syncId=actorId;syncLayer=0}
    const matrix=context.getTransform();
    entries.push({source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],state:state?{type:state.type,alpha:[...state.alpha]}:null,paletteEffect:paletteEffect?{...paletteEffect,add:[...paletteEffect.add],mul:[...paletteEffect.mul]}:null,priority,ontop,layer,under,actorId,syncId,syncLayer,clip:clip?{...clip}:null,kind,phase,opacity,composite:context.globalCompositeOperation,serial:entries.length});
