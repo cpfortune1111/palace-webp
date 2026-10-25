@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.97 Controller Integration</title>
+<title>Prototype 0.25.98 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.97 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD modify-explod-batch-commit-02597-20261025-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.98 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD modify-explod-staged-binding-02598-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -236,8 +236,9 @@ import {applyVariableController,assignExpressionVariable} from './Engine/variabl
 import {createNativeRandom} from './Engine/native-random.js?v=02591';
 import {sampleExplodRandom} from './Engine/explod-random.js?v=02592';
 import {spawnCommonExplod} from './Engine/common-explod.js?v=02592';
-import {applyModifyExplodController} from './Engine/modify-explod.js?v=02597';
-import {commitModifyExplodEffects} from './Engine/modify-explod-commit.js?v=02597';
+import {applyModifyExplodController} from './Engine/modify-explod.js?v=02598';
+import {commitModifyExplodEffects} from './Engine/modify-explod-commit.js?v=02598';
+import {activateExplodBinding,resetLegacyExplodBinding,modifyExplodBindingPosition,applyExplodBindingParameters,finalizeExplodBindingPosition,stepExplodBinding} from './Engine/explod-binding.js?v=02598';
 import {createExplodAnimationClock,modifyExplodAnimationClock,stepExplodAnimationClock} from './Engine/explod-animation-clock.js?v=02595';
 import {stepModifiedExplodMotion} from './Engine/explod-motion.js?v=02592';
 import {applyModifyExplodVisuals} from './Engine/modify-explod-visuals.js?v=02596';
@@ -314,7 +315,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.97 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.98 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -411,11 +412,17 @@ function applySourceExplodAnimation(effect,owner,reference){
 }
 function modifySourceExplod(effect,owner,changes,phase='all'){
  if(phase==='afterWindow'){finishSourceExplodModifiers(effect,owner,changes);return}
- const {spread,postype,legacyReset,position,velocity,friction,accel,spriteScale,removeTime,pauseTimes,positionActive,visuals,transState,removeOnGetHit,removeOnChangeState,windowWrite,ikemen}=changes;
+ const {spread,postype,legacyReset,position,velocity,friction,accel,spriteScale,binding,removeTime,pauseTimes,positionActive,visuals,transState,removeOnGetHit,removeOnChangeState,windowWrite,ikemen}=changes;
+ if(Object.keys(binding).length&&!effect.nativeBinding){
+  activateExplodBinding(effect,owner.kind==='helper'?owner.instanceId:fighterPlayer(owner));
+  const data=effect.common?commonEffectData(effect):effect.animationData??characterProfiles.get(battleCharacters[effect.player-1]).battle,frames=effect.emptyAnimation?[]:effect.common?data.actions[String(effect.anim)]:sourceEffectFrames(effect);effect.animationClock??=createExplodAnimationClock(frames,(effect.animationLoops??data.loopStarts??{})[String(effect.anim)]??0,effect.age);
+ }
  const previousFacing=explodTrueFacing(effect.facing,effect.relativeFacing??1),previousVertical=effect.vfacing??1;
  const unit=collisionWorldRatio(gravityActorData(owner)),previous=[...(effect.bindOffset??[0,0,0])],relative=legacyReset?[0,0,0]:[...previous];
  if(legacyReset){effect.vx=0;effect.vy=0;effect.vz=0;effect.accel=[0,0,0];if(effect.bindtime===0)effect.bindtime=1}
- if(positionActive){
+ if(legacyReset&&effect.nativeBinding)resetLegacyExplodBinding(effect);
+ if(positionActive&&effect.nativeBinding)modifyExplodBindingPosition(effect,{position,spread},unit);
+ if(positionActive&&!effect.nativeBinding){
   for(let axis=0;axis<3;axis++)relative[axis]=Math.fround((position?.[axis]===undefined?relative[axis]??0:Math.fround(position[axis]*unit))+Math.fround(spread[axis]*unit));
   effect.bindOffset=relative;effect.depth=true;
   if(postype==='p1'){effect.screen=false;effect.screenRight=false;effect.facing=owner.facing;effect.x=owner.x+relative[0]*owner.facing;effect.y=owner.y+relative[1];effect.z=Number(owner.z??0)+relative[2]}
@@ -423,6 +430,7 @@ function modifySourceExplod(effect,owner,changes,phase='all'){
  }
  if(velocity||accel||friction){if(!effect.nativeMotion){effect.accel=[Math.fround((effect.accel?.[0]??0)*effect.facing),effect.accel?.[1]??0,effect.accel?.[2]??0];effect.nativeMotion=true}for(const [axis,value] of (velocity??[]).entries())effect[['vx','vy','vz'][axis]]=Math.fround(value*unit*(axis===0?effect.facing:1));for(const [axis,value] of (accel??[]).entries())effect.accel[axis]=Math.fround(value*unit*(axis===0?effect.facing:1));if(friction)effect.friction=[...friction];effect.depth=true}
  if(spriteScale){effect.scale??=[1,1];for(const [axis,value] of spriteScale.entries())effect.scale[axis]=value}
+ if(effect.nativeBinding&&Object.keys(binding).length)applyExplodBindingParameters(effect,owner.kind==='helper'?owner.instanceId:fighterPlayer(owner),binding,ikemen);
  if(removeTime!==null)applyModifiedRemovalTime(effect,removeTime,ikemen);
  if(Object.keys(pauseTimes).length)applyModifiedPauseTimes(effect,pauseTimes,ikemen);
  applyModifyExplodVisuals(effect,visuals,{ikemen,legacyReset,previousFacing,previousVertical});
@@ -442,6 +450,13 @@ function finishSourceExplodModifiers(effect,owner,{animationReference,animationC
  for(const [name,field] of [['angle','value'],['yangle','yangle'],['xangle','xangle']])if(geometry[name]!==undefined){effect.angleState??=createAngleState();effect.angleState[field]=geometry[name];effect.angleState.enabled=true}
  if(geometry.xshear!==undefined)effect.xshear=geometry.xshear;
  if(ignoreHitPause!==null){effect.ignorehitpause=Number(ignoreHitPause);effect.nativeHitPause=true}
+}
+function sourceExplodBindingTargetPosition(actor){
+ const offset=actor.kind==='helper'?offsetDrawingPosition([0,0],actor.drawOffset??[0,0],actor.localScale??1):rootDrawOffsets[fighterPlayer(actor)-1];
+ return [Math.fround(actor.x+offset[0]),Math.fround(actor.y+offset[1]),Math.fround(Number(actor.z??0))];
+}
+function finalizeSourceExplodModifiers(effect,owner,{postype}){
+ if(effect.nativeBinding&&postype==='p1'){const id=owner.kind==='helper'?owner.instanceId:fighterPlayer(owner),actor=combatTargetActor(id)??owner;finalizeExplodBindingPosition(effect,{id,position:sourceExplodBindingTargetPosition(actor),facing:actor.facing})}
 }
 function sourceStateInitialized(actor){
  const ownerKey=hitDefinitionOwnerKey(actor);
@@ -477,13 +492,18 @@ function modifiedSourceExplodHitPaused(effect){
  const owner=specialRuntime.entities.find(entity=>entity.key===effect.ownerKey&&!entity.destroyed);
  return !!owner&&(owner.hitPause>0||owner.hitShake>0);
 }
-function stepSourceExplods(){
+function stepSourceExplods(nativeBinding=false){
  for(let index=sourceExplods.length-1;index>=0;index--){const effect=sourceExplods[index];
+  if(!!effect.nativeBinding!==nativeBinding)continue;
   if(effect.invalid){sourceExplods.splice(index,1);continue}
+  const firstBindingUpdate=effect.nativeBinding?.firstUpdate;if(effect.nativeBinding)effect.nativeBinding.firstUpdate=false;
+  if(effect.nativeBinding&&(specialRoot(effect.player).disabled||rootStatusFlags[effect.player-1].disabled))continue;
+  if(effect.nativeBinding&&!firstBindingUpdate&&(effect.removetime>=0&&effect.age>=effect.removetime||effect.removetime<=-2&&effect.animationClock?.loopEnd)){sourceExplods.splice(index,1);continue}
   if((effect.nativePauseTime?modifiedExplodSystemPaused(effect,specialRuntime.pauses,combatTraceTick):specialRuntime.blocked(effect.player,effect))||(effect.nativeHitPause?modifiedSourceExplodHitPaused(effect):!effect.ignorehitpause&&effect.anim!==905&&(p1HitPause>0||effect.player===2&&p2.attackPause>0)))continue;
   const animationExpired=effect.animationClock?.loopEnd??false;
   if(effect.animationClock)stepExplodAnimationClock(effect.animationClock);
-  if(effect.bindtime!==-1){effect.bindtime=0;if(effect.nativeMotion){stepModifiedExplodMotion(effect)}else{effect.x+=effect.vx;effect.y+=effect.vy;effect.vx+=(effect.accel?.[0]||0);effect.vy+=(effect.accel?.[1]||0)}}effect.age++;
+  if(effect.nativeBinding){const target=combatTargetActor(effect.nativeBinding.targetId);stepExplodBinding(effect,target?sourceExplodBindingTargetPosition(target):null)}else if(effect.bindtime!==-1){effect.bindtime=0;if(effect.nativeMotion){stepModifiedExplodMotion(effect)}else{effect.x+=effect.vx;effect.y+=effect.vy;effect.vx+=(effect.accel?.[0]||0);effect.vy+=(effect.accel?.[1]||0)}}effect.age++;
+  if(effect.nativeBinding)continue;
   const duration=effect.emptyAnimation?Infinity:effect.kind==='gamemakeanim'||effect.nativeRemoveTime?animationFirstLoopDuration(effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect)):effect.common?commonEffectData(effect).actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player);
   if(effect.animationClock?(effect.removetime>=0?effect.age>=effect.removetime:effect.removetime<=-2&&animationExpired):effect.nativeRemoveTime?modifiedExplodExpired(effect,duration):effect.removetime>0?effect.age>=effect.removetime:effect.removetime!==-1&&effect.age>=duration)sourceExplods.splice(index,1);
  }
@@ -1660,7 +1680,7 @@ if(applyGetHitVarSet(controller,adapter.owner||specialRoot(player),{evaluate:exp
  if(applyEnvironmentColor(controller,environmentColor,{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1}))return;
  if(applyMakeDustController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,state:makeDustStateFor,suppressed:actor=>assertionActor(fighterPlayer(actor),actor).assertions.has('nomakedust'),warn:message=>console.warn(message),emit:emitMakeDust}))return;
  if(runGameMakeAnim(controller,adapter.owner||specialRoot(player),context))return;
- if(applyModifyExplodController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,localScale:actor=>320/characterLocalCoord(gravityActorData(actor)),ikemenVersion:actor=>(profileFor(fighterPlayer(actor))?.battle||battleDat).compatibility==='ikemen',randomFloat:(low,high)=>variableRandomStream.float(low,high),select:(actor,id,index)=>{const ownerKey=actor.kind==='helper'?actor.key:'root'+fighterPlayer(actor),matches=sourceExplods.filter(effect=>effect.ownerKey===ownerKey&&(id<0||(effect.id??0)===id));return index<0?matches:matches[index]?[matches[index]]:[]},modify:modifySourceExplod,commitBatch:(effects,owner,changes)=>commitModifyExplodEffects(effects,owner,changes,{modify:modifySourceExplod})}))return;
+ if(applyModifyExplodController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,localScale:actor=>320/characterLocalCoord(gravityActorData(actor)),ikemenVersion:actor=>(profileFor(fighterPlayer(actor))?.battle||battleDat).compatibility==='ikemen',randomFloat:(low,high)=>variableRandomStream.float(low,high),select:(actor,id,index)=>{const ownerKey=actor.kind==='helper'?actor.key:'root'+fighterPlayer(actor),matches=sourceExplods.filter(effect=>effect.ownerKey===ownerKey&&(id<0||(effect.id??0)===id));return index<0?matches:matches[index]?[matches[index]]:[]},modify:modifySourceExplod,commitBatch:(effects,owner,changes)=>commitModifyExplodEffects(effects,owner,changes,{modify:modifySourceExplod,finalize:finalizeSourceExplodModifiers})}))return;
  if(applyAssertCommandController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,assert:(actor,name,time)=>assertCommandBuffers([assertedCommandList(actor)],name,time,{randomIndex:count=>variableRandomStream.integer(0,count-1),warn:message=>console.warn(message)})}))return;
  if(applyModifySoundController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,ownVolume:actor=>dataConstant('data.volume',gravityActorData(actor).dataConstants).value??256,modify:(actor,channel,changes)=>{for(const record of characterSoundChannels.owned(characterSoundIdentity(actor),channel)){if(changes.pan)characterSoundOutput.setPan(record,{pan:changes.pan.pan,sourceId:changes.pan.absolute?-1:actor.kind==='helper'?actor.instanceId:fighterPlayer(actor),localScale:320/characterLocalCoord(gravityActorData(actor)),facing:actor.facing});if(changes.volume!==undefined)characterSoundOutput.setGain(record,Math.fround(Math.max(0,Math.min(512,changes.volume))/256));if(['freqMul','position','repeatCount','loopStart','loopEnd'].some(name=>changes[name]!==undefined))nativeSoundPlayer.modify(record,changes);if(changes.priority!==undefined)record.priority=changes.priority;if(changes.hit!==undefined)record.stopFlags.hit=changes.hit;if(changes.state!==undefined)record.stopFlags.state=changes.state}}}))return;
 if(applyGravityController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,ownScale:actor=>collisionWorldRatio(gravityActorData(actor)),stateScale:actor=>actorVelocityWorldScale(actor),acceleration:actor=>{const value=gravityActorData(actor).originalMotionConstants?.['movement.yaccel'];if(typeof value!=='number')throw Error('Missing Gravity movement.yaccel');return value},velocity:actor=>targetVelocityBinding(actor).vy,setVelocity:(actor,value)=>{targetVelocityBinding(actor).vy=value}}))return;
@@ -2832,7 +2852,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.97',build:'modify-explod-batch-commit-02597-20261025-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.98',build:'modify-explod-staged-binding-02598-20261026-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2840,7 +2860,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.97-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.98-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -2851,13 +2871,14 @@ function simStep(){
  fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life/p1LifeMax*1000,p2.life/p2.lifeMax*1000]);
  stepFallShake();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat||!specialDat||!lifecycleDat)return;
- if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();for(const player of [1,2])advanceReversedMove(specialRoot(player),reversedRootPause[player-1]);finishRootHitFrames();for(const player of [1,2])stepRootZPhysics(player);specialRuntime.step();specialRuntime.finishTick();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
+ if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();for(const player of [1,2])advanceReversedMove(specialRoot(player),reversedRootPause[player-1]);finishRootHitFrames();for(const player of [1,2])stepRootZPhysics(player);specialRuntime.step();specialRuntime.finishTick();stepSourceExplods(true);combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
  stepSourceExplods();
  const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested,p2Left:p2Input.left,p2Right:p2Input.right},guardMode=p2GuardMode();
  const zMovementPaused=[p1HitPause>0,p2.hitPause>0||p2.hitShake>0||p2.attackPause>0];simStepCore();for(const player of [1,2])advanceReversedMove(specialRoot(player),reversedRootPause[player-1]);finishRootHitFrames();for(const player of [1,2])stepRootZPhysics(player,{paused:zMovementPaused[player-1]});stepAfterImages();
  specialRuntime.step();specialRuntime.finishTick();
  bindThrowTarget(1);bindThrowTarget(2);
- for(const effect of sourceExplods)if(effect.bindtime===1||effect.bindtime===-1){const owner=effect.ownerKey?.startsWith('entity')?specialRuntime.entities.find(entity=>entity.key===effect.ownerKey&&!entity.destroyed):specialRoot(effect.player);if(!owner)continue;effect.x=owner.x+(effect.bindOffset?.[0]||0)*owner.facing;effect.y=owner.y+(effect.bindOffset?.[1]||0);if(effect.dust||effect.depth)effect.z=Number(owner.z??0)+(effect.bindOffset?.[2]||0);effect.facing=owner.facing;if(effect.bindtime===1)effect.bindtime=0}
+ stepSourceExplods(true);
+ for(const effect of sourceExplods)if(!effect.nativeBinding&&(effect.bindtime===1||effect.bindtime===-1)){const owner=effect.ownerKey?.startsWith('entity')?specialRuntime.entities.find(entity=>entity.key===effect.ownerKey&&!entity.destroyed):specialRoot(effect.player);if(!owner)continue;effect.x=owner.x+(effect.bindOffset?.[0]||0)*owner.facing;effect.y=owner.y+(effect.bindOffset?.[1]||0);if(effect.dust||effect.depth)effect.z=Number(owner.z??0)+(effect.bindOffset?.[2]||0);effect.facing=owner.facing;if(effect.bindtime===1)effect.bindtime=0}
  combatTraceFrames[combatTraceTick%combatTraceCapacity]={tick:combatTraceTick,physicalInput,canonicalInput:{...prevCanonical},guardMode,p2Control:p2ControlMode,
   randomValue:before.p1.hitPause>0?null:randomValue,before,after:combatTraceSnapshot()};
  scoreRuntime.step(specialRoot(1),specialRoot(2));

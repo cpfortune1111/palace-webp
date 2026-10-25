@@ -1,4 +1,10 @@
+## 0.25.98 — ModifyExplod staged binding consumers (partial, release pending)
+
+bindid/bindtime now reach actual root/Helper target binding, native versioned countdown assignment, queued release motion and final P1 postype/relative-coordinate writes. A separate late update covers fighting/non-fighting branches without legacy double stepping. 144 actual trajectory/driver/postype/screen/paused-removal cases and independent binding traces pass. Full native tick/interpolation/space/provider/creation/compiler fidelity and final versioned regression/publication remain Pending; see MODIFY-EXPLOD-BINDING-WIP.md. No whole-controller certification changes.
+
 ## 0.25.97 — ModifyExplod cross-effect commit visibility (partial, release pending)
+
+Publication subsequently verified at commit 95620532723cc76c0752da9dedfcfac26ae2105b: 277 Node checks, Python stage/five sound tests, final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40208066061 and twelve frozen live text comparisons. No media/original assets were added. Receipt: outputs/release-02597-verification.json. Earlier pending statements below are historical.
 
 The real dispatcher now batches selected effects so every deferred window sees all preceding writes and no later writes across the collection. Sixteen actual root/normal-Helper/profile/player/character-version cases observe live effects during real CNS window evaluation; independent phase/ownership/array/diagnostic checks also pass. Binding review exposed this prerequisite; bindid/bindtime/finite release remain Pending, not newly implemented. See MODIFY-EXPLOD-COMMIT-WIP.md. Full native compatibility, final versioned regression and publication remain separate requirements; no whole-controller certification changes.
 
