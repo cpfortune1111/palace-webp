@@ -1,3 +1,7 @@
+## 0.26.14 — State-entry animation validity (partial)
+
+Numeric transition, root/Helper StateDef, locomotion and eager reaction animation switches now validate actions and retain progress on missing/-1. Successful P2 switches also commit their start clock, fixing the Saturn S3001 skip. Live P1 fixture bindings were corrected. All 294 Node checks, dedicated entry/clock cases, four related browser gates and the complete battle regression pass. Alternate animation/sprite providers, remaining legacy overrides and native phase fidelity remain Pending. See Docs/STATE-ANIMATION-ENTRY-WIP.md; no whole-controller certification is claimed.
+
 ## 0.26.13 — Animation presence and element selection (partial)
 
 Missing animations no longer expose character collision boxes; valid empty actions retain native character Size behavior while projectile recipients still require a current frame. Numeric ChangeAnim/ChangeAnim2 keeps the current action on failure and applies explicit elem/elemtime afterward, validating time against the committed animation. Both root players and Helper browser fixtures, all 294 Node checks, four related collision browser gates and the final full-battle regression pass. Full animation/sprite providers, prefixes, entry validity and native frame phases remain Pending; neither controller is certified complete. Character recoloring remains excluded.

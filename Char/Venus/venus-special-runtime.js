@@ -1,5 +1,6 @@
 import {createReflectionOverride,resetReflectionOverride} from '../../Engine/modify-reflection.js';
 import {controllerBoolean,controllerInteger} from '../../Engine/controller-value-conversion.js';
+import {animationPresence,changeAnimationNumber} from '../../Engine/animation-presence.js';
 import {deferredExplodAfterImageWrites as deferredProjectileAfterImageWrites,finishExplodAfterImage as finishProjectileAfterImage} from '../../Engine/native-afterimage.js';
 import {createProjectileContactEvents} from '../../Engine/projectile-contact-events.js';
 import {readHelperPlacement,helperPlacement} from '../../Engine/helper-placement.js';
@@ -112,7 +113,7 @@ export function createSpecialRuntime(api){
   if(definition.facep2!==undefined){if(!api.stateDefFacing)throw Error('Missing StateDef facing consumer');api.stateDefFacing(definition,()=>entity,value=>{entity.facing=value})}
   if(definition.juggle!==undefined){if(!api.stateDefJuggle)throw Error('Missing StateDef juggle consumer');api.stateDefJuggle(definition,()=>entity)}
   applyStateDefVelocity(definition,{expressions:source=>{if(!api.stateVelocityExpressions)throw Error('Missing StateDef velocity expression parser');return api.stateVelocityExpressions(source)},evaluate:expression=>expression&&typeof expression==='object'?api.evalAST(expression,context(entity)):api.eval(String(expression),context(entity)),setVelocity:(axis,value)=>{const scale=api.stateVelocityScale?.(entity)??1;entity['v'+axis]=Math.fround(Math.fround(value*scale)*(axis==='x'?entity.facing:1))}});
-  if(definition.anim!==undefined){const anim=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(anim!==-1){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}
+  if(definition.anim!==undefined&&definition.anim!=='Keep'){const value=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(value!==-1){const anim=changeAnimationNumber(value);if(api.stateDefAnimation){api.stateDefAnimation(entity,anim)}else if(animationPresence(anim,api.data(entity.player).actions?.[String(anim)]??((api.frames?.(anim,entity.player)?.length??0)>0?api.frames(anim,entity.player):undefined)).exists){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}}
   applyStateDefControlPower(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setControl:value=>{entity.ctrl=Number(value)},addPower:amount=>{if(!api.stateDefPowerAdd)throw Error('Missing StateDef power consumer');api.stateDefPowerAdd(entity,amount)}});
   api.stateInitialized?.(entity);
   api.soundStateInitialized?.(entity);

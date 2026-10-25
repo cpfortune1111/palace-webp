@@ -1,3 +1,11 @@
+## 0.26.14 — State-entry animation validity (partial)
+
+ChangeState/SelfState, imported P1/P2 StateDef, Helper StateDef, P2 locomotion and eager reaction ChangeAnim now validate numeric actions. Missing/-1 preserves animation progress; successful switches commit a new start clock. The Saturn S3001 skip was traced to a stale P2 action clock and corrected. Original full-battle assertions remain unchanged. All 294 Node checks, the dedicated live-binding browser tests, four related browser gates and complete simultaneous/one-tick/five-tick super battle regression pass. See STATE-ANIMATION-ENTRY-WIP.md for remaining limitations.
+
+P1 fixture correction: earlier lifecycle-only bindings did not prove real P1 animation writes. Fixtures now use p1ControllerBinding and pass against live storage; historical P1 claims must be read with this correction.
+
+0.26.13 was verified at f87f9baecd4b6beed92f1cee87a08832ab095133, successful exact-head Pages run 40241282869 and eleven frozen live text comparisons.
+
 ## 0.26.13 — Animation presence and element selection (partial)
 
 Collision/reversal/query paths now separate missing animation from a valid empty animation, including native character Size versus projectile-recipient frame rules and proxy-parent checks. Numeric ChangeAnim/ChangeAnim2 retains the action on failure and still applies explicit elem/elemtime; successful switches validate against the committed action. Actual P1/P2/Helper fixtures, all 294 Node checks, four related collision browser gates and the final complete battle regression pass. Full parameters/providers/entry/timing/native-MUGEN differences remain Pending; see ANIMATION-PRESENCE-WIP.md.
