@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+Unpublished: animation presence and numeric ChangeAnim/ChangeAnim2 element selection now have live controller/collision consumers. Invalid switches retain the existing action; explicit elem/elemtime still applies afterward and validates against the committed action. Both root players and Helper fixtures pass. Provider/sprite ownership, full prefix/compiler semantics, entry validity, warnings and native frame phases remain Pending; neither controller is certified complete. See ANIMATION-PRESENCE-WIP.md.
+
 0.26.12 adds native character drawing/controller offset consumers in ordinary/reversal/query collision, rendering/reflection and debug positions, with real caller-coordinate Offset conversion. Sixteen actual version/player/facing/localcoord cases, proxy geometry, mixed-coordinate redirected-axis tests and full regressions support partial coverage. Broader float/provider/dependent-consumer/native phase fidelity remains Pending; no whole-controller certification changes. See CHARACTER-COLLISION-POSITION-WIP.md.
 
 0.26.11 adds ClsnOverlap/ProjClsnOverlap parser/typed query/live geometry and real CNS controller consumers, including proxy/Size/depth, ownership/index and redirected original-caller side effects. Forty-eight character and twenty-four projectile combinations plus full regressions support partial coverage. Broader provider/animation/offset/native phase/logging/differential fidelity remains Pending; no whole-Helper certification changes. See CLSN-OVERLAP-WIP.md.

@@ -15,15 +15,16 @@ export function reversalAttackBoxContact(reverser,attacker,{reversalSets,attackS
  return {overlap,contact:overlap,group:target.group,requiredMissing:target.requiredMissing};
 }
 
-export function reversalProxyBoxContact(reverser,attacker,{helpers,setsFor,filterTargetBoxes,...options}){
+export function reversalProxyBoxContact(reverser,attacker,{helpers,setsFor,filterTargetBoxes,animation=()=>({exists:true,frame:true}),...options}){
  if(reverser.clsnProxy||attacker.clsnProxy||reverser.standby||attacker.standby||reverser.disabled||attacker.disabled)return {overlap:false,contact:false};
+ if(!animation(reverser).exists||!animation(attacker).exists)return {overlap:false,contact:false};
  const params=prepareReversalDefinition(reverser.params),sources=clsnProxyFamily(reverser,helpers),targets=clsnProxyFamily(attacker,helpers,{group:String(params.p2clsncheck).toLowerCase()==='size'?3:1});
  let result={overlap:false,contact:false};
  for(const source of sources){
-  if(source.standby||source.disabled)continue;
+  if(source.standby||source.disabled||!animation(source).exists)continue;
   const sourceParams=source===reverser?params:{...params,p2clsnrequire:source.activeHitDef?.params?.p2clsnrequire??'none'};
   for(const target of targets){
-   if(target.standby||target.disabled)continue;
+   if(target.standby||target.disabled||!animation(target).exists)continue;
    result=reversalAttackBoxContact({...source,params:sourceParams},{...target,params:attacker.params},{...options,reversalSets:setsFor(source),attackSets:setsFor(target),filterRecipientBoxes:filterTargetBoxes?(boxes,group)=>filterTargetBoxes(source,target,boxes,group):undefined});
    if(result.contact)return result;
   }

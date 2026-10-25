@@ -1,3 +1,7 @@
+## 0.26.13 — Animation presence and element selection (partial)
+
+Collision/reversal/query paths now separate missing animation from a valid empty animation, including native character Size versus projectile-recipient frame rules and proxy-parent checks. Numeric ChangeAnim/ChangeAnim2 retains the action on failure and still applies explicit elem/elemtime; successful switches validate against the committed action. Actual P1/P2/Helper fixtures, all 294 Node checks, four related collision browser gates and the final complete battle regression pass. Full parameters/providers/entry/timing/native-MUGEN differences remain Pending; see ANIMATION-PRESENCE-WIP.md.
+
 ## 0.26.12 — Character collision position (partial)
 
 Native size.draw.offset and Offset now feed ordinary/reversal/query collision positions, actor drawing, reflections and debug outlines while logical Pos remains independent. Normal Offset consumes the real caller world/localcoord ratio, including mixed-coordinate redirection and omitted-axis retention. Sixteen actual version/player/facing/localcoord cases, real root rendering, proxy-child geometry, all 293 Node checks, eighteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Broader float/provider/offset-dependent consumer/native phase fidelity remains Pending; no whole-controller or collision-system certification changes. See Docs/CHARACTER-COLLISION-POSITION-WIP.md. Character recoloring remains excluded; no original assets or media are added.

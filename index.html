@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.26.12 Controller Integration</title>
+<title>Prototype 0.26.13 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.12 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD collision-position-02612-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.13 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD animation-presence-02613-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -204,6 +204,7 @@ import {createHitStateStore} from './Engine/hit-state-store.js';
 import {clsnProxyFamily} from './Engine/helper-clsn-proxy.js';
 import {clsnOverlapGroups,characterClsnOverlap,projClsnOverlapGroup,selectQueryProjectile,projectileClsnOverlap} from './Engine/clsn-overlap-query.js';
 import {characterCollisionPosition} from './Engine/character-collision-position.js';
+import {animationPresence,changeAnimationNumber,changeAnimationElement} from './Engine/animation-presence.js';
 import {clearActorRegistry} from './Engine/actor-registry-cleanup.js';
 import {createMoveHitData,markMoveHitData,finishMoveHitData,getMoveHitVar} from './Engine/move-hit-data.js';
 import {powerTimingProfile} from './Engine/combat-engine-profile.js';
@@ -323,7 +324,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.12 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.13 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -1748,8 +1749,12 @@ if(applyGravityController(controller,adapter.owner||specialRoot(player),{evaluat
   case 'ReversalDef':{const definition=prepareReversalDefinition(params);applyHitDefGuardDistance(definition,guardHitDefActor(player,adapter.owner).hitDef.guardDistance,{evaluate:expression=>evalM1(expression,context),splitPair:splitExpressionPairM1});attackActivityStore.invalidate(hitDefinitionOwnerKey(adapter.owner||specialRoot(player)));const compiled=specialRuntime.numeric(definition,context,player);setHitDefJuggleM1(adapter.owner||specialRoot(player),compiled);adapter.hitDef(compiled);break;}
   case 'AssertSpecial':if(params.flag==='RoundNotOver'){roundNotOverUntil[player-1]=combatTraceTick+1;break}if(!['NoWalk','NoAutoTurn','NoAirGuard','Intro'].includes(params.flag))throw Error('Unsupported locomotion assertion '+params.flag);break;
   case 'NotHitBy':applyNotHitBy(params,adapter.owner||{player},value);break;
-  case 'ChangeAnim2':if(customStateOwners[player-1])customAnimationOwners[player-1]=customStateOwners[player-1];binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
-  case 'ChangeAnim':if(customStateOwners[player-1])customAnimationOwners[player-1]=battleCharacters[player-1];binding.anim=value(params.value);binding.elem=1;binding.elemTick=0;break;
+  case 'ChangeAnim2':case 'ChangeAnim':{
+   const specified=params.elem!==undefined||params.elemtime!==undefined,element=params.elem===undefined?0:value(params.elem),elementTime=params.elemtime===undefined?0:value(params.elemtime);
+   applyChangeAnimationM1(binding,adapter.owner,player,value(params.value),controller.type==='ChangeAnim2');
+   if(specified){const actor=adapter.owner??specialRoot(player),selected=changeAnimationElement(actorAnimationFramesM1(actor,binding.anim),element,elementTime);if(selected){binding.elem=selected.elem;binding.elemTick=selected.tick}}
+   break;
+  }
   case 'SelfState':{const next=Math.trunc(value(params.value))|0,control=params.ctrl===undefined?-1:Math.trunc(value(params.ctrl))|0,animation=params.anim===undefined?-1:Math.trunc(value(params.anim))|0,continueBody=params.continue===undefined?false:Number(value(params.continue))!==0;const readActor=params.readplayerid===undefined?null:combatTargetActor(Math.trunc(value(params.readplayerid))|0),selectedOwner=readActor&&fighterPlayer(readActor)!==player?battleCharacters[fighterPlayer(readActor)-1]:null;applyTransitionAnimationM1(animation,binding,adapter.owner,player);if(control>=0)binding.ctrl=Number(control!==0);if(adapter.owner?.kind==='helper'){adapter.owner.stateOwner=selectedOwner;adapter.changeState(next);return {stateTransition:true,continueBody}}if(adapter.selfState){adapter.selfState(next,selectedOwner);return {stateTransition:true,continueBody}}const wasCustom=customStateOwners[player-1];customStateOwners[player-1]=selectedOwner;customAnimationOwners[player-1]=selectedOwner?battleCharacters[player-1]:null;if(player===1&&(wasCustom||selectedOwner)&&(profileFor(1)?.battle||battleDat).fallStates[String(next)]){p1Reaction={...specialRoot(1),getHit:throwHitData[0],vars:runtimeVar,sysvars:runtimeSysVar,fvars:runtimeFVar,sysfvars:runtimeSysFVar,hitTime:-1,hitShake:0};enterGroundReactionState(p1Reaction,next);syncP1Reaction()}else adapter.changeState(next);return {stateTransition:true,continueBody};}
   case 'ChangeState':{const next=Math.trunc(value(params.value))|0,control=params.ctrl===undefined?-1:Math.trunc(value(params.ctrl))|0,animation=params.anim===undefined?-1:Math.trunc(value(params.anim))|0,continueBody=params.continue===undefined?false:Number(value(params.continue))!==0;applyTransitionAnimationM1(animation,binding,adapter.owner,player);if(control>=0)binding.ctrl=Number(control!==0);adapter.changeState(next);return {stateTransition:true,continueBody};}
   case 'Null':case 'null':break;
@@ -2762,6 +2767,19 @@ function hitDefinitionPreconditionsM1(reverser,attacker){
  const hit=attacker.getHit||fallHitData(attacker),sourceId=hitSourceIdentity(reverser).playerid,hitShake=attacker.kind==='helper'?attacker.hitPause??0:player===1?Math.max(p1HitPause,p1Reaction?.hitShake??0):Math.max(p2.hitPause??0,p2.hitShake??0,p2.attackPause??0);
  return hitChainAllowed(reverser.hitDef.params,hit,{sourceId,lastTargetOwner:hit.targetedBy?.at(-1)?.[0],hitShake});
 }
+function actorAnimationFramesM1(actor,number=actor.anim,provider=null){
+ const player=fighterPlayer(actor),owner=provider??(actor.kind==='helper'?null:customAnimationOwners[player-1])??battleCharacters[player-1],profile=characterProfiles.get(owner),key=String(number);
+ if(profile?.data)return profile.data.actions[key];
+ for(const table of [roundCharDat,lifecycleDat,specialDat,airDat,reactionDat,fallDat,guardDat,gethitDat,turnDat,attackDat,dat])if(table?.actions&&Object.hasOwn(table.actions,key))return table.actions[key];
+ return undefined;
+}
+function actorAnimationPresenceM1(actor){return animationPresence(actor.anim,actorAnimationFramesM1(actor),actor.elem??1)}
+function applyChangeAnimationM1(binding,owner,player,value,second=false){
+ const actor=owner??specialRoot(player),number=changeAnimationNumber(value),provider=actor.kind==='helper'?battleCharacters[player-1]:second?customStateOwners[player-1]??battleCharacters[player-1]:battleCharacters[player-1];
+ if(!animationPresence(number,actorAnimationFramesM1(actor,number,provider)).exists)return false;
+ if(actor.kind!=='helper'&&customStateOwners[player-1])customAnimationOwners[player-1]=provider;
+ binding.anim=number;binding.elem=1;binding.elemTick=0;return true;
+}
 function actorCollisionPositionM1(actor){
  if(actor.kind==='projectile')return [actor.x,actor.y];
  const data=collisionActorData(actor),snapshot=actorSizeSnapshot(actor),offset=actor.kind==='helper'?actor.drawOffset??[0,0]:rootDrawOffsets[fighterPlayer(actor)-1];
@@ -2779,8 +2797,8 @@ function clsnQueryDepthM1(source,target,firstGroup,secondGroup){
  const depth=(actor,group)=>actor.kind==='projectile'?actor.attackDepth:group===1?hitAttackDepth(actor.kind==='helper'?actor.activeHitDef?.params??{}:fighterPlayer(actor)===1?activeHitDef?.params??{}:p2.activeHitDef?.params??{},{constants:collisionActorData(actor).constants}):depthModifiersFor(actor).player;
  const firstScale=source.kind==='projectile'?source.collisionWorldScale??collisionWorldRatio(collisionActorData(source)):collisionWorldRatio(collisionActorData(source)),secondScale=collisionWorldRatio(collisionActorData(target));return depthIntervalsOverlap({z:(source.z??0)/firstScale,depth:depth(source,firstGroup),localScale:firstScale},{z:(target.z??0)/secondScale,depth:depth(target,secondGroup),localScale:secondScale},{enabled:combatDepthEnabled()});
 }
-function actorProjClsnOverlapM1(owner,index,id,group){return projectileClsnOverlap(selectQueryProjectile(owner,index,specialRuntime.entities),controllerCharacterActor(id),group,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,projectileBoxes:projectileBoxesFor,position:actorCollisionPositionM1,depthOverlap:clsnQueryDepthM1})}
-function actorClsnOverlapM1(source,firstGroup,id,secondGroup){return characterClsnOverlap({...source,disabled:!!source.disabled||source.kind!=='helper'&&!!rootStatusFlags[fighterPlayer(source)-1]?.disabled},controllerCharacterActor(id),firstGroup,secondGroup,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,position:actorCollisionPositionM1,depthOverlap:clsnQueryDepthM1})}
+function actorProjClsnOverlapM1(owner,index,id,group){return projectileClsnOverlap(selectQueryProjectile(owner,index,specialRuntime.entities),controllerCharacterActor(id),group,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,projectileBoxes:projectileBoxesFor,position:actorCollisionPositionM1,animation:actorAnimationPresenceM1,depthOverlap:clsnQueryDepthM1})}
+function actorClsnOverlapM1(source,firstGroup,id,secondGroup){return characterClsnOverlap({...source,disabled:!!source.disabled||source.kind!=='helper'&&!!rootStatusFlags[fighterPlayer(source)-1]?.disabled},controllerCharacterActor(id),firstGroup,secondGroup,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,position:actorCollisionPositionM1,animation:actorAnimationPresenceM1,depthOverlap:clsnQueryDepthM1})}
 function proxyBoxHitAllowedM1(source,target,params,group,index){
  const slots=hitBySlotsFor(target);if(params['reversal.attr']||!slots.some(slot=>slot&&slot.time!==0&&(slot.group>=0||slot.index>=0)))return true;
  return hitByAllows(slots,{...params,attr:params.attr??''},{attackerState:source.type,projectile:source.kind==='projectile',compatibility:collisionActorData(source).compatibility,attackerPlayerNo:fighterPlayer(source)-1,attackerId:source.instanceId??source.id??source.player,group,index});
@@ -2789,10 +2807,11 @@ function resolveReversalCollisionM1(reverser,attacker){
  if(!reverser?.hitDef?.params?.['reversal.attr']||!attacker?.hitDef?.params||!hitDefinitionPreconditionsM1(reverser,attacker))return {overlap:false,contact:false};
  const sets=actor=>{const set=collisionAnimationData(actor).collision[String(actor.anim)]?.[Math.max(0,actor.elem-1)]||{};return {c1:()=>modifiedClsnBoxes(actor,set.c1||[],1),c2:()=>modifiedClsnBoxes(actor,set.c2||[],2),dummy:()=>modifiedClsnBoxes(actor,[],4),size:()=>modifiedClsnBoxes(actor,[sizeCollisionBox(actorCollisionSizeConstants(actor),actor.type,{width:widthActor(actor).player,height:heightModifiersFor(actor),scale:1})],3)}};
  const firstScale=collisionWorldRatio(collisionActorData(reverser)),secondScale=collisionWorldRatio(collisionActorData(attacker)),depthOverlap=depthIntervalsOverlap({z:(reverser.z??0)/firstScale,depth:hitAttackDepth(reverser.hitDef.params,{constants:collisionActorData(reverser).constants}),localScale:firstScale},{z:(attacker.z??0)/secondScale,depth:hitAttackDepth(attacker.hitDef.params,{constants:collisionActorData(attacker).constants}),localScale:secondScale},{enabled:combatDepthEnabled()});
-return reversalProxyBoxContact({...reverser,params:reverser.hitDef.params},{...attacker,params:attacker.hitDef.params},{helpers:specialRuntime.entities,setsFor:sets,position:actorCollisionPositionM1,filterTargetBoxes:(source,target,boxes,group)=>{const params=source.clsnProxy?source.activeHitDef?.params??{}:source.params;return boxes.filter((box,index)=>proxyBoxHitAllowedM1(source,target,params,group,index))},active:!attacker.hitDef.hitOnceSpent&&attackActivityStore.actor(hitDefinitionOwnerKey(attacker),combatTraceTick,{moveType:attacker.moveType,reversal:!!attacker.hitDef.params['reversal.attr']}).temporaryActive!==0,ignoreReversal:Number(attacker.hitDef.params.ignorereversaldef??0)!==0,unguardable:entitySourceAssertions({...attacker,player:fighterPlayer(attacker)}).has('unguardable'),depthOverlap});
+return reversalProxyBoxContact({...reverser,params:reverser.hitDef.params},{...attacker,params:attacker.hitDef.params},{helpers:specialRuntime.entities,setsFor:sets,position:actorCollisionPositionM1,animation:actorAnimationPresenceM1,filterTargetBoxes:(source,target,boxes,group)=>{const params=source.clsnProxy?source.activeHitDef?.params??{}:source.params;return boxes.filter((box,index)=>proxyBoxHitAllowedM1(source,target,params,group,index))},active:!attacker.hitDef.hitOnceSpent&&attackActivityStore.actor(hitDefinitionOwnerKey(attacker),combatTraceTick,{moveType:attacker.moveType,reversal:!!attacker.hitDef.params['reversal.attr']}).temporaryActive!==0,ignoreReversal:Number(attacker.hitDef.params.ignorereversaldef??0)!==0,unguardable:entitySourceAssertions({...attacker,player:fighterPlayer(attacker)}).has('unguardable'),depthOverlap});
 }
 function resolveFighterCollisionM1(frame,defender){
  if(frame?.standby||defender.standby||frame?.clsnProxy||defender.clsnProxy)return {overlap:false,contact:false};
+ if(!frame||!actorAnimationPresenceM1(frame).exists||(frame.kind==='projectile'?!actorAnimationPresenceM1(defender).frame:!actorAnimationPresenceM1(defender).exists))return {overlap:false,contact:false};
  if(frame?.hitDef?.params?.['reversal.attr'])return {overlap:false,contact:false};
  if(roundFlow.enabled()&&!roundFlow.canFight())return {overlap:false,contact:false};
  if(!defender.kind&&specialRuntime.unhittable(defender.player||defender.id||1))return {overlap:false,contact:false};
@@ -2807,11 +2826,11 @@ function resolveFighterCollisionM1(frame,defender){
  const filters={attackerState:frame.type,projectile:frame.kind==='projectile',compatibility:profileFor(defender.player||defender.id||1)?.battle.compatibility,attackerPlayerNo:(frame.player||frame.id||2)-1,attackerId:frame.instanceId??frame.id??frame.player??2};
  if(!hitByAllows(hitBySlotsFor(defender),frame.hitDef.params,filters))return {overlap:false,contact:false};
  const overlap=sources.some(source=>{
-  if(source.standby||source.disabled)return false;
+  if(source.standby||source.disabled||!actorAnimationPresenceM1(source).exists)return false;
   const set=collisionAnimationData(source).collision[String(source.anim)]?.[Math.max(0,source.elem-1)]||{},attackBoxes=source.kind==='projectile'?projectileBoxesFor(source,1):modifiedClsnBoxes(source,set.c1||[],1),atk=attackBoxes.map(box=>actorWorldClsnBoxM1(source,box));
   const params=source===sourceActor?frame.hitDef.params:{...frame.hitDef.params,p2clsnrequire:source.activeHitDef?.params?.p2clsnrequire??'none'};
   return targets.some(target=>{
-   if(target.standby||target.disabled)return false;
+   if(target.standby||target.disabled||frame.kind!=='projectile'&&!actorAnimationPresenceM1(target).exists)return false;
    const targetSet=collisionAnimationData(target).collision[String(target.anim)]?.[Math.max(0,target.elem-1)]||{},targetBoxes=hitDefCollisionBoxes(params,{c1:()=>modifiedClsnBoxes(target,targetSet.c1||[],1),c2:()=>modifiedClsnBoxes(target,targetSet.c2||[],2),dummy:()=>modifiedClsnBoxes(target,[],4),size:()=>modifiedClsnBoxes(target,[sizeCollisionBox(actorCollisionSizeConstants(target),target.type,{width:widthActor(target).player,height:heightModifiersFor(target),scale:1})],3)});
    const boxParams=source===sourceActor?frame.hitDef.params:source.activeHitDef?.params??{};
    return atk.some(a=>targetBoxes.boxes.some((box,index)=>clsnWorldOverlap(a,actorWorldClsnBoxM1(target,box))&&proxyBoxHitAllowedM1(source,target,boxParams,targetBoxes.group,index)));
@@ -2929,7 +2948,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.26.12',build:'collision-position-02612-20261026-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.26.13',build:'animation-presence-02613-20261026-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2937,7 +2956,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.26.12-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.26.13-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
