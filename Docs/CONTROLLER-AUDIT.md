@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.10 adds live Helper clsnproxy family consumers for ordinary/reversal geometry, per-proxy HitBy providers, required-before-filter order and logical parent contact/damage/power. Forty ordinary and thirty-two reversal browser combinations plus actual automatic reversal and full regressions support partial coverage. Overlap-trigger/provider/offset/depth/phase/native differential fidelity remains Pending; no whole-Helper certification changes. See HELPER-CLSN-PROXY-WIP.md.
+
 0.26.09 adds actual Helper standby consumers for control/query, attack/recipient collision/contact, proximity guard, push, camera and screen-vs-stage bounds while CNS/movement/clocks continue. Forty-eight actual browser cases, typed constructor checks and full regressions support this partial coverage. Compiler/tag/team/phase/debug-visual/native differential fidelity remains Pending; no whole-Helper certification changes. See HELPER-STANDBY-WIP.md.
 
 0.26.08 adds actual Helper preserve cleanup/round retention and selective native actor-registry/HitDef-history consumers, separate from Target binding cleanup. Semantic and browser-driven round-two/new-match tests verify live state, clocks, orphan handling and continued execution. Native phase/destruction/reset-cache edge cases remain Pending; no whole-Helper certification changes. See HELPER-PRESERVE-WIP.md.

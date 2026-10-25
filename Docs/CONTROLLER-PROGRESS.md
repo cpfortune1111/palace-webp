@@ -1,3 +1,9 @@
+## 0.26.10 — Helper collision proxies (partial)
+
+Helper clsnproxy now reaches ordinary HitDef and ReversalDef geometry through live proxy-only descendant families, while damage/contact/power remain assigned to logical parents. Size stays local; independent proxies cannot hit or be hit. Per-box HitBy reads actual source/proxy attributes and required-box existence precedes immune-box filtering. Forty ordinary and thirty-two reversal browser cases, actual automatic parent reversal/power, typed/traversal/provider checks, all 291 Node checks, fifteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Overlap-trigger/further-provider/offset/depth/phase/native differential fidelity remains Pending; no whole-Helper certification changes. See Docs/HELPER-CLSN-PROXY-WIP.md. Character recoloring remains excluded; no original assets or media are added.
+
+Previous 0.26.09 publication was verified at 29f64fbe296a842d04c59640cf8d41392198f452, successful Pages run 40232136177 and eight frozen live text comparisons.
+
 ## 0.26.09 — Helper standby consumers (partial)
 
 Helper standby now reaches actual Ctrl/Standby queries, attack/recipient collision and contact, proximity guard, PlayerPush, camera tracking and screen-bound consumers. CNS, movement, animation clocks and stage bounds continue. Forty-eight browser combinations, typed constructor checks, all 290 Node checks, fourteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Full compiler/team/tag/phase/debug-visual/native differential fidelity remains Pending; no whole-Helper certification changes. See Docs/HELPER-STANDBY-WIP.md. Character recoloring remains excluded; no original assets or media are added.

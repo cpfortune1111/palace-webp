@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {reversalAttackBoxContact} from '../Engine/reversal-contact-geometry.js';
+import {reversalAttackBoxContact,reversalProxyBoxContact} from '../Engine/reversal-contact-geometry.js';
 
 const reverser={x:0,y:0,facing:1,params:{'reversal.attr':'SCA, NA'}},attacker={x:20,y:0,facing:-1,params:{attr:'S, NA',guardflag:'M'}};
 const sets={reversalSets:{c1:[[0,-20,30,0]],c2:[]},attackSets:{c1:[[0,-20,30,0]],c2:[[100,-20,130,0]]}};
@@ -9,4 +9,15 @@ assert.equal(reversalAttackBoxContact(reverser,attacker,{...sets,attackSets:{c1:
 assert.equal(reversalAttackBoxContact(reverser,attacker,{...sets,ignoreReversal:true}).contact,false);
 assert.equal(reversalAttackBoxContact(reverser,attacker,{...sets,depthOverlap:false}).contact,false);
 assert.equal(reversalAttackBoxContact({...reverser,params:{...reverser.params,p2clsnrequire:'clsn2'}},attacker,{...sets,attackSets:{c1:sets.attackSets.c1,c2:[]}}).requiredMissing,true);
+const requiredBeforeFilter=reversalAttackBoxContact({...reverser,params:{...reverser.params,p2clsnrequire:'clsn2'}},attacker,{...sets,filterRecipientBoxes:(boxes,group)=>group===2?[]:boxes});assert.equal(requiredBeforeFilter.requiredMissing,false);assert.equal(requiredBeforeFilter.contact,true);
 console.log('Reversal filter and shared world collision select attack boxes, honor mirrored positions, missing requirements and depth rejection');
+const first={...reverser,key:'root1',player:1,x:1000},second={...attacker,key:'root2',player:2,x:0,facing:1},proxy={kind:'helper',key:'proxy',player:1,parentKey:null,clsnProxy:true,x:0,y:0,facing:1},proxyTwo={...proxy,key:'proxy2',player:2},fixture={c1:[[0,-20,30,0]],c2:[],size:[[0,-20,30,0]]},options={helpers:[proxy],setsFor:()=>fixture};
+assert.equal(reversalProxyBoxContact(first,second,options).contact,true);
+assert.equal(reversalProxyBoxContact({...first,params:{...first.params,p2clsnrequire:'clsn2'}},second,options).contact,true);
+proxy.activeHitDef={params:{p2clsnrequire:'clsn2'}};assert.equal(reversalProxyBoxContact(first,second,options).contact,false);delete proxy.activeHitDef;
+assert.equal(reversalProxyBoxContact(first,second,{...options,ignoreReversal:true}).contact,false);assert.equal(reversalProxyBoxContact(first,second,{...options,active:false}).contact,false);assert.equal(reversalProxyBoxContact(first,second,{...options,depthOverlap:false}).contact,false);
+proxy.standby=true;assert.equal(reversalProxyBoxContact(first,second,options).contact,false);proxy.standby=false;
+assert.equal(reversalProxyBoxContact({...proxy,params:first.params},second,options).contact,false);
+assert.equal(reversalProxyBoxContact({...first,x:0},{...second,x:1000},{...options,helpers:[proxyTwo]}).contact,true);
+assert.equal(reversalProxyBoxContact({...first,x:0,params:{...first.params,p2clsncheck:'size'}},{...second,x:1000},{...options,helpers:[proxyTwo]}).contact,false);
+console.log('Reversal proxy geometry preserves logical attribute/active/depth gates, per-proxy required boxes, inactive exclusion and target Size locality');
