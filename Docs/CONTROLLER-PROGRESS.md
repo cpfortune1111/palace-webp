@@ -1,3 +1,9 @@
+## 0.26.15 — Independent animation/sprite sources (partial)
+
+Numeric ChangeAnim animplayerno/spriteplayerno/readplayerid and ChangeAnim2 readplayerid now select independent live root/Helper providers. Frames, collisions, clocks, element queries, sprite/atlas drawing, reflections and capture paths consume their relevant source identities. Sprite-owner localcoord compensation is committed on successful switches. Actual mixed-character root/Helper tests verify source identity, collision scaling, double/half-size drawing and reflection transforms. All 296 Node checks, dedicated browser cases, five related entry/position/proxy/history gates and complete simultaneous/one-tick/five-tick super battle regression pass. Full prefix/common FX/cold-resource/version/angle/shear/phase/native differential fidelity remains Pending; no whole-controller certification. See ANIMATION-SPRITE-OWNER-WIP.md.
+
+0.26.14 publication was verified at 183422090d66e2b64ad9e4739a1743f607f2434c, successful exact-head Pages run 40243969240 and eight frozen live text comparisons.
+
 ## 0.26.14 — State-entry animation validity (partial)
 
 ChangeState/SelfState, imported P1/P2 StateDef, Helper StateDef, P2 locomotion and eager reaction ChangeAnim now validate numeric actions. Missing/-1 preserves animation progress; successful switches commit a new start clock. The Saturn S3001 skip was traced to a stale P2 action clock and corrected. Original full-battle assertions remain unchanged. All 294 Node checks, the dedicated live-binding browser tests, four related browser gates and complete simultaneous/one-tick/five-tick super battle regression pass. See STATE-ANIMATION-ENTRY-WIP.md for remaining limitations.

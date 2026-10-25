@@ -1,3 +1,7 @@
+## 0.26.15 — Independent animation/sprite sources (partial)
+
+Numeric animation source-player/ID parameters now reach real root/Helper frames, collision, clocks and drawing. Independent sprite ownership includes localcoord compensation in root/Helper drawing and reflections. Mixed-character source/crop/geometry/double/half-size tests, all 296 Node checks, five related browser gates and complete battle regression pass. Prefixes/common FX/cold assets and broader native version/phase fidelity remain Pending; no whole-controller certification. See Docs/ANIMATION-SPRITE-OWNER-WIP.md. Character recoloring remains excluded.
+
 ## 0.26.14 — State-entry animation validity (partial)
 
 Numeric transition, root/Helper StateDef, locomotion and eager reaction animation switches now validate actions and retain progress on missing/-1. Successful P2 switches also commit their start clock, fixing the Saturn S3001 skip. Live P1 fixture bindings were corrected. All 294 Node checks, dedicated entry/clock cases, four related browser gates and the complete battle regression pass. Alternate animation/sprite providers, remaining legacy overrides and native phase fidelity remain Pending. See Docs/STATE-ANIMATION-ENTRY-WIP.md; no whole-controller certification is claimed.
