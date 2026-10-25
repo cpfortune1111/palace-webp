@@ -1,4 +1,10 @@
+## 0.25.99 — ModifyExplod synchronization consumers (partial, release pending)
+
+synclayer/syncparams/syncid now reach staged target/grouping and priority/facing/size/orthographic-angle/window/shear/Trans/shared-PalFX consumers, even while hitpause freezes clocks. Modified effects synchronize during updates, not drawings. P1's missing sprite-priority adapter is corrected. 160 actual visual/group/driver/redirected-owner cases plus independent extraction tests pass. Projection/shader/AfterImage sync families remain incomplete; syncparams must not be counted fully implemented. See MODIFY-EXPLOD-SYNC-WIP.md. Full controller/native fidelity, final versioned regression and publication remain Pending.
+
 ## 0.25.98 — ModifyExplod staged binding consumers (partial, release pending)
+
+Publication subsequently verified at commit 394d23a8511cbb89041a69b0afe622de412741a8: 278 Node checks, Python stage/five sound tests, 144 binding cases plus final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40210324494 and twelve frozen live text comparisons. No media/original assets were added. Receipt: outputs/release-02598-verification.json. Earlier pending statements below are historical.
 
 bindid/bindtime now reach actual root/Helper target binding, native versioned countdown assignment, queued release motion and final P1 postype/relative-coordinate writes. A separate late update covers fighting/non-fighting branches without legacy double stepping. 144 actual trajectory/driver/postype/screen/paused-removal cases and independent binding traces pass. Full native tick/interpolation/space/provider/creation/compiler fidelity and final versioned regression/publication remain Pending; see MODIFY-EXPLOD-BINDING-WIP.md. No whole-controller certification changes.
 

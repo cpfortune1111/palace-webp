@@ -1,3 +1,7 @@
+## 0.25.99 — ModifyExplod synchronization consumers (partial, release pending)
+
+Modified effects now synchronize target grouping, priority/facing, size/orthographic transforms, clipping, shear and Trans/shared-PalFX during late updates, including hitpause. Disabling synchronization retains snapshots/live palette references as appropriate; redirected recipients and missing targets have real consumers. P1's missing sprite-priority adapter is corrected. 160 actual cases accompany semantic checks. Projection/shader/AfterImage sync families and full native fidelity remain Pending; syncparams is partial, not fully certified. Recoloring remains excluded; no media/original SFF/SND/AIR are added.
+
 ## 0.25.98 — ModifyExplod staged binding consumers (partial, release pending)
 
 Modified effects now bind to actual root/Helper targets with finite/native-versioned countdowns, fixed relative facing and queued release velocity. P1 postype finalization and screen-edge behavior have real consumers. The late simulation path runs once after moving characters/Helpers in fighting and non-fighting branches; paused/disabled zero-age expiry is covered. 144 actual cases accompany independent traces. Full native phase/space/provider/creation fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring stays excluded; gameplay PalFX remains. No media/original SFF/SND/AIR are added.

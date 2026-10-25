@@ -4,6 +4,8 @@ Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; 163 registered 
 
 This is a source inventory, not a claim of full compatibility. Parameter candidates require semantic review; dynamic names and delegated parsing require manual verification. Existing execution paths are not automatically certified.
 
+0.25.99 partial ModifyExplod synchronization consumers cover real synclayer/syncid and staged syncparams visual/grouping paths, including P1/P2/Helper targets and redirected ownership. Projection/shader/AfterImage synchronization remains incomplete, so syncparams and the whole controller remain Pending rather than fully implemented. See MODIFY-EXPLOD-SYNC-WIP.md.
+
 0.25.98 partial ModifyExplod binding: bindid/bindtime now have real staged anchor/relative/queued-motion and late-driver consumers, with 144 actual cases and native-versioned countdown tests. See MODIFY-EXPLOD-BINDING-WIP.md for remaining global-phase/space/provider/creation/compiler gaps. Whole-controller certification remains Pending.
 
 0.25.97 ModifyExplod corrects cross-effect commit visibility through a real batch consumer, with sixteen actual CNS evaluator-observation cases and independent phase tests. This fixes previously incomplete ordering; it does not add a certified controller or claim bindid/bindtime support. See MODIFY-EXPLOD-COMMIT-WIP.md for remaining native phase/provider/binding gaps.
