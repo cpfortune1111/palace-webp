@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {applyModifyProjectileAfterImage} from '../Engine/modify-projectile-afterimage.js';
+const root={kind:'root'},helper={kind:'helper'},projectiles=[{id:7,projectileId:7},{id:7,projectileId:7}],reads=[];
+let counter=0,selections=0;
+const api={evaluate:value=>{reads.push(value);return value==='next'?++counter:Number(value)},split:value=>String(value).split(','),ikemen:()=>true,warn:()=>{},findActor:id=>id===1?root:id===2?helper:null,select:(owner,id,index)=>{assert.equal(owner,root);assert.equal(id,7);assert.equal(index,-1);selections++;return projectiles}};
+applyModifyProjectileAfterImage({type:'ModifyProjectile',params:{redirectid:'1',id:'7',index:'-1',projid:'9','afterimage.time':'next','afterimage.length':'next'}},helper,api);
+assert.deepEqual(reads,['1','7','-1','9','next','next','next','next']);assert.deepEqual(projectiles.map(p=>[p.id,p.projectileId,p.nativeAfterImage.time,p.nativeAfterImage.length,p.nativeAfterImage.imgs.length]),[[9,9,1,3,4],[9,9,2,4,5]]);assert.equal(selections,1);
+reads.length=0;applyModifyProjectileAfterImage({type:'ModifyProjectile',params:{redirectid:'2',id:'7',index:'-1','afterimage.time':'next'}},root,api);assert.deepEqual(reads,['2','7','-1']);assert.equal(selections,1);
+reads.length=0;applyModifyProjectileAfterImage({type:'ModifyProjectile',params:{redirectid:'999',id:'next','afterimage.time':'next'}},root,api);assert.deepEqual(reads,['999']);
+reads.length=0;applyModifyProjectileAfterImage({type:'ModifyProjectile',params:{id:'7','afterimage.time':'next'}},root,{...api,select:()=>[]});assert.deepEqual(reads,['7']);
+assert.throws(()=>applyModifyProjectileAfterImage({type:'ModifyProjectile',params:{velocity:'1,0'}},root,api),/Unsupported ModifyProjectile parameter/);
+console.log('ModifyProjectile AfterImage selection/redirect/ID-before-index order, deferred per-projectile RHS, helper suppression and explicit unsupported-family errors pass');

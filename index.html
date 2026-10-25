@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.26.01 Controller Integration</title>
+<title>Prototype 0.26.02 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.01 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD explod-afterimage-02601-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.02 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD projectile-afterimage-02602-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -240,6 +240,7 @@ import {applyModifyExplodController} from './Engine/modify-explod.js?v=02601';
 import {applyModifyExplodSync} from './Engine/modify-explod-sync.js?v=02599';
 import {applyNativeAfterImageController,nativeAfterImageActive,recordNativeAfterImage,nativeAfterImageDraws,copyNativeAfterImageSettings,deferredExplodAfterImageWrites,finishExplodAfterImage} from './Engine/native-afterimage.js?v=02601';
 import {commitModifyExplodEffects} from './Engine/modify-explod-commit.js?v=02601';
+import {applyModifyProjectileAfterImage} from './Engine/modify-projectile-afterimage.js?v=02602';
 import {activateExplodBinding,resetLegacyExplodBinding,modifyExplodBindingPosition,applyExplodBindingParameters,finalizeExplodBindingPosition,stepExplodBinding} from './Engine/explod-binding.js?v=02598';
 import {createExplodAnimationClock,modifyExplodAnimationClock,stepExplodAnimationClock} from './Engine/explod-animation-clock.js?v=02595';
 import {stepModifiedExplodMotion} from './Engine/explod-motion.js?v=02592';
@@ -317,7 +318,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.01 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.02 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -325,7 +326,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02594';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02602';
 import {createLifecycleRuntime,findParentActor} from './Char/Venus/venus-lifecycle-runtime.js?v=02570';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -555,7 +556,7 @@ for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible
   const windowClip=spriteWindowRect(effect.window,{origin:[viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit],scale:[windowUnit*drawingFacing,windowUnit*(effect.vfacing??1)],pixelRatio:devicePixelRatio});
   const sizeDrawing=effect.entity&&effect.kind==='helper'?helperSizeDrawing(effect.sizeDefinition,{localCoord:effect.sizeLocalCoord??1280,worldWidth:Number((characterProfiles.get(battleCharacters[effect.player-1])?.battle||battleDat).coordinateSystem?.webWorldWidth??1280),facing:effect.facing}):{scale:[1,1],offset:[0,0]};
   const depthPosition=effect.dust||effect.depth?projectDustPosition(effect,STAGE_CAMERA,{enabled:Number(stageCameraConfig.player?.topbound??0)!==Number(stageCameraConfig.player?.botbound??0),cameraX}):{x:effect.x,y:effect.y,scale:1};
-drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(depthPosition.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(depthPosition.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate((offset[0]+sizeDrawing.offset[0])*cameraZoom*fit,(offset[1]+sizeDrawing.offset[1])*cameraZoom*fit)}if(!effect.entity||effect.kind==='helper')applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*depthPosition.scale*sizeDrawing.scale[1]*(effect.angleState?.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*depthPosition.scale*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):(effect.syncedPalFx??effect.palFx)?.enabled?samplePalFx(effect.syncedPalFx??effect.palFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod',afterImageBlend:frame.blend,afterImageOwner:effect.entity?null:effect});drawing.restore();
+drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(depthPosition.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(depthPosition.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate((offset[0]+sizeDrawing.offset[0])*cameraZoom*fit,(offset[1]+sizeDrawing.offset[1])*cameraZoom*fit)}if(!effect.entity||effect.kind==='helper')applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*depthPosition.scale*sizeDrawing.scale[1]*(effect.angleState?.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*depthPosition.scale*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):(effect.syncedPalFx??effect.palFx)?.enabled?samplePalFx(effect.syncedPalFx??effect.palFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod',afterImageBlend:frame.blend,afterImageOwner:effect.kind==='projectile'?combatTargetActor(effect.instanceId):effect.entity?null:effect});drawing.restore();
  }
 }
 function registerCharacterSound(sound,channel,player,owner=null,options={}){
@@ -1608,12 +1609,12 @@ function setNativeAfterImageForActor(actor,state){if(actor.kind==='helper')actor
 function recordNativeAfterImageDrawing(context,source,args,settings){
  if(settings.kind==='native-afterimage')return;
  let actor= settings.kind==='root1'?specialRoot(1):settings.kind==='root2'?specialRoot(2):settings.kind==='helper'?combatTargetActor(settings.actorId):null;
- const effect=settings.afterImageOwner,state=effect?effect.nativeAfterImage:actor?nativeAfterImageForActor(actor):null;if(!state?.native)return;
+ const effect=settings.afterImageOwner,projectile=effect?.kind==='projectile',state=effect?effect.nativeAfterImage:actor?nativeAfterImageForActor(actor):null;if(!state?.native)return;
  if(!nativeAfterImageActive(state)){if(effect)effect.nativeAfterImage=null;else setNativeAfterImageForActor(actor,null);return}
  const priority=Number.isFinite(settings.priority)?settings.priority:actor?.sprPriority??0;
  if(state.lastTick!==combatTraceTick){
-  const hitpause=effect?!!effect.ignorehitpause&&(Number(effect.supermovetime??0)!==0||Number(effect.pausemovetime??0)!==0):actor.kind==='helper'?actor.hitPause>0||actor.hitShake>0:fighterPlayer(actor)===1?p1HitPause>0||p1Reaction?.hitShake>0:p2.hitPause>0||p2.hitShake>0||p2.attackPause>0;
-  const paused=effect?modifiedExplodSystemPaused(effect,specialRuntime.pauses,combatTraceTick)||modifiedSourceExplodHitPaused(effect):specialRuntime.blocked(fighterPlayer(actor),actor.kind==='helper'?actor:null)||hitpause;
+  const hitpause=projectile?false:effect?!!effect.ignorehitpause&&(Number(effect.supermovetime??0)!==0||Number(effect.pausemovetime??0)!==0):actor.kind==='helper'?actor.hitPause>0||actor.hitShake>0:fighterPlayer(actor)===1?p1HitPause>0||p1Reaction?.hitShake>0:p2.hitPause>0||p2.hitShake>0||p2.attackPause>0;
+  const paused=projectile?effect.hitPause>0||specialRuntime.blocked(effect.player,effect):effect?modifiedExplodSystemPaused(effect,specialRuntime.pauses,combatTraceTick)||modifiedSourceExplodHitPaused(effect):specialRuntime.blocked(fighterPlayer(actor),actor.kind==='helper'?actor:null)||hitpause;
   const matrix=context.getTransform();recordNativeAfterImage(state,{source,args:[...args],matrix:[matrix.a,matrix.b,matrix.c,matrix.d,matrix.e,matrix.f],priority,layer:settings.layer??0,under:!!settings.under,clip:settings.clip?{...settings.clip}:null,opacity:context.globalAlpha,airBlend:settings.afterImageBlend??''},{record:!paused,hitpause});state.lastTick=combatTraceTick;
  }
  const player=effect?effect.player:fighterPlayer(actor),ikemen=(characterProfiles.get(battleCharacters[player-1])?.battle.compatibility??'mugen')==='ikemen';
@@ -1633,6 +1634,7 @@ function executeControllerM1(controller,binding,context,adapter){const player=ad
   if(controller.trigger==='TimeEquals'&&binding.time!==controller.time)return;
  }
  scheduling?.executed();
+ if(applyModifyProjectileAfterImage(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,ikemen:actor=>(profileFor(fighterPlayer(actor))?.battle?.compatibility??'mugen')==='ikemen',warn:message=>console.warn(message),select:(owner,id,index)=>{const ownerId=fighterPlayer(owner),matches=specialRuntime.entities.filter(entity=>entity.kind==='projectile'&&!entity.destroyed&&!entity.removing&&entity.projectileOwnerId===ownerId&&(id<0||entity.id===id));return index<0?matches:matches[index]?[matches[index]]:[]}}))return;
  if(applyNativeAfterImageController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,get:nativeAfterImageForActor,set:setNativeAfterImageForActor,ikemen:actor=>(characterProfiles.get(battleCharacters[fighterPlayer(actor)-1])?.battle.compatibility??'mugen')==='ikemen',mugen11:actor=>(profileFor(fighterPlayer(actor))?.battle?.engineVersions?.mugen||[]).join('.')==='1.1'&&(profileFor(fighterPlayer(actor))?.battle.compatibility??'mugen')==='mugen',warn:message=>console.warn(message)}))return;
  const params=controller.params||controller;
  const value=expression=>Number(evalM1(expression,context));
@@ -2883,7 +2885,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.26.01',build:'explod-afterimage-02601-20261026-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.26.02',build:'projectile-afterimage-02602-20261026-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2891,7 +2893,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.26.01-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.26.02-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.02 adds real Projectile creation/rendering and partial ModifyProjectile AfterImage consumers, with active ownership/ID/index/redirect selection and native Helper recipient restriction. Default Helper projectile ownership, ownprojectile initialization and owner-filtered counts are corrected. Eight actual browser combinations support these paths; other Projectile/ModifyProjectile families and full ownprojectile/contact-event/native-fidelity coverage remain Pending. See PROJECTILE-AFTERIMAGE-WIP.md. No whole-controller certification changes.
+
 0.26.01 adds real Explod creation/ModifyExplod prefixed AfterImage consumers and configurable per-player sprite budgets. Sixteen own/common/render/RHS/version/player/Helper cases and independent commit-budget checks support these paths. Projectile histories, remaining creation families and exact native cue/phase fidelity remain Pending; no whole-controller certification changes. See NATIVE-AFTERIMAGE-WIP.md.
 
 AfterImage/AfterImageTime and synchronized effect histories now have partial native-source-reviewed controller and real render consumers; see NATIVE-AFTERIMAGE-WIP.md. Global budgets, exact native draw/simulation timing, creation-time effect families and executable differential fidelity remain Pending. Character recoloring remains excluded; gameplay PalFX remains in scope.

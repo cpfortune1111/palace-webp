@@ -1,5 +1,6 @@
 import {createReflectionOverride,resetReflectionOverride} from '../../Engine/modify-reflection.js';
 import {controllerBoolean,controllerInteger} from '../../Engine/controller-value-conversion.js';
+import {deferredExplodAfterImageWrites as deferredProjectileAfterImageWrites,finishExplodAfterImage as finishProjectileAfterImage} from '../../Engine/native-afterimage.js';
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
 import {canGetUpFromLieDown,advanceDownRecovery} from '../../Engine/down-recovery.js';
@@ -49,6 +50,7 @@ export function createSpecialRuntime(api){
  let helperChangeNest=0;
  const moveTimeKey=actor=>actor.kind==='helper'?actor.key:'root'+(actor.player??actor.id);
  const root=player=>api.root(player);
+ const ownedProjectileCount=(actor,id)=>actor.kind==='helper'&&!actor.ownProjectile?0:entities.filter(item=>item.kind==='projectile'&&item.player===actor.player&&item.projectileOwnerId===(actor.kind==='helper'?actor.instanceId:actor.player)&&!item.destroyed&&!item.removing&&(id===undefined||item.id===Math.max(0,controllerInteger(id)))).length;
  const blocked=(player,entity=null)=>{
   const slot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal',active=pauses[slot].filter(pause=>pause?.remaining>0&&pause.created!==api.tick());
   if(!active.length)return false;
@@ -81,7 +83,7 @@ export function createSpecialRuntime(api){
   if(commands===undefined)commands=entity.kind==='helper'?(api.helperCommands?.(entity)||{}):api.commands(entity.player);
   if(!helperCommandAllowed(entity))commands={};
   const base=api.context(entity,root(entity.player===1?2:1),commands,expressionOwner);
-  return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
+  return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>ownedProjectileCount(entity,id),
    numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&(id<0||effect.id===id)).length,
    query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:name.toLowerCase()==='guardcount'?entity.guardCount||0:base.query(name)};
  }
@@ -126,8 +128,8 @@ export function createSpecialRuntime(api){
   const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0),
    life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:cloneStoredMapValues(owner.mapDefaults),mapDefaults:cloneStoredMapValues(owner.mapDefaults),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,layerNo:0,sprPriority:kind==='projectile'?Number(params.projsprpriority??-1):0,supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
-  entity.instanceId=1000+serial;if(kind==='projectile'){entity.projectileOwnerId=owner.kind==='helper'?owner.instanceId:owner.player??player;entity.projectileOwnerActor=owner.kind==='helper'?owner:null;entity.projectileId=entity.id}
-  if(kind==='helper'){entity.reflectionOverride=createReflectionOverride();entity.inheritChannels=controllerInteger(api.eval(params.inheritchannels??0,sourceContext))}
+  entity.instanceId=1000+serial;if(kind==='projectile'){const helperOwner=owner.kind==='helper'&&owner.ownProjectile;entity.projectileOwnerId=helperOwner?owner.instanceId:owner.player??player;entity.projectileOwnerActor=helperOwner?owner:null;entity.projectileId=entity.id}
+  if(kind==='helper'){entity.reflectionOverride=createReflectionOverride();entity.inheritChannels=controllerInteger(api.eval(params.inheritchannels??0,sourceContext));entity.ownProjectile=controllerBoolean(api.eval(params.ownprojectile??0,sourceContext))}
   if(kind==='helper'&&api.sizeGuardDistances)entity.sizeGuardDistances=api.sizeGuardDistances(owner);
   if(kind==='helper'&&api.sizeDefinition){const inherited=api.sizeDefinition(owner);if(inherited.definition){entity.sizeDefinition=applyHelperSizeOverrides(inherited.definition,params,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.sizeLocalCoord=inherited.localCoord}}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
@@ -137,6 +139,7 @@ export function createSpecialRuntime(api){
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=projectileSpriteScale(params,api.sizeDefinition?.(owner)?.definition,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext,owner),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
   else enter(entity,Number(params.stateno));
   if(kind==='projectile'){const ownPalette=controllerBoolean(api.eval(params.ownpal??0,sourceContext)),components=params.remappal===undefined?[]:api.pair(params.remappal);if(components.length>2)throw Error('Invalid Projectile remappal pair');const destination=components.length?[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))]:[-1,0];api.initializeProjectilePalette?.(entity,owner,ownPalette,destination)}
+  if(kind==='projectile'){for(const write of deferredProjectileAfterImageWrites(params,{evaluate:expression=>api.eval(expression,sourceContext),split:api.pair,ikemen:api.data(player).compatibility==='ikemen',warn:message=>console.warn(message)}))write(entity);finishProjectileAfterImage(entity,{ikemen:api.data(player).compatibility==='ikemen'})}
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
   entities.push(entity);return entity;
  }
@@ -319,7 +322,7 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
  }
  return {entities,pauses,moveTimes,stateChanges,stateChangePending:entity=>stateChanges.has(entity.key),selectState,setMoveTime:(actor,slot,value)=>{const key=moveTimeKey(actor),times=moveTimes.get(key)||{};times[slot]=value;moveTimes.set(key,times)},stagePaused:()=>pauses.super.some(pause=>pause?.remaining>0)&&stagePauseFlags.super||pauses.normal.some(pause=>pause?.remaining>0)&&stagePauseFlags.normal,blocked,context,numeric,dispatch,step,finishTick,enterState:enter,
   unhittable:player=>unhittableUntil[player]>api.tick(),
-  numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
+  numProj:(player,id)=>ownedProjectileCount(root(player),id),
   projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
   projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
   reset:()=>{entities.length=0;stateChanges.clear();projectileContacts.clear();moveTimes.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;stagePauseFlags.normal=true;stagePauseFlags.super=true;api.background([256,256,256])}};

@@ -1,3 +1,9 @@
+## 0.26.02 — Projectile AfterImage consumers (partial, release pending)
+
+Projectile creation and the real renderer now consume independent histories, with native hitpause/SuperPause recording rules and shared player budgets. Partial ModifyProjectile supports redirect, active owned ID/index selection, projid renaming and deferred per-projectile AfterImage writes without clearing history. Ordinary Helper projectiles now belong to the root unless ownprojectile is enabled; counts and selection follow ownership. Eight real browser combinations and semantic tests cover these paths. Other Projectile/ModifyProjectile families, Helper contact-event triggers and exact native fidelity remain Pending; no whole-controller certification changes. See Docs/PROJECTILE-AFTERIMAGE-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.
+
+Previous 0.26.01 publication was verified at 190df5987c4710482b4beaea153d9981f9fb8e7e, successful Pages run 40216940885 and twelve frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.01 — Explod AfterImage parameters and player budgets (partial, release pending)
 
 Explod creation and ModifyExplod now consume prefixed AfterImage parameters through the real history renderer. Deferred expressions run per parameter/per effect, active setup happens after the full commit, and changing settings retains old sprite histories and unspecified vector components. Sixteen own/common-resource/root/Helper/version/player combinations cover rendering, RHS side effects, independent histories and the pinned 512-per-player sprite budget. Configurable budget unit checks and shared standalone-controller regressions accompany these consumers. Native cue ordering, other Explod families and Projectile histories remain Pending; no whole-controller certification changes. Character recoloring remains excluded; gameplay PalFX remains. See Docs/NATIVE-AFTERIMAGE-WIP.md.
