@@ -1,4 +1,14 @@
+## 0.25.95 — ModifyExplod animation/resource consumers (partial, release pending)
+
+Real anim/animplayerno/spriteplayerno consumers now select animation timing and sprite atlas independently, honor MUGEN-character locks and native expression order, reset cursors without resetting lifetime and handle missing/empty actions without unrelated fallbacks. 128 actual Saturn/Moon resource cases pass own/common/cross-character selection, premultiplied atlas pixel comparison, invalid players, combined element/time/freeze ordering and action -2 persistence/removal. Full native provider/resource/phase fidelity remains Pending; see MODIFY-EXPLOD-RESOURCES-WIP.md. Final versioned regression/publication remains separate; no whole-controller certification changes.
+
+## Animation cursor consumer evidence (partial)
+
+ModifyExplod animelem/animelemtime/animfreeze now control actual own/common source effect playback and draw selection independently of lifetime/motion. Thirty-two real root/normal-Helper/profile/player/character-version cases verify seeking, freezing, resume, system pauses, invalid target fallback, negative first-loop removal and positive/zero expiration. Independent native-source-reviewed clock/extraction checks pass. Full animation/provider/phase fidelity remains Pending; see MODIFY-EXPLOD-ANIMATION-WIP.md. Final combined gates/publication are separate requirements, not whole-controller certification.
+
 ## 0.25.94 — ModifyExplod blend and ownership lifecycle consumers (partial, release pending)
+
+Publication was subsequently verified at commit aca5cd5bfa80f486253d929ac14e49b99ae8bdef: 273 Node checks, Python stage/five sound tests, final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40202304943 and fourteen frozen live text comparisons. No media/original assets were added. Receipt: outputs/release-02594-verification.json. Earlier local-only/pending notes below are historical, not full compatibility claims.
 
 ModifyExplod removeonchangestate now reaches actual deferred root/reaction/Helper StateDef initialization, not premature state selection. Sixteen actual cases pass same-state restarts, hitpause deferral, explicit disabling and root/Helper/opponent ownership isolation. Independent typed/evaluation-order checks pass; see MODIFY-EXPLOD-STATE-WIP.md. Full native fidelity and final versioned gates/publication remain Pending.
 

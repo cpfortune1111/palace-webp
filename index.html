@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.25.94 Controller Integration</title>
+<title>Prototype 0.25.95 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.94 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD modify-explod-blend-lifecycle-02594-20261025-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.25.95 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD modify-explod-animation-resources-02595-20261025-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -236,7 +236,8 @@ import {applyVariableController,assignExpressionVariable} from './Engine/variabl
 import {createNativeRandom} from './Engine/native-random.js?v=02591';
 import {sampleExplodRandom} from './Engine/explod-random.js?v=02592';
 import {spawnCommonExplod} from './Engine/common-explod.js?v=02592';
-import {applyModifyExplodController} from './Engine/modify-explod.js?v=02594';
+import {applyModifyExplodController} from './Engine/modify-explod.js?v=02595';
+import {createExplodAnimationClock,modifyExplodAnimationClock,stepExplodAnimationClock} from './Engine/explod-animation-clock.js?v=02595';
 import {stepModifiedExplodMotion} from './Engine/explod-motion.js?v=02592';
 import {applyModifyExplodVisuals} from './Engine/modify-explod-visuals.js?v=02593';
 import {applyModifiedRemovalTime,modifiedExplodExpired,applyModifiedPauseTimes,modifiedExplodSystemPaused} from './Engine/modify-explod-timing.js?v=02593';
@@ -312,7 +313,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.94 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.25.95 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -396,7 +397,18 @@ function spawnSourceExplod(params,owner,player,context=null){
   effect.xshear=compileExplodShear(params.xshear,expression=>evalM1(expression,context||specialRuntime.context({...owner,player})));
  }
 }
-function modifySourceExplod(effect,owner,{spread,postype,legacyReset,position,velocity,friction,accel,spriteScale,removeTime,pauseTimes,positionActive,visuals,transState,ignoreHitPause,removeOnGetHit,removeOnChangeState,ikemen}){
+function applySourceExplodAnimation(effect,owner,reference){
+ if(!['','s','f'].includes(reference.prefix))throw Error('Unsupported ModifyExplod animation prefix '+reference.prefix);
+ const animationPlayer=reference.animationPlayer>0?reference.animationPlayer:fighterPlayer(owner),spritePlayer=reference.spritePlayer>0?reference.spritePlayer:fighterPlayer(owner),frozen=effect.animationClock?.frozen??false;
+ if(animationPlayer>battleCharacters.length||spritePlayer>battleCharacters.length){
+  effect.animationWarning='Invalid ModifyExplod animation/sprite player number';console.warn(effect.animationWarning);
+  const data=effect.common?commonEffectData(effect):effect.animationData??characterProfiles.get(battleCharacters[effect.player-1])?.battle,frames=effect.common?data.actions[String(effect.anim)]:sourceEffectFrames(effect);if(frames?.length){effect.animationClock=createExplodAnimationClock(frames,(effect.animationLoops??data.loopStarts??{})[String(effect.anim)]??0);modifyExplodAnimationClock(effect.animationClock,{animelemtime:0});effect.animationClock.frozen=frozen}return;
+ }
+ const profile=characterProfiles.get(battleCharacters[animationPlayer-1]),common=reference.prefix==='f';
+ effect.anim=reference.action;effect.common=common;effect.gameCommon=common;effect.dust=false;effect.roundFx=false;effect.nativeAnimationResource=true;effect.animationWarning=null;effect.animationPlayer=common?-1:animationPlayer;effect.spritePlayer=common?-1:spritePlayer;effect.spriteCharacter=common?null:battleCharacters[spritePlayer-1];effect.animationData=common?commonAnimationDat:profile.data;effect.animationLoops=common?commonAnimationDat.loopStarts:profile.battle.loopStarts;
+ effect.emptyAnimation=reference.action===-2;const frames=effect.emptyAnimation?[]:effect.animationData.actions[String(effect.anim)];effect.invalid=!effect.emptyAnimation&&!frames?.length;effect.animationClock=effect.invalid?null:createExplodAnimationClock(frames,(effect.animationLoops??{})[String(effect.anim)]??0);if(effect.animationClock){modifyExplodAnimationClock(effect.animationClock,{animelemtime:0});effect.animationClock.frozen=frozen}
+}
+function modifySourceExplod(effect,owner,{spread,postype,legacyReset,position,velocity,friction,accel,spriteScale,removeTime,pauseTimes,positionActive,visuals,transState,ignoreHitPause,removeOnGetHit,removeOnChangeState,animationReference,animationControl,ikemen}){
  const previousFacing=explodTrueFacing(effect.facing,effect.relativeFacing??1),previousVertical=effect.vfacing??1;
  const unit=collisionWorldRatio(gravityActorData(owner)),previous=[...(effect.bindOffset??[0,0,0])],relative=legacyReset?[0,0,0]:[...previous];
  if(legacyReset){effect.vx=0;effect.vy=0;effect.vz=0;effect.accel=[0,0,0];if(effect.bindtime===0)effect.bindtime=1}
@@ -415,6 +427,11 @@ function modifySourceExplod(effect,owner,{spread,postype,legacyReset,position,ve
  if(ignoreHitPause!==null){effect.ignorehitpause=Number(ignoreHitPause);effect.nativeHitPause=true}
  if(removeOnGetHit!==null){effect.removeongethit=Number(removeOnGetHit);effect.nativeRemoveOnGetHit=true}
  if(removeOnChangeState!==null)effect.removeonchangestate=Number(removeOnChangeState);
+ if(animationReference)applySourceExplodAnimation(effect,owner,animationReference);
+ if(Object.keys(animationControl).length&&!effect.invalid){
+  const data=effect.common?commonEffectData(effect):effect.animationData??profileFor(effect.player)?.battle??lifecycleDat,frames=effect.common?data.actions[String(effect.anim)]:sourceEffectFrames(effect),loop=(effect.animationLoops??data.loopStarts??{})[String(effect.anim)]??0;
+  effect.animationClock??=createExplodAnimationClock(frames,loop,effect.age);modifyExplodAnimationClock(effect.animationClock,animationControl);
+ }
 }
 function sourceStateInitialized(actor){
  const ownerKey=hitDefinitionOwnerKey(actor);
@@ -452,14 +469,19 @@ function modifiedSourceExplodHitPaused(effect){
 }
 function stepSourceExplods(){
  for(let index=sourceExplods.length-1;index>=0;index--){const effect=sourceExplods[index];
+  if(effect.invalid){sourceExplods.splice(index,1);continue}
   if((effect.nativePauseTime?modifiedExplodSystemPaused(effect,specialRuntime.pauses,combatTraceTick):specialRuntime.blocked(effect.player,effect))||(effect.nativeHitPause?modifiedSourceExplodHitPaused(effect):!effect.ignorehitpause&&effect.anim!==905&&(p1HitPause>0||effect.player===2&&p2.attackPause>0)))continue;
+  const animationExpired=effect.animationClock?.loopEnd??false;
+  if(effect.animationClock)stepExplodAnimationClock(effect.animationClock);
   if(effect.bindtime!==-1){effect.bindtime=0;if(effect.nativeMotion){stepModifiedExplodMotion(effect)}else{effect.x+=effect.vx;effect.y+=effect.vy;effect.vx+=(effect.accel?.[0]||0);effect.vy+=(effect.accel?.[1]||0)}}effect.age++;
-  const duration=effect.kind==='gamemakeanim'||effect.nativeRemoveTime?animationFirstLoopDuration(effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect)):effect.common?commonEffectData(effect).actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player);
-  if(effect.nativeRemoveTime?modifiedExplodExpired(effect,duration):effect.removetime>0?effect.age>=effect.removetime:effect.removetime!==-1&&effect.age>=duration)sourceExplods.splice(index,1);
+  const duration=effect.emptyAnimation?Infinity:effect.kind==='gamemakeanim'||effect.nativeRemoveTime?animationFirstLoopDuration(effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect)):effect.common?commonEffectData(effect).actions[String(effect.anim)].reduce((total,frame)=>total+frame.time,0):actionDuration(effect.anim,effect.player);
+  if(effect.animationClock?(effect.removetime>=0?effect.age>=effect.removetime:effect.removetime<=-2&&animationExpired):effect.nativeRemoveTime?modifiedExplodExpired(effect,duration):effect.removetime>0?effect.age>=effect.removetime:effect.removetime!==-1&&effect.age>=duration)sourceExplods.splice(index,1);
  }
 }
-function sourceEffectFrames(effect){return effect.animationData?.actions[String(effect.anim)]??framesFor(effect.anim,effect.player)}
+function sourceEffectFrames(effect){return effect.emptyAnimation?[]:effect.animationData?.actions[String(effect.anim)]??framesFor(effect.anim,effect.player)}
 function lifecycleEffectFrame(effect){
+ if(effect.emptyAnimation)return undefined;
+ if(effect.animationClock){const frames=effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect);return frames[effect.animationClock.draw]}
  const frames=effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect),loop=((effect.common?commonEffectData(effect).loopStarts:effect.animationLoops??(profileFor(effect.player)?.battle||lifecycleDat).loopStarts)??{})[String(effect.anim)]??0,total=frames.reduce((sum,frame)=>sum+Math.max(0,frame.time),0),start=frames.slice(0,loop).reduce((sum,frame)=>sum+Math.max(0,frame.time),0);
  let age=effect.age;
  if(!frames.some(frame=>frame.time<0)&&age>=total)age=start+(age-total)%Math.max(1,total-start);
@@ -479,8 +501,8 @@ for(const effect of sourceExplods)synchronizeExplodPriorityFacing(effect,combatT
  effectContext.clearRect(0,0,effectCanvas.width,effectCanvas.height);
  const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewX=(vw-1280*fit)/2,viewY=(vh-720*fit)/2;
  effectContext.imageSmoothingEnabled=true;
-for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible&&!entity.destroyed).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods].sort((left,right)=>Number(!!left.ontop)-Number(!!right.ontop)||(left.sprpriority??0)-(right.sprpriority??0))){if(effect.roundFx&&effect.anim>=930&&effect.anim<=937){const root=specialRoot(effect.player);if(root.state>=190&&root.state<=199)hardwareIndicator.draw(effectContext,hardwareModes[effect.player-1],viewX+worldScreenX(effect.x)*fit,viewY+worldScreenY(effect.y)*fit,fit);continue}let elapsed=0;const frames=effect.roundFx?roundFxDat.actions[String(effect.anim)]:effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect),frame=effect.roundFx?frames[effect.age%frames.length]:effect.common?lifecycleEffectFrame(effect):effect.entity?frames[effect.elem-1]:(effect.animationData||profileFor(effect.player)?.data||lifecycleDat)?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
-  const paletteActor=effect.entity&&effect.kind==='helper'?effect:specialRoot(effect.player),paletteRuntime=effect.syncedPalFx??effect.palFx,sprite=effect.roundFx?roundFxDat.sprites[frame.group+','+frame.item]:effect.common?commonEffectData(effect).sprites[frame.group+','+frame.item]:drawingSpriteFor(frame,paletteActor,paletteRuntime);let source=effect.common||effect.roundFx?null:spriteCanvasFor(frame,paletteActor,paletteRuntime);if(!sprite)continue;
+for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible&&!entity.destroyed).map(entity=>({...entity,entity:true,sprpriority:entity.sprPriority})),...sourceExplods].sort((left,right)=>Number(!!left.ontop)-Number(!!right.ontop)||(left.sprpriority??0)-(right.sprpriority??0))){if(effect.invalid)continue;if(effect.roundFx&&effect.anim>=930&&effect.anim<=937){const root=specialRoot(effect.player);if(root.state>=190&&root.state<=199)hardwareIndicator.draw(effectContext,hardwareModes[effect.player-1],viewX+worldScreenX(effect.x)*fit,viewY+worldScreenY(effect.y)*fit,fit);continue}let elapsed=0;const frames=effect.roundFx?roundFxDat.actions[String(effect.anim)]:effect.common?commonEffectData(effect).actions[String(effect.anim)]:sourceEffectFrames(effect),frame=effect.roundFx?frames[effect.age%frames.length]:effect.common?lifecycleEffectFrame(effect):effect.entity?frames[effect.elem-1]:(effect.animationData||profileFor(effect.player)?.data||lifecycleDat)?.actions?.[String(effect.anim)]?lifecycleEffectFrame(effect):frames.find(frame=>{elapsed+=Math.max(1,frame.time);return effect.age<elapsed});if(!frame)continue;
+  const paletteActor=effect.entity&&effect.kind==='helper'?effect:specialRoot(effect.player),paletteRuntime=effect.syncedPalFx??effect.palFx,ownDrawing=effect.spriteCharacter?sourceEffectDrawing(effect,frame):null,sprite=effect.roundFx?roundFxDat.sprites[frame.group+','+frame.item]:effect.common?commonEffectData(effect).sprites[frame.group+','+frame.item]:ownDrawing?ownDrawing.sprite:drawingSpriteFor(frame,paletteActor,paletteRuntime);let source=effect.common||effect.roundFx?null:ownDrawing?ownDrawing.source:spriteCanvasFor(frame,paletteActor,paletteRuntime);if(!sprite)continue;
   if(effect.common||effect.roundFx){source=document.createElement('canvas');source.width=sprite.w;source.height=sprite.h;source.getContext('2d').drawImage(effect.roundFx?roundFxAtlases[sprite.page]:effect.gameCommon?commonAnimationAtlases[sprite.page]:effect.dust?commonDustAtlases[sprite.page]:commonFallAtlas,sprite.x,sprite.y,sprite.w,sprite.h,0,0,sprite.w,sprite.h)}
   if(!source)continue;
   const drawing=!effect.ontop&&!effect.screen&&effect.sprpriority<Math.min(displayP1().sprPriority,displayP2().sprPriority)?groundContext:effectContext;
@@ -949,6 +971,13 @@ function drawingSpriteFor(frame,actor,paletteRuntime=null){return indexedDrawing
 function spriteCanvasFor(frame,actor=null,paletteRuntime=null){
  const indexed=indexedDrawingFor(frame,actor,paletteRuntime);if(indexed)return indexed.source;
  const source=atlasFor(frame),sprite=spriteFor(frame);
+ return atlasSpriteCanvas(source,sprite);
+}
+function sourceEffectDrawing(effect,frame){
+ const profile=characterProfiles.get(effect.spriteCharacter),sprite=profile?.data?.sprites[frame.group+','+frame.item];
+ return {sprite,source:atlasSpriteCanvas(profile?.images[sprite?.page],sprite)};
+}
+function atlasSpriteCanvas(source,sprite){
  if(!source?.complete||!source.naturalWidth||!sprite)return null;
  let cache=spriteCanvasCache.get(source);if(!cache){cache=new Map();spriteCanvasCache.set(source,cache)}
  const key=[sprite.x,sprite.y,sprite.w,sprite.h].join(',');
@@ -2793,7 +2822,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.25.94',build:'modify-explod-blend-lifecycle-02594-20261025-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.25.95',build:'modify-explod-animation-resources-02595-20261025-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2801,7 +2830,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.25.94-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.25.95-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

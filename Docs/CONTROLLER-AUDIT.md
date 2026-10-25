@@ -4,6 +4,8 @@ Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; 163 registered 
 
 This is a source inventory, not a claim of full compatibility. Parameter candidates require semantic review; dynamic names and delegated parsing require manual verification. Existing execution paths are not automatically certified.
 
+0.25.95 partial ModifyExplod animation consumers: animelem/animelemtime/animfreeze plus anim/animplayerno/spriteplayerno now reach real playback/resource/atlas consumers, with native MUGEN locks and executable distinct-character cases. See MODIFY-EXPLOD-ANIMATION-WIP.md and MODIFY-EXPLOD-RESOURCES-WIP.md for remaining native/library/provider/phase gaps. Whole-controller Pending classifications are unchanged.
+
 Completion requires each controller and parameter to have native defaults, expression evaluation, ownership/redirection, pause/persistence semantics, executable tests, and game regression coverage. Unsupported features must not be silently ignored.
 
 User scope change, 2026-10-25: Moon Palace does not require character recoloring or further RemapPal integration. RemapPal remains in the native inventory for traceability but is excluded from the requested completion scope, not counted as implemented/certified. Existing PalFX/BGPalFX/AllPalFX gameplay effects remain in scope. Automatic unused indexed-palette preloading is disabled; existing compatibility fixtures opt in explicitly.

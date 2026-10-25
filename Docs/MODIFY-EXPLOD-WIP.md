@@ -19,3 +19,7 @@ This is not full ModifyExplod support. Other parameters and postypes are explici
 Unreleased consumers now also cover actual Trans/alpha drawing, parent-owned ignorehitpause clocks and removeongethit mutation/contact removal. See MODIFY-EXPLOD-TRANS-WIP.md, MODIFY-EXPLOD-HITPAUSE-WIP.md and MODIFY-EXPLOD-GETHIT-WIP.md for executable evidence and native phase limitations. This does not change the whole-controller certification status.
 
 The removeonchangestate consumer now waits for real root/reaction/Helper StateDef initialization, including hitpause deferral and same-state restarts. Sixteen actual cases verify removal, explicit disabling and actor isolation; see MODIFY-EXPLOD-STATE-WIP.md. Full native state-provider/slot/phase semantics remain Pending.
+
+Unreleased animelem/animelemtime/animfreeze consumers now reach independent animation cursors and real sprite drawing, preserving motion and lifetime while frozen. Thirty-two real own/common cases and independent clock checks are documented in MODIFY-EXPLOD-ANIMATION-WIP.md. Full anim/resource/provider/interpolation/phase fidelity remains Pending.
+
+Animation/resource writes now also have actual anim/animplayerno/spriteplayerno consumers with native MUGEN locks, independent frame/atlas ownership, empty/missing actions and 128 real distinct-character cases. See MODIFY-EXPLOD-RESOURCES-WIP.md for exact evidence and remaining native fidelity gaps. Whole-controller certification remains Pending.

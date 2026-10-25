@@ -1,3 +1,7 @@
+## 0.25.95 — ModifyExplod animation/resource consumers (partial, release pending)
+
+ModifyExplod now changes real frame position/time, freeze/resume and own/common animation resources. Animation and sprite players select timing and atlas independently while preserving effect lifetime/motion. MUGEN-character animation locks, missing actions and native empty action -2 have real consumers. Thirty-two playback cases and 128 distinct-character resource/draw cases accompany semantic checks. Full native provider/phase/library fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring stays excluded; gameplay PalFX is retained. No new media or original SFF/SND/AIR are included.
+
 ## 0.25.94 — ModifyExplod blend and ownership lifecycle consumers (partial, release pending)
 
 ModifyExplod Trans/alpha now reaches real blended drawing; ignorehitpause follows the actual effect parent. Removal flags support owner-isolated qualified hits and real deferred StateDef initialization, including same-state restarts and explicit disabling. Actual pixel, contact and hitpause/state tests accompany typed semantic checks. Exact native phase/provider fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring remains excluded; gameplay PalFX is retained. This update includes no original SFF/SND/AIR or new media.
