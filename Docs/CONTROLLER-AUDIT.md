@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.11 adds ClsnOverlap/ProjClsnOverlap parser/typed query/live geometry and real CNS controller consumers, including proxy/Size/depth, ownership/index and redirected original-caller side effects. Forty-eight character and twenty-four projectile combinations plus full regressions support partial coverage. Broader provider/animation/offset/native phase/logging/differential fidelity remains Pending; no whole-Helper certification changes. See CLSN-OVERLAP-WIP.md.
+
 0.26.10 adds live Helper clsnproxy family consumers for ordinary/reversal geometry, per-proxy HitBy providers, required-before-filter order and logical parent contact/damage/power. Forty ordinary and thirty-two reversal browser combinations plus actual automatic reversal and full regressions support partial coverage. Overlap-trigger/provider/offset/depth/phase/native differential fidelity remains Pending; no whole-Helper certification changes. See HELPER-CLSN-PROXY-WIP.md.
 
 0.26.09 adds actual Helper standby consumers for control/query, attack/recipient collision/contact, proximity guard, push, camera and screen-vs-stage bounds while CNS/movement/clocks continue. Forty-eight actual browser cases, typed constructor checks and full regressions support this partial coverage. Compiler/tag/team/phase/debug-visual/native differential fidelity remains Pending; no whole-Helper certification changes. See HELPER-STANDBY-WIP.md.

@@ -1,3 +1,9 @@
+## 0.26.11 — Collision overlap queries (partial)
+
+ClsnOverlap and ProjClsnOverlap now reach actual parser, typed boolean, actor geometry and CNS controller consumers. Strict literal box contracts, original-caller redirected arguments, active owned projectile indexes, proxy/Size/depth/immunity rules and standby-owner independence have real tests. Forty-eight character and twenty-four projectile combinations, all 292 Node checks, seventeen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Broader animation/provider/offset/native phase/logging/differential fidelity remains Pending; no whole-Helper or collision-system certification changes. See Docs/CLSN-OVERLAP-WIP.md. Character recoloring remains excluded; no original assets or media are added.
+
+Previous 0.26.10 publication was verified at db0fd6516a27b069b7233fa375b99205d4517c15, successful Pages run 40234407328 and eleven frozen live text comparisons.
+
 ## 0.26.10 — Helper collision proxies (partial)
 
 Helper clsnproxy now reaches ordinary HitDef and ReversalDef geometry through live proxy-only descendant families, while damage/contact/power remain assigned to logical parents. Size stays local; independent proxies cannot hit or be hit. Per-box HitBy reads actual source/proxy attributes and required-box existence precedes immune-box filtering. Forty ordinary and thirty-two reversal browser cases, actual automatic parent reversal/power, typed/traversal/provider checks, all 291 Node checks, fifteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Overlap-trigger/further-provider/offset/depth/phase/native differential fidelity remains Pending; no whole-Helper certification changes. See Docs/HELPER-CLSN-PROXY-WIP.md. Character recoloring remains excluded; no original assets or media are added.
