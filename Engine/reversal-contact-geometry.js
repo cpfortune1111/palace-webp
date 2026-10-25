@@ -4,13 +4,13 @@ import {hitDefCollisionBoxes} from './hitdef-collision-group.js';
 import {worldClsnBox,clsnWorldOverlap} from './clsn-world-geometry.js';
 import {clsnProxyFamily} from './helper-clsn-proxy.js';
 
-export function reversalAttackBoxContact(reverser,attacker,{reversalSets,attackSets,filterRecipientBoxes,active=true,ignoreReversal=false,unguardable=false,depthOverlap=true}){
+export function reversalAttackBoxContact(reverser,attacker,{reversalSets,attackSets,filterRecipientBoxes,position=actor=>[actor.x,actor.y],active=true,ignoreReversal=false,unguardable=false,depthOverlap=true}){
  const params=prepareReversalDefinition(reverser.params);
  if(!depthOverlap||!reversalContactAllowed(params,attacker.params,{active,ignoreReversal,unguardable}))return {overlap:false,contact:false};
  const target=hitDefCollisionBoxes(params,attackSets,{reversal:true});
  const sourceBoxes=typeof reversalSets.c1==='function'?reversalSets.c1():reversalSets.c1??[];
- const source=sourceBoxes.map(box=>worldClsnBox(box,reverser.x,reverser.y,reverser.facing));
- const recipient=(filterRecipientBoxes?filterRecipientBoxes(target.boxes,target.group):target.boxes).map(box=>worldClsnBox(box,attacker.x,attacker.y,attacker.facing));
+ const firstPosition=position(reverser),secondPosition=position(attacker),source=sourceBoxes.map(box=>worldClsnBox(box,...firstPosition,reverser.facing));
+ const recipient=(filterRecipientBoxes?filterRecipientBoxes(target.boxes,target.group):target.boxes).map(box=>worldClsnBox(box,...secondPosition,attacker.facing));
  const overlap=source.some(first=>recipient.some(second=>clsnWorldOverlap(first,second)));
  return {overlap,contact:overlap,group:target.group,requiredMissing:target.requiredMissing};
 }

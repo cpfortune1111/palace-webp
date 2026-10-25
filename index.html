@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.26.11 Controller Integration</title>
+<title>Prototype 0.26.12 Controller Integration</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -40,7 +40,7 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.11 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD clsn-query-02611-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.12 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD collision-position-02612-20261026-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -203,6 +203,7 @@ import {hitFlagAllows,nativeGuardState} from './Engine/hit-flag.js';
 import {createHitStateStore} from './Engine/hit-state-store.js';
 import {clsnProxyFamily} from './Engine/helper-clsn-proxy.js';
 import {clsnOverlapGroups,characterClsnOverlap,projClsnOverlapGroup,selectQueryProjectile,projectileClsnOverlap} from './Engine/clsn-overlap-query.js';
+import {characterCollisionPosition} from './Engine/character-collision-position.js';
 import {clearActorRegistry} from './Engine/actor-registry-cleanup.js';
 import {createMoveHitData,markMoveHitData,finishMoveHitData,getMoveHitVar} from './Engine/move-hit-data.js';
 import {powerTimingProfile} from './Engine/combat-engine-profile.js';
@@ -322,7 +323,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.11 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.26.12 · Controller Integration';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -330,7 +331,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02514';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02514';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02514';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02611';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02612';
 import {createLifecycleRuntime,findParentActor} from './Char/Venus/venus-lifecycle-runtime.js?v=02570';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -376,7 +377,7 @@ function drawStageVisuals(){
   const frame=framesFor(fighter.anim,index+1)[Math.max(0,fighter.elem-1)],sprite=frame&&drawingSpriteFor(frame,actor),source=frame&&spriteCanvasFor(frame,actor);if(!sprite||!source||frame.empty)continue;
   const scale=fit*cameraZoom;
   const helper=fighter.kind==='helper',sizeDrawing=helper?helperSizeDrawing(fighter.sizeDefinition,{localCoord:fighter.sizeLocalCoord??1280,worldWidth:Number(collisionActorData(fighter).coordinateSystem?.webWorldWidth??1280),facing:fighter.facing}):{scale:[1,1],offset:[0,0]};
-  const drawPosition=offsetDrawingPosition([fighter.x,fighter.y],helper?fighter.drawOffset??[0,0]:rootDrawOffsets[index],helper?fighter.localScale??1:1).map((value,axis)=>value+sizeDrawing.offset[axis]),flip=(helper?fighter.facing:spriteFacingFor(fighter.anim,fighter.facing))<0,px=viewX+worldScreenX(drawPosition[0]+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
+  const drawPosition=actorCollisionPositionM1(actor),flip=(helper?fighter.facing:spriteFacingFor(fighter.anim,fighter.facing))<0,px=viewX+worldScreenX(drawPosition[0]+hitShakeOffset(fighter))*fit,ground=viewY+worldScreenY(0)*fit;
   const reflection=helper?(fighter.reflectionOverride??=createReflectionOverride()):rootReflectionOverrides[index],intensity=reflection.intensity<0?stageVisuals.reflection.intensity:reflection.intensity;
   if(intensity<=0)continue;
   const reflectionX=reflection.xscale===0?(stageVisuals.reflection.xscale??1):reflection.xscale,reflectionY=reflection.yscale===0?stageVisuals.reflection.yscale:reflection.yscale;
@@ -560,7 +561,7 @@ for(const effect of [...specialRuntime.entities.filter(entity=>!entity.invisible
   const windowClip=spriteWindowRect(effect.window,{origin:[viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(effect.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(effect.y))*fit],scale:[windowUnit*drawingFacing,windowUnit*(effect.vfacing??1)],pixelRatio:devicePixelRatio});
   const sizeDrawing=effect.entity&&effect.kind==='helper'?helperSizeDrawing(effect.sizeDefinition,{localCoord:effect.sizeLocalCoord??1280,worldWidth:Number((characterProfiles.get(battleCharacters[effect.player-1])?.battle||battleDat).coordinateSystem?.webWorldWidth??1280),facing:effect.facing}):{scale:[1,1],offset:[0,0]};
   const depthPosition=effect.dust||effect.depth?projectDustPosition(effect,STAGE_CAMERA,{enabled:Number(stageCameraConfig.player?.topbound??0)!==Number(stageCameraConfig.player?.botbound??0),cameraX}):{x:effect.x,y:effect.y,scale:1};
-drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(depthPosition.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(depthPosition.y))*fit);if(effect.entity){const offset=offsetDrawingPosition([0,0],effect.drawOffset||[0,0],effect.localScale??1);drawing.translate((offset[0]+sizeDrawing.offset[0])*cameraZoom*fit,(offset[1]+sizeDrawing.offset[1])*cameraZoom*fit)}if(!effect.entity||effect.kind==='helper')applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*depthPosition.scale*sizeDrawing.scale[1]*(effect.angleState?.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*depthPosition.scale*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):(effect.syncedPalFx??effect.palFx)?.enabled?samplePalFx(effect.syncedPalFx??effect.palFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod',afterImageBlend:frame.blend,afterImageOwner:effect.kind==='projectile'?combatTargetActor(effect.instanceId):effect.entity?null:effect});drawing.restore();
+drawing.save();drawing.globalCompositeOperation=frame.blend?.trim().toUpperCase()==='A'?'lighter':'source-over';drawing.translate(viewX+(effect.screen?(effect.screenRight?1280:0)+effect.x:worldScreenX(depthPosition.x))*fit,viewY+(effect.screen?effect.y:worldScreenY(depthPosition.y))*fit);if(effect.entity){const offset=actorDrawingOffsetM1(effect);drawing.translate(offset[0]*cameraZoom*fit,offset[1]*cameraZoom*fit)}if(!effect.entity||effect.kind==='helper')applyExplodShear(drawing,{value:effect.xshear,zoom:effect.screen?1:cameraZoom,verticalScale:fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*depthPosition.scale*sizeDrawing.scale[1]*(effect.angleState?.scale?.[1]??1),height:sprite.h,axisY:sprite.axisY,angle:effect.angleState});drawing.scale((drawingFacing*(effect.screen?1:cameraZoom))*fit*(effect.scale?.[0]??1)*depthPosition.scale*sizeDrawing.scale[0]*(airFlip.includes('H')?-1:1),fit*(effect.screen?1:cameraZoom)*(effect.vfacing??1)*(effect.scale?.[1]??1)*sizeDrawing.scale[1]*(airFlip.includes('V')?-1:1));transformAngleDrawing(drawing,effect.entity?effect.angleState:explodDrawingAngle(effect.angleState,drawingFacing,effect.vfacing??1));drawTransSprite(drawing,source,[-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h],{state:resolveSpriteTrans(effect.transState??null,frame.blend),paletteEffect:effect.entity&&effect.kind==='helper'?actorPaletteEffect(effect):(effect.syncedPalFx??effect.palFx)?.enabled?samplePalFx(effect.syncedPalFx??effect.palFx):null,priority:effect.sprpriority??0,layer:effect.layerNo??effect.layerno??(effect.ontop?1:0),ontop:!!effect.ontop,under:!!effect.under,clip:windowClip,actorId:effect.kind==='helper'?effect.instanceId:0,syncId:effect.syncId??0,syncLayer:effect.syncLayer??0,kind:effect.kind||'explod',afterImageBlend:frame.blend,afterImageOwner:effect.kind==='projectile'?combatTargetActor(effect.instanceId):effect.entity?null:effect});drawing.restore();
  }
 }
 function registerCharacterSound(sound,channel,player,owner=null,options={}){
@@ -646,7 +647,7 @@ function drawMarsForCharacter(){
  const scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(fighter.x+hitShakeOffset(fighter))*fit;
  const flip=spriteFacingFor(fighter.anim,fighter.facing)<0,ax=flip?(sp.w-sp.axisX):sp.axisX;
  const dx=px-(ax-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+fighter.y*scale;
- mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[1]);mctx.translate(offset[0]*scale,offset[1]*scale);
+ mctx.clearRect(0,0,mcv.width,mcv.height);drawAfterImages(mctx,2);mctx.save();const offset=actorDrawingOffsetM1(specialRoot(2));mctx.translate(offset[0]*scale,offset[1]*scale);
  if(rootSpriteShears[1]){mctx.translate(px,ground+fighter.y*scale);applyExplodShear(mctx,{value:rootSpriteShears[1],zoom:cameraZoom,verticalScale:scale*rootAngleStates[1].scale[1],height:sp.h,axisY:sp.axisY,angle:rootAngleStates[1]});mctx.translate(-px,-(ground+fighter.y*scale))}
  const src=spriteCanvasFor(f,specialRoot(2));
  if(src){
@@ -1689,7 +1690,7 @@ if(applyAttackDistanceController(controller,guardHitDefActor(player,adapter.owne
  if(applyRemapPaletteController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),split:splitExpressionPairM1,findActor:controllerCharacterActor,warn:message=>console.warn(message),palette:actor=>{const assets=characterProfiles.get(battleCharacters[fighterPlayer(actor)-1])?.indexedPalette;if(!assets)throw Error('Missing RemapPal indexed assets');const runtime=actorPaletteRuntime(actor);return {catalog:assets.catalog,state:runtime.paletteRemap??=createPaletteRemapState()}}}))return;
  if(applyPalFxController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,ownsPalette:actor=>actor.kind!=='helper'||actor.ownsPalette,compilerOptions:{split:splitExpressionPairM1,mugen11:(profileFor(player)?.battle?.engineVersions?.mugen||[]).join('.')==='1.1'&&(profileFor(player)?.battle?.compatibility??'mugen')==='mugen'},set:(actor,definition)=>{Object.assign(actorPaletteRuntime(actor),createPalFxRuntime(definition))}}))return;
  if(applyTransController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,compilerOptions:{split:splitExpressionPairM1,mugen:(profileFor(player)?.battle?.compatibility??'mugen')==='mugen'},set:(actor,value)=>{if(actor.kind==='helper')actor.transState=value;else rootTransStates[fighterPlayer(actor)-1]=value}}))return;
- if(applyOffsetController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,localScale:actor=>actor.localScale??1,set:(actor,axis,value)=>{if(actor.kind==='helper'){actor.drawOffset??=[0,0];actor.drawOffset[axis]=value}else rootDrawOffsets[fighterPlayer(actor)-1][axis]=value}}))return;
+ if(applyOffsetController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,localScale:actor=>actor.localScale??collisionWorldRatio(collisionActorData(actor)),set:(actor,axis,value)=>{if(actor.kind==='helper'){actor.drawOffset??=[0,0];actor.drawOffset[axis]=value}else rootDrawOffsets[fighterPlayer(actor)-1][axis]=value}}))return;
  if(applyPosFreezeController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,set:(actor,value)=>{if(actor.kind==='helper')actor.positionFrozen=value;else rootPositionFrozen[fighterPlayer(actor)-1]=value}}))return;
  if(applyPlayerPushController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,state:playerPushStateFor}))return;
  if(applyScreenBoundController(controller,adapter.owner||specialRoot(player),{evaluate:expression=>evalM1(expression,context),findActor:controllerCharacterActor,flags:screenFlagsFor,split:splitExpressionPairM1}))return;
@@ -2761,6 +2762,13 @@ function hitDefinitionPreconditionsM1(reverser,attacker){
  const hit=attacker.getHit||fallHitData(attacker),sourceId=hitSourceIdentity(reverser).playerid,hitShake=attacker.kind==='helper'?attacker.hitPause??0:player===1?Math.max(p1HitPause,p1Reaction?.hitShake??0):Math.max(p2.hitPause??0,p2.hitShake??0,p2.attackPause??0);
  return hitChainAllowed(reverser.hitDef.params,hit,{sourceId,lastTargetOwner:hit.targetedBy?.at(-1)?.[0],hitShake});
 }
+function actorCollisionPositionM1(actor){
+ if(actor.kind==='projectile')return [actor.x,actor.y];
+ const data=collisionActorData(actor),snapshot=actorSizeSnapshot(actor),offset=actor.kind==='helper'?actor.drawOffset??[0,0]:rootDrawOffsets[fighterPlayer(actor)-1];
+ return characterCollisionPosition(actor,{drawOffset:snapshot.definition?.drawOffset??[0,0],offset,worldScale:Number(data.coordinateSystem?.webWorldWidth??1280)/snapshot.localCoord,offsetScale:actor.kind==='helper'?actor.localScale??1:1});
+}
+function actorWorldClsnBoxM1(actor,box){return worldClsnBox(box,...actorCollisionPositionM1(actor),actor.facing)}
+function actorDrawingOffsetM1(actor){return actorCollisionPositionM1({...actor,x:0,y:0})}
 function clsnQueryBoxesM1(actor,group){
  const set=collisionAnimationData(actor).collision[String(actor.anim)]?.[Math.max(0,actor.elem-1)]||{};
  if(group===1||group===2)return modifiedClsnBoxes(actor,set['c'+group]||[],group);
@@ -2771,8 +2779,8 @@ function clsnQueryDepthM1(source,target,firstGroup,secondGroup){
  const depth=(actor,group)=>actor.kind==='projectile'?actor.attackDepth:group===1?hitAttackDepth(actor.kind==='helper'?actor.activeHitDef?.params??{}:fighterPlayer(actor)===1?activeHitDef?.params??{}:p2.activeHitDef?.params??{},{constants:collisionActorData(actor).constants}):depthModifiersFor(actor).player;
  const firstScale=source.kind==='projectile'?source.collisionWorldScale??collisionWorldRatio(collisionActorData(source)):collisionWorldRatio(collisionActorData(source)),secondScale=collisionWorldRatio(collisionActorData(target));return depthIntervalsOverlap({z:(source.z??0)/firstScale,depth:depth(source,firstGroup),localScale:firstScale},{z:(target.z??0)/secondScale,depth:depth(target,secondGroup),localScale:secondScale},{enabled:combatDepthEnabled()});
 }
-function actorProjClsnOverlapM1(owner,index,id,group){return projectileClsnOverlap(selectQueryProjectile(owner,index,specialRuntime.entities),controllerCharacterActor(id),group,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,projectileBoxes:projectileBoxesFor,depthOverlap:clsnQueryDepthM1})}
-function actorClsnOverlapM1(source,firstGroup,id,secondGroup){return characterClsnOverlap({...source,disabled:!!source.disabled||source.kind!=='helper'&&!!rootStatusFlags[fighterPlayer(source)-1]?.disabled},controllerCharacterActor(id),firstGroup,secondGroup,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,depthOverlap:clsnQueryDepthM1})}
+function actorProjClsnOverlapM1(owner,index,id,group){return projectileClsnOverlap(selectQueryProjectile(owner,index,specialRuntime.entities),controllerCharacterActor(id),group,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,projectileBoxes:projectileBoxesFor,position:actorCollisionPositionM1,depthOverlap:clsnQueryDepthM1})}
+function actorClsnOverlapM1(source,firstGroup,id,secondGroup){return characterClsnOverlap({...source,disabled:!!source.disabled||source.kind!=='helper'&&!!rootStatusFlags[fighterPlayer(source)-1]?.disabled},controllerCharacterActor(id),firstGroup,secondGroup,{helpers:specialRuntime.entities,boxes:clsnQueryBoxesM1,position:actorCollisionPositionM1,depthOverlap:clsnQueryDepthM1})}
 function proxyBoxHitAllowedM1(source,target,params,group,index){
  const slots=hitBySlotsFor(target);if(params['reversal.attr']||!slots.some(slot=>slot&&slot.time!==0&&(slot.group>=0||slot.index>=0)))return true;
  return hitByAllows(slots,{...params,attr:params.attr??''},{attackerState:source.type,projectile:source.kind==='projectile',compatibility:collisionActorData(source).compatibility,attackerPlayerNo:fighterPlayer(source)-1,attackerId:source.instanceId??source.id??source.player,group,index});
@@ -2781,7 +2789,7 @@ function resolveReversalCollisionM1(reverser,attacker){
  if(!reverser?.hitDef?.params?.['reversal.attr']||!attacker?.hitDef?.params||!hitDefinitionPreconditionsM1(reverser,attacker))return {overlap:false,contact:false};
  const sets=actor=>{const set=collisionAnimationData(actor).collision[String(actor.anim)]?.[Math.max(0,actor.elem-1)]||{};return {c1:()=>modifiedClsnBoxes(actor,set.c1||[],1),c2:()=>modifiedClsnBoxes(actor,set.c2||[],2),dummy:()=>modifiedClsnBoxes(actor,[],4),size:()=>modifiedClsnBoxes(actor,[sizeCollisionBox(actorCollisionSizeConstants(actor),actor.type,{width:widthActor(actor).player,height:heightModifiersFor(actor),scale:1})],3)}};
  const firstScale=collisionWorldRatio(collisionActorData(reverser)),secondScale=collisionWorldRatio(collisionActorData(attacker)),depthOverlap=depthIntervalsOverlap({z:(reverser.z??0)/firstScale,depth:hitAttackDepth(reverser.hitDef.params,{constants:collisionActorData(reverser).constants}),localScale:firstScale},{z:(attacker.z??0)/secondScale,depth:hitAttackDepth(attacker.hitDef.params,{constants:collisionActorData(attacker).constants}),localScale:secondScale},{enabled:combatDepthEnabled()});
-return reversalProxyBoxContact({...reverser,params:reverser.hitDef.params},{...attacker,params:attacker.hitDef.params},{helpers:specialRuntime.entities,setsFor:sets,filterTargetBoxes:(source,target,boxes,group)=>{const params=source.clsnProxy?source.activeHitDef?.params??{}:source.params;return boxes.filter((box,index)=>proxyBoxHitAllowedM1(source,target,params,group,index))},active:!attacker.hitDef.hitOnceSpent&&attackActivityStore.actor(hitDefinitionOwnerKey(attacker),combatTraceTick,{moveType:attacker.moveType,reversal:!!attacker.hitDef.params['reversal.attr']}).temporaryActive!==0,ignoreReversal:Number(attacker.hitDef.params.ignorereversaldef??0)!==0,unguardable:entitySourceAssertions({...attacker,player:fighterPlayer(attacker)}).has('unguardable'),depthOverlap});
+return reversalProxyBoxContact({...reverser,params:reverser.hitDef.params},{...attacker,params:attacker.hitDef.params},{helpers:specialRuntime.entities,setsFor:sets,position:actorCollisionPositionM1,filterTargetBoxes:(source,target,boxes,group)=>{const params=source.clsnProxy?source.activeHitDef?.params??{}:source.params;return boxes.filter((box,index)=>proxyBoxHitAllowedM1(source,target,params,group,index))},active:!attacker.hitDef.hitOnceSpent&&attackActivityStore.actor(hitDefinitionOwnerKey(attacker),combatTraceTick,{moveType:attacker.moveType,reversal:!!attacker.hitDef.params['reversal.attr']}).temporaryActive!==0,ignoreReversal:Number(attacker.hitDef.params.ignorereversaldef??0)!==0,unguardable:entitySourceAssertions({...attacker,player:fighterPlayer(attacker)}).has('unguardable'),depthOverlap});
 }
 function resolveFighterCollisionM1(frame,defender){
  if(frame?.standby||defender.standby||frame?.clsnProxy||defender.clsnProxy)return {overlap:false,contact:false};
@@ -2800,13 +2808,13 @@ function resolveFighterCollisionM1(frame,defender){
  if(!hitByAllows(hitBySlotsFor(defender),frame.hitDef.params,filters))return {overlap:false,contact:false};
  const overlap=sources.some(source=>{
   if(source.standby||source.disabled)return false;
-  const set=collisionAnimationData(source).collision[String(source.anim)]?.[Math.max(0,source.elem-1)]||{},attackBoxes=source.kind==='projectile'?projectileBoxesFor(source,1):modifiedClsnBoxes(source,set.c1||[],1),atk=attackBoxes.map(box=>worldClsnBox(box,source.x,source.y,source.facing));
+  const set=collisionAnimationData(source).collision[String(source.anim)]?.[Math.max(0,source.elem-1)]||{},attackBoxes=source.kind==='projectile'?projectileBoxesFor(source,1):modifiedClsnBoxes(source,set.c1||[],1),atk=attackBoxes.map(box=>actorWorldClsnBoxM1(source,box));
   const params=source===sourceActor?frame.hitDef.params:{...frame.hitDef.params,p2clsnrequire:source.activeHitDef?.params?.p2clsnrequire??'none'};
   return targets.some(target=>{
    if(target.standby||target.disabled)return false;
    const targetSet=collisionAnimationData(target).collision[String(target.anim)]?.[Math.max(0,target.elem-1)]||{},targetBoxes=hitDefCollisionBoxes(params,{c1:()=>modifiedClsnBoxes(target,targetSet.c1||[],1),c2:()=>modifiedClsnBoxes(target,targetSet.c2||[],2),dummy:()=>modifiedClsnBoxes(target,[],4),size:()=>modifiedClsnBoxes(target,[sizeCollisionBox(actorCollisionSizeConstants(target),target.type,{width:widthActor(target).player,height:heightModifiersFor(target),scale:1})],3)});
    const boxParams=source===sourceActor?frame.hitDef.params:source.activeHitDef?.params??{};
-   return atk.some(a=>targetBoxes.boxes.some((box,index)=>clsnWorldOverlap(a,worldClsnBox(box,target.x,target.y,target.facing))&&proxyBoxHitAllowedM1(source,target,boxParams,targetBoxes.group,index)));
+   return atk.some(a=>targetBoxes.boxes.some((box,index)=>clsnWorldOverlap(a,actorWorldClsnBoxM1(target,box))&&proxyBoxHitAllowedM1(source,target,boxParams,targetBoxes.group,index)));
   });
  });
  if(!frame?.hitDef?.params)return {contact:false};
@@ -2921,7 +2929,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.26.11',build:'clsn-query-02611-20261026-01',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.26.12',build:'collision-position-02612-20261026-01',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -2929,7 +2937,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.26.11-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.26.12-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -3070,7 +3078,7 @@ function drawCollision(){
  function boxes(list,fighter,stroke,fill){
   colctx.strokeStyle=stroke;colctx.fillStyle=fill;colctx.lineWidth=2;
   for(const local of list){
-   const box=worldClsnBox(local,fighter.x,fighter.y,fighter.facing),corners=rotatedClsnCorners(box);
+   const box=actorWorldClsnBoxM1(fighter,local),corners=rotatedClsnCorners(box);
    colctx.beginPath();corners.forEach((point,index)=>{const x=viewX+worldScreenX(point[0])*fit,y=viewY+worldScreenY(point[1])*fit;if(index===0)colctx.moveTo(x,y);else colctx.lineTo(x,y)});colctx.closePath();colctx.fill();colctx.stroke();
   }
  }
@@ -3090,7 +3098,7 @@ function drawForCharacter(){
  const drawFi=simPaused?Math.max(0,logicFrame.elem-1):fi;
  let frames=framesFor(drawAnim);if(!frames.length)frames=framesFor(0);if(!frames.length)return;let f=frames[Math.min(drawFi,frames.length-1)],key=f.group+','+f.item,sp=drawingSpriteFor(f,specialRoot(1));if(!sp)return;
 const vw=visualViewport?visualViewport.width:innerWidth,vh=visualViewport?visualViewport.height:innerHeight,fit=Math.min(vw/1280,vh/720),viewW=1280*fit,viewH=720*fit,viewX=(vw-viewW)/2,viewY=(vh-viewH)/2,scale=fit*cameraZoom,ground=viewY+worldScreenY(0)*fit,px=viewX+worldScreenX(posX+hitShakeOffset(displayP1()))*fit,dx=px-(sp.axisX-f.ox)*scale,dy=ground-(sp.axisY-f.oy)*scale+posY*scale;ctx.imageSmoothingEnabled=true;
- const src=spriteCanvasFor(f,specialRoot(1));if(!src)return;ctx.save();const offset=offsetDrawingPosition([0,0],rootDrawOffsets[0]);ctx.translate(offset[0]*scale,offset[1]*scale);
+ const src=spriteCanvasFor(f,specialRoot(1));if(!src)return;ctx.save();const offset=actorDrawingOffsetM1(specialRoot(1));ctx.translate(offset[0]*scale,offset[1]*scale);
  if(rootSpriteShears[0]){ctx.translate(px,ground+posY*scale);applyExplodShear(ctx,{value:rootSpriteShears[0],zoom:cameraZoom,verticalScale:scale*rootAngleStates[0].scale[1],height:sp.h,axisY:sp.axisY,angle:rootAngleStates[0]});ctx.translate(-px,-(ground+posY*scale))}
  if(rootAngleStates[0].enabled){ctx.save();ctx.translate(px,ground+posY*scale);ctx.scale(spriteFacingFor(drawAnim,p1Facing)*scale,scale);transformAngleDrawing(ctx,rootAngleStates[0]);drawTransSprite(ctx,src,[-sp.axisX+f.ox,-sp.axisY+f.oy],{state:resolveSpriteTrans(rootTransStates[0],f.blend),paletteEffect:actorPaletteEffect(specialRoot(1)),priority:displayP1().sprPriority,kind:'root1',afterImageBlend:f.blend});ctx.restore()}
  else if(spriteFacingFor(drawAnim,p1Facing)<0){const fdx=px-((sp.w-sp.axisX)-f.ox)*scale;ctx.save();ctx.translate(fdx+sp.w*scale,0);ctx.scale(-1,1);drawTransSprite(ctx,src,[0,dy,sp.w*scale,sp.h*scale],{state:resolveSpriteTrans(rootTransStates[0],f.blend),paletteEffect:actorPaletteEffect(specialRoot(1)),priority:displayP1().sprPriority,kind:'root1',afterImageBlend:f.blend});ctx.restore()}

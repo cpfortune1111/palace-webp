@@ -1,3 +1,9 @@
+## 0.26.12 — Character collision position (partial)
+
+Native size.draw.offset and Offset now feed ordinary/reversal/query collision positions, actor drawing, reflections and debug outlines while logical Pos remains independent. Normal Offset consumes the real caller world/localcoord ratio, including mixed-coordinate redirection and omitted-axis retention. Sixteen actual version/player/facing/localcoord cases, real root rendering, proxy-child geometry, all 293 Node checks, eighteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Broader float/provider/offset-dependent consumer/native phase fidelity remains Pending; no whole-controller or collision-system certification changes. See Docs/CHARACTER-COLLISION-POSITION-WIP.md. Character recoloring remains excluded; no original assets or media are added.
+
+Previous 0.26.11 publication was verified at 7e38ec234c3f57ded0dde1f22e507b8e80e0ec53, successful Pages run 40236666952 and eleven frozen live text comparisons.
+
 ## 0.26.11 — Collision overlap queries (partial)
 
 ClsnOverlap and ProjClsnOverlap now reach actual parser, typed boolean, actor geometry and CNS controller consumers. Strict literal box contracts, original-caller redirected arguments, active owned projectile indexes, proxy/Size/depth/immunity rules and standby-owner independence have real tests. Forty-eight character and twenty-four projectile combinations, all 292 Node checks, seventeen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Broader animation/provider/offset/native phase/logging/differential fidelity remains Pending; no whole-Helper or collision-system certification changes. See Docs/CLSN-OVERLAP-WIP.md. Character recoloring remains excluded; no original assets or media are added.

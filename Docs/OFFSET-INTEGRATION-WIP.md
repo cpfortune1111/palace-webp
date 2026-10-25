@@ -1,5 +1,7 @@
 # Offset — in progress
 
+Current collision follow-up: see CHARACTER-COLLISION-POSITION-WIP.md. Offset and size.draw.offset now also feed ordinary/reversal/query collision positions and debug boxes, without changing logical Pos. The earlier drawing-only fixtures below measured logical positions and rendering; they did not prove that native collision geometry should ignore Offset. Normal dispatch now consumes the actual caller world/localcoord ratio, with mixed-character redirection tests; explicit localScale compatibility hooks retain their historical API behavior. Full native scale/provider/phase certification remains Pending.
+
 Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go offset, bytecode.go offset, char.go getDrawOffsetX/getDrawOffsetY and ordinary offset reset.
 
 The policy evaluates redirectid in caller context, then optional X/Y as float32 multiplied by caller local scale. Omitted axes preserve the existing value. Missing redirection stops axis evaluation. Drawing converts the stored screen-scale offset using the recipient local scale; this offset is not multiplied by facing, unlike size.draw.offset. Unit checks pass.
@@ -13,3 +15,11 @@ Trail strict byte-equality failed: diagnostic run showed exactly two channel val
 Afterimage tolerance regression completed with exit code 0 in outputs/controller-offset-trail-tolerance.log. Reflection formula verified against pinned src/anim.go ReflectionSpriteList.draw: horizontal coordinate includes the already-offset sprite position; vertical draw coordinate subtracts refPosY multiplied by reflection yscale. WEB reflection now uses root drawing offsets without facing inversion and multiplies the reflected vertical position by yscale (the previous path omitted this factor). Actual canvas transform fixture checks P1 40/20 displacement with unchanged P2 reflection. Fresh full regression is outputs/controller-offset-reflection.log. Full stage ydelta/ground-level overrides, helper reflections, size.draw.offset, native interpolation/scales/compiler/version certification remain pending.
 Root reflection regression completed with exit code 0 in outputs/controller-offset-reflection.log, including the Offset root/helper/pixel/trail/reset fixtures and existing Saturn simultaneous-super tests. 0.24.77 contains partial real Offset integration, not full native certification.
 Correction after broader Trans audit: pinned char.go reset block explicitly resets Offset during hitpause for Mugen 1.x/Ikemen, unlike Width/PosFreeze. The published .77 hitpause retention claim was wrong for this version family. Root reset now runs on unblocked hitpause ticks; helper reset occurs before its hitpause controller loop, allowing ignorehitpause controllers to reapply it. Actual root/helper expectations now require zero offsets on hitpause. Regression: outputs/controller-offset-hitpause-correction.log. WinMugen version metadata/retention remains pending, not silently certified.
+
+
+
+
+
+
+
+
