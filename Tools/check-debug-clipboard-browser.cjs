@@ -1494,6 +1494,31 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(rootStateSounds.length,4);
   for(const row of rootStateSounds){assert.equal(row.selected,true,JSON.stringify(row));assert.equal(row.paused,true);assert.equal(row.stopped,true);assert.equal(row.retained,true);assert.equal(row.pending,false);assert.equal(row.graphRemoved,true)}
   console.log('Actual root/reaction deferred StateDef initialization stops only flagged audio after hitpause for P1/P2');
+  const stateRemovedExplods=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={profile:combatEngineProfile,tick:combatTraceTick,reaction:p1Reaction,paused:[p1HitPause,p2.hitPause,p2.hitShake,p2.attackPause],entities:[...specialRuntime.entities],effects:[...sourceExplods],definitions:data.map(value=>[value.helperStates[991980],value.helperStates[991981]])},rows=[];
+   try{
+    for(const value of data)for(const number of [991980,991981])value.helperStates[number]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const same of [false,true]){
+     combatEngineProfile=profile;sourceExplods.length=0;specialRuntime.entities.length=0;rootStateChanges.clear();p1Reaction=null;p1HitPause=0;p2.hitPause=0;p2.hitShake=0;p2.attackPause=0;
+     if(kind==='root'){selectRootSourceStateM1(player,0);initializeRootSourceStateM1(player)}
+     let actor=specialRoot(player);
+     if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991980,id:991980}},actor,specialRuntime.context(actor),{},actor,player);actor=specialRuntime.entities.at(-1);actor.created=combatTraceTick-1}
+     const spawn=(owner,id,enabled)=>{const context=specialRuntime.context(owner),binding=owner.kind==='helper'?owner:owner.player===1?p1LifecycleBinding:p2,adapter={owner,player:owner.player,schedulingApplied:true,explod:params=>spawnSourceExplod(params,owner,owner.player,context)};executeControllerM1({type:'Explod',params:{anim:'0',id:String(id),removetime:'-1'}},binding,context,adapter);const effect=sourceExplods.at(-1);executeControllerM1({type:'ModifyExplod',params:{id:String(id),removeonchangestate:'1'}},binding,context,adapter);if(!enabled)executeControllerM1({type:'ModifyExplod',params:{id:String(id),removeonchangestate:'0'}},binding,context,adapter);if(effect.removeonchangestate!==Number(enabled))throw Error('Missing actual state removal modifier');return effect};
+     const removed=spawn(actor,991901,true),retained=spawn(actor,991902,false),opponent=spawn(specialRoot(3-player),991903,true),root=kind==='helper'?spawn(specialRoot(player),991904,true):null;
+     let selected,paused;
+     if(kind==='helper'){
+      actor.hitPause=2;specialRuntime.selectState(actor,same?991980:991981,{phase:'current'});selected=sourceExplods.includes(removed);specialRuntime.step();paused=sourceExplods.includes(removed);actor.hitPause=0;specialRuntime.step();
+     }else{
+      if(player===1)p1HitPause=2;else p2.hitPause=2;selectRootSourceStateM1(player,same?0:5000);selected=sourceExplods.includes(removed);combatTraceTick++;initializeRootSourceStateM1(player);paused=sourceExplods.includes(removed);p1HitPause=0;p2.hitPause=0;initializeRootSourceStateM1(player);
+     }
+     rows.push({profile,player,kind,same,selected,paused,removed:!sourceExplods.includes(removed),retained:sourceExplods.includes(retained),opponent:sourceExplods.includes(opponent),root:!root||sourceExplods.includes(root)});
+    }
+    return rows;
+   }finally{combatEngineProfile=saved.profile;rootStateChanges.clear();combatTraceTick=saved.tick;p1Reaction=saved.reaction;[p1HitPause,p2.hitPause,p2.hitShake,p2.attackPause]=saved.paused;sourceExplods.splice(0,sourceExplods.length,...saved.effects);specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++)for(const [position,number]of [991980,991981].entries()){if(saved.definitions[index][position]===undefined)delete data[index].helperStates[number];else data[index].helperStates[number]=saved.definitions[index][position]}}
+  })()`);
+  assert.equal(stateRemovedExplods.length,16);
+  for(const row of stateRemovedExplods){for(const name of ['selected','paused','removed','retained','opponent','root'])assert.equal(row[name],true,JSON.stringify(row))}
+  console.log('ModifyExplod removeonchangestate passes sixteen actual deferred root/reaction/Helper initializations, same-state restarts, explicit disabling and owner isolation');
   const hitStoppedSounds=await run(`(()=>{
    const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={registry:characterSoundChannels,profile:combatEngineProfile,entities:[...specialRuntime.entities],definitions:data.map(value=>value.helperStates[991995])},rows=[];
    try{
@@ -1514,6 +1539,26 @@ for(const owner of [specialRoot(1),specialRoot(2),helper])spawnSourceExplod({ani
   assert.equal(hitStoppedSounds.length,64);
   for(const row of hitStoppedSounds){assert.equal(row.actualGuard,row.guarded,JSON.stringify(row));assert.deepEqual(row.active,row.guarded||!row.reaction?[true,true,true]:[false,false,true],JSON.stringify(row));assert.deepEqual(row.graphs,row.active);assert.equal(row.opponent,true)}
   console.log('Actual qualified root/Helper hit resolution selects ground/air reaction types and preserves guard/None audio in sixty-four profile/player cases');
+  const hitRemovedExplods=await run(`(()=>{
+   const data=[1,2].map(player=>gravityActorData(specialRoot(player))),saved={profile:combatEngineProfile,entities:[...specialRuntime.entities],effects:[...sourceExplods],definitions:data.map(value=>value.helperStates[991995])},rows=[];
+   try{
+    for(const value of data)value.helperStates[991995]={type:'S',physics:'N',moveType:'I',anim:0,controllers:[]};
+    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const kind of ['root','helper'])for(const guarded of [false,true])for(const reaction of [false,true])for(const aerial of [false,true]){
+     combatEngineProfile=profile;sourceExplods.length=0;specialRuntime.entities.length=0;let actor=specialRoot(player);const source=specialRoot(3-player);
+     if(kind==='helper'){specialRuntime.dispatch({type:'Helper',params:{stateno:991995,id:991995}},actor,specialRuntime.context(actor),{},actor,player);actor=specialRuntime.entities.at(-1)}
+     const spawn=(owner,id,enabled)=>{const context=specialRuntime.context(owner),binding=owner.kind==='helper'?owner:owner.player===1?p1LifecycleBinding:p2,adapter={owner,player:owner.player,schedulingApplied:true,explod:params=>spawnSourceExplod(params,owner,owner.player,context)};executeControllerM1({type:'Explod',params:{anim:'0',id:String(id),removetime:'-1',removeongethit:enabled?'0':'1'}},binding,context,adapter);const effect=sourceExplods.at(-1);executeControllerM1({type:'ModifyExplod',params:{id:String(id),removeongethit:enabled?'1':'0'}},binding,context,adapter);if(!effect.nativeRemoveOnGetHit||effect.removeongethit!==Number(enabled))throw Error('Missing actual removal modifier');return effect};
+     const removed=spawn(actor,991901,true),retained=spawn(actor,991902,false),opponent=spawn(source,991903,true),root=kind==='helper'?spawn(specialRoot(player),991904,true):null;
+     const defender={...actor,life:1000,type:aerial?'A':'S',y:aerial?-100:0,moveType:'I',ctrl:1,hitShake:0,hitTime:-1,getHit:{},facing:-source.facing};
+     const params={attr:'S,NA',damage:'10,0',hitflag:'MAFD',guardflag:'MA',pausetime:'0,0',animtype:'light','ground.type':(aerial?!reaction:reaction)?'high':'none','air.type':(aerial?reaction:!reaction)?'high':'none','ground.hittime':10,'air.hittime':10,'ground.velocity':'0,0','air.velocity':'0,0','guard.velocity':'0','guard.hittime':10,fall:0,getpower:'0,0',givepower:'0,0',unhittabletime:'0,0',sparkno:-1,'guard.sparkno':-1};
+     const result=resolveGroundHitM1({...source,id:3-player,type:'S',moveType:'A'},defender,params,guarded?'stand':'none');
+     rows.push({profile,player,kind,guarded,reaction,aerial,actualGuard:result.guarded,removed:!sourceExplods.includes(removed),retained:sourceExplods.includes(retained),opponent:sourceExplods.includes(opponent),root:!root||sourceExplods.includes(root)});
+    }
+    return rows;
+   }finally{combatEngineProfile=saved.profile;sourceExplods.splice(0,sourceExplods.length,...saved.effects);specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);for(let index=0;index<2;index++){if(saved.definitions[index]===undefined)delete data[index].helperStates[991995];else data[index].helperStates[991995]=saved.definitions[index]}}
+  })()`);
+  assert.equal(hitRemovedExplods.length,64);
+  for(const row of hitRemovedExplods){assert.equal(row.actualGuard,row.guarded,JSON.stringify(row));assert.equal(row.removed,!row.guarded&&row.reaction,JSON.stringify(row));assert.equal(row.retained,true);assert.equal(row.opponent,true);assert.equal(row.root,true)}
+  console.log('ModifyExplod removeongethit passes sixty-four actual root/Helper ground/air contacts, guards, None reactions, disabling and owner isolation');
   const decodedLoops=await run(`(async()=>{
    const {createDecodedSoundFrames}=await import('./Engine/decoded-sound-frames.js'),{createSoundSampleLooper}=await import('./Engine/sound-sample-looper.js'),{decodeNativePcmWave}=await import('./Engine/native-pcm-wave.js'),rows=[];
    for(const channels of [1,2]){

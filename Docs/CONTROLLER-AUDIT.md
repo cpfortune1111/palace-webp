@@ -8,6 +8,8 @@ Completion requires each controller and parameter to have native defaults, expre
 
 User scope change, 2026-10-25: Moon Palace does not require character recoloring or further RemapPal integration. RemapPal remains in the native inventory for traceability but is excluded from the requested completion scope, not counted as implemented/certified. Existing PalFX/BGPalFX/AllPalFX gameplay effects remain in scope. Automatic unused indexed-palette preloading is disabled; existing compatibility fixtures opt in explicitly.
 
+0.25.94 partial ModifyExplod consumers: trans/alpha, parent-owned ignorehitpause, removeongethit and deferred removeonchangestate now have real drawing/contact/state consumers and actual fixture evidence. See the corresponding MODIFY-EXPLOD-*-WIP documents for unresolved native phase/provider/compiler semantics. The inventory's whole-controller Pending classification is unchanged; extraction or passing focused cases are not full certification.
+
 | Controller | Parameter candidates | Extraction follow-up | Semantic certification |
 | --- | --- | --- | --- |
 | afterimage | alpha, framegap, ignorehitpause, length, paladd, palbright, palcolor, palcontrast, palhue, palinvertall, palinvertblend, palmul, palpostbright, redirectid, time, timegap, trans | Review delegated parser/defaults | Pending |

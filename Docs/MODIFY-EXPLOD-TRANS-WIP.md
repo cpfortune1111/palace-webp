@@ -1,0 +1,7 @@
+# ModifyExplod Trans/alpha — partial real consumers
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go paramTrans and bytecode.go modifyExplod explod_trans. The consumer reuses the shared strict Trans parser, evaluates source/destination alpha once in caller context, clamps signed integer results to 0..255, and commits independent per-effect state. MUGEN-character Sub locks alpha to 255/255 and suppresses custom-alpha operand evaluation; Ikemen characters retain custom alpha. Default resolves the active AIR element's transparency rather than forcing opaque drawing.
+
+Independent checks cover native defaults, locked Sub operand suppression, shared evaluation, clamping, string-to-zero conversion and alpha-without-trans rejection. 112 real root/normal-Helper/profile/player/character-version probes exercise None/Add/Add1/AddAlpha/Sub/SubAdd/Default through the production dispatcher, real source sprites, actual draw state and opaque compositor. Isolated probes relocate the draw entry onto a known background and compare output channels with independently computed pass equations (outputs/modify-explod-trans-consumers.log).
+
+Full original compiler diagnostics/lenient modes, arbitrary alpha/PalFX combinations, GPU/native rounding, remaining ModifyExplod parameters and final regression/publication remain Pending. These probes are not whole-scene or native-executable equivalence certification.

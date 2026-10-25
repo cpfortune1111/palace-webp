@@ -1,4 +1,18 @@
+## 0.25.94 — ModifyExplod blend and ownership lifecycle consumers (partial, release pending)
+
+ModifyExplod removeonchangestate now reaches actual deferred root/reaction/Helper StateDef initialization, not premature state selection. Sixteen actual cases pass same-state restarts, hitpause deferral, explicit disabling and root/Helper/opponent ownership isolation. Independent typed/evaluation-order checks pass; see MODIFY-EXPLOD-STATE-WIP.md. Full native fidelity and final versioned gates/publication remain Pending.
+
+ModifyExplod removeongethit now changes selected actual effects and removes only the qualified struck root/Helper owner's flagged effects; guards, None reactions and other owners retain them. Explicit disabling works. Independent conversion checks and 64 actual contact cases pass. Exact native update-phase/KeepState/HitOverride semantics remain Pending; see MODIFY-EXPLOD-GETHIT-WIP.md. Character recoloring/further RemapPal integration remain excluded as requested; gameplay PalFX remains in scope.
+
+Combined local regression after these consumers: 273 Node checks, Python stage reflection/five sound tests, modifier/pixel/parent-hitpause fixtures, all common animation cases, the broad actor suite including 64 removal contacts, 400 scheduling groups and complete battle/Saturn simultaneous supers all terminate successfully. Evidence: outputs/modify-explod-gethit-*.log and outputs/modify-explod-removeongethit-actor.log. This batch is not published yet; public release remains 0.25.93. Whole-controller certification remains Pending.
+
+ModifyExplod ignorehitpause now writes the real effect boolean as well as retaining generic scheduler behavior. 104 actual ownership cases verify parent-specific clocks, ignored pauses, opponent/root isolation, missing Helper parents and visible frozen effects. Native acttmp/phase lifecycle and remaining full fidelity remain Pending; see MODIFY-EXPLOD-HITPAUSE-WIP.md.
+
+ModifyExplod Trans/alpha now updates actual per-effect blend state. Independent checks and 112 production-dispatcher/source-sprite/compositor pixel probes pass seven blend modes, AIR Default fallback, versioned Sub alpha locks and typed/clamped values. Full native fidelity and final regression/publication remain Pending; see MODIFY-EXPLOD-TRANS-WIP.md.
+
 ## 0.25.93 — ModifyExplod visual/timing consumers (partial, release pending)
+
+Publication subsequently verified at commit 1ef4499d9c37f9938e81e054f3ce56647a83ca4c: 272 Node checks, stage/five sound tests, final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40130776360 and fourteen live text comparisons. No new media/original assets were uploaded. Receipt: outputs/release-02593-verification.json. Earlier pending statements are historical, not full compatibility claims.
 
 ModifyExplod supermove/supermovetime/pausemovetime now reach effect-age pause thresholds and native versioned deadlines. 128 actual cases pass positive/negative thresholds, explicit override order, SuperPause precedence and visible paused effects. Unmodified effects retain their legacy pause path; exact first-created/parent-hitpause/slow-speed phases and full native fidelity remain Pending.
 

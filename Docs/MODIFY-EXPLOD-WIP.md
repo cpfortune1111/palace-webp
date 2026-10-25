@@ -15,3 +15,7 @@ All 270 final-version Node checks pass, as do Python stage reflection and five s
 Post-0.25.92 real visual and timing consumers are documented separately in MODIFY-EXPLOD-VISUAL-WIP.md and MODIFY-EXPLOD-TIMING-WIP.md. Version 0.25.93 has 272 passing Node checks plus actual visual/removal/pause cases; final regression/publication remain separate gates. Earlier release-pending notes are historical.
 
 This is not full ModifyExplod support. Other parameters and postypes are explicitly rejected instead of ignored. Complete redirected/custom-coordinate/binding/interpolation phase parity, resource limits/native slot reuse, arbitrary foreign states, remaining parameter consumers, diagnostics/compiler/version/lifecycle fidelity and final regression/publication remain Pending. No whole-controller certification is claimed.
+
+Unreleased consumers now also cover actual Trans/alpha drawing, parent-owned ignorehitpause clocks and removeongethit mutation/contact removal. See MODIFY-EXPLOD-TRANS-WIP.md, MODIFY-EXPLOD-HITPAUSE-WIP.md and MODIFY-EXPLOD-GETHIT-WIP.md for executable evidence and native phase limitations. This does not change the whole-controller certification status.
+
+The removeonchangestate consumer now waits for real root/reaction/Helper StateDef initialization, including hitpause deferral and same-state restarts. Sixteen actual cases verify removal, explicit disabling and actor isolation; see MODIFY-EXPLOD-STATE-WIP.md. Full native state-provider/slot/phase semantics remain Pending.

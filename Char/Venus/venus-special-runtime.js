@@ -104,6 +104,7 @@ export function createSpecialRuntime(api){
   applyStateDefVelocity(definition,{expressions:source=>{if(!api.stateVelocityExpressions)throw Error('Missing StateDef velocity expression parser');return api.stateVelocityExpressions(source)},evaluate:expression=>expression&&typeof expression==='object'?api.evalAST(expression,context(entity)):api.eval(String(expression),context(entity)),setVelocity:(axis,value)=>{const scale=api.stateVelocityScale?.(entity)??1;entity['v'+axis]=Math.fround(Math.fround(value*scale)*(axis==='x'?entity.facing:1))}});
   if(definition.anim!==undefined){const anim=Math.trunc(Number(api.eval(String(definition.anim),context(entity))))|0;if(anim!==-1){entity.anim=anim;entity.animStartTime=0;entity.elem=1;entity.elemTick=0}}
   applyStateDefControlPower(definition,{evaluate:expression=>api.eval(String(expression),context(entity)),setControl:value=>{entity.ctrl=Number(value)},addPower:amount=>{if(!api.stateDefPowerAdd)throw Error('Missing StateDef power consumer');api.stateDefPowerAdd(entity,amount)}});
+  api.stateInitialized?.(entity);
   api.soundStateInitialized?.(entity);
  }
  function selectState(entity,state,{provider=entity.stateOwner,phase='external'}={}){

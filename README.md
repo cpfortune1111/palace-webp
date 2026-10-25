@@ -1,3 +1,7 @@
+## 0.25.94 — ModifyExplod blend and ownership lifecycle consumers (partial, release pending)
+
+ModifyExplod Trans/alpha now reaches real blended drawing; ignorehitpause follows the actual effect parent. Removal flags support owner-isolated qualified hits and real deferred StateDef initialization, including same-state restarts and explicit disabling. Actual pixel, contact and hitpause/state tests accompany typed semantic checks. Exact native phase/provider fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring remains excluded; gameplay PalFX is retained. This update includes no original SFF/SND/AIR or new media.
+
 ## 0.25.93 — ModifyExplod visual and timing consumers (partial, release pending)
 
 ModifyExplod facing/layer/priority flags now reach real draw transforms and ordering, preserving native MUGEN flip restrictions and sticky under behavior. Removal and pause movement fields consume native versioned effect-age deadlines, negative modes and override order. Sixteen visual fixtures, 64 removal modes and 128 pause cases pass with actual effects/drawing. Full remaining parameters, native phase/lifecycle fidelity and final deployment remain Pending; no whole-controller certification changes.

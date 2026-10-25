@@ -76,7 +76,7 @@ const server=http.createServer((request,response)=>{
     sourceExplods.length=0;variableRandomStream.seed(1);executeControllerM1({type:'Explod',params:{anim:common?'F120':'0',pos:'0,0'}},actor,context,adapter);if(sourceExplods.length!==1||variableRandomStream.state()!==1)throw Error('Omitted Explod random consumed native samples');sourceExplods.length=0;explods++;
    }
    if(explods!==16)throw Error('Incomplete Explod native random matrix');
-   let modifications=0;
+   let modifications=0,pixelCases=0,hitPauseCases=0;
    for(const profile of ['mugen11','ikemen'])for(const player of [1,2])for(const helper of [false,true])for(const ikemen of [false,true]){
     specialRuntime.reset();sourceExplods.length=0;combatEngineProfile=profile;const root=specialRoot(player),data=characterProfiles.get(battleCharacters[player-1]).battle,savedCompatibility=data.compatibility;data.compatibility=ikemen?'ikemen':'mugen';let actor=root;
     try{
@@ -128,11 +128,37 @@ const server=http.createServer((request,response)=>{
       for(let tick=0;tick<4;tick++)stepSourceExplods();if(effect.age!==expectedAge||sourceExplods.length!==1)throw Error('ModifyExplod pause allowance mismatch '+JSON.stringify({slot,values,ikemen,age:effect.age,expectedAge}));
       specialRuntime.pauses.normal[0]=null;specialRuntime.pauses.super[0]=null;transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='explod'))throw Error('Paused/allowed Explod stopped drawing');
      }
+     sourceExplods.length=0;executeControllerM1({type:'Explod',params:{id:'47',anim:'F120',pos:'0,-20',bindtime:'0'}},actor,context,adapter);
+     for(const mode of ['none','add','add1','addalpha','sub','subadd','default']){
+      const custom=['addalpha','sub','subadd'].includes(mode),params={id:'47',trans:mode,...(custom?{alpha:'128,64'}:{})};executeControllerM1({type:'ModifyExplod',params},actor,context,adapter);
+      const expectedType=mode==='default'||mode==='add'||mode==='add1'||mode==='addalpha'?'add':mode,expectedAlpha=mode==='add1'?[255,128]:mode==='addalpha'||mode==='subadd'||mode==='sub'&&ikemen?[128,64]:mode==='none'?[255,0]:[255,255];
+      transDrawQueue.reset();drawSourceExplods();const entry=transDrawQueue.ordered().find(entry=>entry.kind==='explod');if(!entry||entry.state.type!==expectedType||JSON.stringify(entry.state.alpha)!==JSON.stringify(expectedAlpha))throw Error('ModifyExplod Trans did not reach AIR-aware draw state');entry.matrix=[1,0,0,1,32,32];
+      const target=document.createElement('canvas'),scratch=document.createElement('canvas');target.width=scratch.width=64;target.height=scratch.height=64;const targetContext=target.getContext('2d'),scratchContext=scratch.getContext('2d');targetContext.fillStyle='rgb(80,120,160)';targetContext.fillRect(0,0,64,64);transDrawQueue.rasterize(entry,scratchContext);const input=scratchContext.getImageData(0,0,64,64).data;let selected=-1,score=Infinity;
+      for(let index=0;index<input.length;index+=4)if(input[index+3]>0&&input[index]+input[index+1]+input[index+2]>0&&Math.abs(input[index+3]-80)<score){selected=index;score=Math.abs(input[index+3]-80)}if(selected<0)throw Error('No visible modified blend sample');
+      const queue={ordered:()=>[entry],rasterize:transDrawQueue.rasterize,bounds:transDrawQueue.bounds};renderOpaqueTransQueue(targetContext,scratchContext,queue,{shader:paletteShaderForDraw,grayscale:(record,surface,region)=>grayscaleTransPixels(surface.getImageData(region.x,region.y,region.width,region.height).data)});const output=targetContext.getImageData(0,0,64,64).data,opacity=input[selected+3]/255,sourceAlpha=expectedAlpha[0]/255,destinationAlpha=expectedAlpha[1]/255,gray=(input[selected]+input[selected+1]+input[selected+2])/3,clamp=value=>Math.max(0,Math.min(255,Math.round(value)));
+      for(let channel=0;channel<3;channel++){
+       const background=[80,120,160][channel],source=input[selected+channel];let expected;
+       if(expectedType==='none')expected=clamp(background*(1-opacity)+source*opacity);
+       else if(expectedType==='subadd')expected=clamp(clamp(background-gray*opacity*destinationAlpha)+source*opacity*sourceAlpha);
+       else{const retained=destinationAlpha<1?clamp(background*(1-opacity*(1-destinationAlpha))):background;expected=clamp(retained+(expectedType==='sub'?-1:1)*source*opacity*sourceAlpha)}
+       if(Math.abs(output[selected+channel]-expected)>1)throw Error('ModifyExplod composited pixel mismatch '+JSON.stringify({mode,ikemen,channel,actual:output[selected+channel],expected}));
+      }
+      pixelCases++;
+     }
+     for(const ignored of [0,1])for(const pausedOwner of ['owner','opponent','root']){
+      p1HitPause=0;p2.hitPause=0;p2.hitShake=0;p2.attackPause=0;actor.hitPause=0;sourceExplods.length=0;
+      executeControllerM1({type:'Explod',params:{id:'48',anim:'F120',pos:'0,-20',bindtime:'0',removetime:'-1'}},actor,context,adapter);const effect=sourceExplods[0];effect.age=5;
+      executeControllerM1({type:'ModifyExplod',params:{id:'48',ignorehitpause:String(ignored)}},actor,context,adapter);if(effect.ignorehitpause!==ignored||!effect.nativeHitPause)throw Error('ModifyExplod ignorehitpause was only treated as a scheduler header');
+      const paused=pausedOwner==='owner'?actor:pausedOwner==='root'?root:specialRoot(3-player);if(paused.kind==='helper')paused.hitPause=4;else if(fighterPlayer(paused)===1)p1HitPause=4;else p2.attackPause=4;
+      stepSourceExplods();const expectedAge=!ignored&&(pausedOwner==='owner'||pausedOwner==='root'&&!helper)?5:6;if(effect.age!==expectedAge)throw Error('ModifyExplod parent-specific hitpause mismatch '+JSON.stringify({player,helper,ignored,pausedOwner,age:effect.age,expectedAge}));
+      p1HitPause=0;p2.hitPause=0;p2.hitShake=0;p2.attackPause=0;actor.hitPause=0;transDrawQueue.reset();drawSourceExplods();if(!transDrawQueue.ordered().some(entry=>entry.kind==='explod'))throw Error('Hitpaused Explod stopped drawing');hitPauseCases++;
+     }
+     if(helper){sourceExplods.length=0;executeControllerM1({type:'Explod',params:{id:'48',anim:'F120',bindtime:'0',removetime:'-1'}},actor,context,adapter);const effect=sourceExplods[0];effect.age=5;executeControllerM1({type:'ModifyExplod',params:{id:'48',ignorehitpause:'0'}},actor,context,adapter);actor.hitPause=4;actor.destroyed=true;stepSourceExplods();if(effect.age!==6)throw Error('Missing Explod parent incorrectly preserved hitpause');actor.destroyed=false;actor.hitPause=0;hitPauseCases++}
      modifications++;
     }finally{data.compatibility=savedCompatibility}
    }
-   if(modifications!==16)throw Error('Incomplete ModifyExplod consumer matrix');return count}finally{variableRandomStream.seed(savedSeed);combatEngineProfile=savedProfile;specialRuntime.reset()}
+   if(modifications!==16||pixelCases!==112||hitPauseCases!==104)throw Error('Incomplete ModifyExplod consumer matrix');return count}finally{variableRandomStream.seed(savedSeed);combatEngineProfile=savedProfile;specialRuntime.reset()}
   })()`);
-  assert.equal(count,16);console.log('ModifyExplod motion/visual fixtures, 64 removal modes and 128 Pause/SuperPause movement-time cases pass with actual effects and drawing');
+  assert.equal(count,16);console.log('ModifyExplod motion/visual/timing and 112 blend pixel probes pass; 104 parent-specific ignorehitpause/ownership cases pass');
  }finally{await browser?.close();server.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});
