@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.04 corrects Helper initial animation/control/velocity/max-life bootstrap and consumes state/ID defaults/caller expressions, with StateDef overrides and actual sprite rendering in 24 browser combinations. Full Helper compiler order, first-body timing and remaining constructor families stay Pending; no whole-controller certification changes. The user-requested H950 suppression remains a game-specific exception. See HELPER-ENTRY-WIP.md.
+
 0.26.03 adds owner-scoped latest Projectile contact events and typed time/basic legacy expression consumers, including accepted Helper contacts and native-style cancellation filters. Thirty-two actual browser cases cover ownership, expression types and pause-aware clocks. Exact native per-character phases, full legacy syntax and remaining Projectile families remain Pending; no whole-controller certification changes. See PROJECTILE-CONTACT-EVENTS-WIP.md.
 
 0.26.02 adds real Projectile creation/rendering and partial ModifyProjectile AfterImage consumers, with active ownership/ID/index/redirect selection and native Helper recipient restriction. Default Helper projectile ownership, ownprojectile initialization and owner-filtered counts are corrected. Eight actual browser combinations support these paths; other Projectile/ModifyProjectile families and full ownprojectile/contact-event/native-fidelity coverage remain Pending. See PROJECTILE-AFTERIMAGE-WIP.md. No whole-controller certification changes.

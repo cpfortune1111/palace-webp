@@ -1,3 +1,9 @@
+## 0.26.04 — Helper entry bootstrap (partial, release pending)
+
+New Helpers now begin with native animation 0, control enabled, zero velocity and life/max-life inherited from the parent's maximum before StateDef overrides. Missing/-1 animations render correctly. State/ID defaults and integer caller expressions are consumed once; negative IDs clamp, and the game's H950 suppression remains. Twenty-four root/nested/player/version/StateDef browser cases verify real sprite drawing plus scalar edge cases. Projectile contact fixtures no longer force Helper animation. Remaining Helper fields, full compiler/first-body timing and native differential fidelity stay Pending; no whole-controller certification changes. See Docs/HELPER-ENTRY-WIP.md. Character recoloring remains excluded; no media/original assets are added.
+
+Previous 0.26.03 publication was verified at 9659912be74e772f2cf14588e36777ca85c9cda7, successful Pages run 40220691170 and eleven frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.03 — Owner-scoped Projectile events (partial, release pending)
 
 Real projectile hits, guards, cancellations and Helper-recipient contacts now publish one latest event per owner. Typed Proj*Time queries, basic legacy ProjHit/Guarded/Contact expressions, default/own Helper ownership, reset/destruction and pause-aware clocks have real consumers. Thirty-two browser cases and semantic checks verify these paths. Complete legacy time-comparison syntax, exact native cross-actor phases and remaining Projectile/controller families stay Pending; no whole-controller certification changes. See Docs/PROJECTILE-CONTACT-EVENTS-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.

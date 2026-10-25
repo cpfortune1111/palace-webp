@@ -128,6 +128,10 @@ export function createSpecialRuntime(api){
  }
  function spawn(params,owner,player,kind){
   const sourceContext=context({...owner,player,key:owner.key||'root'+player});
+  const helperState=kind==='helper'?controllerInteger(api.eval(params.stateno??0,sourceContext)):null;
+  // The game's requested H950 suppression also applies to evaluated state expressions.
+  if(helperState===950)return null;
+  const helperId=kind==='helper'?controllerInteger(api.eval(params.id??0,sourceContext)):null;
   const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
   const entity={kind,teamSide:owner.teamSide??player,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0),
@@ -141,7 +145,7 @@ export function createSpecialRuntime(api){
   if(kind==='helper'&&params.remappal!==undefined){const components=api.pair(params.remappal);if(!components.length||components.length>2)throw Error('Invalid Helper remappal pair');const destination=[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))];api.initializePaletteRemap?.(entity,owner,destination)}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=projectileSpriteScale(params,api.sizeDefinition?.(owner)?.definition,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext,owner),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
-  else enter(entity,Number(params.stateno));
+  else {Object.assign(entity,{id:helperId,anim:0,ctrl:1,vx:0,vy:0,vz:0,life:owner.lifeMax??1000,lifeMax:owner.lifeMax??1000});if(entity.id<0){console.warn('Helper ID must be positive');entity.id=0}enter(entity,helperState)}
   if(kind==='projectile'){const ownPalette=controllerBoolean(api.eval(params.ownpal??0,sourceContext)),components=params.remappal===undefined?[]:api.pair(params.remappal);if(components.length>2)throw Error('Invalid Projectile remappal pair');const destination=components.length?[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))]:[-1,0];api.initializeProjectilePalette?.(entity,owner,ownPalette,destination)}
   if(kind==='projectile'){for(const write of deferredProjectileAfterImageWrites(params,{evaluate:expression=>api.eval(expression,sourceContext),split:api.pair,ikemen:api.data(player).compatibility==='ikemen',warn:message=>console.warn(message)}))write(entity);finishProjectileAfterImage(entity,{ikemen:api.data(player).compatibility==='ikemen'})}
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
@@ -157,7 +161,7 @@ export function createSpecialRuntime(api){
   const params=controller.params;
   switch(controller.type){
    case 'Projectile':spawn(params,owner,player,'projectile');return true;
-   case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
+   case 'Helper':spawn(params,owner,player,'helper');return true;
    case 'Pause':startPause(params,player,'normal',sourceContext||context(owner||root(player)),owner);return true;
    case 'SuperPause':startPause(params,player,'super',sourceContext||context(owner||root(player)),owner);return true;
    case 'RemoveExplod':for(let index=api.effects.length-1;index>=0;index--)if(api.effects[index].ownerKey===(owner.key||'root'+player)&&(params.id===undefined||api.effects[index].id===Number(params.id)))api.effects.splice(index,1);return true;
