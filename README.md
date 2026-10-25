@@ -1,3 +1,7 @@
+## 0.26.00 — Native AfterImage histories and synchronization (partial, release pending)
+
+Actual AfterImage controllers now retain independent root/Helper sprite histories with MUGEN/Ikemen sampling, palette gradients, timing controls and real historical transforms/clipping/priorities. Synchronized effects copy settings while retaining their own history; AfterImageTime preserves recorded frames. Eight real browser combinations include pixel composition and independent effect capture. Full-battle Offset/AngleDraw checks use historical sprite snapshots. Exact native timing, global budgets and remaining creation/provider families stay Pending; no whole-controller certification changes. See Docs/NATIVE-AFTERIMAGE-WIP.md. Character recoloring remains excluded; gameplay PalFX remains. No media/original assets are added.
+
 ## 0.25.99 — ModifyExplod synchronization consumers (partial, release pending)
 
 Modified effects now synchronize target grouping, priority/facing, size/orthographic transforms, clipping, shear and Trans/shared-PalFX during late updates, including hitpause. Disabling synchronization retains snapshots/live palette references as appropriate; redirected recipients and missing targets have real consumers. P1's missing sprite-priority adapter is corrected. 160 actual cases accompany semantic checks. Projection/shader/AfterImage sync families and full native fidelity remain Pending; syncparams is partial, not fully certified. Recoloring remains excluded; no media/original SFF/SND/AIR are added.

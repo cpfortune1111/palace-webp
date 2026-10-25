@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+AfterImage/AfterImageTime and synchronized effect histories now have partial native-source-reviewed controller and real render consumers; see NATIVE-AFTERIMAGE-WIP.md. Global budgets, exact native draw/simulation timing, creation-time effect families and executable differential fidelity remain Pending. Character recoloring remains excluded; gameplay PalFX remains in scope.
+
 Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; 163 registered controllers.
 
 This is a source inventory, not a claim of full compatibility. Parameter candidates require semantic review; dynamic names and delegated parsing require manual verification. Existing execution paths are not automatically certified.
