@@ -1,3 +1,4 @@
+import {clearActorRegistry} from './actor-registry-cleanup.js';
 export function createContactPowerScheduler({findActor,addPower,compatibility,tick}){
  const pending=new Map();
  const integer=value=>Math.trunc(Number(value))|0;
@@ -19,5 +20,5 @@ export function createContactPowerScheduler({findActor,addPower,compatibility,ti
    const actor=findActor(key);for(const credit of ready)if(actor&&credit.amount!==0)addPower(actor,credit.amount);
   }
  }
- return {credit,finish,pending:(key,lane)=>(pending.get(key)??[]).filter(credit=>lane===undefined||credit.lane===lane).reduce((sum,credit)=>integer(sum+credit.amount),0),clear:()=>pending.clear()};
+ return {credit,finish,pending:(key,lane)=>(pending.get(key)??[]).filter(credit=>lane===undefined||credit.lane===lane).reduce((sum,credit)=>integer(sum+credit.amount),0),clear:keepKeys=>clearActorRegistry(pending,keepKeys)};
 }

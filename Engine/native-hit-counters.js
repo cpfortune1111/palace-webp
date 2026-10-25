@@ -1,3 +1,4 @@
+import {clearActorRegistry} from './actor-registry-cleanup.js';
 export function createNativeHitCounters(){
  const actors=new Map(),combos=[0,0];
  function actor(key){let counters=actors.get(key);if(!counters){counters={uniqHitCount:0,receivedHits:0};actors.set(key,counters)}return counters}
@@ -12,6 +13,6 @@ export function createNativeHitCounters(){
   delete(key){actors.delete(key)},
   snapshot:()=>({actors:[...actors].map(([key,value])=>[key,{...value}]),combos:[...combos]}),
   restore(snapshot){actors.clear();for(const [key,value]of snapshot.actors)actors.set(key,{...value});combos.splice(0,2,...snapshot.combos)},
-  clear(){actors.clear();combos.fill(0)}
+  clear(keepKeys){clearActorRegistry(actors,keepKeys);combos.fill(0)}
  };
 }

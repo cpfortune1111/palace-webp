@@ -1,4 +1,5 @@
 import {recordTargetedBy} from './hit-targeted-by.js';
+import {clearActorRegistry} from './actor-registry-cleanup.js';
 
 const integer=value=>Math.trunc(Number(value))|0;
 const present=value=>value!==undefined&&value!==null&&!(typeof value==='string'&&!value.trim());
@@ -47,6 +48,6 @@ export function createJuggleState(){
   snapshot:()=>[...actors].map(([key,value])=>[key,{...value}]),
   restore(snapshot){actors.clear();for(const [key,value]of snapshot)actors.set(key,{...value})},
   delete:key=>actors.delete(key),
-  clear:()=>actors.clear()
+  clear:keepKeys=>clearActorRegistry(actors,keepKeys)
  };
 }

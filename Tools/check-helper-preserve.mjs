@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {createSpecialRuntime} from '../Char/Venus/venus-special-runtime.js';
+const roots=[1,2].map(player=>({kind:'root',player,id:player,key:'root'+player,facing:1,x:0,y:0,lifeMax:1000,maps:new Map()})),effects=[],forgotten=[],calls=[];
+const data={character:'fixture',powerMaximum:1000,helperStates:{0:{type:'S',physics:'N',moveType:'I',controllers:[]}}};
+const runtime=createSpecialRuntime({root:player=>roots[player-1],data:()=>data,commands:()=>({}),context:actor=>({player:actor.player}),eval:value=>{calls.push(value);return Number(value)},pair:value=>String(value).split(','),tick:()=>0,effects,forgetHitState:actor=>forgotten.push(actor.key),background:()=>{}});
+const spawn=(player,preserve)=>{const owner=roots[player-1];runtime.dispatch({type:'Helper',params:preserve===undefined?{}:{preserve:String(preserve)}},owner,null,{},owner,player);return runtime.entities.at(-1)};
+const ordinary=spawn(1),kept=spawn(1,1),other=spawn(2,1),child=spawn(1,-1);child.parentKey=ordinary.key;kept.vars[4]=73;kept.time=48;kept.vx=3;kept.life=456;
+assert.equal(ordinary.preserve,false);assert.equal(child.preserve,true);
+runtime.moveTimes.set(kept.key,{super:12});runtime.moveTimes.set(ordinary.key,{normal:5});
+runtime.stateChanges.request(kept.key,{state:0,selectedTick:0},()=>{});runtime.stateChanges.request(ordinary.key,{state:0,selectedTick:0},()=>{});
+runtime.entities.push({kind:'projectile',player:1,key:'proj1'},{kind:'projectile',player:2,key:'proj2'});effects.push({player:1},{player:2});
+runtime.clearPlayerAssets(1);
+assert.deepEqual(runtime.entities.map(actor=>actor.key),[kept.key,other.key,child.key,'proj2']);assert.equal(ordinary.destroyed,true);assert.equal(child.parentKey,'missing:'+ordinary.key);assert.deepEqual([kept.vars[4],kept.time,kept.vx,kept.life],[73,48,3,456]);assert.equal(runtime.stateChanges.has(kept.key),true);assert.equal(runtime.stateChanges.has(ordinary.key),false);assert.equal(runtime.moveTimes.get(kept.key).super,12);assert.deepEqual(effects,[{player:2}]);assert.deepEqual(forgotten,[ordinary.key]);
+runtime.reset({forceDestroy:false});assert.deepEqual(runtime.entities,[kept,other,child]);assert.equal(runtime.stateChanges.has(kept.key),true);assert.equal(runtime.moveTimes.get(kept.key).super,12);
+runtime.reset();assert.deepEqual(runtime.entities,[]);assert.equal(runtime.stateChanges.snapshot().length,0);assert.equal(runtime.moveTimes.size,0);assert.equal(kept.destroyed,true);assert.ok(calls.includes('-1'));
+console.log('Helper preserve consumes typed flags, per-player normal/forced asset cleanup, identity/state/variables/velocity/life, pending entry and modified pause allowances');

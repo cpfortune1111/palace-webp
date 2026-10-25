@@ -1,3 +1,4 @@
+import {clearActorRegistry} from './actor-registry-cleanup.js';
 export function createHitStateStore(){
  const actors=new Map();
  return {
@@ -16,6 +17,6 @@ export function createHitStateStore(){
   reverse(key){const actor=actors.get(key);if(!actor)throw Error('Reversal requires sampled native hit status');if(actor.value===0)actor.value=-1;return actor.value},
   value:key=>actors.get(key)?.value??0,
   delete:key=>actors.delete(key),
-  clear:()=>actors.clear()
+  clear:keepKeys=>clearActorRegistry(actors,keepKeys)
  };
 }

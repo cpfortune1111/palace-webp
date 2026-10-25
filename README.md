@@ -1,3 +1,9 @@
+## 0.26.08 — Helper preserve lifecycle (partial)
+
+Helper preserve now controls actual per-player cleanup and inter-round retention, with forced cleanup for a new match. Preserved objects retain CNS/animation/life/variables and native KO/hit/juggle/invulnerability/counter/move-hit/power registries. Live HitDef committed/buffered history survives independently of cleared Target bindings. Semantic and real VS round-two/new-match tests cover retained clocks, orphan parent references, continued CNS and MoveHitVar uniqhit. Full native lifecycle/phase/destruction/cache and executable differential fidelity remain Pending; no whole-controller certification changes. See Docs/HELPER-PRESERVE-WIP.md. Character recoloring remains excluded; no original assets or media are added.
+
+Previous 0.26.07 publication was verified at 7154f4ec71bcf521eb58631dd2a69395183ba2b9, successful Pages run 40228069716 and eleven frozen live text comparisons.
+
 ## 0.26.07 — Helper survival flags (partial)
 
 Helper immortal and kovelocity now reach actual life and lethal-contact consumers, including LifeSet/LifeAdd/TargetLifeAdd and immediate/queued hit damage. Native role/team exceptions, red-life handling and default-off Helper KO adjustment are preserved. Validation: 287 Node checks, 96 actual life cases, 48 actual KO-velocity cases, twelve additional focused browser gates, stage reflection, five sound metadata tests and full-battle regression including simultaneous/1-tick/5-tick Miss/Miss supers all pass. Full Helper/compiler/resource-phase/native differential fidelity remains Pending. See Docs/HELPER-SURVIVAL-WIP.md. Character recoloring remains excluded; gameplay palette effects remain in scope. No media/original assets are added.
