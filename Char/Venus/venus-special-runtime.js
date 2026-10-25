@@ -150,7 +150,7 @@ export function createSpecialRuntime(api){
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}
   if(kind==='helper'){entity.inheritJuggle=Math.trunc(Number(api.eval(params.inheritjuggle??0,sourceContext)))|0;entity.keyControl=helperKeyControl(params.keyctrl,{split:api.pair,evaluate:expression=>api.eval(expression,sourceContext)});entity.ownClsnScale=Number(api.eval(params.ownclsnscale??0,sourceContext))!==0;entity.hitOverrides=createHitOverrides();entity.helperType=helperTypeParameter(params.helpertype);entity.ownsPalette=Number(api.eval(params.ownpal??0,sourceContext))!==0;entity.paletteParentKey=owner.kind==='helper'?owner.key:'root'+player;api.initializePalette?.(entity,owner)}
   if(kind==='helper'&&params.remappal!==undefined){const components=api.pair(params.remappal);if(!components.length||components.length>2)throw Error('Invalid Helper remappal pair');const destination=[controllerInteger(api.eval(components[0],sourceContext)),components[1]===undefined?0:controllerInteger(api.eval(components[1],sourceContext))];api.initializePaletteRemap?.(entity,owner,destination)}
-  if(kind==='helper'){Object.assign(entity,readHelperSurvival(params,expression=>api.eval(expression,sourceContext)));entity.preserve=controllerBoolean(api.eval(params.preserve??0,sourceContext))}
+  if(kind==='helper'){Object.assign(entity,readHelperSurvival(params,expression=>api.eval(expression,sourceContext)));entity.preserve=controllerBoolean(api.eval(params.preserve??0,sourceContext));entity.standby=controllerBoolean(api.eval(params.standby??0,sourceContext))}
   if(kind==='helper'&&params.extendsmap!==undefined&&api.eval(params.extendsmap,sourceContext))for(const [name,value] of owner.maps||[])entity.maps.set(name,value);
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=projectileSpriteScale(params,api.sizeDefinition?.(owner)?.definition,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.activeHitDef=values.attr?{hitKey:entity.key,guardDistance:api.projectileGuardHitDef?.(player,params,sourceContext,owner),params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Math.trunc(Number(api.eval(params.projpriority??1,sourceContext)))|0;entity.priorityPoints=entity.priority;entity.remainingHits=Math.trunc(Number(values.projhits??1))|0}
   else {const opponent=helperPosition.postype==='p2'?(api.helperOpponent?api.helperOpponent(owner):root(player===1?2:1)):null,center=api.camera?.()??0,edges=api.helperEdges?.()??[center-640,center+640];Object.assign(entity,helperPlacement(owner,helperPosition,{worldScale:helperWorldRatio(api.data(player)),opponent,left:edges[0],right:edges[1]}),{id:helperId,anim:0,ctrl:1,vx:0,vy:0,vz:0,life:owner.lifeMax??1000,lifeMax:owner.lifeMax??1000});if(entity.id<0){console.warn('Helper ID must be positive');entity.id=0}enter(entity,helperState)}
@@ -234,6 +234,7 @@ export function createSpecialRuntime(api){
  }
  function hit(entity){
   const defender=root(entity.player===1?2:1);
+  if(entity.standby||defender.standby)return;
   if(entity.kind==='projectile'&&entity.remainingHits<=0)return;
   if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||entity.activeHitDef.hitOnceSpent||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
   if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
@@ -310,8 +311,8 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
    }
   }
   const overrides=[];
-  for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
-   const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
+  for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed&&!entity.standby)){
+   const opponent=root(helper.player===1?2:1),attacks=[opponent.standby?null:api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&!entity.standby&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
    for(const attack of attacks){
     if(attack?.hitDef?.params?.['reversal.attr'])continue;
     if(!attack?.hitDef?.params||attack.hitDef.hitOnceSpent||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr,{attackerState:attack.type||opponent.type,projectile:attack.kind==='projectile',compatibility:api.data(helper.player).compatibility}))continue;

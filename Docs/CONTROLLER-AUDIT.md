@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.09 adds actual Helper standby consumers for control/query, attack/recipient collision/contact, proximity guard, push, camera and screen-vs-stage bounds while CNS/movement/clocks continue. Forty-eight actual browser cases, typed constructor checks and full regressions support this partial coverage. Compiler/tag/team/phase/debug-visual/native differential fidelity remains Pending; no whole-Helper certification changes. See HELPER-STANDBY-WIP.md.
+
 0.26.08 adds actual Helper preserve cleanup/round retention and selective native actor-registry/HitDef-history consumers, separate from Target binding cleanup. Semantic and browser-driven round-two/new-match tests verify live state, clocks, orphan handling and continued execution. Native phase/destruction/reset-cache edge cases remain Pending; no whole-Helper certification changes. See HELPER-PRESERVE-WIP.md.
 
 0.26.07 adds actual Helper immortal and kovelocity consumers with native defaults, role/team life exceptions, resource-adapter and direct/queued hit integration. 36 semantic cases, 96 real life cases, 48 real KO-velocity cases and full regression support this partial coverage. Remaining Helper fields/compiler/native phases stay Pending; no whole-controller certification changes. See HELPER-SURVIVAL-WIP.md.

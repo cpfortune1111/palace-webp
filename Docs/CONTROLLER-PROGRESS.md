@@ -1,3 +1,9 @@
+## 0.26.09 — Helper standby consumers (partial)
+
+Helper standby now reaches actual Ctrl/Standby queries, attack/recipient collision and contact, proximity guard, PlayerPush, camera tracking and screen-bound consumers. CNS, movement, animation clocks and stage bounds continue. Forty-eight browser combinations, typed constructor checks, all 290 Node checks, fourteen related browser gates and full-battle simultaneous/1-tick/5-tick super regressions pass. Full compiler/team/tag/phase/debug-visual/native differential fidelity remains Pending; no whole-Helper certification changes. See Docs/HELPER-STANDBY-WIP.md. Character recoloring remains excluded; no original assets or media are added.
+
+Previous 0.26.08 publication was verified at 41e43d87f10bae93a1957adac98ccf22cb764ad2, successful Pages run 40230636821 and seventeen frozen live text comparisons.
+
 ## 0.26.08 — Helper preserve lifecycle (partial)
 
 Helper preserve now controls actual per-player cleanup and inter-round retention, with forced cleanup for a new match. Preserved objects retain CNS/animation/life/variables and native KO/hit/juggle/invulnerability/counter/move-hit/power registries. Live HitDef committed/buffered history survives independently of cleared Target bindings. Semantic and real VS round-two/new-match tests cover retained clocks, orphan parent references, continued CNS and MoveHitVar uniqhit. Full native lifecycle/phase/destruction/cache and executable differential fidelity remain Pending; no whole-controller certification changes. See Docs/HELPER-PRESERVE-WIP.md. Character recoloring remains excluded; no original assets or media are added.
