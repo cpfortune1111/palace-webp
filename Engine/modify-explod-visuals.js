@@ -8,7 +8,7 @@ export function readModifyExplodFacing(params,{evaluate,locked}){
 
 export function readModifyExplodLayers(params,{evaluate}){
  const result={};
- for(const name of ['sprpriority','layerno','ontop','under'])if(params[name]!==undefined){const value=evaluate(params[name]);result[name]=['ontop','under'].includes(name)?controllerBoolean(value):controllerInteger(value)}
+ for(const name of ['sprpriority','ontop','under','layerno'])if(params[name]!==undefined){const value=evaluate(params[name]);result[name]=['ontop','under'].includes(name)?controllerBoolean(value):controllerInteger(value)}
  return result;
 }
 
@@ -17,8 +17,8 @@ export function applyModifyExplodVisuals(effect,values,{ikemen,legacyReset=false
  if(values.facing!==undefined&&(ikemen||previousFacing>=0))effect.relativeFacing=values.facing;
  if(values.vfacing!==undefined&&(ikemen||previousVertical>=0))effect.vfacing=values.vfacing;
  if(values.sprpriority!==undefined)effect.sprpriority=values.sprpriority;
- if(values.layerno!==undefined)effect.layerno=Math.sign(values.layerno);
  if(values.ontop===true){effect.ontop=true;effect.layerno=1;effect.sprpriority=0}
  else if(values.ontop===false&&effect.ontop){effect.ontop=false;effect.layerno=0}
  if(values.under===true)effect.under=true;
+ if(values.layerno!==undefined)effect.layerno=Math.sign(values.layerno);
 }

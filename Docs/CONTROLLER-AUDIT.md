@@ -4,6 +4,8 @@ Reference: Ikemen GO `cb56d73badb322f3725257c2e8cfd157b2c3989d`; 163 registered 
 
 This is a source inventory, not a claim of full compatibility. Parameter candidates require semantic review; dynamic names and delegated parsing require manual verification. Existing execution paths are not automatically certified.
 
+0.25.96 partial ModifyExplod geometry: angle/yangle/xangle/xshear/window now have real matrix/clip consumers, with compiler-correct selection/velocity/layer ordering and deferred per-effect sequential windows. See MODIFY-EXPLOD-GEOMETRY-WIP.md for evidence and unresolved native GPU/provider/phase/compiler gaps. Whole-controller certification stays Pending.
+
 0.25.95 partial ModifyExplod animation consumers: animelem/animelemtime/animfreeze plus anim/animplayerno/spriteplayerno now reach real playback/resource/atlas consumers, with native MUGEN locks and executable distinct-character cases. See MODIFY-EXPLOD-ANIMATION-WIP.md and MODIFY-EXPLOD-RESOURCES-WIP.md for remaining native/library/provider/phase gaps. Whole-controller Pending classifications are unchanged.
 
 Completion requires each controller and parameter to have native defaults, expression evaluation, ownership/redirection, pause/persistence semantics, executable tests, and game regression coverage. Unsupported features must not be silently ignored.

@@ -1,3 +1,7 @@
+## 0.25.96 — ModifyExplod geometry/compiler ordering (partial, release pending)
+
+ModifyExplod rotation, orthographic X/Y angles, shear and window clipping now reach actual drawing. Window operands are deferred and written per component/per effect. Native compiler review corrects selector, velocity-synonym and layer/ontop precedence. Forty-eight actual matrix/pixel-clipping/side-effect cases accompany semantic checks. Full native GPU/provider/compiler/phase fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring remains excluded; gameplay PalFX is retained. No media/original SFF/SND/AIR are added.
+
 ## 0.25.95 — ModifyExplod animation/resource consumers (partial, release pending)
 
 ModifyExplod now changes real frame position/time, freeze/resume and own/common animation resources. Animation and sprite players select timing and atlas independently while preserving effect lifetime/motion. MUGEN-character animation locks, missing actions and native empty action -2 have real consumers. Thirty-two playback cases and 128 distinct-character resource/draw cases accompany semantic checks. Full native provider/phase/library fidelity and remaining controllers/parameters remain Pending; no whole-controller certification changes. Recoloring stays excluded; gameplay PalFX is retained. No new media or original SFF/SND/AIR are included.

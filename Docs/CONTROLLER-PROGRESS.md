@@ -1,4 +1,10 @@
+## 0.25.96 — ModifyExplod geometry/compiler ordering (partial, release pending)
+
+Angle/yangle/xangle/xshear/window now reach real drawing matrices and pixel clips. Window expressions run sequentially per effect during commit, not as an early shared value. Pinned compiler/append/run review corrects index-before-ID, vel-over-velocity and layerno-after-ontop ordering. Forty-eight actual geometry/pixel/deferred-window cases and independent semantic tests pass; see MODIFY-EXPLOD-GEOMETRY-WIP.md. Full native GPU/provider/phase/compiler fidelity and final versioned regression/publication remain Pending; no whole-controller certification changes.
+
 ## 0.25.95 — ModifyExplod animation/resource consumers (partial, release pending)
+
+Publication subsequently verified at commit 83d7ccf3621ecf731b182e15ccd3caac023e04ac: 275 Node checks, Python stage/five sound tests, final modifier/animation/actor/scheduling/full battle gates, exact-head successful Pages run 40204983763 and fourteen frozen live text comparisons. No new media/original assets were added. Receipt: outputs/release-02595-verification.json. Earlier pending statements below are historical.
 
 Real anim/animplayerno/spriteplayerno consumers now select animation timing and sprite atlas independently, honor MUGEN-character locks and native expression order, reset cursors without resetting lifetime and handle missing/empty actions without unrelated fallbacks. 128 actual Saturn/Moon resource cases pass own/common/cross-character selection, premultiplied atlas pixel comparison, invalid players, combined element/time/freeze ordering and action -2 persistence/removal. Full native provider/resource/phase fidelity remains Pending; see MODIFY-EXPLOD-RESOURCES-WIP.md. Final versioned regression/publication remains separate; no whole-controller certification changes.
 
