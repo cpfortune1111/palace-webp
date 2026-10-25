@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.07 adds actual Helper immortal and kovelocity consumers with native defaults, role/team life exceptions, resource-adapter and direct/queued hit integration. 36 semantic cases, 96 real life cases, 48 real KO-velocity cases and full regression support this partial coverage. Remaining Helper fields/compiler/native phases stay Pending; no whole-controller certification changes. See HELPER-SURVIVAL-WIP.md.
+
 0.26.06 adds native-derived Helper default names and caller-context string expression consumers, reaching actual HelperName queries, live literal renaming and nested name snapshots. 64 actual browser combinations and strict/loose semantic checks support these paths. Other Helper constructor/compiler/registration/string-parser families remain Pending; no whole-Helper certification changes. See HELPER-NAME-WIP.md.
 
 0.26.05 adds Helper redirectid, standard postype/XYZ/facing and typed pause-field consumers with original-caller evaluation and recipient inheritance. 84 semantic and 168 real mixed-coordinate/recipient/facing/postype cases support these paths. Full constructor/compiler/provider/global-phase and first-body fidelity remain Pending; no whole-Helper certification changes. See HELPER-PLACEMENT-WIP.md.

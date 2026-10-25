@@ -1,3 +1,9 @@
+## 0.26.07 — Helper survival flags (partial)
+
+Helper immortal and kovelocity now reach actual life and lethal-contact consumers, including LifeSet/LifeAdd/TargetLifeAdd and immediate/queued hit damage. Native role/team exceptions, red-life handling and default-off Helper KO adjustment are preserved. Validation: 287 Node checks, 96 actual life cases, 48 actual KO-velocity cases, twelve additional focused browser gates, stage reflection, five sound metadata tests and full-battle regression including simultaneous/1-tick/5-tick Miss/Miss supers all pass. Full Helper/compiler/resource-phase/native differential fidelity remains Pending. See Docs/HELPER-SURVIVAL-WIP.md. Character recoloring remains excluded; gameplay palette effects remain in scope. No media/original assets are added.
+
+Previous 0.26.06 publication was verified at b47b7ac2746d8469576113ea9a61e468df677d45, successful Pages run 40225878560 and ten frozen live text comparisons.
+
 ## 0.26.06 — Helper name consumers (partial)
 
 Helper creation now stores native default names or evaluated caller-context strings, rather than relying on a literal-only query fallback. Names derive from the recipient parent under redirect; explicit expressions retain caller scope and precede later state/ID writes. HelperName, live literal renaming and nested creation-time snapshots have real consumers. Sixty-four browser cases and semantic strict/loose-name checks verify these paths. Other Helper fields/compiler/registration/string-parser fidelity remain Pending; no whole-controller certification changes. See Docs/HELPER-NAME-WIP.md. Character recoloring remains excluded; no media/original assets are added.
