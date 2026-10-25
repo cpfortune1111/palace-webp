@@ -3,6 +3,7 @@ import {controllerBoolean,controllerInteger} from '../../Engine/controller-value
 import {deferredExplodAfterImageWrites as deferredProjectileAfterImageWrites,finishExplodAfterImage as finishProjectileAfterImage} from '../../Engine/native-afterimage.js';
 import {createProjectileContactEvents} from '../../Engine/projectile-contact-events.js';
 import {readHelperPlacement,helperPlacement} from '../../Engine/helper-placement.js';
+import {readHelperName} from '../../Engine/helper-name.js';
 import {characterLocalCoord as helperLocalCoord,collisionWorldRatio as helperWorldRatio} from '../../Engine/clsn-coordinate-scale.js';
 import {movementHitFriction} from '../../Engine/hit-friction.js?v=02505';
 import {cloneStoredMapValues} from '../../Engine/map-value-types.js';
@@ -130,6 +131,8 @@ export function createSpecialRuntime(api){
  }
  function spawn(params,owner,player,kind,options={}){
   const sourceContext=options.sourceContext??context({...owner,player,key:owner.key||'root'+player}),caller=options.caller??owner;
+  if(kind==='helper'&&Number(params.stateno)===950)return null;
+  const helperName=kind==='helper'?readHelperName(params,api.helperParentName?.(owner)??owner.name??api.data(player).name??api.data(player).character,{evaluate:expression=>api.eval(expression,sourceContext),loose:!!api.helperLooseNames}):null;
   const helperState=kind==='helper'?controllerInteger(api.eval(params.stateno??0,sourceContext)):null;
   // The game's requested H950 suppression also applies to evaluated state expressions.
   if(helperState===950)return null;
@@ -140,7 +143,7 @@ export function createSpecialRuntime(api){
    vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0),
    life:1000,power:0,powerMax:owner.powerMax??api.data(player).powerMaximum,attackState:kind==='projectile'?{...(owner.attackState||createAttackState())}:createAttackState(),angleState:createAngleState(),maps:cloneStoredMapValues(owner.mapDefaults),mapDefaults:cloneStoredMapValues(owner.mapDefaults),fvars:Array(40).fill(0),hitCount:0,guardCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,layerNo:0,sprPriority:kind==='projectile'?Number(params.projsprpriority??-1):0,supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
   entity.instanceId=1000+serial;if(kind==='projectile'){const helperOwner=owner.kind==='helper'&&owner.ownProjectile;entity.projectileOwnerId=helperOwner?owner.instanceId:owner.player??player;entity.projectileOwnerActor=helperOwner?owner:null;entity.projectileId=entity.id}
-  if(kind==='helper'){entity.reflectionOverride=createReflectionOverride();entity.inheritChannels=controllerInteger(api.eval(params.inheritchannels??0,sourceContext));entity.ownProjectile=controllerBoolean(api.eval(params.ownprojectile??0,sourceContext))}
+  if(kind==='helper'){entity.name=helperName;entity.reflectionOverride=createReflectionOverride();entity.inheritChannels=controllerInteger(api.eval(params.inheritchannels??0,sourceContext));entity.ownProjectile=controllerBoolean(api.eval(params.ownprojectile??0,sourceContext))}
   if(kind==='helper'&&api.sizeGuardDistances)entity.sizeGuardDistances=api.sizeGuardDistances(owner);
   if(kind==='helper'&&api.sizeDefinition){const inherited=api.sizeDefinition(owner);if(inherited.definition){entity.sizeDefinition=applyHelperSizeOverrides(inherited.definition,params,{evaluate:expression=>api.eval(String(expression),sourceContext),split:api.pair});entity.sizeLocalCoord=inherited.localCoord}}
   if(kind==='projectile'&&api.projectileCollisionSettings){const collision=api.projectileCollisionSettings(owner,params,sourceContext);entity.collisionSettings=collision.settings;entity.collisionWorldScale=collision.worldScale;entity.attackDepth=collision.attackDepth;entity.z=Number(owner.z||0)}

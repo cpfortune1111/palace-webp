@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.06 adds native-derived Helper default names and caller-context string expression consumers, reaching actual HelperName queries, live literal renaming and nested name snapshots. 64 actual browser combinations and strict/loose semantic checks support these paths. Other Helper constructor/compiler/registration/string-parser families remain Pending; no whole-Helper certification changes. See HELPER-NAME-WIP.md.
+
 0.26.05 adds Helper redirectid, standard postype/XYZ/facing and typed pause-field consumers with original-caller evaluation and recipient inheritance. 84 semantic and 168 real mixed-coordinate/recipient/facing/postype cases support these paths. Full constructor/compiler/provider/global-phase and first-body fidelity remain Pending; no whole-Helper certification changes. See HELPER-PLACEMENT-WIP.md.
 
 0.26.04 corrects Helper initial animation/control/velocity/max-life bootstrap and consumes state/ID defaults/caller expressions, with StateDef overrides and actual sprite rendering in 24 browser combinations. Full Helper compiler order, first-body timing and remaining constructor families stay Pending; no whole-controller certification changes. The user-requested H950 suppression remains a game-specific exception. See HELPER-ENTRY-WIP.md.

@@ -1,3 +1,9 @@
+## 0.26.06 — Helper name consumers (partial)
+
+Helper creation now stores native default names or evaluated caller-context strings, rather than relying on a literal-only query fallback. Names derive from the recipient parent under redirect; explicit expressions retain caller scope and precede later state/ID writes. HelperName, live literal renaming and nested creation-time snapshots have real consumers. Sixty-four browser cases and semantic strict/loose-name checks verify these paths. Other Helper fields/compiler/registration/string-parser fidelity remain Pending; no whole-controller certification changes. See Docs/HELPER-NAME-WIP.md. Character recoloring remains excluded; no media/original assets are added.
+
+Previous 0.26.05 publication was verified at e40e3ef0edd2d29e133187cdba8b9fb795c7a508, successful Pages run 40224219183 and ten frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.05 — Helper redirect and placement (partial, release pending)
 
 Helper creation now separates original-caller expressions from redirected-recipient ownership and inheritance. Standard p1/p2/front/back/left/right/none postypes, XYZ position, facing and typed pause fields have real consumers with local-scale conversion. Negative Helper/Projectile pause allowances follow their native class rules. Eighty-four semantic and 168 real mixed-coordinate/recipient/facing/postype cases verify these paths and drawing. Full Helper field/compiler order, provider/global-phase edge cases and first-body timing remain Pending; no whole-controller certification changes. See Docs/HELPER-PLACEMENT-WIP.md. Character recoloring remains excluded; no media/original assets are added.
