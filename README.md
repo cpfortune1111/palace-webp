@@ -1,3 +1,9 @@
+## 0.26.05 — Helper redirect and placement (partial, release pending)
+
+Helper creation now separates original-caller expressions from redirected-recipient ownership and inheritance. Standard p1/p2/front/back/left/right/none postypes, XYZ position, facing and typed pause fields have real consumers with local-scale conversion. Negative Helper/Projectile pause allowances follow their native class rules. Eighty-four semantic and 168 real mixed-coordinate/recipient/facing/postype cases verify these paths and drawing. Full Helper field/compiler order, provider/global-phase edge cases and first-body timing remain Pending; no whole-controller certification changes. See Docs/HELPER-PLACEMENT-WIP.md. Character recoloring remains excluded; no media/original assets are added.
+
+Previous 0.26.04 publication was verified at 1691df96b703f8501067b2ca0e9aa7e297f819c8, successful Pages run 40222325664 and ten frozen live text comparisons; earlier pending wording below is historical.
+
 ## 0.26.04 — Helper entry bootstrap (partial, release pending)
 
 New Helpers now begin with native animation 0, control enabled, zero velocity and life/max-life inherited from the parent's maximum before StateDef overrides. Missing/-1 animations render correctly. State/ID defaults and integer caller expressions are consumed once; negative IDs clamp, and the game's H950 suppression remains. Twenty-four root/nested/player/version/StateDef browser cases verify real sprite drawing plus scalar edge cases. Projectile contact fixtures no longer force Helper animation. Remaining Helper fields, full compiler/first-body timing and native differential fidelity stay Pending; no whole-controller certification changes. See Docs/HELPER-ENTRY-WIP.md. Character recoloring remains excluded; no media/original assets are added.

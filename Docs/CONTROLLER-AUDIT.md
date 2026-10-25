@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.05 adds Helper redirectid, standard postype/XYZ/facing and typed pause-field consumers with original-caller evaluation and recipient inheritance. 84 semantic and 168 real mixed-coordinate/recipient/facing/postype cases support these paths. Full constructor/compiler/provider/global-phase and first-body fidelity remain Pending; no whole-Helper certification changes. See HELPER-PLACEMENT-WIP.md.
+
 0.26.04 corrects Helper initial animation/control/velocity/max-life bootstrap and consumes state/ID defaults/caller expressions, with StateDef overrides and actual sprite rendering in 24 browser combinations. Full Helper compiler order, first-body timing and remaining constructor families stay Pending; no whole-controller certification changes. The user-requested H950 suppression remains a game-specific exception. See HELPER-ENTRY-WIP.md.
 
 0.26.03 adds owner-scoped latest Projectile contact events and typed time/basic legacy expression consumers, including accepted Helper contacts and native-style cancellation filters. Thirty-two actual browser cases cover ownership, expression types and pause-aware clocks. Exact native per-character phases, full legacy syntax and remaining Projectile families remain Pending; no whole-controller certification changes. See PROJECTILE-CONTACT-EVENTS-WIP.md.
