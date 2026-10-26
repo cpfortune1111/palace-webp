@@ -1,3 +1,7 @@
+## M0 follow-up — runtime baseline probes
+
+The existing Web seeded RNG matches 10,960 compiled native operations, including signed state and float32 bits. Another 672 native tick-boundary and 321 native actor-order/action probes establish scoped reference baselines; the current Web main loop is not yet certified against them. [Runtime coverage](Docs/RUNTIME-COVERAGE.json) records source pins, phase differences and remaining determinism gaps. Runtime stays 0.26.22; M0/full-engine work continues.
+
 ## M0 follow-up — compiled native component checks
 
 The existing indexed SFF preprocessing path now also handles raw/RLE8/RLE5. Against an executable built from 13 unchanged declarations in the pinned Ikemen source, 2,460 synthetic pixel fixtures, 80 physical sprites sampled across five original characters, and 8,707 AIR alpha cases match. The native sources/toolchain/executable and original assets remain private. This is component evidence, not full native engine or original-package browser loading. Runtime stays 0.26.22. [Stage/asset coverage](Docs/STAGE-ASSET-COVERAGE.json) records remaining gaps and the separate BGCtrl namespace.

@@ -1,0 +1,311 @@
+{
+  "schema": "moon-palace-runtime-coverage-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "baseline": {
+    "runtime": "0.26.22",
+    "commit": "cd15eb153902e6b0ea1145e5d88918717eb38fa5"
+  },
+  "references": {
+    "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "sourceHashes": {
+      "common": "d7a40673b3bfcd7f6b320747e37679431fefd1aad7040e2d1f60484e03148ac6",
+      "system": "b1784a92a937f5c940e7a99fc5025f807af497a23bc447c861c276bdbb51bf77",
+      "char": "7f8839374168cf5948d190268e6bdad73c61dac4febadb015cd501d46a579bf7"
+    },
+    "sourceFiles": {
+      "common": "src/common.go",
+      "system": "src/system.go",
+      "char": "src/char.go"
+    },
+    "unchangedDeclarations": [
+      {
+        "source": "common",
+        "marker": "func Random(",
+        "line": 30,
+        "sha256": "efe1df0422e06fd7fbbc17958dd4077a70ee3eb18a02d9dd28365ee21f06df8b"
+      },
+      {
+        "source": "common",
+        "marker": "func Srand(",
+        "line": 39,
+        "sha256": "3f1e817d7bd09a31f7cd0967aeba26e24b8693d4c52cde7c6005e942d1fda64a"
+      },
+      {
+        "source": "common",
+        "marker": "func Rand(",
+        "line": 43,
+        "sha256": "23d0d00f0bd8c8ab4d7ea3f538e7afe044bf7571dd781084f80c39e4d30e7d49"
+      },
+      {
+        "source": "common",
+        "marker": "func RandF32(",
+        "line": 47,
+        "sha256": "ecf668e84d1d0faa6074d0d1ed299e52ae7a2ea93694962a157bf8e359961d97"
+      },
+      {
+        "source": "common",
+        "marker": "func RandI(",
+        "line": 51,
+        "sha256": "9566287a7e37ce450ab3469dfea3987d838126b506c90a81ce042e1bc1d5e7f4"
+      },
+      {
+        "source": "common",
+        "marker": "func RandF(",
+        "line": 64,
+        "sha256": "9861530f2d54f51518a5aaf8e225961f0ae94c45fb1eec20f92acfb408460a43"
+      },
+      {
+        "source": "common",
+        "marker": "func Btoi(",
+        "line": 458,
+        "sha256": "ed976449fcd318d266df145e2a6e2b8529efaeea59b4edf3f6832112b2820965"
+      },
+      {
+        "source": "common",
+        "marker": "func Clamp[",
+        "line": 86,
+        "sha256": "b341a80f5f97936933cadfd19aa8a464e4505870ad7da65496ba2799f1fe9f75"
+      },
+      {
+        "source": "system",
+        "marker": "func (s *System) tickFrame(",
+        "line": 2619,
+        "sha256": "ccab4f181e4851ac8fc5d7e5aea3503c4cc7082fee0a28e0840f40e8979c9916"
+      },
+      {
+        "source": "system",
+        "marker": "func (s *System) tickNextFrame(",
+        "line": 2629,
+        "sha256": "49406285c233e68c0ab7f8f60c86b7888dc6ed68f152c0f41608f490cc39ec62"
+      },
+      {
+        "source": "system",
+        "marker": "func (s *System) tickInterpolation(",
+        "line": 2636,
+        "sha256": "3245c472953175457b7c20f496549591823598f717349f7b8b21951f5e16ac5a"
+      },
+      {
+        "source": "char",
+        "marker": "func (cl *CharList) updateRunOrder(",
+        "line": 13963,
+        "sha256": "c299b075c498f377b0e1b72792eb29288bf7ec3b2afe16e542a051014c2786c4"
+      },
+      {
+        "source": "char",
+        "marker": "func (cl *CharList) action(",
+        "line": 14017,
+        "sha256": "60f43b3530dde692f57c9f138dc718380f91a44b96f05ffe277a8f98a027811c"
+      }
+    ]
+  },
+  "componentEvidence": {
+    "compiler": "go version go1.27.3 windows/amd64",
+    "generatedSourceSha256": "ce4a36ed5855519752eebf02a733145339a014c33c71bf9cbe82b691c4ab5b02",
+    "executableSha256": "855c6c184e7719dcbcd829a94aba266bc83102aae922f4e922ae0e4fdc6baca9",
+    "facades": [
+      "Primitive System field/config subset",
+      "Character move/flag label adapter",
+      "Command/prepare/run/finish trace callbacks",
+      "Fixture-only helper appends"
+    ],
+    "scope": "Exact RNG/tick gate/order/action-loop function bodies with primitive System fields and traced character callbacks. Not full native states, commands, spawn allocator, combat, tick scheduler or MUGEN executable certification.",
+    "results": {
+      "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+      "compiler": "go version go1.27.3 windows/amd64",
+      "oracleExecutableSha256": "855c6c184e7719dcbcd829a94aba266bc83102aae922f4e922ae0e4fdc6baca9",
+      "randomOperations": 10960,
+      "tickCases": 672,
+      "orderCases": 321,
+      "matched": true,
+      "scopes": {
+        "random": "Actual Web native-random.js consumer versus extracted native RNG functions; no full gameplay RNG wiring certification.",
+        "tick": "Compiled native gates versus independent float32 formula fixtures; current Web scheduler is not certified.",
+        "order": "Compiled native priority/action loops with trace callback facades versus fixture model; current Web actor scheduler is not certified."
+      },
+      "goalComplete": false
+    }
+  },
+  "rng": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "consumer": "Engine/native-random.js",
+    "verified": "10,960 actual Web next/integer/RandF operations compare returned state and exact float32 bits with compiled native source across signed seeds and reversed/equal/wide integer bounds.",
+    "nativeObserved": [
+      "Single global signed int32 seed",
+      "Random uses signed division/int32 overflow and maps non-positive result",
+      "RandI selects inclusive ordered integer bounds, with int64 wide-range path",
+      "RandF uses float32 arithmetic; reversed/equal endpoints still consume one sample"
+    ],
+    "gaps": [
+      "Full gameplay stream wiring and source query order",
+      "Legacy per-tick randomValue and intro variants still use Math.random",
+      "Native RandF32 is available to oracle but not covered as a Web consumer",
+      "Serializable gameplay RNG/replay reset rules"
+    ]
+  },
+  "tick": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "source": "System.tickFrame/tickNextFrame/tickInterpolation",
+    "nativeObserved": [
+      "tickFrame depends on pause/frame-step and oldTickCount < tickCount",
+      "tickNextFrame uses float32 sum then integer truncation and distinct paused gating",
+      "tickInterpolation returns 1 at next-tick boundary, otherwise clamps float32 progress when enabled"
+    ],
+    "fixtures": 672,
+    "webStatus": "Unsupported native tick-boundary model; current requestAnimationFrame loop uses a 1/60 accumulator, capped render delta and separate paused-visual accumulation.",
+    "webAnchors": [
+      "index.html: advanceSimulation",
+      "index.html: advancePausedVisuals",
+      "index.html: loop"
+    ],
+    "gaps": [
+      "Separate native render/update/logical collision boundaries",
+      "Float32 clock/turbo/slowdown semantics",
+      "Wall-clock-independent input sampling and replay",
+      "Deterministic snapshot/load/hash"
+    ]
+  },
+  "actorOrder": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "fixtures": 321,
+    "priority": [
+      {
+        "condition": "runfirst without runlast",
+        "value": 100
+      },
+      {
+        "condition": "runlast without runfirst",
+        "value": -100
+      },
+      {
+        "condition": "attacking root or helper",
+        "value": 5
+      },
+      {
+        "condition": "idle root",
+        "value": 4
+      },
+      {
+        "condition": "remaining root",
+        "value": 3
+      },
+      {
+        "condition": "idle helper",
+        "value": 2
+      },
+      {
+        "condition": "remaining helper",
+        "value": 1
+      }
+    ],
+    "tieBreak": "Ascending character ID; both assertion flags fall back to ordinary move/root/helper priority.",
+    "flagLifetime": "Both ordering assertions are cleared after sorting.",
+    "nativeSequence": [
+      "updateRunOrder",
+      "commandUpdate for all",
+      "actionPrepare for initial sorted list",
+      "index-based actionRun loop including appended helpers",
+      "actionFinish for resulting list"
+    ],
+    "appendObservation": "A helper appended during run receives run and finish in that action call, but no earlier prepare; it participates in a fresh sort/prepare next call. Trace facades model append only, not the real helper allocator.",
+    "webStatus": "Partial fixed-root/source-special paths; full generic native actor scheduler not implemented.",
+    "gaps": [
+      "Integrate ordering into actual root/helper negative/current State pipeline",
+      "Real spawn/destruction/list mutation, disabled/pause/provider/version interactions",
+      "Root/helper command-update ownership and frame buffering"
+    ]
+  },
+  "systemOrder": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "kind": "Static pinned-source inspection only; full System.action executable trace remains missing",
+    "observed": [
+      "Return if matchPaused",
+      "Reset camera tracking",
+      "stepRoundState",
+      "stage.action",
+      "tickFrame block: bounds, environment/pause timers and buffers, global flags, charList.action, global PalFX/shake/zoom/music",
+      "charUpdate: character update then projectile update",
+      "tickFrame: fightScreen.step",
+      "tickNextFrame: globalCollision then globalTick",
+      "Camera action/update and character screen bounds",
+      "Explod/text/storyboard update after hit detection",
+      "tickNextFrame: game speed/slowdown/frame-step adjustments"
+    ],
+    "globalCollision": [
+      "Projectile tradeDetection",
+      "CharList collisionDetection",
+      "Clear temporary detection slices"
+    ],
+    "globalTick": [
+      "Stage.tick",
+      "CharList.tick",
+      "Projectile.tick",
+      "Increment matchTime"
+    ],
+    "webDifferences": [
+      "simStep steps HUD before core state execution",
+      "simStep roundFlow.step occurs after core and effects on the active fight path",
+      "Root/P2/helper/effect processing is distributed, with early returns and fixed ordering",
+      "Current combat trace explicitly describes itself as diagnostic rather than a replay save"
+    ],
+    "gaps": [
+      "Full source-faithful phase dispatcher and trace adapter",
+      "Version-specific MUGEN versus Ikemen pause activation differences",
+      "Removal/creation/hit/round/camera effect ordering across all consumers"
+    ]
+  },
+  "statePhases": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "kind": "Static actionRun inspection; individual earlier controller tests do not certify complete phase order.",
+    "nativeObserved": [
+      "State -4 before pauseBool gate",
+      "-3 conditional on own provider and player/keyctrl",
+      "-2 conditional on player/keyctrl",
+      "-1 conditional on own provider/keyctrl",
+      "Buffered state initialization before current State",
+      "State +1 stored at -10 runs outside pauseBool gate",
+      "A State +1 transition may initialize/run another current State",
+      "Position update, aerial landing, facing and State time follow hitpause checks"
+    ],
+    "gaps": [
+      "Full -4/+1 generic source/runtime/version classification",
+      "Pause/hitpause/global phase interactions",
+      "Integration with controller slot/carry and provider ownership"
+    ]
+  },
+  "privateOnly": [
+    "Original pinned Go sources",
+    "Generated Go implementation/executable/toolchain",
+    "Raw native fixtures and local receipts"
+  ],
+  "next": [
+    "Complete remaining M0 subsystem/item reconciliation without treating component probes as native full-engine traces",
+    "Use these fixtures as M1 ordering/tick/RNG acceptance baselines",
+    "Preserve existing game regression gates during generic scheduling migration"
+  ]
+}

@@ -325,6 +325,7 @@
       "evidence": [
         "Tools/import_venus_sources.py",
         "Tools/sff_indexed_palette.py",
+        "Docs/STAGE-ASSET-COVERAGE.json",
         "Engine/native-sound-loader.js",
         "Engine/native-sound-player.js",
         "index.html: prepareCharacters / fetch manifests"
@@ -360,6 +361,8 @@
       "name": "Runtime / tick order / determinism",
       "evidence": [
         "Engine/native-random.js",
+        "Docs/RUNTIME-COVERAGE.json",
+        "Tools/check-native-runtime-components.cjs",
         "Engine/controller-schedule.js",
         "Char/Venus/venus-special-runtime.js",
         "index.html: simStep / simStepCore / Math.random call sites"
@@ -367,7 +370,7 @@
       "gaps": [
         "Single specified deterministic tick/event order across all subsystems",
         "Gameplay random/input/assets separated from rendering/wall-clock sources",
-        "Replay/snapshot/native differential harness with reproducible seeds and fixtures"
+        "Replay/snapshot/full-engine native differential harness; scoped RNG/tick/order component probes now exist"
       ],
       "overall": "Partial",
       "stageAssessments": {
@@ -400,7 +403,7 @@
   "milestones": [
     {
       "id": "M0",
-      "status": "In progress: controller reference inheritance/dynamic families and expression registry input inventories; complete semantic reconciliation remains unfinished",
+      "status": "In progress: controller/expression/CNS/AIR/CMD/stage/asset/runtime source inventories and scoped compiled component probes; complete item/default/version/semantic reconciliation remains unfinished",
       "progressDocument": "Docs/ENGINE-M0-PROGRESS.md",
       "title": "Reference and coverage reconciliation",
       "dependsOn": [],

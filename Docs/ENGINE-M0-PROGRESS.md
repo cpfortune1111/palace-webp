@@ -1,5 +1,21 @@
 # Engine inventory reconciliation — M0
 
+## Runtime/RNG/order component follow-up
+
+[RUNTIME-COVERAGE.json](RUNTIME-COVERAGE.json) pins the examined System/Char sources and records native frame boundaries, priority sorting, action phases, negative/+1 states, global collision/tick and current Web gaps. It explicitly separates source-only observations from compiled component evidence and actual Web consumers. Both source caches match the previously pinned upstream Git blobs exactly.
+
+A second private Go executable contains 13 unchanged native declarations: Random/Srand/Rand/RandF32/RandI/RandF/Btoi/Clamp, three tick gates and two character-list ordering/action functions. Primitive System fields and trace callbacks replace the surrounding engine. **10,960 actual Web RNG operations** match signed native state and exact float32 result bits. **672 tick-boundary probes and 321 ordering/action-loop probes** match independent fixture models; they do not certify the current Web tick/actor dispatcher. The ordering fixtures include every root/helper × idle/attack/hit × first/last flag combination, ID ties in priority, assertion reset and helpers appended during the run loop.
+
+The native action list sorts once, updates commands, prepares the initial list, runs by a growing index and finishes the resulting list. Appended helpers run and finish that call without the earlier prepare; sorting/assertion reset happen afresh next call. Full native spawn/allocator/state/combat behavior is not represented by trace facades. Current fixed P1/P2 paths, distributed entity loops and Math.random call sites remain explicit gaps. The existing seeded RNG consumer is validated; full gameplay determinism/replay is not.
+
+```text
+python Tools/build-native-runtime-oracle.py --common ../outputs/ikemen-common-pinned.go --system ../outputs/ikemen-system.go --char ../outputs/ikemen-char.go --go ../outputs/toolchains/go1.27.3/go/bin/go.exe --output ../outputs/native-runtime-oracle
+node Tools/check-native-runtime-components.cjs ../outputs/native-runtime-oracle/build-receipt.json ../outputs/native-runtime-component-results.json
+python Tools/check-runtime-inventory.py --source-root ../outputs
+```
+
+All probes passed. Runtime remains 0.26.22; M0/full engine/M1 scheduling remain unfinished. Generated upstream code, toolchain, executable and raw fixtures stay private.
+
 ## Compiled component evidence and stage/assets (follow-up)
 
 The existing indexed preprocessing helper now supports raw/RLE8/RLE5 alongside LZ5/indexed PNG. A private Go 1.27.3 executable contains 13 unchanged declarations extracted from pinned Ikemen sources, with byte-capture/error/log facades. Source pins and generated/executable hashes are recorded during each build. It passes 8,707 ASCII AIR alpha state/diagnostic cases, 2,460 synthetic SFF pixel cases and 80 physical sprite samples across five original characters. The public stage/asset ledger records original source hashes and sample indices, never original image/audio bytes.
