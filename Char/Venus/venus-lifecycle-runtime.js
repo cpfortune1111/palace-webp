@@ -15,16 +15,17 @@ export function createLifecycleRuntime(api){
  function execute(controller,fighter,context){
   const params=controller.params,type=controllerType(controller);
   switch(type){
-   case 'VarRangeSet':case 'VarRandom':case 'PowerSet':api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);break;
+   case 'VarRangeSet':case 'VarRandom':case 'PowerSet':return api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);
    case 'DisplayToClipboard':if(api.trigger(controller,context))api.debug?.(fighter,params,context);break;
-   default:api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);
+   default:return api.controller({...controller,type,controllerSchedulingKey:controller.controllerSchedulingKey||controller},fighter,context);
   }
-  return true;
  }
  function globalState(fighter,context,stateNo,{hitPause=false}={}){
-  for(const controller of api.data(fighter.player).globalControllers?.[String(stateNo)]??[]){
+  for(const [index,controller] of (api.data(fighter.player).globalControllers?.[String(stateNo)]??[]).entries()){
+   api.visitController?.(fighter,index);
    if(hitPause&&!parseCnsIntegerLiteral(controller.params.ignorehitpause??0))continue;
-   execute({...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller},fighter,context);
+   const outcome=execute({...controller,controllerStateNo:stateNo,controllerSchedulingKey:controller,controllerSchedulingIndex:index},fighter,context);
+   if(outcome?.stateTransition&&!outcome.continueBody)return outcome;
   }
  }
  function globals(fighter,context,options={}){for(const stateNo of [-3,-2])globalState(fighter,context,stateNo,options)}

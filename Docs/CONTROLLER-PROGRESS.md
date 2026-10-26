@@ -1,3 +1,9 @@
+## 0.26.20 — Negative states and provider identity (partial)
+
+Root/Helper negative bodies retain CNS position and transition outcomes; root StateDef initialization is buffered to a same-tick post-negative boundary. Full -1 command bodies, player-slot State ownership, same-character root/Helper negative eligibility, captured HitDef provider identity and own-negative-source contexts are integrated. All 172 new actual browser cases, 301 Node checks and dedicated animation/state, scheduling and Helper-entry browser gates pass. Final complete own-context battle regression passed, including simultaneous/one-tick/five-tick supers. Capacity reallocation, complete native phase/context/reset/retention and compiler/version/warning fidelity remain Partial. No whole controller is certified; see STATE-CONTROLLER-HITPAUSE-WIP.md.
+
+0.26.19 publication was verified at 4b26f3ef82ce7277170768f29b9c60aebe711da6, successful exact-head Pages run 40260866786 and nine frozen live text comparisons.
+
 ## 0.26.19 — State counters and pause drivers (partial)
 
 Root/Helper selection and release now reset destination-visible counters while retaining hidden slots. Continued old bodies share actor-wide controller position; expiry resets occur before StateDef initialization, ordinary attack-pause drivers use indexed bodies, and scheduling recognizes secondary clocks. Forty new actual browser cases, all 301 Node checks, dedicated animation/state, scheduling and Helper-entry browser gates and final complete battle regression pass. Native capacity reallocation, complete nested aliases, mixed-provider/global/native phase fidelity and wider controller parameters remain Partial. No whole controller is certified; see STATE-CONTROLLER-HITPAUSE-WIP.md.

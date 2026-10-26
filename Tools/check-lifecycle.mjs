@@ -77,3 +77,11 @@ globalRuntime.globalState(fighter,context,-4);
 assert.equal(stateFour.length,3);
 assert.doesNotThrow(()=>globalRuntime.globalState(fighter,context,-5));
 console.log('Lifecycle source import, 5900 first/later initialization, 1v1 queries, hitpause scheduling: PASS');
+for(const continuing of [false,true]){
+ const visited=[],calls=[];
+ const runtime=createLifecycleRuntime({data:()=>({globalControllers:{'-2':[{type:'Null',params:{}},{type:'ChangeState',params:{ignorehitpause:1}},{type:'VarAdd',params:{ignorehitpause:1}}]}}),visitController:(_,index)=>visited.push(index),controller:controller=>{calls.push([controller.type,controller.controllerSchedulingIndex]);return controller.type==='ChangeState'?{stateTransition:true,continueBody:continuing}:undefined}});
+ runtime.globalState(fighter,context,-2,{hitPause:true});
+ assert.deepEqual(visited,continuing?[0,1,2]:[0,1]);
+ assert.deepEqual(calls,continuing?[['ChangeState',1],['VarAdd',2]]:[['ChangeState',1]]);
+}
+console.log('Negative body tracks skipped slots and honors explicit transition continuation');

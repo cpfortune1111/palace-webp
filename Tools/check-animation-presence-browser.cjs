@@ -12,6 +12,21 @@ const server=http.createServer((request,response)=>{
  await page.goto('http://127.0.0.1:'+server.address().port+'/');await page.waitForFunction(()=>window.animationPresenceTest?.run('!!dat&&!!stateIR&&!!battleDat&&!!lifecycleDat&&!!specialDat&&!!commonAnimationDat'),null,{timeout:90000});
  const run=source=>page.evaluate(source=>window.animationPresenceTest.run(source),source);await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
 
+await run("prepareCharacters(['SailorSaturn','SailorMoon'])");
+await run(`(()=>{
+ const data=battleCharacters.map(name=>characterProfiles.get(name).battle),saved=data.map(value=>({commands:value.playerCommands,versions:value.engineVersions}));
+ try{
+  for(const value of data)value.playerCommands=[{type:'VarAdd',params:{v:'20',value:'100'},triggerall:[],triggers:{1:['1']}}];
+  for(const ikemen of [false,true])for(const driver of ['p1-command','p1-dash','p2-command']){
+   const player=driver==='p2-command'?2:1;data.forEach(value=>value.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]});specialRuntime.reset();rootControllerSchedules.reset();customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;enterIRState(0);enterP2State(0);const actor=specialRoot(player);actor.vars[20]=0;
+   const visit=()=>driver==='p1-command'?runStateMinus1M1():driver==='p1-dash'?runP1DashCommands():withCharacter(2,()=>runRootCommandBodyM1(2));
+   customStateOwners[player-1]=battleCharacters[2-player];visit();if(actor.vars[20]!==0)throw Error('Foreign-state root executed own -1 commands '+JSON.stringify({ikemen,driver,value:actor.vars[20]}));
+   customStateOwners[player-1]=battleCharacters[player-1];visit();if(actor.vars[20]!==100)throw Error('Explicit own-state provider blocked -1 commands');
+   customStateOwners[player-1]=null;visit();if(actor.vars[20]!==200)throw Error('Default own-state provider blocked -1 commands');
+  }
+ }finally{data.forEach((value,i)=>{value.playerCommands=saved[i].commands;value.engineVersions=saved[i].versions});customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
 await run(`(()=>{
  const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992060,992061],saved=ids.map(id=>states[id]);
  const add=(v,ignore=true)=>({type:'VarAdd',params:{v:String(v),value:'1',persistent:'0',...(ignore?{ignorehitpause:'1'}:{})},triggerall:[],triggers:{1:['1']}});
@@ -144,6 +159,122 @@ await run(`(()=>{
   p1Reaction=null;p2.hitPause=0;visit();if(actor.vars[20]!==1||actor.vars[21]!==3)throw Error('Root secondary-clock release gate failed');
  }}finally{p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
 })()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992120,992121],saved=ids.map(id=>states[id]),negative=[-4,-3,-2],savedGlobal=negative.map(id=>data.globalControllers[String(id)]);
+ const add=v=>({type:'VarAdd',params:{v:String(v),value:'1',ignorehitpause:'1',persistent:'0'},triggerall:[],triggers:{1:['1']}}),idle={type:'Null',params:{},triggerall:[],triggers:{1:['0']}};
+ try{
+  states[ids[0]]={type:'S',physics:'N',moveType:'I',controllers:[idle,idle,idle]};states[ids[1]]={type:'S',physics:'N',moveType:'I',controllers:[add(30),add(31),add(32)]};
+  for(const ikemen of [false,true])for(const player of [1,2])for(const stateNo of negative)for(const type of ['ChangeState','SelfState'])for(const continuing of [false,true]){
+   specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);if(player===1)enterIRState(ids[0]);else enterP2State(ids[0]);
+   const actor=specialRoot(player);for(const v of [29,30,31,32])actor.vars[v]=0;runRootCurrentBody(player);if(player===1)p1HitPause=3;else p2.attackPause=3;
+   data.globalControllers[String(stateNo)]=[{type,params:{value:String(ids[1]),ignorehitpause:'1',continue:continuing?'1':'0'},triggerall:[],triggers:{1:['1']}},add(29)];
+   lifecycleRuntime.globalState(player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),stateNo,{hitPause:true});
+   if(specialRoot(player).state!==ids[1]||actor.vars[29]!==Number(continuing))throw Error('Negative body did not honor transition continuation '+JSON.stringify({ikemen,player,stateNo,type,continuing,value:actor.vars[29]}));
+   runPendingRootHitPauseM1(player);if(actor.vars[30]!==(ikemen?1:0)||actor.vars[31]!==1||actor.vars[32]!==1)throw Error('Negative transition lost slot zero '+JSON.stringify({ikemen,player,stateNo,type,continuing,values:[actor.vars[30],actor.vars[31],actor.vars[32]]}));
+  }
+ }finally{data.engineVersions=versions;ids.forEach((id,i)=>{if(saved[i]===undefined)delete states[id];else states[id]=saved[i]});negative.forEach((id,i)=>{if(savedGlobal[i]===undefined)delete data.globalControllers[String(id)];else data.globalControllers[String(id)]=savedGlobal[i]});p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,versions=data.engineVersions,ids=[992130,992131],saved=ids.map(id=>data.helperStates[id]),negative=[-4,-3,-2],savedGlobal=negative.map(id=>data.globalControllers[String(id)]);
+ const add=v=>({type:'VarAdd',params:{v:String(v),value:'1',ignorehitpause:'1',persistent:'0'},triggerall:[],triggers:{1:['1']}}),idle={type:'Null',params:{},triggerall:[],triggers:{1:['0']}};
+ try{
+  data.helperStates[ids[0]]={type:'S',physics:'N',moveType:'I',controllers:[idle,idle,idle]};data.helperStates[ids[1]]={type:'S',physics:'N',moveType:'I',controllers:[add(30),add(31),add(32)]};
+  for(const ikemen of [false,true])for(const player of [1,2])for(const stateNo of negative)for(const type of ['ChangeState','SelfState'])for(const continuing of [false,true]){
+   specialRuntime.reset();negative.forEach(id=>data.globalControllers[String(id)]=[]);data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};
+   const owner=specialRoot(player);specialRuntime.dispatch({type:'Helper',params:{stateno:String(ids[0]),id:'90',keyctrl:'2,3'}},owner,specialRuntime.context(owner),{},owner,player);const actor=specialRuntime.entities.at(-1);for(const v of [29,30,31,32])actor.vars[v]=0;combatTraceTick++;specialRuntime.step();actor.hitPause=3;
+   data.globalControllers[String(stateNo)]=[{type,params:{value:String(ids[1]),ignorehitpause:'1',continue:continuing?'1':'0'},triggerall:[],triggers:{1:['1']}},add(29)];combatTraceTick++;specialRuntime.step();
+   if(actor.state!==ids[1]||actor.vars[29]!==Number(continuing)||actor.vars[30]!==(ikemen?1:0)||actor.vars[31]!==1||actor.vars[32]!==1)throw Error('Helper negative transition cursor/continuation mismatch '+JSON.stringify({ikemen,player,stateNo,type,continuing,state:actor.state,values:[actor.vars[29],actor.vars[30],actor.vars[31],actor.vars[32]]}));
+  }
+ }finally{specialRuntime.reset();data.engineVersions=versions;ids.forEach((id,i)=>{if(saved[i]===undefined)delete data.helperStates[id];else data.helperStates[id]=saved[i]});negative.forEach((id,i)=>{if(savedGlobal[i]===undefined)delete data.globalControllers[String(id)];else data.globalControllers[String(id)]=savedGlobal[i]})}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,id=992140,saved=states[id],savedGlobal=data.globalControllers['-2'];
+ try{
+  states[id]={type:'S',physics:'N',moveType:'I',anim:'F1',ctrl:'0',velset:'9,0',sprpriority:'7',controllers:[]};
+  for(const ikemen of [false,true])for(const player of [1,2])for(const type of ['ChangeState','SelfState'])for(const continuing of [false,true]){
+   specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);p1Facing=p2.facing=1;vx=p2.vx=3;p1SprPriority=p2.sprPriority=2;runtimeCtrl=p2.ctrl=1;
+   const actor=specialRoot(player);actor.vars[29]=0;data.globalControllers['-2']=[{type,params:{value:String(id),anim:'F0',ctrl:'1',continue:continuing?'1':'0'},triggerall:[],triggers:{1:['1']}},{type:'VarAdd',params:{v:'29',value:'1'},triggerall:[],triggers:{1:['1']}}];
+   lifecycleRuntime.globalState(player===1?p1LifecycleBinding:p2,specialRuntime.context(actor),-2);const selected=specialRoot(player);
+   if(selected.state!==id||selected.time!==0||selected.anim!==0||selected.ctrl!==1||selected.sprPriority!==2||Math.abs(selected.vx)!==3||!rootStateChanges.has('root'+player)||actor.vars[29]!==Number(continuing))throw Error('Negative StateDef initialized before negative-body completion '+JSON.stringify({ikemen,player,type,continuing,state:selected.state,anim:selected.anim,ctrl:selected.ctrl,priority:selected.sprPriority,vx:selected.vx,tail:actor.vars[29]}));
+if(!initializeRootSourceStateM1(player))throw Error('Negative buffered StateDef did not initialize in the same tick after negative completion');const live=specialRoot(player);if(live.anim!==1||live.ctrl!==0||live.sprPriority!==7||Math.abs(live.vx)!==9)throw Error('Negative buffered StateDef effects missing');
+  }
+ }finally{data.engineVersions=versions;if(saved===undefined)delete states[id];else states[id]=saved;if(savedGlobal===undefined)delete data.globalControllers['-2'];else data.globalControllers['-2']=savedGlobal;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,saved=states[100],commands=data.playerCommands,watch=gameShell.isWatch;
+ try{
+  gameShell.isWatch=()=>false;states[100]={type:'S',physics:'N',moveType:'I',anim:'F1',ctrl:'0',velset:'9,0',sprpriority:'7',controllers:[]};data.playerCommands=[{type:'ChangeState',params:{value:'100'},triggerall:[],triggers:{1:['1']}}];
+  for(const ikemen of [false,true])for(const driver of ['p1-command','p1-dash','p2-command']){
+   specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);const tick=combatTraceTick;
+   const player=driver==='p2-command'?2:1;if(driver==='p1-command')runStateMinus1M1();else if(driver==='p1-dash')runP1DashCommands();else stepP2M1();const actor=specialRoot(player);
+   if(combatTraceTick!==tick||actor.state!==100||actor.anim!==1||actor.ctrl!==0||actor.sprPriority!==7||Math.abs(actor.vx)!==9||rootStateChanges.has('root'+player))throw Error('Command driver did not initialize buffered StateDef at its same-tick boundary '+JSON.stringify({ikemen,driver,state:actor.state,anim:actor.anim,ctrl:actor.ctrl,priority:actor.sprPriority,vx:actor.vx,pending:rootStateChanges.has('root'+player)}));
+  }
+ }finally{gameShell.isWatch=watch;data.engineVersions=versions;data.playerCommands=commands;if(saved===undefined)delete states[100];else states[100]=saved;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992150,992151],saved=ids.map(id=>states[id]),commands=data.playerCommands,watch=gameShell.isWatch;
+ const add=(v,value='1')=>({type:'VarAdd',params:{v:String(v),value,persistent:'0'},triggerall:[],triggers:{1:['1']}});
+ try{
+  gameShell.isWatch=()=>false;ids.forEach(id=>states[id]={type:'S',physics:'N',moveType:'I',anim:'F1',ctrl:'0',sprpriority:'7',controllers:[]});
+  for(const ikemen of [false,true])for(const player of [1,2])for(const type of ['ChangeState','SelfState'])for(const continuing of [false,true]){
+   specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);
+   data.playerCommands=[add(28),{type,params:{value:String(ids[0]),ctrl:'1',continue:continuing?'1':'0'},triggerall:[],triggers:{1:['1']}},add(29,'Ctrl'),{type,params:{value:String(ids[1]),ctrl:'1'},triggerall:[],triggers:{1:['1']}},add(31)];const actor=specialRoot(player);for(const v of [28,29,31])actor.vars[v]=0;
+   for(let pass=1;pass<=2;pass++){
+    if(player===1){if(!runStateMinus1M1())throw Error('Command body failed to report transition')}else stepP2M1();const live=specialRoot(player);
+    if(actor.vars[28]!==pass||actor.vars[29]!==Number(continuing)*pass||actor.vars[31]!==0||live.state!==ids[continuing?1:0]||live.ctrl!==0||live.anim!==1||rootStateChanges.has('root'+player))throw Error('Command body lost non-transition/continuation/negative-persistence behavior '+JSON.stringify({ikemen,player,type,continuing,pass,values:[actor.vars[28],actor.vars[29],actor.vars[31]],state:live.state,ctrl:live.ctrl,anim:live.anim}));
+   }
+  }
+ }finally{gameShell.isWatch=watch;data.engineVersions=versions;data.playerCommands=commands;ids.forEach((id,i)=>{if(saved[i]===undefined)delete states[id];else states[id]=saved[i]});p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,versions=data.engineVersions,commands=data.playerCommands,negative=[-4,-3,-2],savedGlobal=negative.map(id=>data.globalControllers[String(id)]),savedTargets=[...combatTargets];
+ const add=v=>({type:'VarAdd',params:{v:String(v),value:'1'},triggerall:[],triggers:{1:['1']}});
+ const dispatch=(player,params)=>{const actor=specialRoot(player);return executeControllerM1({type:'SelfState',params},player===1?p1ControllerBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true,changeState:next=>changeRootControllerState(player,next)})};
+ try{
+  data.playerCommands=[add(20)];data.globalControllers['-4']=[];data.globalControllers['-3']=[add(21)];data.globalControllers['-2']=[];
+  for(const ikemen of [false,true])for(const player of [1,2])for(const route of ['SelfState','TargetState','HitDef']){
+   specialRuntime.reset();combatTargets.clear();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;p1LastHitKey=null;p2.lastHitKey=null;p1Life=p2.life=1000;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);const actor=specialRoot(player),caller=specialRoot(3-player);actor.vars[20]=actor.vars[21]=0;
+   if(route==='SelfState')dispatch(player,{value:'0',readplayerid:String(3-player)});
+   else if(route==='TargetState'){combatTargetList(caller).add(player);executeControllerM1({type:'TargetState',params:{value:'0'}},caller.player===1?p1ControllerBinding:p2,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true})}
+   else{const params=specialRuntime.numeric({attr:'S,NA',damage:'0,0',guardflag:'',pausetime:'0,0',p2stateno:'0',p2getp1state:'1'},specialRuntime.context(caller)),definition={params,hitKey:'same-character-provider-'+ikemen+'-'+player};if(player===2)applyP2HitM1(definition);else applyP1HitM1({...caller,hitDef:definition})}
+   withCharacter(player,()=>runRootCommandBodyM1(player));stepLifecycleGlobals();
+   if(customStateOwnerPlayers[player-1]!==3-player||actor.vars[20]!==0||actor.vars[21]!==0)throw Error('Same-character foreign player slot did not block -1/-3 '+JSON.stringify({ikemen,player,route,slot:customStateOwnerPlayers[player-1],values:[actor.vars[20],actor.vars[21]]}));
+   const captured=specialRuntime.numeric({attr:'S,NA',damage:'0,0',p1stateno:'0'},specialRuntime.context(specialRoot(player)));if(captured.hitDefinitionStateOwnerPlayer!==3-player)throw Error('HitDef lost provider player slot');applySourceHitState(specialRoot(player),captured,{});if(customStateOwnerPlayers[player-1]!==3-player)throw Error('P1StateNo lost captured provider slot');
+   dispatch(player,{value:'0',ctrl:'1'});actor.vars[20]=actor.vars[21]=0;withCharacter(player,()=>runRootCommandBodyM1(player));stepLifecycleGlobals();if(customStateOwnerPlayers[player-1]!==player||actor.vars[20]!==1||actor.vars[21]!==1)throw Error('SelfState did not restore same-character own player commands');
+  }
+ }finally{data.engineVersions=versions;data.playerCommands=commands;negative.forEach((id,i)=>{if(savedGlobal[i]===undefined)delete data.globalControllers[String(id)];else data.globalControllers[String(id)]=savedGlobal[i]});combatTargets.clear();for(const [key,value]of savedTargets)combatTargets.set(key,value);customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,versions=data.engineVersions,id=992160,saved=data.helperStates[id],commands=data.playerCommands,negative=[-4,-3,-2],savedGlobal=negative.map(id=>data.globalControllers[String(id)]),savedTargets=[...combatTargets];
+ const add=v=>({type:'VarAdd',params:{v:String(v),value:'1'},triggerall:[],triggers:{1:['1']}});
+ const self=(actor,params)=>executeControllerM1({type:'SelfState',params},actor,specialRuntime.context(actor),{owner:actor,player:actor.player,schedulingApplied:true,changeState:next=>specialRuntime.selectState(actor,next)});
+ try{
+  data.helperStates[id]={type:'S',physics:'N',moveType:'I',controllers:[]};data.playerCommands=[add(20)];data.globalControllers['-4']=[];data.globalControllers['-3']=[add(21)];data.globalControllers['-2']=[];
+  for(const ikemen of [false,true])for(const player of [1,2])for(const route of ['SelfState','TargetState']){
+   specialRuntime.reset();combatTargets.clear();customStateOwners.fill(null);data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};const owner=specialRoot(player),caller=specialRoot(3-player);specialRuntime.dispatch({type:'Helper',params:{stateno:String(id),id:'91',keyctrl:'1,2,3'}},owner,specialRuntime.context(owner),{},owner,player);const actor=specialRuntime.entities.at(-1);
+   if(route==='SelfState')self(actor,{value:String(id),readplayerid:String(3-player)});else{combatTargetList(caller).add(actor.instanceId);executeControllerM1({type:'TargetState',params:{value:String(id)}},caller.player===1?p1ControllerBinding:p2,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true})}
+   combatTraceTick++;specialRuntime.step();if(actor.stateOwnerPlayer!==3-player||actor.vars[20]!==0||actor.vars[21]!==0)throw Error('Same-character Helper lost foreign provider slot '+JSON.stringify({ikemen,player,route,slot:actor.stateOwnerPlayer,values:[actor.vars[20],actor.vars[21]]}));
+   const params=specialRuntime.numeric({attr:'S,NA',damage:'0,0',p1stateno:String(id)},specialRuntime.context(actor));if(params.hitDefinitionStateOwnerPlayer!==3-player||!params.hitDefinitionForeignStateOwner)throw Error('Helper captured HitDef lost foreign player identity');applySourceHitState(actor,params,{});combatTraceTick++;specialRuntime.step();if(actor.stateOwnerPlayer!==3-player||actor.vars[20]!==0||actor.vars[21]!==0)throw Error('Helper P1StateNo lost provider identity');
+   self(actor,{value:String(id)});combatTraceTick++;specialRuntime.step();if(actor.stateOwnerPlayer!==player||actor.vars[20]!==1||actor.vars[21]!==1)throw Error('Helper SelfState did not restore own negative states');
+  }
+ }finally{specialRuntime.reset();data.engineVersions=versions;data.playerCommands=commands;if(saved===undefined)delete data.helperStates[id];else data.helperStates[id]=saved;negative.forEach((number,i)=>{if(savedGlobal[i]===undefined)delete data.globalControllers[String(number)];else data.globalControllers[String(number)]=savedGlobal[i]});combatTargets.clear();for(const [key,value]of savedTargets)combatTargets.set(key,value);customStateOwners.fill(null)}
+})()`);
+await run("prepareCharacters(['SailorSaturn','SailorMoon'])");
+await run(`(()=>{
+ const profiles=battleCharacters.map(name=>characterProfiles.get(name)),saved=profiles.map(profile=>({versions:profile.battle.engineVersions,commands:profile.battle.playerCommands,globals:profile.battle.globalControllers,zero:profile.states.states[0]}));
+ const raw={attr:'S,NA',damage:'0,0',p1stateno:'0'},hit={type:'HitDef',params:raw,triggerall:[],triggers:{1:['1']}};
+ const self=(player,params)=>{const actor=specialRoot(player);return executeControllerM1({type:'SelfState',params},player===1?p1ControllerBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true,changeState:next=>changeRootControllerState(player,next)})};
+ try{
+  profiles.forEach(profile=>{profile.battle.globalControllers={};profile.states.states[0]={...profile.states.states[0],hitdefpersist:'1'}});
+  for(const ikemen of [false,true])for(const player of [1,2])for(const phase of [-4,-2,-1]){
+   profiles.forEach(profile=>{profile.battle.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};profile.battle.globalControllers={};profile.battle.playerCommands=[]});specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;activeHitDef=null;p2.activeHitDef=null;enterIRState(0);enterP2State(0);
+   if(phase===-1){profiles[player-1].battle.playerCommands=[{type:'SelfState',params:{value:'0',readplayerid:String(3-player),continue:'1'},triggerall:[],triggers:{1:['1']}},hit];withCharacter(player,()=>runRootCommandBodyM1(player))}
+   else{self(player,{value:'0',readplayerid:String(3-player)});profiles[player-1].battle.globalControllers[String(phase)]=[hit];stepLifecycleGlobals()}
+   const params=(player===1?activeHitDef:p2.activeHitDef)?.params;if(!params||params.hitDefinitionStateOwner!==battleCharacters[player-1]||params.hitDefinitionStateOwnerPlayer!==player||params.hitDefinitionForeignStateOwner||customStateOwnerPlayers[player-1]!==3-player)throw Error('Negative HitDef inherited foreign current-State context '+JSON.stringify({ikemen,player,phase,owner:params?.hitDefinitionStateOwner,slot:params?.hitDefinitionStateOwnerPlayer,foreign:params?.hitDefinitionForeignStateOwner,current:customStateOwnerPlayers[player-1]}));
+  }
+ }finally{profiles.forEach((profile,i)=>{profile.battle.engineVersions=saved[i].versions;profile.battle.playerCommands=saved[i].commands;profile.battle.globalControllers=saved[i].globals;profile.states.states[0]=saved[i].zero});customStateOwners.fill(null);p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();activeHitDef=null;p2.activeHitDef=null;enterIRState(0);enterP2State(0)}
+})()`);
+await run("prepareCharacters(['SailorSaturn','SailorSaturn'])");
 const result=await run(`(()=>{
  const data=profileFor(1).battle,number=991988;data.helperStates[number]={type:'S',physics:'N',moveType:'I',anim:'0',ctrl:'1',controllers:[]};data.collision={...data.collision,0:[{c1:[[-20,-40,20,0]],c2:[[-20,-40,20,0]]}]};roundFlow.enabled=()=>false;lifecycleRuntime.rounds.state=2;specialRuntime.reset();posX=p2.x=0;posY=p2.y=0;p1Reaction=null;p1HitPause=0;p2.hitShake=p2.attackPause=0;enterIRState(0);enterP2State(0);
  const spawn=player=>{const owner=specialRoot(player);specialRuntime.dispatch({type:'Helper',params:{stateno:String(number),id:'80'}},owner,specialRuntime.context(owner),{},owner,player);const actor=specialRuntime.entities.at(-1);actor.x=actor.y=0;return actor};

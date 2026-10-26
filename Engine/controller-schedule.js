@@ -36,15 +36,15 @@ export function createActorControllerSchedules(){
  }
  function prepareEntry(entry,controller,options={}){
   const params=controller.params||controller;
-  if(options.global)return {eligible:!options.hitPause||!!parseCnsIntegerLiteral(params.ignorehitpause??0),executed:()=>{}};
   const index=controller.controllerSchedulingIndex;
   if(Number.isInteger(index))entry.cursor.index=index;
   if(options.hitPause&&Number.isInteger(index)&&entry.phase.carried&&index===entry.phase.skipIndex)return {eligible:false,executed:()=>{}};
+  if(options.global)return {eligible:!options.hitPause||!!parseCnsIntegerLiteral(params.ignorehitpause??0),executed:()=>{}};
   const key=controllerKey(controller);
   return {eligible:entry.schedule.before(key,params,options),executed:()=>entry.schedule.executed(key,params)};
  }
  function prepare(actor,generation,controller,options={}){
-  return prepareEntry(options.global?null:entryFor(actor,generation),controller,options);
+  return prepareEntry(options.global?(actors.get(actor)||entryFor(actor,generation)):entryFor(actor,generation),controller,options);
  }
  function capture(actor,generation){
   const entry=entryFor(actor,generation);

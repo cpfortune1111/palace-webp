@@ -1,3 +1,7 @@
+## 0.26.20 — Negative states and provider identity (partial)
+
+Negative root/Helper bodies retain controller position and transition outcomes. Root StateDef effects wait for the post-negative boundary; full -1 bodies and same-character State-provider player identity reach real consumers. Own-negative contexts preserve source identity through continued transitions. All 172 new actual browser cases, 301 Node checks, related browser gates and final battle regression pass. Complete native capacity/phase/context/reset/compiler/version fidelity remains Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.
+
 ## 0.26.19 — State counters and pause drivers (partial)
 
 State entry/release now resets destination-visible counters while retaining hidden slots. Continued bodies retain actor-wide controller position; combat/presentation expiry and ordinary attack-pause drivers use consistent scheduling and secondary pause clocks. Forty new actual browser cases, all 301 Node checks, related browser gates and full battle regression pass. Capacity reallocation, complete nested/global/native phase fidelity and wider controller coverage remain Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.

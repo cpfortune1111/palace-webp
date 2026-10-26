@@ -55,3 +55,12 @@ sourceBody.prepare(controller(2));nested.carryTo(1,2,3,4);
 assert.equal(nested.prepare(1,3,controller(2),{hitPause:true}).eligible,false,'continued old body updates actor-wide current slot before the next transition');
 assert.equal(nested.prepare(1,3,controller(0),{hitPause:true}).eligible,true,'second transition does not skip the earlier slot');
 console.log('Continued source body retains actor-wide current-controller position');
+
+const negative=createActorControllerSchedules(),globalController=controller(1);
+for(let visit=0;visit<2;visit++){const item=negative.prepare(1,10,globalController,{global:true,hitPause:true});assert.equal(item.eligible,true);item.executed()}
+negative.carryTo(1,10,11,3);
+assert.equal(negative.prepare(1,11,controller(1),{global:true,hitPause:true}).eligible,false,'negative body also honors MUGEN transition-slot suppression');
+assert.equal(negative.prepare(1,11,controller(0),{global:true,hitPause:true}).eligible,true);
+negative.releaseCarry(1,11);
+assert.equal(negative.prepare(1,11,controller(1),{global:true,hitPause:true}).eligible,true);
+console.log('Negative states bypass persistent counters while tracking and suppressing CNS slots');

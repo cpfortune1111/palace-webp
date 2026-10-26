@@ -70,7 +70,7 @@ export function createSpecialRuntime(api){
  };
  const numeric=(params,context,player=context?.player??1)=>{
   const result={...params,...compileHitChain(params,{evaluate:value=>api.eval(value,context),split:api.pair}),...compileHitStateParameters(params,{evaluate:value=>api.eval(value,context)})};
-  if(params.attr!==undefined||params['reversal.attr']!==undefined){result.hitDefinitionStateOwner=context?.stateOwner??api.data(player).character;result.hitDefinitionForeignStateOwner=!!context?.foreignStateOwner;}
+  if(params.attr!==undefined||params['reversal.attr']!==undefined){result.hitDefinitionStateOwner=context?.stateOwner??api.data(player).character;result.hitDefinitionStateOwnerPlayer=context?.stateOwnerPlayer??player;result.hitDefinitionForeignStateOwner=!!context?.foreignStateOwner;}
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.pausetime!==undefined||params['guard.pausetime']!==undefined){const pause=hitPauseParameters(params,{evaluate:value=>api.eval(value,context),split:api.pair});result.pausetime=pause.pause.join(',');result['guard.pausetime']=pause.guard.join(',')}
   if(params.attr!==undefined||params['reversal.attr']!==undefined||params.unhittabletime!==undefined)result.unhittabletime=hitUnhittableTime(params,{pause:String(result.pausetime??'0,0').split(',').map(Number),reversal:params['reversal.attr']!==undefined&&compileAttackAttribute(params['reversal.attr'])!==0,throwAttribute:params.attr!==undefined&&(compileAttackAttribute(params.attr,{hitdef:true})&9344)!==0,evaluate:value=>api.eval(value,context),split:api.pair}).join(',');
   if(params.attr!==undefined||params['reversal.attr']!==undefined){compileHitAffectTeam(params.affectteam);const nativeTeam=context?.teamSide??root(player).teamSide??player,side=params.teamside===undefined?nativeTeam:Math.trunc(Number(api.eval(params.teamside,context)))|0;result.hitDefinitionTeamSide=side>=0&&side<=2?side:nativeTeam}
@@ -118,11 +118,11 @@ export function createSpecialRuntime(api){
   api.stateInitialized?.(entity);
   api.soundStateInitialized?.(entity);
  }
- function selectState(entity,state,{provider=entity.stateOwner,phase='external'}={}){
+ function selectState(entity,state,{provider=entity.stateOwner,providerPlayer=provider===entity.stateOwner?(entity.stateOwnerPlayer??entity.player):provider&&provider!==api.data(entity.player).character?3-entity.player:entity.player,phase='external'}={}){
   if(!helperDefinition(entity,state,provider))throw Error('Unknown helper state '+state);
   const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(provider?api.stateData(provider):api.data(entity.player)).ikemen;
   return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider,phase},()=>{
-   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});
+   const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,stateOwnerPlayer:provider?providerPlayer:entity.player,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});
    entity.hitStateChangeIndex=resetAfterPause?(entity.currentControllerIndex??-1):-1;
    if(!resetAfterPause)entity.controllerSchedule.resetSlots(helperDefinition(entity,state,provider).controllers?.length??0);
   });
@@ -183,8 +183,8 @@ export function createSpecialRuntime(api){
   const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',rootvarset:'RootVarSet',rootvaradd:'RootVarAdd',bindtoroot:'BindtoRoot'};
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ownData=api.ownData?.(entity.player)??api.data(entity.player),ctx=context(entity,undefined,global?{...entity,stateOwner:null,expressionLocalCoord:characterLocalCoord(ownData)}:entity);
-  if(global)Object.assign(ctx,{stateOwner:ownData.character,foreignStateOwner:false});
-  if(!global){entity.currentControllerIndex=index;if(entity.hitPause>0&&entity.hitStateChangeIndex>=0&&index===entity.hitStateChangeIndex)return}
+  if(global)Object.assign(ctx,{stateOwner:ownData.character,stateOwnerPlayer:entity.player,foreignStateOwner:false});
+  entity.currentControllerIndex=index;if(entity.hitPause>0&&entity.hitStateChangeIndex>=0&&index===entity.hitStateChangeIndex)return;
   if(global?(entity.hitPause>0&&!parseCnsIntegerLiteral(controller.params.ignorehitpause??0)):!schedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
   const outcome=helperControllerEffect(entity,controller,ctx,global);
@@ -236,7 +236,7 @@ export function createSpecialRuntime(api){
  }
  function helperGlobals(entity){
   for(const stateNo of [-3,-2,-1]){
-   if(!helperNegativeStates(entity).includes(stateNo))continue;
+   if(!helperNegativeStates(entity,{ownState:entity.stateOwnerPlayer===undefined?!entity.stateOwner:entity.stateOwnerPlayer===entity.player}).includes(stateNo))continue;
    helperGlobalState(entity,stateNo);if(entity.destroyed)return;
   }
  }
@@ -333,7 +333,7 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
     if(result)api.recordCornerPush?.(attack,helper,result);
     if(result&&attack.kind==='projectile')recordProjectileContact(attack,result.guarded?'guarded':'hit');
     if(result){if(api.setHelperLife)api.setHelperLife(helper,result.life);else setHelperLife(helper,result.life);helper.getHit=result.getHit;helper.hitPause=result.defenderPause;helper.hitShake=result.defenderPause;if(!result.keepState)helper.hitTime=result.getHit.hittime;helper.sprPriority=result.defenderPriority;if(result.forceAirApplied)helper.type='A';if(!result.keepState&&!selected?.override.keepState)helper.moveType='H';consumeHitOnceContact(attack.hitDef,{accepted:true,isProjectile:attack.kind==='projectile'});}
-    if(!selected){if(!result.keepState){const provider=!result.guarded&&result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
+    if(!selected){if(!result.keepState){const provider=!result.guarded&&result.getHit.p2getp1state?attack.hitDef.params.hitDefinitionStateOwner??api.data(attack.player).character:null;selectState(helper,result.state,{provider,providerPlayer:provider?(attack.hitDef.params.hitDefinitionStateOwnerPlayer??attack.player):helper.player});helper.ctrl=0}api.helperCustomHit?.(attack,helper,result)}
     if(selected&&!helper.getHit?.keepstate&&!selected.override.keepState&&selected.override.state>=0)overrides.push([helper,selected.override.state]);
     break;
    }
