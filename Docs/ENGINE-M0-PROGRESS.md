@@ -1,5 +1,19 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.26 existing-runtime trace prerequisite for M1
+
+`Tools/check-runtime-trace-repeatability.cjs` runs the actual Moon/Venus source paths in three fresh browser contexts. It resets the existing native RNG, intercepts legacy Math.random only during fixture-driven simulation, scripts S1000/S3000 entries and held inputs, then captures 360 real ticks per context with one actual camera update per tick. Root/GetHit/entity/effect/round/pause fields and observed function phases are canonicalized with explicit undefined/nonfinite/negative-zero tokens. Failed comparisons retain the first chronological difference. Requested code/JSON/HTML inputs are fingerprinted and must stay unchanged across the trials.
+
+The first complete simulation exposed a real Venus player-push schema error: body dimensions are in legacy sizeConstants, but the lookup indexed absent constants. The owning-character fallback now accepts either existing table without changing width math or source-State ownership. With the repair, seed 17/17 traces match exactly and seed 29 differs; five entities spawn, P2 reaches 880 HP, 1,823 legacy random samples are exercised and 332 source inputs remain stable. [RUNTIME-TRACE-EVIDENCE.json](RUNTIME-TRACE-EVIDENCE.json) records digests, environment, phase examples and scope.
+
+This is a real-consumer verification prerequisite within the continuing audit, not a completed M1 kernel: production Math.random calls, full native phase ordering, full-state save/load, physical input replay, all actors/versions and GPU presentation remain incomplete. The native component reference and current Web call markers remain distinct. No large scheduler replacement is claimed.
+
+```text
+node Tools/check-runtime-trace-repeatability.cjs ../outputs/release-02626-repeatability-results.json
+```
+
+Each tick now gets an independent deep plain-data snapshot before later updates can mutate nested pause/GetHit values. Unsupported object prototypes/types and cycles fail explicitly; in-page alias/rejection assertions protect this contract. The frozen driver SHA joins the loaded-source fingerprints, and a failed/unfinished run cannot leave a stale passed report. All 301 Node checks, complete battle regression and the final immutable-snapshot three-context trace gate passed. Raw detailed traces/source fingerprints remain private. The initial bad fixture setup was corrected to use specialRoot(2) storage initialization before filling variables; the subsequent player-push failure was a production data-binding bug and was fixed in the actual runtime.
+
 ## AIR original-frame metadata and explicit export gaps
 
 [AIR-FRAME-EVIDENCE.json](AIR-FRAME-EVIDENCE.json) records 29 synthetic frame probes and all 10,501 frame rows from five private original AIR files against the pinned compiled ReadAnimFrame component. Required fields, H/V offset handling, repeated flips and float32 scale/angle metadata match independent fixtures. Ignored starts and malformed metadata diagnostics remain distinct from full-file parser policy. No raw AIR text is published.

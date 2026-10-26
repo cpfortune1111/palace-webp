@@ -1,0 +1,118 @@
+{
+  "schema": "moon-palace-runtime-trace-evidence-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "scope": "Fresh-context scripted actual Web simulation with test-owned native seed reset and simulation-only Math.random interception. Observed state projection and phase calls only; not production determinism, save-state replay, native phase equivalence or full-engine certification.",
+  "trial": {
+    "runtime": "0.26.26",
+    "driverSha256": "72dbee292efc771a2df027228a504e2e861524dc5711afbc6a78e7bd4ad16975",
+    "snapshotPolicy": "Immutable plain-data projection; unsupported types/prototypes and cycles fail explicitly",
+    "environment": {
+      "node": "v24.22.1",
+      "browser": "156.0.4314.42"
+    },
+    "seeds": [
+      17,
+      17,
+      29
+    ],
+    "ticksPerRun": 360,
+    "tape": [
+      {
+        "tick": 0,
+        "player": 1,
+        "state": 1000
+      },
+      {
+        "tick": 30,
+        "player": 2,
+        "state": 1000
+      },
+      {
+        "tick": 150,
+        "player": 1,
+        "state": 3000
+      },
+      {
+        "tick": 200,
+        "player": 2,
+        "state": 3000
+      }
+    ],
+    "sameSeedMatched": true,
+    "otherSeedDiffers": true,
+    "digests": [
+      "6bf866bd83667aadde0dd01009f49d8ac0ba9b76549795231a3a30e73c3c0b4f",
+      "6bf866bd83667aadde0dd01009f49d8ac0ba9b76549795231a3a30e73c3c0b4f",
+      "9bb2d7468690dee71ad422c92bac67724276a67c8f2e2f055df71181e41b800e"
+    ],
+    "phaseNames": [
+      "afterimages",
+      "boundEffects",
+      "camera",
+      "effects",
+      "entities",
+      "entityFinish",
+      "lifecycleGlobals",
+      "p2State",
+      "roundFlow",
+      "scriptState:1:1000",
+      "scriptState:1:3000",
+      "scriptState:2:1000",
+      "scriptState:2:3000",
+      "simStep",
+      "simStepCore"
+    ],
+    "sourceFileCount": 332,
+    "sourceManifestSha256": "3c49afc5cf9263ef743cc9154d5a644695ee404b420275de60f4cddf41913a68",
+    "sourceChanges": [],
+    "renderPolicy": "One actual camera update after each manually driven simulation tick; canvas/GPU drawing excluded",
+    "maxEntities": 5,
+    "minimumLife": [
+      1000,
+      880
+    ],
+    "legacyRandomCalls": 1823,
+    "firstTickPhases": [
+      "scriptState:1:1000",
+      "simStep",
+      "effects",
+      "simStepCore",
+      "lifecycleGlobals",
+      "p2State",
+      "afterimages",
+      "entities",
+      "entityFinish",
+      "boundEffects",
+      "roundFlow",
+      "camera"
+    ],
+    "scope": "Fresh-context scripted actual Web simulation with test-owned native seed reset and simulation-only Math.random interception. Observed state projection and phase calls only; not production determinism, save-state replay, native phase equivalence or full-engine certification."
+  },
+  "repair": {
+    "consumer": "index.html: playerPushExtentsM1",
+    "problem": "Fresh Moon/Venus simulation attempted to index missing Venus battle.constants; its body dimensions live in battle.sizeConstants.",
+    "change": "Read the owning character's constants table or legacy sizeConstants table, retaining the existing per-field fallback and width modifier path.",
+    "scope": "Schema binding repair; complete native player-push/scale/depth semantics remain Partial."
+  },
+  "stages": {
+    "Parsed": "Partial",
+    "Executable": "Partial",
+    "Source-verified": "Partial",
+    "Semantically tested": "Partial"
+  },
+  "qualification": [
+    "Test-owned RNG reset/interception is confined to the browser fixture; production Math.random wiring is unchanged",
+    "Each trial starts in a fresh browser context; this is not save-state restoration or arbitrary recording replay",
+    "Scripted State entries supplement held-input fixtures and do not certify the complete CMD/input grammar",
+    "Observed root/GetHit/entity/effect/camera/round fields are a projection, not every engine field",
+    "Current Web call ordering is recorded, not asserted equal to the pinned native engine",
+    "All 332 loaded code/JSON/HTML input hashes stay private in the detailed receipt; the public digest fingerprints that list",
+    "No original source assets, binaries or raw private traces are published"
+  ],
+  "next": [
+    "Use observed phase/state traces to drive M1 deterministic scheduler migration",
+    "Replace test-only RNG interception with source-faithful production stream ownership",
+    "Complete tick-boundary/native phase comparison, input capture, full snapshots and replay"
+  ]
+}

@@ -1,3 +1,7 @@
+## 0.26.26 — Mixed-character push binding and actual trace prerequisite
+
+The actual fresh-context Moon/Venus trace exposed a player-push crash: Venus stores body constants in sizeConstants, while the consumer assumed constants. The owning-character lookup now accepts both schemas. The new browser probe captures 360 ticks including State-entry scripts, source moves, helpers/projectiles, effects, round state and camera updates. Two seed-17 runs match; seed 29 differs. All 332 loaded code/JSON/HTML inputs remain unchanged during the trials. [RUNTIME-TRACE-EVIDENCE.json](RUNTIME-TRACE-EVIDENCE.json) retains the projection, test-only RNG interception and missing native/full-snapshot/replay scope. M0/full-engine work remains incomplete.
+
 ## 0.26.25 — StateDef persistence/cost and complete header inventory
 
 The three persistence flags and juggle now use shared Boolean/integer conversion. Undefined/NaN and numeric strings no longer incorrectly retain hit/contact/HitDef data or assign a numeric-string juggle cost. Unit assertions reproduced the old flag failure; actual root/reaction entry fixtures now use quoted string expressions on their reset path. [STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json) reconciles all 13 MUGEN/native header fields with separate Partial stages, source execution order, current consumers and tests. Generic frontend/phase/default/version conformance remains unfinished.

@@ -2,6 +2,7 @@
   "schema": "moon-palace-runtime-coverage-v1",
   "status": "Partial",
   "goalComplete": false,
+  "webTraceEvidence": "Docs/RUNTIME-TRACE-EVIDENCE.json: fresh-context actual simulation projection with test-owned RNG and camera updates; not production determinism/native order certification",
   "baseline": {
     "runtime": "0.26.22",
     "commit": "cd15eb153902e6b0ea1145e5d88918717eb38fa5"

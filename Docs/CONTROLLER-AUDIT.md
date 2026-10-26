@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.26 fixes legacy Venus body-constant binding in player push and adds [actual runtime trace evidence](RUNTIME-TRACE-EVIDENCE.json). Fresh-context seed-17 simulation/camera projections match for 360 ticks; seed 29 differs. This uses test-owned RNG interception and is a verification prerequisite, not production determinism or native scheduling certification.
+
 0.26.25 fixes typed values for StateDef hitcountpersist/movehitpersist/hitdefpersist/juggle and adds [STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json). All 13 header fields have reviewed consumers/tests and separate Partial stages; complete source/default/version/phase semantics remain unfinished. This header namespace is distinct from the State-controller parameter inventory.
 
 0.26.24 corrects StateDef scalar/facing typed values using shared conversion helpers: strings and undefined values yield native false/zero. The failing-before-fix assertion, all 301 Node checks and actual P1/P2/Helper entry fixtures cover the correction. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) retains Partial scope; full StateDef/engine conformance is incomplete.

@@ -1,3 +1,7 @@
+## 0.26.26 — Mixed-character push data and trace baseline
+
+Venus body-size lookup now reads its legacy sizeConstants table, fixing a mixed-character player-push crash. A fresh-browser trace probe repeats 360 actual Moon/Venus simulation ticks with test-owned seeds and immutable snapshots, including camera updates, spawned entities and damage. Equal seeds match; another seed differs. All 301 Node checks and complete battle regression pass. [Evidence and limits](Docs/RUNTIME-TRACE-EVIDENCE.json) distinguish this prerequisite from production determinism, native ordering and complete replay support. Full engine work continues.
+
 ## M0 follow-up — AIR frame evidence and export diagnostics
 
 29 synthetic and 10,501 private original AIR frame records match the compiled pinned frame reader. Both exporters retain the exact existing records and now stop explicitly on unimplemented per-frame transforms/interpolation instead of silently dropping them. [Frame evidence](Docs/AIR-FRAME-EVIDENCE.json) separates reference probes from missing browser execution. Alpha (8,707) and synthetic sprite (2,460) regression cases pass. Game runtime stays 0.26.25; full engine work continues.

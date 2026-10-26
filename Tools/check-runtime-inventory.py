@@ -47,3 +47,15 @@ for name in ('rng', 'tick', 'actorOrder', 'systemOrder', 'statePhases'):
     assert set(ledger[name]['evidenceStages'].values()) == {'Partial'}
 assert (root / ledger['rng']['consumer']).is_file()
 print('PASS runtime source pins, 13 unchanged declaration hashes, observed call order and scoped evidence records')
+trace = json.loads((root / 'Docs/RUNTIME-TRACE-EVIDENCE.json').read_text(encoding='utf-8'))
+trial = trace['trial']
+assert trace['status'] == 'Partial' and trace['goalComplete'] is False
+assert trial['sameSeedMatched'] is True and trial['otherSeedDiffers'] is True
+assert trial['digests'][0] == trial['digests'][1] != trial['digests'][2]
+assert trial['seeds'] == [17, 17, 29] and trial['ticksPerRun'] == 360
+assert trial['sourceChanges'] == [] and trial['sourceFileCount'] == 332
+driver = root / 'Tools/check-runtime-trace-repeatability.cjs'
+assert hashlib.sha256(driver.read_bytes()).hexdigest() == trial['driverSha256'], 'Trace driver evidence is stale'
+assert trial['snapshotPolicy'].startswith('Immutable plain-data projection')
+assert trial['maxEntities'] > 0 and trial['minimumLife'][1] < 1000 and trial['legacyRandomCalls'] > 0
+print('PASS actual Web trace evidence identity, frozen driver and explicitly Partial repeatability scope')

@@ -366,6 +366,8 @@
       "evidence": [
         "Engine/native-random.js",
         "Docs/RUNTIME-COVERAGE.json",
+        "Docs/RUNTIME-TRACE-EVIDENCE.json",
+        "Tools/check-runtime-trace-repeatability.cjs",
         "Tools/check-native-runtime-components.cjs",
         "Engine/controller-schedule.js",
         "Char/Venus/venus-special-runtime.js",
@@ -399,9 +401,9 @@
   ],
   "inventoryWarnings": [
     "The 163-controller registry is an Ikemen compiler candidate inventory, not a count of completed controllers.",
-    "Legacy HITDEF-AUDIT labels (53 Not implemented / 46 Partial / 32 Implemented) are not reconciled with newer source consumers and must not be used as a current completion percentage.",
+    "Legacy HITDEF-AUDIT labels are historical; current HITDEF-COVERAGE records 38 scoped Partial and 93 Unassessed parameters. Neither table is a complete engine completion percentage.",
     "State-controller and animation parameter inventories explicitly retain Partial statuses.",
-    "No complete separate trigger/CMD/AIR/format/runtime item inventory was evidenced in this audit."
+    "Separate trigger/CMD/AIR/StateDef/format/runtime evidence now exists; complete per-item/default/version reconciliation and subsystem certification remain unfinished."
   ],
   "standingScopeException": "Prior Moon Palace character recoloring integration remains excluded and must be recorded explicitly; no silent full-engine certification across excluded features. Required asset palette decoding is distinct from new character-art recoloring work.",
   "milestones": [
