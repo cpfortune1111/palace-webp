@@ -64,4 +64,4 @@ M0 starts with the existing controller/state work, not a blank project. M1 estab
 
 The objective file explicitly states: **“Before starting large new subsystems, report the audit results and proposed implementation order for approval.”**
 
-This document provides that reviewable audit and order. Proposed authorization: **approve the M0–M7 order, begin M0 then M1**, and continue through that approved order without restarting existing work. No large new parser, asset loader, VM or kernel replacement has been started by this audit. Existing authorized controller fixes and their unpublished release remain preserved; the overall compatibility objective remains unfinished.
+The human user approved the M0–M7 order on 2026-10-26: begin M0 then M1 and continue through the approved order without restarting existing work. The approval boundary is satisfied. M0 input-inventory reconciliation has started; see `ENGINE-M0-PROGRESS.md`. No new parser, asset loader, VM or kernel replacement has yet been started. Existing controller fixes were published and live-verified in 0.26.21; the overall compatibility objective remains unfinished.

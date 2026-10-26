@@ -389,6 +389,8 @@
   "milestones": [
     {
       "id": "M0",
+      "status": "In progress: controller reference inheritance/dynamic families and expression registry input inventories; complete semantic reconciliation remains unfinished",
+      "progressDocument": "Docs/ENGINE-M0-PROGRESS.md",
       "title": "Reference and coverage reconciliation",
       "dependsOn": [],
       "complexity": "L",
@@ -533,6 +535,8 @@
     }
   ],
   "approval": {
+    "status": "Approved by the human user on 2026-10-26; M0 started",
+    "answer": "可以，依此順序繼續",
     "requiredBeforeLargeNewSubsystems": true,
     "sourceQuote": "Before starting large new subsystems, report the audit results and proposed implementation order for approval.",
     "proposedFirstAuthorization": "Approve the M0–M7 dependency order; begin M0 then M1 and continue through the approved order without restarting existing work."
