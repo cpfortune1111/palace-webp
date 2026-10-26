@@ -2,6 +2,20 @@
 
 The user approved the M0–M7 implementation order on 2026-10-26. The original approval boundary in the initial audit has now been satisfied. Character costume recoloring remains excluded; gameplay PalFX behavior remains in scope.
 
+## AIR/CMD audit and 0.26.22 existing-consumer correction
+
+[AIR-CMD-COVERAGE.json](AIR-CMD-COVERAGE.json) now records the examined 10-field AIR element path, headers/loops/collision directives, four interpolation directives and CMD parameter/default/remap/key/timing gaps. Native animation/input files and the original KFM CMD reference comments/example are pinned privately; only authored metadata, tools and implementation are published. The sample's documented buffer limit and pinned Ikemen loader behavior remain distinct, as do internal constructor defaults and file-level defaults.
+
+The current converted-character path omits interpolation and per-element scale/angle. The command exporter/matcher lacks full OR, absolute/neutral-direction, step-time, buffering/versioned behavior and generic source ingestion. These are explicit Partial/Unsupported records, not certified executable support. `check-air-cmd-inventory.py` cross-checks five actual pinned inputs, accepted native parameter/default/key facts, documentation interpolation names and stage-record integrity.
+
+Inspection also found a concrete existing alpha-consumer error and an incorrect matching test expectation: AS with no digits used source 255, while pinned native ReadAnimFrame uses 0. The 0.26.22 helper corrects AS/SS/SAS and accepted tails, exposes diagnostics separately, and preserves native-selected fallback states. All 301 Node checks, 72 actual root draw cases and full battle regression passed. This is continued existing-consumer work; no large parser/kernel replacement was started, and the full goal remains unfinished.
+
+```text
+python Tools/check-air-cmd-inventory.py --anim ../outputs/ikemen-anim.go --input ../outputs/ikemen-input.go --compiler ../outputs/ikemen-compiler.go --air ../outputs/mugen-reference-11b1/docs/air.html --mugen-cmd ../outputs/mugen-reference-11b1-kfm.cmd
+node Tools/check-air-trans.mjs
+node Tools/check-air-trans-browser.cjs
+```
+
 ## Current work
 
 `Tools/audit-engine-controller-baseline.py` creates separate reference rows for the pinned MUGEN 1.1 beta1 controller document and the pinned Ikemen compiler registry. It checks both the document and compiler-source SHA-256 and compiler inventory commit before producing a report. The cached compiler source was read back from the exact upstream commit and matched character for character. It does not redistribute either original reference source.

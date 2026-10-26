@@ -1,3 +1,7 @@
+## 0.26.22 — AIR alpha source parity (partial)
+
+AIR `AS` without source digits now produces alpha 0, matching the pinned Ikemen branch; SS/SAS, accepted prefix/tails and error-tolerant selected states follow the same source behavior. Parsing exposes diagnostics separately. All 301 Node checks, 72 actual P1/P2 draw cases and full battle regression pass. [AIR/CMD coverage](Docs/AIR-CMD-COVERAGE.json) records the remaining frame/interpolation/input/parameter gaps; full engine compatibility remains incomplete.
+
 ## 0.26.21 — Own-state release and removal (partial)
 
 Helper HitOverride, root/Helper binding release, conditional TargetDrop and Helper destruction select own pending States without prematurely replacing control/animation. All 96 new actual browser cases, 301 Node checks, related browser gates and final complete battle regression pass. Full controller/native phase/retention semantics remain Partial. The user approved the expanded M0–M7 engine plan; M0 inventory reconciliation has started (Docs/ENGINE-M0-PROGRESS.md). This audit follow-up does not change the deployed game runtime. Original source assets and character costume recoloring are excluded.

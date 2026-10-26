@@ -36,6 +36,11 @@
     "Semantically tested",
     "Partial / Unsupported"
   ],
+  "latestReconciledSubset": {
+    "version": "0.26.22",
+    "ledger": "Docs/AIR-CMD-COVERAGE.json",
+    "scope": "Existing AIR alpha helper correction; 301 Node checks, 72 actual root draw cases and full battle regression passed. Complete AIR/CMD and engine remain Partial."
+  },
   "subsystems": [
     {
       "id": "controllers",

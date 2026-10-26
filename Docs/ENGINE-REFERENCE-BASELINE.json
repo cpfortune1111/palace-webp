@@ -14,9 +14,20 @@
     "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
     "sourceHashes": {
       "src/compiler.go": "e027f39df8f86d3ea9b7c422237f4c1525795d70eb1365b136e9a31c75bcd9f8",
-      "src/compiler_functions.go": "fb22ba6775515cf9cd278a6d0556b4972287655f712e07271a12d5561e55688d"
+      "src/compiler_functions.go": "fb22ba6775515cf9cd278a6d0556b4972287655f712e07271a12d5561e55688d",
+      "src/anim.go": "0385650e39a91a4c43cd02dd926b3306cf4bb88f9be7b26df572702f93b07afd",
+      "src/input.go": "c5f02ca16464c98a052fee9c453729638b3fab31c6d6ace6ba4e92a96985d94b"
     },
-    "verification": "Both pinned compiler files were read back from upstream and matched the cached source."
+    "verification": "Both pinned compiler files were read back from upstream and matched the cached source. Animation/input source caches additionally matched exact upstream Git blob hashes and lengths."
+  },
+  "commandReferenceExample": {
+    "repository": "Tunlan/mugen-1.1b1",
+    "commit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
+    "path": "chars/kfm/kfm.cmd",
+    "gitBlobSha": "ede02c8a9664eff01566c82f4398397862fc844b",
+    "bytes": 22216,
+    "sha256": "2c4a52e3f425d6a1a4303a44405ac060f3c122f1a4a1a5447d3dc95ee3adb88b",
+    "scope": "Private original authoring comments/example for CMD syntax; metadata only is published."
   },
   "files": [
     {

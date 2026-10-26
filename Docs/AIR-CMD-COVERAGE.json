@@ -1,0 +1,618 @@
+{
+  "schema": "moon-palace-air-cmd-coverage-v1",
+  "certification": "Partial audit and one existing AIR alpha consumer correction. No generic AIR/CMD parser, matcher or engine certification.",
+  "runtimeVersion": "0.26.22",
+  "references": {
+    "mugenMirrorCommit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
+    "air": {
+      "path": "docs/air.html",
+      "sha256": "79432cd5fd57376895a31ffbd69a97b5d48e376152a8eebc7d38dbd3f1217fa3"
+    },
+    "cmdExample": {
+      "path": "chars/kfm/kfm.cmd",
+      "gitBlobSha": "ede02c8a9664eff01566c82f4398397862fc844b",
+      "bytes": 22216,
+      "sha256": "2c4a52e3f425d6a1a4303a44405ac060f3c122f1a4a1a5447d3dc95ee3adb88b",
+      "qualification": "Original authoring reference comments/example, cached privately; not an independently verified MUGEN executable oracle."
+    },
+    "ikemenCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "nativeSources": [
+      {
+        "path": "src/anim.go",
+        "sha256": "0385650e39a91a4c43cd02dd926b3306cf4bb88f9be7b26df572702f93b07afd",
+        "gitBlobSha": "d299ae57755a5b9950b668ebcedc4ba09d81d8e3"
+      },
+      {
+        "path": "src/input.go",
+        "sha256": "c5f02ca16464c98a052fee9c453729638b3fab31c6d6ace6ba4e92a96985d94b",
+        "gitBlobSha": "0f3da0611424dcfe328349fe81f30d1f1f45b883"
+      },
+      {
+        "path": "src/compiler.go",
+        "sha256": "e027f39df8f86d3ea9b7c422237f4c1525795d70eb1365b136e9a31c75bcd9f8"
+      }
+    ]
+  },
+  "air": {
+    "frameFields": [
+      {
+        "id": "air/frame/group",
+        "position": 1,
+        "name": "group",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/image",
+        "position": 2,
+        "name": "image",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/x-offset",
+        "position": 3,
+        "name": "x-offset",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/y-offset",
+        "position": 4,
+        "name": "y-offset",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/duration",
+        "position": 5,
+        "name": "duration",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/flip",
+        "position": 6,
+        "name": "flip",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/blend",
+        "position": 7,
+        "name": "blend",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/x-scale",
+        "position": 8,
+        "name": "x-scale",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/y-scale",
+        "position": 9,
+        "name": "y-scale",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      },
+      {
+        "id": "air/frame/angle",
+        "position": 10,
+        "name": "angle",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined converted-character import/render path; not a general browser AIR reader."
+      }
+    ],
+    "directives": [
+      {
+        "id": "air/directive/Begin Action",
+        "name": "Begin Action",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      },
+      {
+        "id": "air/directive/LoopStart",
+        "name": "LoopStart",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      },
+      {
+        "id": "air/directive/Clsn1",
+        "name": "Clsn1",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      },
+      {
+        "id": "air/directive/Clsn2",
+        "name": "Clsn2",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      },
+      {
+        "id": "air/directive/Clsn1Default",
+        "name": "Clsn1Default",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      },
+      {
+        "id": "air/directive/Clsn2Default",
+        "name": "Clsn2Default",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "remaining": "Full source grammar, indexed/count validation, defaults, diagnostics, timing and query interactions."
+      }
+    ],
+    "interpolation": [
+      {
+        "id": "air/interpolate/Offset",
+        "name": "Offset",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "evidence": [
+          "Tools/export_venus_turn.py",
+          "Tools/compile_moon_states.py",
+          "index.html"
+        ],
+        "nativeConsumer": "src/anim.go: readAnimation and interpolation update",
+        "remaining": "Preserve directives in import, implement versioned interpolation/draw/collision/query consumers, verify wrap and timing against native traces."
+      },
+      {
+        "id": "air/interpolate/Blend",
+        "name": "Blend",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "evidence": [
+          "Tools/export_venus_turn.py",
+          "Tools/compile_moon_states.py",
+          "index.html"
+        ],
+        "nativeConsumer": "src/anim.go: readAnimation and interpolation update",
+        "remaining": "Preserve directives in import, implement versioned interpolation/draw/collision/query consumers, verify wrap and timing against native traces."
+      },
+      {
+        "id": "air/interpolate/Scale",
+        "name": "Scale",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "evidence": [
+          "Tools/export_venus_turn.py",
+          "Tools/compile_moon_states.py",
+          "index.html"
+        ],
+        "nativeConsumer": "src/anim.go: readAnimation and interpolation update",
+        "remaining": "Preserve directives in import, implement versioned interpolation/draw/collision/query consumers, verify wrap and timing against native traces."
+      },
+      {
+        "id": "air/interpolate/Angle",
+        "name": "Angle",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "evidence": [
+          "Tools/export_venus_turn.py",
+          "Tools/compile_moon_states.py",
+          "index.html"
+        ],
+        "nativeConsumer": "src/anim.go: readAnimation and interpolation update",
+        "remaining": "Preserve directives in import, implement versioned interpolation/draw/collision/query consumers, verify wrap and timing against native traces."
+      }
+    ],
+    "blendConsumer": {
+      "id": "air/blend-consumer",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "runtimeConsumers": [
+        "Engine/air-trans.js",
+        "index.html"
+      ],
+      "tests": [
+        "Tools/check-air-trans.mjs",
+        "Tools/check-air-trans-browser.cjs"
+      ],
+      "verifiedSubset": "Pinned alpha branch: absent source digits yield 0; native accepted prefix/tails; 14-bit wrap/255 cap; invalid plain-mode diagnostics retain selected state. 72 actual root draw cases cover P1/P2 forward/reverse/angle and controller overrides.",
+      "remaining": [
+        "Full AIR frame parser and file-level warning/error policy",
+        "MUGEN/Ikemen version-specific alpha/render behavior",
+        "Native executable differential traces",
+        "All helper/projectile/Explod/reflection/afterimage and GPU interactions"
+      ]
+    },
+    "nativeSyntaxOutsideAirDocumentCandidates": [
+      "SA",
+      "SS<source>D<destination>",
+      "SAS<source>D<destination>",
+      "Copy Action <number>"
+    ],
+    "versionReview": [
+      "MUGEN AIR documentation uses alpha authoring range 0-256; pinned native storage caps to byte 255 after a 14-bit mask.",
+      "Pinned source comments distinguish blank optional scale behavior in MUGEN 1.1 from Ikemen; closed MUGEN behavior still requires executable verification."
+    ],
+    "remaining": [
+      "Original AIR browser loading and generic action table/compiler",
+      "All frame-duration, zero/infinite-frame, loop and query semantics",
+      "Reserved/recommended action requirements and common-state interactions",
+      "Collision indices/counts/normalization and diagnostic policy"
+    ]
+  },
+  "cmd": {
+    "mugenExampleDirections": [
+      "B",
+      "DB",
+      "D",
+      "DF",
+      "F",
+      "UF",
+      "U",
+      "UB"
+    ],
+    "mugenExampleHeaderButtons": [
+      "a",
+      "b",
+      "c",
+      "x",
+      "y",
+      "z"
+    ],
+    "mugenExampleRemapButtons": [
+      "x",
+      "y",
+      "z",
+      "a",
+      "b",
+      "c",
+      "s"
+    ],
+    "nativeDirectionBases": [
+      "B",
+      "D",
+      "F",
+      "L",
+      "R",
+      "U",
+      "N"
+    ],
+    "nativeDirectionTokens": [
+      "U",
+      "D",
+      "B",
+      "F",
+      "L",
+      "R",
+      "N",
+      "UB",
+      "DB",
+      "UF",
+      "DF",
+      "UL",
+      "DL",
+      "UR",
+      "DR"
+    ],
+    "nativeButtons": [
+      "a",
+      "b",
+      "c",
+      "x",
+      "y",
+      "z",
+      "s",
+      "d",
+      "w",
+      "m"
+    ],
+    "prefixes": [
+      ">",
+      "~",
+      "/",
+      "$"
+    ],
+    "separators": [
+      ",",
+      "+",
+      "|"
+    ],
+    "commandParameters": [
+      {
+        "id": "cmd/parameter/name",
+        "name": "name",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/command",
+        "name": "command",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/time",
+        "name": "time",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/steptime",
+        "name": "steptime",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/autogreater",
+        "name": "autogreater",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/buffer.time",
+        "name": "buffer.time",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/buffer.hitpause",
+        "name": "buffer.hitpause",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/buffer.pauseend",
+        "name": "buffer.pauseend",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      },
+      {
+        "id": "cmd/parameter/buffer.shared",
+        "name": "buffer.shared",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Unassessed",
+          "Semantically tested": "Unassessed"
+        },
+        "scope": "Examined exported command schema and current runtime matcher."
+      }
+    ],
+    "defaultsParameters": [
+      "command.time",
+      "command.steptime",
+      "command.autogreater",
+      "command.buffer.time",
+      "command.buffer.hitpause",
+      "command.buffer.pauseend",
+      "command.buffer.shared"
+    ],
+    "nativeCommandListDefaults": {
+      "DefaultTime": 15,
+      "DefaultStepTime": -1,
+      "DefaultAutoGreater": true,
+      "DefaultBufferTime": 1,
+      "DefaultBufferHitpause": true,
+      "DefaultBufferPauseEnd": true,
+      "DefaultBufferShared": true
+    },
+    "nativeInternalCommandConstructor": {
+      "maxtime": 1,
+      "maxbuftime": 1,
+      "qualification": "Internal initialization only; loader then applies CommandList/file defaults. Do not use this as the authoring default."
+    },
+    "nativeApiCommandSpecFields": [
+      "Cmd",
+      "Time",
+      "BufTime",
+      "BufferHitpause",
+      "BufferPauseend",
+      "StepTime"
+    ],
+    "rules": [
+      {
+        "id": "cmd/step-or",
+        "stages": {
+          "Parsed": "Unsupported",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "observation": "Pinned parser accepts OR inside a step; current exported parser splits + and the matcher uses every(). Mixed + and | is rejected natively."
+      },
+      {
+        "id": "cmd/absolute-neutral-directions",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Unsupported",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "observation": "Pinned parser/input buffer recognizes L/R/N and absolute diagonals. Current command sampling/state evaluation explicitly tracks U/D/B/F only."
+      },
+      {
+        "id": "cmd/charge",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "observation": "Current releaseMinimum is not a complete substitute for native InputBuffer.StateCharge; slash/tilde numeric prefixes, history, facing and bounds need native tests."
+      },
+      {
+        "id": "cmd/versioned-compatibility",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "observation": "Native file compilation gates parse-error tolerance and ApplyBackwardCompatibility by engine version; mixed holds and helper AI differ."
+      },
+      {
+        "id": "cmd/buffer-bounds",
+        "stages": {
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Unassessed"
+        },
+        "observation": "Original sample documents a buffer upper limit of 30; pinned Ikemen loader explicitly clamps minimum 1. Current exporters parse integers without that clamp. MUGEN executable behavior remains unverified."
+      }
+    ],
+    "examinedConsumers": [
+      "Tools/compile_state200.py",
+      "Tools/build_saturn_runtime.py",
+      "index.html"
+    ],
+    "remaining": [
+      "Complete generic CMD/Defaults/Remap ingestion",
+      "Native signed input/charge counters and facing-relative/absolute histories",
+      "Per-step and whole-command timing, duplicate-direction expansion and step iteration order",
+      "Hitpause/Pause/SuperPause buffering, hold-only and shared duplicate-name command semantics",
+      "Button remap, InputReader/SOCD/assist/ShiftInput/AssertInput and Helper ownership",
+      "Source version and invalid/empty-input diagnostics",
+      "Native executable traces and real-character integration"
+    ]
+  },
+  "exclusions": [
+    "Character costume recoloring; gameplay effects remain in scope."
+  ],
+  "goalComplete": false
+}

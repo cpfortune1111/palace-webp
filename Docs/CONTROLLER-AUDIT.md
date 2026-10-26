@@ -1,6 +1,8 @@
 # Controller compatibility work ledger
 
-0.26.21 adds own pending State selection for accepted Helper overrides, root/Helper binding release, conditional TargetDrop and destruction cleanup. All 96 new actual browser cases, 301 Node checks, related browser gates and a freshly completed final battle gate pass. Complete recursion/removal/retention/native phase/ownership semantics remain Partial; no whole controller is certified. The separate ten-subsystem engine audit and proposed M0–M7 order are documented and await approval before large new subsystems.
+0.26.22 corrects the existing AIR alpha branch: missing source digits produce 0, accepted native prefix/tails are retained, and selected states/diagnostics remain distinct. All 301 Node checks, 72 actual root draw cases and final full battle regression passed. [AIR-CMD-COVERAGE.json](AIR-CMD-COVERAGE.json) records examined import/matcher gaps; complete AIR/CMD/controller and engine semantics remain Partial. The human-approved M0–M7 order is proceeding through M0.
+
+0.26.21 adds own pending State selection for accepted Helper overrides, root/Helper binding release, conditional TargetDrop and destruction cleanup. All 96 new actual browser cases, 301 Node checks, related browser gates and a freshly completed final battle gate pass. Complete recursion/removal/retention/native phase/ownership semantics remain Partial; no whole controller is certified.
 
 0.26.20 adds negative-body cursor/outcome propagation, buffered same-tick root StateDef initialization, full -1 command bodies, root/Helper State-provider player identity and own-negative-source contexts. All 172 new actual browser cases, 301 Node checks, related browser gates and final full battle regression pass. Same-character fixture identity is explicit, with unchanged expectations. Complete capacity/native phase/context/retention/compiler/version fidelity remains Partial; no whole controller is certified. See STATE-CONTROLLER-HITPAUSE-WIP.md.
 
