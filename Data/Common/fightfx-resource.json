@@ -1,0 +1,16 @@
+{
+  "prefix": "f",
+  "localcoord": [
+    320,
+    240
+  ],
+  "scale": 1,
+  "animation": "common_animations_full.json",
+  "collisionBoxes": "none",
+  "source": {
+    "fightDefSHA256": "15aa12aa5de250b220193d2d06ce4fcf6263c0be7fb81168178761b8071d3374",
+    "airSHA256": "e17d588d9b5a74cb2efcb979f89c4dd249e8bd101973fe350277bf45d4eb0186",
+    "sffSHA256": "4f6fd37ce8f55f8c6e1127a387a44f34c519024b2605a1f052b72dc2112c801e"
+  },
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d fightscreen.go newFightScreen/newFightFx and FightFx scale"
+}

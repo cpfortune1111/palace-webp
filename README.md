@@ -1,3 +1,7 @@
+## 0.26.16 — Animation prefixes, FightFX and redirection (partial)
+
+Literal/dynamic S/F references now reach real root/Helper animation and StateDef/transition consumers. All 33 project FightFX actions have actual frame/crop/loop checks. Redirection writes live recipients with caller operand scope; common scale/collision coordinates and duplicate P2 StateDef evaluation are corrected. All 299 Node checks, six related browser gates and complete battle regression pass. Coverage remains Partial for custom libraries, cold import/compiler/version/phase fidelity; see Docs/CHANGE-ANIMATION-COVERAGE.json. No original SFF/SND/AIR is added; character recoloring remains excluded.
+
 ## 0.26.15 — Independent animation/sprite sources (partial)
 
 Numeric animation source-player/ID parameters now reach real root/Helper frames, collision, clocks and drawing. Independent sprite ownership includes localcoord compensation in root/Helper drawing and reflections. Mixed-character source/crop/geometry/double/half-size tests, all 296 Node checks, five related browser gates and complete battle regression pass. Prefixes/common FX/cold assets and broader native version/phase fidelity remain Pending; no whole-controller certification. See Docs/ANIMATION-SPRITE-OWNER-WIP.md. Character recoloring remains excluded.

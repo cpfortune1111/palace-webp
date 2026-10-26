@@ -1,0 +1,254 @@
+{
+  "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "certification": "partial; no complete controller or parameter certification",
+  "controllers": {
+    "changeanim": {
+      "parameters": {
+        "value": {
+          "status": "partial",
+          "consumers": [
+            "Engine/change-animation-reference.js",
+            "Engine/fightfx-animation-profile.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs",
+            "Tools/check-change-animation-reference.mjs"
+          ],
+          "remaining": [
+            "Character fightfxprefix overrides, arbitrary registered libraries, cold assets, complete compiler/version/phase behavior"
+          ]
+        },
+        "elem": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-presence.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Native warning and displayed/current-frame phase fidelity"
+          ]
+        },
+        "elemtime": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-presence.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Native warning and displayed/current-frame phase fidelity"
+          ]
+        },
+        "animplayerno": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-provider-selection.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-provider-selection.mjs",
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Full native player-slot identity/team cardinality and all source-query/phase consumers"
+          ]
+        },
+        "spriteplayerno": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-provider-selection.js",
+            "Engine/sprite-owner-scale.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "All legacy/paused/angle/shear/palette and native phase/version consumers"
+          ]
+        },
+        "readplayerid": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-provider-selection.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-provider-selection.mjs",
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete state-owner slot identity and native redirected-caller differential behavior"
+          ]
+        },
+        "redirectid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete compiler/version/native warning and per-frame differential coverage"
+          ]
+        }
+      },
+      "commonParameters": {
+        "persistent": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Full compiler/version and all redirected-provider scheduling fidelity"
+          ]
+        },
+        "ignorehitpause": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Native frame phase and complete cross-version differential coverage"
+          ]
+        }
+      }
+    },
+    "changeanim2": {
+      "parameters": {
+        "value": {
+          "status": "partial",
+          "consumers": [
+            "Engine/change-animation-reference.js",
+            "Engine/fightfx-animation-profile.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs",
+            "Tools/check-change-animation-reference.mjs"
+          ],
+          "remaining": [
+            "Character fightfxprefix overrides, arbitrary registered libraries, cold assets, complete compiler/version/phase behavior"
+          ]
+        },
+        "elem": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-presence.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Native warning and displayed/current-frame phase fidelity"
+          ]
+        },
+        "elemtime": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-presence.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Native warning and displayed/current-frame phase fidelity"
+          ]
+        },
+        "animplayerno": {
+          "status": "partial",
+          "nativeBehavior": "Pinned ChangeAnim2 ignores these compiled fields without evaluating their expressions",
+          "consumers": [
+            "Engine/animation-provider-selection.js"
+          ],
+          "evidence": [
+            "Tools/check-animation-provider-selection.mjs"
+          ],
+          "remaining": [
+            "Native end-to-end differential validation; not counted as general provider implementation"
+          ]
+        },
+        "spriteplayerno": {
+          "status": "partial",
+          "nativeBehavior": "Pinned ChangeAnim2 ignores these compiled fields without evaluating their expressions",
+          "consumers": [
+            "Engine/animation-provider-selection.js"
+          ],
+          "evidence": [
+            "Tools/check-animation-provider-selection.mjs"
+          ],
+          "remaining": [
+            "Native end-to-end differential validation; not counted as general provider implementation"
+          ]
+        },
+        "readplayerid": {
+          "status": "partial",
+          "consumers": [
+            "Engine/animation-provider-selection.js",
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-provider-selection.mjs",
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete state-owner slot identity and native redirected-caller differential behavior"
+          ]
+        },
+        "redirectid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete compiler/version/native warning and per-frame differential coverage"
+          ]
+        }
+      },
+      "commonParameters": {
+        "persistent": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Full compiler/version and all redirected-provider scheduling fidelity"
+          ]
+        },
+        "ignorehitpause": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Native frame phase and complete cross-version differential coverage"
+          ]
+        }
+      }
+    }
+  }
+}
