@@ -66,4 +66,14 @@ for row in rows:
 for source in ledger['air']['blendConsumer']['runtimeConsumers'] + ledger['air']['blendConsumer']['tests'] + ledger['cmd']['examinedConsumers']:
     assert (root / source).is_file(), source
 assert ledger['goalComplete'] is False
+frame_evidence = json.loads((root / 'Docs/AIR-FRAME-EVIDENCE.json').read_text(encoding='utf-8'))
+assert frame_evidence['status'] == 'Partial' and frame_evidence['goalComplete'] is False
+native = frame_evidence['nativeFrameEvidence']
+policy = frame_evidence['exportPolicyEvidence']
+assert native['syntheticFrames'] == 29 and native['originalFrames'] == policy['frames'] == 10501
+assert native['matched'] is True and len(native['characters']) == len(policy['characters']) == 5
+assert {(row['name'], row['sourceSha256'], row['frames']) for row in native['characters']} == {(row['name'], row['sourceSha256'], row['frames']) for row in policy['characters']}
+assert all(row['nonDefaultScaleOrAngle'] == row['interpolationDirectives'] == 0 for row in native['characters'])
+for source in frame_evidence['exportPolicy']['paths']:
+    assert (root / source).is_file(), source
 print('PASS five pinned AIR/CMD inputs, native parameter/default/key facts, interpolation names and distinct partial evidence records')

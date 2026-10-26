@@ -8,6 +8,21 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 
+def air_frame_for_export(line):
+    """Existing seven-field renderer contract; reject unsupported transforms explicitly."""
+    if re.match(r'^interpolate\b', line, re.I):
+        raise NotImplementedError('AIR interpolation rendering is not integrated: ' + line)
+    fields = [part.strip() for part in line.split(',')]
+    if len(fields) < 5 or len(fields) > 10:
+        raise ValueError('Invalid AIR export frame component count')
+    group, item, ox, oy, time = map(int, fields[:5])
+    for index, fallback in ((7, 1), (8, 1), (9, 0)):
+        if len(fields) > index and fields[index] and float(fields[index]) != fallback:
+            raise NotImplementedError('AIR per-frame scale/angle rendering is not integrated: ' + line)
+    return dict(group=group, item=item, ox=ox, oy=oy, time=time,
+                flip=fields[5] if len(fields) > 5 else '', blend=fields[6] if len(fields) > 6 else '')
+
+
 def decode_lz5(data, length):
     output = bytearray()
     cursor, bit, recycled, recycled_bits = 1, 0, 0, 0
@@ -120,10 +135,8 @@ def export(source_dir, output_dir, action_ids=('5', '6'), prefix='venus_turn', s
                 actions[action] = []
         elif action and line.lower() == 'loopstart':
             loop_starts[action] = len(actions[action])
-        elif action and re.match(r'^-?\d+\s*,', line):
-            fields = [part.strip() for part in line.split(',')]
-            group, item, ox, oy, time = map(int, fields[:5])
-            actions[action].append(dict(group=group, item=item, ox=ox, oy=oy, time=time, flip=fields[5] if len(fields)>5 else '', blend=fields[6] if len(fields)>6 else ''))
+        elif action and (re.match(r'^-?\d+\s*,', line) or re.match(r'^interpolate\b', line, re.I)):
+            actions[action].append(air_frame_for_export(line))
     assert set(actions) == set(action_ids)
     atlas_height = 2048 if prefix.endswith('_full') or prefix in ('venus_special', 'venus_lifecycle') else 4096
     atlas = Image.new('RGBA', (1024, 1024) if action_ids == ('5', '6') else (2048, atlas_height))

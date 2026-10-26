@@ -1,3 +1,7 @@
+## M0 follow-up — AIR frame evidence and export diagnostics
+
+29 synthetic and 10,501 private original AIR frame records match the compiled pinned frame reader. Both exporters retain the exact existing records and now stop explicitly on unimplemented per-frame transforms/interpolation instead of silently dropping them. [Frame evidence](Docs/AIR-FRAME-EVIDENCE.json) separates reference probes from missing browser execution. Alpha (8,707) and synthetic sprite (2,460) regression cases pass. Game runtime stays 0.26.25; full engine work continues.
+
 ## 0.26.25 — StateDef retention and cost types
 
 StateDef hitcountpersist/movehitpersist/hitdefpersist and juggle now use native typed conversion, so undefined/string results reset the relevant data or cost. All 301 Node checks, complete battle regression and pinned StateDef inventory checks pass. [StateDef coverage](Docs/STATEDEF-COVERAGE.json) records all 13 documented/native fields, source header order, consumers/tests and remaining Partial scope. Full engine compatibility remains incomplete.

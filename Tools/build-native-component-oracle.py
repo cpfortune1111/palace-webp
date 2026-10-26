@@ -69,13 +69,17 @@ func Error(value string)error{return fmt.Errorf("%s",value)}
 type Sprite struct{Size [2]uint16; Group,Number uint16; Offset [2]int16; palidx int; rle int; coldepth byte; pixels []byte; raw []byte; rawWidth,rawHeight,rawDepth int32}
 func(s *Sprite)SetPxl(value []byte){s.pixels=append([]byte{},value...)}
 func(s *Sprite)SetRaw(value []byte,width,height,depth int32){s.raw=append([]byte{},value...);s.rawWidth=width;s.rawHeight=height;s.rawDepth=depth}
-type request struct{Kind string; Blend string; Format int; Width,Height uint16; Depth byte; Payload []byte; FilePath string; Indices []uint32}
-type response struct{Type string; Alpha [2]byte; Pixels []byte; Raw []byte; RawWidth,RawHeight,RawDepth int32; Error string; Panic string; Warnings []diagnostic; Frames []response; FileSha256 string; Group,Number uint16; Offset [2]int16; Palette int; Index uint32}
+type request struct{Kind string; Blend string; Line string; Format int; Width,Height uint16; Depth byte; Payload []byte; FilePath string; Indices []uint32}
+type response struct{Type string; Alpha [2]byte; Pixels []byte; Raw []byte; RawWidth,RawHeight,RawDepth int32; Error string; Panic string; Warnings []diagnostic; Frames []response; FileSha256 string; Group,Number uint16; Offset [2]int16; Palette int; Index uint32; Present bool; FrameIntegers [7]int32; FrameFloatBits [3]uint32}
 func spriteResult(sprite *Sprite)(result response){result.Pixels=sprite.pixels;result.Raw=sprite.raw;result.RawWidth=sprite.rawWidth;result.RawHeight=sprite.rawHeight;result.RawDepth=sprite.rawDepth;result.Group=sprite.Group;result.Number=sprite.Number;result.Offset=sprite.Offset;result.Palette=sprite.palidx;return}
 func evaluate(value request)(result response){
  defer func(){if recovered:=recover();recovered!=nil{result.Panic=fmt.Sprint(recovered)}}()
  warnings=nil
- if value.Kind=="alpha"{
+ if value.Kind=="frame"{
+  if len(value.Line)>16384{result.Error="Oracle frame fixture limit";return}
+  frame,err:=ReadAnimFrame(value.Line);if err!=nil{result.Error=err.Error()}
+  if frame!=nil{result.Present=true;result.FrameIntegers=[7]int32{frame.Group,frame.Number,frame.Xoffset,frame.Yoffset,frame.Time,int32(frame.Hscale),int32(frame.Vscale)};result.FrameFloatBits=[3]uint32{math.Float32bits(frame.Xscale),math.Float32bits(frame.Yscale),math.Float32bits(frame.Angle)};result.Alpha=[2]byte{frame.SrcAlpha,frame.DstAlpha};switch frame.TransType{case TT_none:result.Type="none";case TT_add:result.Type="add";case TT_sub:result.Type="sub";case TT_subadd:result.Type="subadd";default:result.Type="other"}}
+ }else if value.Kind=="alpha"{
   if strings.ContainsAny(value.Blend,",\n\r"){result.Error="Oracle alpha fixture excludes frame separators";return}
   frame,err:=ReadAnimFrame("0,0,0,0,1,,"+value.Blend)
   if err!=nil{result.Error=err.Error()}
@@ -119,6 +123,6 @@ receipt = {'scope': 'Unmodified extracted function bodies with facade Sprite/ren
            'generatedSourceSha256': hashlib.sha256(source_file.read_bytes()).hexdigest(),
            'executableSha256': hashlib.sha256(executable.read_bytes()).hexdigest(),
            'executable': str(executable), 'facades': ['Sprite decoded-byte capture instead of texture upload', 'error constructor', 'console/log capture'],
-           'limits': 'Alpha and decoded-pixel fixtures only; no file separators in alpha, at most 1048576 pixels or 16 MiB direct payload. Physical SFF v2 fixture samples at most 64 indices and 512 MiB per source; linked sprites, palette/GPU behavior and full file recovery are not certified.'}
+           'limits': 'Frame metadata, alpha and decoded-pixel fixtures only; frame lines at most 16384 bytes, no file separators in alpha, at most 1048576 pixels or 16 MiB direct payload. Physical SFF v2 fixture samples at most 64 indices and 512 MiB per source; complete AIR file policy/animation execution, linked sprites, palette/GPU behavior and file recovery are not certified.'}
 (output / 'build-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
-print('PASS built pinned source-extracted alpha/sprite component oracle with '+str(len(selected))+' unchanged declarations')
+print('PASS built pinned source-extracted alpha/frame/sprite component oracle with '+str(len(selected))+' unchanged declarations')

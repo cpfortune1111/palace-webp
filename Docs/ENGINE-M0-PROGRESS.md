@@ -1,5 +1,21 @@
 # Engine inventory reconciliation — M0
 
+## AIR original-frame metadata and explicit export gaps
+
+[AIR-FRAME-EVIDENCE.json](AIR-FRAME-EVIDENCE.json) records 29 synthetic frame probes and all 10,501 frame rows from five private original AIR files against the pinned compiled ReadAnimFrame component. Required fields, H/V offset handling, repeated flips and float32 scale/angle metadata match independent fixtures. Ignored starts and malformed metadata diagnostics remain distinct from full-file parser policy. No raw AIR text is published.
+
+The private five-file baseline contains no per-element scale/angle fields and no interpolation directives. Current runtime-facing exporters only emit seven fields; both now explicitly reject nonidentity per-frame transforms and interpolation for selected actions. This prevents silent data loss while real native renderer/animation support remains unfinished. Omitted/identity fields retain the current renderer contract. The four policy checks and all 10,501 existing frame records pass unchanged through both exporters. This is a temporary explicit Unsupported policy, not a substitute for required AIR implementation.
+
+The new private oracle adds a frame metadata mode without changing the 13 extracted native declarations. Alpha's 8,707 cases, synthetic SFF's 2,460 cases, scanner's four checks and pinned AIR/CMD inventory pass against the expanded tooling. The earlier original-SFF sample receipt remains separate; no new physical sprite sample claim is made by this frame follow-up.
+
+```text
+python Tools/build-native-component-oracle.py --image ../outputs/ikemen-image.go --anim ../outputs/ikemen-anim.go --common ../outputs/ikemen-common-pinned.go --go ../outputs/toolchains/go1.27.3/go/bin/go.exe --output ../outputs/native-frame-component-oracle
+python Tools/check-air-frame-native.py --receipt ../outputs/native-frame-component-oracle/build-receipt.json --output ../outputs/air-frame-native-results.json --character-air ../outputs/moon/original/moon.air --character-air ../outputs/venus/original/venus.air --character-air ../outputs/jupiter/original/jupiter.air --character-air ../outputs/neptune/original/neptune.air --character-air ../outputs/saturn/original/saturn.air
+python Tools/check-air-export-policy.py --character-air ../outputs/moon/original/moon.air --character-air ../outputs/venus/original/venus.air --character-air ../outputs/jupiter/original/jupiter.air --character-air ../outputs/neptune/original/neptune.air --character-air ../outputs/saturn/original/saturn.air --output ../outputs/air-export-policy-results.json
+```
+
+Full AIR field execution, original package/frontend handling, interpolation, collision/timing/render/native scheduling and M0/full-engine conformance remain incomplete. Game runtime stays 0.26.25; this follow-up changes offline tooling/diagnostics and evidence only.
+
 ## 0.26.25 StateDef full header reconciliation and persistence/cost correction
 
 [STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json) records all 13 MUGEN CNS header fields and all 13 pinned compiler fields, including the internal moveType spelling. The checker verifies pinned compiler/bytecode/CNS bytes, compiler parameter order, header bytecode case order and every listed consumer/test. Entry type/move/physics defaults, U retention, native outer initialization and CNS-ignore/ZSS-reject negative-header behavior are explicit source observations, with generic frontend execution still pending.

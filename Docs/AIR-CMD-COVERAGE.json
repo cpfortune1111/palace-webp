@@ -1,7 +1,8 @@
 {
   "schema": "moon-palace-air-cmd-coverage-v1",
-  "certification": "Partial audit and one existing AIR alpha consumer correction. No generic AIR/CMD parser, matcher or engine certification.",
-  "runtimeVersion": "0.26.22",
+  "certification": "Partial audit, existing AIR alpha consumer correction and scoped native frame/original-file metadata probes. No generic AIR/CMD parser, matcher or engine certification.",
+  "runtimeVersion": "0.26.25",
+  "frameReferenceEvidence": "Docs/AIR-FRAME-EVIDENCE.json; source-component probes and explicit offline Unsupported policy are separate from browser execution certification",
   "references": {
     "mugenMirrorCommit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
     "air": {
