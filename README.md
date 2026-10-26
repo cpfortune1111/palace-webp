@@ -1,3 +1,7 @@
+## M0 follow-up — HitDef evidence reconciliation
+
+[Current HitDef coverage](Docs/HITDEF-COVERAGE.json) replaces stale support-count readings of the historical audit: 131 parameters now have stage-specific records, 38 Partial, 93 Unassessed and none Certified. Thirteen historical absence labels have newer scoped consumer evidence. Seven focused checks pass. Unassessed does not mean no execution path. Runtime remains 0.26.22; combat/full-engine work continues.
+
 ## M0 follow-up — runtime baseline probes
 
 The existing Web seeded RNG matches 10,960 compiled native operations, including signed state and float32 bits. Another 672 native tick-boundary and 321 native actor-order/action probes establish scoped reference baselines; the current Web main loop is not yet certified against them. [Runtime coverage](Docs/RUNTIME-COVERAGE.json) records source pins, phase differences and remaining determinism gaps. Runtime stays 0.26.22; M0/full-engine work continues.

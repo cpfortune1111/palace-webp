@@ -1,0 +1,141 @@
+{
+  "schema": "moon-palace-hitdef-reviewed-evidence-v1",
+  "scope": "Curated reviewed current consumers, supplementing incremental parameter evidence; Partial only, not complete semantic certification.",
+  "groups": [
+    {
+      "parameters": [
+        "ground.velocity",
+        "air.velocity",
+        "guard.velocity",
+        "airguard.velocity",
+        "down.velocity"
+      ],
+      "runtime": [
+        "Engine/hitdef-velocity-defaults.js",
+        "Engine/guard-contact.js",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "tests": [
+        "Tools/check-hitdef-velocity-defaults.mjs",
+        "Tools/check-guard-contact.mjs"
+      ],
+      "documents": [
+        "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+        "Docs/HITDEF-Z-VELOCITY-WIP.md"
+      ],
+      "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+      "pending": [
+        "Complete parser/version diagnostics and MUGEN n differences",
+        "All contact/ownership/reset/scaling/depth paths"
+      ]
+    },
+    {
+      "parameters": [
+        "xaccel",
+        "yaccel",
+        "zaccel"
+      ],
+      "runtime": [
+        "Engine/hitdef-acceleration.js",
+        "index.html"
+      ],
+      "tests": [
+        "Tools/check-hitdef-acceleration.mjs"
+      ],
+      "documents": [
+        "Docs/HITDEF-ACCELERATION-WIP.md"
+      ],
+      "observation": "Source evaluated float32 XYZ acceleration reaches recipient GetHit data with origin/recipient scale and X-facing conversion.",
+      "pending": [
+        "Complete native aspect metadata and source-state ownership",
+        "All reset/KO/depth/clock paths"
+      ]
+    },
+    {
+      "parameters": [
+        "stand.friction",
+        "crouch.friction"
+      ],
+      "runtime": [
+        "Engine/hit-friction.js",
+        "index.html"
+      ],
+      "tests": [
+        "Tools/check-hit-friction.mjs"
+      ],
+      "documents": [
+        "Docs/HIT-FRICTION-WIP.md"
+      ],
+      "observation": "Source fields reach GetHit data and hit-only root/helper XZ friction consumers; query fallback remains distinct.",
+      "pending": [
+        "All native friction/update/order/version conditions",
+        "Full simultaneous contact and ownership cases"
+      ]
+    },
+    {
+      "parameters": [
+        "affectteam",
+        "teamside"
+      ],
+      "stageOverrides": {
+        "teamside": {
+          "Semantically tested": "Unassessed"
+        }
+      },
+      "runtime": [
+        "Engine/hit-team.js",
+        "Char/Venus/venus-special-runtime.js",
+        "index.html"
+      ],
+      "tests": [
+        "Tools/check-hit-team.mjs"
+      ],
+      "documents": [],
+      "observation": "E/F/B parsing and side equality filtering execute; source HitDef teamside is compiled independently from actor native side.",
+      "pending": [
+        "Complete team-mode/neutral/override/default eligibility",
+        "Native all-actor state and collision scheduling"
+      ]
+    },
+    {
+      "parameters": [
+        "keepstate"
+      ],
+      "runtime": [
+        "Engine/keep-state-hit-data.js",
+        "index.html"
+      ],
+      "tests": [
+        "Tools/check-keep-state-hit-data.mjs"
+      ],
+      "documents": [
+        "Docs/HITDEF-KEEPSTATE-WIP.md"
+      ],
+      "observation": "HitDef keepstate has a distinct preserved-state/data path, independent of HitOverride keepState.",
+      "pending": [
+        "Deferred damage and untouched native fields",
+        "All override/custom state/paused/disabled/helper interactions"
+      ]
+    },
+    {
+      "parameters": [
+        "guard.hittime",
+        "guard.slidetime",
+        "guard.ctrltime",
+        "airguard.ctrltime"
+      ],
+      "runtime": [
+        "Engine/guard-contact.js"
+      ],
+      "tests": [
+        "Tools/check-guard-contact.mjs"
+      ],
+      "documents": [],
+      "observation": "MUGEN/Ikemen guard hit-time fallback selection and subsequent slide/control inheritance execute in the existing guard consumer.",
+      "pending": [
+        "Complete native sentinel/overflow and source-version selection",
+        "All root/helper/projectile/guard state timing"
+      ]
+    }
+  ]
+}

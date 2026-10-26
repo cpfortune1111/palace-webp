@@ -1,5 +1,20 @@
 # Engine inventory reconciliation — M0
 
+## HitDef legacy/current evidence reconciliation
+
+[HITDEF-COVERAGE.json](HITDEF-COVERAGE.json) reconciles the 131-name HitDef union (81 MUGEN document names, 131 pinned compiler candidates) with current reviewed groups and the incremental parameter ledger. Every item has separate Parsed/Executable/Source-verified/Semantically tested records. **38 are Partial, 93 Unassessed, zero Certified**. Unassessed means that complete current evidence reconciliation is pending, not that the engine has no execution path. Old Implemented labels are not promoted to certification.
+
+Thirteen historical Not implemented labels have current evidence, including affectteam/teamside, chain/depth filters, down cornerpush, X/Z acceleration, friction and independent keepstate. Current velocity-default/depth support also supersedes the old 2D-only limitation wording. The old audit JSON remains a hashed historical input; its Markdown is clearly marked historical. Its legacy generator now defaults to private output instead of overwriting public current evidence.
+
+Reviewed evidence groups retain consumer/test/document paths, observations and pending work. ReversalDef rows remain separate: ReversalDef.missonoverride evidence does not imply HitDef.missonoverride coverage. The fresh seven focused checks pass (velocity defaults, guard contact, acceleration, friction, teams, keepstate and incremental evidence integrity). These do not replace native full-contact/actor/version certification or the earlier browser evidence.
+
+```text
+python Tools/reconcile-hitdef-coverage.py --mugen-document ../outputs/mugen-sctrls.html --registry ../outputs/ikemen-compiler.go --compiler ../outputs/ikemen-compiler-functions.go --output ../outputs/hitdef-coverage-reconciled.json
+python Tools/check-hitdef-coverage.py --mugen-document ../outputs/mugen-sctrls.html --registry ../outputs/ikemen-compiler.go --compiler ../outputs/ikemen-compiler-functions.go
+```
+
+The published record is reproducible from pinned inputs and authored evidence. Runtime remains 0.26.22; complete combat/engine compatibility and M0 item reconciliation remain unfinished.
+
 ## Runtime/RNG/order component follow-up
 
 [RUNTIME-COVERAGE.json](RUNTIME-COVERAGE.json) pins the examined System/Char sources and records native frame boundaries, priority sorting, action phases, negative/+1 states, global collision/tick and current Web gaps. It explicitly separates source-only observations from compiled component evidence and actual Web consumers. Both source caches match the previously pinned upstream Git blobs exactly.

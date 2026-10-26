@@ -1,5 +1,7 @@
 # HitDef parameter audit — 0.24.59
 
+**Historical snapshot.** Current reconciliation is [HITDEF-COVERAGE.json](HITDEF-COVERAGE.json), reproduced by `Tools/reconcile-hitdef-coverage.py` against pinned references and reviewed evidence. The old JSON and table below retain their original claims for comparison; they are not current support/absence counts. Thirteen old Not implemented labels now have scoped consumer evidence. The current table records 38 Partial and 93 Unassessed parameters, zero Certified. Unassessed does not mean absent; legacy Implemented does not prove full semantics.
+
 This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.
 Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.
 

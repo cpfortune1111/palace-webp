@@ -88,10 +88,10 @@ def controller_usage(value, character, usage):
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description='Historical 0.24.59 snapshot generator; use reconcile-hitdef-coverage.py for current evidence.')
     parser.add_argument('--ikemen', type=Path, default=Path('outputs/ikemen-compiler-functions.go'))
     parser.add_argument('--mugen', type=Path, default=Path('outputs/mugen-sctrls.html'))
-    parser.add_argument('--output', type=Path, default=Path('work/Docs/HITDEF-AUDIT.md'))
+    parser.add_argument('--output', type=Path, default=Path('outputs/historical-hitdef-audit.md'))
     args = parser.parse_args()
     compiler = args.ikemen.read_text(encoding='utf-8-sig')
     compiler_hitdef = function_body(compiler, 'hitDefSub') + function_body(compiler, 'hitDef')
@@ -117,6 +117,7 @@ def main():
     missing_used = [row['parameter'] for row in rows if row['status'] == 'Not implemented' and row['usedBy']]
     lines = [
         '# HitDef parameter audit — 0.24.59', '',
+        'Historical static-label reconstruction only. Current reconciliation: Docs/HITDEF-COVERAGE.json and Tools/reconcile-hitdef-coverage.py. These old labels are not current semantic support or absence certification.', '',
         'This is an implementation audit, NOT a declaration of complete MUGEN/Ikemen compatibility.',
         'Scope: every named HitDef parameter in the official MUGEN 1.1 beta documentation and the pinned Ikemen compiler, including delegated PalFX parameters. Projectile-only parameters, controller persistent/ignorehitpause, StateDef parameters and undocumented fork extensions are outside this table.', '',
         '[MUGEN reference](https://www.elecbyte.com/mugendocs-11b1/sctrls.html#hitdef)',

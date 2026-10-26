@@ -254,13 +254,15 @@
       "name": "Combat / rounds",
       "evidence": [
         "Docs/HITDEF-AUDIT.json",
+        "Docs/HITDEF-COVERAGE.json",
+        "Docs/HITDEF-REVIEWED-EVIDENCE.json",
         "Engine/hit-state-store.js",
         "Engine/get-hit-resource-consumer.js",
         "Tools/check-saturn-priority.cjs",
         "index.html"
       ],
       "gaps": [
-        "Reconcile stale HitDef ledger with newer executable modules",
+        "Complete remaining 93 Unassessed HitDef item reviews; 38 scoped Partial records now reconcile selected newer consumers, with no Certified parameter",
         "Complete guard/juggle/throw/KO/round/default/ordering interactions",
         "Native executable comparisons for full parameter/default/version coverage"
       ],
