@@ -1,3 +1,7 @@
+## 0.26.18 — State entry during hitpause (partial)
+
+Root/reaction State entry now waits for recipient hitpause before applying StateDef effects. MUGEN root/Helper counters carry by CNS slot and skip the recipient transition slot; Ikemen resets immediately. Counter commits follow actual execution outcomes. Twenty-four actual carry-body cases, entry/redirect cases, all 301 Node checks, related browser gates and full battle regression pass. Native array aliasing, mixed-provider/global/tick ordering and broader fidelity remain Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.
+
 ## 0.26.17 — State-controller target redirection (partial)
 
 ChangeState/SelfState now write actual target state/control/animation with caller RHS scope and native default/explicit continuation. SelfState state-provider selection and invalid read-ID own fallback have mixed-character tests. Thirty real root/Helper body cases verify later controller execution. All 300 Node checks, three related browser gates and complete battle regression pass. Full nested/pause/version/phase fidelity remains Pending; see Docs/STATE-CONTROLLER-COVERAGE.json. No whole-controller certification or original asset upload.

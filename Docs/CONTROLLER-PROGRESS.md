@@ -1,3 +1,7 @@
+## 0.26.18 — State entry during hitpause (partial)
+
+Root/reaction StateDef initialization now waits for recipient hitpause. MUGEN root/Helper counters carry by CNS slot and suppress the recipient transition slot; Ikemen starts fresh. Persistent commits follow real execution outcomes. Sixteen root and eight Helper carry-body cases, existing clean-entry/reaction/redirect cases, all 301 Node checks, related browser gates and complete battle regression pass. Native array capacity/aliasing, mixed-provider/global/tick ordering, synthetic slot layout and wider version/compiler fidelity remain Pending. No whole controller is certified. See STATE-CONTROLLER-HITPAUSE-WIP.md.
+
 ## 0.26.17 — State-controller target redirection (partial)
 
 ChangeState/SelfState now select real root/reaction/Helper recipients, preserve caller operand scope and apply target animation/control/state. SelfState selects own/readplayerid state providers; invalid/disabled read IDs fall back after earlier operands, while ChangeState leaves that native-ignored field unevaluated. Twenty-four direct redirect/continue cases, mixed Saturn/Moon provider cases and thirty actual caller-body sentinel cases pass. All 300 Node checks, the dedicated browser fixture, three latest scheduling/entry/geometry gates and complete simultaneous/one-tick/five-tick battle regression pass. STATE-CONTROLLER-COVERAGE.json enumerates every pinned parameter/common field with Partial evidence; full nested/pause/version/player-slot/warning/native phase fidelity remains Pending. See STATE-CONTROLLER-REDIRECT-WIP.md.

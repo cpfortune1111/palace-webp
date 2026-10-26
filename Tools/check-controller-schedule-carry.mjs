@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {createActorControllerSchedules} from '../Engine/controller-schedule.js';
+
+const schedules=createActorControllerSchedules();
+const controller=(slot,file='old.cns',persistent=0)=>({controllerSchedulingIndex:slot,source:{file,line:slot+1},params:{persistent,ignorehitpause:1}});
+const lock=schedules.prepare(1,10,controller(0));
+assert.equal(lock.eligible,true);lock.executed();
+const wait=schedules.prepare(1,10,controller(1,'old.cns',3));
+assert.equal(wait.eligible,true);wait.executed();
+schedules.prepare(1,10,controller(2));
+schedules.carryTo(1,10,11);
+assert.equal(schedules.prepare(1,11,controller(0,'new.cns'),{hitPause:true}).eligible,false,'locked CNS slot survives a change of source file');
+assert.equal(schedules.prepare(1,11,controller(1,'new.cns',3),{hitPause:true}).eligible,false);
+assert.equal(schedules.prepare(1,11,controller(1,'new.cns',3),{hitPause:true}).eligible,false);
+assert.equal(schedules.prepare(1,11,controller(1,'new.cns',3),{hitPause:true}).eligible,true,'countdown is carried');
+assert.equal(schedules.prepare(1,11,controller(2,'new.cns'),{hitPause:true}).eligible,false,'transition slot is skipped even with ignorehitpause');
+assert.equal(schedules.prepare(2,11,controller(0),{hitPause:true}).eligible,true,'recipient counters are independent');
+assert.equal(schedules.releaseCarry(1,10),false,'stale generation cannot clear current counters');
+assert.equal(schedules.releaseCarry(1,11),true);
+assert.equal(schedules.prepare(1,11,controller(0,'new.cns')).eligible,true,'release clears carried locks');
+assert.equal(schedules.prepare(1,11,controller(2,'new.cns')).eligible,true,'release clears skipped slot');
+assert.equal(schedules.releaseCarry(1,11),false);
+console.log('CNS-slot carry, transition-slot suppression, release and actor isolation passed');

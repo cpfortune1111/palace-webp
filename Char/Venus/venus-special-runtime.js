@@ -120,13 +120,14 @@ export function createSpecialRuntime(api){
  }
  function selectState(entity,state,{provider=entity.stateOwner,phase='external'}={}){
   if(!helperDefinition(entity,state,provider))throw Error('Unknown helper state '+state);
-  const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(api.data(entity.player)).ikemen;
+  const resetAfterPause=entity.hitPause>0&&!hitPauseVersionProfile(provider?api.stateData(provider):api.data(entity.player)).ikemen;
   return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider,phase},()=>{
    const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});
+   entity.hitStateChangeIndex=resetAfterPause?(entity.currentControllerIndex??-1):-1;
    if(!resetAfterPause)entity.controllerSchedule=createControllerSchedule();
   });
  }
- function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule=createControllerSchedule();pending.resetAfterPause=false}}
+ function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule=createControllerSchedule();entity.hitStateChangeIndex=-1;pending.resetAfterPause=false}}
  function initializeSelectedState(entity){
   const pending=stateChanges.get(entity.key);if(pending&&pending.state!==entity.state){stateChanges.cancel(entity.key);return false}
   return stateChanges.initialize(entity.key,{paused:blocked(entity.player,entity),hitPause:entity.hitPause>0,tick:api.tick(),allowSameTick:pending?.phase==='global'||pending?.phase==='current',initialize:entry=>{resetSelectedSchedule(entity);enter(entity,entry.state,{selected:true})}});
@@ -183,9 +184,15 @@ export function createSpecialRuntime(api){
   controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
   const ownData=api.ownData?.(entity.player)??api.data(entity.player),ctx=context(entity,undefined,global?{...entity,stateOwner:null,expressionLocalCoord:characterLocalCoord(ownData)}:entity);
   if(global)Object.assign(ctx,{stateOwner:ownData.character,foreignStateOwner:false});
+  if(!global){entity.currentControllerIndex=index;if(entity.hitPause>0&&entity.hitStateChangeIndex>=0&&index===entity.hitStateChangeIndex)return}
   if(global?(entity.hitPause>0&&!parseCnsIntegerLiteral(controller.params.ignorehitpause??0)):!schedule.before(index,controller.params,{hitPause:entity.hitPause>0}))return;
   if(!api.trigger(controller,ctx))return;
-  if(!global){schedule.executed(index,controller.params);entity.once.add(index)}const params=controller.params;
+  const outcome=helperControllerEffect(entity,controller,ctx,global);
+  if(!global&&!entity.destroyed&&(!outcome?.stateTransition||outcome.continueBody)){schedule.executed(index,controller.params);entity.once.add(index)}
+  return outcome;
+ }
+ function helperControllerEffect(entity,controller,ctx,global){
+  const params=controller.params;
   if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
   switch(controller.type){
    case 'HitDef':entity.activeHitDef={hitKey:entity.key+':'+(++serial),guardDistance:api.guardHitDef?.(entity.player,entity,params,ctx),params:numeric(params,ctx)};activateJuggle(entity,entity.activeHitDef.params);entity.hitSpent=false;api.activateHitDef?.(entity);break;
