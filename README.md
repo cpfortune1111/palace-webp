@@ -1,3 +1,7 @@
+## CMD source-conformance groundwork — runtime unchanged
+
+New standalone command grammar, input-buffer, matcher and list modules are compared with pinned compiled native functions. Gates pass 1,599 synthetic plus 247 original grammar cases, 315,400 input-state/charge comparisons, 43,784 individual-command ticks and 3,232 list ticks. Duplicate-name sharing, assertions and legacy hold transforms are covered. Two Jupiter source diagnostics are preserved. [Evidence and limits](Docs/CMD-NATIVE-EVIDENCE.md): these components are not yet wired into battle; runtime remains 0.26.26 and full engine compatibility remains incomplete.
+
 ## 0.26.26 — Mixed-character push data and trace baseline
 
 Venus body-size lookup now reads its legacy sizeConstants table, fixing a mixed-character player-push crash. A fresh-browser trace probe repeats 360 actual Moon/Venus simulation ticks with test-owned seeds and immutable snapshots, including camera updates, spawned entities and damage. Equal seeds match; another seed differs. All 301 Node checks and complete battle regression pass. [Evidence and limits](Docs/RUNTIME-TRACE-EVIDENCE.json) distinguish this prerequisite from production determinism, native ordering and complete replay support. Full engine work continues.

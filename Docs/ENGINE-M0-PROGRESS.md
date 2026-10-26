@@ -1,5 +1,15 @@
 # Engine inventory reconciliation — M0
 
+## Native CMD reference prerequisite
+
+[CMD-NATIVE-EVIDENCE.md](CMD-NATIVE-EVIDENCE.md) records 226 passing synthetic fixtures through 25 unchanged pinned native declarations, including actual input counter/State/StateCharge functions. The native reader inspected 247 original command definitions: 245 without diagnostics and two Jupiter definitions with retained separator diagnostics. This is reference evidence only; Web OR matching, complete input timing, CommandList/version policy and State -1 integration remain unfinished. Runtime remains 0.26.26.
+
+The new standalone Web symbol parser also passes 1,599 synthetic and 247 original grammar comparisons against that native executable, including exact partial results/diagnostics and Unicode whitespace/UTF-8 diagnostic details. It is not yet connected to the production matcher. These are grammar results, not timing or full command-engine certification.
+
+Standalone input-buffer and individual-command matcher components now add 315,400 State/StateCharge comparisons and 43,784 per-tick matcher comparisons against unchanged native functions. Expanded step metadata/order, timers, buffers, completion and the two original diagnostics agree across 176 synthetic plus 247 original definitions. CommandList sharing, backward-compatibility transforms, file policy and battle consumers still need integration; the production matcher is unchanged. Detailed scope and reproducible gates are in the CMD evidence document. No M1/M3 completion or full command compatibility is claimed.
+
+The optional 35-declaration native list reference now verifies the standalone Web CommandList plus legacy hold transforms over 32 scenarios / 3,232 ticks. Duplicate-name progress clearing preserves buffers and respects each shared flag; assertions and grouped active-state queries match. Full compiler version selection, cross-player copies, file defaults and battle handoff still need integration. This follow-up publishes authored modules/tests/evidence only; no original reference text, corpus, native executable or toolchain is included.
+
 ## 0.26.26 existing-runtime trace prerequisite for M1
 
 `Tools/check-runtime-trace-repeatability.cjs` runs the actual Moon/Venus source paths in three fresh browser contexts. It resets the existing native RNG, intercepts legacy Math.random only during fixture-driven simulation, scripts S1000/S3000 entries and held inputs, then captures 360 real ticks per context with one actual camera update per tick. Root/GetHit/entity/effect/round/pause fields and observed function phases are canonicalized with explicit undefined/nonfinite/negative-zero tokens. Failed comparisons retain the first chronological difference. Requested code/JSON/HTML inputs are fingerprinted and must stay unchanged across the trials.
