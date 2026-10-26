@@ -1,3 +1,7 @@
+## 0.26.25 — StateDef persistence/cost and complete header inventory
+
+The three persistence flags and juggle now use shared Boolean/integer conversion. Undefined/NaN and numeric strings no longer incorrectly retain hit/contact/HitDef data or assign a numeric-string juggle cost. Unit assertions reproduced the old flag failure; actual root/reaction entry fixtures now use quoted string expressions on their reset path. [STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json) reconciles all 13 MUGEN/native header fields with separate Partial stages, source execution order, current consumers and tests. Generic frontend/phase/default/version conformance remains unfinished.
+
 ## 0.26.24 — StateDef typed scalar/facing consumers
 
 StateDef ctrl/facep2/sprpriority/poweradd use the existing shared typed conversion helpers. Undefined/NaN and numeric-looking strings no longer cause false control/facing or numeric-string power/priority. The new assertion failed before the fix; all 301 Node checks pass, including single evaluation and false short-circuit behavior. Actual P1/P2/Helper State-entry fixtures preserve Power/facing and produce ctrl/priority zero from string results. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) records the source, Partial stages and remaining parser/phase/version work.

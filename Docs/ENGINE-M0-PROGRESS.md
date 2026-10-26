@@ -1,5 +1,15 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.25 StateDef full header reconciliation and persistence/cost correction
+
+[STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json) records all 13 MUGEN CNS header fields and all 13 pinned compiler fields, including the internal moveType spelling. The checker verifies pinned compiler/bytecode/CNS bytes, compiler parameter order, header bytecode case order and every listed consumer/test. Entry type/move/physics defaults, U retention, native outer initialization and CNS-ignore/ZSS-reject negative-header behavior are explicit source observations, with generic frontend execution still pending.
+
+Further review found Number coercion in hitcountpersist/movehitpersist/hitdefpersist/juggle. Shared typed converters now map evaluated strings and undefined/NaN to false/zero. The new flag assertion reproduced all three incorrectly retained flags before the fix. Focused tests preserve evaluation/reset order and actual Helper entry behavior; real root/reaction reset fixtures now use quoted numeric-string flags. All 301 Node checks, the complete battle regression and pinned StateDef inventory check passed. All 13 fields remain Partial, none Certified. Full StateDef transition/provider/negative/global/pause/default/version behavior remains unfinished.
+
+```text
+python Tools/check-statedef-coverage.py --compiler ../outputs/ikemen-compiler.go --bytecode ../outputs/ikemen-bytecode.go --cns ../outputs/mugen-reference-11b1/docs/cns.html
+```
+
 ## 0.26.24 StateDef existing-consumer type correction
 
 StateDef source review verified compiler Boolean/integer types and BytecodeValue.ToB/ToI string/undefined handling against the pinned upstream bytecode blob. The existing scalar/facing consumers used Number coercion and incorrectly enabled ctrl from NaN/undefined or consumed numeric strings as numbers. Shared typed converters now handle ctrl/facep2/sprpriority/poweradd. The new assertion failed before the fix; all 301 Node checks pass. Actual P1/P2/Helper entry fixtures evaluate quoted string expressions through the real source path and verify ctrl/priority zero, unchanged Power and unchanged facing. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) records Partial evidence and remaining generic frontend/phase work. Full M0/engine compatibility remains unfinished.

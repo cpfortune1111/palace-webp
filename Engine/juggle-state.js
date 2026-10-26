@@ -1,5 +1,6 @@
 import {recordTargetedBy} from './hit-targeted-by.js';
 import {clearActorRegistry} from './actor-registry-cleanup.js';
+import {controllerInteger} from './controller-value-conversion.js';
 
 const integer=value=>Math.trunc(Number(value))|0;
 const present=value=>value!==undefined&&value!==null&&!(typeof value==='string'&&!value.trim());
@@ -33,7 +34,7 @@ export function consumeJuggleContact(entries,sourceId,{cost,previousFall=false,f
 
 export function applyStateDefJuggle(definition,api){
  if(!present(definition?.juggle))return false;
- api.setCost(integer(api.evaluate(definition.juggle)));
+ api.setCost(controllerInteger(api.evaluate(definition.juggle)));
  return true;
 }
 

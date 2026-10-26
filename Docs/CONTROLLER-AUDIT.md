@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.25 fixes typed values for StateDef hitcountpersist/movehitpersist/hitdefpersist/juggle and adds [STATEDEF-COVERAGE.json](STATEDEF-COVERAGE.json). All 13 header fields have reviewed consumers/tests and separate Partial stages; complete source/default/version/phase semantics remain unfinished. This header namespace is distinct from the State-controller parameter inventory.
+
 0.26.24 corrects StateDef scalar/facing typed values using shared conversion helpers: strings and undefined values yield native false/zero. The failing-before-fix assertion, all 301 Node checks and actual P1/P2/Helper entry fixtures cover the correction. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) retains Partial scope; full StateDef/engine conformance is incomplete.
 
 0.26.23 corrects signed int32 overflow in the existing reversal hitpause addition before the minimum-one clamp. Boundary tests reproduced the old failure; all 301 Node checks passed, with actual browser pause-adapter cases for three version profiles. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records source scope and remaining conformance work. No whole controller is certified.

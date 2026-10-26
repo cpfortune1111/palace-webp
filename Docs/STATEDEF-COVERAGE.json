@@ -1,0 +1,392 @@
+{
+  "schema": "moon-palace-statedef-coverage-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "runtimeVersion": "0.26.25",
+  "references": {
+    "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "compilerSha256": "e027f39df8f86d3ea9b7c422237f4c1525795d70eb1365b136e9a31c75bcd9f8",
+    "bytecodeSha256": "89793c6a023e65c30b25e30676e1f0120a0856af39b8033529d16435d92d119f",
+    "cnsDocumentSha256": "ee340cc6fb0bafca800dfbd41e385b5bb9b0dd94af1b5ea89b0d5b6a305c93bb"
+  },
+  "counts": {
+    "mugenFields": 13,
+    "nativeCompilerFields": 13,
+    "reviewedFields": 13,
+    "partial": 13,
+    "certified": 0
+  },
+  "nativeCompilerOrder": [
+    "type",
+    "movetype",
+    "physics",
+    "hitcountpersist",
+    "movehitpersist",
+    "hitdefpersist",
+    "sprpriority",
+    "facep2",
+    "juggle",
+    "velset",
+    "anim",
+    "ctrl",
+    "poweradd"
+  ],
+  "nativeHeaderExecutionOrder": [
+    "hitcountpersist",
+    "movehitpersist",
+    "hitdefpersist",
+    "sprpriority",
+    "facep2",
+    "juggle",
+    "velset",
+    "anim",
+    "ctrl",
+    "poweradd"
+  ],
+  "nativeOuterEntry": [
+    "State type (unless U)",
+    "Previous/current move type and storeMoveType handling (unless U)",
+    "Physics (unless U)",
+    "Reset juggle if resulting move type is not attack",
+    "Execute remaining header bytecode"
+  ],
+  "defaults": {
+    "type": "S",
+    "movetype": "I",
+    "physics": "N",
+    "hitcountpersist": 0,
+    "movehitpersist": 0,
+    "hitdefpersist": 0,
+    "otherFields": "Optional compiled fields; full transition/default interactions remain Partial"
+  },
+  "negativeHeaders": {
+    "CNS": "Pinned compiler ignores headers on negative States",
+    "ZSS": "Pinned compiler rejects nonempty negative StateDef headers",
+    "web": "Generic original-file frontend/version error behavior remains incomplete"
+  },
+  "rows": [
+    {
+      "parameter": "type",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "State type S/C/A/L; U preserves incoming type",
+      "runtimeConsumers": [
+        "Engine/state-def-types.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-types.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "movetype",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Move type I/A/H; U preserves incoming move type",
+      "runtimeConsumers": [
+        "Engine/state-def-types.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-types.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ],
+      "internalFieldName": "moveType"
+    },
+    {
+      "parameter": "physics",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Physics S/C/A/N; U preserves incoming physics",
+      "runtimeConsumers": [
+        "Engine/state-def-types.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-types.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "hitcountpersist",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Boolean false resets hit counters before evaluating later header fields",
+      "runtimeConsumers": [
+        "Engine/state-persistence.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-persistence.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "movehitpersist",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Boolean false resets move-contact data after hit-count handling",
+      "runtimeConsumers": [
+        "Engine/state-persistence.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-persistence.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "hitdefpersist",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Boolean false resets HitDef/guard-distance data after other persistence fields",
+      "runtimeConsumers": [
+        "Engine/state-persistence.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-persistence.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "sprpriority",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Integer priority assignment resets layer to zero",
+      "runtimeConsumers": [
+        "Engine/state-def-scalars.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-scalars.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "facep2",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Boolean source value, assertion/opponent gates and facing geometry",
+      "runtimeConsumers": [
+        "Engine/state-def-facing.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-facing.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "juggle",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Optional integer cost, with separate entry and action reset behavior",
+      "runtimeConsumers": [
+        "Engine/juggle-state.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-juggle-state.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "velset",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Supplied float components update X/Y/Z in order; omitted later components retain values",
+      "runtimeConsumers": [
+        "Engine/state-def-velocity.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-velocity.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "anim",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Animation reference evaluates source/action; -1 keeps existing animation",
+      "runtimeConsumers": [
+        "Engine/change-animation-reference.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-change-animation-reference.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "ctrl",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Boolean source value assigned after animation",
+      "runtimeConsumers": [
+        "Engine/state-def-scalars.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-scalars.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    },
+    {
+      "parameter": "poweradd",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "nativeRule": "Integer addition follows ctrl and observes its updated context",
+      "runtimeConsumers": [
+        "Engine/state-def-scalars.js",
+        "index.html",
+        "Char/Venus/venus-special-runtime.js"
+      ],
+      "semanticTests": [
+        "Tools/check-state-def-scalars.mjs",
+        "Tools/check-saturn-priority.cjs"
+      ],
+      "pending": [
+        "Full original CNS/ZSS parsing, diagnostics and type compilation",
+        "All State-entry/provider/pause/global/default/version interactions"
+      ]
+    }
+  ],
+  "corrections": {
+    "release02624": [
+      "ctrl",
+      "facep2",
+      "sprpriority",
+      "poweradd"
+    ],
+    "release02625": [
+      "hitcountpersist",
+      "movehitpersist",
+      "hitdefpersist",
+      "juggle"
+    ],
+    "typedRule": "Native ToB/ToI map strings and undefined/NaN to false/zero. Preserve single evaluation and ordered effects.",
+    "evidence": "Failing-before-fix unit cases; actual root/reaction retention/reset paths use quoted string expressions. Complete battle receipt records release gates."
+  },
+  "limitations": [
+    "Name/field enumeration is not full State machine conformance",
+    "Native previous-move storage and working-State/global context need complete reconciliation",
+    "HitDef reset/guard-distance effects and counter slot ownership remain Partial",
+    "Generic animation source/version diagnostics and complete nonfinite integer conversions remain Partial",
+    "Original sources/private fixtures are not published"
+  ]
+}

@@ -116,6 +116,8 @@
       "evidence": [
         "Engine/state-change-buffer.js",
         "Engine/state-properties.js",
+        "Docs/STATEDEF-COVERAGE.json",
+        "Tools/check-statedef-coverage.py",
         "Engine/controller-schedule.js",
         "Char/Venus/venus-lifecycle-runtime.js",
         "Docs/STATE-CONTROLLER-HITPAUSE-WIP.md"

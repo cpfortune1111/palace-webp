@@ -1,3 +1,7 @@
+## 0.26.25 — StateDef retention and cost types
+
+StateDef hitcountpersist/movehitpersist/hitdefpersist and juggle now use native typed conversion, so undefined/string results reset the relevant data or cost. All 301 Node checks, complete battle regression and pinned StateDef inventory checks pass. [StateDef coverage](Docs/STATEDEF-COVERAGE.json) records all 13 documented/native fields, source header order, consumers/tests and remaining Partial scope. Full engine compatibility remains incomplete.
+
 ## 0.26.24 — StateDef typed values
 
 StateDef ctrl/facep2 now treat strings and undefined results as false; sprpriority/poweradd treat strings as zero. This prevents accidental control, facing, power or priority changes from JavaScript coercion. All 301 Node checks and complete battle regression pass; actual P1/P2/Helper entry fixtures cover the typed values. [Evidence and remaining scope](Docs/STATEDEF-TYPED-VALUES.md). Full engine compatibility remains incomplete.

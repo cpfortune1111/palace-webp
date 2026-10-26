@@ -31,3 +31,8 @@ state.finish('helper',{ikemen:true,moveType:'I'});assert.equal(state.cost('helpe
 assert.equal(state.sampleFall('helper',1,false),false);assert.equal(state.sampleFall('helper',1,true),false);assert.equal(state.sampleFall('helper',2,true),true);
 const snapshot=state.snapshot();state.clear();state.restore(snapshot);assert.deepEqual(state.snapshot(),snapshot);state.delete('helper');assert.equal(state.cost('helper'),0);
 console.log('Native juggle budget ownership, player/projectile version gates, inheritance, conditional debit, cost reset and previous-fall sampling passed');
+for(const value of [NaN,undefined,'7','Moon']){
+ let observed=5,reads=0;
+ applyStateDefJuggle({juggle:'typed'},{evaluate:()=>{reads++;return value},setCost:value=>{observed=value}});
+ assert.equal(observed,0);assert.equal(reads,1);
+}

@@ -29,3 +29,8 @@ assert.deepEqual([helper.hitCount,helper.guardCount,helper.moveContact,helper.mo
 assert.deepEqual([helper.activeHitDef.id,helper.guardHitDef.id],[3,4]);
 assert.deepEqual(transitions,[{hitcountpersist:0,movehitpersist:1},{hitcountpersist:1,movehitpersist:0}]);
 console.log('Actual Helper enterState honors expression context, ordered resets and retained contact/HitDef consumers');
+for(const value of [NaN,undefined,'1','Moon']){
+ const resets=[],reads=[];
+ assert.deepEqual(applyStatePersistence({hitcountpersist:'typed',movehitpersist:'typed',hitdefpersist:'typed'},{evaluate:field=>{reads.push(field);return value},clearHitCount:()=>resets.push('count'),clearMoveHit:()=>resets.push('move'),clearHitDef:()=>resets.push('definition')}),{hitcountpersist:0,movehitpersist:0,hitdefpersist:0});
+ assert.deepEqual(resets,['count','move','definition']);assert.deepEqual(reads,['typed','typed','typed']);
+}

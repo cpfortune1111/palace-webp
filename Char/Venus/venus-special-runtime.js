@@ -14,7 +14,7 @@ import {hitDefCornerPush} from '../../Engine/hitdef-cornerpush.js';
 import {compileHitStateParameters} from '../../Engine/hit-state-parameters.js';
 import {prepareReversalDefinition} from '../../Engine/reversal-definition.js';
 import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../Engine/helper-key-control.js';
-import {applyStatePersistence} from '../../Engine/state-persistence.js';
+import {applyStatePersistence} from '../../Engine/state-persistence.js?v=02625';
 import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js?v=02554';
 import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
 import {applyStateDefPriority,applyStateDefControlPower} from '../../Engine/state-def-scalars.js?v=02624';
