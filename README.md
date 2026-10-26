@@ -1,3 +1,7 @@
+## 0.26.19 — State counters and pause drivers (partial)
+
+State entry/release now resets destination-visible counters while retaining hidden slots. Continued bodies retain actor-wide controller position; combat/presentation expiry and ordinary attack-pause drivers use consistent scheduling and secondary pause clocks. Forty new actual browser cases, all 301 Node checks, related browser gates and full battle regression pass. Capacity reallocation, complete nested/global/native phase fidelity and wider controller coverage remain Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.
+
 ## 0.26.18 — State entry during hitpause (partial)
 
 Root/reaction State entry now waits for recipient hitpause before applying StateDef effects. MUGEN root/Helper counters carry by CNS slot and skip the recipient transition slot; Ikemen resets immediately. Counter commits follow actual execution outcomes. Twenty-four actual carry-body cases, entry/redirect cases, all 301 Node checks, related browser gates and full battle regression pass. Native array aliasing, mixed-provider/global/tick ordering and broader fidelity remain Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.

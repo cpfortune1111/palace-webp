@@ -99,7 +99,7 @@ export function createSpecialRuntime(api){
  function helperDefinition(entity,state,provider=entity.stateOwner){const data=provider?api.stateData?.(provider):api.data(entity.player);if(!data)throw Error('Unknown Helper state provider '+provider);return data.helperStates[String(state)]||data.lifecycleHelpers?.[String(state)]||data.states?.[String(state)]}
  function enter(entity,state,{selected=false}={}){
   const definition=helperDefinition(entity,state);if(!definition)throw Error('Unknown helper state '+state);
-  if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});entity.controllerSchedule=createControllerSchedule()}
+  if(!selected){stateChanges.cancel(entity.key);const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set(),hitStateChangeIndex:-1});entity.controllerSchedule??=createControllerSchedule();entity.controllerSchedule.resetSlots(definition.controllers?.length??0)}
   applyStateDefTypes(definition,{set:(name,value)=>{entity[name]=value}});
   if(state===5110){entity.getHit??={};if(entity.getHit['down.recovertime']===undefined){if(!api.downRecoveryDefault)throw Error('Missing actual Helper down recovery default');entity.getHit['down.recovertime']=api.downRecoveryDefault(entity)}}
   api.initializeStateJuggle?.(entity);
@@ -124,10 +124,10 @@ export function createSpecialRuntime(api){
   return stateChanges.request(entity.key,{state,previousState:entity.state,selectedTick:api.tick(),resetAfterPause,provider,phase},()=>{
    const age=entity.time-(entity.animStartTime||0);Object.assign(entity,{prevState:entity.state,state,stateOwner:provider||null,entrySerial:(entity.entrySerial||0)+1,time:0,animStartTime:-age,once:new Set()});
    entity.hitStateChangeIndex=resetAfterPause?(entity.currentControllerIndex??-1):-1;
-   if(!resetAfterPause)entity.controllerSchedule=createControllerSchedule();
+   if(!resetAfterPause)entity.controllerSchedule.resetSlots(helperDefinition(entity,state,provider).controllers?.length??0);
   });
  }
- function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule=createControllerSchedule();entity.hitStateChangeIndex=-1;pending.resetAfterPause=false}}
+ function resetSelectedSchedule(entity){const pending=stateChanges.get(entity.key);if(pending?.resetAfterPause&&!(entity.hitPause>0)){entity.controllerSchedule.resetSlots(helperDefinition(entity,pending.state).controllers?.length??0);entity.hitStateChangeIndex=-1;pending.resetAfterPause=false}}
  function initializeSelectedState(entity){
   const pending=stateChanges.get(entity.key);if(pending&&pending.state!==entity.state){stateChanges.cancel(entity.key);return false}
   return stateChanges.initialize(entity.key,{paused:blocked(entity.player,entity),hitPause:entity.hitPause>0,tick:api.tick(),allowSameTick:pending?.phase==='global'||pending?.phase==='current',initialize:entry=>{resetSelectedSchedule(entity);enter(entity,entry.state,{selected:true})}});

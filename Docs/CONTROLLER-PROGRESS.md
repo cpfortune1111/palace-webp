@@ -1,3 +1,9 @@
+## 0.26.19 — State counters and pause drivers (partial)
+
+Root/Helper selection and release now reset destination-visible counters while retaining hidden slots. Continued old bodies share actor-wide controller position; expiry resets occur before StateDef initialization, ordinary attack-pause drivers use indexed bodies, and scheduling recognizes secondary clocks. Forty new actual browser cases, all 301 Node checks, dedicated animation/state, scheduling and Helper-entry browser gates and final complete battle regression pass. Native capacity reallocation, complete nested aliases, mixed-provider/global/native phase fidelity and wider controller parameters remain Partial. No whole controller is certified; see STATE-CONTROLLER-HITPAUSE-WIP.md.
+
+0.26.18 publication was verified at 3ce36efaeb616691c173716959a41016d2f9f41d, exact-head successful Pages run 40257398878 and nine frozen live text comparisons.
+
 ## 0.26.18 — State entry during hitpause (partial)
 
 Root/reaction StateDef initialization now waits for recipient hitpause. MUGEN root/Helper counters carry by CNS slot and suppress the recipient transition slot; Ikemen starts fresh. Persistent commits follow real execution outcomes. Sixteen root and eight Helper carry-body cases, existing clean-entry/reaction/redirect cases, all 301 Node checks, related browser gates and complete battle regression pass. Native array capacity/aliasing, mixed-provider/global/tick ordering, synthetic slot layout and wider version/compiler fidelity remain Pending. No whole controller is certified. See STATE-CONTROLLER-HITPAUSE-WIP.md.

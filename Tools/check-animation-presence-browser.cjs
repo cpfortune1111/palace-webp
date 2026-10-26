@@ -67,6 +67,83 @@ await run(`(()=>{
   }
  }finally{specialRuntime.reset();data.engineVersions=versions;ids.forEach((id,i)=>{if(saved[i]===undefined)delete data.helperStates[id];else data.helperStates[id]=saved[i]})}
 })()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992080,992081],saved=ids.map(id=>[states[id],data.helperStates[id]]);
+ const idle=()=>({type:'Null',params:{},triggerall:[],triggers:{1:['0']}}),add=v=>({type:'VarAdd',params:{v:String(v),value:'1',persistent:'0',ignorehitpause:'1'},triggerall:[],triggers:{1:['1']}});
+ try{
+  const definitions=[{type:'S',physics:'N',moveType:'I',controllers:[idle(),idle(),idle(),idle(),idle(),add(20)]},{type:'S',physics:'N',moveType:'I',controllers:[add(21)]}];
+  ids.forEach((id,i)=>{states[id]=definitions[i];data.helperStates[id]=definitions[i]});
+for(const ikemen of [false,true])for(const helper of [false,true])for(const player of [1,2])for(const firstPause of [false,true]){
+   specialRuntime.reset();rootControllerSchedules.reset();p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);
+   let actor;if(helper){const owner=specialRoot(player);specialRuntime.dispatch({type:'Helper',params:{stateno:String(ids[0]),id:'89'}},owner,specialRuntime.context(owner),{},owner,player);actor=specialRuntime.entities.at(-1)}else{if(player===1)enterIRState(ids[0]);else enterP2State(ids[0]);actor=specialRoot(player)}
+   actor.vars[20]=actor.vars[21]=0;
+   const step=()=>{combatTraceTick++;if(helper)specialRuntime.step();else runRootCurrentBody(player)};
+   const pause=value=>{if(helper)actor.hitPause=value;else if(player===1)p1HitPause=value;else p2.hitShake=value};
+   const change=id=>executeControllerM1({type:'ChangeState',params:{value:String(id),ignorehitpause:'1'}},helper?actor:player===1?p1ControllerBinding:p2,specialRuntime.context(actor),{owner:actor,player,schedulingApplied:true,changeState:next=>helper?specialRuntime.selectState(actor,next):changeRootControllerState(player,next)});
+   const pending=()=>{combatTraceTick++;if(helper)specialRuntime.step();else runPendingRootHitPauseM1(player)};
+   const release=()=>{pause(0);combatTraceTick++;if(helper)specialRuntime.step();else{initializeRootSourceStateM1(player);runRootCurrentBody(player)}};
+   step();if(actor.vars[20]!==1)throw Error('Long source did not lock hidden slot');pause(firstPause?2:0);change(ids[1]);pending();release();pause(2);change(ids[0]);pending();
+   if(actor.vars[20]!==(ikemen?2:1))throw Error('Recovered hidden counter lost across short-state release '+JSON.stringify({ikemen,helper,player,value:actor.vars[20]}));
+   release();if(actor.vars[20]!==2)throw Error('Recovered counter did not reset on long-state release');
+  }
+ }finally{specialRuntime.reset();data.engineVersions=versions;ids.forEach((id,i)=>{for(const [target,value] of [[states,saved[i][0]],[data.helperStates,saved[i][1]]])if(value===undefined)delete target[id];else target[id]=value});p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992090,992091,992092],saved=ids.map(id=>states[id]);
+ const add=v=>({type:'VarAdd',params:{v:String(v),value:'1',ignorehitpause:'1'},triggerall:[],triggers:{1:['1']}});
+ try{
+  states[ids[1]]={type:'S',physics:'N',moveType:'I',controllers:[]};states[ids[2]]={type:'S',physics:'N',moveType:'I',controllers:[add(30),add(31),add(32)]};
+  for(const ikemen of [false,true])for(const type of ['ChangeState','SelfState'])for(const player of [1,2]){
+   data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};
+   states[ids[0]]={type:'S',physics:'N',moveType:'I',controllers:[{type,params:{value:String(ids[1]),continue:'1'},triggerall:[],triggers:{1:['1']}},{type:'Null',params:{},triggerall:[],triggers:{1:['0']}},add(29)]};
+   p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');enterIRState(0);enterP2State(0);if(player===1)enterIRState(ids[0]);else enterP2State(ids[0]);
+   const actor=specialRoot(player);for(const v of [29,30,31,32])actor.vars[v]=0;runRootCurrentBody(player);
+   if(specialRoot(player).state!==ids[1]||actor.vars[29]!==1)throw Error('Source body failed to continue after nested State entry');
+   if(player===1)p1HitPause=3;else p2.hitShake=3;const caller=specialRoot(3-player);
+   executeControllerM1({type,params:{value:String(ids[2]),redirectid:String(player),ignorehitpause:'1'}},caller.player===1?p1ControllerBinding:p2,specialRuntime.context(caller),{owner:caller,player:caller.player,schedulingApplied:true});runPendingRootHitPauseM1(player);
+   if(actor.vars[30]!==1||actor.vars[31]!==1||actor.vars[32]!==(ikemen?1:0))throw Error('Second transition used stale source-body cursor '+JSON.stringify({ikemen,type,player,values:[actor.vars[30],actor.vars[31],actor.vars[32]]}));
+  }
+ }finally{data.engineVersions=versions;ids.forEach((id,i)=>{if(saved[i]===undefined)delete states[id];else states[id]=saved[i]});p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,id=992100,saved=states[id],flags=rootStatusFlags.map(value=>value.disabled);
+ const controller={type:'VarAdd',params:{v:'20',value:'1',persistent:'0',ignorehitpause:'1'},triggerall:[],triggers:{1:['1']}};
+ try{
+  states[id]={type:'S',physics:'N',moveType:'I',controllers:[controller]};
+  for(const ikemen of [false,true])for(const player of [1,2])for(const combat of [false,true]){
+   specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStatusFlags.forEach(value=>value.disabled=false);data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);
+   const actor=specialRoot(player);actor.vars[20]=0;if(player===1)p1HitPause=1;else p2.hitShake=1;changeRootControllerState(player,id);runPendingRootHitPauseM1(player);if(actor.vars[20]!==1)throw Error('Release fixture did not lock paused destination counter');
+   if(combat)simStepCore();else finishPendingRootPausesM1(pendingRootPauseSnapshotM1());
+   if(rootStateHitPauseM1(player)||!rootStateChanges.has('root'+player))throw Error('Release fixture did not stop at tick boundary before StateDef initialization');
+   const tagged={...controller,controllerSchedulingIndex:0,controllerSchedulingKey:controller};if(player===1)runController(tagged);else runP2ControllerM1(tagged);
+   if(actor.vars[20]!==(ikemen?1:2))throw Error('Persistent reset waited until StateDef initialization '+JSON.stringify({ikemen,player,combat,value:actor.vars[20]}));
+  }
+ }finally{data.engineVersions=versions;if(saved===undefined)delete states[id];else states[id]=saved;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();rootStatusFlags.forEach((value,i)=>value.disabled=flags[i]);enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const data=profileFor(1).battle,states=profileFor(1).states.states,versions=data.engineVersions,ids=[992110,992111],saved=ids.map(id=>[states[id],data.attackStates[id]]),oldDefenderPause=entityDefenderPause;
+ const add=(v,ignore)=>({type:'VarAdd',params:{v:String(v),value:'1',...(ignore?{ignorehitpause:'1'}:{})},triggerall:[],triggers:{1:['1']}});
+ try{
+  const source={type:'S',physics:'N',moveType:'A',controllers:[{type:'ChangeState',params:{value:String(ids[1]),ignorehitpause:'1'},triggerall:[],triggers:{1:['var(25) = 1']}},{type:'Null',params:{},triggerall:[],triggers:{1:['0']}},add(29,false)]};
+  states[ids[0]]=data.attackStates[ids[0]]=source;states[ids[1]]={type:'S',physics:'N',moveType:'I',controllers:[add(30,true),add(31,true),add(32,true)]};
+  for(const ikemen of [false,true])for(const driver of ['p1-core','p2-step','p2-core']){
+   const player=driver==='p1-core'?1:2;specialRuntime.reset();rootControllerSchedules.reset();rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;entityDefenderPause=false;data.engineVersions={mugen:[1,1],ikemen:ikemen?[0,99]:[0,0]};enterIRState(0);enterP2State(0);if(player===1)enterIRState(ids[0]);else enterP2State(ids[0]);
+   const actor=specialRoot(player);for(const v of [25,29,30,31,32])actor.vars[v]=0;runRootCurrentBody(player);actor.vars[25]=1;if(player===1||driver==='p2-core')p1HitPause=3;if(player===2)p2.attackPause=3;
+   if(driver==='p2-step')stepP2M1();else simStepCore();if(specialRoot(player).state!==ids[1])throw Error('Ordinary hitpause transition failed');runPendingRootHitPauseM1(player);
+   if(actor.vars[30]!==(ikemen?1:0)||actor.vars[31]!==1||actor.vars[32]!==1)throw Error('Attack hitpause lost controller slot '+JSON.stringify({ikemen,driver,values:[actor.vars[30],actor.vars[31],actor.vars[32]]}));
+  }
+ }finally{data.engineVersions=versions;ids.forEach((id,i)=>{for(const [target,value] of [[states,saved[i][0]],[data.attackStates,saved[i][1]]])if(value===undefined)delete target[id];else target[id]=value});entityDefenderPause=oldDefenderPause;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootStateChanges.cancel('root1');rootStateChanges.cancel('root2');rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
+await run(`(()=>{
+ const definition=(slot,ignore)=>({type:'VarAdd',controllerSchedulingIndex:slot,params:{v:String(20+slot),value:'1',...(ignore?{ignorehitpause:'1'}:{})},triggerall:[],triggers:{1:['1']}});
+ try{for(const player of [1,2]){
+  specialRuntime.reset();rootControllerSchedules.reset();p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;enterIRState(0);enterP2State(0);const actor=specialRoot(player);actor.vars[20]=actor.vars[21]=0;
+  if(player===1)p1Reaction={...specialRoot(1),hitShake:2};else p2.hitPause=2;
+  const visit=()=>{for(const controller of [definition(0,false),definition(1,true)])if(player===1)runController(controller);else runP2ControllerM1(controller)};
+  visit();visit();if(actor.vars[20]!==0||actor.vars[21]!==2)throw Error('Root scheduler missed secondary hitpause clock '+JSON.stringify({player,values:[actor.vars[20],actor.vars[21]]}));
+  p1Reaction=null;p2.hitPause=0;visit();if(actor.vars[20]!==1||actor.vars[21]!==3)throw Error('Root secondary-clock release gate failed');
+ }}finally{p1Reaction=null;p1HitPause=0;p2.hitPause=p2.hitShake=p2.attackPause=0;rootControllerSchedules.reset();enterIRState(0);enterP2State(0)}
+})()`);
 const result=await run(`(()=>{
  const data=profileFor(1).battle,number=991988;data.helperStates[number]={type:'S',physics:'N',moveType:'I',anim:'0',ctrl:'1',controllers:[]};data.collision={...data.collision,0:[{c1:[[-20,-40,20,0]],c2:[[-20,-40,20,0]]}]};roundFlow.enabled=()=>false;lifecycleRuntime.rounds.state=2;specialRuntime.reset();posX=p2.x=0;posY=p2.y=0;p1Reaction=null;p1HitPause=0;p2.hitShake=p2.attackPause=0;enterIRState(0);enterP2State(0);
  const spawn=player=>{const owner=specialRoot(player);specialRuntime.dispatch({type:'Helper',params:{stateno:String(number),id:'80'}},owner,specialRuntime.context(owner),{},owner,player);const actor=specialRuntime.entities.at(-1);actor.x=actor.y=0;return actor};
