@@ -23,7 +23,8 @@
       "src/sound.go": "8648f1a497f1e2795b83f740de58e204b77152fbe386629247b17178a3b75925",
       "src/common.go": "d7a40673b3bfcd7f6b320747e37679431fefd1aad7040e2d1f60484e03148ac6",
       "src/system.go": "b1784a92a937f5c940e7a99fc5025f807af497a23bc447c861c276bdbb51bf77",
-      "src/char.go": "7f8839374168cf5948d190268e6bdad73c61dac4febadb015cd501d46a579bf7"
+      "src/char.go": "7f8839374168cf5948d190268e6bdad73c61dac4febadb015cd501d46a579bf7",
+      "src/bytecode.go": "89793c6a023e65c30b25e30676e1f0120a0856af39b8033529d16435d92d119f"
     },
     "verification": "Both pinned compiler files were read back from upstream and matched the cached source. Animation/input source caches additionally matched exact upstream Git blob hashes and lengths."
   },

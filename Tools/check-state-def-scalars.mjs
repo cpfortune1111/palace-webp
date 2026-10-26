@@ -19,3 +19,11 @@ console.log('StateDef scalar fields evaluate once, retain absence, preserve inte
 const layerEvents=[];
 applyStateDefPriority({sprpriority:'4'},{evaluate:value=>{layerEvents.push('evaluate');return Number(value)},setPriority:value=>layerEvents.push(['priority',value]),setLayer:value=>layerEvents.push(['layer',value])});
 assert.deepEqual(layerEvents,['evaluate',['priority',4],['layer',0]]);
+for(const value of [NaN,undefined,'1','-7','Moon']){
+ const result={ctrl:true,power:100,priority:5},reads=[];
+ const typedApi={evaluate:expression=>{reads.push(expression);return value},setControl:value=>{result.ctrl=value},addPower:value=>{result.power+=value},setPriority:value=>{result.priority=value}};
+ applyStateDefPriority({sprpriority:'typed'},typedApi);
+ applyStateDefControlPower({ctrl:'typed',poweradd:'typed'},typedApi);
+ assert.deepEqual(result,{ctrl:false,power:100,priority:0});
+ assert.deepEqual(reads,['typed','typed','typed']);
+}

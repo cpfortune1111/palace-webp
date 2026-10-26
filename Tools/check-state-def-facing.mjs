@@ -30,3 +30,8 @@ assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:0},{depth:tru
 assert.equal(shouldFaceStateOpponent({x:0,z:0,facing:1},{x:0,z:0},{depth:true}),true);
 assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:-1}),false);
 console.log('StateDef facing evaluates once, honors both assertions, uses native legacy truncation and depth tie breaking');
+for(const value of [NaN,undefined,'1','Moon']){
+ let reads=0;
+ assert.equal(applyStateDefFacing({facep2:'typed'},{evaluate:()=>{reads++;return value},asserted:()=>{throw Error('False facep2 must short circuit assertions')},opponent:()=>{throw Error('False facep2 must not select opponent')}}),false);
+ assert.equal(reads,1);
+}

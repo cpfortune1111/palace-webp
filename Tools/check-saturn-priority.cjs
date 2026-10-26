@@ -206,7 +206,12 @@ const server=http.createServer((request,response)=>{
     lifecycleRuntime.rounds.state=2;delete definition.sprpriority;delete definition.ctrl;delete definition.poweradd;p1SprPriority=9;runtimeCtrl=1;p1Power=77;enterIRState(number);
     const omitted=[p1SprPriority,runtimeCtrl,p1Power];data.states['0']={...saved.idle,anim:0,ctrl:'Anim = 0',controllers:[]};customStateOwners.fill(null);p1Life=p2.life=1;p1LifeMax=p2.lifeMax=1000;runtimeCtrl=0;current=11;enterIRState(0);
     const idleFirst=[runtimeCtrl,current];p2.ctrl=0;p2.anim=11;enterP2State(0);
-    return [first,second,reaction,helperEntry,capped,floored,locked,omitted,initialHelperPriority,legacyFirst,legacySecond,idleFirst,[p2.ctrl,p2.anim]];
+    const idleSecond=[p2.ctrl,p2.anim];
+    Object.assign(definition,{sprpriority:'"9"',ctrl:'"1"',poweradd:'"7"',facep2:'"1"'});data.helperStates[number]=definition;
+    p1Facing=p2.x<posX?1:-1;const initialFacing=p1Facing;p1Power=100;runtimeCtrl=1;p1SprPriority=5;enterIRState(number);const typedFirst=[p1SprPriority,runtimeCtrl,p1Power,p1Facing===initialFacing];
+    p2.facing=posX<p2.x?1:-1;const initialSecondFacing=p2.facing;Object.assign(p2,{ctrl:1,power:100,sprPriority:5});enterP2State(number);const typedSecond=[p2.sprPriority,p2.ctrl,p2.power,p2.facing===initialSecondFacing];
+    helper.facing=initialFacing;helper.ctrl=1;p1Power=100;specialRuntime.enterState(helper,number);const typedHelper=[helper.sprPriority,helper.ctrl,p1Power,helper.facing===initialFacing];
+    return [first,second,reaction,helperEntry,capped,floored,locked,omitted,initialHelperPriority,legacyFirst,legacySecond,idleFirst,idleSecond,typedFirst,typedSecond,typedHelper];
    }finally{
     for(const entity of specialRuntime.entities){forgetHelperCommandInput(entity);nativeHitStates.delete(hitDefinitionOwnerKey(entity))}
     [state,prevState,stateTicks,p1AnimStartTime,current,fi,ticks,p1StateType,p1Physics,runtimeCtrl,runtimeMoveType,vx,vy,velZ,p1Facing,p1Reaction,stateEntrySerial,p1SprPriority,p1EntryCommands,activeHitDef,moveContact,moveHit,moveGuarded,p1HitCount,p1GuardCount,p1Power,p1Life,p1LifeMax]=saved.root;data.states['0']=saved.idle;
@@ -217,7 +222,7 @@ const server=http.createServer((request,response)=>{
     specialRuntime.entities.splice(0,specialRuntime.entities.length,...saved.entities);nativeHitCounters.restore(saved.counts);rootGuardHitDefs.splice(0,2,...saved.guards);throwTargets.splice(0,2,...saved.targets);throwBindings.splice(0,2,...saved.bindings);
    }
   })()`);
-  assert.deepEqual(stateScalarsActual,[[3,1,210,11,2,3],[3,1,210,11,8],[3,1,210,11,8],[3,1,210,11,8,0],3000,0,100,[9,1,77],0,[3,1,210,11,2],[3,1,210,11,2],[1,5300],[1,5300]]);
+  assert.deepEqual(stateScalarsActual,[[3,1,210,11,2,3],[3,1,210,11,8],[3,1,210,11,8],[3,1,210,11,8,0],3000,0,100,[9,1,77],0,[3,1,210,11,2],[3,1,210,11,2],[1,5300],[1,5300],[0,0,100,true],[0,0,100,true],[0,0,100,true]]);
   console.log('Actual StateDef priority/control/power phases evaluate before velocity and after animation across roots/reactions/Helpers, sharing/clamping/locking real power and retaining absence');
   const stateVelocityActual=await run(`(()=>{
    const data=characterProfiles.get(battleCharacters[0]).battle,number=991510,foreign='StateVelocityForeignFixture';

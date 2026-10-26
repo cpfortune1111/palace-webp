@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.24 corrects StateDef scalar/facing typed values using shared conversion helpers: strings and undefined values yield native false/zero. The failing-before-fix assertion, all 301 Node checks and actual P1/P2/Helper entry fixtures cover the correction. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) retains Partial scope; full StateDef/engine conformance is incomplete.
+
 0.26.23 corrects signed int32 overflow in the existing reversal hitpause addition before the minimum-one clamp. Boundary tests reproduced the old failure; all 301 Node checks passed, with actual browser pause-adapter cases for three version profiles. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records source scope and remaining conformance work. No whole controller is certified.
 
 M0 now includes compiled pinned-source component evidence: 8,707 AIR alpha cases, 2,460 synthetic indexed SFF cases and 80 sampled original sprites match. The offline preprocessing path adds raw/RLE8/RLE5 support. [STAGE-ASSET-COVERAGE.json](STAGE-ASSET-COVERAGE.json) explicitly separates preprocessing from runtime loading and BGCtrl from State controllers. Runtime remains 0.26.22; full engine conformance remains Partial.

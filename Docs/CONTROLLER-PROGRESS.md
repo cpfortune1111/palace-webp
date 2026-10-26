@@ -1,3 +1,7 @@
+## 0.26.24 — StateDef typed scalar/facing consumers
+
+StateDef ctrl/facep2/sprpriority/poweradd use the existing shared typed conversion helpers. Undefined/NaN and numeric-looking strings no longer cause false control/facing or numeric-string power/priority. The new assertion failed before the fix; all 301 Node checks pass, including single evaluation and false short-circuit behavior. Actual P1/P2/Helper State-entry fixtures preserve Power/facing and produce ctrl/priority zero from string results. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) records the source, Partial stages and remaining parser/phase/version work.
+
 ## 0.26.23 — Reversal pause integer addition
 
 Source review found a real signed-overflow discrepancy in the existing reversal pause adapter. Pause 2147483647 plus the native version correction now wraps before `Max(1, ...)`, yielding one tick; legacy no-correction behavior is retained. The new unit assertion failed before the fix, then all 301 Node checks passed. Actual browser adapter fixtures cover independent Helper counters across legacy, MUGEN 1.x and Ikemen profiles. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records the source and Partial scope. Full engine work continues.

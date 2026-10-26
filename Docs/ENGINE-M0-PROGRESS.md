@@ -1,5 +1,9 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.24 StateDef existing-consumer type correction
+
+StateDef source review verified compiler Boolean/integer types and BytecodeValue.ToB/ToI string/undefined handling against the pinned upstream bytecode blob. The existing scalar/facing consumers used Number coercion and incorrectly enabled ctrl from NaN/undefined or consumed numeric strings as numbers. Shared typed converters now handle ctrl/facep2/sprpriority/poweradd. The new assertion failed before the fix; all 301 Node checks pass. Actual P1/P2/Helper entry fixtures evaluate quoted string expressions through the real source path and verify ctrl/priority zero, unchanged Power and unchanged facing. [STATEDEF-TYPED-VALUES.md](STATEDEF-TYPED-VALUES.md) records Partial evidence and remaining generic frontend/phase work. Full M0/engine compatibility remains unfinished.
+
 ## 0.26.23 existing-consumer correction during combat review
 
 The remaining combat review found a signed-addition bug in ReversalDef pause consumption: 2147483647 plus the native version fix was kept as a JavaScript positive number, instead of int32 wrapping before the minimum-one clamp. The new assertion failed against the old implementation, then the fixed consumer passed 36 independent BigInt boundary/version combinations and all 301 Node checks. Actual browser fixtures exercise legacy/MUGEN/Ikemen profiles through `applyReversalHitPauseM1` and both Helper counters. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records Partial evidence and remaining scope. The HitDef name/evidence snapshot remains unchanged; this correction belongs to the independent ReversalDef consumer.

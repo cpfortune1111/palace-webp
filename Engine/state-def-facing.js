@@ -1,3 +1,5 @@
+import {controllerBoolean} from './controller-value-conversion.js';
+
 const present=value=>value!==undefined&&value!==null&&!(typeof value==='string'&&!value.trim());
 
 export function shouldFaceStateOpponent(actor,opponent,{depth=false,worldScale=1,legacyDistance=false}={}){
@@ -12,7 +14,7 @@ export function shouldFaceStateOpponent(actor,opponent,{depth=false,worldScale=1
 
 export function applyStateDefFacing(definition,api){
  if(!present(definition?.facep2))return false;
- if(Number(api.evaluate(definition.facep2))===0||api.asserted('nofacep2'))return false;
+ if(!controllerBoolean(api.evaluate(definition.facep2))||api.asserted('nofacep2'))return false;
  const actor=api.actor(),opponent=api.opponent(actor);
  if(!opponent||api.targetAsserted(opponent,'noturntarget'))return false;
  if(!shouldFaceStateOpponent(actor,opponent,api.geometry(actor)))return false;

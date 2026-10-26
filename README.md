@@ -1,3 +1,7 @@
+## 0.26.24 — StateDef typed values
+
+StateDef ctrl/facep2 now treat strings and undefined results as false; sprpriority/poweradd treat strings as zero. This prevents accidental control, facing, power or priority changes from JavaScript coercion. All 301 Node checks and complete battle regression pass; actual P1/P2/Helper entry fixtures cover the typed values. [Evidence and remaining scope](Docs/STATEDEF-TYPED-VALUES.md). Full engine compatibility remains incomplete.
+
 ## 0.26.23 — Reversal hitpause signed overflow
 
 Reversal pause components now wrap to signed 32-bit before the native minimum-one calculation. A maximum integer plus the version correction now gives one tick instead of an extremely long pause. Boundary and actual browser-counter cases cover legacy/MUGEN/Ikemen profiles; all 301 Node checks and complete battle regression pass. [Evidence and remaining scope](Docs/REVERSAL-HITPAUSE-OVERFLOW.md). Full engine compatibility remains incomplete.

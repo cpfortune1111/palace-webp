@@ -17,7 +17,7 @@ import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../../
 import {applyStatePersistence} from '../../Engine/state-persistence.js';
 import {applyStateDefVelocity} from '../../Engine/state-def-velocity.js?v=02554';
 import {parseCnsIntegerLiteral} from '../../Engine/cns-integer-literal.js';
-import {applyStateDefPriority,applyStateDefControlPower} from '../../Engine/state-def-scalars.js';
+import {applyStateDefPriority,applyStateDefControlPower} from '../../Engine/state-def-scalars.js?v=02624';
 import {characterLocalCoord} from '../../Engine/clsn-coordinate-scale.js';
 import {applyHelperSizeOverrides,projectileSpriteScale} from '../../Engine/size-constants.js';
 import {hitPauseVersionProfile} from '../../Engine/hit-pause-version.js';
