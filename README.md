@@ -1,3 +1,7 @@
+## 0.26.17 — State-controller target redirection (partial)
+
+ChangeState/SelfState now write actual target state/control/animation with caller RHS scope and native default/explicit continuation. SelfState state-provider selection and invalid read-ID own fallback have mixed-character tests. Thirty real root/Helper body cases verify later controller execution. All 300 Node checks, three related browser gates and complete battle regression pass. Full nested/pause/version/phase fidelity remains Pending; see Docs/STATE-CONTROLLER-COVERAGE.json. No whole-controller certification or original asset upload.
+
 ## 0.26.16 — Animation prefixes, FightFX and redirection (partial)
 
 Literal/dynamic S/F references now reach real root/Helper animation and StateDef/transition consumers. All 33 project FightFX actions have actual frame/crop/loop checks. Redirection writes live recipients with caller operand scope; common scale/collision coordinates and duplicate P2 StateDef evaluation are corrected. All 299 Node checks, six related browser gates and complete battle regression pass. Coverage remains Partial for custom libraries, cold import/compiler/version/phase fidelity; see Docs/CHANGE-ANIMATION-COVERAGE.json. No original SFF/SND/AIR is added; character recoloring remains excluded.

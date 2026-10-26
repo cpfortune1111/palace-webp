@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.17 adds partial real ChangeState/SelfState target redirection and state-provider selection, caller operand scope and default/explicit continue body behavior. Direct and mixed-character fixtures plus thirty actual body cases, all 300 Node checks, three related browser gates and complete battle regression pass. STATE-CONTROLLER-COVERAGE.json lists every pinned parameter/common field with Partial limits; nested/pause/version/player-slot/warning/native phase fidelity remains Pending. No complete state controller is certified.
+
 0.26.16 adds partial animation S/F prefix, verified 33-action project FightFX, StateDef/transition and real redirect binding consumers. All 299 Node checks, dedicated frame/crop/loop/entry/redirect cases, six related browser gates and complete battle regression pass. CHANGE-ANIMATION-COVERAGE.json explicitly enumerates every pinned animation parameter/common field with Partial evidence and remaining limits; it does not certify complete controllers. See CHANGE-ANIMATION-PREFIX-WIP.md.
 
 0.26.15 adds partial numeric ChangeAnim/ChangeAnim2 independent root/Helper source selection, live frame/collision/clock/query/atlas consumers and sprite-owner localcoord drawing/reflection compensation. Mixed-character semantic and actual browser cases, all 296 Node checks, five related browser gates and full battle regression pass. Common FX/prefixes/cold resources and native version/phase fidelity remain Pending; no whole-controller certification changes. See ANIMATION-SPRITE-OWNER-WIP.md.

@@ -1,0 +1,211 @@
+{
+  "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "certification": "partial; enumeration is not semantic completeness",
+  "controllers": {
+    "changestate": {
+      "parameters": {
+        "value": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "ctrl": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "anim": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "continue": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "readplayerid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ],
+          "nativeBehavior": "Pinned ChangeState ignores the compiled field without evaluating it; actual root/Helper side-effect tests verify this. Not general provider implementation."
+        },
+        "redirectid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        }
+      },
+      "commonParameters": {
+        "persistent": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native scheduling differential coverage"
+          ]
+        },
+        "ignorehitpause": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "All native pause/version/frame-phase combinations"
+          ]
+        }
+      }
+    },
+    "selfstate": {
+      "parameters": {
+        "value": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "ctrl": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "anim": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "continue": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "readplayerid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        },
+        "redirectid": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-animation-presence-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native warning/compiler/version/player-slot and nested/pause/frame-phase fidelity"
+          ]
+        }
+      },
+      "commonParameters": {
+        "persistent": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "Complete native scheduling differential coverage"
+          ]
+        },
+        "ignorehitpause": {
+          "status": "partial",
+          "consumers": [
+            "index.html"
+          ],
+          "evidence": [
+            "Tools/check-cns-scheduling-browser.cjs"
+          ],
+          "remaining": [
+            "All native pause/version/frame-phase combinations"
+          ]
+        }
+      }
+    }
+  }
+}
