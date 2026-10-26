@@ -1,3 +1,9 @@
+## 0.26.28 — Decoded CMD configuration and owning-player queries
+
+The battle command adapter accepts decoded original CMD text as well as existing bundles. Defaults, Remap, numeric conversions, duplicate fields and version-dependent symbol-error policy match 352 pinned native compiler-block cases, including five private original files. Both players' five-character browser sampler/expression fixtures pass. Command snapshots/existence checks now use the owning player's compiled list. Existing profiles retain their bundled data. [Evidence and remaining limits](Docs/CMD-FILE-EVIDENCE.md): file I/O/encoding, CMD State -1 compilation, full input/pause scheduling and the wider engine goal remain incomplete.
+
+All 307 Node checks, the final complete battle regression and the 0.26.28 fresh-context 360-tick repeatability gate pass; all 339 loaded source inputs stay unchanged during the trace gate.
+
 ## 0.26.27 — Native-style battle command matching
 
 Battle command sampling now uses the verified symbol parser, signed input/charge counters, individual matcher and grouped command list. Existing character version metadata selects legacy hold rules; AssertCommand buffers remain writable. All 215 installed command definitions execute, 306 Node checks and complete battle regression pass, and actual browser P1/P2 sampler/query fixtures pass for five characters. [Evidence and limits](Docs/CMD-NATIVE-EVIDENCE.md): generic CMD files, full input scheduling and cross-player command copies remain incomplete. Full engine work continues.

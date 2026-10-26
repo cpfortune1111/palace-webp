@@ -1,7 +1,7 @@
 {
   "schema": "moon-palace-air-cmd-coverage-v1",
-  "certification": "Partial audit, existing AIR alpha consumer correction and scoped native frame/original-file metadata probes. No generic AIR/CMD parser, matcher or engine certification.",
-  "runtimeVersion": "0.26.27",
+  "certification": "Partial AIR/CMD compatibility audit. Decoded CMD configuration and battle matching have scoped native/browser evidence; complete file IO, State -1 compilation, AIR execution and engine certification remain incomplete.",
+  "runtimeVersion": "0.26.28",
   "commandReferenceEvidence": "Docs/CMD-NATIVE-EVIDENCE.md; native component probes plus 0.26.27 battle adapter and browser sampler tests; full CMD remains Partial",
   "frameReferenceEvidence": "Docs/AIR-FRAME-EVIDENCE.json; source-component probes and explicit offline Unsupported policy are separate from browser execution certification",
   "references": {
@@ -424,7 +424,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/command",
@@ -435,7 +435,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/time",
@@ -446,7 +446,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/steptime",
@@ -457,7 +457,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/autogreater",
@@ -468,7 +468,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.time",
@@ -479,7 +479,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.hitpause",
@@ -490,7 +490,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.pauseend",
@@ -501,7 +501,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.shared",
@@ -512,7 +512,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
+        "scope": "Decoded CMD configuration, native matcher/list and battle consumers have differential/browser coverage; file IO/encoding, full compiler and complete input/pause scheduling remain incomplete."
       }
     ],
     "defaultsParameters": [
@@ -585,7 +585,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "observation": "Existing exported engineVersions selects legacy hold transforms and helper AI restriction. Native transform/list tests and browser legacy-hold cases pass. Complete DEF/CMD loader and malformed-source tolerance remain incomplete."
+        "observation": "Decoded CMD error tolerance, first Defaults/Remap sections and existing engineVersions select legacy transforms and helper restrictions. 352 native compiler-block policy cases and browser consumers pass. Full DEF/file IO and State -1 ownership still require integration."
       },
       {
         "id": "cmd/buffer-bounds",
@@ -595,7 +595,7 @@
           "Source-verified": "Partial",
           "Semantically tested": "Partial"
         },
-        "observation": "Battle adapter clamps configured bufferTime to minimum 1, matching pinned compiler per-command behavior. Component buffer controls and expiry tests pass. MUGEN executable upper bounds and all file-default/version rules remain unverified."
+        "observation": "Decoded CMD configuration and battle adapter apply native minimum-one buffer rules, including nonempty comma lists with an empty first item. Full file/version policy and independently executed MUGEN upper limits remain unverified."
       }
     ],
     "examinedConsumers": [
@@ -608,10 +608,13 @@
       "Engine/command-matcher.js",
       "Engine/command-list.js",
       "Tools/check-battle-command-list.mjs",
-      "Tools/check-battle-command-browser.cjs"
+      "Tools/check-battle-command-browser.cjs",
+      "Engine/ini-sections.js",
+      "Engine/command-file.js",
+      "Tools/check-command-file-native.mjs"
     ],
     "remaining": [
-      "Generic CMD/Defaults/Remap ingestion and offline exporters for all new syntax",
+      "File/URL acquisition, encoding/BOM and include policy, offline exporters for new syntax, and CMD State -1 compilation",
       "Full native hardware/SOCD/assist/injection ordering and physical keyboard/gamepad/touch integration",
       "Exact input.pauseonhitpause, Pause/SuperPause end-command buffering and WinMUGEN extra-frame policy",
       "InputWait/noinput reset timing and AI command cheats",
@@ -623,5 +626,6 @@
   "exclusions": [
     "Character costume recoloring; gameplay effects remain in scope."
   ],
-  "goalComplete": false
+  "goalComplete": false,
+  "commandFileEvidence": "Docs/CMD-FILE-EVIDENCE.md"
 }

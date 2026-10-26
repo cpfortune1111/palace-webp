@@ -1,6 +1,6 @@
 # Native command reference prerequisite
 
-Status: **Partial**. Runtime baseline: 0.26.27. The verified symbol/input/matcher/list components now drive battle command sampling through `Engine/battle-command-list.js`. Generic CMD-file ingestion and complete native input scheduling remain unfinished.
+Status: **Partial**. Runtime baseline: 0.26.28. The verified symbol/input/matcher/list components drive battle command sampling through `Engine/battle-command-list.js`. [Decoded CMD configuration](CMD-FILE-EVIDENCE.md) adds text input, Defaults/Remap and error/version policy. File I/O/encoding, State -1 compilation and complete native input scheduling remain unfinished.
 
 The private reference compiles 25 unchanged declarations from Ikemen GO commit `cb56d73badb322f3725257c2e8cfd157b2c3989d`. Source SHA-256 pins:
 

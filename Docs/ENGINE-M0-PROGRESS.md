@@ -1,5 +1,9 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.28 decoded CMD configuration and battle consumers
+
+Engine/ini-sections.js and Engine/command-file.js implement decoded CMD text configuration, first Defaults/Remap, native numeric/boolean conversion, duplicate fields and version/error policy. A private oracle now compiles 45 unchanged declarations plus the unchanged pinned compiler configuration block; 352 synthetic/original policy cases match. Raw-text battle adapter and five-character P1/P2 browser expression gates pass, and 307 Node checks pass after the consumer repair. Root/Helper command snapshots no longer assume JSON arrays, and command existence uses the expression player's list. [CMD-FILE-EVIDENCE.md](CMD-FILE-EVIDENCE.md) distinguishes decoded text from remaining file/encoding, full State -1, pause scheduling and cross-player ownership work. Full engine compatibility is not complete.
+
 ## 0.26.27 battle CMD consumer integration
 
 The battle sampler now uses the source-verified command components through Engine/battle-command-list.js. Existing engineVersions metadata selects native legacy holds/helper restrictions; existing AssertCommand/trace buffer interfaces forward to matcher storage. All 215 installed definitions, 306 Node gates, complete battle/Helper regression and five-character P1/P2 browser sampler/expression fixtures pass. Generic CMD ingestion, full native input scheduling, cross-player command copies and complete State -1 ordering remain incomplete. See [CMD-NATIVE-EVIDENCE.md](CMD-NATIVE-EVIDENCE.md) for exact component/integration boundaries. Earlier prerequisite sections below describe their historical baseline.

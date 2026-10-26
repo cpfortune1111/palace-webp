@@ -1,6 +1,6 @@
-"""Build a private individual-command reference from unchanged pinned source bodies.
+"""Build private command references from pinned source bodies and an optional compiler block.
 
-Physical hardware/SOCD, CommandList sharing and file-version policy are excluded.
+Physical hardware/SOCD and full-engine compilation/scheduling are excluded.
 """
 import argparse
 import hashlib
@@ -16,7 +16,12 @@ cli = argparse.ArgumentParser(description=__doc__)
 for name in ('input', 'common', 'go', 'output'):
     cli.add_argument('--' + name, type=Path, required=True)
 cli.add_argument('--with-lists', action='store_true', help='Also compile native list and legacy transforms; logging is captured by a fixture facade')
+cli.add_argument('--compiler', type=Path, help='Pinned compiler.go, required for --with-files')
+cli.add_argument('--with-files', action='store_true', help='Compile original CMD section-reading block with native INI functions')
 args = cli.parse_args()
+if args.with_files:
+    args.with_lists = True
+    if not args.compiler:cli.error('--with-files requires --compiler')
 sources = {}
 for name, pin in PINS.items():
     data = getattr(args, name).read_bytes()
@@ -52,6 +57,26 @@ if args.with_lists:
                    'func (cl *CommandList) GetState(', 'func (c *Command) ApplyBackwardCompatibility(']:
         row = declaration(sources['input'], marker)
         selected.append({'source': 'input', 'marker': marker, 'line': row['line'], 'text': row['text'],
+                         'sha256': hashlib.sha256(row['text'].encode()).hexdigest()})
+compiler_block = None
+if args.with_files:
+    compiler_data = args.compiler.read_bytes()
+    compiler_pin = 'e027f39df8f86d3ea9b7c422237f4c1525795d70eb1365b136e9a31c75bcd9f8'
+    if hashlib.sha256(compiler_data).hexdigest() != compiler_pin:raise ValueError('Unpinned compiler')
+    compiler_text = compiler_data.decode('utf-8')
+    block_start = compiler_text.index('\tremap, defaults, ckr := true, true, NewCommandKeyRemap()')
+    block_end = compiler_text.index('\n\t// Reset string pool', block_start)
+    compiler_block = compiler_text[block_start:block_end]
+    PINS['compiler'] = compiler_pin
+    alias = 'type IniSection map[string]string'
+    selected.append({'source': 'common', 'marker': alias, 'line': sources['common'][:sources['common'].index(alias)].count('\n') + 1,
+                     'text': alias, 'sha256': hashlib.sha256(alias.encode()).hexdigest()})
+    for marker in ['func NewIniSection(', 'func ReadIniSection(',
+                   'func (is IniSection) Parse(', 'func (is IniSection) ReadI32(',
+                   'func (is IniSection) ReadBool(', 'func (is IniSection) getText(',
+                   'func Atoi(', 'func SplitAndTrim(', 'func SectionName(']:
+        row = declaration(sources['common'], marker)
+        selected.append({'source': 'common', 'marker': marker, 'line': row['line'], 'text': row['text'],
                          'sha256': hashlib.sha256(row['text'].encode()).hexdigest()})
 source = sources['input'];start = source.index('type CommandKey byte')
 opening = source.index('(', source.index('const (', start))
@@ -95,6 +120,27 @@ func evaluateList(v request)(r response){
  for _,frame:=range v.Frames{held:=map[string]bool{};for _,name:=range frame.Held{held[name]=true};left,right:=held["L"],held["R"];back,forward:=left,right;if frame.Facing<0{back,forward=right,left};buffer.updateInputTime(held["U"],held["D"],left,right,back,forward,held["a"],held["b"],held["c"],held["x"],held["y"],held["z"],held["s"],held["d"],held["w"],held["m"]);tick:=listTickResult{Assertions:[]bool{},Active:map[string]bool{}};for _,a:=range frame.Assertions{tick.Assertions=append(tick.Assertions,list.Assert(a.Name,a.Time))};for _,name:=range frame.ClearNames{list.ClearName(name)};list.Step(frame.AI,frame.Helper,frame.HitPause,frame.PauseEnd,frame.Extra);for _,group:=range list.Commands{for _,c:=range group{out:=listCommandResult{Name:c.name,Complete:c.completeframe,Buffer:c.curbuftime,Time:c.curtime,MaxBuffer:c.maxbuftime,Completed:append([]bool{},c.completed...),Timers:append([]int32{},c.stepTimers...),Steps:[]stepResult{}};for _,step:=range c.steps{s:=stepResult{Greater:step.greater,Or:step.orLogic};for _,k:=range step.keys{s.Keys=append(s.Keys,keyResult{Key:keyLabel(k.key),Hold:k.slash,Release:k.tilde,Fourway:k.dollar,Charge:k.chargetime})};out.Steps=append(out.Steps,s)};tick.Commands=append(tick.Commands,out);tick.Active[c.name]=list.GetState(c.name)}};r.ListTicks=append(r.ListTicks,tick)};return
 }
 '''
+if args.with_files:
+    wrapper = wrapper.replace('type fixtureSystem struct{}', 'type fixtureSystem struct{ignoreMostErrors bool}')
+    wrapper = wrapper.replace('func LogMessage(string){}', 'func LogMessage(string,...any){}')
+    wrapper = wrapper.replace('type request struct{Commands ', 'type request struct{FileText *string;Version [3]int;IgnoreErrors bool;Commands ')
+    wrapper = wrapper.replace('type response struct{ListTicks ', 'type response struct{File *fileResult;ListTicks ')
+    wrapper = wrapper.replace('if len(v.Commands)>0{return evaluateList(v)};', 'if v.FileText!=nil{r.File=evaluateFile(*v.FileText,v.Version,v.IgnoreErrors);return};if len(v.Commands)>0{return evaluateList(v)};')
+    wrapper += '''
+const IMax int32=2147483647
+const IErr int32=-2147483648
+type fixtureCompiler struct{cmdl *CommandList}
+type fileCommand struct{Name string;Time,StepTime,Buffer int32;AutoGreater,HitPause,PauseEnd,Shared bool;Steps []stepResult;Order []int}
+type fileResult struct{Error string;Commands []fileCommand;Defaults map[string]any}
+func compileFile(str string,version [3]int,ignore bool)(*CommandList,error){
+ lines,lnidx:=SplitAndTrim(str,"\\n"),0;c:=&fixtureCompiler{NewCommandList(&InputBuffer{})};gi:=struct{ikemenver [3]int;name string}{version,"fixture"};cmd:="fixture.cmd";sys.ignoreMostErrors=ignore
+''' + compiler_block + '''
+ return c.cmdl,nil
+}
+func evaluateFile(text string,version [3]int,ignore bool)*fileResult{
+ r:=&fileResult{Commands:[]fileCommand{}};list,err:=compileFile(text,version,ignore);if err!=nil{r.Error=err.Error();return r};r.Defaults=map[string]any{"time":list.DefaultTime,"stepTime":list.DefaultStepTime,"autoGreater":list.DefaultAutoGreater,"bufferTime":list.DefaultBufferTime,"bufferHitPause":list.DefaultBufferHitpause,"bufferPauseEnd":list.DefaultBufferPauseEnd,"bufferShared":list.DefaultBufferShared};for _,group:=range list.Commands{for _,c:=range group{out:=fileCommand{Name:c.name,Time:c.maxtime,StepTime:c.maxsteptime,Buffer:c.maxbuftime,AutoGreater:c.autogreater,HitPause:c.buffer_hitpause,PauseEnd:c.buffer_pauseend,Shared:c.buffer_shared,Steps:[]stepResult{},Order:append([]int{},c.loopOrder...)};for _,step:=range c.steps{s:=stepResult{Greater:step.greater,Or:step.orLogic};for _,k:=range step.keys{s.Keys=append(s.Keys,keyResult{Key:keyLabel(k.key),Hold:k.slash,Release:k.tilde,Fourway:k.dollar,Charge:k.chargetime})};out.Steps=append(out.Steps,s)};r.Commands=append(r.Commands,out)}};return r
+}
+'''
 source_file = out / 'command-oracle.go'
 source_file.write_text(wrapper + '\n' + enum + '\n' + '\n\n'.join(row['text'] for row in selected), encoding='utf-8')
 executable = out / ('native-command-oracle.exe' if os.name == 'nt' else 'native-command-oracle')
@@ -102,7 +148,8 @@ subprocess.run([str(go), 'build', '-trimpath', '-o', str(executable), str(source
 receipt = {'commit': 'cb56d73badb322f3725257c2e8cfd157b2c3989d', 'compiler': version, 'sourcePins': PINS,
            'functions': [{k: v for k, v in row.items() if k != 'text'} for row in selected],
            'generatedSourceSha256': hashlib.sha256(source_file.read_bytes()).hexdigest(), 'executableSha256': hashlib.sha256(executable.read_bytes()).hexdigest(), 'executable': str(executable),
-           'scope': 'Unmodified symbol parser, command matching and input counter/state/charge functions; fixture-provided button booleans/facing/config. Empty unused InputReader type only. Excludes hardware/SOCD reader, file loading/version policy and full engine scheduling.',
-           'listMode': args.with_lists, 'loggingFacade': args.with_lists}
+           'scope': 'Unmodified symbol parser, command matching and input counter/state/charge functions; fixture-provided button booleans/facing/config. Optional list and CMD compiler-statement-block modes are explicitly recorded. Excludes hardware/SOCD, byte decoding/file IO and full-engine compilation/scheduling.',
+           'listMode': args.with_lists, 'loggingFacade': args.with_lists, 'fileMode': args.with_files,
+           'compilerBlockSha256': hashlib.sha256(compiler_block.encode()).hexdigest() if compiler_block else None}
 (out / 'build-receipt.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
 print('PASS built private native command oracle with '+str(len(selected))+' unchanged declarations')

@@ -37,12 +37,17 @@ const server=http.createServer((request,response)=>{
      const absolute=active('__cmd_left')&&playerCommandLists[player].signed.L===2;
      if(player===1)p1Facing=oldFacing;else p2.facing=oldFacing;
      sample({});for(let i=0;i<4;i++)sample({B:true,a:true});const hold=active('__cmd_hold');
-     rows.push({player,definitions:original.length,or,query,peer,expired,charge,absolute,hold});
+     const fixtureDefinitions=data.commands;
+     data.commands='[Remap]\\na=x\\nb=y\\n[Defaults]\\ncommand.buffer.time=4\\n[Command]\\nname="__cmd_file"\\ncommand=a|b';
+     resetCommandList(player);sample({x:true});
+     const file=active('__cmd_file')&&hasCommandDef('__cmd_file',player)&&!!evalM1('command = "__cmd_file"',specialRuntime.context(specialRoot(player)));
+     data.commands=fixtureDefinitions;resetCommandList(player);
+     rows.push({player,definitions:original.length,or,query,peer,expired,charge,absolute,hold,file});
     }}finally{data.commands=original;resetCommandList(1);resetCommandList(2)}return rows;
    })()`);
-   for(const row of result){for(const key of ['or','query','expired','charge','absolute','hold'])assert.equal(row[key],true,character+' '+JSON.stringify(row));assert.equal(row.peer,false);rows.push({character,...row})}
+   for(const row of result){for(const key of ['or','query','expired','charge','absolute','hold','file'])assert.equal(row[key],true,character+' '+JSON.stringify(row));assert.equal(row.peer,false);rows.push({character,...row})}
   }
   assert.equal(rows.length,10);assert.equal(rows.reduce((sum,row)=>sum+row.definitions,0),430);assert.deepEqual(errors,[]);
-  console.log('PASS five-character P1/P2 battle sampler and actual command expressions: OR, charge, expiry, physical facing continuity, legacy holds and peer isolation');
+  console.log('PASS five-character P1/P2 battle sampler and actual command expressions: OR, charge, expiry, physical facing continuity, legacy holds, peer isolation and raw CMD Defaults/Remap');
  }finally{clearTimeout(timeout);await browser?.close();await new Promise(resolve=>server.close(resolve))}
 })().catch(error=>{console.error(error);process.exitCode=1});

@@ -7,9 +7,10 @@ function forwardPair(first,next){
 }
 function equal(first,next){return first.greater===next.greater&&JSON.stringify(first.keys)===JSON.stringify(next.keys)}
 export class CommandMatcher{
- constructor(symbols,{time=1,stepTime=0,bufferTime=1,autoGreater=false,bufferHitPause=false,bufferPauseEnd=false,remap={}}={}){
+ constructor(symbols,{time=1,stepTime=0,bufferTime=1,autoGreater=false,bufferHitPause=false,bufferPauseEnd=false,remap={},ignoreParseErrors=false}={}){
   const parsed=parseCommandSymbols(symbols,{remap});
-  if(parsed.error)throw new SyntaxError(parsed.error);
+  if(parsed.error&&!ignoreParseErrors)throw new SyntaxError(parsed.error);
+  this.parseError=parsed.error;
   this.steps=parsed.steps;
   if(autoGreater){
    const original=this.steps;this.steps=[];
