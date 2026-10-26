@@ -27,7 +27,7 @@ Run its focused checks with `python Tools/check-engine-controller-baseline.py`. 
 - Resolve aliases, alternate syntax and inherited-field applicability into a complete MUGEN parameter inventory.
 - Verify the manually inventoried dynamic compiler syntax and distinguish documented Ikemen extensions from compiler-only names.
 - Reconcile existing runtime consumers, defaults, source behavior and semantic tests per parameter; preserve older implementation evidence without accepting older summary labels as certification.
-- Pin the remaining MUGEN documentation set and create the other nine subsystem inventories.
+- Finish reference provenance/coverage review and create the remaining subsystem item inventories; the pinned mirrored text set and initial trigger/CNS inventories now exist.
 - Complete dependency/evidence checks before calling M0 complete or presenting an overall completion percentage.
 
 No new runtime behavior is introduced by this inventory tool. The full engine goal remains incomplete.
@@ -46,3 +46,32 @@ python Tools/check-engine-expression-baseline.py
 ```
 
 The working generated reports remain private audit outputs. Public tools and authored evidence records contain no original compiler implementation or original character assets. Runtime remains 0.26.21 for this audit-only follow-up.
+
+## MUGEN trigger/CNS comparison
+
+[ENGINE-REFERENCE-BASELINE.json](ENGINE-REFERENCE-BASELINE.json) pins 31 mirrored original text documents by Git blob/SHA-256 and records provenance qualifications. No original reference text or compiler implementation is published. The mirrored controller reference matches the older official-site cache after CRLF normalization. Binary documentation diagrams and complete per-item authentication/coverage remain outside this text-snapshot receipt.
+
+The controller audit accepts either independently pinned physical copy (old CRLF cache or mirrored LF copy), records which SHA/variant was used, and rejects unpinned content. Both copies generated identical controller inventory rows against the same pinned compiler. Thus the new reference cache can reproduce the controller input inventory without relying on the earlier download's line endings.
+
+The expression audit now accepts `--mugen-document ../outputs/mugen-reference-11b1/docs/trigger.html`. It records 127 document sections and **132 independent names/variants**, including LoseKO/LoseTime and WinKO/WinTime/WinPerfect; all 132 occur in the pinned compiler registry. Nine inherited format references retain both original and alias source locations. Individual variants retain independent Unassessed stage records; a shared document section does not certify equivalent behavior.
+
+The inventory also preserves 74 Const, 36 GetHitVar and 4 StageVar selector candidates with individual stage records. GetHitVar argument/detail differences and StageVar's `info.authorname` versus `info.author` are explicit follow-ups. Five document format-name disagreements are retained (DrawGame, GameWidth, PrevStateNo, ProjGuardedTime and RightEdge). They require native verification and are not silently corrected or accepted as runtime aliases. Eleven compiler names under its Mugen comment do not occur in the trigger reference; other original documents/extension references must determine their classification.
+
+`Tools/audit-engine-cns-baseline.py` inventories the pinned CNS document: 13 precedence groups, 22 operator entries (unary/binary minus remain distinct), 8 interval shapes, 12 redirect forms representing 8 names, 13 StateDef fields and 50 documented special State numbers. Assignment/unary right associativity and the document's left-associative exponent group are retained as syntax facts awaiting execution tests. Defaults, type conversions, bottom propagation, full arguments, negative/global phases, common-state bodies and version differences remain incomplete.
+
+```text
+python Tools/audit-engine-expression-baseline.py --compiler ../outputs/ikemen-compiler.go --mugen-document ../outputs/mugen-reference-11b1/docs/trigger.html --evidence Docs/ENGINE-EXPRESSION-EVIDENCE.json --output ../outputs/engine-expression-baseline.json
+python Tools/audit-engine-cns-baseline.py --document ../outputs/mugen-reference-11b1/docs/cns.html --output ../outputs/engine-cns-baseline.json
+python Tools/check-engine-expression-baseline.py
+python Tools/check-engine-cns-baseline.py
+```
+
+The expression suite now has 14 focused checks; the CNS suite has 6. Actual pinned inputs were also processed successfully. These validate audit extraction and evidence integrity, not runtime compatibility. Game runtime remains 0.26.21.
+
+`Tools/check-engine-pinned-audit.py` performs the joint actual-input check: all 31 text-file hashes; reproduction of the existing 163-controller inventory from the pinned compiler sources; identical controller rows from both line-ending variants; 132 distinct MUGEN trigger records; documented selector counts and retained document disagreements; and the 8 CNS redirect names against the compiler's 13. The other 5 redirects (`helperindex`, `p2`, `player`, `playerindex`, `stateowner`) remain outside this CNS list and require extension/other-reference classification.
+
+```text
+python Tools/check-engine-pinned-audit.py --reference-root ../outputs/mugen-reference-11b1 --registry-source ../outputs/ikemen-compiler.go --compiler-source ../outputs/ikemen-compiler-functions.go --official-controller-cache ../outputs/mugen-sctrls.html --output ../outputs/engine-pinned-audit-results.json
+```
+
+The joint check passed. The separate 6 controller, 14 expression and 6 CNS extraction checks passed; none are counted as runtime semantic cases. The M0 milestone and the complete engine goal remain unfinished.

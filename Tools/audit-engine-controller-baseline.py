@@ -7,6 +7,10 @@ from pathlib import Path
 import re
 
 MUGEN_SHA256 = '16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332'
+MUGEN_DOCUMENT_PINS = {
+    MUGEN_SHA256: 'Existing official-site snapshot (CRLF)',
+    '8b9a7ee231368b3b8d895940133d9568e151717da8a4aee98b5d39d698d2e1d9': 'Pinned original-document mirror (LF); character content matched official-site cache',
+}
 IKEMEN_COMMIT = 'cb56d73badb322f3725257c2e8cfd157b2c3989d'
 IKEMEN_COMPILER_SHA256 = 'fb22ba6775515cf9cd278a6d0556b4972287655f712e07271a12d5561e55688d'
 STAGES = ('Parsed', 'Executable', 'Source-verified', 'Semantically tested')
@@ -119,7 +123,7 @@ def resolve_parameter_references(rows, references):
 
 def build(document, registry, compiler=None):
     digest = hashlib.sha256(document).hexdigest()
-    if digest != MUGEN_SHA256:
+    if digest not in MUGEN_DOCUMENT_PINS:
         raise ValueError('MUGEN documentation snapshot differs from pinned baseline')
     if registry['referenceCommit'] != IKEMEN_COMMIT:
         raise ValueError('Ikemen controller inventory differs from pinned baseline')
@@ -177,6 +181,7 @@ def build(document, registry, compiler=None):
     return {'schema': 'moon-palace-controller-baseline-v1',
             'certification': 'Input inventory only. Existing runtime evidence must be reconciled per item; Unassessed does not mean absent.',
             'references': {'mugenDocumentSha256': digest, 'ikemenCommit': IKEMEN_COMMIT,
+                           'mugenDocumentVariant': MUGEN_DOCUMENT_PINS[digest],
                            'ikemenCompilerSha256': IKEMEN_COMPILER_SHA256},
             'scopeExclusion': 'Character costume recoloring is excluded by the user. Gameplay PalFX remains in scope.',
             'mugenControllerHeadings': len(parser.rows), 'ikemenRegistryControllers': len(ikemen),

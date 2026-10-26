@@ -4,16 +4,18 @@ This audit responds to the user-provided `goal-objective.md`. The objective now 
 
 ## Audited baseline to preserve
 
-- Verified published checkpoint: **0.26.20**, commit `2e8d1b9a9e7300aac98e5765bef477d1e2b05429`; its private receipt records successful exact-head Pages deployment and twelve live text comparisons.
+- Verified game-runtime checkpoint: **0.26.21**, commit `fae96af0f47fc634a21869f8da26df22927fe6e4`; its private receipt records successful exact-head Pages deployment and ten live text comparisons. Subsequent M0 audit commits preserve that runtime.
 - Existing engine directory: 268 JavaScript modules. There are 301 `check-*.mjs` scripts; the latest existing controller-work log reports PASS 301. Counts indicate substantial reusable work, not engine completeness.
 - The existing real-character/browser/battle fixtures and converted sprite/audio pipeline remain the integration baseline. Do not restart the engine or duplicate these consumers.
-- The existing controller release candidate contains 96 additional own-state/HitOverride/binding/TargetDrop/destruction browser cases. Its verification/publication status is tracked separately in `CONTROLLER-PROGRESS.md` and release receipts. Preserve this work separately from the new subsystem plan; it does not certify the full engine.
+- The last controller release passed 96 additional own-state/HitOverride/binding/TargetDrop/destruction browser cases, related browser gates, 301 Node checks and final full battle regression. This verifies the described subset; it does not certify the full engine.
 
 ## References and inventory quality
 
 IKEMEN GO is pinned to `cb56d73badb322f3725257c2e8cfd157b2c3989d`. `CONTROLLER-AUDIT.json` enumerates 163 compiler-registry controller candidates. That inventory has parameter candidates and source-function inspection; it is **not** 163 completed controllers and does not provide a complete separate MUGEN/extension classification.
 
-The repository audit tool names the MUGEN 1.1 beta1 controller reference at `https://www.elecbyte.com/mugendocs-11b1/sctrls.html`. The private cached controller page has SHA-256 `16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332`. This anchors the observed controller snapshot, not a complete pinned manual set for triggers, CMD, AIR, formats and runtime behavior.
+The repository audit tool names the MUGEN 1.1 beta1 controller reference at `https://www.elecbyte.com/mugendocs-11b1/sctrls.html`. The private cached controller page has SHA-256 `16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332`. M0 subsequently pinned 31 original text documents preserved in a community mirror at commit `5ed02054fe5e80c24259b9da1f7d129b995676c9`. The mirrored controller page matches that official-site snapshot after CRLF normalization. [ENGINE-REFERENCE-BASELINE.json](ENGINE-REFERENCE-BASELINE.json) records per-file Git blob/SHA-256 hashes, exact source commits and provenance qualifications without redistributing original documents. Binary documentation diagrams are not included; per-item semantic verification remains incomplete.
+
+The pinned trigger reference yields 127 sections and 132 independently tracked names/variants, all found in the 279-name Ikemen registry. Nine format references and five suffix variants are retained. Compiler comments do not define the official MUGEN boundary: eleven names in its Mugen group are outside this trigger reference and remain to be classified. Selector lists for Const/GetHitVar/StageVar and inconsistencies between document formats, argument lists and details remain visible. CNS syntax inventories now include operators, intervals, redirection forms, StateDef fields and special State numbers; none of these inventory counts certify execution.
 
 Existing ledgers use incompatible status vocabularies. For example, the legacy HitDef JSON contains 53 `Not implemented`, 46 `Partial` and 32 `Implemented` labels, while later modules and regression logs evidence additional work. These counts must be reconciled before use as present-day progress figures. The state-controller and animation parameter inventories explicitly retain Partial statuses. No whole-engine percentage is justified by the current evidence.
 

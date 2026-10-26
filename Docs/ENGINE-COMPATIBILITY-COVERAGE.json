@@ -3,11 +3,11 @@
   "certification": "Initial repository/subsystem audit only; not a complete per-item inventory or engine certification",
   "objectiveFile": "User-provided goal-objective.md; original local attachment excluded from publication",
   "baseline": {
-    "publishedVersion": "0.26.20",
-    "commit": "2e8d1b9a9e7300aac98e5765bef477d1e2b05429",
+    "publishedVersion": "0.26.21",
+    "commit": "fae96af0f47fc634a21869f8da26df22927fe6e4",
     "nodeCheckScripts": 301,
     "engineJavaScriptFiles": 268,
-    "pendingExistingWork": "Existing controller release candidate contains 96 own-state/release/removal browser cases; subsequent verification/publication is tracked in CONTROLLER-PROGRESS.md and release receipts, not certified by this initial engine audit"
+    "lastVerifiedControllerWork": "96 own-state/release/removal browser cases, 301 Node checks, related browser gates and final full battle regression passed; 0.26.21 was published and live-verified. M0 follow-ups preserve the game runtime."
   },
   "references": {
     "mugen": {
@@ -15,11 +15,17 @@
       "urlObservedInRepository": "https://www.elecbyte.com/mugendocs-11b1/sctrls.html",
       "privateSnapshot": "outputs/mugen-sctrls.html",
       "sha256": "16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332",
-      "completeDocumentationSetPinned": false
+      "completeDocumentationSetPinned": false,
+      "textSnapshotMetadata": "Docs/ENGINE-REFERENCE-BASELINE.json",
+      "mirroredTextDocumentCount": 31,
+      "triggerReferenceHeadings": 127,
+      "triggerReferenceIndependentSpellings": 132,
+      "qualification": "Pinned mirrored text documents, with official controller snapshot comparison; not complete independent authentication of every file, binary diagrams or full semantic inventory"
     },
     "ikemen": {
       "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
       "controllerRegistryCandidates": 163,
+      "expressionRegistryNames": 279,
       "separateCompleteExtensionInventory": false
     }
   },

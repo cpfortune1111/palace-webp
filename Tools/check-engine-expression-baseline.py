@@ -51,6 +51,68 @@ class RegistryExtractionTests(unittest.TestCase):
         self.assertIn('Native differential traces', rows[1]['remaining'])
         self.assertEqual(rows[2], {'name': 'time'})
 
+    def test_document_markup_keeps_format_separate_from_nested_argument_definitions(self):
+        text = '<div class="section" id="foo"><h2><a>Foo(*,***)</a></h2><dl><dt>Format:</dt><dd>Foo(<em>n</em>)</dd><dt>Arguments:</dt><dd><dl><dt>n</dt><dd>int</dd></dl></dd><dt>Return type:</dt><dd>float</dd></dl></div>'
+        rows = expressions.extract_mugen_triggers(text)
+        self.assertEqual(rows[0]['name'], 'foo')
+        self.assertEqual(rows[0]['formatCandidates'][0]['text'], 'Foo(n)')
+        self.assertEqual(rows[0]['declaredReturnTypes'][0]['text'], 'float')
+        self.assertEqual(rows[0]['anchor'], 'foo')
+        self.assertEqual(set(rows[0]['stages'].values()), {'Unassessed'})
+
+    def test_document_suffixes_and_projectile_id_family_are_not_lost(self):
+        text = '<div class="section" id="win"><h2>Win</h2><p>Format: 1. Win 2. WinKO 3. WinTime 4. WinPerfect</p></div><div class="section" id="lose"><h2>Lose</h2><dl><dt>Format:</dt><dd><ol><li>Lose</li><li>LoseKO</li><li>LoseTime</li></ol></dd></dl></div><div class="section" id="projhit"><h2>ProjHit(*,***)</h2><dl><dt>Format:</dt><dd>ProjHit[ID] = 1, &lt; 15</dd></dl></div>'
+        rows = expressions.extract_mugen_triggers(text)
+        self.assertEqual(rows[0]['documentedSpellings'], ['win', 'winko', 'wintime', 'winperfect'])
+        self.assertEqual(rows[1]['documentedSpellings'], ['lose', 'loseko', 'losetime'])
+        self.assertEqual(rows[2]['specialGrammarFamily'], 'projhit<decimal projectile ID>')
+        self.assertIn('< 15', rows[2]['formatCandidates'][0]['text'])
+
+    def test_document_missing_suffix_duplicate_or_unparsed_heading_fails(self):
+        for text in ['<div class="section"><h2>Win</h2></div>',
+                     '<div class="section"><h2>Time</h2><h2>Time</h2></div>',
+                     '<div class="section"><h2>Unexpected heading words</h2></div>',
+                     '<div class="section"><h2>Time</h2><dl><dt>Format:</dt></dl></div>']:
+            with self.assertRaises(ValueError):
+                expressions.extract_mugen_triggers(text)
+
+    def test_document_reference_formats_keep_original_and_alias_locations(self):
+        text = '<div class="section"><h2>Name(*,***)</h2><dl><dt>Format:</dt><dd>Name = "example"</dd><dt>Return type:</dt><dd>boolean int</dd></dl></div>\n<div class="section"><h2>P1Name(*,***)</h2></div>\n<div class="section"><h2>P2Name(*,***)</h2></div>'
+        rows = expressions.extract_mugen_triggers(text)
+        expressions.resolve_mugen_formats(rows)
+        self.assertEqual(rows[2]['formatCandidates'][0]['text'], 'P2Name = "example"')
+        self.assertEqual(rows[2]['formatCandidates'][0]['sourceLine'], 1)
+        self.assertEqual(rows[2]['formatCandidates'][0]['referenceSourceLine'], 3)
+        self.assertEqual(rows[2]['declaredReturnTypes'][0]['text'], 'boolean int')
+        self.assertEqual(rows[0]['formatCandidates'][0]['text'], 'Name = "example"')
+
+    def test_document_unknown_reference_cannot_silently_produce_empty_formats(self):
+        rows = expressions.extract_mugen_triggers('<div class="section"><h2>P1Name</h2></div>')
+        with self.assertRaisesRegex(ValueError, 'Unknown MUGEN format reference'):
+            expressions.resolve_mugen_formats(rows)
+
+    def test_document_format_reference_cycle_is_rejected(self):
+        from unittest.mock import patch
+        text = '<div class="section"><h2>First</h2></div><div class="section"><h2>Second</h2></div>'
+        rows = expressions.extract_mugen_triggers(text)
+        with patch.dict(expressions.MUGEN_FORMAT_REFERENCES, {'first': 'second', 'second': 'first'}, clear=True):
+            with self.assertRaisesRegex(ValueError, 'Cyclic'):
+                expressions.resolve_mugen_formats(rows)
+
+    def test_document_selector_disagreements_are_preserved_without_aliasing(self):
+        text = '<div class="section"><h2>StageVar</h2><dl><dt>Valid values are:</dt><dd>info.name, info.authorname.</dd><dt>Details:</dt><dd><ul><li>info.name: name</li><li>info.author: author</li></ul></dd></dl></div>'
+        row = expressions.extract_mugen_triggers(text)[0]
+        selectors = row['selectorInventory']
+        self.assertEqual([item['name'] for item in selectors['candidates']], ['info.author', 'info.authorname', 'info.name'])
+        self.assertEqual(selectors['argumentOnly'], ['info.authorname'])
+        self.assertEqual(selectors['detailsOnly'], ['info.author'])
+        self.assertEqual(set(selectors['candidates'][0]['stages'].values()), {'Unassessed'})
+
+    def test_unparsed_document_selector_list_is_not_dropped(self):
+        text = '<div class="section"><h2>GetHitVar</h2><dl><dt>Valid values are:</dt><dd>damage, unknown syntax !</dd></dl></div>'
+        with self.assertRaisesRegex(ValueError, 'Unparsed documented selector list'):
+            expressions.extract_mugen_triggers(text)
+
 
 if __name__ == '__main__':
     unittest.main()
