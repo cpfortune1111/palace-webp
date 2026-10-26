@@ -1,0 +1,540 @@
+{
+  "schema": "moon-palace-engine-audit-v1",
+  "certification": "Initial repository/subsystem audit only; not a complete per-item inventory or engine certification",
+  "objectiveFile": "User-provided goal-objective.md; original local attachment excluded from publication",
+  "baseline": {
+    "publishedVersion": "0.26.20",
+    "commit": "2e8d1b9a9e7300aac98e5765bef477d1e2b05429",
+    "nodeCheckScripts": 301,
+    "engineJavaScriptFiles": 268,
+    "pendingExistingWork": "Existing controller release candidate contains 96 own-state/release/removal browser cases; subsequent verification/publication is tracked in CONTROLLER-PROGRESS.md and release receipts, not certified by this initial engine audit"
+  },
+  "references": {
+    "mugen": {
+      "editionObserved": "MUGEN 1.1 beta1 controller documentation",
+      "urlObservedInRepository": "https://www.elecbyte.com/mugendocs-11b1/sctrls.html",
+      "privateSnapshot": "outputs/mugen-sctrls.html",
+      "sha256": "16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332",
+      "completeDocumentationSetPinned": false
+    },
+    "ikemen": {
+      "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+      "controllerRegistryCandidates": 163,
+      "separateCompleteExtensionInventory": false
+    }
+  },
+  "stages": [
+    "Parsed",
+    "Executable",
+    "Source-verified",
+    "Semantically tested",
+    "Partial / Unsupported"
+  ],
+  "subsystems": [
+    {
+      "id": "controllers",
+      "name": "Controllers / parameters",
+      "evidence": [
+        "Docs/CONTROLLER-AUDIT.json",
+        "Docs/STATE-CONTROLLER-COVERAGE.json",
+        "Docs/CHANGE-ANIMATION-COVERAGE.json",
+        "Engine/controller-schedule.js",
+        "index.html"
+      ],
+      "gaps": [
+        "Separate complete MUGEN and Ikemen parameter inventories",
+        "Reconcile legacy status ledgers with actual consumers",
+        "Complete defaults, ordering, warnings and cross-controller interactions"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "expressions",
+      "name": "Triggers / expressions",
+      "evidence": [
+        "index.html: tokenizeExpr / parseExprAST / evalAST",
+        "Engine/expression-numeric-types.js",
+        "Tools/check-expression-numeric-types.mjs"
+      ],
+      "gaps": [
+        "Complete trigger/function/redirect inventory and executable coverage",
+        "Full compiler/type/conversion/short-circuit/evaluation-order parity",
+        "Generic source parsing rather than selected imported expression forms"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "states",
+      "name": "State machine",
+      "evidence": [
+        "Engine/state-change-buffer.js",
+        "Engine/state-properties.js",
+        "Engine/controller-schedule.js",
+        "Char/Venus/venus-lifecycle-runtime.js",
+        "Docs/STATE-CONTROLLER-HITPAUSE-WIP.md"
+      ],
+      "gaps": [
+        "Native counter capacity/reallocation and nested alias semantics",
+        "Complete negative/current/global and paused/disabled phase interactions",
+        "Common-state and warning behavior without character-specific replacements"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "cmd",
+      "name": "CMD / input",
+      "evidence": [
+        "index.html: createCommandList / commandInputState / sampleCommandList",
+        "Engine/assert-command.js",
+        "Engine/socd-input.js",
+        "Tools/build_saturn_runtime.py"
+      ],
+      "gaps": [
+        "Complete documented command grammar and generic CMD reader",
+        "Timing/buffering/facing/hold/release/simultaneous-input interaction matrix",
+        "Dedicated complete command semantic inventory and native trace oracle"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "air",
+      "name": "AIR / animation",
+      "evidence": [
+        "Engine/air-trans.js",
+        "Engine/animation-first-loop.js",
+        "Engine/animation-presence.js",
+        "Tools/check-animation-presence-browser.cjs",
+        "Tools/import_venus_sources.py"
+      ],
+      "gaps": [
+        "Generic browser AIR parsing and complete animation flag inventory",
+        "All duration/loop/offset/collision/animation-trigger combinations",
+        "Separate rendered-frame regression from full native animation certification"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "physics",
+      "name": "Physics / collision / stage / camera",
+      "evidence": [
+        "Engine/player-push.js",
+        "Engine/character-collision-position.js",
+        "Engine/depth-camera.js",
+        "Engine/stage-backgrounds.js",
+        "index.html: prepareStage / applyPhysics"
+      ],
+      "gaps": [
+        "Generic source stage definitions and boundaries/camera interactions",
+        "Uniform coordinate/float/facing/collision/push semantics",
+        "Remove fixed-stage and character-specific runtime branches through source-backed adapters"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "combat",
+      "name": "Combat / rounds",
+      "evidence": [
+        "Docs/HITDEF-AUDIT.json",
+        "Engine/hit-state-store.js",
+        "Engine/get-hit-resource-consumer.js",
+        "Tools/check-saturn-priority.cjs",
+        "index.html"
+      ],
+      "gaps": [
+        "Reconcile stale HitDef ledger with newer executable modules",
+        "Complete guard/juggle/throw/KO/round/default/ordering interactions",
+        "Native executable comparisons for full parameter/default/version coverage"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "entities",
+      "name": "Helpers / projectiles / Explods / targets",
+      "evidence": [
+        "Char/Venus/venus-special-runtime.js",
+        "Engine/target-state.js",
+        "Engine/target-list.js",
+        "Engine/projectile-collision-geometry.js",
+        "Docs/STATE-CONTROLLER-HITPAUSE-WIP.md"
+      ],
+      "gaps": [
+        "Full spawn/destruction/recursive/retention ownership semantics",
+        "Complete generic effect/source support instead of exact accepted patterns",
+        "All parent/root/target redirects, collision and pause interactions"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "assets",
+      "name": "DEF / CNS / ST / ZSS / CMD / AIR / SFF / SND assets",
+      "evidence": [
+        "Tools/import_venus_sources.py",
+        "Tools/sff_indexed_palette.py",
+        "Engine/native-sound-loader.js",
+        "Engine/native-sound-player.js",
+        "index.html: prepareCharacters / fetch manifests"
+      ],
+      "gaps": [
+        "Generic browser-native source package loader and dependency filesystem",
+        "Complete original format readers; inspected offline SFF v2 is not full SFF support",
+        "Generic ZSS and source compiler integration",
+        "Audio manifests/decoded PCM support is not direct SND-container loading"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    },
+    {
+      "id": "runtime",
+      "name": "Runtime / tick order / determinism",
+      "evidence": [
+        "Engine/native-random.js",
+        "Engine/controller-schedule.js",
+        "Char/Venus/venus-special-runtime.js",
+        "index.html: simStep / simStepCore / Math.random call sites"
+      ],
+      "gaps": [
+        "Single specified deterministic tick/event order across all subsystems",
+        "Gameplay random/input/assets separated from rendering/wall-clock sources",
+        "Replay/snapshot/native differential harness with reproducible seeds and fixtures"
+      ],
+      "overall": "Partial",
+      "stageAssessments": {
+        "Parsed": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Executable": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Source-verified": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        },
+        "Semantically tested": {
+          "status": "Partial",
+          "note": "Selected existing paths only; no subsystem-wide certification"
+        }
+      }
+    }
+  ],
+  "inventoryWarnings": [
+    "The 163-controller registry is an Ikemen compiler candidate inventory, not a count of completed controllers.",
+    "Legacy HITDEF-AUDIT labels (53 Not implemented / 46 Partial / 32 Implemented) are not reconciled with newer source consumers and must not be used as a current completion percentage.",
+    "State-controller and animation parameter inventories explicitly retain Partial statuses.",
+    "No complete separate trigger/CMD/AIR/format/runtime item inventory was evidenced in this audit."
+  ],
+  "standingScopeException": "Prior Moon Palace character recoloring integration remains excluded and must be recorded explicitly; no silent full-engine certification across excluded features. Required asset palette decoding is distinct from new character-art recoloring work.",
+  "milestones": [
+    {
+      "id": "M0",
+      "title": "Reference and coverage reconciliation",
+      "dependsOn": [],
+      "complexity": "L",
+      "risk": "Low runtime / high audit importance",
+      "covers": [
+        "controllers",
+        "expressions",
+        "states",
+        "cmd",
+        "air",
+        "physics",
+        "combat",
+        "entities",
+        "assets",
+        "runtime"
+      ],
+      "exit": "Pin complete official documentation snapshots; classify MUGEN vs Ikemen items; normalize evidence-backed stage records and stale ledgers; preserve current baseline."
+    },
+    {
+      "id": "M1",
+      "title": "Deterministic kernel and native trace harness",
+      "dependsOn": [
+        "M0"
+      ],
+      "complexity": "XL",
+      "risk": "Very high",
+      "covers": [
+        "runtime",
+        "states"
+      ],
+      "exit": "Reproducible tick/input/RNG/snapshot traces; pinned native reference executable or explicitly documented differential gap; existing game regressions retained."
+    },
+    {
+      "id": "M2",
+      "title": "Generic source front end and expression VM",
+      "dependsOn": [
+        "M0",
+        "M1"
+      ],
+      "complexity": "XL",
+      "risk": "Very high",
+      "covers": [
+        "assets",
+        "expressions",
+        "controllers",
+        "states"
+      ],
+      "exit": "DEF/CNS/ST/ZSS and expression syntax/typing/redirect/evaluation semantics execute from generic source fixtures, not controller-name recognition."
+    },
+    {
+      "id": "M3",
+      "title": "State machine and command execution",
+      "dependsOn": [
+        "M1",
+        "M2"
+      ],
+      "complexity": "XL",
+      "risk": "Very high",
+      "covers": [
+        "states",
+        "cmd",
+        "runtime"
+      ],
+      "exit": "StateDef/common/negative/transition and full CMD timing/grammar/buffering/held/facing behavior match version-specific traces."
+    },
+    {
+      "id": "M4",
+      "title": "Asset readers and animation runtime",
+      "dependsOn": [
+        "M2"
+      ],
+      "complexity": "XL",
+      "risk": "High",
+      "covers": [
+        "assets",
+        "air"
+      ],
+      "exit": "Local/private source packages load DEF dependencies, CMD/AIR, SFF and SND with real frames/sounds; animation flags/collisions/timing verified; no copyrighted source redistributed."
+    },
+    {
+      "id": "M5",
+      "title": "Physics, stage and camera conformance",
+      "dependsOn": [
+        "M1",
+        "M3",
+        "M4"
+      ],
+      "complexity": "XL",
+      "risk": "Very high",
+      "covers": [
+        "physics",
+        "air",
+        "runtime"
+      ],
+      "exit": "Versioned float/coordinate/facing/motion/collision/push/stage/camera fixtures match reference behavior while preserving current presentation."
+    },
+    {
+      "id": "M6",
+      "title": "Combat, entities and remaining controllers",
+      "dependsOn": [
+        "M3",
+        "M4",
+        "M5"
+      ],
+      "complexity": "XL",
+      "risk": "Very high",
+      "covers": [
+        "controllers",
+        "combat",
+        "entities",
+        "runtime"
+      ],
+      "exit": "Complete remaining parameter/default/order matrices and entity/guard/hit/fall/juggle/throw/KO/round interactions; migrate source-specific branches through verified generic consumers."
+    },
+    {
+      "id": "M7",
+      "title": "Full conformance and verified release",
+      "dependsOn": [
+        "M0",
+        "M1",
+        "M2",
+        "M3",
+        "M4",
+        "M5",
+        "M6"
+      ],
+      "complexity": "L–XL",
+      "risk": "High",
+      "covers": [
+        "controllers",
+        "expressions",
+        "states",
+        "cmd",
+        "air",
+        "physics",
+        "combat",
+        "entities",
+        "assets",
+        "runtime"
+      ],
+      "exit": "Every documented item has stage-specific evidence; unsupported/no-op paths cannot pass certification; original character integration, CI, deployment and live build comparison verified."
+    }
+  ],
+  "approval": {
+    "requiredBeforeLargeNewSubsystems": true,
+    "sourceQuote": "Before starting large new subsystems, report the audit results and proposed implementation order for approval.",
+    "proposedFirstAuthorization": "Approve the M0–M7 dependency order; begin M0 then M1 and continue through the approved order without restarting existing work."
+  }
+}

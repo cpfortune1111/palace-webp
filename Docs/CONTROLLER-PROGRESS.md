@@ -1,3 +1,13 @@
+## Expanded full-engine objective — audit and proposed order
+
+The user-provided goal-objective.md expands the objective to controllers, expressions, states, CMD, AIR, physics, combat, entities, native asset loading and deterministic runtime. [ENGINE-COMPATIBILITY-AUDIT.md](ENGINE-COMPATIBILITY-AUDIT.md) records the initial ten-subsystem source audit, gaps, dependency-aware M0–M7 plan and complexity/regression risk. [ENGINE-COMPATIBILITY-COVERAGE.json](ENGINE-COMPATIBILITY-COVERAGE.json) separates parsing/execution/source/semantic evidence stages; it is an initial subsystem ledger, not a completed per-item inventory. The objective explicitly requires approval before large new subsystems. Existing controller work and unpublished changes below remain preserved; no full-engine certification is claimed.
+
+## 0.26.21 — Own-state release and removal (partial)
+
+Helper HitOverride, root/Helper binding release, conditional TargetDrop and Helper destruction now use own pending State selection at their native phase, clearing bindings without prematurely replacing animation/control. All 96 new actual browser cases, 301 Node checks and dedicated animation/state, scheduling and Helper-entry browser gates pass. A freshly observed final battle gate completed with exit 0, including simultaneous/one-tick/five-tick supers. Full recursive/retention/target/gethit/native phase/context/compiler/version fidelity remains Partial. No whole controller is certified; see STATE-CONTROLLER-HITPAUSE-WIP.md. The expanded engine audit/order awaits approval before large new subsystems.
+
+0.26.20 publication was verified at 2e8d1b9a9e7300aac98e5765bef477d1e2b05429, successful exact-head Pages run 40265572185 and twelve frozen live text comparisons.
+
 ## 0.26.20 — Negative states and provider identity (partial)
 
 Root/Helper negative bodies retain CNS position and transition outcomes; root StateDef initialization is buffered to a same-tick post-negative boundary. Full -1 command bodies, player-slot State ownership, same-character root/Helper negative eligibility, captured HitDef provider identity and own-negative-source contexts are integrated. All 172 new actual browser cases, 301 Node checks and dedicated animation/state, scheduling and Helper-entry browser gates pass. Final complete own-context battle regression passed, including simultaneous/one-tick/five-tick supers. Capacity reallocation, complete native phase/context/reset/retention and compiler/version/warning fidelity remain Partial. No whole controller is certified; see STATE-CONTROLLER-HITPAUSE-WIP.md.

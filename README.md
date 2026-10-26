@@ -1,3 +1,7 @@
+## 0.26.21 — Own-state release and removal (partial)
+
+Helper HitOverride, root/Helper binding release, conditional TargetDrop and Helper destruction select own pending States without prematurely replacing control/animation. All 96 new actual browser cases, 301 Node checks, related browser gates and final complete battle regression pass. Full controller/native phase/retention semantics remain Partial. The expanded engine audit and dependency plan are in Docs/ENGINE-COMPATIBILITY-AUDIT.md; large new subsystems await user approval. Original source assets are excluded.
+
 ## 0.26.20 — Negative states and provider identity (partial)
 
 Negative root/Helper bodies retain controller position and transition outcomes. Root StateDef effects wait for the post-negative boundary; full -1 bodies and same-character State-provider player identity reach real consumers. Own-negative contexts preserve source identity through continued transitions. All 172 new actual browser cases, 301 Node checks, related browser gates and final battle regression pass. Complete native capacity/phase/context/reset/compiler/version fidelity remains Partial; see Docs/STATE-CONTROLLER-HITPAUSE-WIP.md. Character recoloring stays excluded.

@@ -338,7 +338,7 @@ if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}if(entity.kin
     break;
    }
   }
-  for(const [helper,nextState] of overrides){enter(helper,nextState);for(const [index,controller] of helperDefinition(helper,helper.state).controllers.entries())helperController(helper,controller,index)}
+  for(const [helper,nextState] of overrides)selectState(helper,nextState,{provider:null,providerPlayer:helper.player,phase:'hit'});
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){if(entities[index].kind==='helper'){projectileContacts.forget(entities[index]);stateChanges.cancel(entities[index].key);api.forgetHitState?.(entities[index])}entities.splice(index,1)}
  }
  function finishTick(){
