@@ -41,13 +41,20 @@ const server=http.createServer((request,response)=>{
      data.commands='[Remap]\\na=x\\nb=y\\n[Defaults]\\ncommand.buffer.time=4\\n[Command]\\nname="__cmd_file"\\ncommand=a|b';
      resetCommandList(player);sample({x:true});
      const file=active('__cmd_file')&&hasCommandDef('__cmd_file',player)&&!!evalM1('command = "__cmd_file"',specialRuntime.context(specialRoot(player)));
+     const battle=profileFor(player).battle,constants=battle.constants||battle.sizeConstants,priorConstant=constants['input.pauseonhitpause'],priorVersions=battle.engineVersions;
+     const pausePolicy=[];
+     try{
+      for(const value of [0,1]){constants['input.pauseonhitpause']=value;resetCommandList(player);sample({y:true});playerCommandLists[player].commands.find(c=>c.definition.name==='__cmd_file').buffer=3;sampleCommandList(player,{},true);pausePolicy.push(playerCommandLists[player].commands.find(c=>c.definition.name==='__cmd_file').buffer)}
+      constants['input.pauseonhitpause']=1;
+      for(const major of [0,1]){battle.engineVersions={...priorVersions,mugen:[major,major?0:5]};resetCommandList(player);sampleCommandList(player,{y:true},true);pausePolicy.push(playerCommandLists[player].commands.find(c=>c.definition.name==='__cmd_file').buffer)}
+     }finally{if(priorConstant===undefined)delete constants['input.pauseonhitpause'];else constants['input.pauseonhitpause']=priorConstant;battle.engineVersions=priorVersions}
      data.commands=fixtureDefinitions;resetCommandList(player);
-     rows.push({player,definitions:original.length,or,query,peer,expired,charge,absolute,hold,file});
+     rows.push({player,definitions:original.length,or,query,peer,expired,charge,absolute,hold,file,pausePolicy});
     }}finally{data.commands=original;resetCommandList(1);resetCommandList(2)}return rows;
    })()`);
-   for(const row of result){for(const key of ['or','query','expired','charge','absolute','hold','file'])assert.equal(row[key],true,character+' '+JSON.stringify(row));assert.equal(row.peer,false);rows.push({character,...row})}
+   for(const row of result){for(const key of ['or','query','expired','charge','absolute','hold','file'])assert.equal(row[key],true,character+' '+JSON.stringify(row));assert.equal(row.peer,false);assert.deepEqual(row.pausePolicy,[2,3,6,5]);rows.push({character,...row})}
   }
   assert.equal(rows.length,10);assert.equal(rows.reduce((sum,row)=>sum+row.definitions,0),430);assert.deepEqual(errors,[]);
-  console.log('PASS five-character P1/P2 battle sampler and actual command expressions: OR, charge, expiry, physical facing continuity, legacy holds, peer isolation and raw CMD Defaults/Remap');
+  console.log('PASS five-character P1/P2 battle sampler and actual command expressions: OR, charge, expiry, physical facing continuity, legacy holds, peer isolation, raw CMD Defaults/Remap and 40 hitpause/version policy observations');
  }finally{clearTimeout(timeout);await browser?.close();await new Promise(resolve=>server.close(resolve))}
 })().catch(error=>{console.error(error);process.exitCode=1});

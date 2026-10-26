@@ -53,9 +53,18 @@ assert trace['status'] == 'Partial' and trace['goalComplete'] is False
 assert trial['sameSeedMatched'] is True and trial['otherSeedDiffers'] is True
 assert trial['digests'][0] == trial['digests'][1] != trial['digests'][2]
 assert trial['seeds'] == [17, 17, 29] and trial['ticksPerRun'] == 360
-assert trial['sourceChanges'] == [] and trial['sourceFileCount'] == 339
+assert trial['sourceChanges'] == [] and trial['sourceFileCount'] == 340
 driver = root / 'Tools/check-runtime-trace-repeatability.cjs'
 assert hashlib.sha256(driver.read_bytes()).hexdigest() == trial['driverSha256'], 'Trace driver evidence is stale'
 assert trial['snapshotPolicy'].startswith('Immutable plain-data projection')
 assert trial['maxEntities'] > 0 and trial['minimumLife'][1] < 1000 and trial['legacyRandomCalls'] > 0
 print('PASS actual Web trace evidence identity, frozen driver and explicitly Partial repeatability scope')
+policy = ledger['commandBufferPolicyEvidence']
+pause = ledger['globalPauseEvidence']
+assert policy['status'] == pause['status'] == 'Partial'
+assert (policy['nativeCombinations'], policy['browserObservations']) == (8788, 40)
+assert (pause['scenarios'], pause['transitions']) == (289, 7459)
+assert policy['pauseEndWindowsInBattle'] is False and pause['connectedToBattle'] is False
+for path in [policy['document'], policy['consumer'], pause['document'], pause['component']]:
+    assert (root / path).is_file(), path
+print('PASS distinct production HitPause policy and unconnected native global-pause component evidence')

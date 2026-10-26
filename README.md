@@ -1,3 +1,11 @@
+## 0.26.29 — HitPause command buffering and global Pause groundwork
+
+Battle command sampling now honors input.pauseonhitpause, WinMUGEN's extra buffer frame and State-source Helper restrictions. A Helper blocked by Pause is no longer treated as being in HitPause. Native policy tests pass 8,788 combinations; five-character P1/P2 browser fixtures pass 40 additional buffer observations, and the complete battle regression passes. [Policy scope](Docs/CMD-BUFFER-POLICY-EVIDENCE.md) separates this handoff from still-unconnected Pause/SuperPause end windows.
+
+A standalone global Pause core passes 289 native scenarios / 7,459 transitions, covering buffered activation, arbitration, allowances, defence stacking and darken-family timer propagation. [Global state evidence](Docs/GLOBAL-PAUSE-EVIDENCE.md) records that the core is not yet connected to battle or certified against the full native scheduler/MUGEN executable. Full engine work continues.
+
+All 309 Node checks and the fresh-context 360-tick repeatability gate pass, with 340 unchanged loaded source inputs. Production determinism and full native phase equivalence remain incomplete.
+
 ## 0.26.28 — Decoded CMD configuration and owning-player queries
 
 The battle command adapter accepts decoded original CMD text as well as existing bundles. Defaults, Remap, numeric conversions, duplicate fields and version-dependent symbol-error policy match 352 pinned native compiler-block cases, including five private original files. Both players' five-character browser sampler/expression fixtures pass. Command snapshots/existence checks now use the owning player's compiled list. Existing profiles retain their bundled data. [Evidence and remaining limits](Docs/CMD-FILE-EVIDENCE.md): file I/O/encoding, CMD State -1 compilation, full input/pause scheduling and the wider engine goal remain incomplete.

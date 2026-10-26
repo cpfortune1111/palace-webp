@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createBattleCommandList} from '../Engine/battle-command-list.js';
+import {commandBufferPolicy} from '../Engine/command-buffer-policy.js';
 const paths=['../Char/Venus/venus_cmd_runtime.json','../Char/Moon/Battle/moon_runtime.json','../Char/Jupiter/Battle/jupiter_runtime.json','../Char/Neptune/Battle/neptune_runtime.json','../Char/Saturn/Battle/saturn_runtime.json'];
 let definitions=0;
 for(const path of paths){
@@ -20,4 +21,10 @@ for(const legacy of [true,false]){
 const absolute=createBattleCommandList([{name:'left',command:'/L',time:15,bufferTime:1}]);
 absolute.sample({B:true},{facing:1});assert.equal(absolute.signed.L,1);
 absolute.sample({F:true},{facing:-1});assert.equal(absolute.signed.L,2);assert.equal(absolute.commands[0].buffer,1);
-console.log(`PASS ${definitions} installed battle command definitions, writable assertion buffers, OR, versioned legacy holds and physical direction continuity`);
+for(const ownLegacy of [false,true])for(const sourceLegacy of [false,true]){
+ const test=createBattleCommandList([{name:'press',command:'a',time:15,bufferTime:2}],{engineVersions:{ikemen:ownLegacy?[0,0,0]:[1,0,0]}});
+ const policy=commandBufferPolicy({helper:true,sourceVersions:{ikemen:sourceLegacy?[0,0,0]:[1,0,0],mugen:[1,0]}});
+ test.sample({a:true},{ai:true,helper:true,...policy});
+ assert.equal(test.commands[0].buffer,sourceLegacy?0:2,'AI Helper restrictions follow State-source version, not command-list owner version');
+}
+console.log(`PASS ${definitions} installed battle command definitions, writable assertion buffers, OR, versioned legacy holds, physical direction continuity and State-source Helper restrictions`);

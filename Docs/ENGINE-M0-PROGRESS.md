@@ -1,5 +1,9 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.29 command-buffer policy and native global Pause prerequisite
+
+The real sampler now uses native-tested HitPause/WinMUGEN/source-version Helper policy, with 8,788 differential combinations and 40 additional five-character browser observations. Complete battle regression passes. A standalone GlobalPauseState adds 289 native scenarios / 7,459 transition comparisons for timer buffering/arbitration, eligible allowances, defence stacking and own-palette-family timer propagation. [Policy evidence](CMD-BUFFER-POLICY-EVIDENCE.md) and [global state evidence](GLOBAL-PAUSE-EVIDENCE.md) distinguish production handoff from the unconnected core. The global scheduler, per-player pause-array replacement and actual Pause/SuperPause end-command windows remain unfinished; no full-engine or complete pause compatibility is claimed.
+
 ## 0.26.28 decoded CMD configuration and battle consumers
 
 Engine/ini-sections.js and Engine/command-file.js implement decoded CMD text configuration, first Defaults/Remap, native numeric/boolean conversion, duplicate fields and version/error policy. A private oracle now compiles 45 unchanged declarations plus the unchanged pinned compiler configuration block; 352 synthetic/original policy cases match. Raw-text battle adapter and five-character P1/P2 browser expression gates pass, and 307 Node checks pass after the consumer repair. Root/Helper command snapshots no longer assume JSON arrays, and command existence uses the expression player's list. [CMD-FILE-EVIDENCE.md](CMD-FILE-EVIDENCE.md) distinguishes decoded text from remaining file/encoding, full State -1, pause scheduling and cross-player ownership work. Full engine compatibility is not complete.

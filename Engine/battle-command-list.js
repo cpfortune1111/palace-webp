@@ -25,5 +25,5 @@ export function createBattleCommandList(definitions,{player=1,engineVersions={ik
    get done(){return matcher.completed},get timers(){return matcher.timers},get time(){return matcher.time},set time(value){matcher.time=value|0},get buffer(){return matcher.buffer},set buffer(value){matcher.buffer=value|0}});
  }
  return {player,native,get commands(){return native.commands.map(entry=>wrappers.get(entry.matcher))},get diagnostics(){return native.commands.filter(entry=>entry.matcher.parseError).map(entry=>({name:entry.name,error:entry.matcher.parseError}))},get signed(){return native.input.current},get previous(){return native.input.previous},
-  sample(now,options={}){const facing=options.facing??1;native.input.update({...now,L:facing>=0?now.B:now.F,R:facing>=0?now.F:now.B});native.step({...options,helper:legacy&&!!options.helper})}};
+  sample(now,options={}){const facing=options.facing??1;native.input.update({...now,L:facing>=0?now.B:now.F,R:facing>=0?now.F:now.B});native.step({...options,helper:options.helperRestricted??(legacy&&!!options.helper)})}};
 }

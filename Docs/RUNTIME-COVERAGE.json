@@ -308,5 +308,22 @@
     "Complete remaining M0 subsystem/item reconciliation without treating component probes as native full-engine traces",
     "Use these fixtures as M1 ordering/tick/RNG acceptance baselines",
     "Preserve existing game regression gates during generic scheduling migration"
-  ]
+  ],
+  "commandBufferPolicyEvidence": {
+    "status": "Partial",
+    "runtimeVersion": "0.26.29",
+    "document": "Docs/CMD-BUFFER-POLICY-EVIDENCE.md",
+    "consumer": "Engine/command-buffer-policy.js",
+    "nativeCombinations": 8788,
+    "browserObservations": 40,
+    "pauseEndWindowsInBattle": false
+  },
+  "globalPauseEvidence": {
+    "status": "Partial",
+    "document": "Docs/GLOBAL-PAUSE-EVIDENCE.md",
+    "component": "Engine/global-pause-state.js",
+    "scenarios": 289,
+    "transitions": 7459,
+    "connectedToBattle": false
+  }
 }

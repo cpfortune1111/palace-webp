@@ -1,7 +1,7 @@
 {
   "schema": "moon-palace-air-cmd-coverage-v1",
   "certification": "Partial AIR/CMD compatibility audit. Decoded CMD configuration and battle matching have scoped native/browser evidence; complete file IO, State -1 compilation, AIR execution and engine certification remain incomplete.",
-  "runtimeVersion": "0.26.28",
+  "runtimeVersion": "0.26.29",
   "commandReferenceEvidence": "Docs/CMD-NATIVE-EVIDENCE.md; native component probes plus 0.26.27 battle adapter and browser sampler tests; full CMD remains Partial",
   "frameReferenceEvidence": "Docs/AIR-FRAME-EVIDENCE.json; source-component probes and explicit offline Unsupported policy are separate from browser execution certification",
   "references": {
@@ -611,12 +611,13 @@
       "Tools/check-battle-command-browser.cjs",
       "Engine/ini-sections.js",
       "Engine/command-file.js",
-      "Tools/check-command-file-native.mjs"
+      "Tools/check-command-file-native.mjs",
+      "Engine/command-buffer-policy.js"
     ],
     "remaining": [
       "File/URL acquisition, encoding/BOM and include policy, offline exporters for new syntax, and CMD State -1 compilation",
       "Full native hardware/SOCD/assist/injection ordering and physical keyboard/gamepad/touch integration",
-      "Exact input.pauseonhitpause, Pause/SuperPause end-command buffering and WinMUGEN extra-frame policy",
+      "Connect the native global Pause core/end-command windows; complete counter/phase/WinMUGEN input scheduling beyond verified current handoff",
       "InputWait/noinput reset timing and AI command cheats",
       "Cross-player command-list copies, Helper ownership interactions and complete State -1 ordering",
       "Version-dependent malformed-source tolerance and complete empty-input/file diagnostics",
@@ -627,5 +628,7 @@
     "Character costume recoloring; gameplay effects remain in scope."
   ],
   "goalComplete": false,
-  "commandFileEvidence": "Docs/CMD-FILE-EVIDENCE.md"
+  "commandFileEvidence": "Docs/CMD-FILE-EVIDENCE.md",
+  "commandBufferPolicyEvidence": "Docs/CMD-BUFFER-POLICY-EVIDENCE.md",
+  "globalPauseEvidence": "Docs/GLOBAL-PAUSE-EVIDENCE.md; standalone, not connected to battle"
 }
