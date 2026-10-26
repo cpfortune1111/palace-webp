@@ -1,3 +1,7 @@
+## 0.26.23 — Reversal hitpause signed overflow
+
+Reversal pause components now wrap to signed 32-bit before the native minimum-one calculation. A maximum integer plus the version correction now gives one tick instead of an extremely long pause. Boundary and actual browser-counter cases cover legacy/MUGEN/Ikemen profiles; all 301 Node checks and complete battle regression pass. [Evidence and remaining scope](Docs/REVERSAL-HITPAUSE-OVERFLOW.md). Full engine compatibility remains incomplete.
+
 ## M0 follow-up — HitDef evidence reconciliation
 
 [Current HitDef coverage](Docs/HITDEF-COVERAGE.json) replaces stale support-count readings of the historical audit: 131 parameters now have stage-specific records, 38 Partial, 93 Unassessed and none Certified. Thirteen historical absence labels have newer scoped consumer evidence. Seven focused checks pass. Unassessed does not mean no execution path. Runtime remains 0.26.22; combat/full-engine work continues.

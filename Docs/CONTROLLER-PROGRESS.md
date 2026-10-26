@@ -1,3 +1,7 @@
+## 0.26.23 — Reversal pause integer addition
+
+Source review found a real signed-overflow discrepancy in the existing reversal pause adapter. Pause 2147483647 plus the native version correction now wraps before `Max(1, ...)`, yielding one tick; legacy no-correction behavior is retained. The new unit assertion failed before the fix, then all 301 Node checks passed. Actual browser adapter fixtures cover independent Helper counters across legacy, MUGEN 1.x and Ikemen profiles. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records the source and Partial scope. Full engine work continues.
+
 ## M0 follow-up — native component evidence
 
 The pinned-source component executable passes 8,707 AIR alpha comparisons, 2,460 synthetic SFF pixel comparisons and 80 sampled original sprites across Moon/Venus/Jupiter/Neptune/Saturn. Indexed preprocessing now supports raw/RLE8/RLE5 alongside existing LZ5/indexed PNG. This does not certify browser raw SFF/SND loading or native tick scheduling. [STAGE-ASSET-COVERAGE.json](STAGE-ASSET-COVERAGE.json) separates those gaps and the BGCtrl namespace. Runtime stays 0.26.22; M0 and the full engine remain incomplete.

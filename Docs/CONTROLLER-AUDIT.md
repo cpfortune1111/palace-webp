@@ -1,5 +1,7 @@
 # Controller compatibility work ledger
 
+0.26.23 corrects signed int32 overflow in the existing reversal hitpause addition before the minimum-one clamp. Boundary tests reproduced the old failure; all 301 Node checks passed, with actual browser pause-adapter cases for three version profiles. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records source scope and remaining conformance work. No whole controller is certified.
+
 M0 now includes compiled pinned-source component evidence: 8,707 AIR alpha cases, 2,460 synthetic indexed SFF cases and 80 sampled original sprites match. The offline preprocessing path adds raw/RLE8/RLE5 support. [STAGE-ASSET-COVERAGE.json](STAGE-ASSET-COVERAGE.json) explicitly separates preprocessing from runtime loading and BGCtrl from State controllers. Runtime remains 0.26.22; full engine conformance remains Partial.
 
 0.26.22 corrects the existing AIR alpha branch: missing source digits produce 0, accepted native prefix/tails are retained, and selected states/diagnostics remain distinct. All 301 Node checks, 72 actual root draw cases and final full battle regression passed. [AIR-CMD-COVERAGE.json](AIR-CMD-COVERAGE.json) records examined import/matcher gaps; complete AIR/CMD/controller and engine semantics remain Partial. The human-approved M0–M7 order is proceeding through M0.

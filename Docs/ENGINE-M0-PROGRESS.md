@@ -1,5 +1,9 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.23 existing-consumer correction during combat review
+
+The remaining combat review found a signed-addition bug in ReversalDef pause consumption: 2147483647 plus the native version fix was kept as a JavaScript positive number, instead of int32 wrapping before the minimum-one clamp. The new assertion failed against the old implementation, then the fixed consumer passed 36 independent BigInt boundary/version combinations and all 301 Node checks. Actual browser fixtures exercise legacy/MUGEN/Ikemen profiles through `applyReversalHitPauseM1` and both Helper counters. [REVERSAL-HITPAUSE-OVERFLOW.md](REVERSAL-HITPAUSE-OVERFLOW.md) records Partial evidence and remaining scope. The HitDef name/evidence snapshot remains unchanged; this correction belongs to the independent ReversalDef consumer.
+
 ## HitDef legacy/current evidence reconciliation
 
 [HITDEF-COVERAGE.json](HITDEF-COVERAGE.json) reconciles the 131-name HitDef union (81 MUGEN document names, 131 pinned compiler candidates) with current reviewed groups and the incremental parameter ledger. Every item has separate Parsed/Executable/Source-verified/Semantically tested records. **38 are Partial, 93 Unassessed, zero Certified**. Unassessed means that complete current evidence reconciliation is pending, not that the engine has no execution path. Old Implemented labels are not promoted to certification.
