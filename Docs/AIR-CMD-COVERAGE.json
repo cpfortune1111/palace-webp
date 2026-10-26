@@ -314,7 +314,7 @@
       "remaining": [
         "Full AIR frame parser and file-level warning/error policy",
         "MUGEN/Ikemen version-specific alpha/render behavior",
-        "Native executable differential traces",
+          "Full-engine native differential traces; the scoped ASCII alpha component now has 8,707 compiled-source comparisons (STAGE-ASSET-COVERAGE.json)",
         "All helper/projectile/Explod/reflection/afterimage and GPU interactions"
       ]
     },

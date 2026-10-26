@@ -1,5 +1,23 @@
 # Engine inventory reconciliation — M0
 
+## Compiled component evidence and stage/assets (follow-up)
+
+The existing indexed preprocessing helper now supports raw/RLE8/RLE5 alongside LZ5/indexed PNG. A private Go 1.27.3 executable contains 13 unchanged declarations extracted from pinned Ikemen sources, with byte-capture/error/log facades. Source pins and generated/executable hashes are recorded during each build. It passes 8,707 ASCII AIR alpha state/diagnostic cases, 2,460 synthetic SFF pixel cases and 80 physical sprite samples across five original characters. The public stage/asset ledger records original source hashes and sample indices, never original image/audio bytes.
+
+This is scoped evidence for existing consumers, not completion of M1 scheduling, complete native-engine execution, browser raw SFF/SND loading, palette/link/GPU behavior or malformed-input conformance. A terminal zero-run RLE8 input that would stall native code is explicitly rejected offline. Character costume recoloring remains excluded.
+
+[STAGE-ASSET-COVERAGE.json](STAGE-ASSET-COVERAGE.json) records stage/asset gaps. BGCtrl is a separate namespace: ten MUGEN document headings versus twelve pinned native reader types. The document's Enabled and native enable spelling disagreement is retained. Current GLB/JSON stage paths and static asset layout do not certify generic stage DEF/BGCtrl/original-package execution. Full stage parameter and semantic reconciliation remains unfinished.
+
+Reproduce the component checks with private pinned sources/toolchain:
+
+```text
+python Tools/build-native-component-oracle.py --image ../outputs/ikemen-image.go --anim ../outputs/ikemen-anim.go --common ../outputs/ikemen-common-pinned.go --go ../outputs/toolchains/go1.27.3/go/bin/go.exe --output ../outputs/native-component-oracle
+node Tools/check-air-trans-native.cjs ../outputs/native-component-oracle/build-receipt.json ../outputs/air-trans-native-results.json
+python Tools/check-sff-pixels-native.py --receipt ../outputs/native-component-oracle/build-receipt.json --output ../outputs/sff-pixels-native-results.json --character-sff ../outputs/moon/original/moon.sff --character-sff ../outputs/venus/original/venus.sff --character-sff ../outputs/jupiter/original/jupiter.sff --character-sff ../outputs/neptune/original/neptune.sff --character-sff ../outputs/saturn/original/saturn.sff
+```
+
+The exact common.go pin uses the upstream physical bytes; an older private cache differs only by a trailing blank line and is not accepted for this build. No upstream Go implementation, toolchain, executable or original SFF/SND is published. Existing runtime stays 0.26.22.
+
 The user approved the M0–M7 implementation order on 2026-10-26. The original approval boundary in the initial audit has now been satisfied. Character costume recoloring remains excluded; gameplay PalFX behavior remains in scope.
 
 ## AIR/CMD audit and 0.26.22 existing-consumer correction

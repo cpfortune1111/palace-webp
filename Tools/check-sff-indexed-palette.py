@@ -4,7 +4,7 @@ import unittest
 
 from PIL import Image
 
-from sff_indexed_palette import IndexedSff
+from sff_indexed_palette import IndexedSff, decode_rle8, decode_rle5
 
 
 def fixture(linked=False):
@@ -28,6 +28,34 @@ def fixture(linked=False):
 
 
 class IndexedPaletteTests(unittest.TestCase):
+    def test_rle8_native_control_bits_clipping_and_cursor_end(self):
+        self.assertEqual(decode_rle8(bytes([1, 2, 3]), 3), bytes([1, 2, 3]))
+        self.assertEqual(decode_rle8(bytes([0x43, 7, 255, 0x41, 0x40]), 5), bytes([7, 7, 7, 255, 64]))
+        self.assertEqual(decode_rle8(bytes([0x40, 5, 1, 2]), 2), bytes([1, 2]))
+        self.assertEqual(decode_rle8(bytes([0x7f, 9]), 4), bytes([9] * 4))
+        self.assertEqual(decode_rle8(bytes([7]), 4), bytes([7] * 4))
+        self.assertEqual(decode_rle8(b'', 4), b'')
+        with self.assertRaisesRegex(ValueError, 'Non-progressing'):
+            decode_rle8(bytes([0x40]), 1)
+
+    def test_rle5_initial_and_subpacket_counts(self):
+        self.assertEqual(decode_rle5(bytes([3, 0]), 4), bytes(4))
+        self.assertEqual(decode_rle5(bytes([2, 0x80, 9]), 3), bytes([9, 9, 9]))
+        self.assertEqual(decode_rle5(bytes([0, 0x82, 7, 0x23, 0x44]), 6), bytes([7, 3, 3, 4, 4, 4]))
+        self.assertEqual(decode_rle5(bytes([0, 1, 0x21]), 3), bytes([0, 1, 1]))
+        self.assertEqual(decode_rle5(bytes([1, 0x80, 255]), 2), bytes([255, 255]))
+        self.assertEqual(decode_rle5(bytes([0]), 3), bytes(3))
+
+    def test_raw_rle8_and_rle5_container_dispatch(self):
+        for encoding, packet in [(0, bytes([0, 1])), (2, bytes([0, 1])), (3, bytes([0, 1, 1]))]:
+            data = bytearray(fixture())
+            payload = packet if encoding == 0 else struct.pack('<I', 2) + packet
+            data[512 + 8:] = payload
+            data[128 + 14] = encoding
+            struct.pack_into('<I', data, 128 + 20, len(payload))
+            struct.pack_into('<I', data, 56, 8 + len(payload))
+            self.assertEqual(IndexedSff(bytes(data)).sprite(0)['indices'], bytes([0, 1]), encoding)
+
     def test_native_direct_alias_chain_and_duplicate_logical_name(self):
         data = bytearray(fixture())
         palette_offset = 156

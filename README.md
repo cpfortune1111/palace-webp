@@ -1,3 +1,7 @@
+## M0 follow-up — compiled native component checks
+
+The existing indexed SFF preprocessing path now also handles raw/RLE8/RLE5. Against an executable built from 13 unchanged declarations in the pinned Ikemen source, 2,460 synthetic pixel fixtures, 80 physical sprites sampled across five original characters, and 8,707 AIR alpha cases match. The native sources/toolchain/executable and original assets remain private. This is component evidence, not full native engine or original-package browser loading. Runtime stays 0.26.22. [Stage/asset coverage](Docs/STAGE-ASSET-COVERAGE.json) records remaining gaps and the separate BGCtrl namespace.
+
 ## 0.26.22 — AIR alpha source parity (partial)
 
 AIR `AS` without source digits now produces alpha 0, matching the pinned Ikemen branch; SS/SAS, accepted prefix/tails and error-tolerant selected states follow the same source behavior. Parsing exposes diagnostics separately. All 301 Node checks, 72 actual P1/P2 draw cases and full battle regression pass. [AIR/CMD coverage](Docs/AIR-CMD-COVERAGE.json) records the remaining frame/interpolation/input/parameter gaps; full engine compatibility remains incomplete.

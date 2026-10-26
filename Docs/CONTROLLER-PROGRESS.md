@@ -1,3 +1,7 @@
+## M0 follow-up — native component evidence
+
+The pinned-source component executable passes 8,707 AIR alpha comparisons, 2,460 synthetic SFF pixel comparisons and 80 sampled original sprites across Moon/Venus/Jupiter/Neptune/Saturn. Indexed preprocessing now supports raw/RLE8/RLE5 alongside existing LZ5/indexed PNG. This does not certify browser raw SFF/SND loading or native tick scheduling. [STAGE-ASSET-COVERAGE.json](STAGE-ASSET-COVERAGE.json) separates those gaps and the BGCtrl namespace. Runtime stays 0.26.22; M0 and the full engine remain incomplete.
+
 ## 0.26.22 — AIR alpha source parity (partial)
 
 Source inspection found an incorrect existing test expectation: the pinned ReadAnimFrame alpha branch assigns source 0 when AS/SS/SAS has no digits. The Web helper now follows that branch, including prefix/tail acceptance, 14-bit coefficient wrapping/byte limits and retention of selected state plus diagnostics for invalid plain modes. This corrects an existing consumer; it is not a new generic AIR subsystem.
