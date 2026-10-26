@@ -1,8 +1,8 @@
 {
   "schema": "moon-palace-air-cmd-coverage-v1",
   "certification": "Partial audit, existing AIR alpha consumer correction and scoped native frame/original-file metadata probes. No generic AIR/CMD parser, matcher or engine certification.",
-  "runtimeVersion": "0.26.26",
-  "commandReferenceEvidence": "Docs/CMD-NATIVE-EVIDENCE.md; native individual-command probes only, not Web matcher certification",
+  "runtimeVersion": "0.26.27",
+  "commandReferenceEvidence": "Docs/CMD-NATIVE-EVIDENCE.md; native component probes plus 0.26.27 battle adapter and browser sampler tests; full CMD remains Partial",
   "frameReferenceEvidence": "Docs/AIR-FRAME-EVIDENCE.json; source-component probes and explicit offline Unsupported policy are separate from browser execution certification",
   "references": {
     "mugenMirrorCommit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
@@ -316,7 +316,7 @@
       "remaining": [
         "Full AIR frame parser and file-level warning/error policy",
         "MUGEN/Ikemen version-specific alpha/render behavior",
-          "Full-engine native differential traces; the scoped ASCII alpha component now has 8,707 compiled-source comparisons (STAGE-ASSET-COVERAGE.json)",
+        "Full-engine native differential traces; the scoped ASCII alpha component now has 8,707 compiled-source comparisons (STAGE-ASSET-COVERAGE.json)",
         "All helper/projectile/Explod/reflection/afterimage and GPU interactions"
       ]
     },
@@ -421,10 +421,10 @@
         "stages": {
           "Parsed": "Partial",
           "Executable": "Partial",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/command",
@@ -432,10 +432,10 @@
         "stages": {
           "Parsed": "Partial",
           "Executable": "Partial",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/time",
@@ -443,32 +443,32 @@
         "stages": {
           "Parsed": "Partial",
           "Executable": "Partial",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/steptime",
         "name": "steptime",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/autogreater",
         "name": "autogreater",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.time",
@@ -476,43 +476,43 @@
         "stages": {
           "Parsed": "Partial",
           "Executable": "Partial",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.hitpause",
         "name": "buffer.hitpause",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.pauseend",
         "name": "buffer.pauseend",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       },
       {
         "id": "cmd/parameter/buffer.shared",
         "name": "buffer.shared",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
-          "Source-verified": "Unassessed",
-          "Semantically tested": "Unassessed"
+          "Parsed": "Partial",
+          "Executable": "Partial",
+          "Source-verified": "Partial",
+          "Semantically tested": "Partial"
         },
-        "scope": "Examined exported command schema and current runtime matcher."
+        "scope": "Verified native-style matcher/list with battle bundle configuration; raw CMD-file field/default/remap ingestion and complete native scheduling remain incomplete."
       }
     ],
     "defaultsParameters": [
@@ -550,22 +550,22 @@
       {
         "id": "cmd/step-or",
         "stages": {
-          "Parsed": "Unsupported",
-          "Executable": "Unsupported",
+          "Parsed": "Partial",
+          "Executable": "Partial",
           "Source-verified": "Partial",
-          "Semantically tested": "Unassessed"
+          "Semantically tested": "Partial"
         },
-        "observation": "Pinned parser accepts OR inside a step; current exported parser splits + and the matcher uses every(). Mixed + and | is rejected natively."
+        "observation": "Pinned parser and matcher OR semantics pass native differential tests and P1/P2 browser sampler/query tests. Raw command or stepLogic is accepted by the battle adapter; existing offline exporters still split AND only. OR is an Ikemen extension."
       },
       {
         "id": "cmd/absolute-neutral-directions",
         "stages": {
           "Parsed": "Partial",
-          "Executable": "Unsupported",
+          "Executable": "Partial",
           "Source-verified": "Partial",
-          "Semantically tested": "Unassessed"
+          "Semantically tested": "Partial"
         },
-        "observation": "Pinned parser/input buffer recognizes L/R/N and absolute diagonals. Current command sampling/state evaluation explicitly tracks U/D/B/F only."
+        "observation": "Native-style signed input, physical L/R and relative B/F, neutral and all diagonal queries are implemented. 315400 component comparisons and actual browser facing reversal pass; complete upstream event/SOCD pipeline remains Partial."
       },
       {
         "id": "cmd/charge",
@@ -573,9 +573,9 @@
           "Parsed": "Partial",
           "Executable": "Partial",
           "Source-verified": "Partial",
-          "Semantically tested": "Unassessed"
+          "Semantically tested": "Partial"
         },
-        "observation": "Current releaseMinimum is not a complete substitute for native InputBuffer.StateCharge; slash/tilde numeric prefixes, history, facing and bounds need native tests."
+        "observation": "StateCharge is executed by the new battle matcher, with 315400 input comparisons and a real browser three-tick release-charge fixture. Counter wraparound extremes and complete upstream timing remain unverified."
       },
       {
         "id": "cmd/versioned-compatibility",
@@ -583,9 +583,9 @@
           "Parsed": "Partial",
           "Executable": "Partial",
           "Source-verified": "Partial",
-          "Semantically tested": "Unassessed"
+          "Semantically tested": "Partial"
         },
-        "observation": "Native file compilation gates parse-error tolerance and ApplyBackwardCompatibility by engine version; mixed holds and helper AI differ."
+        "observation": "Existing exported engineVersions selects legacy hold transforms and helper AI restriction. Native transform/list tests and browser legacy-hold cases pass. Complete DEF/CMD loader and malformed-source tolerance remain incomplete."
       },
       {
         "id": "cmd/buffer-bounds",
@@ -593,24 +593,31 @@
           "Parsed": "Partial",
           "Executable": "Partial",
           "Source-verified": "Partial",
-          "Semantically tested": "Unassessed"
+          "Semantically tested": "Partial"
         },
-        "observation": "Original sample documents a buffer upper limit of 30; pinned Ikemen loader explicitly clamps minimum 1. Current exporters parse integers without that clamp. MUGEN executable behavior remains unverified."
+        "observation": "Battle adapter clamps configured bufferTime to minimum 1, matching pinned compiler per-command behavior. Component buffer controls and expiry tests pass. MUGEN executable upper bounds and all file-default/version rules remain unverified."
       }
     ],
     "examinedConsumers": [
       "Tools/compile_state200.py",
       "Tools/build_saturn_runtime.py",
-      "index.html"
+      "index.html",
+      "Engine/battle-command-list.js",
+      "Engine/command-symbols.js",
+      "Engine/command-input-buffer.js",
+      "Engine/command-matcher.js",
+      "Engine/command-list.js",
+      "Tools/check-battle-command-list.mjs",
+      "Tools/check-battle-command-browser.cjs"
     ],
     "remaining": [
-      "Complete generic CMD/Defaults/Remap ingestion",
-      "Native signed input/charge counters and facing-relative/absolute histories",
-      "Per-step and whole-command timing, duplicate-direction expansion and step iteration order",
-      "Hitpause/Pause/SuperPause buffering, hold-only and shared duplicate-name command semantics",
-      "Button remap, InputReader/SOCD/assist/ShiftInput/AssertInput and Helper ownership",
-      "Source version and invalid/empty-input diagnostics",
-      "Native executable traces and real-character integration"
+      "Generic CMD/Defaults/Remap ingestion and offline exporters for all new syntax",
+      "Full native hardware/SOCD/assist/injection ordering and physical keyboard/gamepad/touch integration",
+      "Exact input.pauseonhitpause, Pause/SuperPause end-command buffering and WinMUGEN extra-frame policy",
+      "InputWait/noinput reset timing and AI command cheats",
+      "Cross-player command-list copies, Helper ownership interactions and complete State -1 ordering",
+      "Version-dependent malformed-source tolerance and complete empty-input/file diagnostics",
+      "Independent counter-wraparound boundary evidence and broader original move reachability tests"
     ]
   },
   "exclusions": [

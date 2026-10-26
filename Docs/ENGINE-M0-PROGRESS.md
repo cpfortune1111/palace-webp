@@ -1,5 +1,9 @@
 # Engine inventory reconciliation — M0
 
+## 0.26.27 battle CMD consumer integration
+
+The battle sampler now uses the source-verified command components through Engine/battle-command-list.js. Existing engineVersions metadata selects native legacy holds/helper restrictions; existing AssertCommand/trace buffer interfaces forward to matcher storage. All 215 installed definitions, 306 Node gates, complete battle/Helper regression and five-character P1/P2 browser sampler/expression fixtures pass. Generic CMD ingestion, full native input scheduling, cross-player command copies and complete State -1 ordering remain incomplete. See [CMD-NATIVE-EVIDENCE.md](CMD-NATIVE-EVIDENCE.md) for exact component/integration boundaries. Earlier prerequisite sections below describe their historical baseline.
+
 ## Native CMD reference prerequisite
 
 [CMD-NATIVE-EVIDENCE.md](CMD-NATIVE-EVIDENCE.md) records 226 passing synthetic fixtures through 25 unchanged pinned native declarations, including actual input counter/State/StateCharge functions. The native reader inspected 247 original command definitions: 245 without diagnostics and two Jupiter definitions with retained separator diagnostics. This is reference evidence only; Web OR matching, complete input timing, CommandList/version policy and State -1 integration remain unfinished. Runtime remains 0.26.26.

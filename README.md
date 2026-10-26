@@ -1,3 +1,9 @@
+## 0.26.27 — Native-style battle command matching
+
+Battle command sampling now uses the verified symbol parser, signed input/charge counters, individual matcher and grouped command list. Existing character version metadata selects legacy hold rules; AssertCommand buffers remain writable. All 215 installed command definitions execute, 306 Node checks and complete battle regression pass, and actual browser P1/P2 sampler/query fixtures pass for five characters. [Evidence and limits](Docs/CMD-NATIVE-EVIDENCE.md): generic CMD files, full input scheduling and cross-player command copies remain incomplete. Full engine work continues.
+
+The actual 360-tick Moon/Venus repeatability gate also passes with 337 stable loaded source inputs; equal seeds match and another seed differs. Its state digests remain identical to the preceding release's scripted fixture. This remains test-owned repeatability evidence, not production determinism or complete native scheduling certification.
+
 ## CMD source-conformance groundwork — runtime unchanged
 
 New standalone command grammar, input-buffer, matcher and list modules are compared with pinned compiled native functions. Gates pass 1,599 synthetic plus 247 original grammar cases, 315,400 input-state/charge comparisons, 43,784 individual-command ticks and 3,232 list ticks. Duplicate-name sharing, assertions and legacy hold transforms are covered. Two Jupiter source diagnostics are preserved. [Evidence and limits](Docs/CMD-NATIVE-EVIDENCE.md): these components are not yet wired into battle; runtime remains 0.26.26 and full engine compatibility remains incomplete.

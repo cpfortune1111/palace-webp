@@ -53,7 +53,7 @@ assert trace['status'] == 'Partial' and trace['goalComplete'] is False
 assert trial['sameSeedMatched'] is True and trial['otherSeedDiffers'] is True
 assert trial['digests'][0] == trial['digests'][1] != trial['digests'][2]
 assert trial['seeds'] == [17, 17, 29] and trial['ticksPerRun'] == 360
-assert trial['sourceChanges'] == [] and trial['sourceFileCount'] == 332
+assert trial['sourceChanges'] == [] and trial['sourceFileCount'] == 337
 driver = root / 'Tools/check-runtime-trace-repeatability.cjs'
 assert hashlib.sha256(driver.read_bytes()).hexdigest() == trial['driverSha256'], 'Trace driver evidence is stale'
 assert trial['snapshotPolicy'].startswith('Immutable plain-data projection')

@@ -4,7 +4,7 @@
   "goalComplete": false,
   "scope": "Fresh-context scripted actual Web simulation with test-owned native seed reset and simulation-only Math.random interception. Observed state projection and phase calls only; not production determinism, save-state replay, native phase equivalence or full-engine certification.",
   "trial": {
-    "runtime": "0.26.26",
+    "runtime": "0.26.27",
     "driverSha256": "72dbee292efc771a2df027228a504e2e861524dc5711afbc6a78e7bd4ad16975",
     "snapshotPolicy": "Immutable plain-data projection; unsupported types/prototypes and cycles fail explicitly",
     "environment": {
@@ -63,8 +63,8 @@
       "simStep",
       "simStepCore"
     ],
-    "sourceFileCount": 332,
-    "sourceManifestSha256": "3c49afc5cf9263ef743cc9154d5a644695ee404b420275de60f4cddf41913a68",
+    "sourceFileCount": 337,
+    "sourceManifestSha256": "904fe4f7006407e6b65a2cbb9542e2e86cb1fde24fc2413959c578b296f73245",
     "sourceChanges": [],
     "renderPolicy": "One actual camera update after each manually driven simulation tick; canvas/GPU drawing excluded",
     "maxEntities": 5,
@@ -107,7 +107,7 @@
     "Scripted State entries supplement held-input fixtures and do not certify the complete CMD/input grammar",
     "Observed root/GetHit/entity/effect/camera/round fields are a projection, not every engine field",
     "Current Web call ordering is recorded, not asserted equal to the pinned native engine",
-    "All 332 loaded code/JSON/HTML input hashes stay private in the detailed receipt; the public digest fingerprints that list",
+    "All 337 loaded code/JSON/HTML input hashes stay private in the detailed receipt; the public digest fingerprints that list",
     "No original source assets, binaries or raw private traces are published"
   ],
   "next": [
