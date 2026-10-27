@@ -1,4 +1,5 @@
 // Route unchanged historical files to the hash-identical frozen backup.
+// Revision 02408r4: refresh the map when switching from an already-open older test.
 // Return a fresh Response so module-relative URLs retain the test namespace.
 const base=new URL('./',self.location.href);
 const mapping=fetch(new URL('asset-map.json',base),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Snapshot map unavailable');return r.json()});
