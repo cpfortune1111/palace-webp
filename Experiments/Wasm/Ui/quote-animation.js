@@ -1,0 +1,27 @@
+let prepared;
+const pendingImages=new Map(),pendingSounds=new Map();
+export async function preloadQuoteAssets(ids=['9000']){
+ if(!prepared)prepared=fetch('./Data/Quote/venus.json?v=02377').then(response=>{if(!response.ok)throw Error('Quote manifest');return response.json()}).then(manifest=>({manifest,images:new Map(),sounds:new Map()}));
+ const assets=await prepared,keys=new Set(),files=new Set();
+ for(const id of ids){const action=assets.manifest.actions[id];if(!action)throw Error('Quote action '+id);for(const frame of action.frames)keys.add(frame.sprite);for(const cue of action.cues)files.add(cue.file)}
+ await Promise.all([...keys].map(key=>{if(!pendingImages.has(key))pendingImages.set(key,(async()=>{const image=new Image();image.src='./'+assets.manifest.frames[key].file+'?v=02377';await image.decode();assets.images.set(key,image)})());return pendingImages.get(key)}));
+ await Promise.all([...files].map(file=>{if(!pendingSounds.has(file))pendingSounds.set(file,(async()=>{const response=await fetch('./'+file);if(!response.ok)throw Error('Quote voice '+file);assets.sounds.set(file,URL.createObjectURL(await response.blob()))})());return pendingSounds.get(file)}));
+ return assets;
+}
+export function quoteFrame(action,tick){
+ const duration=action.frames.reduce((total,frame)=>total+Math.max(0,frame.ticks),0);let age=Math.max(0,tick);
+ if(action.loop!==null&&age>=duration)age=action.loop+(age-action.loop)%(duration-action.loop);
+ for(const frame of action.frames){if(frame.ticks<0||age<frame.ticks)return frame.sprite;age-=frame.ticks}
+ return action.frames.at(-1).sprite;
+}
+export function quoteDuration(action){return Math.max(action.frames.reduce((total,frame)=>total+Math.max(0,frame.ticks),0),0,...action.cues.map(cue=>cue.tick+cue.duration))}
+export function createQuotePortrait(){
+ let assets,action='9000',tick=0,lastSprite,played=new Set(),clips=[];const canvas=document.createElement('canvas'),context=canvas.getContext('2d');
+ canvas.dataset.quotePortrait='SailorVenus';
+ const ready=preloadQuoteAssets().then(value=>{assets=value;render()});
+ function set(next,nextTick=0){for(const clip of clips)clip.pause();clips=[];action=String(next);tick=Math.max(0,Number(nextTick)||0);played.clear();lastSprite=undefined;render()}
+ function render(){if(!assets)return;const key=quoteFrame(assets.manifest.actions[action],tick);if(key===lastSprite)return;lastSprite=key;const image=assets.images.get(key);canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;context.drawImage(image,0,0)}
+ function step(amount=1,sound){if(!assets)return;tick+=amount;if(sound)for(const [index,cue] of assets.manifest.actions[action].cues.entries())if(tick>=cue.tick&&!played.has(index)){played.add(index);const clip=sound(new Audio(assets.sounds.get(cue.file)));clips.push(clip);clip.play().catch(error=>console.warn('Quote audio',error))}render()}
+ function draw(context,x,y,width,height,alpha=1,facing=1){if(!assets)return;context.save();context.globalAlpha*=alpha;context.translate(x+width/2,y+height/2);context.scale(facing,1);context.drawImage(canvas,-width/2,-height/2,width,height);context.restore()}
+ return {ready,set,step,draw,canvas,get tick(){return tick},get action(){return action},get duration(){return assets?quoteDuration(assets.manifest.actions[action]):0},get playing(){return clips.some(clip=>!clip.ended&&!clip.paused)},stop:()=>{for(const clip of clips)clip.pause()},snapshot:()=>({action,tick,sprite:lastSprite,width:canvas.width,height:canvas.height})};
+}

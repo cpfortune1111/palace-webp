@@ -1,15 +1,15 @@
 {
   "ikemen.wasm": {
-    "bytes": 25469096,
-    "sha256": "35dbbfeee49b14be2aec3d1f9292900ce18a8933a2bf82922fba4a2c8501ea96"
+    "bytes": 25490393,
+    "sha256": "1315648ce0cfdd205db761ff26d72760575ed77dfb1662e80d725bfaf27cc6e4"
   },
   "fs-shim.js": {
     "bytes": 33221,
     "sha256": "938ed003d90c59171d83cae3f397c09c81aaef7d95e002f9764e73709238ab3d"
   },
   "ikemen.wasm.gz": {
-    "bytes": 5870173,
-    "sha256": "c21e4b65c999219bbb0558424cb4557f17f11354daf46b5d496a4bd2ed30c255"
+    "bytes": 5874307,
+    "sha256": "0b5c774b938549917ebbb8badecacfd87c370da3a340e1bf62637bab5488fbd7"
   },
   "LICENCE.txt": {
     "bytes": 3743,

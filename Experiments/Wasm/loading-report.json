@@ -1,0 +1,35 @@
+{
+  "status": "on-demand preview v1",
+  "engineSha256": "1315648ce0cfdd205db761ff26d72760575ed77dfb1662e80d725bfaf27cc6e4",
+  "reproducibleFreshBuild": true,
+  "comparison": {
+    "environment": "Edge, GTX 1650 SUPER, same local encrypted pack, Moon/Jupiter on Moon stage; single-run comparison, includes intros and short sampling wait",
+    "before": {
+      "elapsedToActiveMs": 146655,
+      "assetNetworkBytes": 121856370
+    },
+    "after": {
+      "elapsedToActiveMs": 20924,
+      "assetNetworkBytes": 16827319,
+      "managedSpriteGpuBytes": 62603652
+    }
+  },
+  "stress": {
+    "moonSuperEntered": true,
+    "returnedToIdle": true,
+    "textureEvictions": 315,
+    "managedSpriteGpuPeak": 201308080,
+    "decodedAtlasPeak": 203374592
+  },
+  "checks": {
+    "fullUiTwoRoundsReportHome": true,
+    "unselectedDeclarationBattleOrSoundRequests": 0,
+    "encryptedPackUnchanged": true
+  },
+  "bounds": [
+    "Managed sprite counters exclude stage, model, UI and browser memory",
+    "Texture and decoded-atlas budgets are targets with live/borrowed/transient exceptions",
+    "First use of an uncached animation may still wait for its asset",
+    "Mobile hardware remains unqualified"
+  ]
+}

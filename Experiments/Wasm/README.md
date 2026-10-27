@@ -2,6 +2,8 @@
 
 [Open the protected-media UI preview](play.html). It retains the existing Moon Palace interface and drives real native WASM battles. Compressed WebP/Ogg derivatives are loaded from authenticated encrypted mixed bundles; original SFF/SND archives are not distributed. See [PROTECTED-ASSETS.md](PROTECTED-ASSETS.md) and protected-build-report.json for validation and limitations. The main game and backup remain unchanged.
 
+The on-demand loader registers sprite metadata first, then decodes/uploads rendered frames with cache reclamation. Native sounds load on first playback, and declarations prepare selected characters only. Browser-native ImageBitmap decoding avoids repeated large atlas copies through WASM. See loading-report.json for the measured local comparison and memory counter boundaries; the existing encrypted Pack/ files are unchanged.
+
 This directory pins official IKEMEN GO v1.0.0 (`81c6da71d689625e20db79586815b695da00dd6d`) and the third-party fiiight `upstream-wasm-port` source (`716cc944a6f19bf845e08595a1c9b7b5f8f8525b`). The latter is a browser port patch source, not an officially merged browser release. Full per-file Git blob hashes are in source-lock.json.
 
 The browser port is now integrated onto v1.0.0 and compiled with pinned Go 1.27.3. Two fresh source integrations produced byte-identical 25,176,351-byte WASM binaries (5,798,159 bytes gzipped). The actual compressed distribution passed Edge/WebGL2 startup, 180 UI ticks, separate P1/P2 keyboard inputs and nonzero WebAudio sample tests without page errors. This is an engine smoke test, not a Moon Palace battle or 3D-stage compatibility result. See build-report.json and Dist/artifact-hashes.json.

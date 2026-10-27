@@ -24,7 +24,7 @@ export function createWasmHost({container=document.body,onSnapshot=()=>{},onResu
   const {kind,value}=event.data;
   if(kind==='snapshot'){lastSnapshot=value;onSnapshot(value);if(settle){clearTimeout(timeout);settle();settle=rejectStart=null}}
   if(kind==='winner')winner=Number(value);
-  if(kind==='matchEnded'){const result=lastSnapshot;stop();onResult(winner,value,result)}
+  if(kind==='matchEnded'){const result=lastSnapshot;stop();Promise.resolve(onResult(winner,value,result)).catch(onError)}
   if(kind==='error'||kind==='exit'&&value!==0){const error=Error('Battle engine: '+String(value));clearTimeout(timeout);rejectStart?.(error);settle=rejectStart=null;onError(error)}
  });
  async function start(config){stop();session=crypto.randomUUID();winner=0;lastSnapshot=null;frame=document.createElement('iframe');frame.title='Moon Palace battle';frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:1;pointer-events:none';frame.src=new URL('./host-frame.html',import.meta.url);container.appendChild(frame);

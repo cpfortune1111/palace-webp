@@ -1,6 +1,6 @@
 {
   "status": "experimental desktop integration preview",
-  "engineSha256": "35dbbfeee49b14be2aec3d1f9292900ce18a8933a2bf82922fba4a2c8501ea96",
+  "engineSha256": "1315648ce0cfdd205db761ff26d72760575ed77dfb1662e80d725bfaf27cc6e4",
   "reproducibleFreshBuild": true,
   "pack": {
     "files": 1916,
@@ -25,8 +25,9 @@
   "bounds": [
     "No original SFF/SND archives published or reconstructed",
     "Main runtime and backup unchanged",
-    "Large selected sprite sets currently allocate RGBA textures eagerly; mobile memory/performance remains unqualified",
     "Underlying browser port lacks native model shadows and TCP/UDP netplay",
-    "Round voice gap is source-derived; not yet an independent audio timing measurement"
-  ]
+    "Round voice gap is source-derived; not yet an independent audio timing measurement",
+    "On-demand cache targets exclude stage/UI and may be exceeded by the live working set"
+  ],
+  "loadingReport": "loading-report.json"
 }

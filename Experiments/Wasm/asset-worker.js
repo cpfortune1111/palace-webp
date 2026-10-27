@@ -2,6 +2,7 @@ import {openAssetPack} from './encrypted-assets.js';
 let packPromise;
 const siteRoot=new URL('../../',self.location.href).pathname;
 const configKey=new URL('./__pack-config__',self.location.href).href;
+const uiAdapters=new Set(['palace-menu.js','quote-animation.js','declaration-screen.js','acs-screen.js','result-declaration-screen.js']);
 async function currentPack(){if(!packPromise)packPromise=(async()=>{const saved=await(await caches.open('palace-wasm-config-v1')).match(configKey);if(!saved)throw Error('Protected asset service is not initialized');return openAssetPack(await saved.text())})();return packPromise}
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
@@ -16,6 +17,11 @@ self.addEventListener('fetch',event=>{
  const name=decodeURIComponent(url.pathname.slice(siteRoot.length));
  if(name.startsWith('Experiments/Wasm/'))return;
  event.respondWith((async()=>{
+  if(name.startsWith('Engine/')&&uiAdapters.has(name.slice(7))){
+   const response=await fetch(new URL('./Ui/'+name.slice(7),self.location.href),{cache:'no-store'});
+   if(!response.ok)throw Error('UI adapter unavailable');
+   return new Response(await response.arrayBuffer(),{headers:{'Content-Type':'text/javascript','Cache-Control':'no-store'}});
+  }
   const pack=await currentPack(),entry=pack.files[name];
   if(!entry){if(/\.(?:png|webp|jpe?g|wav|ogg|mp3|flac|glb|glb\.gz|ttf|woff2?|sff|snd)$/i.test(name))return new Response('Packed asset unavailable',{status:404});return fetch(event.request)}
   const bytes=await pack.read(name);let body=bytes,status=200;const headers={'Content-Type':entry.mime,'Accept-Ranges':'bytes','Cache-Control':'no-store'};
