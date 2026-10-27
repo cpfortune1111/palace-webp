@@ -1,7 +1,7 @@
 const hex=bytes=>Array.from(new Uint8Array(bytes),v=>v.toString(16).padStart(2,'0')).join('');
 const unhex=text=>Uint8Array.from(text.match(/../g)||[],x=>parseInt(x,16));
 const inflate=async bytes=>new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
-export async function openAssetPack(manifestUrl,{fetcher=fetch,cacheBytes=32*1024*1024}={}){
+export async function openAssetPack(manifestUrl,{fetcher=fetch,cacheBytes=32*1024*1024,bundleCacheBytes=16*1024*1024}={}){
  const base=new URL(manifestUrl,globalThis.location?.href||'http://localhost/');
  const response=await fetcher(base);if(!response.ok)throw Error('Asset manifest HTTP '+response.status);const manifest=await response.json();
  if(manifest.version!==1||manifest.algorithm!=='AES-256-GCM')throw Error('Unsupported asset pack');
@@ -27,7 +27,7 @@ export async function openAssetPack(manifestUrl,{fetcher=fetch,cacheBytes=32*102
     const expected=manifest.bundles.find(item=>item.file===part.file);
     if(!expected||b.length!==expected.size||b.length<part.offset+part.size)throw Error('Invalid asset bundle');
     await checked(b,expected.sha256);
-    if(b.length<=16*1024*1024){while(fullBytes+b.length>16*1024*1024&&fullBundles.size){const first=fullBundles.keys().next().value;fullBytes-=fullBundles.get(first).length;fullBundles.delete(first)}fullBundles.set(part.file,b);fullBytes+=b.length}
+    if(b.length<=bundleCacheBytes){while(fullBytes+b.length>bundleCacheBytes&&fullBundles.size){const first=fullBundles.keys().next().value;fullBytes-=fullBundles.get(first).length;fullBundles.delete(first)}fullBundles.set(part.file,b);fullBytes+=b.length}
     return b.slice(part.offset,part.offset+part.size);
    }
    if(r.status!==206||b.length!==part.size)throw Error('Invalid asset range');
@@ -39,5 +39,6 @@ export async function openAssetPack(manifestUrl,{fetcher=fetch,cacheBytes=32*102
  async function chunk(part){return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:unhex(part.iv),additionalData:new TextEncoder().encode(part.id)},key,await encryptedChunk(part)))}
  async function load(name){const entry=index.files[name];if(!entry)throw Error('Asset unavailable: '+name);const pieces=new Array(entry.parts.length);let next=0;await Promise.all(Array.from({length:Math.min(4,entry.parts.length)},async()=>{for(;;){const index=next++;if(index>=entry.parts.length)return;pieces[index]=await chunk(entry.parts[index])}}));let bytes=new Uint8Array(pieces.reduce((n,b)=>n+b.length,0)),offset=0;for(const b of pieces){bytes.set(b,offset);offset+=b.length}if(entry.encoding==='gzip')bytes=await inflate(bytes);if(bytes.length!==entry.size)throw Error('Asset size mismatch');await checked(bytes,entry.sha256);retain(name,bytes);metrics.files++;return bytes}
  async function read(name){if(cache.has(name)){const b=cache.get(name);cache.delete(name);cache.set(name,b);return b.slice()}if(!pending.has(name))pending.set(name,load(name).finally(()=>pending.delete(name)));return (await pending.get(name)).slice()}
- return {read,files:index.files,metrics,manifest};
+ async function warmBundles(){let next=0;await Promise.all(Array.from({length:4},async()=>{for(;;){const item=manifest.bundles[next++];if(!item)return;if(fullBundles.has(item.file))continue;const response=await fetcher(new URL(item.file,base));if(!response.ok)throw Error('Bundle preload HTTP '+response.status);const bytes=new Uint8Array(await response.arrayBuffer());metrics.networkBytes+=bytes.length;if(bytes.length!==item.size)throw Error('Invalid bundle length');await checked(bytes,item.sha256);fullBundles.set(item.file,bytes);fullBytes+=bytes.length}}))}
+ return {read,files:index.files,metrics,manifest,warmBundles,dropBundles(){fullBundles.clear();fullBytes=0}};
 }

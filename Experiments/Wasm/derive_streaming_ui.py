@@ -56,3 +56,11 @@ text=replace(text,'function hide(){view.hidden=true;','function hide(){showSeria
 text=replace(text,'return {ready,show,hide,handleKey,','return {ready,prepare:players=>declaration.prepare(players,{result:true}),show,hide,handleKey,')
 save('result-declaration-screen.js',text)
 print('Generated selected-character declaration and action-scoped Venus adapters')
+
+text=read('fight-hud-runtime.js')
+text="import {createHudPortraits} from './hud-portraits.js?battle-ready=2';\n"+text
+start=text.index(' const emblemReady=');end=text.index(' const ready=',start)
+text=text[:start]+' const portraitFaces=createHudPortraits();const emblemReady=Promise.resolve();\n'+text[end:]
+text=replace(text,'  for(const [index,actor] of [first,second].entries())','  portraitFaces.draw(context,first,second,ticks);\n  for(const [index,actor] of [first,second].entries())')
+text=replace(text,'return {setCharacterEmblem:',"return {prepareCharacter:async id=>{const entry=await portraitFaces.prepare(id);characterEmblems.set(id,entry)},setCharacterEmblem:")
+save('fight-hud-runtime.js',text)

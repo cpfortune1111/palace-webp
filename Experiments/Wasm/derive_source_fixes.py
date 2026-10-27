@@ -7,7 +7,8 @@ for character in ['SailorVenus','SailorMoon','SailorJupiter','SailorNeptune','Sa
   text=file.read_text(encoding='utf-8-sig',errors='replace');removed=[]
   def clean(match):
    block=match.group(0)
-   if re.search(r'(?im)^\s*type\s*=\s*Helper\b',block) and re.search(r'(?im)^\s*stateno\s*=\s*950\s*(?:;.*)?$',block):removed.append(950);return '; H950 presentation is owned by the Web HUD.\n'
+   if re.search(r'(?im)^\s*type\s*=\s*Helper\b',block) and (state:=re.search(r'(?im)^\s*stateno\s*=\s*(915|925|950)\s*(?:;.*)?$',block)):
+    removed.append(int(state.group(1)));return '; Portrait/emblem presentation is owned by the Web HUD.\n'
    return block
   modified=re.sub(r'(?ims)^\[State\s+[^\]]*\].*?(?=^\[|\Z)',clean,text)
   # v1.0.0 rejects unary ! immediately after a trigger redirection.

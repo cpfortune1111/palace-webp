@@ -2,7 +2,7 @@
 import argparse, gzip, hashlib, json, pathlib, secrets, random
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-def pack(files,destination):
+def pack(files,destination,bundle_limit=4*1024*1024):
     destination=pathlib.Path(destination)
     if destination.exists() and any(destination.iterdir()):raise ValueError('Pack destination must be empty')
     destination.mkdir(parents=True,exist_ok=True)
@@ -20,7 +20,7 @@ def pack(files,destination):
         nonlocal bundle,number
         name='part-'+str(number).zfill(4)+'.mpak';data=bytes(bundle);(destination/name).write_bytes(data);bundles.append(dict(file=name,size=len(data),sha256=hashlib.sha256(data).hexdigest()));bundle=bytearray();number+=1
     for part,cipher in fragments:
-        if bundle and len(bundle)+len(cipher)>4*1024*1024:flush()
+        if bundle and len(bundle)+len(cipher)>bundle_limit:flush()
         part['file']='part-'+str(number).zfill(4)+'.mpak';part['offset']=len(bundle);bundle.extend(cipher)
     if bundle:flush()
     iv=secrets.token_bytes(12);catalog=aes.encrypt(iv,gzip.compress(json.dumps(dict(files=entries),separators=(',',':')).encode(),mtime=0),b'palace-catalog-v1');(destination/'catalog.bin').write_bytes(catalog)

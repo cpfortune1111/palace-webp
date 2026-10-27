@@ -1,15 +1,15 @@
-import {openAssetPack} from './encrypted-assets.js';
+import {openAssetLibrary} from './asset-library.js?battle-ready=2';
 let packPromise;
 const siteRoot=new URL('../../',self.location.href).pathname;
 const configKey=new URL('./__pack-config__',self.location.href).href;
-const uiAdapters=new Set(['palace-menu.js','quote-animation.js','declaration-screen.js','acs-screen.js','result-declaration-screen.js']);
-async function currentPack(){if(!packPromise)packPromise=(async()=>{const saved=await(await caches.open('palace-wasm-config-v1')).match(configKey);if(!saved)throw Error('Protected asset service is not initialized');return openAssetPack(await saved.text())})();return packPromise}
+const uiAdapters=new Set(['palace-menu.js','quote-animation.js','acs-screen.js','declaration-screen.js','result-declaration-screen.js','fight-hud-runtime.js','hud-portraits.js']);
+async function currentPack(){if(!packPromise)packPromise=(async()=>{const saved=await(await caches.open('palace-wasm-config-v1')).match(configKey);if(!saved)throw Error('Protected asset service is not initialized');return openAssetLibrary(await saved.text())})();return packPromise}
 self.addEventListener('install',()=>self.skipWaiting());
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 self.addEventListener('message',event=>{
  if(event.data?.type!=='palace-pack')return;
  const url=new URL(event.data.url,self.location.href);if(url.origin!==self.location.origin)return;
- packPromise=openAssetPack(url.href);
+ packPromise=openAssetLibrary(url.href);
  event.waitUntil(packPromise.then(async pack=>{await(await caches.open('palace-wasm-config-v1')).put(configKey,new Response(url.href));event.ports[0]?.postMessage({ok:true,files:Object.keys(pack.files).length})},error=>event.ports[0]?.postMessage({ok:false,error:String(error)})));
 });
 self.addEventListener('fetch',event=>{

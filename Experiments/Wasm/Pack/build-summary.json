@@ -1,6 +1,62 @@
 {
-  "files": 1916,
-  "logicalBytes": 331743506,
-  "bundleBytes": 287997948,
-  "bundles": 71
+  "characters/SailorVenus": {
+    "files": 135,
+    "logicalBytes": 42957087,
+    "bundleBytes": 42588480,
+    "bundles": 11
+  },
+  "characters/SailorMoon": {
+    "files": 317,
+    "logicalBytes": 62616692,
+    "bundleBytes": 62006623,
+    "bundles": 16
+  },
+  "characters/SailorJupiter": {
+    "files": 267,
+    "logicalBytes": 48508528,
+    "bundleBytes": 47886112,
+    "bundles": 12
+  },
+  "characters/SailorNeptune": {
+    "files": 138,
+    "logicalBytes": 19446663,
+    "bundleBytes": 19066103,
+    "bundles": 5
+  },
+  "characters/SailorSaturn": {
+    "files": 132,
+    "logicalBytes": 15433362,
+    "bundleBytes": 15063684,
+    "bundles": 4
+  },
+  "shared": {
+    "files": 64,
+    "logicalBytes": 1398315,
+    "bundleBytes": 1282579,
+    "bundles": 1
+  },
+  "stages/moon": {
+    "files": 2,
+    "logicalBytes": 16966736,
+    "bundleBytes": 10686562,
+    "bundles": 3
+  },
+  "stages/training": {
+    "files": 2,
+    "logicalBytes": 16415795,
+    "bundleBytes": 4646696,
+    "bundles": 2
+  },
+  "presentation": {
+    "files": 465,
+    "logicalBytes": 32744572,
+    "bundleBytes": 27548065,
+    "bundles": 1
+  },
+  "interface": {
+    "files": 316,
+    "logicalBytes": 48038254,
+    "bundleBytes": 47790597,
+    "bundles": 12
+  }
 }

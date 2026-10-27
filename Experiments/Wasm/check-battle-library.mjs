@@ -1,0 +1,16 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';
+import {openAssetLibrary} from './asset-library.js';
+const root=path.resolve(process.argv[2]);let requests=0;
+const fetcher=async(url,options={})=>{requests++;const file=path.join(root,new URL(url).pathname);let bytes=new Uint8Array(fs.readFileSync(file));const range=options.headers?.Range?.match(/^bytes=(\d+)-(\d+)$/);if(range)bytes=bytes.slice(+range[1],+range[2]+1);return new Response(bytes,{status:range?206:200})};
+const library=await openAssetLibrary('http://fixture/manifest.json',{players:['SailorMoon','SailorJupiter'],stage:'training',fetcher});
+assert(!Object.keys(library.files).some(name=>name.includes('SailorVenus')||name.includes('SailorNeptune')||name.includes('SailorSaturn')));
+await library.preload();library.seal();const preparedRequests=requests;
+assert((await library.read('chars/SailorMoon/media.pms')).length>0);assert((await library.read('stages/training.glb')).length>0);assert.equal(requests,preparedRequests);assert.equal(library.metrics.missesAfterReady,0);
+await assert.rejects(()=>library.read('chars/SailorVenus/media.pms'));assert.equal(requests,preparedRequests);
+const wholeRequests=[];
+const wholeFetcher=async url=>{const name=new URL(url).pathname;wholeRequests.push(name);return new Response(fs.readFileSync(path.join(root,name)),{status:200})};
+const ui=await openAssetLibrary('http://fixture/manifest.json',{fetcher:wholeFetcher});
+assert(!Object.keys(ui.files).some(name=>name.startsWith('chars/')));
+await ui.read('Data/HudFaces/SailorMoon.json');await ui.read('Data/HudFaces/SailorJupiter.json');
+assert.equal(wholeRequests.filter(name=>name.endsWith('/presentation/part-0000.mpak')).length,1,'Keep large presentation bundle when Range is ignored');
+console.log(JSON.stringify({pass:true,preparedFiles:library.metrics.files,networkRequests:preparedRequests,groups:library.metrics.groups,presentationWholeBundleReuse:true}));

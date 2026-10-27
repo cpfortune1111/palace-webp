@@ -18,7 +18,7 @@ func palaceHostFrame(){
  fighters:=make([]map[string]interface{},0,2)
  for i:=0;i<2;i++{if len(sys.chars[i])==0{return};c:=sys.chars[i][0];if len(palaceSettings.Hardware)==2{mode:=int32(0);if palaceSettings.Hardware[i]=="saturn"{mode=2};c.varSet(50,mode)};if len(palaceSettings.Command)==2{value:=int32(0);if palaceSettings.Command[i]=="auto"{value=10};c.varSet(52,value)}
   if control.Type()==js.TypeObject{if control.Get("kill").Type()==js.TypeNumber&&control.Get("kill").Int()==i+1{c.life=0;control.Set("kill",0)};if control.Get("all1hp").Truthy(){c.life=1;if i==1{control.Set("all1hp",false)}}}
-  fighters=append(fighters,map[string]interface{}{"life":c.life,"lifeMax":c.lifeMax,"state":c.ss.no,"stateTime":c.ss.time,"facing":c.facing,"x":c.pos[0],"y":c.pos[1],"hits":c.hitCount,"score":sys.scorePoints[i]})
+  fighters=append(fighters,map[string]interface{}{"life":c.life,"lifeMax":c.lifeMax,"state":c.ss.no,"stateTime":c.ss.time,"facing":c.facing,"x":c.pos[0],"y":c.pos[1],"hits":c.hitCount,"score":sys.scorePoints[i],"gettingHit":c.ss.moveType==MT_H})
  }
  if sys.frameCounter%4==0{data,_:=json.Marshal(map[string]interface{}{"fighters":fighters,"round":sys.roundNo,"ticks":sys.tickCount,"timer":sys.curRoundTime,"paused":sys.paused,"intro":sys.intro,"wins":sys.wins,"totalHits":palaceTotalHits,"roundState":sys.roundState(),"streaming":palaceStreamingStats()});js.Global().Call("__palaceEmit","snapshot",string(data))}
 }

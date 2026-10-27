@@ -1,35 +1,42 @@
 {
-  "status": "on-demand preview v1",
-  "engineSha256": "1315648ce0cfdd205db761ff26d72760575ed77dfb1662e80d725bfaf27cc6e4",
-  "reproducibleFreshBuild": true,
-  "comparison": {
-    "environment": "Edge, GTX 1650 SUPER, same local encrypted pack, Moon/Jupiter on Moon stage; single-run comparison, includes intros and short sampling wait",
-    "before": {
-      "elapsedToActiveMs": 146655,
-      "assetNetworkBytes": 121856370
-    },
-    "after": {
-      "elapsedToActiveMs": 20924,
-      "assetNetworkBytes": 16827319,
-      "managedSpriteGpuBytes": 62603652
-    }
-  },
-  "stress": {
-    "moonSuperEntered": true,
-    "returnedToIdle": true,
-    "textureEvictions": 315,
-    "managedSpriteGpuPeak": 201308080,
-    "decodedAtlasPeak": 203374592
+  "status": "battle-ready preview v2; supersedes rejected on-demand v1",
+  "engineSha256": "a7eee4bfc9ca2199a973a062bc99cea1548eb63b818946b6c47cd15dfab2c551",
+  "contract": [
+    "UI uses separate interface and single-file presentation groups",
+    "Before battle preload only shared, unique selected characters and chosen stage",
+    "Upload all selected sprites and decode native audio to PCM before readiness",
+    "Seal resident library at readiness; no combat-time network, sprite upload or media decode"
+  ],
+  "localDesktopCheck": {
+    "environment": "Hardware-accelerated Edge, GTX 1650 SUPER; Moon/Jupiter, training stage; real Enter start gesture",
+    "preparedFiles": 650,
+    "assetRequestsAtReady": 39,
+    "assetRequestsAfterMovementNormalSpecialJump": 39,
+    "unpreparedReads": 0,
+    "spriteUploadsAtReady": 2975,
+    "spriteUploadsAfter": 2975,
+    "nativeSoundsDecodedAtReady": 195,
+    "audioContext": "running",
+    "nonzeroAudioChunks": 601,
+    "maxAudioQueueMs": 23.219954648524777,
+    "frameIntervalP95Ms": 16.89999999999418,
+    "managedSpriteGpuBytes": 3291578144,
+    "pageErrors": []
   },
   "checks": {
+    "authenticatedGroupReads": true,
+    "tamperingRejected": true,
+    "readinessRejectsUnpreparedAssetsWithoutNetworking": true,
+    "selectedGroupsOnly": true,
     "fullUiTwoRoundsReportHome": true,
-    "unselectedDeclarationBattleOrSoundRequests": 0,
-    "encryptedPackUnchanged": true
+    "nativeIntroRoundStartNormalSpecialAudioCuesAndNonzeroOutput": true,
+    "lifebarFacesOnFrontCanvas": true
   },
   "bounds": [
-    "Managed sprite counters exclude stage, model, UI and browser memory",
-    "Texture and decoded-atlas budgets are targets with live/borrowed/transient exceptions",
-    "First use of an uncached animation may still wait for its asset",
+    "Full residency intentionally costs more loading time and GPU memory than rejected streaming",
+    "One pressure-affected run measured 450.2 ms p95; isolated repeat measured about 16.9 ms; this is not a universal performance guarantee",
+    "Audio queue time excludes operating-system and device output latency",
+    "GPU counter excludes stage/model/UI/browser/PCM/CPU memory",
     "Mobile hardware remains unqualified"
   ]
 }

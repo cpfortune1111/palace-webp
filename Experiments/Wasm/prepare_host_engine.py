@@ -4,13 +4,10 @@ if dest.exists():raise SystemExit('Use a new private engine directory')
 if here.parents[1]==dest or here.parents[1] in dest.parents:raise SystemExit('Native sources must remain outside the site')
 shutil.copytree(source,dest)
 fixes=[
-('src/image.go','func (s *Sprite) isBlank() bool {','\n palaceEnsureSprite(s)'),
-('src/image.go','func (s *Sprite) Draw(x, y, xscale, yscale float32, rxadd float32, rot Rotation, projectionMode int32, fLength float32, fx *PalFX, window *[4]int32) {','\n palaceEnsureSprite(s)'),
-('src/anim.go','func (a *Animation) isBlank() bool {','\n palaceWarmAnimation(a)'),
 ('src/image.go','func loadSff(filename string, char bool, isMainThread bool, isActPal bool) (*Sff, error) {','\n if isPalaceSprites(filename){return loadPalaceSprites(filename,nil,isMainThread)}'),
 ('src/image.go','func preloadSff(filename string, char bool, preloadSpr map[[2]uint16]bool) (*Sff, []int32, error) {','\n if isPalaceSprites(filename){s,e:=loadPalaceSprites(filename,preloadSpr,true);return s,[]int32{1},e}'),
 ('src/sound.go','func LoadSndFiltered(filename string, keepItem func([2]int32) bool, max uint32) (*Snd, error) {','\n if isPalaceSounds(filename){return loadPalaceSounds(filename,keepItem,max)}'),
-('src/sound.go','type Sound struct {','\n palaceCompressed bool\n palaceFile string'),
+('src/sound.go','type Sound struct {','\n palaceCompressed bool\n palacePCM *beep.Buffer\n palaceGroup,palaceNumber int32\n palaceSource string'),
 ('src/sound.go','func (s *Sound) GetStreamer() beep.StreamSeeker {','\n if s.palaceCompressed{return palaceSoundStreamer(s)}'),
 ('src/system.go','systemScriptInit(l)','\n registerPalaceHost(l)'),
 ('src/system.go','func (s *System) update() bool {','\n palaceHostFrame()'),
@@ -21,4 +18,15 @@ for name,before,addition in fixes:
 p=dest/'src/sound.go';text=p.read_text(encoding='utf-8').replace('&Sound{wavData, wavfmt, s.Len()}','&Sound{wavData:wavData, format:wavfmt, length:s.Len()}');p.write_text(text,encoding='utf-8',newline='\n')
 p=dest/'src/system.go';text=p.read_text(encoding='utf-8');before='p[0].lifeMax = Max(1, int32(math.Floor(float64(lmax))))';assert text.count(before)==1;text=text.replace(before,'p[0].lifeMax = Max(1, int32(math.Floor(float64(lmax)*palaceLifeScale(i))))');p.write_text(text,encoding='utf-8',newline='\n')
 for p in (here/'engine').glob('*.go'):shutil.copyfile(p,dest/'src'/p.name)
+p=dest/'src/audio_js.go';text=p.read_text(encoding='utf-8')
+for before,after in [
+ ('func (s *JSSpeaker) Init(sampleRate beep.SampleRate, bufferSize int) error {','func (s *JSSpeaker) Init(sampleRate beep.SampleRate, bufferSize int) error {\n bufferSize=Min(bufferSize,512)'),
+ ('s.ctx = ctor.New(map[string]interface{}{"sampleRate": int(sampleRate)})','s.ctx = palaceAudioContext(ctor,sampleRate)'),
+ ('time.Sleep(time.Millisecond * 17)','time.Sleep(time.Millisecond * 5)'),
+ ('s.nextTime-now > 4*chunkDur','s.nextTime-now > 2*chunkDur'),
+ ('js.Global().Set("__ikemenResumeAudio", s.resumeHook)','js.Global().Set("__ikemenResumeAudio", s.resumeHook)\n js.Global().Set("__ikemenCloseAudio", js.FuncOf(func(js.Value, []js.Value)interface{}{s.Close();return nil}))'),
+ ('if !s.ctx.IsUndefined() {\n\t\tjsTry(func() {','if js.Global().Get("__palaceSharedAudio").Truthy(){return}\n if !s.ctx.IsUndefined() {\n\t\tjsTry(func() {')]:
+ assert text.count(before)==1,before
+ text=text.replace(before,after)
+p.write_text(text,encoding='utf-8',newline='\n')
 print('Prepared derivative-media and host interface engine')

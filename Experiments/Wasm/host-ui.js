@@ -1,7 +1,8 @@
-import {createWasmHost,validateMatch} from './host-runtime.js?on-demand=1';
+import {createWasmHost,validateMatch} from './host-runtime.js?battle-ready=2';
+import {battleAudio,readyBattleAudio} from './battle-audio.js?battle-ready=2';
 import {createRoundView} from '../../Engine/round-flow-view.js';
 const startup=document.getElementById('status');startup.textContent='Preparing protected assets…';
-const registration=await navigator.serviceWorker.register(new URL('./asset-worker.js?on-demand=1',import.meta.url),{type:'module',scope:new URL('./',import.meta.url).pathname,updateViaCache:'none'});
+const registration=await navigator.serviceWorker.register(new URL('./asset-worker.js?battle-ready=2',import.meta.url),{type:'module',scope:new URL('./',import.meta.url).pathname,updateViaCache:'none'});
 const installingWorker=registration.installing||registration.waiting;
 if(installingWorker&&installingWorker.state!=='activated')await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Asset service update timed out')),60000);installingWorker.addEventListener('statechange',()=>{if(installingWorker.state==='activated'){clearTimeout(timer);resolve()}else if(installingWorker.state==='redundant'){clearTimeout(timer);reject(Error('Asset service update failed'))}})});
 await navigator.serviceWorker.ready;
@@ -21,22 +22,12 @@ function trackRoundStatistics(value){
 }
 const emblemLoads=new Map();
 function prepareEmblem(character){
- if(character==='SailorVenus')return hud.ready;
- if(emblemLoads.has(character))return emblemLoads.get(character);
- const task=(async()=>{
-  const folder=character.replace('Sailor',''),base='./Char/'+folder+'/Battle/';
-  const response=await fetch(base+folder.toLowerCase()+'_full.json');
-  if(!response.ok)throw Error('Character emblem HTTP '+response.status);
-  const data=await response.json(),images=[],pages=new Set();
-  for(const action of [950,951,952])for(const frame of data.actions[String(action)]||[]){const sprite=data.sprites[frame.group+','+frame.item];if(sprite&&!frame.empty)pages.add(sprite.page||0)}
-  await Promise.all([...pages].map(async page=>{const image=new Image();image.src=base+data.atlasFiles[page];await image.decode();images[page]=image}));
-  hud.setCharacterEmblem(character,data,images);
- })();emblemLoads.set(character,task);return task;
+ return hud.prepareCharacter(character);
 }
-const runtime=createWasmHost({onSnapshot:value=>{trackRoundStatistics(value);latest=value;if(value.round!==round){round=value.round;priorHits=[0,0];hud.reset();hud.setMode(currentConfig.timer)}if(value.totalHits)hits=[...value.totalHits];else for(let i=0;i<2;i++){const current=value.fighters[i].hits;if(current>priorHits[i])hits[i]+=current-priorHits[i];priorHits[i]=current}startup.textContent='WASM · Round '+value.round;hud.step(false,value.fighters.map(x=>x.life/x.lifeMax*1000));if(Number.isFinite(value.timer))hud.setRoundTime(value.timer);},onResult:async(w,stats)=>{winner=w;runtime.pause(true);const matches=stats?.statsLog?.matches||stats?.matches||[],last=matches.at(-1);const totals=last?.totalScore||latest?.fighters.map(x=>x.score)||[0,0];await shell.showResult(w,{koTime:(last?.matchTime||0)/60,hits,totals});},onError:error=>{startup.textContent=error.message;shell?.loading.fail(error,()=>shell.showHome())}});
-shell=createPalaceMenu({pause:value=>runtime.pause(value),ready:progress=>{progress?.(1);return Promise.all([hud.ready,roundView.ready])},prepareCharacters:async players=>{choice={...choice,players};await Promise.all([...new Set(players)].map(prepareEmblem))},prepareStage:async stage=>{choice={...choice,stage}},keyConfig:()=>openKeys(),start:async(mode,timer,selected)=>{choice=selected;currentConfig=validateMatch(mode,timer,selected,shell.options.difficulty);hits=[0,0];priorHits=[0,0];koTicks=0;round=0;resetRoundStatistics();hud.setMode(timer);await runtime.start(currentConfig);shell.resultDeclarations.prepare?.(selected.players).catch(error=>console.warn('Result preparation',error));}});
+const runtime=createWasmHost({onLoading:value=>{startup.textContent=value.phase||'Preparing battle';shell?.loading.update(value.progress||0)},onSnapshot:value=>{trackRoundStatistics(value);latest=value;if(value.round!==round){round=value.round;priorHits=[0,0];hud.reset();hud.setMode(currentConfig.timer)}if(value.totalHits)hits=[...value.totalHits];else for(let i=0;i<2;i++){const current=value.fighters[i].hits;if(current>priorHits[i])hits[i]+=current-priorHits[i];priorHits[i]=current}startup.textContent='WASM · Round '+value.round;hud.step(false,value.fighters.map(x=>x.life/x.lifeMax*1000));if(Number.isFinite(value.timer))hud.setRoundTime(value.timer);},onResult:async(w,stats)=>{winner=w;runtime.pause(true);const matches=stats?.statsLog?.matches||stats?.matches||[],last=matches.at(-1);const totals=last?.totalScore||latest?.fighters.map(x=>x.score)||[0,0];await shell.showResult(w,{koTime:(last?.matchTime||0)/60,hits,totals});},onError:error=>{startup.textContent=error.message;shell?.loading.fail(error,()=>shell.showHome())}});
+shell=createPalaceMenu({pause:value=>runtime.pause(value),ready:progress=>{progress?.(1);return Promise.all([hud.ready,roundView.ready])},prepareCharacters:async players=>{choice={...choice,players};await Promise.all([...new Set(players)].map(prepareEmblem))},prepareStage:async stage=>{choice={...choice,stage}},keyConfig:()=>openKeys(),start:async(mode,timer,selected)=>{choice=selected;currentConfig=validateMatch(mode,timer,selected,shell.options.difficulty);hits=[0,0];priorHits=[0,0];koTicks=0;round=0;resetRoundStatistics();hud.setMode(timer);await readyBattleAudio();await shell.resultDeclarations.prepare?.(selected.players);await runtime.start(currentConfig);}});
 window.wasmPreview={shell,runtime,snapshot:()=>latest,config:()=>currentConfig,statistics:()=>structuredClone(roundStatistics)};
-document.getElementById('hud').querySelector('b').textContent='Moon Palace · WASM Preview';document.getElementById('buildid').textContent='On-demand assets v1 · native battle runtime';document.getElementById('detail').textContent='';
+document.getElementById('hud').querySelector('b').textContent='Moon Palace · WASM Preview';document.getElementById('buildid').textContent='Battle-ready assets v2 · preloaded match';document.getElementById('detail').textContent='';
 document.getElementById('inputMode').onchange=event=>{document.body.dataset.inputMode=event.target.value==='touch'?'touch':event.target.value==='keyboard'?'keyboard':matchMedia('(pointer:coarse)').matches?'touch':'keyboard'};
 document.body.dataset.inputMode=matchMedia('(pointer:coarse)').matches?'touch':'keyboard';
 const defaults={p1:{left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down:'ArrowDown',x:'KeyZ',y:'KeyX',a:'KeyA',b:'KeyS',l:'KeyQ',r:'KeyW'},p2:{left:'Numpad4',right:'Numpad6',up:'Numpad8',down:'Numpad5',x:'Numpad0',y:'NumpadDecimal',a:'Numpad1',b:'Numpad2',l:'NumpadDivide',r:'NumpadMultiply'}};
