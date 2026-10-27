@@ -1,4 +1,11 @@
 // Narrow fixes for the historical 0.24.08 test, not the generic engine work.
+export function resultNeutralState(root){
+ if(root.life<=0||!root.ctrl||root.type==='A')return null;
+ // These released-input transitions belong to locomotion, not to AIR/CNS.
+ if(root.state===11)return 12;
+ if(root.state===20)return 0;
+ return null;
+}
 export function resultFacing(player,root,opponent){
  if(root.life<=0||root.state!==0)return null;
  return opponent.x===root.x?root.facing:opponent.x>root.x?1:-1;
