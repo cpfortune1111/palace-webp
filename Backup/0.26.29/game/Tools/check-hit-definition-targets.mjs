@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {createHitDefinitionTargets} from '../Engine/hit-definition-targets.js';
+
+const targets=createHitDefinitionTargets(),first={attr:'S, NA'},next={...first};
+targets.record(first,'root1',2);
+assert.equal(targets.has(first,'root1',2),false);
+assert.equal(targets.queued(first,'root1',2),true);
+targets.commitActor('root1',1);
+assert.equal(targets.has(first,'root1',2),true);
+assert.equal(targets.has(next,'root1',2),false);
+assert.equal(targets.has(first,'root2',2),false);
+targets.record(first,'helper1',10);
+targets.commitActor('helper1',1);
+assert.equal(targets.has(first,'helper1',10),true);
+assert.equal(targets.has(first,'root1',10),false);
+targets.record(first,'helper1',11,5);targets.record(next,'helper1',12,5);targets.record(first,'root1',3,5);
+targets.clear(new Set(['helper1']));
+assert.equal(targets.has(first,'helper1',10),true);assert.equal(targets.has(first,'root1',2),false);assert.equal(targets.queued(first,'root1',3),false);assert.equal(targets.queued(first,'helper1',11),true);
+targets.commitActor('helper1',5);assert.equal(targets.has(first,'helper1',11),false);targets.commitActor('helper1',6);assert.equal(targets.has(first,'helper1',11),true);assert.equal(targets.has(next,'helper1',12),true);assert.equal(targets.has(next,'helper1',11),false);
+targets.record(first,'root1',9,6);targets.commitActor('root1',7);assert.equal(targets.has(first,'root1',9),true);assert.equal(targets.has(first,'root1',2),false);
+targets.clear();assert.equal(targets.has(first,'root1',2),false);assert.equal(targets.has(first,'helper1',10),false);assert.equal(targets.queued(next,'helper1',12),false);
+console.log('HitDef target identity distinguishes activation objects, actor owners and helper instance IDs');

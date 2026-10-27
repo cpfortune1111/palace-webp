@@ -1,0 +1,16 @@
+[Data]
+life = 1500
+power = 2500
+guardpoints = 1300
+attack = 110
+defence = 120
+fall.defence_up = 100
+liedown.time = 0
+airjuggle = 12
+volume = 20
+volumescale = ,1
+intpersistindex =
+floatpersistindex = 7
+
+[Data]
+life = 9999

@@ -1,0 +1,2919 @@
+{
+  "schema": "moon-palace-hitdef-coverage-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "runtimeVersion": "0.26.22",
+  "references": {
+    "mugenDocumentSha256": "16e143ce3f7b61be0de8a3056d03495c916dd83c76d7ef339a6c70e54877b332",
+    "ikemenCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "mugenDocumentVariant": "Existing official-site snapshot (CRLF)",
+    "ikemenCompilerSha256": "fb22ba6775515cf9cd278a6d0556b4972287655f712e07271a12d5561e55688d"
+  },
+  "inputHashes": {
+    "legacyAudit": "54527e2223cd921c8b1f7cea042e2294a5cf9c7a44cbb9e821026c9de7224380",
+    "reviewedEvidence": "9791c343d205f2ca44081f92803a00e28caca5acb3f83e11ff2c6cf95d72e17f",
+    "incrementalEvidence": "502d61303ed95f16d63296e112fd69633def8271852cf91f88bf4775d8bf6eb5"
+  },
+  "scope": "HitDef parameter name union and reviewed existing consumer reconciliation. Not complete combat/HitDef certification; common controller fields and independent ReversalDef/Projectile fields stay separate.",
+  "counts": {
+    "parameters": 131,
+    "partial": 38,
+    "unassessed": 93,
+    "certified": 0,
+    "legacyNotImplementedWithCurrentEvidence": 13
+  },
+  "excludedIndependentEvidence": [
+    {
+      "controller": "ReversalDef",
+      "parameter": "missonoverride",
+      "reason": "Controller identity is distinct; no implicit promotion into HitDef"
+    },
+    {
+      "controller": "ReversalDef",
+      "parameter": "reversal.attr",
+      "reason": "Controller identity is distinct; no implicit promotion into HitDef"
+    },
+    {
+      "controller": "ReversalDef",
+      "parameter": "reversal.guardflag",
+      "reason": "Controller identity is distinct; no implicit promotion into HitDef"
+    },
+    {
+      "controller": "ReversalDef",
+      "parameter": "reversal.guardflag.not",
+      "reason": "Controller identity is distinct; no implicit promotion into HitDef"
+    }
+  ],
+  "rows": [
+    {
+      "parameter": "affectteam",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 3,
+          "observation": "E/F/B parsing and side equality filtering execute; source HitDef teamside is compiled independently from actor native side.",
+          "runtime": [
+            "Engine/hit-team.js",
+            "Char/Venus/venus-special-runtime.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hit-team.mjs"
+          ],
+          "pending": [
+            "Complete team-mode/neutral/override/default eligibility",
+            "Native all-actor state and collision scheduling"
+          ],
+          "documents": [],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "air.animtype",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "air.cornerpush.velmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 10,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "air.cornerpush.veloff",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 9,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "air.fall",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "air.hittime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "air.juggle",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "air.type",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "air.velocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 0,
+          "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+          "runtime": [
+            "Engine/hitdef-velocity-defaults.js",
+            "Engine/guard-contact.js",
+            "Char/Venus/venus-special-runtime.js"
+          ],
+          "tests": [
+            "Tools/check-hitdef-velocity-defaults.mjs",
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete parser/version diagnostics and MUGEN n differences",
+            "All contact/ownership/reset/scaling/depth paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+            "Docs/HITDEF-Z-VELOCITY-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "airguard.cornerpush.velmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 16,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "airguard.cornerpush.veloff",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 15,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "airguard.ctrltime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 5,
+          "observation": "MUGEN/Ikemen guard hit-time fallback selection and subsequent slide/control inheritance execute in the existing guard consumer.",
+          "runtime": [
+            "Engine/guard-contact.js"
+          ],
+          "tests": [
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete native sentinel/overflow and source-version selection",
+            "All root/helper/projectile/guard state timing"
+          ],
+          "documents": [],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "airguard.velocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 0,
+          "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+          "runtime": [
+            "Engine/hitdef-velocity-defaults.js",
+            "Engine/guard-contact.js",
+            "Char/Venus/venus-special-runtime.js"
+          ],
+          "tests": [
+            "Tools/check-hitdef-velocity-defaults.mjs",
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete parser/version diagnostics and MUGEN n differences",
+            "All contact/ownership/reset/scaling/depth paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+            "Docs/HITDEF-Z-VELOCITY-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "animtype",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "attack.depth",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 20,
+          "observation": "shared float compiler and actual reversal geometry adapter",
+          "tests": [
+            "Tools/check-hit-attack-depth.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "all ordinary HitDef consumers",
+            "state-owned coordinate scales and projectile modification parity"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "attr",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "chainid",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 18,
+          "observation": "shared compiler and root/helper collision preconditions",
+          "tests": [
+            "Tools/check-hit-chain.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "Mugen version differences",
+            "native targetedBy cleanup and hitshake phase ordering"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "crouch.friction",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 2,
+          "observation": "Source fields reach GetHit data and hit-only root/helper XZ friction consumers; query fallback remains distinct.",
+          "runtime": [
+            "Engine/hit-friction.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hit-friction.mjs"
+          ],
+          "pending": [
+            "All native friction/update/order/version conditions",
+            "Full simultaneous contact and ownership cases"
+          ],
+          "documents": [
+            "Docs/HIT-FRICTION-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "damage",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "dizzypoints",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "down.bounce",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "down.cornerpush.velmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 12,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "down.cornerpush.veloff",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 11,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "down.hittime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "down.recover",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "down.recovertime",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "down.velocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 0,
+          "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+          "runtime": [
+            "Engine/hitdef-velocity-defaults.js",
+            "Engine/guard-contact.js",
+            "Char/Venus/venus-special-runtime.js"
+          ],
+          "tests": [
+            "Tools/check-hitdef-velocity-defaults.mjs",
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete parser/version diagnostics and MUGEN n differences",
+            "All contact/ownership/reset/scaling/depth paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+            "Docs/HITDEF-Z-VELOCITY-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "envshake.ampl",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.decay",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.dir",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.diradd",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.freq",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.mul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.phase",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "envshake.time",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.animtype",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.damage",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.ampl",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.dir",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.freq",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.mul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.phase",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.envshake.time",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.kill",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.recover",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.recovertime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.xvelocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.yvelocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "fall.zvelocity",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "forcecrouch",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "forcenofall",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "forcestand",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "getpower",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "givepower",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "ground.cornerpush.velmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 8,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "ground.cornerpush.veloff",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 7,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "ground.hittime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "ground.slidetime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "ground.type",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "ground.velocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 0,
+          "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+          "runtime": [
+            "Engine/hitdef-velocity-defaults.js",
+            "Engine/guard-contact.js",
+            "Char/Venus/venus-special-runtime.js"
+          ],
+          "tests": [
+            "Tools/check-hitdef-velocity-defaults.mjs",
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete parser/version diagnostics and MUGEN n differences",
+            "All contact/ownership/reset/scaling/depth paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+            "Docs/HITDEF-Z-VELOCITY-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.cornerpush.velmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 14,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.cornerpush.veloff",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 13,
+          "observation": "shared float compiler, native legacy/modern defaults, root/Helper contact storage and movement",
+          "tests": [
+            "Tools/check-hitdef-cornerpush.mjs",
+            "Tools/check-corner-push.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete Mugen/version contact defaults and persistence",
+            "native scheduler and state-owned mixed-coordinate precision",
+            "general Helper collision integration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.ctrltime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 5,
+          "observation": "MUGEN/Ikemen guard hit-time fallback selection and subsequent slide/control inheritance execute in the existing guard consumer.",
+          "runtime": [
+            "Engine/guard-contact.js"
+          ],
+          "tests": [
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete native sentinel/overflow and source-version selection",
+            "All root/helper/projectile/guard state timing"
+          ],
+          "documents": [],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.dist",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.dist.depth",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.dist.height",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.dist.width",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.hittime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 5,
+          "observation": "MUGEN/Ikemen guard hit-time fallback selection and subsequent slide/control inheritance execute in the existing guard consumer.",
+          "runtime": [
+            "Engine/guard-contact.js"
+          ],
+          "tests": [
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete native sentinel/overflow and source-version selection",
+            "All root/helper/projectile/guard state timing"
+          ],
+          "documents": [],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.kill",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.pausetime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.slidetime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 5,
+          "observation": "MUGEN/Ikemen guard hit-time fallback selection and subsequent slide/control inheritance execute in the existing guard consumer.",
+          "runtime": [
+            "Engine/guard-contact.js"
+          ],
+          "tests": [
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete native sentinel/overflow and source-version selection",
+            "All root/helper/projectile/guard state timing"
+          ],
+          "documents": [],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guard.sparkangle",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.sparkno",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.sparkscale",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guard.velocity",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 0,
+          "observation": "Three-axis vectors are compiled/finalized per component before source hit dispatch; guard/down fallbacks and pinned n syntax have executable paths.",
+          "runtime": [
+            "Engine/hitdef-velocity-defaults.js",
+            "Engine/guard-contact.js",
+            "Char/Venus/venus-special-runtime.js"
+          ],
+          "tests": [
+            "Tools/check-hitdef-velocity-defaults.mjs",
+            "Tools/check-guard-contact.mjs"
+          ],
+          "pending": [
+            "Complete parser/version diagnostics and MUGEN n differences",
+            "All contact/ownership/reset/scaling/depth paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-VELOCITY-DEFAULTS-WIP.md",
+            "Docs/HITDEF-Z-VELOCITY-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "guardflag",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guardpoints",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guardsound",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "guardsound.channel",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "hitflag",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 6,
+          "observation": "ordinary root/Helper geometry predicate with state, fall and plus/minus masks",
+          "tests": [
+            "Tools/check-hit-flag.mjs",
+            "Tools/check-damage-assertions.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "native phase-owned hittmp and same-pass negative transitions",
+            "pause/version parity and general Helper collision routing"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "hitonce",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "hitsound",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "hitsound.channel",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "id",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 17,
+          "observation": "shared numeric compiler and accepted contact",
+          "tests": [
+            "Tools/check-hit-chain.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "activation persistence and version parity"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "ignorereversaldef",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 21,
+          "observation": "boolean compiler and actual reversal geometry filter",
+          "tests": [
+            "Tools/check-hit-power-runtime.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "live reversal dispatch and collision arbitration"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "keepstate",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 4,
+          "observation": "HitDef keepstate has a distinct preserved-state/data path, independent of HitOverride keepState.",
+          "runtime": [
+            "Engine/keep-state-hit-data.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-keep-state-hit-data.mjs"
+          ],
+          "pending": [
+            "Deferred damage and untouched native fields",
+            "All override/custom state/paused/disabled/helper interactions"
+          ],
+          "documents": [
+            "Docs/HITDEF-KEEPSTATE-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "kill",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "maxdist",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "mindist",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "missonoverride",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "nochainid",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 19,
+          "observation": "eight-component compiler and source-aware collision preconditions",
+          "tests": [
+            "Tools/check-hit-chain.mjs",
+            "Tools/check-hit-targeted-by.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "Mugen chain override differences",
+            "full juggle/source inheritance and cleanup"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "numhits",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p1facing",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p1getp2facing",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p1sprpriority",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 1,
+          "observation": "shared int32 compiler, ordinary source priority and staged qualified-reversal actor consumer",
+          "tests": [
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete default/version behavior and native stateChange phase ordering",
+            "automatic ReversalDef dispatch and all actor combinations"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "p1stateno",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 3,
+          "observation": "shared int32 compiler and accepted root/Helper source-state hooks",
+          "tests": [
+            "Tools/check-hit-state-parameters.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "legacy paired-throw replacement and projectile-owner trajectories",
+            "definition-time statePN and native scheduling/version parity"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "p2clsncheck",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p2clsnrequire",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p2facing",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "p2getp1state",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 5,
+          "observation": "shared boolean compiler, implicit P2StateNo default and live root state-owner/GetHit consumers",
+          "tests": [
+            "Tools/check-hit-state-parameters.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "native definition statePN snapshots",
+            "foreign Helper state/animation execution and full scheduling/version parity"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "p2sprpriority",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 2,
+          "observation": "shared int32 compiler, ordinary recipient priority and staged qualified-reversal actor consumer",
+          "tests": [
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "complete native ghvset/override timing",
+            "automatic ReversalDef dispatch and all actor combinations"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "p2stateno",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [
+        {
+          "kind": "incremental-row",
+          "index": 4,
+          "observation": "shared int32 compiler, root target-state routing and forced H/no-control status",
+          "tests": [
+            "Tools/check-hit-state-parameters.mjs",
+            "Tools/check-saturn-priority.cjs"
+          ],
+          "pending": [
+            "full P1/Helper foreign-state cases",
+            "native HitOverride/custom-state phase and version parity"
+          ],
+          "status": "Partial"
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "palfx.add",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.color",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.hue",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.invertall",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.invertblend",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.mul",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.sinadd",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.sincolor",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.sinhue",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.sinmul",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "palfx.time",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "pausetime",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "priority",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "redirectid",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "redlife",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "score",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "snap",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "sparkangle",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "sparkno",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "sparkscale",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "sparkxy",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Partial",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "sprpriority",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "stand.friction",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 2,
+          "observation": "Source fields reach GetHit data and hit-only root/helper XZ friction consumers; query fallback remains distinct.",
+          "runtime": [
+            "Engine/hit-friction.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hit-friction.mjs"
+          ],
+          "pending": [
+            "All native friction/update/order/version conditions",
+            "Full simultaneous contact and ownership cases"
+          ],
+          "documents": [
+            "Docs/HIT-FRICTION-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "teamside",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 3,
+          "observation": "E/F/B parsing and side equality filtering execute; source HitDef teamside is compiled independently from actor native side.",
+          "runtime": [
+            "Engine/hit-team.js",
+            "Char/Venus/venus-special-runtime.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hit-team.mjs"
+          ],
+          "pending": [
+            "Complete team-mode/neutral/override/default eligibility",
+            "Native all-actor state and collision scheduling"
+          ],
+          "documents": [],
+          "stageOverrides": {
+            "Semantically tested": "Unassessed"
+          }
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "unhittabletime",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Unassessed",
+      "stages": {
+        "Parsed": "Unassessed",
+        "Executable": "Unassessed",
+        "Source-verified": "Unassessed",
+        "Semantically tested": "Unassessed"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [],
+      "followUp": "Current consumer/default/test reconciliation still required; legacy status is historical, not an absence or support certification"
+    },
+    {
+      "parameter": "xaccel",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 1,
+          "observation": "Source evaluated float32 XYZ acceleration reaches recipient GetHit data with origin/recipient scale and X-facing conversion.",
+          "runtime": [
+            "Engine/hitdef-acceleration.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hitdef-acceleration.mjs"
+          ],
+          "pending": [
+            "Complete native aspect metadata and source-state ownership",
+            "All reset/KO/depth/clock paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-ACCELERATION-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "yaccel",
+      "references": [
+        "mugen-1.1-beta1",
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 1,
+          "observation": "Source evaluated float32 XYZ acceleration reaches recipient GetHit data with origin/recipient scale and X-facing conversion.",
+          "runtime": [
+            "Engine/hitdef-acceleration.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hitdef-acceleration.mjs"
+          ],
+          "pending": [
+            "Complete native aspect metadata and source-state ownership",
+            "All reset/KO/depth/clock paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-ACCELERATION-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    },
+    {
+      "parameter": "zaccel",
+      "references": [
+        "ikemen-cb56d73badb322f3725257c2e8cfd157b2c3989d"
+      ],
+      "overall": "Partial",
+      "stages": {
+        "Parsed": "Partial",
+        "Executable": "Partial",
+        "Source-verified": "Partial",
+        "Semantically tested": "Partial"
+      },
+      "legacyStatus": "Not implemented",
+      "evidence": [
+        {
+          "kind": "reviewed-group",
+          "index": 1,
+          "observation": "Source evaluated float32 XYZ acceleration reaches recipient GetHit data with origin/recipient scale and X-facing conversion.",
+          "runtime": [
+            "Engine/hitdef-acceleration.js",
+            "index.html"
+          ],
+          "tests": [
+            "Tools/check-hitdef-acceleration.mjs"
+          ],
+          "pending": [
+            "Complete native aspect metadata and source-state ownership",
+            "All reset/KO/depth/clock paths"
+          ],
+          "documents": [
+            "Docs/HITDEF-ACCELERATION-WIP.md"
+          ],
+          "stageOverrides": {}
+        }
+      ],
+      "followUp": "Complete defaults, evaluation/order, version, all actors and executable native comparisons"
+    }
+  ]
+}

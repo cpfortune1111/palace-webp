@@ -1,0 +1,14 @@
+Prototype 0.18.1 — Camera Bounds Corrected
+
+Source: StageTraining.def
+Camera: boundleft=-2850, boundright=2850, tension=200
+PlayerInfo: leftbound=-3750, rightbound=3750
+Bound: screenleft=60, screenright=60
+Vertical: boundhigh=-1300, boundlow=0, verticalfollow=.5, floortension=200
+
+Changes from 0.18:
+- Removed obsolete prototype player clamp ±580.
+- Separated camera bounds, player world bounds, and screen bounds.
+- Horizontal camera activates at tension margins from viewport edges.
+- Mars remains world X=+280 and is projected through the same cameraX.
+- Preserved existing vertical camera behavior and locked stage calibration.

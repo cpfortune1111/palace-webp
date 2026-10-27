@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {animationProviderSelection} from '../Engine/animation-provider-selection.js';
+const calls=[],options={own:'Moon',stateOwner:'Saturn',evaluate:x=>{calls.push(x);return Number(x)},findActor:id=>id===80?{player:1}:null,playerOf:actor=>actor.player,characterAt:index=>['Saturn','Moon'][index]};
+const pick=(params,second=false)=>animationProviderSelection(params,{...options,second});
+assert.deepEqual(pick({}),{animation:'Moon',sprite:'Moon'});
+assert.deepEqual(pick({animplayerno:'1'}),{animation:'Saturn',sprite:'Moon'});
+assert.deepEqual(pick({spriteplayerno:'1'}),{animation:'Moon',sprite:'Saturn'});
+assert.deepEqual(pick({animplayerno:'99',spriteplayerno:'99'}),{animation:'Moon',sprite:'Moon'});
+assert.deepEqual(pick({readplayerid:'80'}),{animation:'Saturn',sprite:'Saturn'});
+assert.deepEqual(pick({animplayerno:'2',readplayerid:'80'}),{animation:'Moon',sprite:'Moon'});
+assert.deepEqual(pick({animplayerno:'0',spriteplayerno:'0',readplayerid:'80'}),{animation:'Saturn',sprite:'Saturn'});
+assert.equal(pick({readplayerid:'999'}),null);
+assert.deepEqual(pick({},true),{animation:'Saturn',sprite:'Moon'});
+calls.length=0;assert.deepEqual(pick({animplayerno:'99',spriteplayerno:'99',readplayerid:'80'},true),{animation:'Saturn',sprite:'Moon'});assert.deepEqual(calls,['80']);
+console.log('Animation/sprite provider defaults, invalid fallback, deprecated ID priority, abort and ChangeAnim2 ignored native fields pass');

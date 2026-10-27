@@ -1,0 +1,22 @@
+# PosFreeze — in progress
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go posFreeze, bytecode.go posFreeze, char.go position correction.
+
+Policy module evaluates caller optional value/default true and redirectid. The pure frozen-position helper models velocity-step base coordinates, not an unconditional whole-frame rollback: native explicit position setters can update oldPos, so freezing must not blindly undo them. Shared dispatch now stores root/helper flags, removes the helper value-only intercept, and source fall controllers route PosFreeze through the shared adapter. Root source/locomotion/reaction and helper velocity movement honor flags while explicit position/binding/cornerpush paths remain separate. Ordinary root/helper ticks reset flags, retaining hitpause. Baseline regression is running in outputs/controller-pos-freeze-baseline.log.
+
+Baseline regression passed with exit code 0 in outputs/controller-pos-freeze-baseline.log, including the real helper-source PlayerPush follow-up. Actual root fixture now checks freeze prevents physics N velocity movement, explicit PosSet remains effective, redirected P2 freezes and both resume after clear. Fresh regression is running in outputs/controller-pos-freeze-actual.log.
+
+Actual root freeze/PosSet/redirection/resume regression passed with exit code 0 in outputs/controller-pos-freeze-actual.log. An isolated real helper state now executes PosFreeze followed by explicit PosSet at Time 0, verifying 30/40 remains despite velocity, hitpause retains freeze, then ordinary reset resumes velocity to 33/44. Fresh regression is running in outputs/controller-pos-freeze-helper.log.
+
+Actual helper source freeze/setter/hitpause/reset regression passed with exit code 0 in outputs/controller-pos-freeze-helper.log. Source fall inspection found its old local frozen branch also suppressed friction/gravity, unlike native velocity-position freezing. Friction/gravity now execute independently from position movement; fresh regression is running in outputs/controller-pos-freeze-physics.log.
+
+Post-physics-edit baseline passed with exit code 0 in outputs/controller-pos-freeze-physics.log. A temporary own fall-state fixture now verifies frozen P2 coordinates remain 100/-50 while gravity updates vertical velocity and stand friction updates horizontal velocity. Fresh regression is running in outputs/controller-pos-freeze-source-physics.log.
+
+The source-physics log reaches the terminal success marker and no matching test process remains; its exit code was not retained after output truncation, so that run is not independently exit-code certified. A fresh full regression in outputs/controller-pos-freeze-reset.log includes actual root hitpause retention and ordinary-tick reset, alongside the gravity/friction fixtures.
+
+Pending: full native oldPos/physics/interpolation/camera/timing fidelity. Partial, not certified from policy tests alone.
+
+Related source-path audit found helper PlayerPush still intercepted by its old value-only branch, bypassing the shared priority/team implementation. That branch was removed. A real helper-state controller fixture tests all source parameters and next-tick reset; regression is running in outputs/controller-player-push-source-helper.log. This is a follow-up to partial 0.24.75, not a complete compatibility claim.
+Fresh full regression passed with exit code 0 in outputs/controller-pos-freeze-reset.log. Actual source fall gravity/friction, root hitpause retention/ordinary reset, root explicit setters/redirection/resume, helper explicit setters/hitpause/resume and existing Saturn simultaneous-super regressions pass together. No publication or full native certification is claimed by this result.
+Actual root binding and P2 cornerpush fixtures are added in outputs/controller-pos-freeze-binding-corner.log: frozen coordinates follow a live binder, and an -8 cornerpush displaces X while decaying velocity to -4. Native camera inspection confirms PosFreeze does not remove the actor from camera position bounds; it suppresses that actor's own velocity prediction, using binder velocity when bound. WEB camera velocity prediction/interpolation remains pending, not a reason to exclude frozen actors from tracking.
+Binding/cornerpush full regression completed with exit code 0. These fixtures verify actual execution but do not certify every native timing/scale/physics interaction.

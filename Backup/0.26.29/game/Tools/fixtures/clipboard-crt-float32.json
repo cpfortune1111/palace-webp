@@ -1,0 +1,365 @@
+{
+  "reference": "Windows msvcrt _snprintf with float32 bit patterns promoted to C vararg double. Exponent padding normalized to two digits; raw outputs retained. Validates numeric formatting, not full MUGEN executable behavior.",
+  "cases": [
+    {
+      "bits": 0,
+      "format": "%.0f",
+      "raw": "0",
+      "expected": "0"
+    },
+    {
+      "bits": 0,
+      "format": "%.2f",
+      "raw": "0.00",
+      "expected": "0.00"
+    },
+    {
+      "bits": 0,
+      "format": "%.6e",
+      "raw": "0.000000e+000",
+      "expected": "0.000000e+00"
+    },
+    {
+      "bits": 0,
+      "format": "%.3g",
+      "raw": "0",
+      "expected": "0"
+    },
+    {
+      "bits": 0,
+      "format": "%#.3g",
+      "raw": "0.000",
+      "expected": "0.000"
+    },
+    {
+      "bits": 2147483648,
+      "format": "%.0f",
+      "raw": "-0",
+      "expected": "-0"
+    },
+    {
+      "bits": 2147483648,
+      "format": "%.2f",
+      "raw": "-0.00",
+      "expected": "-0.00"
+    },
+    {
+      "bits": 2147483648,
+      "format": "%.6e",
+      "raw": "-0.000000e+000",
+      "expected": "-0.000000e+00"
+    },
+    {
+      "bits": 2147483648,
+      "format": "%.3g",
+      "raw": "-0",
+      "expected": "-0"
+    },
+    {
+      "bits": 2147483648,
+      "format": "%#.3g",
+      "raw": "-0.000",
+      "expected": "-0.000"
+    },
+    {
+      "bits": 1,
+      "format": "%.0f",
+      "raw": "0",
+      "expected": "0"
+    },
+    {
+      "bits": 1,
+      "format": "%.2f",
+      "raw": "0.00",
+      "expected": "0.00"
+    },
+    {
+      "bits": 1,
+      "format": "%.6e",
+      "raw": "1.401298e-045",
+      "expected": "1.401298e-45"
+    },
+    {
+      "bits": 1,
+      "format": "%.3g",
+      "raw": "1.4e-045",
+      "expected": "1.4e-45"
+    },
+    {
+      "bits": 1,
+      "format": "%#.3g",
+      "raw": "1.40e-045",
+      "expected": "1.40e-45"
+    },
+    {
+      "bits": 8388607,
+      "format": "%.0f",
+      "raw": "0",
+      "expected": "0"
+    },
+    {
+      "bits": 8388607,
+      "format": "%.2f",
+      "raw": "0.00",
+      "expected": "0.00"
+    },
+    {
+      "bits": 8388607,
+      "format": "%.6e",
+      "raw": "1.175494e-038",
+      "expected": "1.175494e-38"
+    },
+    {
+      "bits": 8388607,
+      "format": "%.3g",
+      "raw": "1.18e-038",
+      "expected": "1.18e-38"
+    },
+    {
+      "bits": 8388607,
+      "format": "%#.3g",
+      "raw": "1.18e-038",
+      "expected": "1.18e-38"
+    },
+    {
+      "bits": 8388608,
+      "format": "%.0f",
+      "raw": "0",
+      "expected": "0"
+    },
+    {
+      "bits": 8388608,
+      "format": "%.2f",
+      "raw": "0.00",
+      "expected": "0.00"
+    },
+    {
+      "bits": 8388608,
+      "format": "%.6e",
+      "raw": "1.175494e-038",
+      "expected": "1.175494e-38"
+    },
+    {
+      "bits": 8388608,
+      "format": "%.3g",
+      "raw": "1.18e-038",
+      "expected": "1.18e-38"
+    },
+    {
+      "bits": 8388608,
+      "format": "%#.3g",
+      "raw": "1.18e-038",
+      "expected": "1.18e-38"
+    },
+    {
+      "bits": 1065353216,
+      "format": "%.0f",
+      "raw": "1",
+      "expected": "1"
+    },
+    {
+      "bits": 1065353216,
+      "format": "%.2f",
+      "raw": "1.00",
+      "expected": "1.00"
+    },
+    {
+      "bits": 1065353216,
+      "format": "%.6e",
+      "raw": "1.000000e+000",
+      "expected": "1.000000e+00"
+    },
+    {
+      "bits": 1065353216,
+      "format": "%.3g",
+      "raw": "1",
+      "expected": "1"
+    },
+    {
+      "bits": 1065353216,
+      "format": "%#.3g",
+      "raw": "1.00",
+      "expected": "1.00"
+    },
+    {
+      "bits": 1066401792,
+      "format": "%.0f",
+      "raw": "1",
+      "expected": "1"
+    },
+    {
+      "bits": 1066401792,
+      "format": "%.2f",
+      "raw": "1.13",
+      "expected": "1.13"
+    },
+    {
+      "bits": 1066401792,
+      "format": "%.6e",
+      "raw": "1.125000e+000",
+      "expected": "1.125000e+00"
+    },
+    {
+      "bits": 1066401792,
+      "format": "%.3g",
+      "raw": "1.13",
+      "expected": "1.13"
+    },
+    {
+      "bits": 1066401792,
+      "format": "%#.3g",
+      "raw": "1.13",
+      "expected": "1.13"
+    },
+    {
+      "bits": 1075838976,
+      "format": "%.0f",
+      "raw": "3",
+      "expected": "3"
+    },
+    {
+      "bits": 1075838976,
+      "format": "%.2f",
+      "raw": "2.50",
+      "expected": "2.50"
+    },
+    {
+      "bits": 1075838976,
+      "format": "%.6e",
+      "raw": "2.500000e+000",
+      "expected": "2.500000e+00"
+    },
+    {
+      "bits": 1075838976,
+      "format": "%.3g",
+      "raw": "2.5",
+      "expected": "2.5"
+    },
+    {
+      "bits": 1075838976,
+      "format": "%#.3g",
+      "raw": "2.50",
+      "expected": "2.50"
+    },
+    {
+      "bits": 1080033280,
+      "format": "%.0f",
+      "raw": "4",
+      "expected": "4"
+    },
+    {
+      "bits": 1080033280,
+      "format": "%.2f",
+      "raw": "3.50",
+      "expected": "3.50"
+    },
+    {
+      "bits": 1080033280,
+      "format": "%.6e",
+      "raw": "3.500000e+000",
+      "expected": "3.500000e+00"
+    },
+    {
+      "bits": 1080033280,
+      "format": "%.3g",
+      "raw": "3.5",
+      "expected": "3.5"
+    },
+    {
+      "bits": 1080033280,
+      "format": "%#.3g",
+      "raw": "3.50",
+      "expected": "3.50"
+    },
+    {
+      "bits": 1067030938,
+      "format": "%.0f",
+      "raw": "1",
+      "expected": "1"
+    },
+    {
+      "bits": 1067030938,
+      "format": "%.2f",
+      "raw": "1.20",
+      "expected": "1.20"
+    },
+    {
+      "bits": 1067030938,
+      "format": "%.6e",
+      "raw": "1.200000e+000",
+      "expected": "1.200000e+00"
+    },
+    {
+      "bits": 1067030938,
+      "format": "%.3g",
+      "raw": "1.2",
+      "expected": "1.2"
+    },
+    {
+      "bits": 1067030938,
+      "format": "%#.3g",
+      "raw": "1.20",
+      "expected": "1.20"
+    },
+    {
+      "bits": 2139095039,
+      "format": "%.0f",
+      "raw": "340282346638528860000000000000000000000",
+      "expected": "340282346638528860000000000000000000000"
+    },
+    {
+      "bits": 2139095039,
+      "format": "%.2f",
+      "raw": "340282346638528860000000000000000000000.00",
+      "expected": "340282346638528860000000000000000000000.00"
+    },
+    {
+      "bits": 2139095039,
+      "format": "%.6e",
+      "raw": "3.402823e+038",
+      "expected": "3.402823e+38"
+    },
+    {
+      "bits": 2139095039,
+      "format": "%.3g",
+      "raw": "3.4e+038",
+      "expected": "3.4e+38"
+    },
+    {
+      "bits": 2139095039,
+      "format": "%#.3g",
+      "raw": "3.40e+038",
+      "expected": "3.40e+38"
+    },
+    {
+      "bits": 1266679807,
+      "format": "%.0f",
+      "raw": "16777215",
+      "expected": "16777215"
+    },
+    {
+      "bits": 1266679807,
+      "format": "%.2f",
+      "raw": "16777215.00",
+      "expected": "16777215.00"
+    },
+    {
+      "bits": 1266679807,
+      "format": "%.6e",
+      "raw": "1.677722e+007",
+      "expected": "1.677722e+07"
+    },
+    {
+      "bits": 1266679807,
+      "format": "%.3g",
+      "raw": "1.68e+007",
+      "expected": "1.68e+07"
+    },
+    {
+      "bits": 1266679807,
+      "format": "%#.3g",
+      "raw": "1.68e+007",
+      "expected": "1.68e+07"
+    }
+  ]
+}

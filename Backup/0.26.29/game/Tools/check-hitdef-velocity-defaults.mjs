@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {hitDefVelocityDefaults} from '../Engine/hitdef-velocity-defaults.js';
+assert.deepEqual(hitDefVelocityDefaults({}),{ground:[0,0,0],air:[0,0,0],guard:[0,0,0],airguard:[0,0,0],down:[0,0,0]});
+const result=hitDefVelocityDefaults({'ground.velocity':'-4,2,6','air.velocity':'-8,-10,12','guard.velocity':'-3','airguard.velocity':'-2','down.velocity':'5'});
+assert.deepEqual(result.guard,[-3,0,6]);assert.deepEqual(result.airguard,[-2,-5,18]);assert.deepEqual(result.down,[5,-10,12]);
+assert.deepEqual(hitDefVelocityDefaults({'ground.velocity':'n,2,n'}).ground,[0,2,0]);
+assert.deepEqual(hitDefVelocityDefaults({'ground.velocity':'3,n'}).ground,[3,0,0]);
+assert.throws(()=>hitDefVelocityDefaults({'ground.velocity':'3,n,4'}),/after n/);
+assert.throws(()=>hitDefVelocityDefaults({'ground.velocity':'3,,4'}),/Missing/);
+assert.throws(()=>hitDefVelocityDefaults({'air.velocity':'1,2,3,4'}),/Too many/);
+assert.deepEqual(hitDefVelocityDefaults({'ground.velocity':'caller'}, {evaluate:expression=>expression==='caller'?7:0}).ground,[7,0,0]);
+console.log('Native three-axis initialization, per-component guard/down fallback, caller expressions and ground n grammar passed');

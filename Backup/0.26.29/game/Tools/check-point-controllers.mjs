@@ -1,0 +1,39 @@
+import assert from 'node:assert/strict';
+import {applyPointController,consumeHitPoints} from '../Engine/point-controllers.js';
+
+const actor={dizzyPoints:900,dizzyPointsMax:1000,guardPoints:400,guardPointsMax:500,finalDefense:2};
+const other={dizzyPoints:100,dizzyPointsMax:200,guardPoints:200,guardPointsMax:300,finalDefense:1};
+let enabled=true,noDamage=false;
+const api={evaluate:Number,findActor:id=>id===7?other:null,enabled:()=>enabled,noDamage:()=>noDamage};
+const run=(type,params)=>applyPointController({type,params},actor,api);
+run('DizzyPointsAdd',{value:'-101'});assert.equal(actor.dizzyPoints,849);
+run('GuardPointsAdd',{value:'-101'});assert.equal(actor.guardPoints,349);
+run('DizzyPointsAdd',{value:'-100',absolute:'1'});assert.equal(actor.dizzyPoints,749);
+run('GuardPointsSet',{value:'900'});assert.equal(actor.guardPoints,500);
+run('DizzyPointsSet',{value:'-10'});assert.equal(actor.dizzyPoints,0);
+run('GuardPointsSet',{value:'100.9',redirectid:'7'});assert.equal(other.guardPoints,100);
+run('DizzyPointsAdd',{value:'300',redirectid:'7'});assert.equal(other.dizzyPoints,200);
+enabled=false;run('GuardPointsSet',{value:'0'});assert.equal(actor.guardPoints,500);
+enabled=true;noDamage=true;run('DizzyPointsSet',{value:'500'});assert.equal(actor.dizzyPoints,0);
+run('DizzyPointsSet',{redirectid:'99'});assert.equal(actor.dizzyPoints,0);
+assert.throws(()=>run('GuardPointsAdd',{}),/Missing/);
+assert.equal(run('Null',{}),false);
+actor.dizzyPoints=900;actor.guardPoints=400;
+consumeHitPoints(actor,'dizzyPoints',101,true,false);assert.equal(actor.dizzyPoints,799);assert.equal(actor.guardPoints,400);
+consumeHitPoints(actor,'guardPoints',1000,true,false);assert.equal(actor.guardPoints,0);
+consumeHitPoints(actor,'guardPoints',-1000,true,false);assert.equal(actor.guardPoints,500);
+consumeHitPoints(actor,'dizzyPoints',100,false,false);assert.equal(actor.dizzyPoints,799);
+consumeHitPoints(actor,'dizzyPoints',100,true,true);assert.equal(actor.dizzyPoints,799);
+console.log('Dizzy/guard point bounds, defense rounding, absolute, integer values, redirects and gates passed');
+enabled=true;noDamage=false;
+for(const [type,field] of [['DizzyPointsAdd','dizzyPoints'],['GuardPointsAdd','guardPoints']]){
+ const sampled=[];
+ applyPointController({type,params:{absolute:'flag',value:'zero'}},actor,{...api,evaluate:expression=>{sampled.push(expression);return expression==='flag'?1:0}});
+ assert.deepEqual(sampled,['flag','zero']);
+ sampled.length=0;
+ applyPointController({type,params:{value:'zero'}},actor,{...api,evaluate:expression=>{sampled.push(expression);return 0}});
+ assert.deepEqual(sampled,['zero']);
+ actor[field]=400;
+ applyPointController({type,params:{absolute:'flag',value:'amount'}},actor,{...api,evaluate:expression=>expression==='flag'?NaN:-100});
+ assert.equal(actor[field],350);
+}

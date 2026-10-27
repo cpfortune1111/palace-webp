@@ -1,0 +1,26 @@
+[Velocity]
+walk.fwd = 4tail
+walk.fwd = 999
+walk.back = -3
+run.back = -6,-2
+jump.neu = 2,-16
+jump.back = -7
+jump.fwd = 8
+runjump.back = ,-20
+runjump.fwd = 11
+airjump.neu = ,-12
+airjump.fwd = 9
+walk.up = 1,2,3
+run.down = 4,5,6
+air.gethit.airrecover.mul = .75,
+ground.gethit.ko.xmul = .5
+[Velocity]
+jump.neu = 90,-90
+[Movement]
+airjump.num = 2.9
+airjump.height = 80tail
+stand.friction = .75
+down.bounce.offset = ,30
+down.gethit.offset = -2,18
+[Movement]
+airjump.num = 99

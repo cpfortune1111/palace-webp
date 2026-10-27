@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {applyClsnTransformController,createClsnTransforms,transformedClsnBoxes} from '../Engine/clsn-transform.js';
+const caller={coord:320,slots:createClsnTransforms()},recipient={coord:640,slots:createClsnTransforms()},api={evaluate:Number,findActor:id=>id===2?recipient:null,localCoord:actor=>actor.coord,split:value=>String(value).split(','),slots:actor=>actor.slots};
+applyClsnTransformController({type:'TransformClsn',params:{scale:'-2',angle:45,pivot:'5,10',redirectid:2}},caller,api);
+assert.equal(recipient.slots.every(slot=>slot.length===1),true);
+const boxes=[[0,0,10,20]],first=transformedClsnBoxes(boxes,recipient.slots[0],0.5);
+assert.deepEqual(first,[{rect:[-20,0,-0,20],angle:45,pivot:[5,10]}]);
+applyClsnTransformController({type:'TransformClsn',params:{group:'clsn1',scale:'3,2',angle:10}},recipient,api);
+assert.deepEqual(transformedClsnBoxes(boxes,recipient.slots[0],0.5),[{rect:[-60,0,-0,40],angle:10,pivot:[0,0]}]);
+applyClsnTransformController({type:'TransformClsn',params:{group:'dummy',index:99}},recipient,api);
+assert.deepEqual(transformedClsnBoxes([],recipient.slots[3]),[]);
+assert.deepEqual(boxes,[[0,0,10,20]]);
+applyClsnTransformController({type:'TransformClsn',params:{group:'none'}},recipient,api);
+assert.equal(recipient.slots.every(slot=>slot.length===0),true);
+applyClsnTransformController({type:'TransformClsn',params:{redirectid:99,scale:'invalid'}},caller,api);
+console.log('TransformClsn defaults, all groups, redirected pivot, signed cumulative scale, last angle/pivot and no creation passed');

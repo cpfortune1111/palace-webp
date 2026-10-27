@@ -1,0 +1,13 @@
+# ShiftInput — partial root command integration
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go shiftInput, bytecode.go shiftInput.Run, input.go inputUpdate and char.go input-modifier reset.
+
+The root dispatcher accepts mandatory input/output key names and caller-evaluated RedirectID. U/D/L/R and a/b/c/x/y/z/s/d/w/m are case sensitive; none is case insensitive. B/F are invalid ShiftInput names. Repeated source mappings replace the previous destination. A none destination disables the source; a none source with a real destination does nothing.
+
+Mappings operate simultaneously on physical input, not by chaining newly remapped output through another mapping. Multiple active sources may union into one destination. AssertInput is merged first, then ShiftInput runs, then the existing command recognizer samples the result. Pending mappings are consumed once and input reset clears them. Samples without mappings retain the existing behavior. Subsequent HELPER-COMMAND-BUFFER-WIP.md integration adds partial Helper-owned mappings instead of borrowing a root buffer; full Helper lifecycle/phase parity remains Pending.
+
+Pinned redirected reset caveat: when both keys are none, bytecode.go clears c.inputShift, the caller, rather than crun.inputShift, the redirected actor. The WEB adapter preserves this observed pinned behavior and the semantic/runtime fixtures distinguish caller from target. A missing redirected actor returns before reset.
+
+Focused tests cover all keys, invalid/missing values, disabling, replacement, simultaneous swaps, non-chaining, physical facing and caller-reset ownership. All three inventory parameter names have matching partial evidence rows. The actual root controller fixture remaps an asserted a into b, triggers the real b command, consumes the mapping on the next sample and distinguishes caller/redirected reset ownership. It also remaps a physical direction while the recipient faces left. The fixture's first expected release duration was corrected from -1 to -3 to reflect the real command buffer's three released samples; runtime behavior did not need changing. The corrected actual fixture and complete browser regression passed with terminal exit 0 in outputs/controller-shift-input-command-browser.log.
+
+Pending: native input/action and hitpause reset phases, configurable SOCD ordering, Helper key-control ownership, replay/network input, original MUGEN support/version distinctions and exhaustive cross-controller behavior. This is partial implementation, not certification. No complete-controller count changes; this checkpoint is included in 0.25.18, with deployment verified separately.

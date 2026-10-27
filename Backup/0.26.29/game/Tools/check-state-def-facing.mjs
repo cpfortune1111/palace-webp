@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import {applyStateDefFacing,shouldFaceStateOpponent} from '../Engine/state-def-facing.js';
+
+const actor={x:100,z:0,facing:1},opponent={x:-100,z:0},events=[];
+let disabled=false,targetDisabled=false;
+const api={evaluate:value=>{events.push('evaluate');return Number(value)},actor:()=>actor,asserted:flag=>flag==='nofacep2'&&disabled,opponent:()=>{events.push('opponent');return opponent},targetAsserted:(_,flag)=>flag==='noturntarget'&&targetDisabled,geometry:()=>({}),setFacing:value=>{events.push('turn');actor.facing=value}};
+assert.equal(applyStateDefFacing({},api),false);
+assert.deepEqual(events,[]);
+assert.equal(applyStateDefFacing({facep2:0},api),false);
+assert.deepEqual(events,['evaluate']);
+events.length=0;disabled=true;
+assert.equal(applyStateDefFacing({facep2:1},api),false);
+assert.deepEqual(events,['evaluate']);
+disabled=false;targetDisabled=true;events.length=0;
+assert.equal(applyStateDefFacing({facep2:-2},api),false);
+assert.deepEqual(events,['evaluate','opponent']);
+targetDisabled=false;events.length=0;
+assert.equal(applyStateDefFacing({facep2:1},api),true);
+assert.equal(actor.facing,-1);
+assert.deepEqual(events,['evaluate','opponent','turn']);
+assert.equal(applyStateDefFacing({facep2:1},api),false);
+assert.equal(shouldFaceStateOpponent(actor,null),false);
+assert.equal(shouldFaceStateOpponent({x:0,facing:1},{x:-.5},{legacyDistance:true}),false);
+assert.equal(shouldFaceStateOpponent({x:0,facing:1},{x:-.5}),true);
+assert.equal(shouldFaceStateOpponent({x:0,facing:1},{x:-2},{worldScale:4,legacyDistance:true}),false);
+assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:-1},{depth:true}),true);
+assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:1},{depth:true}),false);
+assert.equal(shouldFaceStateOpponent({x:-100,z:0,facing:1},{x:-100,z:1},{depth:true}),true);
+assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:0},{depth:true}),false);
+assert.equal(shouldFaceStateOpponent({x:0,z:0,facing:1},{x:0,z:0},{depth:true}),true);
+assert.equal(shouldFaceStateOpponent({x:100,z:0,facing:1},{x:100,z:-1}),false);
+console.log('StateDef facing evaluates once, honors both assertions, uses native legacy truncation and depth tie breaking');
+for(const value of [NaN,undefined,'1','Moon']){
+ let reads=0;
+ assert.equal(applyStateDefFacing({facep2:'typed'},{evaluate:()=>{reads++;return value},asserted:()=>{throw Error('False facep2 must short circuit assertions')},opponent:()=>{throw Error('False facep2 must not select opponent')}}),false);
+ assert.equal(reads,1);
+}

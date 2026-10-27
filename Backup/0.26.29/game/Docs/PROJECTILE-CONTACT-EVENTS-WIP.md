@@ -1,0 +1,15 @@
+# Owner-scoped Projectile contact events (partial)
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d. Reviewed Char.projTimeTrigger, projHitTime/projGuardedTime/projContactTime/projCancelTime, actionRun pctime update, Projectile.flagProjCancel, accepted projectile hit bookkeeping, compiler legacy projectile forms and typed time opcodes.
+
+The former map retained separate events for every player/projectile ID and measured elapsed global ticks. Native instead keeps one latest event per owner, with kind, ID and signed integer clock. The runtime now follows that representation. New hit/guard/cancel events replace the old ID; positive query IDs filter the latest event while zero/negative IDs are wildcards. Cancellation does not count as a contact/hit/guard. Missing/disallowed owners and mismatches return -1; undefined IDs retain numeric undefined behavior.
+
+Ordinary Helper projectiles report to the root; ownprojectile Helpers have independent records. Accepted contacts against both roots and Helpers publish events. Actual projectile clashes publish cancellation, dead Helper owners cannot acquire new records, helper removal forgets its record and runtime reset clears everything.
+
+ProjHitTime, ProjGuardedTime, ProjContactTime and ProjCancelTime now reach typed integer expression consumers through the actual actor/redirect context. Basic legacy ProjHit123/ProjGuarded123/ProjContact123 comparisons now use time zero rather than a one-global-tick delay. Redirected Helper counts and event reads preserve actor ownership.
+
+The current driver advances each existing owner clock once in finishTick, skips a newly published event in its contact frame, respects global pause/disabled owner state and continues through hitpause. This improves previous wall-clock aging, but exact native per-character actionRun/inter-player observation ordering remains pending; native increments after character controllers, before later collision processing. The engine's combined root/Helper/entity driver is not yet a native executable differential oracle.
+
+Evidence: independent latest-event/wildcard/kind/clock/reset checks; 24 actual browser hit/guard combinations spanning character versions, both players and root/default-Helper/own-Helper producers; four actual root/own-Helper cancellation cases; four accepted Helper-recipient cases. They exercise real collision/hit callbacks, typed expressions, basic legacy expressions, latest-ID replacement, pause/hitpause/disabled clocks and owner isolation.
+
+Helper initial animation/control/velocity bootstrap now has actual consumers (see HELPER-ENTRY-WIP.md); the contact fixture no longer forces animation 0. Pending: optional second comparison in legacy ProjHit/Guarded/Contact syntax, full native compiler validation of those forms, precise native cross-actor driver phases, helper destruction-order edge cases, Projectile/ModifyProjectile parameter families and executable differential certification. No whole-controller or ownprojectile certification changes. Character recoloring remains excluded; gameplay palette effects remain. No original assets or new media are added.

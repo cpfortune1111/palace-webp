@@ -1,0 +1,25 @@
+{
+  "schema": "moon-palace-expression-evidence-v1",
+  "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "certification": "Reviewed partial evidence only. No trigger is certified complete by this file.",
+  "rows": [
+    {
+      "name": "attack",
+      "stages": {"Parsed": "Unassessed", "Executable": "Partial", "Source-verified": "Partial", "Semantically tested": "Partial"},
+      "runtimeConsumers": ["index.html: evalCNS context attack", "Engine/combat-base-trigger.js: combatBaseTrigger"],
+      "semanticTests": ["Tools/check-combat-base-trigger.mjs"],
+      "nativeBehaviorEvidence": ["src/bytecode.go: OC_ex_attack", "src/char.go: attackTrigger, lines 8915-8925 at pinned commit"],
+      "verifiedSubset": "Three-decimal half-away-from-zero snapping and float32 return, including positive/negative tie cases and a noisy multiplier.",
+      "remaining": ["End-to-end expression parse and evaluation", "Native differential traces", "Modified attack base and multiplier lifecycle, redirection, Helper and source-version behavior", "Exceptional numeric values and input float-width boundaries"]
+    },
+    {
+      "name": "defence",
+      "stages": {"Parsed": "Unassessed", "Executable": "Partial", "Source-verified": "Partial", "Semantically tested": "Partial"},
+      "runtimeConsumers": ["index.html: evalCNS context defence", "Engine/combat-base-trigger.js: combatBaseTrigger"],
+      "semanticTests": ["Tools/check-combat-base-trigger.mjs"],
+      "nativeBehaviorEvidence": ["src/bytecode.go: OC_ex_defence", "src/char.go: defenceTrigger, lines 8929-8933 at pinned commit"],
+      "verifiedSubset": "Shared numeric snapping/float32 helper is exercised. Runtime multiplies finalDefense by 100, matching the pinned native formula; full defense-state selection is not certified.",
+      "remaining": ["End-to-end expression parse and evaluation", "Native differential traces", "Final-defense selection, scaling lifecycle, redirection, Helper and source-version behavior", "Exceptional numeric values and input float-width boundaries"]
+    }
+  ]
+}

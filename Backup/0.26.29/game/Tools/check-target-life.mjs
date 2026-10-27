@@ -1,0 +1,40 @@
+import assert from 'node:assert/strict';
+import {createTargetList} from '../Engine/target-list.js';
+import {applyTargetLifeController,targetLifeDamage,targetLifeResult,executeTargetLifeAddition,targetLifeMultipliers} from '../Engine/target-life.js';
+
+const targets=createTargetList();targets.add(2);targets.add(3);
+const owner={targets},caller={},actors=new Map([[1,owner],[2,{getHit:{hitid:7}}],[3,{getHit:{hitid:8}}]]),calls=[];
+const api={evaluate:value=>value==='var(8)'?-25:Number(value),findActor:id=>actors.get(id),targets:actor=>actor.targets,lifeAdd:(target,value,options)=>calls.push({target,value,options})};
+applyTargetLifeController({type:'TargetLifeAdd',params:{redirectid:1,id:7,index:0,value:'var(8)'}},caller,api);
+assert.equal(calls.length,1);assert.equal(calls[0].target,actors.get(2));assert.equal(calls[0].value,-25);
+assert.deepEqual(calls[0].options,{owner,absolute:false,kill:true,dizzy:true,redlife:true});
+applyTargetLifeController({type:'TargetLifeAdd',params:{value:12,kill:0,absolute:0.5,dizzy:0,redlife:0,id:8}},owner,api);
+assert.deepEqual(calls[1].options,{owner,absolute:true,kill:false,dizzy:false,redlife:false});
+applyTargetLifeController({type:'TargetLifeAdd',params:{value:0}},owner,api);assert.equal(calls.length,2);
+const target={life:100,lifeMax:1000,finalDefense:2};
+assert.deepEqual(targetLifeMultipliers('S, NA'),{redLife:0.75,dizzy:Math.fround(1.8)});
+for(const attribute of ['HA','HP','HT','AA','AP','AT','h','a'])assert.deepEqual(targetLifeMultipliers('S, '+attribute),{redLife:0.75,dizzy:0});
+assert.deepEqual(targetLifeMultipliers('A, HP',{'super.lifetoredlifemul':0.5,'super.lifetodizzypointsmul':2}),{redLife:0.5,dizzy:2});
+assert.equal(targetLifeDamage(-25,target),13);
+assert.equal(targetLifeDamage(25,target),-13);
+assert.equal(targetLifeDamage(-25,target,{absolute:true}),25);
+assert.equal(targetLifeDamage(-1000,target,{kill:false}),99);
+assert.equal(targetLifeResult(targetLifeDamage(-1000,target,{kill:false}),target),1);
+assert.equal(targetLifeDamage(-1,{...target,finalDefense:100}),1);
+assert.equal(targetLifeDamage(-10,{...target,life:0},{kill:false,compatibility:'mugen'}),-1);
+assert.equal(targetLifeDamage(-10,{...target,life:0},{kill:false,compatibility:'ikemen'}),0);
+assert.equal(targetLifeResult(-100,{...target,life:2147483640,lifeMax:2147483647}),0);
+const resource={...target,getHit:{},receivedDamage:0},effects=[];
+const resourceApi={redLifeMultiplier:0.75,dizzyMultiplier:1.8,synchronizeRedLife:(actor,life)=>effects.push(['sync',life]),redLifeAdd:(actor,amount)=>effects.push(['red',amount]),dizzyPointsAdd:amount=>effects.push(['dizzy',amount])};
+assert.equal(executeTargetLifeAddition(-25,resource,{kill:true,absolute:false,redlife:true,dizzy:true},resourceApi),13);
+assert.deepEqual([resource.life,resource.receivedDamage,resource.getHit.kill],[87,13,true]);
+assert.deepEqual(effects,[['sync',87],['red',-13*0.75],['dizzy',-13*1.8]]);
+effects.length=0;executeTargetLifeAddition(-25,resource,{kill:false,absolute:true,redlife:false,dizzy:true},{...resourceApi,noDamage:true,noDizzyDamage:true});
+assert.deepEqual([resource.life,resource.receivedDamage,resource.getHit.kill],[87,38,false]);assert.deepEqual(effects,[]);
+console.log('TargetLifeAdd caller integers, flag defaults/booleans, index/redirection and zero exclusion passed');
+for(const raw of [NaN,'0','Moon']){
+ const observed=[];
+ applyTargetLifeController({type:'TargetLifeAdd',params:{id:7,value:-25,absolute:'flag',kill:'flag',dizzy:'flag',redlife:'flag'}},owner,{...api,evaluate:expression=>expression==='flag'?raw:Number(expression),lifeAdd:(target,value,options)=>observed.push(options)});
+ assert.deepEqual(observed,[{owner,absolute:false,kill:false,dizzy:false,redlife:false}]);
+}
+assert.throws(()=>applyTargetLifeController({type:'TargetLifeAdd',params:{}},owner,api),/Missing TargetLifeAdd value/);

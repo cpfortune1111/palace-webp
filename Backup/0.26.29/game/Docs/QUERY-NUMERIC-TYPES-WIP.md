@@ -1,0 +1,9 @@
+# Native query numeric types — 0.25.49 partial checkpoint
+
+Reference: pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, direct OC query PushI/PushB/PushF consumers. This is type coverage for existing queries, not certification of their value-generation/native timing behavior.
+
+The typed evaluator now recognizes 29 integer queries, seven boolean queries and five float queries. Integer metadata covers state/animation/time, facing, edge distances, counters, IDs, resources, teams and contact clocks. Boolean metadata covers Alive/CanRecover/Ctrl/HitFall/HitOver/HitShakeOver/InGuardDist. Pos X/Y and Vel X/Y/Z retain float32 tags. Booleans normalize their numeric source flags; undefined values remain undefined before conversion. String and irregular legacy queries are intentionally excluded rather than guessed from JavaScript integer values.
+
+Tools/check-query-numeric-types.mjs validates all 41 metadata entries against the pinned Go source when the local reference is available, then executes actual parser/evaluator arithmetic and undefined observations for both profiles. Absence of that reference is reported as an unrun source-inventory gate. Tools/check-query-numeric-browser.cjs passes all 41 VarSet parameter consumers in eight profile/player/root-or-Helper contexts, using existing actor query values and independently applying each native tag's division rule. The fixture supplies a sampled per-action Random value as existing runtime actor contexts do; it does not certify native RNG call timing or distribution.
+
+Pending: remaining query families and irregular triggers, complete value semantics and root/Helper lifecycle inputs, version changes, full VM/undefined/storage and compiler behavior, full regression and publication. No controller certification changes; last verified publication remains 0.25.48.

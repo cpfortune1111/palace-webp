@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createHitStateStore} from '../Engine/hit-state-store.js';
+
+const states=createHitStateStore();
+assert.equal(states.sample('root1',1,{moveType:'I'}),0);
+assert.equal(states.sample('root1',1,{moveType:'H',fall:true}),0);
+assert.equal(states.sample('root1',2,{moveType:'H'}),1);
+assert.equal(states.sample('root1',3,{moveType:'H',fall:true,actionRun:false}),2);
+assert.equal(states.sample('root1',4,{moveType:'I',actionRun:false}),2);
+assert.equal(states.sample('root1',5,{moveType:'I'}),0);
+assert.equal(states.reverse('root1'),-1);
+assert.equal(states.sample('root1',6,{moveType:'I'}),-1);
+assert.equal(states.sample('root1',7,{moveType:'H'}),1);
+assert.equal(states.reverse('root1'),1);
+assert.equal(states.sample('root1',8,{moveType:'I',disabled:true}),1);
+assert.equal(states.sample('helper1',8,{moveType:'I'}),0);
+assert.equal(states.value('root1'),1);
+states.delete('root1');assert.equal(states.value('root1'),0);
+assert.throws(()=>states.reverse('missing'),/sampled/);
+states.clear();assert.equal(states.value('helper1'),0);
+console.log('Native hit status preserves collision-pass snapshots, pause-held positive state, reversal -1 and actor isolation; scheduler binding remains separately verified');

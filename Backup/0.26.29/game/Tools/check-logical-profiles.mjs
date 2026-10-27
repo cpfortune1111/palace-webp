@@ -1,0 +1,60 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {evaluateTypedNumericAST,isConstantNumericExpression} from '../Engine/expression-numeric-types.js';
+import {assignExpressionVariable} from '../Engine/variables.js';
+
+const source=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexOf('function queryValue('));
+const evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
+const actor={vars:Array(60).fill(0),fvars:Array(40).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0)};
+actor.query=name=>name.toLowerCase()==='customundefined'?NaN:5;
+const context=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpression,assignExpressionVariable,animElemTime:()=>0,testContext:actor,runtimeVar:actor.vars,runtimeFVar:actor.fvars,runtimeSysVar:actor.sysvars,runtimeSysFVar:actor.sysfvars});
+vm.runInContext(parser+'\n'+evaluator,context);
+const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',context);
+for(const profile of ['mugen11','ikemen']){
+ actor.engineProfile=profile;actor.vars.fill(0);actor.vars[0]=5;actor.fvars[0]=.5;
+ const native=profile==='ikemen';
+ const fallback=execute('CustomUndefined||2');
+ if(native)assert.equal(fallback,2);else assert.ok(Number.isNaN(fallback));
+ assert.equal(Number(execute('IfElse(Var(0),5,1/0)||2')),native?5:1);
+ assert.equal(Number(execute('Cond(Var(0),5,1/0)||2')),native?5:1);
+ for(const expression of ['(1/0)||2','(1/0)&&Var(0)','Var(0)&&(1/0)','Var(0)^^(1/0)','0||(1/0)']){
+  const result=execute(expression);
+  if(!native)assert.ok(Number.isNaN(result),expression);
+  else if(expression==='(1/0)&&Var(0)'||expression==='Var(0)&&(1/0)')assert.ok(Number.isNaN(result),expression);
+  else assert.equal(Number(result),expression==='(1/0)||2'||expression==='Var(0)^^(1/0)'?1:0,expression);
+ }
+ assert.equal(Number(execute('Var(0)||2')),native?5:1);
+ assert.equal(execute('(Var(0)||2)/2'),native?2:0);
+ assert.equal(execute('(FVar(0)||2)/2'),native?.25:0);
+ assert.equal(Number(execute('5||2')),1);
+ assert.equal(Number(execute('0&&5')),0);
+ assert.equal(Number(execute('abs(5)||2')),1);
+ assert.equal(Number(execute('floor(5.9)||2')),1);
+ assert.equal(Number(execute('sin(0)||2')),1);
+ assert.equal(Number(execute('0||5||Var(0)')),native?5:1);
+ assert.equal(Number(execute('(0||5)||Var(0)')),1);
+ assert.equal(Number(execute('Var(0)&&7&&9')),1);
+ assert.equal(Number(execute('(Var(0)&&7)&&9')),native?9:1);
+ assert.equal(Number(execute('5^^0')),1);
+ assert.equal(Number(execute('5^^7')),0);
+ assert.equal(Number(execute('1||1^^1')),1);
+ assert.equal(Number(execute('1^^1&&0')),1);
+ actor.vars[4]=0;actor.vars[5]=0;
+ assert.equal(Number(execute('(Var(4):=1)^^(Var(5):=2)')),0);
+ assert.equal(actor.vars[4],1);assert.equal(actor.vars[5],2);
+ assert.equal(execute('(Var(4)^^0)/2'),0);
+ assert.equal(Number(execute('Var(4):=3^^1')),0);assert.equal(actor.vars[4],3);
+ assert.equal(Number(execute('Var(4):=1&&0')),0);assert.equal(actor.vars[4],1);
+ actor.vars[1]=0;assert.equal(Number(execute('Var(0)||(Var(1):=9)')),native?5:1);assert.equal(actor.vars[1],0);
+ assert.equal(Number(execute('Var(0)&&(Var(1):=7)')),native?7:1);assert.equal(actor.vars[1],7);
+ actor.vars[0]=0;actor.vars[1]=0;assert.equal(Number(execute('Var(0)&&(Var(1):=9)')),0);assert.equal(actor.vars[1],0);
+ assert.equal(execute('(Var(0)||FVar(0))/2'),native?.25:0);
+ vm.runInContext("cachedLogical=parseExprAST('(Var(0)||FVar(0))/2')",context);
+ actor.vars[0]=5;assert.equal(vm.runInContext('evalAST(cachedLogical,testContext)',context),native?2:0);
+ actor.vars[0]=0;assert.equal(vm.runInContext('evalAST(cachedLogical,testContext)',context),native?.25:0);
+}
+actor.vars[0]=5;actor.engineProfile='mugen11';assert.equal(vm.runInContext('evalAST(cachedLogical,testContext)',context),0);
+actor.engineProfile='ikemen';assert.equal(vm.runInContext('evalAST(cachedLogical,testContext)',context),2);
+console.log('MUGEN numeric normalization and pinned Ikemen CNS dynamic operand values/types, constant folding and native short-circuit writes passed; ZSS and full VM semantics remain Pending');

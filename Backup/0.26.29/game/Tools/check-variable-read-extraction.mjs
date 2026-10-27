@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {evaluateTypedNumericAST,isConstantNumericExpression} from '../Engine/expression-numeric-types.js';
+import {assignExpressionVariable} from '../Engine/variables.js';
+
+const source=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexOf('function queryValue('));
+const evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
+const actor={vars:Array(60).fill(0),fvars:Array(40).fill(0),sysvars:Array(10).fill(0),sysfvars:Array(5).fill(0)};
+actor.vars[0]=7;actor.vars[12]=99;actor.fvars[0]=.25;actor.fvars[12]=9;actor.sysvars[0]=21;actor.sysfvars[0]=.5;
+const warnings=[];
+const sandbox=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpression,assignExpressionVariable,animElemTime:()=>0,testContext:actor,console:{warn:message=>warnings.push(message)}});
+vm.runInContext(parser+'\n'+evaluator,sandbox);
+const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',sandbox);
+for(const [expression,expected]of [['var("12")',7],['var(0/0)',7],['var(4294967296)',0],['var(2147483647+1+2147483647+1)',7],['fvar("12")',.25],['sysvar("3")',21],['sysfvar("2")',.5],['var(12)',99]])assert.equal(execute(expression),expected,expression);
+assert.equal(execute('var((var(1):=var(1)+1))'),1);
+assert.equal(actor.vars[1],1);
+for(const family of ['var','fvar','sysvar','sysfvar'])assert.ok(Number.isNaN(execute(family+'(-1)')),family);
+assert.deepEqual(warnings,['var','fvar','sysvar','sysfvar'].map(family=>family+' index -1 must be positive'));
+actor.fvars[2]=NaN;actor.fvars[3]=-0;
+assert.ok(Number.isNaN(execute('fvar(2)')));
+assert.ok(Object.is(execute('fvar(3)'),-0));
+console.log('Actual variable-read evaluator extracts string/undefined indices as zero, wraps signed indices and samples index side effects once');

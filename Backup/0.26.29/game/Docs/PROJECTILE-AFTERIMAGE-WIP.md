@@ -1,0 +1,15 @@
+# Projectile AfterImage consumers (partial)
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d. Reviewed projectileSub/modifyProjectile in compiler_functions.go; Projectile/ModifyProjectile in bytecode.go; Projectile.initFromChar, cueDraw, Char.getMultipleProjs and canOwnProjectiles in char.go.
+
+Projectile creation now applies prefixed AfterImage fields through the shared typed parameter writers and setup. Every live projectile owns its own sprite history. The actual projectile drawing path records atlas surfaces, arguments, historical matrices/clips/layers/priorities and queues ghosts within the player's shared budget. Contact hitpause and global pauses stop recording; Projectile does not use the character/Explod ignorehitpause exception. Resuming preserves history.
+
+The partial ModifyProjectile dispatcher implements redirectid, ID-before-index selection, active ownership-filtered recipients, projid renaming and prefixed AfterImage parameters. Shared fields evaluate once where native does; AfterImage fields evaluate per parameter/per selected projectile. Existing history/counters/cursors survive modification. Active setup runs after the whole batch. Invalid/missing recipients and disallowed Helper recipients suppress later RHS reads. Unknown parameter families raise explicit errors; they are not silently counted as supported.
+
+Review exposed old ownership metadata that assigned every Helper projectile to the Helper. Native assigns ordinary Helper spawns to the root; Helper ownprojectile opts into independent ownership. Creation now records this distinction, and NumProjID counts and modification selection respect it. The existing contact-identity regression now marks its intentionally Helper-owned fixture with ownProjectile=true. Native ModifyProjectile still rejects Helper recipients even with ownprojectile in this pinned implementation; that restriction is preserved rather than guessed away.
+
+Evidence: independent redirect/selection/parameter-order/RHS/unsupported-field checks; eight real root/Helper/P1/P2/character-version browser combinations exercise live projectile creation and rendering, history identity, hitpause/SuperPause, modification/resize, ID-filtered index and rename, redirect, opposite-owner isolation and inactive suppression. Additional real Helper creation checks distinguish default root ownership from ownprojectile ownership.
+
+Owner-scoped latest hit/guard/cancel records and typed Proj*Time consumers now have real root/Helper collision producers and basic legacy expressions; see PROJECTILE-CONTACT-EVENTS-WIP.md. Exact native clock phases and complete legacy syntax remain pending.
+
+Pending: other ModifyProjectile/Projectile parameter families, full creation compiler order, native cue allocation/interpolation/provider fidelity, ownprojectile edge cases and native executable differential validation. Neither controller nor ownprojectile is fully certified. Character recoloring remains excluded; gameplay palette effects remain. No original SFF/SND/AIR or new media are added.

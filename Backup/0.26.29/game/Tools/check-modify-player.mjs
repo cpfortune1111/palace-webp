@@ -1,0 +1,50 @@
+import assert from 'node:assert/strict';
+import {applyModifyPlayerController} from '../Engine/modify-player.js';
+
+const caller={id:1},helper={id:77,kind:'helper',instanceId:99},writes=[];
+const counters=[],contacts=[],pauses=[],resources={power:900,powerMax:1000,life:900,lifeMax:1000,dizzyPoints:700,dizzyPointsMax:1000,guardPoints:400,guardPointsMax:1000};
+const sides=[],alive=[],names=[],levels=[],moveTimes=[],bases=[],api={setTeamSide:(target,side)=>sides.push(side),setAlive:(target,value)=>alive.push(value),setName:(target,name,value)=>names.push([name,value]),setAILevel:(target,value)=>levels.push(value),setPauseMoveTime:(target,slot,value)=>moveTimes.push([slot,value]),setBase:(target,name,value)=>bases.push([name,value]),setMoveCountered:(target,value)=>counters.push(value),setMoveContact:(target,type,time)=>contacts.push([target.instanceId??target.id,type,time]),maximumActor:()=>resources,evaluate:Number,findActor:id=>id===77?helper:null,setUnhittableTime:(actor,time)=>writes.push([actor.id,time]),setHitPauseTime:(actor,time)=>pauses.push([actor.id,time])};
+assert.equal(applyModifyPlayerController({type:'Null'},caller,api),false);
+applyModifyPlayerController({type:'ModifyPlayer',params:{unhittabletime:'-7'}},caller,api);
+applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'77',unhittabletime:'4.8'}},caller,api);
+applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'99',unhittabletime:'9'}},caller,api);
+assert.deepEqual(writes,[[1,0],[77,4]]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'77',hitpausetime:'5.9'}},caller,api);
+applyModifyPlayerController({type:'ModifyPlayer',params:{hitpausetime:'-3'}},caller,api);
+assert.deepEqual(pauses,[[77,5],[1,0]]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{lifemax:'500.9',powermax:'300',dizzypointsmax:'-3',guardpointsmax:'200'}},caller,api);
+assert.deepEqual(resources,{power:300,powerMax:300,life:500,lifeMax:500,dizzyPoints:0,dizzyPointsMax:0,guardPoints:200,guardPointsMax:200});
+applyModifyPlayerController({type:'ModifyPlayer',params:{lifemax:'-7'}},caller,api);assert.equal(resources.lifeMax,1);assert.equal(resources.life,1);
+applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'77','helpervar.id':'12'}},caller,api);assert.equal(helper.id,12);assert.equal(helper.instanceId,99);
+applyModifyPlayerController({type:'ModifyPlayer',params:{'helpervar.id':'-7'}},helper,api);assert.equal(helper.id,0);
+applyModifyPlayerController({type:'ModifyPlayer',params:{movehit:'2',moveguarded:'3.8',movereversed:'-7'}},caller,api);assert.deepEqual(contacts,[[1,'hit',2],[1,'guarded',3],[1,'reversed',0]]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{movecountered:'-2'}},caller,api);applyModifyPlayerController({type:'ModifyPlayer',params:{movecountered:'0'}},caller,api);assert.deepEqual(counters,[true,false]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{attack:'120.8',defence:'80.9'}},caller,api);assert.deepEqual(bases,[['attack',120],['defence',80]]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{pausemovetime:'3.9',supermovetime:'-7'}},caller,api);assert.deepEqual(moveTimes,[['normal',3],['super',0]]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{ailevel:'3.75'}},caller,api);applyModifyPlayerController({type:'ModifyPlayer',params:{ailevel:'0'}},caller,api);assert.deepEqual(levels,[3.75,0]);
+applyModifyPlayerController({type:'ModifyPlayer',params:{helpername:'"New Helper"'}},helper,api);assert.equal(helper.name,'New Helper');applyModifyPlayerController({type:'ModifyPlayer',params:{helpername:'"Skipped Root"'}},caller,api);assert.equal(caller.name,undefined);applyModifyPlayerController({type:'ModifyPlayer',params:{displayname:'"New Display"',lifebarname:'"New Bar"'}},caller,api);assert.deepEqual(names,[['displayname','New Display'],['lifebarname','New Bar']]);
+assert.throws(()=>applyModifyPlayerController({type:'ModifyPlayer',params:{helpername:'bad'}},helper,api),/double quotes/);
+applyModifyPlayerController({type:'ModifyPlayer',params:{alive:'-1'}},caller,api);applyModifyPlayerController({type:'ModifyPlayer',params:{alive:'0'}},caller,api);assert.deepEqual(alive,[true,false]);
+for(const teamside of ['0','2','3','-1'])applyModifyPlayerController({type:'ModifyPlayer',params:{teamside}},caller,api);assert.deepEqual(sides,[0,2]);
+assert.throws(()=>applyModifyPlayerController({type:'ModifyPlayer',params:{unknown:'1'}},caller,api),/Unsupported ModifyPlayer parameter unknown/);
+console.log('ModifyPlayer partial live adapter: integer/clamped timer, helper redirect and missing redirect pass; unsupported parameters fail explicitly');
+const invalidValues=['1','not a number',NaN,undefined];
+for(const operand of invalidValues){
+ const invalidApi={...api,evaluate:()=>operand};
+ applyModifyPlayerController({type:'ModifyPlayer',params:{movecountered:'operand',alive:'operand',ailevel:'operand'}},caller,invalidApi);
+ assert.equal(counters.at(-1),false);
+ assert.equal(alive.at(-1),false);
+ assert.equal(levels.at(-1),0);
+}
+for(const operand of ['7',NaN,undefined]){
+ const recorded=[],resource={life:900,lifeMax:1000,power:900,powerMax:1000,dizzyPoints:700,dizzyPointsMax:1000,guardPoints:400,guardPointsMax:1000},recipient={kind:'helper',id:44};
+ const numericApi={...api,evaluate:()=>operand,maximumActor:()=>resource,setTeamSide:(_,value)=>recorded.push(['side',value]),setMoveContact:(_,kind,value)=>recorded.push([kind,value]),setHitPauseTime:(_,value)=>recorded.push(['hitpause',value]),setPauseMoveTime:(_,kind,value)=>recorded.push([kind,value]),setUnhittableTime:(_,value)=>recorded.push(['unhittable',value]),setBase:(_,kind,value)=>recorded.push([kind,value])};
+ const params=Object.fromEntries(['lifemax','powermax','dizzypointsmax','guardpointsmax','teamside','helpervar.id','movehit','moveguarded','movereversed','hitpausetime','pausemovetime','supermovetime','unhittabletime','attack','defence'].map(name=>[name,'operand']));
+ applyModifyPlayerController({type:'ModifyPlayer',params},recipient,numericApi);
+ assert.deepEqual(resource,{life:1,lifeMax:1,power:0,powerMax:0,dizzyPoints:0,dizzyPointsMax:0,guardPoints:0,guardPointsMax:0});
+ assert.equal(recipient.id,0);
+ assert.deepEqual(recorded,[['side',0],['hit',0],['guarded',0],['reversed',0],['hitpause',0],['normal',0],['super',0],['unhittable',0],['attack',0],['defence',0]]);
+ const ids=[];
+ applyModifyPlayerController({type:'ModifyPlayer',params:{redirectid:'operand',attack:'operand'}},recipient,{...numericApi,findActor:id=>{ids.push(id);return null}});
+ assert.deepEqual(ids,[0]);
+}

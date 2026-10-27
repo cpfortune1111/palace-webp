@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {compilePlaySoundOptions} from '../Engine/play-sound-options.js';
+
+const reads=[],evaluate=value=>{reads.push(value);return value};
+const playback={freqMul:1,loopCount:0,loopStart:0,loopEnd:0,startPosition:0};
+assert.deepEqual(compilePlaySoundOptions({},evaluate),{lowPriority:false,priority:0,panParams:{pan:0,absolute:false},volume:100,stopFlags:{hit:false,state:false},playback});assert.deepEqual(reads,[]);
+assert.deepEqual(compilePlaySoundOptions({lowpriority:1,pan:20,abspan:40,priority:7},evaluate),{lowPriority:true,priority:7,panParams:{pan:40,absolute:true},volume:100,stopFlags:{hit:false,state:false},playback});assert.deepEqual(reads,[1,20,40,7]);
+assert.deepEqual(compilePlaySoundOptions({pan:.1},evaluate).panParams,{pan:Math.fround(.1),absolute:false});
+assert.deepEqual(compilePlaySoundOptions({lowpriority:'1',abspan:'40',priority:'7'},evaluate),{lowPriority:false,priority:0,panParams:{pan:0,absolute:true},volume:100,stopFlags:{hit:false,state:false},playback});
+assert.deepEqual(compilePlaySoundOptions({},evaluate,0).stopFlags,{hit:true,state:false});assert.deepEqual(compilePlaySoundOptions({stopongethit:'1',stoponchangestate:1},evaluate,0).stopFlags,{hit:false,state:true});assert.deepEqual(compilePlaySoundOptions({stopongethit:1},evaluate,7).stopFlags,{hit:true,state:false});
+reads.length=0;assert.equal(compilePlaySoundOptions({volume:128,volumescale:50,priority:7},evaluate).volume,50);assert.deepEqual(reads,[128,50,7]);assert.equal(compilePlaySoundOptions({volume:-129},evaluate).volume,75);
+const names=['lowpriority','pan','abspan','volume','volumescale','freqmul','loop','priority','loopstart','loopend','startposition','loopcount','stopongethit','stoponchangestate'],values=[1,20,40,128,50,2,1,7,4294967297,4294967300,4294967299,3,0,1],expressions=Object.fromEntries(names.map(name=>[name,name])),order=[];
+const complete=compilePlaySoundOptions(expressions,name=>{order.push(name);return values[names.indexOf(name)]},0,{ikemen:[0,99,0]});assert.deepEqual(order,names);assert.deepEqual(complete.playback,{freqMul:2,loopCount:3,loopStart:4294967297,loopEnd:4294967300,startPosition:4294967299});assert.deepEqual(complete.stopFlags,{hit:false,state:true});assert.equal(complete.volume,50);
+assert.equal(compilePlaySoundOptions({volume:128,loop:1},evaluate).volume,100);assert.equal(compilePlaySoundOptions({volume:128,loop:1},evaluate,-1,{ikemen:[0,99,0]}).volume,125);assert.equal(compilePlaySoundOptions({volume:128,loop:1},evaluate,-1,{ikemen:[0,0,1]}).volume,100);assert.equal(compilePlaySoundOptions({volumescale:50,loop:1},evaluate).volume,50);
+assert.equal(compilePlaySoundOptions({loop:1},evaluate).playback.loopCount,-1);assert.equal(compilePlaySoundOptions({loop:1,loopcount:2,volume:128},evaluate).volume,125);assert.equal(compilePlaySoundOptions({loop:0,loopcount:-1},evaluate).playback.loopCount,-1);assert.equal(compilePlaySoundOptions({freqmul:'2'},evaluate).playback.freqMul,Math.fround(.01));assert.equal(compilePlaySoundOptions({freqmul:99},evaluate).playback.freqMul,5);
+console.log('PlaySnd playback/volume/stop options preserve native evaluation order, typed wide indices, frequency clamp, loop count precedence and legacy volume rule; full live playback remains pending');

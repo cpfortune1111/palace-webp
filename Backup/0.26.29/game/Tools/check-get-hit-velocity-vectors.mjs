@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {getHitVelocityVectors} from '../Engine/get-hit-velocity-vectors.js';
+import {getHitQueryScale} from '../Engine/get-hit-query-scale.js';
+const result=getHitVelocityVectors({'ground.velocity':'-4,2,6','air.velocity':'-8,-10,12'},0.5,-1);
+assert.equal(Object.keys(result).length,15);
+assert.deepEqual(['x','y','z'].map(axis=>result['ground.velocity.'+axis]),[-2,1,3]);
+assert.deepEqual(['x','y','z'].map(axis=>result['airguard.velocity.'+axis]),[-6,-2.5,9]);
+assert.equal(result['down.velocity.z'],6);
+assert.equal(getHitQueryScale(result,'ground.velocity.z',2).value,6);
+assert.equal(getHitQueryScale({},'ground.velocity.z',2).value,0);
+console.log('All fifteen GetHitVar velocity-vector fields preserve defaults, facing, recipient and query-origin scaling');

@@ -1,0 +1,25 @@
+[Info]
+name = "Sailor Venus"
+displayname = "Sailor Venus"
+versiondate = 10/22/2022
+mugenversion = 1.0
+author = "TsukinoAi+"
+pal.defaults = 1
+localcoord = 1280,720
+
+[Files]
+stcommon	= venus_Common.cns
+cmd		= venus.cmd
+cns		= venus.cns
+st		= venus.cns
+st1		= venus_Helper.st
+movelist	= movelist.dat
+
+sprite	= venus.sff
+anim		= venus.air
+
+sound		= venus.snd 
+
+[Arcade]
+intro.storyboard = ;venus_Intro.def
+ending.storyboard = ;venus_Ending.def

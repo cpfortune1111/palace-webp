@@ -1,0 +1,13 @@
+# RoundTimeSet / RoundTimeAdd — partial unpublished implementation
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go roundTimeSet/roundTimeAdd and bytecode.go matching Run methods; system.go curRoundTime/maxRoundTime are int32 ticks.
+
+Both controllers now update the real fight HUD countdown without resetting mode or life animation state. Required value uses caller-side signed int32 extraction; Add wraps its addition as int32 before clamping to zero/current configured maximum. An unlimited maximum (-1) skips value evaluation entirely. Existing HUD display and exact remaining-time APIs consume the changed tick count, and active countdown continues from it.
+
+The pinned compiler accepts redirectid, but these Run methods never read that parameter or resolve a recipient. WEB follows that source behavior and does not evaluate its expression. This ignored native field is explicitly not counted as an implemented redirection feature or evidence of whole-controller completion.
+
+Independent integer/bounds/unlimited checks pass. Four actual P1/P2 root/normal-Helper cases verify shared HUD tick changes, second/exact display values, active/inactive decrement, maximum clamp, expiry and skipped expressions (outputs/round-time-consumers-browser.log, complete actor suite exit 0). Controller-specific scheduling, actual time-over transition, all native timing/configuration/compiler/version fidelity and final regression/publication remain Pending.
+
+Eight additional browser component-integration cases now connect actual root/Helper controller calls and the live HUD timer to a fresh production createRoundFlow instance. With fixed non-KO life inputs, setting/subtracting to zero changes fight to result, reason=time and round state=3 (outputs/round-time-timeout-browser.log, complete actor suite exit 0). This verifies the production timer-to-round-flow connection, not the entire global simulation/render loop or native timing parity.
+
+Eighty controller-specific actual scheduling groups now pass (40 per controller): root current/global/lifecycle and normal-Helper current/global execution, literal hitpause gates, current/global persistent=0 and global-pause movement allowance in both profiles/player directions. Each repeated idempotent write resets the real HUD tick count first. The combined five-controller matrix has 200 groups (outputs/round-time-actual-scheduling.log, exit 0). Native timing/configuration/compiler/version fidelity and final full regression/publication remain Pending; the pinned ignored redirectid still is not counted as an implemented redirection feature.

@@ -1,0 +1,493 @@
+{
+  "version": "0.19-m1-preflight-v1",
+  "policy": {
+    "rule": "Every new character MUST run DEF-driven compatibility preflight before runtime/import work.",
+    "unknown_behavior": "NEW/PARTIAL/UNSUPPORTED/MISSING must be reported; never silently ignored.",
+    "status_semantics": {
+      "GENERIC": "implemented generically",
+      "ADAPTER": "prototype/special-case only",
+      "PARSED": "recognized/inventoried but not runtime-compatible",
+      "UNSUPPORTED": "known but not implemented",
+      "NEW": "not present in registry",
+      "MISSING": "referenced source file unavailable"
+    }
+  },
+  "expressions": {
+    "!": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "&&": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "||": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "=": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "!=": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "<": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    ">": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "<=": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    ">=": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "+": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "-": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "*": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "/": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "%": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "range[]": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "time": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "anim": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "animtime": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "animelem": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "animelemtime": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "stateno": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "prevstateno": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "statetype": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "movetype": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "ctrl": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "pos x": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "pos y": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "vel x": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "vel y": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "const": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "var": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "ailevel": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "command": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "abs": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "cond": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "ifelse": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "random": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "life": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "lifemax": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "alive": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "roundstate": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "roundno": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "roundsexisted": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "p2statetype": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "p2movetype": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "p2stateno": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "p2bodydist x": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "p2bodydist y": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "movecontact": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "movehit": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "moveguarded": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitcount": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "selfanimexist": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "gethitvar": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitover": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitshakeover": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitfall": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "inguarddist": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "numhelper": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "numprojid": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "numexplod": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "numpartner": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "numenemy": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "playeridexist": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "playerid": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "partner": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "enemy": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "enemynear": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "sysvar": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "const720p": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "const240p": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    }
+  },
+  "controllers": {
+    "ctrlset": {
+      "status": "ADAPTER",
+      "priority": "M1"
+    },
+    "changestate": {
+      "status": "ADAPTER",
+      "priority": "M1"
+    },
+    "changeanim": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "velset": {
+      "status": "ADAPTER",
+      "priority": "M1"
+    },
+    "veladd": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "velmul": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "posset": {
+      "status": "ADAPTER",
+      "priority": "M1"
+    },
+    "posadd": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "statetypeset": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "varset": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "varadd": {
+      "status": "PARSED",
+      "priority": "M1"
+    },
+    "varrandom": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "varrangeset": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitdef": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "projectile": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "helper": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "explod": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "removeexplod": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "nothitby": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "assertspecial": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "playsnd": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "stopsnd": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "pause": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "superpause": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "powerset": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "palfx": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "bgpalfx": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "turn": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "selfstate": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitvelset": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitfallvel": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitfallset": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "hitfalldamage": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "defencemulset": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "fallenvshake": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "posfreeze": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "forcefeedback": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "makedust": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    },
+    "displaytoclipboard": {
+      "status": "PARSED",
+      "priority": "BATTLE"
+    }
+  },
+  "zss_features": {
+    "if_else": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "function": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "call": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "let": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "local_variable": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "assignment_colon_eq": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "persistent": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    },
+    "ignore_hit_pause": {
+      "status": "PARSED",
+      "priority": "ZSS_FRONTEND"
+    }
+  }
+}

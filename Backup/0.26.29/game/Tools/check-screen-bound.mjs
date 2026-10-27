@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createScreenBoundFlags,applyScreenBoundController,screenBoundInterval} from '../Engine/screen-bound.js';
+const owner={flags:createScreenBoundFlags()},api={evaluate:Number,findActor:id=>id===2?owner:null,flags:actor=>actor.flags,split:value=>String(value).split(',')};
+applyScreenBoundController({type:'ScreenBound',params:{}},owner,api);assert.deepEqual(owner.flags,{screenBound:false,stageBound:true,moveCamera:[false,false]});
+applyScreenBoundController({type:'ScreenBound',params:{redirectid:2,value:1,movecamera:-1,stagebound:0}},{},api);assert.deepEqual(owner.flags,{screenBound:true,stageBound:false,moveCamera:[true,false]});
+assert.deepEqual(screenBoundInterval(owner.flags,{left:-100,right:100},{left:-50,right:50},{left:10,right:20}),{left:-90,right:80});
+owner.flags.screenBound=false;assert.deepEqual(screenBoundInterval(owner.flags,{left:-100,right:100},{left:-50,right:50}),{left:-Infinity,right:Infinity});
+assert.deepEqual(createScreenBoundFlags(false),{screenBound:false,stageBound:true,moveCamera:[false,false]});
+console.log('ScreenBound native defaults, redirected booleans, optional stage flag and intervals passed');
+const ordered={flags:{screenBound:false,stageBound:true,moveCamera:[false,false]}},reads=[];
+applyScreenBoundController({type:'ScreenBound',params:{value:'enable',movecamera:'first,second',stagebound:'stage'}},ordered,{...api,evaluate:expression=>{reads.push([expression,ordered.flags.screenBound,...ordered.flags.moveCamera]);return expression==='enable'||expression==='first'?1:expression==='second'?ordered.flags.moveCamera[0]:ordered.flags.moveCamera[1]}});
+assert.deepEqual(ordered.flags,{screenBound:true,stageBound:true,moveCamera:[true,true]});
+assert.deepEqual(reads,[['enable',false,false,false],['first',true,false,false],['second',true,true,false],['stage',true,true,true]]);

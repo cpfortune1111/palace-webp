@@ -1,0 +1,7 @@
+# GetHitVar query scaling — partial integration
+
+Initial complete browser regression passed with terminal exit code 0 in outputs/controller-get-hit-query-scale-integration.log. The additional actual redirected expression fixture and complete regression passed with terminal exit code 0 in outputs/controller-get-hit-query-scale-actual.log.
+
+Pinned Ikemen bytecode.go scales offsets, XYZ velocity/acceleration, fall velocity and shake amplitude by queried-recipient localscl divided by original expression-owner localscl. Root/helper/enemy redirection must retain the original expression owner rather than replacing it at each redirected context. Fall X/Z NaN queries return the WinMugen -32760 sentinel without scaling; the runtime's null representation uses the same sentinel. Shake amplitude is truncated after query scaling.
+
+The shared expression context now carries its original actor through helper and ordinary redirect contexts. GetHitVar scale conversion uses recipient and expression-origin localcoord. Focused module tests pass conversion, amplitude truncation, sentinel and scalar field exclusion. Actual mixed-localcoord helper-to-root fixtures exercise the real expression parser and contexts. Still partial: native state-owned local scales, expression redirection grammar coverage, missing-field native defaults and full version-specific GetHitVar semantics remain Pending. No full controller certification is asserted.

@@ -1,0 +1,11 @@
+# Hitspark geometry and GetHitVar spark queries — partial integration
+
+Actual HitDef expression/contact/recipient-query/spawned-visual fixture passed complete browser regression with terminal exit code 0 in outputs/controller-hit-spark-query-visual-actual-fixed.log. The expanded caller-read-count log reaches the final Saturn simultaneous-super checks and confirms arithmetic pairs and single evaluation for facing/state scalars. Its process handle is no longer available, so its terminal exit code is not independently confirmed.
+
+The actual spark expression fixture initially failed because the generic numeric fast-path regex accepted '2 + 3' as a numeric literal, leaving it unevaluated and producing NaN geometry. The shared pair compiler now recognizes complete signed/scientific numeric components rather than any sequence of digits/signs/spaces. Facing/state integers are compiled once by the scalar path instead of evaluating them again through the pair path. The strict visual/query assertions are retained and the fixed regression is running.
+
+Pinned char.go hitspark computes regular/projectile X from recipient base-size front/back edge and source spark offset; Y is source-relative. Recipient query offsets are measured relative to its position/local scale, with X multiplied by recipient facing. The native back edge is positive (-base.left), not the old renderer's negated back constant. Base size ignores transient Width/Height modifiers.
+
+Shared HitDef compilation now evaluates sparkxy expressions before contact. Actual contact records sparkx/sparky even when no visual animation is emitted; queries rescale to original expression ownership and default to zero when absent. Source effect spawning uses the same geometry/size-box/source/recipient conversion, avoiding a detached getter-only approximation. Keepstate updates spark query data independently of its retained reaction fields.
+
+Focused front/back/scaling/mirror and query-scale tests pass. Actual source/contact/query/visual fixtures pass the verified regression above. Still unpublished and partial: ReversalDef-specific offsets, MoveHitVar spark storage, complete state-owned coordinate scales, spark angle/scale/native common animations and Z presentation remain Pending. This is not full hitspark/controller certification.

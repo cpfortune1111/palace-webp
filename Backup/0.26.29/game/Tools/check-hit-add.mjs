@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {applyHitAddController} from '../Engine/hit-add.js';
+
+const owner={id:1,side:0,hitCount:2,uniqHitCount:1,targets:[99,2,3]},second={id:2,moveType:'H',receivedHits:4},third={id:3,moveType:'I',receivedHits:7},actors=new Map([[1,owner],[2,second],[3,third]]),combo=[],evaluations=[];
+const counterReads=[];
+const api={evaluate:value=>{evaluations.push(value);return Number(value)},findActor:id=>actors.get(id),counters:actor=>{counterReads.push(actor.id);return actor},targets:actor=>actor.targets||[],teamSide:actor=>actor.side,opponents:()=>[second,third],addComboHits:(side,value)=>combo.push([side,value])};
+const execute=params=>applyHitAddController({type:'HitAdd',params},owner,api);
+assert.equal(applyHitAddController({type:'Other'},owner,api),false);
+assert.throws(()=>execute({}),/Missing/);
+execute({value:3});assert.deepEqual([owner.hitCount,owner.uniqHitCount,second.receivedHits,third.receivedHits],[5,4,7,7]);assert.deepEqual(combo,[[0,3]]);
+owner.targets=[99];execute({value:-2});assert.deepEqual([owner.hitCount,owner.uniqHitCount,second.receivedHits,third.receivedHits],[3,2,7,7]);assert.equal(combo.length,1);
+owner.targets=[];second.receivedHits=0;third.receivedHits=7;execute({value:2});assert.deepEqual([second.receivedHits,third.receivedHits],[2,9]);assert.deepEqual(combo.slice(-2),[[0,2],[0,2]]);
+owner.side=-1;execute({value:1});assert.deepEqual([second.receivedHits,third.receivedHits],[2,9]);
+const redirected={id:4,side:1,hitCount:2147483647,uniqHitCount:0,targets:[2]};actors.set(4,redirected);
+execute({redirectid:4,value:1});assert.equal(redirected.hitCount,-2147483648);assert.equal(redirected.uniqHitCount,1);assert.equal(second.receivedHits,3);assert.deepEqual(combo.at(-1),[1,1]);
+const count=combo.length,snapshot=[owner.hitCount,owner.uniqHitCount];counterReads.length=0;execute({value:0});assert.equal(counterReads.length,0);assert.equal(combo.length,count);assert.deepEqual([owner.hitCount,owner.uniqHitCount],snapshot);
+evaluations.length=0;execute({redirectid:99,value:123});assert.deepEqual(evaluations,[99]);
+const helper={id:5,kind:'helper',side:0,hitCount:0,uniqHitCount:0,targets:[3]};actors.set(5,helper);
+execute({redirectid:5,value:-1});assert.deepEqual([helper.hitCount,helper.uniqHitCount,third.receivedHits],[-1,-1,8]);assert.deepEqual([owner.hitCount,owner.uniqHitCount],snapshot);
+owner.side=0;owner.targets=[];second.moveType='I';second.receivedHits=0;third.receivedHits=0;const beforeIdle=combo.length;execute({value:1});assert.equal(combo.length,beforeIdle);
+const inventory=JSON.parse(readFileSync(new URL('../Docs/CONTROLLER-AUDIT.json',import.meta.url),'utf8'));
+const evidence=JSON.parse(readFileSync(new URL('../Docs/HIT-ADD-PARAMETER-EVIDENCE.json',import.meta.url),'utf8'));
+assert.deepEqual(evidence.rows.map(row=>row.parameter).sort(),inventory.controllers.find(row=>row.controller==='hitadd').parameterCandidates);
+assert.equal(evidence.certifiedParameters,0);
+console.log('Pinned HitAdd updates signed counters, first existing explicit target, eligible no-target opponents and combo ownership without fallback from stale targets');

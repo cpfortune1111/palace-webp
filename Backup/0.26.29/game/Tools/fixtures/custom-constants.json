@@ -1,0 +1,12 @@
+{
+  "customConstants": {
+    "test.rate": 1.2345678806304932,
+    "test.zero": 0,
+    "data.attack": 9999,
+    "test.prefix": 12.5,
+    "test.exponent": 0.009999999776482582,
+    "test.signed.exponent": -100,
+    "test.infinity": "Infinity",
+    "test.nan": "NaN"
+  }
+}

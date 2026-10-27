@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {createForceFeedback,browserRumble} from '../Engine/force-feedback.js';
+
+const first={player:1},second={player:2},helper={player:1,kind:'helper'},events=[],reads=[];
+const feedback=createForceFeedback((target,low,high,time)=>events.push([target.player,low,high,time]));
+const api={evaluate:value=>{reads.push(value);return Number(value)},split:value=>String(value).split(','),findActor:id=>id===1?first:id===2?second:id===3?helper:null,opponent:actor=>actor.player===1?second:first,controllerKey:actor=>actor.player};
+feedback.execute({lo:-1,hi:65537,time:12,self:0,redirectid:2},first,api);
+assert.deepEqual(events.splice(0),[[2,65535,1,12]]);
+feedback.execute({ampl:255,time:2,waveform:'sinesquare',self:0},first,api);
+feedback.step();feedback.step();feedback.step();
+assert.deepEqual(events.splice(0),[[2,65535,65535,1],[2,65535,65535,1]]);
+feedback.execute({ampl:255,time:1,waveform:'square'},first,api);feedback.step();
+assert.deepEqual(events.splice(0),[[1,0,65535,1]]);
+feedback.execute({ampl:255,time:1,waveform:'off'},first,api);feedback.step();
+assert.deepEqual(events.splice(0),[[1,0,0,1]]);
+feedback.execute({ampl:255,time:1},helper,api);feedback.step();assert.deepEqual(events,[]);
+feedback.execute({lo:123,hi:456,time:8},helper,api);assert.deepEqual(events.splice(0),[[1,123,456,8]]);
+feedback.execute({redirectid:999,lo:1},first,api);assert.deepEqual(events,[]);
+feedback.execute({time:9},first,api);feedback.reset();feedback.step();assert.deepEqual(events,[]);
+const requests=[];
+assert.equal(browserRumble({vibrationActuator:{playEffect:(type,params)=>{requests.push({type,params});return Promise.resolve()}}},65535,0,12),true);
+assert.deepEqual(requests,[{type:'dual-rumble',params:{duration:212,strongMagnitude:1,weakMagnitude:0,startDelay:0}}]);
+assert.equal(browserRumble(null,0,0,1),false);
+assert.equal(browserRumble({vibrationActuator:{playEffect:()=>{throw Error('Device unavailable')}}},0,0,1),false);
+console.log('ForceFeedback old/new execution, native Helper distinction, redirects, motor routing and browser requests passed; physical hardware fidelity remains unverified');

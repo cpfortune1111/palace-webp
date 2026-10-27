@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {evaluateTypedNumericAST,isConstantNumericExpression} from '../Engine/expression-numeric-types.js';
+
+const source=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexOf('function queryValue('));
+const evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
+const calls=[];
+const target={query:name=>name.toLowerCase()==='layerno'?-5:name.toLowerCase()==='name'?'target':NaN};
+const context={query:name=>name.toLowerCase()==='layerno'?3:NaN,vars:[42],redirect:(name,index)=>{calls.push([name.toLowerCase(),index]);return name.toLowerCase()==='playerid'&&index===42?target:null}};
+context.originalContext=()=>context;
+target.originalContext=()=>context;
+target.redirect=context.redirect;
+const sandbox=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpression,testContext:context,animElemTime:()=>0});
+vm.runInContext(parser+'\n'+evaluator,sandbox);
+const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',sandbox);
+assert.equal(execute('PlayerID(var(0)), LayerNo / 2'),-2);
+assert.equal(execute('PlayerID(42), LayerNo + LayerNo'),-2);
+assert.throws(()=>execute('PlayerID(42), (LayerNo + LayerNo)'),/Parentheses cannot/);
+assert.equal(execute('PlayerID(42), (2 + 4)'),6);
+assert.equal(execute('playerid(42), Name'),'target');
+assert.equal(execute('PlayerID(42), PlayerID(var(0)), LayerNo'),-5);
+assert.ok(Number.isNaN(execute('PlayerID(99), LayerNo')));
+assert.deepEqual(calls,[['playerid',42],['playerid',42],['playerid',42],['playerid',42],['playerid',42],['playerid',42],['playerid',99]]);
+for(const expression of ['PlayerID(42) LayerNo','PlayerID(42, LayerNo','PlayerID(), LayerNo'])assert.throws(()=>execute(expression));
+console.log('PlayerID parser and typed/untyped expression consumers preserve target values, nested caller index scope and missing-target undefined');

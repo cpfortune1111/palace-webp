@@ -1,0 +1,704 @@
+{
+  "schema": 1,
+  "referenceCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "builtinNameCount": 138,
+  "certifiedBuiltinNames": 0,
+  "customFallback": {
+    "source": "OC_const_constants -> c.gi().constants",
+    "missingValue": 0,
+    "coordinateConversion": false,
+    "status": "Partial: original Constants-section import and live root/Helper consumers; full native/version parity pending"
+  },
+  "rows": [
+    {
+      "name": "data.life",
+      "opcode": "OC_const_data_life",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.power",
+      "opcode": "OC_const_data_power",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.dizzypoints",
+      "opcode": "OC_const_data_dizzypoints",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.guardpoints",
+      "opcode": "OC_const_data_guardpoints",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.attack",
+      "opcode": "OC_const_data_attack",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.defence",
+      "opcode": "OC_const_data_defence",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.fall.defence_up",
+      "opcode": "OC_const_data_fall_defence_up",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.fall.defence_mul",
+      "opcode": "OC_const_data_fall_defence_mul",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.liedown.time",
+      "opcode": "OC_const_data_liedown_time",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.airjuggle",
+      "opcode": "OC_const_data_airjuggle",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.sparkno",
+      "opcode": "OC_const_data_sparkno",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.guard.sparkno",
+      "opcode": "OC_const_data_guard_sparkno",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.hitsound.channel",
+      "opcode": "OC_const_data_hitsound_channel",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.guardsound.channel",
+      "opcode": "OC_const_data_guardsound_channel",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.ko.echo",
+      "opcode": "OC_const_data_ko_echo",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.volume",
+      "opcode": "OC_const_data_volume",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.intpersistindex",
+      "opcode": "OC_const_data_intpersistindex",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "data.floatpersistindex",
+      "opcode": "OC_const_data_floatpersistindex",
+      "status": "Partial: original Data import, typed own-character queries and actual root/Helper evidence"
+    },
+    {
+      "name": "size.xscale",
+      "opcode": "OC_const_size_xscale",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.yscale",
+      "opcode": "OC_const_size_yscale",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.ground.back",
+      "opcode": "OC_const_size_ground_back",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.ground.front",
+      "opcode": "OC_const_size_ground_front",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.air.back",
+      "opcode": "OC_const_size_air_back",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.air.front",
+      "opcode": "OC_const_size_air_front",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.height",
+      "opcode": "OC_const_size_height",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.attack.dist",
+      "opcode": "OC_const_size_attack_dist_width_front",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.width.front",
+      "opcode": "OC_const_size_attack_dist_width_front",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.width.back",
+      "opcode": "OC_const_size_attack_dist_width_back",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.height.top",
+      "opcode": "OC_const_size_attack_dist_height_top",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.height.bottom",
+      "opcode": "OC_const_size_attack_dist_height_bottom",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.depth.top",
+      "opcode": "OC_const_size_attack_dist_depth_top",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.dist.depth.bottom",
+      "opcode": "OC_const_size_attack_dist_depth_bottom",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.attack.depth.top",
+      "opcode": "OC_const_size_attack_depth_top",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.attack.depth.bottom",
+      "opcode": "OC_const_size_attack_depth_bottom",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.proj.attack.dist",
+      "opcode": "OC_const_size_proj_attack_dist_width_front",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.width.front",
+      "opcode": "OC_const_size_proj_attack_dist_width_front",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.width.back",
+      "opcode": "OC_const_size_proj_attack_dist_width_back",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.height.top",
+      "opcode": "OC_const_size_proj_attack_dist_height_top",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.height.bottom",
+      "opcode": "OC_const_size_proj_attack_dist_height_bottom",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.depth.top",
+      "opcode": "OC_const_size_proj_attack_dist_depth_top",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.attack.dist.depth.bottom",
+      "opcode": "OC_const_size_proj_attack_dist_depth_bottom",
+      "status": "Partial: live guard-distance consumer and focused/browser evidence"
+    },
+    {
+      "name": "size.proj.doscale",
+      "opcode": "OC_const_size_proj_doscale",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.head.pos.x",
+      "opcode": "OC_const_size_head_pos_x",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.head.pos.y",
+      "opcode": "OC_const_size_head_pos_y",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.mid.pos.x",
+      "opcode": "OC_const_size_mid_pos_x",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.mid.pos.y",
+      "opcode": "OC_const_size_mid_pos_y",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.shadowoffset",
+      "opcode": "OC_const_size_shadowoffset",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.draw.offset.x",
+      "opcode": "OC_const_size_draw_offset_x",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.draw.offset.y",
+      "opcode": "OC_const_size_draw_offset_y",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.depth.top",
+      "opcode": "OC_const_size_depth_top",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.depth.bottom",
+      "opcode": "OC_const_size_depth_bottom",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.weight",
+      "opcode": "OC_const_size_weight",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "size.pushfactor",
+      "opcode": "OC_const_size_pushfactor",
+      "status": "Partial: original Size import, actor/Helper snapshots and actual typed/unit query evidence"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.add.x",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_add_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.add.y",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_add_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.back",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_back",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.down",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_down",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.fwd",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_fwd",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.mul.x",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_mul_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.mul.y",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_mul_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.airrecover.up",
+      "opcode": "OC_const_velocity_air_gethit_airrecover_up",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.groundrecover.x",
+      "opcode": "OC_const_velocity_air_gethit_groundrecover_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.groundrecover.y",
+      "opcode": "OC_const_velocity_air_gethit_groundrecover_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.ko.add.x",
+      "opcode": "OC_const_velocity_air_gethit_ko_add_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.ko.add.y",
+      "opcode": "OC_const_velocity_air_gethit_ko_add_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.air.gethit.ko.ymin",
+      "opcode": "OC_const_velocity_air_gethit_ko_ymin",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.back.x",
+      "opcode": "OC_const_velocity_airjump_back_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.down.x",
+      "opcode": "OC_const_velocity_airjump_down_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.down.y",
+      "opcode": "OC_const_velocity_airjump_down_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.down.z",
+      "opcode": "OC_const_velocity_airjump_down_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.fwd.x",
+      "opcode": "OC_const_velocity_airjump_fwd_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.neu.x",
+      "opcode": "OC_const_velocity_airjump_neu_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.up.x",
+      "opcode": "OC_const_velocity_airjump_up_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.up.y",
+      "opcode": "OC_const_velocity_airjump_up_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.up.z",
+      "opcode": "OC_const_velocity_airjump_up_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.airjump.y",
+      "opcode": "OC_const_velocity_airjump_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.ground.gethit.ko.add.x",
+      "opcode": "OC_const_velocity_ground_gethit_ko_add_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.ground.gethit.ko.add.y",
+      "opcode": "OC_const_velocity_ground_gethit_ko_add_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.ground.gethit.ko.xmul",
+      "opcode": "OC_const_velocity_ground_gethit_ko_xmul",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.ground.gethit.ko.ymin",
+      "opcode": "OC_const_velocity_ground_gethit_ko_ymin",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.back.x",
+      "opcode": "OC_const_velocity_jump_back_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.down.x",
+      "opcode": "OC_const_velocity_jump_down_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.down.y",
+      "opcode": "OC_const_velocity_jump_down_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.down.z",
+      "opcode": "OC_const_velocity_jump_down_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.fwd.x",
+      "opcode": "OC_const_velocity_jump_fwd_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.neu.x",
+      "opcode": "OC_const_velocity_jump_neu_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.up.x",
+      "opcode": "OC_const_velocity_jump_up_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.up.y",
+      "opcode": "OC_const_velocity_jump_up_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.up.z",
+      "opcode": "OC_const_velocity_jump_up_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.jump.y",
+      "opcode": "OC_const_velocity_jump_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.back.x",
+      "opcode": "OC_const_velocity_run_back_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.back.y",
+      "opcode": "OC_const_velocity_run_back_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.down.x",
+      "opcode": "OC_const_velocity_run_down_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.down.y",
+      "opcode": "OC_const_velocity_run_down_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.down.z",
+      "opcode": "OC_const_velocity_run_down_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.fwd.x",
+      "opcode": "OC_const_velocity_run_fwd_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.fwd.y",
+      "opcode": "OC_const_velocity_run_fwd_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.up.x",
+      "opcode": "OC_const_velocity_run_up_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.up.y",
+      "opcode": "OC_const_velocity_run_up_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.run.up.z",
+      "opcode": "OC_const_velocity_run_up_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.back.x",
+      "opcode": "OC_const_velocity_runjump_back_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.back.y",
+      "opcode": "OC_const_velocity_runjump_back_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.down.x",
+      "opcode": "OC_const_velocity_runjump_down_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.down.y",
+      "opcode": "OC_const_velocity_runjump_down_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.down.z",
+      "opcode": "OC_const_velocity_runjump_down_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.fwd.x",
+      "opcode": "OC_const_velocity_runjump_fwd_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.up.x",
+      "opcode": "OC_const_velocity_runjump_up_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.up.y",
+      "opcode": "OC_const_velocity_runjump_up_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.up.z",
+      "opcode": "OC_const_velocity_runjump_up_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.runjump.y",
+      "opcode": "OC_const_velocity_runjump_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.back.x",
+      "opcode": "OC_const_velocity_walk_back_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.down.x",
+      "opcode": "OC_const_velocity_walk_down_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.down.y",
+      "opcode": "OC_const_velocity_walk_down_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.down.z",
+      "opcode": "OC_const_velocity_walk_down_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.fwd.x",
+      "opcode": "OC_const_velocity_walk_fwd_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.up.x",
+      "opcode": "OC_const_velocity_walk_up_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.up.y",
+      "opcode": "OC_const_velocity_walk_up_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "velocity.walk.up.z",
+      "opcode": "OC_const_velocity_walk_up_z",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.airjump.num",
+      "opcode": "OC_const_movement_airjump_num",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.airjump.height",
+      "opcode": "OC_const_movement_airjump_height",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.yaccel",
+      "opcode": "OC_const_movement_yaccel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.stand.friction",
+      "opcode": "OC_const_movement_stand_friction",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.crouch.friction",
+      "opcode": "OC_const_movement_crouch_friction",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.stand.friction.threshold",
+      "opcode": "OC_const_movement_stand_friction_threshold",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.crouch.friction.threshold",
+      "opcode": "OC_const_movement_crouch_friction_threshold",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.groundlevel",
+      "opcode": "OC_const_movement_air_gethit_groundlevel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.groundrecover.ground.threshold",
+      "opcode": "OC_const_movement_air_gethit_groundrecover_ground_threshold",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.groundrecover.groundlevel",
+      "opcode": "OC_const_movement_air_gethit_groundrecover_groundlevel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.airrecover.threshold",
+      "opcode": "OC_const_movement_air_gethit_airrecover_threshold",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.airrecover.yaccel",
+      "opcode": "OC_const_movement_air_gethit_airrecover_yaccel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.air.gethit.trip.groundlevel",
+      "opcode": "OC_const_movement_air_gethit_trip_groundlevel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.bounce.offset.x",
+      "opcode": "OC_const_movement_down_bounce_offset_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.bounce.offset.y",
+      "opcode": "OC_const_movement_down_bounce_offset_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.bounce.yaccel",
+      "opcode": "OC_const_movement_down_bounce_yaccel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.bounce.groundlevel",
+      "opcode": "OC_const_movement_down_bounce_groundlevel",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.gethit.offset.x",
+      "opcode": "OC_const_movement_down_gethit_offset_x",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.gethit.offset.y",
+      "opcode": "OC_const_movement_down_gethit_offset_y",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    },
+    {
+      "name": "movement.down.friction.threshold",
+      "opcode": "OC_const_movement_down_friction_threshold",
+      "status": "Partial: original import and live own root/Helper query/caller-unit adapter; complete native consumers/version evidence pending"
+    }
+  ]
+}

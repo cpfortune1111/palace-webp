@@ -1,0 +1,66 @@
+# Venus Palace Web — Source Import V1 / TODO
+
+盤點日期：2026-10-02。遊戲基線：0.23.7；本次不修改可玩版本或鏡頭。
+
+## 已完成
+- [x] 按 SailorVenus.def 追齊 9 個實際檔案；cns / st 指向同一檔案，已去重。
+- [x] 原檔完整本機匯入及 SHA-256 清單，包含 SFF / SND；完整來源包見 venus-source-import-v1.zip。
+- [x] 85 個 Statedef 區段、661 個 controller 區段、39 個 Command 區段，保留來源行號與原始表達式。
+- [x] 133 個 AIR actions，保留影格、offset、flip、時長、LoopStart / Clsn 原文。
+- [x] SFF 760 個 sprite directory entries、708 個 palette entries；SND 67 個 sound entries。
+- [x] 對照目前 index.html 的 controller handlers，分開「有 handler」與「完整支援」。
+- [x] 靜態 state / action / sound 引用檢查；動態或外部引用另列，未假裝已解析。
+
+## 作者補充及 0.23.8
+- [x] 0.23.9：CLSN viewer crash、sprpriority 排層、5001 轉 A5005 的一幀回圈、統一 P1/P2 HUD。
+- [x] 0.23.9 使用者 PASS；0.23.10 補單 target 的地面 hit／guard cornerpush、近角落距離扣除、legacy 0.7 衰減。
+- [x] 0.23.10 使用者確認角落推退正常；0.23.11 修正 guard stun 期間第二拳破防誤判，補 source renderer hitshake。
+- [x] 0.23.12：按使用者要求將視覺 hitshake 幅度由 1 加倍至 2；此為視覺 override，時長、物理與角落推退不變。
+- [x] 122,0／951,99 作者確認是刻意空影格，保留 ticks；空中無防禦。
+- [x] 645／投技 800、801 未完成，保留參考 code；175／5500 保留 source fallback。
+- [x] State 200 原 CNS controllers、AIR Clsn、地面 hit／guard／hitpause／恢復接入 0.23.8 M1。
+- [ ] 雙向角色執行器、多 target／特殊狀態 cornerpush、hit spark、空中受擊仍待後續；詳見 NOTES_02310.md。
+
+## P0 — 來源一致性及匯入驗收
+- [x] 對照 IKEMEN 確認 3 個 904,-1 為刻意空影格；匯入器已修正誤報，保留影格時間。
+- [x] 作者確認後，餘下 9 個缺失引用全屬未完成 Action 645；不自行補圖。
+- [ ] 核對 referenceChecks 所列 missing / dynamic-or-external-review；追至 CNS、Helper、CMD 的觸發條件。
+- [x] 逐 state 比對舊 repo 與本機來源：venus.cns 20 個共同 state 改變、增 2／刪 1；Common 3 個 state 改變。State 200 確有差異，不直接覆蓋。
+- [x] 全部 6 個靜態缺失引用完成條件核對：3 個 SelfAnimExist guard、2 個 State 999 限制入口、1 個有序 fallback。
+- [x] 匯出並驗證全部 67 個原樣 WAV payload；尚未接入瀏覽器播放。
+- [ ] 建立全量 SFF→分批 atlas / metadata 及 SND→音效匯出器，驗證 linked sprite / palette、透明度、axis、AIR flip 與 Clsn default 生效範圍。
+- [ ] 全量編譯器對未知 controller / trigger / expression 明確報告；不靜默忽略。
+
+## P1 — 最小完整對戰閉環（下一個可玩里程碑）
+- [x] 固定 60 Hz 邏輯 tick；30/60/120 Hz 相同地面攻擊結果一致。
+- [ ] 完整可重播 input / state trace。
+- [x] 0.23.12 使用者 PASS；0.23.13 新增最近 600 個 tick 的 input／state／hitpause／命中診斷 JSON 匯出；不是完整 replay save。
+- [ ] State 200：CMD→State→AIR Clsn→原始 HitDef→命中／防禦→hitpause→damage／擊退→恢復。
+- [ ] P1 / P2 同一套角色執行器，Venus vs Venus；移除 P2 硬編碼受擊數值。
+- [x] 0.23.14 第一切片：共用 ground HitDef 結果／AIR 碰撞 context；12 組雙 id／facing 隔離測試。完整雙向 runner／P1 受擊仍未完成。
+- [x] 0.23.15：P2 單次 State 200 測試接通 P1 ground hit／stand guard／恢復／hitshake／cornerpush；雙 facing 及 Pause/Step 驗收。完整 CMD／同時攻擊／空中受擊仍未完成。
+- [x] 0.23.15 使用者 PASS；0.23.16 統一雙方 AST／trigger 評估、隔離 fighter variables／command context，新增 U 單次 P2 出拳測試快捷鍵。
+- [x] 0.23.16 使用者 PASS；0.23.17 共用已有 controller handlers，P2 J/L 原 State 20 地面前後行／後防，保留 Dummy 選單；幀率／邊界／轉身驗證。
+- [x] 0.23.18 修正 P2 出拳跨角色 ctrl 依賴與同幀碰撞清走 HitDef；State 200 地面 equal-priority Hit 互中、雙方 hitpause／hitshake／恢復，兩個 facing × 兩個輸入次序通過；非完整 priority 系統。
+- [ ] 逐項補足 State 200 所需 trigger、HitDef 欄位及共同受擊／防禦 state controllers。
+- [ ] 驗收：命中、揮空、防禦各可重播；兩邊可互相受擊；數值對照原 CNS 與 IKEMEN。
+
+## P2 — 普通動作及普通技
+- [ ] 站立／蹲下／空中攻擊，跑步／後跳、防禦、倒地／起身，按來源相依順序接入。
+- [ ] -1 / -2 / -3、VarAdd / VarRangeSet 等變數操作及完整 CMD 時序／buffer／轉向。
+- [ ] 回歸：Turn 5 / 6、空中 facing lock、stage edge、local VX / world velocity、atlas 裁切。
+
+## P3 — Venus 必殺、特效與音效
+- [ ] Helper / ParentVarSet / BindToRoot / DestroySelf，含 root / parent / helper trigger redirects。
+- [ ] Explod / RemoveExplod / Projectile、Pause / SuperPause、PlaySnd / StopSnd。
+- [ ] 按實際招式依賴補完生命／能量、hit override / invulnerability、取消技及特效透明混合。
+
+## P4 — 完整角色驗收
+- [ ] 勝負／回合、intro／win／taunt、AI、完整招式表、音效及性能／手機輸入回歸。
+- [ ] 每招與原 IKEMEN 並排對照；差異逐條留在 TODO，不以 Web 特有猜測補行為。
+
+## 邊界
+- 原始文字來源與 JSON inventory 提交 GitHub 的 sources/venus；完整 SFF/SND 留在本機來源包，尚未上傳 GitHub。
+- 這是來源匯入，不是已完成全量角色執行；有 handler 不等於語義完整。
+- 鎖定既有鏡頭校準；不以本機 StageTraining.def 改寫現有 Web 鏡頭。
+- 暫不加入其他角色或擴充舞台。下一步先做 P0 缺口核對，再落實 P1 State 200 閉環。

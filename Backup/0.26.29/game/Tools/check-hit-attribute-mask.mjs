@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {excludesHit,allowsHit} from '../Engine/hit-attribute-mask.js';
+
+assert.equal(excludesHit('SCA','A, SP'),true);
+assert.equal(excludesHit(',AA,AT','S, NA'),true);
+assert.equal(excludesHit(',AA,AT','A, HT'),true);
+assert.equal(excludesHit(',AA,AT','S, HP'),false);
+assert.equal(excludesHit(',NT,ST,HT','C, NT'),true);
+assert.equal(excludesHit(',NT,ST,HT','C, SA'),false);
+assert.equal(excludesHit('S, SP','A, SP'),true);
+assert.equal(excludesHit('S, SP','S, NP'),true);
+assert.equal(excludesHit('S, SP','A, NP'),false);
+assert.equal(allowsHit('S, SP','A, SP'),false);
+assert.equal(allowsHit('S, SP','S, NP'),false);
+assert.equal(allowsHit('S, SP','S, SP'),true);
+assert.equal(excludesHit(',H','A,NA,HP'),true);
+assert.equal(excludesHit('S','A,NA',{attackerState:'S',compatibility:'mugen'}),true);
+assert.equal(excludesHit('S','A,NA',{attackerState:'S',compatibility:'ikemen'}),false);
+assert.equal(excludesHit('S','A,NA',{attackerState:'S',compatibility:'mugen',projectile:true}),false);
+console.log('NotHitBy attribute masks passed');

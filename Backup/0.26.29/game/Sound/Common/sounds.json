@@ -1,0 +1,42 @@
+{
+  "20-0": {
+    "file": "common-20-0.wav",
+    "ticks": 42,
+    "sourceSHA256": "cd25fac2722938bc48367f91bec5df97c3a18a1367d76ec3f2d7dbd69770c2a7",
+    "nativeSHA256": "cd25fac2722938bc48367f91bec5df97c3a18a1367d76ec3f2d7dbd69770c2a7",
+    "sourceSampleRate": 16000,
+    "sourceFrames": 11111,
+    "sourceChannels": 1,
+    "sourceSampleWidth": 1
+  },
+  "7-0": {
+    "file": "common-7-0.wav",
+    "ticks": 21,
+    "sourceSHA256": "032234c9f3ee5a4fd6568cae7b06d30e83cb823713d1dc088d01a22abb58516f",
+    "nativeSHA256": "032234c9f3ee5a4fd6568cae7b06d30e83cb823713d1dc088d01a22abb58516f",
+    "sourceSampleRate": 11025,
+    "sourceFrames": 3881,
+    "sourceChannels": 1,
+    "sourceSampleWidth": 1
+  },
+  "7-1": {
+    "file": "common-7-1.wav",
+    "ticks": 21,
+    "sourceSHA256": "ef001f693fe7dca4da09de5bdae56700a869cb850029d16dae94a9ca702470b1",
+    "nativeSHA256": "ef001f693fe7dca4da09de5bdae56700a869cb850029d16dae94a9ca702470b1",
+    "sourceSampleRate": 11025,
+    "sourceFrames": 3881,
+    "sourceChannels": 1,
+    "sourceSampleWidth": 1
+  },
+  "7-2": {
+    "file": "common-7-2.wav",
+    "ticks": 66,
+    "sourceSHA256": "ebb6a72693a871d94376a057cd21ac3f4859645f7abb4db391818184995a2b59",
+    "nativeSHA256": "ebb6a72693a871d94376a057cd21ac3f4859645f7abb4db391818184995a2b59",
+    "sourceSampleRate": 11025,
+    "sourceFrames": 12162,
+    "sourceChannels": 1,
+    "sourceSampleWidth": 1
+  }
+}

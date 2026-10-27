@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {compileHitPriority} from '../Engine/hit-priority.js';
+import {hitContactMetadata} from '../Engine/hit-contact-metadata.js';
+let count=0;const compiled=compileHitPriority('2 + 4, Miss',{evaluate:value=>{count++;assert.equal(value,'2 + 4');return 6}});
+assert.equal(compiled,'6, Miss');assert.equal(count,1);
+assert.equal(compileHitPriority('2.9'), '2, Hit');
+assert.deepEqual(hitContactMetadata({priority:compiled,p2facing:-1},false),{priority:6,facing:-1,kill:0});
+assert.deepEqual(hitContactMetadata({},true),{priority:4,facing:0,kill:1});
+assert.throws(()=>compileHitPriority('6, Unknown'),/priority type/);
+console.log('Native HitDef priority expression/type, one evaluation and contact priority/facing/kill metadata passed');

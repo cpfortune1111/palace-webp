@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import {accumulateHitContactLedger,clearHitContactInformation,commitHitContactPower,accumulateAttackerContactPower} from '../Engine/hit-contact-ledger.js';
+
+const hit={};
+const contact={hitDamage:100,guardDamage:12,hitGivePower:60,guardGivePower:30};
+accumulateHitContactLedger(hit,contact);
+accumulateHitContactLedger(hit,{...contact,guarded:true});
+assert.deepEqual(hit,{hitdamage:200,guarddamage:24,hitpower:120,guardpower:60,power:90});
+clearHitContactInformation(hit);
+assert.deepEqual(hit,{hitdamage:0,guarddamage:0,hitpower:0,guardpower:0,power:90});
+const commits=[];
+assert.equal(commitHitContactPower(hit,value=>commits.push(value)),90);
+assert.equal(commitHitContactPower(hit,value=>commits.push(value)),0);
+assert.deepEqual(commits,[90]);
+const helper={};
+accumulateHitContactLedger(helper,{...contact,playerType:false});
+assert.equal(helper.power,undefined);
+assert.equal(helper.hitpower,60);
+const wrapped={hitdamage:2147483647};
+accumulateHitContactLedger(wrapped,{...contact,hitDamage:1});
+assert.equal(wrapped.hitdamage,-2147483648);
+const moveHit={};
+accumulateAttackerContactPower(moveHit,{hitGetPower:70,guardGetPower:35});
+accumulateAttackerContactPower(moveHit,{hitGetPower:70,guardGetPower:35,guarded:true});
+assert.equal(moveHit.power,105);
+assert.equal(commitHitContactPower(moveHit,value=>commits.push(value)),105);
+assert.deepEqual(commits,[90,105]);
+console.log('Hit contact information accumulates both branches independently; selected player-type power survives information reset and commits once');

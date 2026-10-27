@@ -1,0 +1,17 @@
+# DefenceMulSet evaluation staging (unpublished, partial)
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, src/compiler_functions.go defenceMulSet and src/bytecode.go defenceMulSet.Run.
+
+The native runtime collects value, onHit and mulType before applying customDefense and defenseMulDelay. Engine/defense-controllers.js previously wrote customDefense before evaluating onhit, exposing a value the native operand cannot yet observe. It now samples supplied onhit before committing either field. An omitted onhit selects the profile default without invoking the expression evaluator on a synthetic literal.
+
+Tools/check-defense-controllers.mjs has a failing-before case in which onhit observes the previous customDefense, plus an evaluator-call inventory for supplied and omitted onhit. Existing MUGEN/Ikemen defaults, direct/reciprocal multipliers, constant multype parsing and redirected storage cases continue to pass. This is production-module evidence, not native executable differential or a complete browser trajectory certification.
+
+Subsequent actual browser coverage uses the common dispatcher and real Defence trigger. Each actor starts with a direct multiplier of 3 and an effective Defence value of 300; value=2 and onhit=Defence > 250 must retain true while committing multiplier 2. All eight profile/player/root-or-Helper scenarios pass in Tools/check-debug-clipboard-browser.cjs; outputs/defense-evaluation-browser.log records the completed run. Thus this edge case also has a real expression/resource read consumer, not solely a module callback.
+
+Version defaults now consume explicit native engineVersions rather than the character compatibility label. The pinned Char.stWgi implementation selects the current state owner for ordinary states and the character's own global metadata during every negative state. Actual dispatch follows that distinction without using the redirected recipient's version. Module tests deliberately conflict version metadata with compatibility labels and cover zero first-two Ikemen fields despite a nonzero patch field.
+
+Eight actual-browser actor scenarios temporarily install conflicting own/foreign native metadata, enter a foreign state-provider context, and dispatch ordinary state 5000 and negative states -2/-1. The observed defaults are direct multiplier 2 with onHit=false for foreign Ikemen code, then reciprocal 0.5 with onHit=true for own legacy negative code. Fixture metadata and state ownership are restored afterward. Evidence: outputs/defense-version-browser.log and the versionResults assertions in Tools/check-debug-clipboard-browser.cjs.
+
+Full provider chains, boolean undefined semantics, scheduling, broader effective-defense consumers and all parameter certifications remain Pending. Final combined regression and publication are separate gates.
+
+The later complete game suite caught a legacy runController entry that passes null context. Version selection now obtains the real active actor/state provider when no context is supplied, instead of dereferencing null. Its existing compatibility fixture also now changes explicit engineVersions together with its compatibility label, matching the native stWgi contract; all expected defense, healing and guard-time values are retained unchanged, and original metadata is restored. The restarted complete regression is logged in outputs/controller-conversion-full-browser.log; successful completion must be observed separately.

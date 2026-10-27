@@ -1,0 +1,17 @@
+# 0.25.46 — Engine-profile logical operand values (partial)
+
+Checkpoint: all 191 Node tools and the expanded eight actual engine-profile/player/root-or-Helper cases pass. Final combined browser/deployment gates are separate. Chronological unpublished-stage observations below do not redefine controller certification; all remaining native gaps stay Pending.
+
+References: [Elecbyte MUGEN 1.1 CNS documentation](https://www.elecbyte.com/mugendocs-11b1/cns.html), version 1.1/updated 09 June 2013; pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go expBoolAnd/expBoolOr (6013/6057) and bytecode.go jump/boolean handlers. The engine profiles must not be silently treated as identical.
+
+MUGEN's documented logical result is normalized. The pinned Ikemen CNS compiler instead emits jumps for dynamic logical expressions, leaving the selected operand and its type on the stack. A fully constant expression is folded to a normalized boolean. The WEB had normalized both profiles, losing dynamic Ikemen values and causing enclosing arithmetic to use the wrong tag. The existing engine-profile switch now reaches expression contexts and the real numeric/legacy consumers. This is actual runtime selection, not an unused test-only option.
+
+For supported variable/numeric subtrees, Ikemen CNS retains selected int/float tags through enclosing arithmetic, while the MUGEN profile retains existing normalization. Literal trees, intervals, numeric conditional constants and the supported native math-function folds are distinguished from runtime operands. Cached ASTs can change condition and engine profile without freezing the first selected type/value. Untyped query/function families and complete constant folding are still Pending; no full VM/type certification is claimed.
+
+Tools/check-logical-profiles.mjs exercises the actual parser/evaluator, values/types, constant folds, short-circuit writes and cached-profile changes. Tools/check-logical-browser.cjs exercises eight actual engine-profile/player/root-or-Helper cases through real floating-parameter controllers, including typed arithmetic, a runtime Time query and constant math. All eight cases pass (outputs/logical-profile-controller-browser.log). The original failing fixture is outputs/logical-profiles-before.log. These tests preserve the existing MUGEN path; they are not an empirical proof of every MUGEN expression-side-effect/bottom rule.
+
+The pinned compiler's ZSS block path is different again and is not claimed by this CNS work. ZSS metadata/import, broader boolean operators, bitwise/exponent syntax, undefined/bottom propagation, all query tags, complete native scope/VM/version behavior and the remaining controller parameters remain Pending. Full combined regression and publication are separate gates; this checkpoint is not released and no controller is certified.
+
+Focused gate status: the eight actual profile/player/root-or-Helper cases pass, all 44 reaction cases pass (outputs/logical-reaction44.log), and the complete Node sweep finishes at 191/191 with no failures (outputs/node-semantic-sweep-logical-profiles/summary.json). The newer combined browser suite is separately recorded in outputs/logical-full-browser.log; these focused results do not imply its completion or publication.
+
+That complete profile browser run subsequently finishes with exit 0 (outputs/logical-full-browser.log). The later XOR/chain-grouping work requires a fresh combined gate; see LOGICAL-XOR-WIP.md. This does not imply publication or whole-controller certification.

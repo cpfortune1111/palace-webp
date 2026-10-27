@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {applyDepthController,createDepthModifiers} from '../Engine/depth-controller.js';
+const caller={coord:1280,depth:createDepthModifiers()},recipient={coord:640,depth:createDepthModifiers()},api={evaluate:Number,split:value=>String(value).split(','),localCoord:actor=>actor.coord,findActor:id=>id===2?recipient:null,slots:actor=>actor.depth};
+applyDepthController({type:'Depth',params:{value:'10'}},caller,api);
+assert.deepEqual(caller.depth,{player:[10,0],edge:[10,0]});
+applyDepthController({type:'Depth',params:{player:'-8,12',edge:'4',value:'bad',redirectid:2}},caller,api);
+assert.deepEqual(recipient.depth,{player:[-4,6],edge:[2,0]});
+applyDepthController({type:'Depth',params:{edge:'',value:'bad'}},caller,api);
+assert.deepEqual(caller.depth,{player:[10,0],edge:[10,0]});
+applyDepthController({type:'Depth',params:{player:'bad',redirectid:99}},caller,api);
+assert.throws(()=>applyDepthController({type:'Depth',params:{}},caller,api),/Missing Depth/);
+assert.notEqual(caller.depth.player,caller.depth.edge);
+console.log('Native Depth value/player/edge precedence, empty declaration suppression, missing second zero and redirected ratio passed');

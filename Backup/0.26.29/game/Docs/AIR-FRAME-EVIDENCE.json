@@ -1,0 +1,151 @@
+{
+  "schema": "moon-palace-air-frame-evidence-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "runtimeBaseline": "0.26.25",
+  "reference": {
+    "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "animSha256": "0385650e39a91a4c43cd02dd926b3306cf4bb88f9be7b26df572702f93b07afd",
+    "compiler": "go version go1.27.3 windows/amd64",
+    "unchangedDeclarations": 13,
+    "oracleExecutableSha256": "52eee2170cab11e298edf101cbead43ff15fb213ee3a9b7c2ceee4bf8331ac9f"
+  },
+  "nativeFrameEvidence": {
+    "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "compiler": "go version go1.27.3 windows/amd64",
+    "oracleExecutableSha256": "52eee2170cab11e298edf101cbead43ff15fb213ee3a9b7c2ceee4bf8331ac9f",
+    "syntheticFrames": 29,
+    "originalFrames": 10501,
+    "characters": [
+      {
+        "name": "moon",
+        "sourceSha256": "98b9525c715425db93c2ade59116c681730a5abda91e50787037dd2102f5cb52",
+        "bytes": 139765,
+        "frames": 3633,
+        "scaleOrAngleFields": 0,
+        "nonDefaultScaleOrAngle": 0,
+        "interpolationDirectives": 0,
+        "longFrameRows": 0
+      },
+      {
+        "name": "venus",
+        "sourceSha256": "33d6e309ffcf2c19471f1a067f706131ebb40258ca38e192011402f4c32d329e",
+        "bytes": 69326,
+        "frames": 1269,
+        "scaleOrAngleFields": 0,
+        "nonDefaultScaleOrAngle": 0,
+        "interpolationDirectives": 0,
+        "longFrameRows": 0
+      },
+      {
+        "name": "jupiter",
+        "sourceSha256": "d3fcfe627c07cf5c13639225b83443c7f8b00572438d343b7fca08bb079697a5",
+        "bytes": 145511,
+        "frames": 3153,
+        "scaleOrAngleFields": 0,
+        "nonDefaultScaleOrAngle": 0,
+        "interpolationDirectives": 0,
+        "longFrameRows": 0
+      },
+      {
+        "name": "neptune",
+        "sourceSha256": "cdfa73ffd4a64e4f47439f0853e022fc66c9709191a317cb3f9da05eba4ba320",
+        "bytes": 66921,
+        "frames": 1388,
+        "scaleOrAngleFields": 0,
+        "nonDefaultScaleOrAngle": 0,
+        "interpolationDirectives": 0,
+        "longFrameRows": 0
+      },
+      {
+        "name": "saturn",
+        "sourceSha256": "1aca13edc9ab86707ae29650e155e6289040ca744ae7d10b6a6a792cfda1e76a",
+        "bytes": 64023,
+        "frames": 1058,
+        "scaleOrAngleFields": 0,
+        "nonDefaultScaleOrAngle": 0,
+        "interpolationDirectives": 0,
+        "longFrameRows": 0
+      }
+    ],
+    "matched": true,
+    "scope": "Compiled native ReadAnimFrame versus independent metadata fixtures and private original AIR frame fields. Not Web scale/angle/interpolation execution, generic AIR file parsing or renderer certification.",
+    "goalComplete": false
+  },
+  "exportPolicyEvidence": {
+    "unitChecks": 4,
+    "characters": [
+      {
+        "name": "moon",
+        "sourceSha256": "98b9525c715425db93c2ade59116c681730a5abda91e50787037dd2102f5cb52",
+        "frames": 3633,
+        "unchanged": true
+      },
+      {
+        "name": "venus",
+        "sourceSha256": "33d6e309ffcf2c19471f1a067f706131ebb40258ca38e192011402f4c32d329e",
+        "frames": 1269,
+        "unchanged": true
+      },
+      {
+        "name": "jupiter",
+        "sourceSha256": "d3fcfe627c07cf5c13639225b83443c7f8b00572438d343b7fca08bb079697a5",
+        "frames": 3153,
+        "unchanged": true
+      },
+      {
+        "name": "neptune",
+        "sourceSha256": "cdfa73ffd4a64e4f47439f0853e022fc66c9709191a317cb3f9da05eba4ba320",
+        "frames": 1388,
+        "unchanged": true
+      },
+      {
+        "name": "saturn",
+        "sourceSha256": "1aca13edc9ab86707ae29650e155e6289040ca744ae7d10b6a6a792cfda1e76a",
+        "frames": 1058,
+        "unchanged": true
+      }
+    ],
+    "frames": 10501,
+    "goalComplete": false
+  },
+  "regressions": {
+    "alphaCases": 8707,
+    "syntheticSffPixelCases": 2460,
+    "scannerChecks": 4,
+    "airCmdPinnedInventory": true
+  },
+  "observations": [
+    "Five cached original character AIR files contain no per-element scale/angle fields or interpolation directives",
+    "All 10501 raw frame metadata records match the pinned native ReadAnimFrame component",
+    "Both existing exporters produce the identical seven-field records for these private originals",
+    "Synthetic probes cover H/V offset parity, repeated flags, identity/explicit scale/angle, ignored line prefixes and malformed frame diagnostics"
+  ],
+  "exportPolicy": {
+    "paths": [
+      "Tools/export_venus_turn.py",
+      "Tools/Legacy/export_venus_turn.py"
+    ],
+    "current": "Seven-field existing renderer contract; omitted/identity per-frame transforms accepted.",
+    "unsupported": "Nonidentity per-frame scale/angle and interpolation now stop selected-action export explicitly instead of being silently omitted.",
+    "qualification": "Temporary explicit Unsupported policy pending real renderer/animation support, not completion of AIR parsing or the full goal. Existing exporter numeric grammar/version/error behavior remains Partial."
+  },
+  "nativeLimits": [
+    "ReadAnimFrame called directly after fixture-provided comment/whitespace preprocessing",
+    "No complete ReadAnimation collision/default/loop/interpolation/version/error recovery policy",
+    "Fixture facades capture frame data without GPU upload or native engine scheduling",
+    "Original character metadata comparison is not Web rendering equivalence"
+  ],
+  "remaining": [
+    "Implement per-element scale/angle and all four interpolation forms through actual renderer/animation consumers",
+    "Complete generic AIR reader and original package ingestion",
+    "Native/full-engine frame timing, collision/default boxes and logical/render tick parity",
+    "Complete finite/nonfinite/overflow/encoding/version diagnostics"
+  ],
+  "privateOnly": [
+    "Original AIR text",
+    "Pinned Go source",
+    "Generated Go implementation/executable",
+    "Raw frame fixture requests/results"
+  ]
+}

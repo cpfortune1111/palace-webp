@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {createStateChangeBuffer} from '../Engine/state-change-buffer.js';
+
+const pending=createStateChangeBuffer(),actor={state:100,time:7,anim:0,velocity:2};let initializations=0;
+pending.request('helper',{state:200,previousState:100,selectedTick:10},entry=>{actor.state=entry.state;actor.time=0});
+assert.deepEqual(actor,{state:200,time:0,anim:0,velocity:2});assert.equal(pending.has('helper'),true);
+const initialize=entry=>{assert.equal(pending.has('helper'),true);actor.anim=entry.state;actor.velocity=5;initializations++};
+for(const [paused,hitPause,tick]of [[true,false,11],[false,true,11],[false,false,10]])assert.equal(pending.initialize('helper',{paused,hitPause,tick,initialize}),false);
+assert.equal(initializations,0);const saved=pending.snapshot();
+assert.equal(pending.initialize('helper',{paused:false,hitPause:false,tick:11,initialize}),true);
+assert.equal(pending.has('helper'),false);assert.equal(initializations,1);
+assert.equal(pending.initialize('helper',{paused:false,hitPause:false,tick:12,initialize}),false);
+pending.restore(saved);assert.equal(pending.get('helper').state,200);
+pending.initialize('helper',{paused:false,hitPause:false,tick:12,initialize:()=>pending.request('helper',{state:300,selectedTick:12},()=>{})});
+assert.equal(pending.get('helper').state,300);
+assert.throws(()=>pending.request('helper',{state:400},()=>{throw Error('selection failed')}),/selection failed/);
+assert.equal(pending.get('helper').state,300);pending.cancel('helper');assert.equal(pending.has('helper'),false);
+assert.throws(()=>pending.initialize('helper',{}),/actual state initialization phase/);
+pending.restore(saved);pending.clear();assert.deepEqual(pending.snapshot(),[]);assert.equal(saved[0][1].state,200);
+pending.request('global',{state:200,selectedTick:15},()=>{});assert.equal(pending.initialize('global',{paused:false,hitPause:false,tick:14,allowSameTick:true,initialize:()=>{}}),false);
+assert.equal(pending.initialize('global',{paused:true,hitPause:false,tick:15,allowSameTick:true,initialize:()=>{}}),false);
+assert.equal(pending.initialize('global',{paused:false,hitPause:false,tick:15,allowSameTick:true,initialize:()=>{}}),true);
+console.log('Real state selection is distinct from once-only header initialization, waits for live action eligibility and a later action tick, and handles replacement, cancellation and snapshots');

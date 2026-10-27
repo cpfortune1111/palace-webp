@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {applyGetHitVarSet} from '../Engine/get-hit-var-set.js';
+const caller={scale:0.25},recipient={scale:0.5,hit:{damage:42}},evaluated=[];
+const api={evaluate:value=>{evaluated.push(value);return Number(value)},findActor:id=>id===2?recipient:null,getHit:actor=>actor.hit,localScale:actor=>actor.scale};
+assert.equal(applyGetHitVarSet({type:'GetHitVarSet',params:{redirectid:2,damage:7.8,xvel:8,'stand.friction':0.25,'fall.envshake.ampl':5.9,playerno:2,attr:'S,NA',hitcount:3,hittime:9}},caller,api),true);
+assert.deepEqual(recipient.hit,{damage:7,xvel:4,'stand.friction':0.25,'fall.envshake.ampl':2,playerno:1,attr:65,hittime:9});
+const before=evaluated.length;
+applyGetHitVarSet({type:'GetHitVarSet',params:{redirectid:99,damage:8}},caller,api);
+assert.equal(evaluated.length,before+1);
+recipient.hit={};applyGetHitVarSet({type:'GetHitVarSet',params:{redirectid:2,hitcount:7,hittime:9}},caller,{...api,parameterProfile:()=> 'documented'});
+assert.deepEqual(recipient.hit,{hitcount:7,hittime:9});
+console.log('Pinned GetHitVarSet types, redirection, scaling, attribute mask and hitcount compiler alias passed');

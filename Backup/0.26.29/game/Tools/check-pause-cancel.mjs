@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {createSpecialRuntime} from '../Char/Venus/venus-special-runtime.js';
+
+let tick=0;
+const roots=[null,{player:1,x:0,y:0,facing:1,vars:[]},{player:2,x:0,y:0,facing:-1,vars:[]}];
+const runtime=createSpecialRuntime({root:player=>roots[player],tick:()=>tick,data:()=>({engineVersions:{mugen:[1,1],ikemen:[0,0]}}),commands:()=>[],effects:[],context:()=>({query:()=>0}),pair:value=>String(value).split(','),eval:Number,collision:()=>({contact:false,overlap:false}),projectileOverlap:()=>true,advance:()=>{},duration:()=>4,frames:()=>[{time:4}],attack:()=>null,background:()=>{}});
+const pause=(player,time,movetime,kind='Pause')=>runtime.dispatch({type:kind,params:{time,movetime}},null,null,null,roots[player],player);
+pause(1,5,5);tick=1;assert.equal(runtime.blocked(1),false);assert.equal(runtime.blocked(2),true);
+pause(2,7,7);runtime.finishTick();tick=2;
+assert.equal(runtime.blocked(1),false);assert.equal(runtime.blocked(2),false);
+for(;tick<=5;tick++)runtime.finishTick();
+assert.equal(runtime.blocked(1),true);assert.equal(runtime.blocked(2),false);
+for(;tick<=8;tick++)runtime.finishTick();assert.equal(runtime.blocked(1),false);
+runtime.reset();pause(1,10,2);tick++;assert.equal(runtime.blocked(1),false);runtime.finishTick();tick++;runtime.finishTick();tick++;assert.equal(runtime.blocked(1),true);
+assert.equal(runtime.blocked(1,{created:tick-3,pausemovetime:2}),true);
+runtime.reset();runtime.dispatch({type:'Helper',params:{stateno:'950'}},null,null,null,roots[1],1);assert.equal(runtime.entities.length,0);
+for(const player of [1,2])runtime.dispatch({type:'Projectile',params:{projid:'1050',projanim:'9008',projhitanim:'902',velocity:'10,0',attr:'S,SP'}},null,null,null,roots[player],player);
+tick++;runtime.step();assert.equal(runtime.entities.length,2);assert.ok(runtime.entities.every(entity=>entity.anim===902&&entity.removing&&entity.time===0));
+for(let count=0;count<4;count++){tick++;runtime.step()}assert.equal(runtime.entities.length,0);
+console.log('Independent pause movetime, H950 suppression and cancellation defaults passed');

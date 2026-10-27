@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {guardFlagMask,guardFlagString,guardFlagMatches} from '../Engine/get-hit-guard-flag.js';
+assert.equal(guardFlagMask('M'),3);
+assert.equal(guardFlagString(' ma '),'HLA');
+assert.equal(guardFlagString('MAFD+-'),'HLAFD-+');
+assert.equal(guardFlagString(0),'');
+assert.equal(guardFlagMatches('MA','H'),true);
+assert.equal(guardFlagMatches('MA','D'),false);
+assert.throws(()=>guardFlagMask('Q'),/Invalid guard flag/);
+console.log('Native guard flag aliases, bit layout, string ordering and any-bit comparisons passed');

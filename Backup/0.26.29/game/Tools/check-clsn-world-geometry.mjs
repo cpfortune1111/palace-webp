@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {worldClsnBox,rotatedClsnCorners,clsnWorldOverlap} from '../Engine/clsn-world-geometry.js';
+const thin=worldClsnBox({rect:[-10,-1,10,1],angle:45,pivot:[0,0]},0,0),corner=worldClsnBox([6,6,7,7],0,0),center=worldClsnBox([-1,-1,1,1],0,0);
+assert.equal(clsnWorldOverlap(thin,corner),false);
+assert.equal(clsnWorldOverlap(thin,center),true);
+assert.equal(clsnWorldOverlap(center,thin),true);
+assert.equal(clsnWorldOverlap(worldClsnBox([0,0,10,10],0,0),worldClsnBox([10,0,20,10],0,0)),true);
+assert.equal(clsnWorldOverlap(worldClsnBox([0,0,0,0],0,0),center),true);
+const flipped=worldClsnBox({rect:[0,0,10,20],angle:30,pivot:[5,8]},100,200,-1);
+assert.deepEqual(flipped,{l:90,r:100,t:200,b:220,angle:30,pivot:[95,208]});
+const original=rotatedClsnCorners(worldClsnBox({rect:[0,0,10,20],angle:30,pivot:[5,8]},0,0)),mirrored=rotatedClsnCorners(worldClsnBox({rect:[0,0,10,20],angle:30,pivot:[5,8]},0,0,-1));
+for(const point of original)assert.ok(mirrored.some(other=>Math.abs(other[0]+point[0])<0.00001&&Math.abs(other[1]-point[1])<0.00001));
+assert.equal(clsnWorldOverlap(worldClsnBox({rect:[-10,-1,10,1],angle:45},0,0),worldClsnBox({rect:[-10,-1,10,1],angle:45},0,20)),false);
+console.log('Rotated SAT rejects enclosing-AABB false contacts, accepts center/touch/points and mirrors native angle/pivot');

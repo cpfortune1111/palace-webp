@@ -1,0 +1,7 @@
+# ModifyExplod ignorehitpause — partial parent-owned consumer
+
+Pinned reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler_functions.go Explod ignorehitpause parsing, bytecode.go modifyExplod explod_ignorehitpause and char.go Explod.pauseStatus. The same declaration is both a generic CNS scheduling property and an evaluated boolean effect parameter; it must not be treated solely as the header.
+
+The shared consumer now writes the effect boolean after native preceding fields. Modified effects opt into parent-owned hitpause observation: P1/P2 root pause clocks are isolated, Helpers use their actual owner instance, the other fighter or Helper's root does not incorrectly freeze the effect, and a missing/destroyed parent does not hold the effect. Existing unmodified legacy effect hitpause paths remain unchanged. Ignore=true advances the effect despite its parent's hitpause; frozen effects remain drawable.
+
+104 actual root/normal-Helper/profile/player/character-version ownership cases verify false/true, own/opponent/root pauses, missing Helper parents and continued rendering (outputs/modify-explod-hitpause-consumers.log). Independent typed-boolean checks pass. Generic header gates remain separately exercised by the actual scheduling matrix. Precise native acttmp/tick ordering, pause snapshots/slow speed, missing-parent bind lifecycle, other parameters and final regression/publication remain Pending; no whole-controller certification is claimed.

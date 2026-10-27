@@ -1,0 +1,1163 @@
+{
+  "version": "0.23.38",
+  "defaults": {
+    "time": 15,
+    "buffer.time": 1
+  },
+  "commands": [
+    {
+      "name": "S_SNES_NRML_ChainExplosive",
+      "command": "~B, D, $F, $D, y",
+      "time": 30,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 17
+      }
+    },
+    {
+      "name": "S_SNES_AUTO_ChainExplosive",
+      "command": "~d, w",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "w",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 23
+      }
+    },
+    {
+      "name": "S_SNES_AUTO_ChainExplosive",
+      "command": "~w, d",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "d",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 27
+      }
+    },
+    {
+      "name": "SNES_NRML_Beam_l",
+      "command": "~D,$D, F, x",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 33
+      }
+    },
+    {
+      "name": "SNES_NRML_Beam_h",
+      "command": "~D,$D, F, y",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 38
+      }
+    },
+    {
+      "name": "SNES_AUTO_Beam_l",
+      "command": "~d,x",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 43
+      }
+    },
+    {
+      "name": "SNES_AUTO_Beam_h",
+      "command": "~w,x",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 47
+      }
+    },
+    {
+      "name": "SNES_NRML_Sword_l",
+      "command": "~$D,$U, x",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 51
+      }
+    },
+    {
+      "name": "SNES_NRML_Sword_h",
+      "command": "~$D,$U, y",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": true,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": false,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 57
+      }
+    },
+    {
+      "name": "SNES_AUTO_Sword_l",
+      "command": "~d,y",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 63
+      }
+    },
+    {
+      "name": "SNES_AUTO_Sword_h",
+      "command": "~w,y",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 67
+      }
+    },
+    {
+      "name": "SNES_NRML_Chain_l",
+      "command": "~F, D, DF, x",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "DF",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 71
+      }
+    },
+    {
+      "name": "SNES_NRML_Chain_h",
+      "command": "~F, D, DF, y",
+      "time": 15,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "DF",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 76
+      }
+    },
+    {
+      "name": "SNES_AUTO_Chain_l",
+      "command": "~d,a",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 81
+      }
+    },
+    {
+      "name": "SNES_AUTO_Chain_h",
+      "command": "~w,a",
+      "time": 15,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": true,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 85
+      }
+    },
+    {
+      "name": "FF",
+      "command": "F, F",
+      "time": 10,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 91
+      }
+    },
+    {
+      "name": "BB",
+      "command": "B, B",
+      "time": 10,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 96
+      }
+    },
+    {
+      "name": "recovery",
+      "command": "x+y",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          },
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 102
+      }
+    },
+    {
+      "name": "down_a",
+      "command": "/$D,a",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 108
+      }
+    },
+    {
+      "name": "down_b",
+      "command": "/$D,b",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ],
+        [
+          {
+            "key": "b",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 113
+      }
+    },
+    {
+      "name": "a",
+      "command": "a",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "a",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 119
+      }
+    },
+    {
+      "name": "b",
+      "command": "b",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "b",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 125
+      }
+    },
+    {
+      "name": "c",
+      "command": "c",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "c",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 131
+      }
+    },
+    {
+      "name": "x",
+      "command": "x",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "x",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 137
+      }
+    },
+    {
+      "name": "y",
+      "command": "y",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "y",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 143
+      }
+    },
+    {
+      "name": "z",
+      "command": "z",
+      "time": 1,
+      "bufferTime": 3,
+      "steps": [
+        [
+          {
+            "key": "z",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 149
+      }
+    },
+    {
+      "name": "start",
+      "command": "s",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "s",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 155
+      }
+    },
+    {
+      "name": "d",
+      "command": "d",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 160
+      }
+    },
+    {
+      "name": "w",
+      "command": "w",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 165
+      }
+    },
+    {
+      "name": "fwd",
+      "command": "F",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 170
+      }
+    },
+    {
+      "name": "back",
+      "command": "B",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 175
+      }
+    },
+    {
+      "name": "up",
+      "command": "U",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 180
+      }
+    },
+    {
+      "name": "down",
+      "command": "D",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": false,
+            "fourway": false,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 185
+      }
+    },
+    {
+      "name": "holdfwd",
+      "command": "/$F",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "F",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 191
+      }
+    },
+    {
+      "name": "holdback",
+      "command": "/$B",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "B",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 196
+      }
+    },
+    {
+      "name": "holdup",
+      "command": "/$U",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "U",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 201
+      }
+    },
+    {
+      "name": "holddown",
+      "command": "/$D",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "D",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 206
+      }
+    },
+    {
+      "name": "holdd",
+      "command": "/$d",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "d",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 211
+      }
+    },
+    {
+      "name": "holdw",
+      "command": "/$w",
+      "time": 1,
+      "bufferTime": 1,
+      "steps": [
+        [
+          {
+            "key": "w",
+            "release": false,
+            "hold": true,
+            "fourway": true,
+            "greater": false
+          }
+        ]
+      ],
+      "supportedM2": true,
+      "source": {
+        "file": "venus.cmd",
+        "line": 216
+      }
+    }
+  ],
+  "sourceSha256": "4d01cf633e7a23c3723aa65b105385b70b57defc7c601029ba9d1c93b4df23a7"
+}

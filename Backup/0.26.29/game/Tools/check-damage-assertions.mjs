@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import {applyDamageAssertion} from '../Engine/damage-assertions.js';
+
+const actor={assertions:new Set()},other={assertions:new Set()};
+const api={evaluate:Number,findActor:id=>id===7?other:null};
+const run=params=>applyDamageAssertion({type:'AssertSpecial',params},actor,api);
+run({flag:'NoHitDamage',flag2:'NoRedLifeDamage',flag3:'NoDizzyPointsDamage'});
+assert.deepEqual([...actor.assertions],['nohitdamage','noredlifedamage','nodizzypointsdamage']);
+run({flag:'NoGuardDamage',flag8:'NoGuardPointsDamage',redirectid:'7'});
+assert.deepEqual([...other.assertions],['noguarddamage','noguardpointsdamage']);
+run({flag:'NoHitDamage',enabled:'0'});assert.equal(actor.assertions.has('nohitdamage'),false);
+run({flag:'NoGuardDamage',redirectid:'99'});assert.equal(actor.assertions.has('noguarddamage'),false);
+assert.throws(()=>run({flag2:'NoHitDamage'}),/flag not specified/);
+run({flag:'NoHitDamage',flag2:'NoWalk',flag3:'NoAutoTurn'});
+assert.equal(actor.assertions.has('nowalk'),true);assert.equal(actor.assertions.has('noautoturn'),true);
+run({flag:'NoStandGuard',flag2:'NoCrouchGuard',flag3:'UnGuardable',redirectid:'7'});
+assert.equal(other.assertions.has('nostandguard'),true);assert.equal(other.assertions.has('nocrouchguard'),true);assert.equal(other.assertions.has('unguardable'),true);
+run({flag:'NoAirGuard',redirectid:'7'});assert.equal(other.assertions.has('noairguard'),true);
+run({flag:'NoAirGuard',redirectid:'7',enabled:'0'});assert.equal(other.assertions.has('noairguard'),false);
+run({flag:'NoKOFall',flag2:'NoKOVelocity',redirectid:'7'});
+assert.equal(other.assertions.has('nokofall'),true);assert.equal(other.assertions.has('nokovelocity'),true);
+run({flag:'NoKOFall',flag2:'NoKOVelocity',redirectid:'7',enabled:'0'});
+assert.equal(other.assertions.has('nokofall'),false);assert.equal(other.assertions.has('nokovelocity'),false);
+run({flag:'NoCornerPush',redirectid:'7'});assert.equal(other.assertions.has('nocornerpush'),true);
+run({flag:'NoFallHitFlag',redirectid:'7'});assert.equal(other.assertions.has('nofallhitflag'),true);
+run({flag:'NoFallHitFlag',redirectid:'7',enabled:'0'});assert.equal(other.assertions.has('nofallhitflag'),false);
+assert.throws(()=>run({flag:'NoHitDamage',flag2:'Intro'}),/Unsupported mixed/);
+assert.equal(run({flag:'Intro'}),false);
+actor.assertions.clear();assert.equal(actor.assertions.size,0);
+run({flag:'NoFaceP2',flag2:'NoTurnTarget',redirectid:'7'});
+assert.equal(other.assertions.has('nofacep2'),true);assert.equal(other.assertions.has('noturntarget'),true);
+run({flag:'NoFaceP2',flag2:'NoTurnTarget',redirectid:'7',enabled:'0'});
+assert.equal(other.assertions.has('nofacep2'),false);assert.equal(other.assertions.has('noturntarget'),false);
+run({flag:'NoJuggleCheck',redirectid:'7'});assert.equal(other.assertions.has('nojugglecheck'),true);
+run({flag:'NoJuggleCheck',redirectid:'7',enabled:0});assert.equal(other.assertions.has('nojugglecheck'),false);
+run({flag:'NoGetUpFromLieDown',redirectid:7});assert.equal(other.assertions.has('nogetupfromliedown'),true);
+run({flag:'NoGetUpFromLieDown',redirectid:7,enabled:0});assert.equal(other.assertions.has('nogetupfromliedown'),false);
+console.log('Damage assertion flags, multi-flag slots, enabled, redirects and explicit unsupported mixtures passed');
+for(const operand of ['1',NaN,undefined]){
+ actor.assertions.add('nohitdamage');
+ applyDamageAssertion({type:'AssertSpecial',params:{flag:'NoHitDamage',enabled:'operand'}},actor,{...api,evaluate:()=>operand});
+ assert.equal(actor.assertions.has('nohitdamage'),false);
+ const ids=[],reads=[];
+ applyDamageAssertion({type:'AssertSpecial',params:{flag:'NoHitDamage',redirectid:'redirect',enabled:'rhs'}},actor,{...api,evaluate:expression=>{reads.push(expression);return expression==='redirect'?operand:1},findActor:id=>{ids.push(id);return null}});
+ assert.deepEqual(ids,[0]);assert.deepEqual(reads,['redirect']);
+}

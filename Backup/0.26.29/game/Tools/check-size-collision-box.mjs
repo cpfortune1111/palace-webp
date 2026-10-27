@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {sizeCollisionBox} from '../Engine/size-collision-box.js';
+const constants={'size.ground.back':40,'size.ground.front':50,'size.air.back':20,'size.air.front':30,'size.height':100};
+assert.deepEqual(sizeCollisionBox(constants,'S'),[-40,-100,50,0]);
+assert.deepEqual(sizeCollisionBox(constants,'C'),[-40,-100,50,0]);
+assert.deepEqual(sizeCollisionBox(constants,'A'),[-20,-100,30,0]);
+assert.deepEqual(sizeCollisionBox({...constants,'size.down.sizebox':'-60,-20,70,5'},'L'),[-60,-20,70,5]);
+assert.deepEqual(sizeCollisionBox(constants,'S',{width:[-100,-100],height:[-200,-200]}),[-50,-200,60,100]);
+assert.deepEqual(sizeCollisionBox(constants,'A',{scale:.5}),[-10,-50,15,0]);
+assert.throws(()=>sizeCollisionBox({'size.height':'invalid'},'S'),/Invalid native/);
+console.log('Native legacy/state-specific Size boxes, signed modifiers, normalization and scaling passed');

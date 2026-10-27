@@ -1,0 +1,363 @@
+{
+  "schema": "moon-palace-stage-asset-coverage-v1",
+  "status": "Partial",
+  "goalComplete": false,
+  "baseline": {
+    "runtime": "0.26.22",
+    "commit": "55cf7d45a0ce2bca4239b695509e658a2332bd27"
+  },
+  "references": {
+    "ikemenCommit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "sources": {
+      "src/camera.go": "eddfc0d38f02a9640007c302f2006aab591d93fd47d7a7843a65a99d1df6f00a",
+      "src/stage.go": "5b7d0fbe66de879908ba13be5cb8586f8ff5bbc059b95059c17ce41ba2abced2",
+      "src/image.go": "0bc6c82b58d153a8ae4313290db5460275fbb4837f28cecb8fdc88ad3be3222c",
+      "src/sound.go": "8648f1a497f1e2795b83f740de58e204b77152fbe386629247b17178a3b75925",
+      "src/common.go": "d7a40673b3bfcd7f6b320747e37679431fefd1aad7040e2d1f60484e03148ac6"
+    },
+    "mugenBackgroundDocumentSha256": "d1c2f5e4fd3ee9f5c565db058f4d916a4ec4a26e73ed7d1c82bf38fabbd66834"
+  },
+  "stage": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "examinedConsumers": [
+      "index.html: prepareStage",
+      "Engine/depth-camera.js",
+      "Engine/stage-backgrounds.js",
+      "Tools/export_stage_camera.py"
+    ],
+    "current": "Converted GLB/JSON training and moon paths plus selected depth/camera/draw consumers; not a generic stage DEF loader.",
+    "groupsObserved": [
+      "Info",
+      "StageInfo",
+      "Constants",
+      "Scaling",
+      "Bound",
+      "PlayerInfo",
+      "Camera",
+      "Music",
+      "BGDef",
+      "Model",
+      "Shadow",
+      "Reflection",
+      "BG",
+      "BGCtrlDef",
+      "BGCtrl",
+      "BGCtrl3D"
+    ],
+    "gaps": [
+      "Generic sections/duplicates/localized precedence and file search",
+      "Dynamic p%dstartx/starty/startz/facing fields",
+      "Full native camera/physics tick interaction",
+      "Music delegate and model/background source loading",
+      "BGCtrl timeline, inherited ctrlid/looptime, positionlink, phase order and BGCtrl3D"
+    ],
+    "backgroundControllers": {
+      "namespace": "Separate from State controllers; not added to the 163 State-controller count",
+      "mugenDocument": [
+        "Null",
+        "Visible",
+        "Enabled",
+        "VelSet",
+        "VelAdd",
+        "PosSet",
+        "PosAdd",
+        "Anim",
+        "SinX",
+        "SinY"
+      ],
+      "ikemenRead": [
+        "anim",
+        "visible",
+        "enable",
+        "null",
+        "palfx",
+        "posset",
+        "posadd",
+        "remappal",
+        "sinx",
+        "siny",
+        "velset",
+        "veladd"
+      ],
+      "nameDisagreement": "MUGEN heading Enabled versus native enable. Alias/version behavior remains unverified.",
+      "commonReadKeys": [
+        "type",
+        "time",
+        "positionlink",
+        "sctrlid"
+      ],
+      "xyReadKeys": [
+        "x",
+        "y"
+      ],
+      "remapReadKeys": [
+        "source",
+        "dest"
+      ],
+      "palfxReadKeys": [
+        "add",
+        "mul",
+        "sinadd",
+        "sinmul",
+        "sincolor",
+        "sinhue",
+        "invertall",
+        "invertblend",
+        "color",
+        "hue"
+      ],
+      "otherReadKeys": [
+        "value"
+      ],
+      "runtimeStatus": "Unsupported generic BGCtrl DEF execution; selected background rendering does not certify this namespace."
+    }
+  },
+  "assets": {
+    "evidenceStages": {
+      "Parsed": "Partial",
+      "Executable": "Partial",
+      "Source-verified": "Partial",
+      "Semantically tested": "Partial"
+    },
+    "examinedConsumers": [
+      "Engine/asset-paths.js",
+      "Data/asset-layout.json",
+      "Engine/native-sound-loader.js",
+      "Engine/native-pcm-wave.js",
+      "Tools/sff_indexed_palette.py"
+    ],
+    "current": "Static converted asset layout and decoded media consumers. Offline indexed SFF preprocessing executes; original-package runtime loading remains incomplete.",
+    "sff": {
+      "preprocessingFormats": [
+        0,
+        2,
+        3,
+        4,
+        10
+      ],
+      "depth": 8,
+      "formatLabels": {
+        "0": "raw",
+        "2": "RLE8",
+        "3": "RLE5",
+        "4": "LZ5",
+        "10": "indexed PNG"
+      },
+      "nativeAdditionalFormats": [
+        11,
+        12
+      ],
+      "sourceVerified": "Extracted native header/subheader/readV2/decoder functions within the recorded fixture scope.",
+      "semanticEvidence": {
+        "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+        "compiler": "go version go1.27.3 windows/amd64",
+        "oracleExecutableSha256": "061a2ebde1ab0d17d780cd1a1b3de5d8851b499f49246244370aecc1bdc34298",
+        "cases": 2460,
+        "encodingCounts": {
+          "0": 416,
+          "2": 1048,
+          "3": 673,
+          "4": 163,
+          "10": 160
+        },
+        "matched": true,
+        "characters": [
+          {
+            "name": "moon",
+            "sourceSha256": "b99f2b4cb24b8f43893f310cefe30b8b0a4d7918c0e21628d16405315e23786a",
+            "spriteCount": 1570,
+            "eligiblePhysicalIndexedSprites": 965,
+            "sampledIndices": [
+              0,
+              64,
+              129,
+              327,
+              392,
+              592,
+              657,
+              777,
+              999,
+              1063,
+              1128,
+              1229,
+              1294,
+              1358,
+              1501,
+              1565
+            ],
+            "matched": true
+          },
+          {
+            "name": "venus",
+            "sourceSha256": "1619a50cb24a9fc8cff31cfa502d577e5f9ba57e5de62bffd7b6bd5c2acb494f",
+            "spriteCount": 760,
+            "eligiblePhysicalIndexedSprites": 665,
+            "sampledIndices": [
+              0,
+              44,
+              89,
+              133,
+              177,
+              221,
+              267,
+              312,
+              356,
+              413,
+              458,
+              502,
+              546,
+              649,
+              711,
+              755
+            ],
+            "matched": true
+          },
+          {
+            "name": "jupiter",
+            "sourceSha256": "e3ca09a2c085d56bedaa9d4adcee041ce2af43375960519540f044eaa314212c",
+            "spriteCount": 1489,
+            "eligiblePhysicalIndexedSprites": 1317,
+            "sampledIndices": [
+              0,
+              88,
+              175,
+              263,
+              351,
+              439,
+              537,
+              628,
+              726,
+              822,
+              909,
+              998,
+              1150,
+              1238,
+              1379,
+              1484
+            ],
+            "matched": true
+          },
+          {
+            "name": "neptune",
+            "sourceSha256": "41d0560a847f31cad99af630e347a4ea4b5b926d0c8c9791092fd67399ab26fc",
+            "spriteCount": 806,
+            "eligiblePhysicalIndexedSprites": 679,
+            "sampledIndices": [
+              0,
+              45,
+              90,
+              136,
+              181,
+              226,
+              272,
+              318,
+              365,
+              421,
+              478,
+              523,
+              568,
+              694,
+              756,
+              801
+            ],
+            "matched": true
+          },
+          {
+            "name": "saturn",
+            "sourceSha256": "efa256d26657b0f50e6b51d12cb63a6232ce6ea7f197c6da47f6b8114ecb0315",
+            "spriteCount": 686,
+            "eligiblePhysicalIndexedSprites": 596,
+            "sampledIndices": [
+              0,
+              40,
+              83,
+              123,
+              163,
+              202,
+              242,
+              283,
+              334,
+              374,
+              414,
+              453,
+              493,
+              585,
+              641,
+              681
+            ],
+            "matched": true
+          }
+        ],
+        "scope": "Indexed preprocessing/container dispatch versus native decoded-byte capture; synthetic fixtures and optional sampled original physical sprites. Not browser SFF loading, palette/GPU rendering, linked sprites or corrupt-input conformance.",
+        "knownDifference": "A malformed terminal RLE8 zero-run that would stall native execution is explicitly rejected by the preprocessing helper; no native-hang equivalence claimed.",
+        "goalComplete": false
+      },
+      "gaps": [
+        "Browser original SFF1/2 runtime reader",
+        "Complete palette/link/duplicate/version behavior",
+        "True-color/PCX coverage",
+        "Full corruption/error/file-size policy",
+        "GPU upload/render fidelity"
+      ],
+      "knownPolicyDifference": "A malformed terminal RLE8 zero-run that would stall native execution is explicitly rejected by the preprocessing helper; no native-hang equivalence claimed."
+    },
+    "snd": {
+      "status": "Unsupported original SND runtime container loading",
+      "existing": "Decoded audio plus metadata and selected PCM WAV support.",
+      "nativeObserved": [
+        "ElecbyteSnd signature/version",
+        "Linked chunks with signed group/number keys",
+        "Embedded WAV parsing",
+        "First duplicate sound key retained with warning"
+      ],
+      "gaps": [
+        "Complete original SND reader and chunk error policy",
+        "Resampling/mixing/loop/version fidelity"
+      ]
+    },
+    "frontends": {
+      "status": "Partial",
+      "gaps": [
+        "Original DEF/CNS/ST/ZSS/CMD/AIR resolution and load order",
+        "Search paths, encoding, separators, errors and version-dependent defaults",
+        "Original package references through runtime consumers"
+      ]
+    }
+  },
+  "componentOracle": {
+    "compiler": "go version go1.27.3 windows/amd64",
+    "executableSha256": "061a2ebde1ab0d17d780cd1a1b3de5d8851b499f49246244370aecc1bdc34298",
+    "unchangedDeclarations": 13,
+    "sourceOnlyBuild": true,
+    "networkDuringBuild": false,
+    "facades": [
+      "Sprite byte capture replaces GPU upload",
+      "Error constructor",
+      "Console/log capture"
+    ],
+    "alphaCases": 8707,
+    "scope": "Component-only executable; not a complete native engine binary or M1 deterministic scheduling oracle.",
+    "privateOnly": [
+      "Original sources",
+      "Generated Go implementation",
+      "Go toolchain/executable",
+      "Original SFF/SND",
+      "Raw fixture data"
+    ]
+  },
+  "next": [
+    "Finish M0 inventory/evidence reconciliation",
+    "M1 tick/native trace architecture",
+    "M2 generic frontend/VM",
+    "M3 State/CMD",
+    "M4 AIR/assets",
+    "M5 physics/stage/camera",
+    "M6 combat/entities/controllers",
+    "M7 integrated conformance"
+  ]
+}

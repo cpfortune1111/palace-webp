@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {applyVelocityController} from '../Engine/velocity-controllers.js';
+
+const caller={vx:2,vy:3,localScale:2},target={vx:4,vy:5,localScale:1};
+const api={evaluate:value=>value==='caller'?caller.vx:Number(value),findActor:id=>id===7?target:null};
+const run=(type,params)=>applyVelocityController({type,params},caller,api);
+run('VelSet',{x:'6'});assert.deepEqual([caller.vx,caller.vy],[6,3]);
+run('VelAdd',{redirectid:'7',x:'caller',y:'-2'});assert.deepEqual([target.vx,target.vy],[16,1]);
+run('VelMul',{redirectid:'7',x:'0.5',y:'3'});assert.deepEqual([target.vx,target.vy],[8,3]);
+run('VelSet',{redirectid:'99',x:'100'});assert.equal(caller.vx,6);
+run('VelSet',{y:'0.1'});assert.equal(caller.vy,Math.fround(0.1));
+assert.equal(run('Null',{}),false);
+run('VelSet',{z:'1'});assert.equal(caller.vz,1);
+run('VelAdd',{redirectid:7,z:'3'});assert.equal(target.vz,6);
+run('VelMul',{redirectid:7,z:'-2'});assert.equal(target.vz,-12);
+console.log('Velocity caller evaluation, redirection, local scale, float32 and omitted axes passed');
+caller.facing=1;caller.getHit={xvel:9,yvel:-5};
+target.facing=-1;target.getHit={xvel:-7,yvel:4};target.moveType='I';
+run('HitVelSet',{redirectid:'7',x:'1',y:'-1'});assert.deepEqual([target.vx,target.vy],[7,4]);
+run('HitVelSet',{x:'1',y:'0'});assert.equal(caller.vx,9);
+const held=caller.vy;run('HitVelSet',{});assert.equal(caller.vy,held);
+run('HitVelSet',{redirectid:'99',x:'1'});assert.equal(caller.vx,9);
+console.log('HitVelSet reads target hit velocity, preserves omitted/disabled axes and requires no hit movetype');
+target.getHit.zvel=-8;run('HitVelSet',{redirectid:7,z:1});assert.equal(target.vz,-8);run('HitVelSet',{redirectid:7,z:0});assert.equal(target.vz,-8);
+console.log('Z velocity set/add/multiply and HitVelSet are independent of facing and preserve disabled axes');

@@ -1,0 +1,17 @@
+# 0.25.46 — Logical XOR and CNS chain grouping (partial)
+
+Checkpoint: all 191 Node tools, 44 reaction cases, 56 root cases and eight actual profile/player/root-or-Helper cases pass. Final combined browser/deployment gates are separate. Earlier failing/unpublished observations below are retained chronologically; this is not a full VM/controller certification.
+
+References: [Elecbyte MUGEN 1.1 CNS operators/precedence](https://www.elecbyte.com/mugendocs-11b1/cns.html) and pinned Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, compiler.go expBoolXor/expBoolAnd/expBoolOr and bytecode.go blxor. This covers partial numeric/controller-expression consumers, not all operators or VM compatibility.
+
+The lexer previously rejected logical XOR (^^). It now parses between logical AND and OR. The operator evaluates both operands once and returns a normalized result, independently of the short-circuit operand-valued AND/OR path. The intrinsic boolean result retains its numeric behavior in surrounding arithmetic even when an operand is a runtime query. This does not add the different bitwise XOR (^) operator.
+
+Adding the precedence level also updates assignment RHS parsing: the pinned variable-assignment helper consumes comparison expressions, not the outer logical chain. Tests distinguish Var(4):=3^^1 and Var(4):=1&&0 so the assignment write is not accidentally expanded by a shifted numeric precedence.
+
+The pinned CNS AND/OR compiler recursively parses the RHS. This matters for constant folding and operand-valued Ikemen results: 0||5||Var(0) returns 5, while explicit (0||5)||Var(0) returns the folded true value. Likewise Var(0)&&7&&9 uses a folded constant RHS, while explicit (Var(0)&&7)&&9 can return 9. The parser now preserves that chain grouping and explicit parentheses; existing normalized MUGEN results remain covered. Complete MUGEN side-effect/bottom behavior and ZSS are not certified by this work.
+
+Tools/check-logical-profiles.mjs retains its profile/constant/type/cache assertions and adds XOR truth cases, eager writes, precedence, assignment boundaries and chain grouping. Its original lexer failure is outputs/logical-xor-before.log. Tools/check-logical-browser.cjs now runs fourteen real floating-parameter expressions in each of eight engine-profile/player/root-or-Helper cases, including runtime Time XOR arithmetic; all eight cases pass (outputs/logical-xor-controller-browser.log). Unsupported operators, bottom/undefined propagation, complete query tags and broader native phases remain Pending. Complete combined regression/publication are separate gates; no controller is certified.
+
+Current gates: 44 reaction cases and 56 root cases pass (outputs/logical-xor-reaction44.log and outputs/logical-xor-root56.log). The full Node sweep finishes with 191/191 passing and no failures (outputs/node-semantic-sweep-logical-xor/summary.json). The combined browser run is recorded separately in outputs/logical-xor-full-browser.log; its completion is not inferred from these narrower gates. This checkpoint is not published.
+
+The complete final combined browser run subsequently finishes with exit 0 (outputs/logical-xor-full-browser.log), including the actual XOR/precedence/grouping changes. The later release version/cache edits are metadata-only and have a separate post-edit focused gate. Deployment verification is recorded separately; native gaps and all 163 pending certifications remain unchanged.

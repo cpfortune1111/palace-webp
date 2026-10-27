@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {evaluateTypedNumericAST,isConstantNumericExpression} from '../Engine/expression-numeric-types.js';
+import {assignExpressionVariable} from '../Engine/variables.js';
+
+const source=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const parser=source.slice(source.indexOf('function tokenizeExpr('),source.indexOf('function queryValue('));
+const evaluator=source.slice(source.indexOf('function evalAST('),source.indexOf('const exprCache='));
+const actor={vars:Array(60).fill(0),fvars:Array(40).fill(0),sysvars:[],sysfvars:[],elemTime:()=>0};
+const context=vm.createContext({evaluateTypedNumericAST,isConstantNumericExpression,assignExpressionVariable,testContext:actor});
+vm.runInContext(parser+'\n'+evaluator,context);
+const execute=expression=>vm.runInContext('evalAST(parseExprAST('+JSON.stringify(expression)+'),testContext)',context);
+for(const profile of ['mugen11','ikemen']){
+ actor.engineProfile=profile;actor.vars.fill(0);actor.vars[0]=-5;actor.fvars[0]=-5;
+ for(const [expression,expected] of [['max(5,2)/2',2.5],['min(5,2)/4',.5],['log(2,8)/2',1.5],['round(1.25,1)',Math.fround(1.3)],['round(-1.25,1)',Math.fround(-1.2)],['atan2(0,1)/2',0],['clamp(5,0,4)/3',Math.fround(4/3)],['clamp(0,4,2)',4],['lerp(2,6,.5)',4],['lerp(2,6,-1)',2],['lerp(2,6,2)',6],['sign(-5)/2',0],['rad(180)',Math.fround(Math.PI)],['deg(0)',0]])assert.equal(execute(expression),expected,expression);
+ for(const expression of ['max(1/0,2)','min(2,1/0)','log(0,2)','log(2,0)','round(1/0,2)','atan2(0,1/0)','clamp(1,1/0,2)','lerp(1,2,1/0)'])assert.ok(Number.isNaN(execute(expression)),expression);
+ assert.equal(execute('log(Var(4):=2,Var(4):=8)'),3);assert.equal(actor.vars[4],8);
+ assert.ok(Number.isNaN(execute('max(1/0,Var(5):=7)')));assert.equal(actor.vars[5],7);
+ const recipient={...actor,vars:Array(60).fill(42),originalContext:()=>actor};
+ actor.redirect=()=>recipient;
+ recipient.vars[0]=43;
+ actor.helperContext=id=>id===1?recipient:null;
+ actor.targetContext=id=>id===1?recipient:null;
+ assert.equal(execute('(Enemy,Var(0))/2'),21);
+ assert.equal(execute('(Enemy(0),Var(0))/2'),21);
+ assert.equal(execute('(Helper(1),Var(0))/2'),21);
+ assert.equal(execute('(Target(1),Var(0))/2'),21);
+ assert.equal(execute('(Enemy,FVar(0))/2'),-2.5);
+ assert.equal(execute('(Enemy,floor(Var(0)))/2'),-2);
+ const missingTarget=execute('(Target(99),Var(0))/2');
+ if(profile==='ikemen')assert.equal(missingTarget,0);else assert.ok(Number.isNaN(missingTarget));
+ assert.equal(execute('Enemy, max(Var(0),1)'),1);
+ assert.equal(execute('Enemy, floor(Var(0))'),-5);
+ assert.equal(execute('Enemy, max(Var(6):=3,Var(6):=7)'),7);
+ assert.equal(actor.vars[6],7);assert.equal(recipient.vars[6],42);
+ for(const [expression,expected] of [['floor(5.9)/2',2],['ceil(5.1)/2',3],['floor(-5.1)/2',-3],['ceil(-5.9)/2',-2],['abs(Var(0))/2',2],['abs(FVar(0))/2',2.5],['sin(0)/2',0],['cos(0)/2',.5],['exp(0)/2',.5],['acos(1)/2',0],['asin(0)/2',0],['atan(0)/2',0],['tan(0)/2',0],['ln(1)/2',0],['abs(-2147483647)',2147483647]])assert.equal(execute(expression),expected,expression);
+ for(const expression of ['ln(0)','ln(-1)','asin(2)','acos(2)','floor(1/0)','ceil(1/0)','abs(1/0)'])assert.ok(Number.isNaN(execute(expression)),expression);
+ assert.equal(execute('floor(Var(1):=5)/2'),2);assert.equal(actor.vars[1],5);
+ assert.equal(execute('ceil(FVar(1):=5.1)/2'),3);assert.equal(actor.fvars[1],Math.fround(5.1));
+ vm.runInContext("cachedMath=parseExprAST('abs(Cond(Var(2),Var(0),FVar(0)))/2')",context);
+ actor.vars[2]=1;assert.equal(vm.runInContext('evalAST(cachedMath,testContext)',context),2);
+ actor.vars[2]=0;assert.equal(vm.runInContext('evalAST(cachedMath,testContext)',context),2.5);
+}
+console.log('Actual unary math consumers retain integer/float tags through division, domains, cached branches and single operand writes; range and native rounding boundaries remain Pending');

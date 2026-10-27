@@ -1,0 +1,1104 @@
+[
+  {
+    "parameter": "affectteam",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "air.animtype",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Same limited reaction mapping as animtype."
+  },
+  {
+    "parameter": "air.cornerpush.velmul",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "air.cornerpush.veloff",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "air.fall",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "air.hittime",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "air.juggle",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "air.type",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "High/Low/Trip are handled; None semantics are incomplete."
+  },
+  {
+    "parameter": "air.velocity",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "2D aerial velocity exists; optional Z component is not implemented."
+  },
+  {
+    "parameter": "airguard.cornerpush.velmul",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Explicit values and existing default multiplier drive aerial guard cornerpush. Full native default/version parity remains pending."
+  },
+  {
+    "parameter": "airguard.cornerpush.veloff",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit values and ground fallback feed actual aerial guard cornerpush. Full native corner/scale conditions remain pending."
+  },
+  {
+    "parameter": "airguard.ctrltime",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit caller integer expressions and guard.ctrltime fallback drive original aerial guard CtrlSet. Full command eligibility and version/default parity remain pending."
+  },
+  {
+    "parameter": "airguard.velocity",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit XY and native 1.5x/0.5x fallback air velocity execute in imported-character aerial guard reactions. Z, full native scale/default and helper collision parity remain pending."
+  },
+  {
+    "parameter": "animtype",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Light/Medium/Hard/DiagUp mappings exist; Back/Up and fallback parity are incomplete."
+  },
+  {
+    "parameter": "attack.depth",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "attr",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Attack classification and attribute masks exist; team/override parity is incomplete."
+  },
+  {
+    "parameter": "chainid",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "crouch.friction",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "damage",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "dizzypoints",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Explicit hit point damage executes with its independent attack factor, target defense and no life cap. Native defaults, attack-base composition, queued timing, existing-dizzy suppression and other assertion interactions remain pending."
+  },
+  {
+    "parameter": "down.bounce",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller boolean suppresses future fall velocity for launched grounded L victims when disabled. Complete bounce animation, offset/recovery and ownership remain pending."
+  },
+  {
+    "parameter": "down.cornerpush.velmul",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "down.cornerpush.veloff",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "down.hittime",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit caller integer/default 20 supplies down hit/control time. Full MUGEN version timing, queued/reset/recovery parity remain pending."
+  },
+  {
+    "parameter": "down.recover",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "down.recovertime",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "down.velocity",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit XY and air fallback feed actual grounded down-hit source states; aerial L victims use air velocity. Z, scale, native down offsets and full ownership/reset rules remain pending."
+  },
+  {
+    "parameter": "envshake.ampl",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.decay",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.dir",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.diradd",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.freq",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.mul",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.phase",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "envshake.time",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "fall",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.animtype",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "fall.damage",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.envshake.ampl",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.envshake.dir",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "fall.envshake.freq",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.envshake.mul",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.envshake.phase",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.envshake.time",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.kill",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.recover",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller boolean/default true drives actual CanRecover and source-state recovery transition eligibility. Full native clock/reset/ownership and all actor/input paths remain pending."
+  },
+  {
+    "parameter": "fall.recovertime",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller integer/default 4 drives actual fall-clock threshold and GetHitVar queries. Separate native hitpause/hitshake scheduling, exact reset and overflow parity remain pending."
+  },
+  {
+    "parameter": "fall.xvelocity",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.yvelocity",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "fall.zvelocity",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "forcecrouch",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Caller boolean selects crouching ordinary standing-victim reactions. Full native state mutation/ownership, custom/override/down/helper paths remain pending."
+  },
+  {
+    "parameter": "forcenofall",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "forcestand",
+    "status": "Partial",
+    "usedBy": [
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller boolean and ground-Y default select standing ordinary reactions; guarded/trip/air branches retain priority. Native pre-state flags, down/custom/override ownership and helper victim parity remain pending."
+  },
+  {
+    "parameter": "getpower",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "givepower",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "ground.cornerpush.velmul",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "ground.cornerpush.veloff",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "ground.hittime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "ground.slidetime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "ground.type",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "High/Low/Trip are handled; None does not suppress native reaction correctly."
+  },
+  {
+    "parameter": "ground.velocity",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "2D grounded velocity exists; native falling/down-state alternatives are incomplete."
+  },
+  {
+    "parameter": "guard.cornerpush.velmul",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.cornerpush.veloff",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.ctrltime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.dist",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Root/helper HitDefs share actor guard-distance vectors with AttackDist; projectile snapshots also feed InGuardDist. Full local scale/defaults, eligibility and reset/persistence remain pending."
+  },
+  {
+    "parameter": "guard.dist.depth",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Root depth vectors and strict pure query tests exist; actual Z gameplay and full actor/projectile integration remain pending."
+  },
+  {
+    "parameter": "guard.dist.height",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Root vertical range updates actual strict proximity checks with same-plane safeguard. Root/helper/projectile proximity aggregation exists; custom defaults, scale and native eligibility remain pending."
+  },
+  {
+    "parameter": "guard.dist.width",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Root caller integer expressions, alias priority, negative retention and omitted back-zero update actual proximity queries. Root/helper caller and independent projectile paths exist; full default/reset parity remains pending."
+  },
+  {
+    "parameter": "guard.hittime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.kill",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Nonlethal guard floor and native lethal-chip switch to hit reaction exist. Pinned native char.go confirms this switch is intentional. NoKO/NoGuardKO/global survival assertions, rounding and queued damage parity remain pending."
+  },
+  {
+    "parameter": "guard.pausetime",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.slidetime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "guard.sparkangle",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "guard.sparkno",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Character-owned S-prefixed sparks only; common fightfx sparks/defaults are not complete."
+  },
+  {
+    "parameter": "guard.sparkscale",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "guard.velocity",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Ground X velocity exists; optional Z is explicitly unsupported."
+  },
+  {
+    "parameter": "guardflag",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Ground H/L/M and imported-character aerial A contacts honor stance assertions and source UnGuardable. Aerial reactions execute original states 154/155. Venus aerial guard assets/state import and full SCF_guard/input ordering remain pending."
+  },
+  {
+    "parameter": "guardpoints",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Explicit guard point damage executes with its independent attack factor and target defense. Native defaults, air guarding, queued timing and assertions remain pending."
+  },
+  {
+    "parameter": "guardsound",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Same ownership/default limitations as hitsound."
+  },
+  {
+    "parameter": "guardsound.channel",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "hitflag",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "M/A/F and stance checks exist; complete D/H/L and +/- eligibility semantics are missing."
+  },
+  {
+    "parameter": "hitonce",
+    "status": "Partial",
+    "usedBy": [
+      "Neptune"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller boolean expressions and throw defaults mark accepted root/helper activations spent on hits and guards; repeated activation is rejected, while explicit zero and projectile hit budgets remain separate. Helper trigger/persistence execution creates fresh activations. Real per-actor target retention executes, but native TargetDrop release/ID bookkeeping, override/reversal, buffered timing and multi-target parity remain pending."
+  },
+  {
+    "parameter": "hitsound",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Character-owned sound playback exists; common/character ownership and native defaults are not complete."
+  },
+  {
+    "parameter": "hitsound.channel",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "id",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Hit metadata/helper targeting exist; complete target-ID filtering is missing."
+  },
+  {
+    "parameter": "ignorereversaldef",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "keepstate",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "kill",
+    "status": "Implemented",
+    "usedBy": [
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "maxdist",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller coordinate expressions feed facing-sensitive root hit offsets with native max-after-min ordering. Full native scale/version/actor and binding conditions remain pending."
+  },
+  {
+    "parameter": "mindist",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller coordinate expressions feed facing-sensitive root hit offsets and optional snap-time constrained axes. Full native scale/version/actor and binding conditions remain pending."
+  },
+  {
+    "parameter": "missonoverride",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "nochainid",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Single-ID helper/projectile check only; two-ID and root attack checks are missing."
+  },
+  {
+    "parameter": "numhits",
+    "status": "Partial",
+    "usedBy": [
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller integer expressions drive actual root/entity HitCount/GuardCount queries and report hit/combo totals. Defender physical GetHitVar hitcount/guardcount are separate from numhits. receivedHits, complete reset/eligibility rules, projectile-owner attribution, queued timing and integer overflow remain pending."
+  },
+  {
+    "parameter": "p1facing",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Root/helper hit writers execute caller integer signs and preserve world velocity. Projectile and guard contacts exclude attacker turns. Native deferred timing, reversal/type-None and throw interactions remain pending."
+  },
+  {
+    "parameter": "p1getp2facing",
+    "status": "Partial",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller integer expressions inherit defender facing with precedence over p1facing in actual root/helper contacts. Native deferred timing, reversal/type-None and throw interactions remain pending."
+  },
+  {
+    "parameter": "p1sprpriority",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "p1stateno",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Current paired throw path only; standalone/custom-state ownership semantics are incomplete."
+  },
+  {
+    "parameter": "p2clsncheck",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "p2clsnrequire",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "p2facing",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller signs drive actual root/entity-victim facing; zero and guards preserve it. Native deferred timing, combined p1 fields, throws/custom/override ownership and helper victims remain pending."
+  },
+  {
+    "parameter": "p2getp1state",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "p2sprpriority",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "p2stateno",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Custom hit/throw transitions exist; p2getp1state and standalone parity are incomplete."
+  },
+  {
+    "parameter": "palfx.add",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.color",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.hue",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.invertall",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.invertblend",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.mul",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.sinadd",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.sincolor",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.sinhue",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.sinmul",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "palfx.time",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "pausetime",
+    "status": "Implemented",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "priority",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Root P1/P2 simultaneous attacks support all Hit/Miss/Dodge combinations and unequal priorities. Helper/projectile attack-class ties are not unified with this root resolver."
+  },
+  {
+    "parameter": "redirectid",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "redlife",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "score",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "snap",
+    "status": "Partial",
+    "usedBy": [
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Caller float coordinate expressions and integer temporal binding feed actual root offset consumption, live root/helper owner following, expiry and same-frame binder-hit SelfState release. Guarded-Y and projectile owner rules exist. Native per-actor flags, target lists, local scales, version argument layout and helper victims remain partial."
+  },
+  {
+    "parameter": "sparkangle",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "sparkno",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Character-owned S-prefixed sparks only; common fightfx sparks/defaults are not complete."
+  },
+  {
+    "parameter": "sparkscale",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "sparkxy",
+    "status": "Partial",
+    "usedBy": [
+      "Jupiter",
+      "Moon",
+      "Neptune",
+      "Saturn"
+    ],
+    "reference": "MUGEN + Ikemen",
+    "note": "Explicit character spark offsets exist; complete default/common-spark parity is missing."
+  },
+  {
+    "parameter": "sprpriority",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "stand.friction",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "teamside",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "unhittabletime",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "xaccel",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  },
+  {
+    "parameter": "yaccel",
+    "status": "Implemented",
+    "usedBy": [],
+    "reference": "MUGEN + Ikemen",
+    "note": "Execution path present; numeric expression/default parity has not been certified for every input."
+  },
+  {
+    "parameter": "zaccel",
+    "status": "Not implemented",
+    "usedBy": [],
+    "reference": "Ikemen",
+    "note": "No complete native execution path. Importing/storing a value is not implementation."
+  }
+]

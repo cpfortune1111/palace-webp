@@ -1,0 +1,19 @@
+{
+  "reference": "Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d",
+  "controller": "AssertInput",
+  "certifiedParameters": 0,
+  "status": "Partial root-only integration; actual browser fixture and complete regression passed in controller-assert-input-startup-browser.log",
+  "rows": [
+    {"parameter":"redirectid","consumer":"caller-evaluated int32 lookup and redirected recipient facing","tests":["check-assert-input.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"flag","consumer":"case-sensitive physical input union into root command sampling","tests":["check-assert-input.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"flag2","consumer":"same validated union as flag","tests":["check-assert-input.mjs","check-saturn-priority.cjs"]},
+    {"parameter":"flag3","consumer":"same validated union as flag","tests":["check-assert-input.mjs"]},
+    {"parameter":"flag4","consumer":"same validated union as flag","tests":["check-assert-input.mjs"]},
+    {"parameter":"flag5","consumer":"same validated union as flag","tests":["check-assert-input.mjs"]},
+    {"parameter":"flag6","consumer":"same validated union as flag","tests":["check-assert-input.mjs"]},
+    {"parameter":"flag7","consumer":"same validated union as flag","tests":["check-assert-input.mjs"]},
+    {"parameter":"flag8","consumer":"same validated union as flag","tests":["check-assert-input.mjs","check-saturn-priority.cjs"]}
+  ],
+  "pending": ["native input/action phase ordering","pause/hitpause semantics","configurable SOCD","ShiftInput composition","Helper key-control ownership","replay/network input","cross-version fidelity"],
+  "commonParameters": "Persistent/IgnoreHitPause use the existing controller scheduler; complete scheduler certification is not established here."
+}

@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {hitDefCollisionBoxes} from '../Engine/hitdef-collision-group.js';
+const sets={c1:[[1,2,3,4]],c2:[[5,6,7,8]]};
+assert.equal(hitDefCollisionBoxes({},sets).boxes,sets.c2);
+assert.equal(hitDefCollisionBoxes({},sets,{reversal:true}).boxes,sets.c1);
+assert.equal(hitDefCollisionBoxes({p2clsncheck:'clsn1'},sets).group,1);
+assert.deepEqual(hitDefCollisionBoxes({p2clsncheck:'none'},sets).boxes,[]);
+assert.equal(hitDefCollisionBoxes({p2clsnrequire:'clsn1'},{c2:sets.c2}).requiredMissing,true);
+assert.equal(hitDefCollisionBoxes({p2clsnrequire:'none'},sets).requiredMissing,false);
+assert.deepEqual(hitDefCollisionBoxes({p2clsncheck:'dummy'},sets).boxes,[]);
+assert.equal(hitDefCollisionBoxes({p2clsnrequire:'dummy'},sets).requiredMissing,true);
+const dummy=[[0,0,10,10]];
+assert.equal(hitDefCollisionBoxes({p2clsncheck:'dummy'},{...sets,dummy}).boxes,dummy);
+assert.throws(()=>hitDefCollisionBoxes({p2clsncheck:'size'},sets),/Unsupported native size/);
+console.log('HitDef target collision groups, None, required boxes and explicit unsupported geometry passed');

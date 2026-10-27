@@ -1,0 +1,21 @@
+# Native AfterImage prerequisites and synchronization (partial)
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, char.go AfterImage setup/record/cue and Explod synchronization; compiler_functions.go AfterImageSub/AfterImageTime; bytecode.go AfterImage execution.
+
+The previous root-only simplified trail is replaced for actual AfterImage controllers. Root and normal Helper recipients now own independent bounded sprite histories. The controller reads time/length/gaps, palette color/hue/inversion/brightness/contrast/postbrightness/add/mul, Trans/alpha and ignorehitpause. Redirect and AfterImageTime suppress unreachable expressions and preserve native time/value precedence. Palette gradients use float32 multiplication and signed integer conversion. MUGEN and Ikemen histories use different ring sizes and sampling offsets.
+
+The real draw consumer retains sprite source, atlas arguments, matrix, clipping, opacity, layer and priority. Historical priority clamps do not rebound. Ghosts clear synchronization identity and do not enter reflection/shadow paths. AfterImageTime resets the time counter without clearing the ring. The compositor explicitly activates for historical sprites.
+
+ModifyExplod synchronization copies active target settings, counters specified by native synchronization and shared palette zero. It preserves the effect's own ring, cursor and recording count. It deliberately does not call setup: the pinned native synchronization path likewise leaves newly allocated history/palette buffers at constructor sizes. Source time zero does not erase retained effect state.
+
+Evidence: independent history/version/pause/redirect/controller/sync checks; eight browser root/Helper/P1/P2/character-version combinations test actual drawing matrices, pixels, once-per-tick capture and separate effect history. Full-battle Offset/AngleDraw checks now inspect real historical sprite snapshots instead of the retired simplified controller format. Legacy raw trail fixtures remain available only for existing drawing tests.
+
+Explod creation and ModifyExplod now consume every documented prefixed AfterImage field through the shared controller parameter writers. Modification evaluates deferred RHS per parameter, then per selected effect, after all window writes and before later modifiers. It preserves history/cursors/counts, retains unspecified vector components and sets up active histories after the entire commit. Inactive histories keep pending setup. Creation starts from native time zero, unlike the standalone controller's time one.
+
+The sprite queue enforces the pinned Config.AfterImageMax default of 512, shared between a player's root/Helpers/effects, independently for each player and reset on a new sprite frame. The queue constructor accepts a configured maximum, including zero/negative suppression. Source: src/resources/defaultConfig.ini and System.clearSpriteData/AfterImage.recAndCue. Exact allocation ordering across all native cue families remains unverified.
+
+Additional evidence: sixteen own/common-resource, root/Helper, player and character-version browser combinations exercise actual effect drawing, deferred variable side effects, unchanged sprite histories and the 512-sprite limit. Unit checks independently verify cross-effect commit order, inactive setup, retained snapshots and configurable budgets.
+
+Projectile creation/modification and actual rendering now consume these histories too; see PROJECTILE-AFTERIMAGE-WIP.md for native hitpause differences, recipient restrictions and ownership evidence. This does not certify the remaining Projectile parameter families.
+
+Still pending: exact native CueDraw/acttmp/slow-frame interpolation timing and allocation order, creation parameter ordering relative to other unsupported Explod/Projectile families, provider/version edge cases and native executable differential validation. Native System.cueDraw skips collection on frameSkip, so missing a history snapshot for every simulation tick is not by itself evidence of incorrect recording. The excluded indexed character recoloring path is not reintroduced. No whole-controller or syncparams certification is claimed. No original assets are added.

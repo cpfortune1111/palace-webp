@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {characterLocalCoord,collisionWorldRatio,animationCollisionScale,collisionBoxesToWorld,scaledAnimationBoxes} from '../Engine/clsn-coordinate-scale.js';
+const data={coordinateSystem:{localcoord:[640,480],webWorldWidth:1280},constants:{'size.xscale':2,'size.yscale':0.5}};
+assert.equal(characterLocalCoord(data),640);assert.equal(collisionWorldRatio(data),2);
+assert.equal(collisionWorldRatio({}),1);
+assert.deepEqual(animationCollisionScale(data,{xscale:3,yscale:4},{ownScale:true,sameOwner:true}),[3,4]);
+assert.deepEqual(animationCollisionScale(data,{xscale:3,yscale:4},{ownScale:true,sameOwner:false}),[2,0.5]);
+assert.deepEqual(scaledAnimationBoxes([[1,2,3,4]],[2,0.5]),[[2,1,6,2]]);
+assert.deepEqual(collisionBoxesToWorld([{rect:[1,2,3,4],angle:30,pivot:[5,6]}],{worldScale:2,pivotScale:4}),[{rect:[2,4,6,8],angle:30,pivot:[20,24]}]);
+assert.throws(()=>characterLocalCoord({coordinateSystem:{localcoord:[0,240]}}),/Invalid/);
+console.log('WEB world bridge, legacy metadata fallback, animation-owner/helper own scale and independent pivot conversion passed');

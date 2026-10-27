@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {createAttackActivityStore} from '../Engine/attack-activity-store.js';
+import {reversalPriorityDecision} from '../Engine/reversal-priority.js';
+
+const store=createAttackActivityStore(),first=store.actor('root1',10,{moveType:'I',reversal:true}),second=store.actor('root2',10,{moveType:'I',reversal:true});
+const decision=reversalPriorityDecision(first,second,{counterContact:true});
+first.temporaryActive=decision.enemyTemporaryActive;
+assert.equal(decision.enemyLoses,false);
+assert.equal(store.actor('root1',10,{moveType:'I',reversal:true}),first);
+assert.equal(first.temporaryActive,-1);
+const reciprocal=reversalPriorityDecision(second,first,{counterContact:true});
+assert.equal(reciprocal.enemyLoses,true);
+second.temporaryActive=reciprocal.enemyTemporaryActive;
+assert.equal(store.actor('root2',10,{moveType:'I',reversal:true}).temporaryActive,-1);
+store.invalidate('root1');assert.equal(store.actor('root1',10,{moveType:'I',reversal:true}).temporaryActive,1);
+assert.equal(store.actor('root2',10,{moveType:'I',reversal:true}).temporaryActive,-1);
+assert.equal(store.actor('root1',11,{moveType:'A'}).temporaryActive,1);
+assert.equal(store.actor('helper1',11,{moveType:'I'}).temporaryActive,0);
+store.clear();assert.equal(store.actor('root1',11,{moveType:'I'}).temporaryActive,0);
+console.log('Per-tick attack activity retains reciprocal negative flags, separates owners and resets next tick/round');

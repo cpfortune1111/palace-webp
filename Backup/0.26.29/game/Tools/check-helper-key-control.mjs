@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {helperKeyControl,helperCommandAllowed,helperNegativeStates} from '../Engine/helper-key-control.js';
+
+const api={split:value=>String(value).split(','),evaluate:Number};
+assert.deepEqual(helperKeyControl(undefined,api),[false,false,false,true]);
+assert.deepEqual(helperKeyControl('0',api),[false,false,false,true]);
+assert.deepEqual(helperKeyControl('2,3,4,-1',api),[false,true,true,true]);
+assert.deepEqual(helperKeyControl('1,1,99,-1',api),[true,false,false,true]);
+assert.throws(()=>helperKeyControl('1,2,3,4,1',api),/at most four/);
+assert.equal(helperCommandAllowed({kind:'helper'}),false);
+assert.equal(helperCommandAllowed({kind:'helper',keyControl:helperKeyControl('2,3',api)}),false);
+assert.equal(helperCommandAllowed({kind:'helper',keyControl:helperKeyControl('1',api)}),true);
+assert.equal(helperCommandAllowed({kind:'root'}),true);
+const evaluated=[];
+assert.deepEqual(helperKeyControl('1 + 0',{split:value=>[value],evaluate:value=>{evaluated.push(value);return 1}}),[true,false,false,true]);
+assert.deepEqual(evaluated,['1 + 0']);
+const actor={kind:'helper',helperType:1,keyControl:helperKeyControl(undefined,api)};
+assert.deepEqual(helperNegativeStates(actor),[]);
+for(const [value,states]of [['1',[-1]],['2',[-2]],['3',[-3]],['1,2,3',[-3,-2,-1]]])assert.deepEqual(helperNegativeStates({...actor,keyControl:helperKeyControl(value,api)}),states);
+assert.deepEqual(helperNegativeStates({...actor,helperType:2}),[-3,-2]);
+assert.deepEqual(helperNegativeStates({...actor,helperType:2,keyControl:helperKeyControl('1',api)},{ownState:false}),[-2]);
+assert.deepEqual(helperNegativeStates({...actor,stateOwner:'foreign',keyControl:helperKeyControl('1,2,3',api)}),[-2]);
+console.log('Helper keyctrl defaults to fourth flag only, evaluates up to four enum expressions and gates command access on flag one');

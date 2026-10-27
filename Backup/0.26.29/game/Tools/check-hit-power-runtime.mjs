@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import {createSpecialRuntime} from '../Char/Venus/venus-special-runtime.js';
+
+const reads=[];
+const runtime=createSpecialRuntime({root:player=>({player,teamSide:player}),data:player=>({engineVersions:{mugen:[1,1],ikemen:[0,0]},constants:{'default.attack.lifetopowermul':player===2?0.25:0.7}}),pair:value=>String(value).split(','),eval:value=>{reads.push(value);return ({damage:101,attack:11,guard:3,receive:9})[value]??Number(value)}});
+const defaults=runtime.numeric({attr:'S, NA',damage:'damage,0'},{player:2});
+assert.equal(defaults.damage,'101,0');
+assert.equal(defaults.getpower,'25,12');
+assert.equal(defaults.givepower,'60,30');
+const nullContext=runtime.numeric({attr:'S, NA',damage:'101,0'},null,2);
+assert.equal(nullContext.getpower,'25,12');
+reads.length=0;
+const explicit=runtime.numeric({attr:'S, NA',damage:'100,0',getpower:'attack,guard',givepower:'receive'},{player:1});
+assert.equal(explicit.getpower,'11,3');
+assert.equal(explicit.givepower,'9,4');
+assert.deepEqual(reads.filter(value=>['attack','guard','receive'].includes(value)),['attack','guard','receive']);
+reads.length=0;
+const depth=runtime.numeric({attr:'S, NA',damage:'10,0','attack.depth':'attack,guard',ignorereversaldef:'receive'},{player:1});
+assert.equal(depth['attack.depth'],'11,3');
+assert.equal(depth.ignorereversaldef,1);
+assert.equal(reads.filter(value=>value==='attack').length,1);
+assert.equal(reads.filter(value=>value==='guard').length,1);
+assert.equal(reads.filter(value=>value==='receive').length,1);
+const reversal=runtime.numeric({'reversal.attr':'SCA,NA',damage:'100,0',getpower:'attack,guard'},{player:1});
+assert.equal(reversal.getpower,'11,3');
+assert.equal(reversal.givepower,'60,30');
+console.log('Live shared HitDef numeric compiler uses caller constants, raw compiled damage and evaluates each supplied power expression once');

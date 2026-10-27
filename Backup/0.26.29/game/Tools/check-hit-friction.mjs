@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {hitFrictionValue,movementHitFriction} from '../Engine/hit-friction.js';
+const constants={'movement.stand.friction':0.7,'movement.crouch.friction':0.6};
+assert.equal(hitFrictionValue({},constants,'S'),0.7);
+assert.equal(hitFrictionValue({'crouch.friction':NaN},constants,'C'),0.6);
+assert.equal(hitFrictionValue({'stand.friction':0},constants,'S'),0);
+assert.equal(movementHitFriction({moveType:'H',getHit:{'stand.friction':0.2}},constants,'S'),0.2);
+assert.equal(movementHitFriction({moveType:'I',getHit:{'stand.friction':0.2}},constants,'S'),0.7);
+assert.equal(hitFrictionValue({'stand.friction':0.2},constants,'S'),0.2);
+console.log('Native friction fallback, zero override and hit-only movement consumption passed');

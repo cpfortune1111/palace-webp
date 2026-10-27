@@ -1,0 +1,9 @@
+# Helper TargetState — 0.25.39 partial implementation
+
+Pinned native reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, char.go targetState and stateChange1/stateChange2. TargetState clears control and selects a state without itself forcing MoveType H. Incoming header initialization must wait through the recipient's hitpause/global pause.
+
+The actual WEB TargetState adapter now sends an eligible Helper recipient to the existing real Helper pending-state buffer. The initial own-program checkpoint removed the unconditional Unsupported helper victim TargetState ownership error. Subsequent foreign-program lookup, retained provider and Helper-local SelfState recovery are covered separately in HELPER-FOREIGN-STATE-WIP.md; broad foreign-program parity remains incomplete.
+
+Tools/check-helper-target-state-change.cjs executes actual root controllers against live hit-ID-selected Helper targets in both player slots and both Mugen/Ikemen profiles. Eight source/target cases verify old fields and animation age through hitpause/global pause, profile-specific persistent scheduling, real first-body Time=0, shared root power, replacement cancellation and explicit U/-1 versus omitted defaults. The red run is controller-helper-target-before.log; the eight-case green run is controller-helper-target-both-slots.log. Broader regression gates are tracked separately.
+
+Pending: complete foreign Helper program parity, Helper P2StateNo/custom-hit recipient entry, complete provider/animation ownership and local-scale transitions, negative/global program identity and native persistent indices/action/collision scheduling. No whole controller or parameter family is certified by this checkpoint. Initial complete browser regression passes; final versioned gates and publication are verified separately.

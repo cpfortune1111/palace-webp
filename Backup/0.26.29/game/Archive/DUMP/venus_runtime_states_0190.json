@@ -1,0 +1,163 @@
+{
+  "version": "0.19.0-cns-runtime-m1",
+  "states": {
+    "0": {
+      "type": "S",
+      "physics": "S",
+      "anim": 0,
+      "ctrl": 1,
+      "controllers": []
+    },
+    "11": {
+      "type": "C",
+      "physics": "C",
+      "anim": 11,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "CtrlSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "!AILevel"
+            ]
+          },
+          "params": {
+            "value": "1"
+          }
+        }
+      ]
+    },
+    "20": {
+      "type": "S",
+      "physics": "S",
+      "anim": 20,
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "WalkVelocity"
+        }
+      ]
+    },
+    "40": {
+      "type": "S",
+      "physics": "S",
+      "anim": 40,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "JumpTakeoff",
+          "trigger": "AnimDone",
+          "nextState": 50
+        }
+      ]
+    },
+    "50": {
+      "type": "A",
+      "physics": "A",
+      "anim": "JumpByVelocity",
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "ChangeState",
+          "trigger": "VelYPositive",
+          "value": 51
+        },
+        {
+          "type": "Land",
+          "trigger": "PosYAtGround",
+          "value": 52
+        }
+      ]
+    },
+    "51": {
+      "type": "A",
+      "physics": "A",
+      "anim": "Keep",
+      "ctrl": 1,
+      "controllers": [
+        {
+          "type": "Land",
+          "trigger": "PosYAtGround",
+          "value": 52
+        }
+      ]
+    },
+    "52": {
+      "type": "S",
+      "physics": "S",
+      "anim": 47,
+      "ctrl": 0,
+      "controllers": [
+        {
+          "type": "VelSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "y": "0"
+          }
+        },
+        {
+          "type": "PosSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 0"
+            ]
+          },
+          "params": {
+            "y": "0"
+          }
+        },
+        {
+          "type": "CtrlSet",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "Time = 3"
+            ],
+            "2": [
+              "PrevStateNo = 5040"
+            ]
+          },
+          "params": {
+            "value": "1"
+          }
+        },
+        {
+          "type": "VelSetThreshold",
+          "axis": "x",
+          "absBelowConst": "movement.stand.friction.threshold",
+          "value": 0
+        },
+        {
+          "type": "ChangeState",
+          "triggerall": [],
+          "triggers": {
+            "1": [
+              "AnimTime = 0"
+            ]
+          },
+          "params": {
+            "value": "0",
+            "ctrl": "1"
+          }
+        }
+      ]
+    }
+  },
+  "constants": {
+    "velocity.walk.fwd.x": 9.0,
+    "velocity.walk.back.x": -6.75,
+    "velocity.jump.neu.x": 0.0,
+    "velocity.jump.y": -40.0,
+    "velocity.jump.fwd.x": 8.0,
+    "velocity.jump.back.x": -8.0,
+    "movement.yaccel": 1.76,
+    "movement.stand.friction.threshold": 8.0
+  }
+}

@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {createNativeSoundPlayer} from '../Engine/native-sound-player.js';
+
+const sampleData=new Float32Array([0,.5]),buffer={numberOfChannels:1,getChannelData:()=>sampleData},records=new Set(),nodes=[],events=[],errors=[];let finish,loads=0,modules=0;
+const loader={load:()=>{loads++;return new Promise(resolve=>{finish=resolve})}},context={audioWorklet:{addModule:async()=>{modules++}}};
+const createNode=(context,options)=>{const node={options,messages:[],disconnects:0,closed:0,port:{onmessage:null,postMessage:message=>node.messages.push(message),close:()=>node.closed++},disconnect:()=>node.disconnects++};nodes.push(node);return node};
+const player=createNativeSoundPlayer({loader,isActive:record=>records.has(record),createNode}),options={context,url:'sound.flac',metadata:{},params:{freqMul:2},attach:(record,node)=>{events.push(['attach',record]);return records.has(record)},onEnded:record=>events.push(['end',record]),onError:error=>errors.push(error.message)};
+await Promise.all([player.prepare(context),player.prepare(context)]);assert.equal(modules,1);assert.equal(loads,0);assert.equal(player.size(),0);assert.equal(nodes.length,0);
+const first={id:1};records.add(first);const cancelled=player.play(first,options);records.delete(first);player.stop(first);finish(buffer);assert.equal(await cancelled.ready,false);assert.equal(nodes.length,0);assert.equal(player.size(),0);
+const second={id:2};records.add(second);const playing=player.play(second,options);finish(buffer);assert.equal(await playing.ready,true);assert.equal(modules,1);assert.equal(loads,2);assert.equal(nodes.length,1);assert.notEqual(nodes[0].options.channels[0],sampleData);assert.deepEqual(nodes[0].options.channels[0],sampleData);assert.equal(nodes[0].options.params.freqMul,2);
+assert.equal(player.modify(second,{freqMul:3}),true);assert.deepEqual(nodes[0].messages,[{type:'modify',changes:{freqMul:3},id:1}]);assert.equal(options.params.freqMul,2);const acknowledged=player.settled(second);nodes[0].port.onmessage({data:{type:'modified',id:1,frames:128}});assert.deepEqual(await acknowledged,[128]);
+nodes[0].port.onmessage({data:{type:'ended'}});assert.deepEqual(events,[['attach',second],['end',second]]);assert.equal(player.size(),0);assert.equal(nodes[0].closed,1);assert.equal(nodes[0].disconnects,1);player.stop(second);assert.equal(nodes[0].closed,1);assert.equal(player.modify(second,{freqMul:4}),false);
+const third={id:3};records.add(third);const stale=player.play(third,options);records.delete(third);finish(buffer);assert.equal(await stale.ready,false);assert.equal(nodes.length,1);
+const fourth={id:4};records.add(fourth);const rejected=player.play(fourth,{...options,attach:()=>false});finish(buffer);assert.equal(await rejected.ready,false);assert.equal(nodes.length,2);assert.equal(nodes[1].closed,1);assert.deepEqual(errors,[]);
+let moduleAttempts=0;
+const retryContext={audioWorklet:{addModule:async()=>{moduleAttempts++;if(moduleAttempts===1)throw Error('module unavailable')}}};
+await assert.rejects(player.prepare(retryContext),/module unavailable/);await player.prepare(retryContext);assert.equal(moduleAttempts,2);assert.equal(player.size(),0);
+console.log('Native sound player prewarms one shared module per context, retries failed setup without allocating channels, prevents stale playback and cleans completion');
+const seeking={id:5};records.add(seeking);const pendingSeek=player.play(seeking,options);assert.equal(player.modify(seeking,{position:1}),true);assert.equal(player.modify(seeking,{position:-1}),true);finish(buffer);assert.equal(await pendingSeek.ready,true);assert.deepEqual(nodes.at(-1).options.updates,[{position:1},{position:-1}]);assert.equal(options.params.startPosition,undefined);player.stop(seeking);assert.equal(player.size(),0);

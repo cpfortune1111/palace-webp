@@ -1,0 +1,21 @@
+# Variable-controller extraction (partial, unpublished)
+
+Reference: Ikemen GO cb56d73badb322f3725257c2e8cfd157b2c3989d, bytecode.go BytecodeValue.ToI/ToF, varSet.Run and varRangeSet.Run; compiler_functions.go varRangeSet; char.go cnsVarSet and varRangeSetSub.
+
+Controller integer extraction now maps string/undefined values to zero, then uses signed integer indices/redirect IDs. Floating controller values use float32 extraction with the same string/undefined zero mapping. This fixes floating NaN storage, numeric-string coercion and undefined-index rejection in the covered VarSet/VarAdd paths, including family-variable variants.
+
+VarRangeSet follows compiler precedence: value wins when both value and fvalue are supplied, and the discarded fvalue is not evaluated. Runtime RHS evaluation occurs before the range setter rejects invalid bounds; caller-side expression writes therefore still occur for a negative first index. The existing bounded/sparse storage policies and loop caps are unchanged.
+
+A failing-before independent test reproduced NaN being stored instead of zero. Checks cover string/undefined/boolean/number values, integer index wrapping, redirect ID extraction, value/fvalue precedence and invalid-range evaluation. Actual P1/P2 root/Helper scenarios under both engine profiles verify string extraction, integer range precedence and RHS writes despite invalid bounds. Evidence: outputs/variable-extraction-browser.log.
+
+Expression-assignment storage was subsequently reviewed against char.go cnsVarSet's ToI/ToF calls. The shared storage writer now applies the same zero extraction to string/undefined RHS values and string/undefined indices. Independent checks cover var/fvar/sysvar/sysfvar; actual P1/P2 root/Helper cases under both profiles verify numeric-string and undefined float assignments, and that a string index writes slot zero (outputs/variable-extraction-assignment-browser.log). The stored return values are exercised through the actual expression evaluator, not only the storage helper.
+
+Variable-read indices now also map strings/undefined to zero before signed extraction. A failing-before actual actor case distinguished slot zero from the erroneously selected slot twelve; the corrected eight-scenario fixture passes (outputs/variable-index-browser.log). Independent real-parser/evaluator checks cover all four variable families, undefined/string indices, integer wrapping and one-time side-effect evaluation.
+
+Native infinity/overflow edge cases, negative-index/console diagnostics, version/bounds policy, warning/loop-cap details, complete VM/storage/lifecycle behavior and all whole-controller certifications remain Pending. Full combined/versioned regression and verified publication are separate gates.
+
+Legacy sysv/sysfv selectors were present in the inventory but absent from the shared variable controller. They now select system integer/float storage for VarSet/VarAdd and family variants. Multiple selectors are rejected with the pinned strict compiler's single-variable diagnostic instead of silently choosing fv. Lenient ignoreMostErrors/warning policy and full compiler staging remain Pending.
+
+Actual system-selector coverage found a second integration gap: newly dispatched Helpers had no sysfvars storage. Helper/entity construction now creates an independent zero-filled five-slot array. Eight actual profile/player/root-or-Helper cases exercise sysv integer addition, sysfv string extraction and floating addition, plus Helper/root storage independence (outputs/variable-system-selector-browser.log). The final independence assertion still requires its fresh focused/full release gates; earlier passes predate that added assertion.
+
+Final integration review exposed a third storage-adapter gap: P1's real lifecycle/current/global binding had vars/fvars but no system-variable arrays. The actual root fixture now executes against p1LifecycleBinding/P2 instead of a specialRoot snapshot; it failed with Missing sysvar storage before the fix. P1's binding now exposes the live runtimeSysVar/runtimeSysFVar arrays. The corrected eight-scenario fixture, including Helper independence, passes (outputs/variable-lifecycle-binding-browser.log). The earlier unpublished release candidate is superseded and must not be used for publishing; fresh final gates and regenerated blob hashes are required.

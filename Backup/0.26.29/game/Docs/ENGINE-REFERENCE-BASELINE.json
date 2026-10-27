@@ -1,0 +1,229 @@
+{
+  "schema": "moon-palace-reference-baseline-v1",
+  "edition": "MUGEN 1.1 Beta 1 (2013)",
+  "provenance": {
+    "kind": "Preserved Elecbyte-authored documentation in a community mirror",
+    "repository": "Tunlan/mugen-1.1b1",
+    "commit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
+    "officialEditionIndex": "https://www.elecbyte.com/mugendocs-11b1/mugen.html",
+    "officialControllerComparison": "Mirror sctrls.html matches the previously cached official-site snapshot after CRLF normalization.",
+    "qualification": "The controller comparison does not independently authenticate every other mirrored file. Only text snapshots are listed; binary documentation diagrams are not included."
+  },
+  "ikemen": {
+    "repository": "ikemen-engine/Ikemen-GO",
+    "commit": "cb56d73badb322f3725257c2e8cfd157b2c3989d",
+    "sourceHashes": {
+      "src/compiler.go": "e027f39df8f86d3ea9b7c422237f4c1525795d70eb1365b136e9a31c75bcd9f8",
+      "src/compiler_functions.go": "fb22ba6775515cf9cd278a6d0556b4972287655f712e07271a12d5561e55688d",
+      "src/anim.go": "0385650e39a91a4c43cd02dd926b3306cf4bb88f9be7b26df572702f93b07afd",
+      "src/input.go": "c5f02ca16464c98a052fee9c453729638b3fab31c6d6ace6ba4e92a96985d94b",
+      "src/camera.go": "eddfc0d38f02a9640007c302f2006aab591d93fd47d7a7843a65a99d1df6f00a",
+      "src/stage.go": "5b7d0fbe66de879908ba13be5cb8586f8ff5bbc059b95059c17ce41ba2abced2",
+      "src/image.go": "0bc6c82b58d153a8ae4313290db5460275fbb4837f28cecb8fdc88ad3be3222c",
+      "src/sound.go": "8648f1a497f1e2795b83f740de58e204b77152fbe386629247b17178a3b75925",
+      "src/common.go": "d7a40673b3bfcd7f6b320747e37679431fefd1aad7040e2d1f60484e03148ac6",
+      "src/system.go": "b1784a92a937f5c940e7a99fc5025f807af497a23bc447c861c276bdbb51bf77",
+      "src/char.go": "7f8839374168cf5948d190268e6bdad73c61dac4febadb015cd501d46a579bf7",
+      "src/bytecode.go": "89793c6a023e65c30b25e30676e1f0120a0856af39b8033529d16435d92d119f"
+    },
+    "verification": "Both pinned compiler files were read back from upstream and matched the cached source. Animation/input source caches additionally matched exact upstream Git blob hashes and lengths."
+  },
+  "commandReferenceExample": {
+    "repository": "Tunlan/mugen-1.1b1",
+    "commit": "5ed02054fe5e80c24259b9da1f7d129b995676c9",
+    "path": "chars/kfm/kfm.cmd",
+    "gitBlobSha": "ede02c8a9664eff01566c82f4398397862fc844b",
+    "bytes": 22216,
+    "sha256": "2c4a52e3f425d6a1a4303a44405ac060f3c122f1a4a1a5447d3dc95ee3adb88b",
+    "scope": "Private original authoring comments/example for CMD syntax; metadata only is published."
+  },
+  "files": [
+    {
+      "path": "docs/LICENSES.TXT",
+      "gitBlobSha": "438120801d95238fe8b472153f76086bf5f46c83",
+      "bytes": 963,
+      "sha256": "4124cda8cb134510e85fa8e9f330c9d8472b853bc4f71391ae6f0eb51dc2b21b"
+    },
+    {
+      "path": "docs/air.html",
+      "gitBlobSha": "6ff4456285bb74e73d6f4e74a1f2a812f85f667b",
+      "bytes": 25473,
+      "sha256": "79432cd5fd57376895a31ffbd69a97b5d48e376152a8eebc7d38dbd3f1217fa3"
+    },
+    {
+      "path": "docs/bg-tut.html",
+      "gitBlobSha": "b653ff2ee3bff787dab92d90b8e392b8c20c2f0e",
+      "bytes": 15473,
+      "sha256": "c07d7ffcea49e447a950bb1d00b3fdcbb39c60eda54bdb75c2240437293a6f20"
+    },
+    {
+      "path": "docs/bgs.html",
+      "gitBlobSha": "f8354a541ea31eeb87d232e5f307d651022d27e7",
+      "bytes": 58065,
+      "sha256": "d1c2f5e4fd3ee9f5c565db058f4d916a4ec4a26e73ed7d1c82bf38fabbd66834"
+    },
+    {
+      "path": "docs/cns.html",
+      "gitBlobSha": "57f833acd1610c51cf030020bc21248617167b10",
+      "bytes": 91913,
+      "sha256": "ee340cc6fb0bafca800dfbd41e385b5bb9b0dd94af1b5ea89b0d5b6a305c93bb"
+    },
+    {
+      "path": "docs/coordspace.html",
+      "gitBlobSha": "93d6c2738c2ff2895b04594751083c1150d62a9d",
+      "bytes": 6769,
+      "sha256": "38e60c820f0cd40b072107c2852bba53425a3a0ecd8f89b7611c88d8153434e3"
+    },
+    {
+      "path": "docs/fonts.html",
+      "gitBlobSha": "abba35c9da5a0a7ff69cb45414bed8c2cf21aa07",
+      "bytes": 11223,
+      "sha256": "699e948a6d3307063695772fd0aa49c9b9ecb09b872556287ae83054cb18e6ed"
+    },
+    {
+      "path": "docs/history.html",
+      "gitBlobSha": "78560c1acc5c99560bb2c66621a2f21ebc701dbd",
+      "bytes": 38172,
+      "sha256": "644025fd8c6948e91e02ebd7134f67fbbaaa14b8fb9a3fd1c8a4cae860b17ef5"
+    },
+    {
+      "path": "docs/licenses/FTL.TXT",
+      "gitBlobSha": "bbaba33f47d92ee4ed527582d96aeebf54cdcbb0",
+      "bytes": 6741,
+      "sha256": "f4b133e25df1f86ad3ffea453aa0e613f0474f34778dbbb3e437e7b2724937d8"
+    },
+    {
+      "path": "docs/licenses/GLEW.txt",
+      "gitBlobSha": "e723fde5e770d797e4edbee77a5e217d2c93b4d1",
+      "bytes": 3799,
+      "sha256": "6111c33266d6f3a736dbba22795a675cdaddc205b1984074a5f1b7c1ccc57fd6"
+    },
+    {
+      "path": "docs/licenses/LGPL.TXT",
+      "gitBlobSha": "eb685a5ec981b949faa391ad3fc395cd42932510",
+      "bytes": 25265,
+      "sha256": "94b03f1a60a7fd5007149530626a895a6ef5a8b9342abfd56860c5f3956f5d23"
+    },
+    {
+      "path": "docs/licenses/allegro.txt",
+      "gitBlobSha": "f2e11078d7fea1ce7cfcc478c726f954e035d905",
+      "bytes": 1340,
+      "sha256": "675f08f6627a9f0c3b7b98d86ac66ddc5108794d6abbec696250b888cb468c34"
+    },
+    {
+      "path": "docs/licenses/libpng.txt",
+      "gitBlobSha": "968bbb47689821ba7ee6bfa2a1fe2e60e2409c90",
+      "bytes": 4204,
+      "sha256": "747a329fbb5ba9cd0803405357a5b9ff5b4ef048063bab7c5365e2b3ae39c4af"
+    },
+    {
+      "path": "docs/licenses/xiph.txt",
+      "gitBlobSha": "28de72a9705bfa6b2aa777c608feade0ef6bcb26",
+      "bytes": 1470,
+      "sha256": "414bfd5d8ee64395a9231d6386188461500052c10915bee08b18bfa9489dd0b3"
+    },
+    {
+      "path": "docs/licenses/zlib.txt",
+      "gitBlobSha": "016155255e53d966e22b7d9b2213bcc82195a970",
+      "bytes": 1091,
+      "sha256": "f37edf8502249ac91e62491e70c437219955ea4a630d943a0370e2cc11789d66"
+    },
+    {
+      "path": "docs/localization.html",
+      "gitBlobSha": "6d0310a391b623147d79383addfc886b497b9241",
+      "bytes": 9340,
+      "sha256": "221b2b13da498fcf486e812835b22b44bac490533beef0fe03da89c22ce34d1d"
+    },
+    {
+      "path": "docs/loopguide.html",
+      "gitBlobSha": "4e09339fe6616452afc23fe9758eb2bcbad95709",
+      "bytes": 8649,
+      "sha256": "703932a23f55b5ddd50d899411248f5a9efe65cc0dfde0e0cfadf5e81b2c3488"
+    },
+    {
+      "path": "docs/mconsole.html",
+      "gitBlobSha": "6779b0aa80cb5fb314e6fc0c3021e05210d20d88",
+      "bytes": 11393,
+      "sha256": "8fe69c2dc311b8aeb02493ba68dec7c9ea48c8408738f2a317bb0d3a1c716d1e"
+    },
+    {
+      "path": "docs/mugen.html",
+      "gitBlobSha": "de389fa31868a920382ababb3702ff7e0862f6d1",
+      "bytes": 10253,
+      "sha256": "8f4f5b0cd8f858dc8fbf4ab35371f1f5b674f6f2ad00bbbf0d30eb6602d3bc20"
+    },
+    {
+      "path": "docs/old_tools/airedit.txt",
+      "gitBlobSha": "37a31a137fb23763e46aebc3646fcc7731e50ccc",
+      "bytes": 5299,
+      "sha256": "4bb0945053c7b0d39c5c5f5b67c259e33546e53aaba079fee3380f22244c3048"
+    },
+    {
+      "path": "docs/readme.txt",
+      "gitBlobSha": "00290b523867145b555f3ff499ca88f8b35f75de",
+      "bytes": 23239,
+      "sha256": "9bbe35cf8d616fd4d5c48e422d17a8dbfb8de3e65322999256b985793a03ebe6"
+    },
+    {
+      "path": "docs/sctrls.html",
+      "gitBlobSha": "93f4ae7303837fcc4b5a75b2175645842db69564",
+      "bytes": 152631,
+      "sha256": "8b9a7ee231368b3b8d895940133d9568e151717da8a4aee98b5d39d698d2e1d9"
+    },
+    {
+      "path": "docs/spr.html",
+      "gitBlobSha": "62a9ea0cc8379acda8d6dccccf6c82d9f4b99e94",
+      "bytes": 12784,
+      "sha256": "b099e24ea900a7fa6c39359bf84a05b6ceafe73676d9cb8e514543a6a63e9574"
+    },
+    {
+      "path": "docs/sprmake2.html",
+      "gitBlobSha": "92a2f3de3215ee4539014430046b8e734ed3a3df",
+      "bytes": 13582,
+      "sha256": "146701dfe75f827365d39c1d4bcc8c3cf0d8e40a4a37170ea76bf9cda6af628f"
+    },
+    {
+      "path": "docs/storyboard.html",
+      "gitBlobSha": "1277859306d5844bed525440046b4b63c9b387c5",
+      "bytes": 27255,
+      "sha256": "9269edaac06938a9788f18c31e133930c999e4274e2558c751d9d0c02f8484dd"
+    },
+    {
+      "path": "docs/trigger.html",
+      "gitBlobSha": "d5c148d9a1c4e59e9d6b4e966729f228a9a139b7",
+      "bytes": 132137,
+      "sha256": "b90c6f80a749b6e3862949939e1191f1416a8a708476bdb6a27fe89e1bbc15de"
+    },
+    {
+      "path": "docs/tutorial1.html",
+      "gitBlobSha": "8931afe1115203fda88b9e01688751c3b9e97fa4",
+      "bytes": 20336,
+      "sha256": "910192c763b2c8ba55210cd07e65458fab18aad35f0bcce417d38f9fa65689e3"
+    },
+    {
+      "path": "docs/tutorial2.html",
+      "gitBlobSha": "d217275e2afab14e2be77d7abcf9f190c023fe5c",
+      "bytes": 9328,
+      "sha256": "724035ebf035734bf41e605e456c038b89d7fd6222d89444c4f525e9368c58b1"
+    },
+    {
+      "path": "docs/tutorial3.html",
+      "gitBlobSha": "d1894d05fb5d9746ff46e9eeb317de8ffb31b993",
+      "bytes": 18144,
+      "sha256": "dcb56108a38ceb0c1a5c07d259dd5e07dd135a4fda380be24fc83d2c42382fc1"
+    },
+    {
+      "path": "docs/tutorial4.html",
+      "gitBlobSha": "d8598140987ae780d69b21eba11515df2e1639f8",
+      "bytes": 15487,
+      "sha256": "d5ebb8016a87d77610b2bf4b34b6822fab71a954d9b62d5a17b2f39e578951a3"
+    },
+    {
+      "path": "docs/upgrading.html",
+      "gitBlobSha": "98ac3ed9cfa9c383f0d40d15b79d4e7f0c13a5e3",
+      "bytes": 23950,
+      "sha256": "f344ccd998927ea079d5589c60ada1e48f621ac479bfd76bd238aaaea49c9c5b"
+    }
+  ],
+  "certification": "Reference metadata only. No original reference documents, compiler implementations, game executables or character assets are redistributed; this is not engine compatibility certification."
+}
