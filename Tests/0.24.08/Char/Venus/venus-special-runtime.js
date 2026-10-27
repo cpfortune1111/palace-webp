@@ -1,0 +1,157 @@
+import {excludesHit} from '../../Engine/hit-attribute-mask.js';
+export function createSpecialRuntime(api){
+ const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
+ const projectileContacts=new Map();
+ const root=player=>api.root(player);
+ const blocked=(player,entity=null)=>{
+  const slot=pauses.super.some(pause=>pause?.remaining>0)?'super':'normal',active=pauses[slot].filter(pause=>pause?.remaining>0&&pause.created!==api.tick());
+  if(!active.length)return false;
+  if(entity){const allowance=Number(entity[slot==='super'?'supermovetime':'pausemovetime']||0),start=Math.max(Math.min(...active.map(pause=>pause.created)),entity.created??-Infinity);return api.tick()-start>allowance}
+  if(!pauses[slot][player-1]?.movetime&&api.trigger){const fighter=root(player),data=api.data(player),definition=data.states?.[String(fighter.state)]||data.attackStates?.[String(fighter.state)]||data.locomotionStates?.[String(fighter.state)];if(fighter.time===0){const pending=definition?.controllers.find(controller=>controller.type===(slot==='super'?'SuperPause':'Pause')&&Number(controller.params.movetime)>0&&api.trigger(controller,context(fighter)));if(pending){const remaining=Number(pending.params.time);pauses[slot][player-1]={kind:slot,remaining,movetime:Math.min(remaining,Number(pending.params.movetime)),player,created:api.tick()}}}}
+  return !(pauses[slot][player-1]?.movetime>0);
+ };
+ const numeric=(params,context)=>{
+  const result={...params};
+  for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
+  if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
+  for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
+  return result;
+ };
+ function context(entity,commands=api.commands(entity.player)){
+  const base=api.context(entity,root(entity.player===1?2:1),commands);
+  return {...base,rootVar:index=>root(entity.player).vars[index]||0,numProj:id=>entities.filter(item=>item.player===entity.player&&item.kind==='projectile'&&item.id===id&&!item.destroyed).length,
+   numExplod:id=>api.effects.filter(effect=>effect.ownerKey===entity.key&&effect.id===id).length,
+   query:name=>name.toLowerCase()==='hitcount'?entity.hitCount||0:base.query(name)};
+ }
+ function enter(entity,state){
+  const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
+  Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
+  entity.sprPriority=definition.sprpriority??entity.sprPriority;
+  if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
+  if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
+ }
+ function spawn(params,owner,player,kind){
+  const sourceContext=context({...owner,player,key:owner.key||'root'+player});
+  const values=numeric(params,sourceContext),offset=String(values.offset||values.pos||'0,0').split(',').map(Number),velocity=String(values.velocity||'0,0').split(',').map(Number);
+  const entity={kind,parentKey:owner.kind==='helper'?owner.key:null,key:'entity'+(++serial),player,abilityState:owner.abilityState??owner.state,id:Number(params.projid??params.id),x:owner.x+(offset[0]||0)*owner.facing,y:owner.y+(offset[1]||0),facing:owner.facing,
+   vx:(velocity[0]||0)*owner.facing,vy:velocity[1]||0,time:0,anim:Number(params.projanim),animStartTime:0,elem:1,elemTick:0,type:'A',moveType:'A',ctrl:0,vars:Array(60).fill(0),sysvars:Array(10).fill(0),
+   life:1000,fvars:Array(40).fill(0),hitCount:0,hitPause:0,moveContact:0,moveHit:0,moveGuarded:0,sprPriority:Number(params.projsprpriority??-1),supermovetime:Number(params.supermovetime||0),pausemovetime:Number(params.pausemovetime||0),once:new Set(),created:api.tick(),params:values};
+  entity.instanceId=1000+serial;
+  if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
+  else enter(entity,Number(params.stateno));
+  if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
+  entities.push(entity);return entity;
+ }
+ function startPause(params,player,kind){
+  const remaining=Number(params.time),movetime=Math.max(0,Math.min(remaining,Number(params.movetime||0))),slot=kind==='super'?'super':'normal';
+  pauses[slot][player-1]=remaining>0?{kind,remaining,movetime,player,created:api.tick()}:null;
+  if(kind==='super'){if(params.sound){if(/^S/i.test(params.sound))api.sound(params.sound,player===1?0:4,player);else {const sound=String(params.sound).split(',').map(Number);api.commonSound(sound[0],sound[1],player===1?0:4)}}if(Number(params.unhittable??1))unhittableUntil[player]=api.tick()+remaining+1}
+ }
+ function dispatch(controller,binding,sourceContext,adapter,owner,player){
+  const params=controller.params;
+  switch(controller.type){
+   case 'Projectile':spawn(params,owner,player,'projectile');return true;
+   case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
+   case 'Pause':startPause(params,player,'normal');return true;
+   case 'SuperPause':startPause(params,player,'super');return true;
+   case 'BGPalFX':api.background(String(params.mul).split(',').map(Number));bgTime=Number(params.time);bgCreated=api.tick();return true;
+   case 'RemoveExplod':for(let index=api.effects.length-1;index>=0;index--)if(api.effects[index].ownerKey===(owner.key||'root'+player)&&(params.id===undefined||api.effects[index].id===Number(params.id)))api.effects.splice(index,1);return true;
+   case 'StopSnd':api.stopSound(Number(params.channel||0)+(player===2?4:0));return true;
+   default:return false;
+  }
+ }
+ function helperController(entity,controller,index){
+  const canonical={varset:'VarSet',varadd:'VarAdd',parentvarset:'ParentVarSet',parentvaradd:'ParentVarAdd',bindtoroot:'BindtoRoot'};
+  controller={...controller,type:canonical[controller.type.toLowerCase()]||controller.type};
+  const ctx=context(entity);if(!api.trigger(controller,ctx)||Number(controller.params.persistent)===0&&entity.once.has(index))return;
+  entity.once.add(index);const params=controller.params;
+  if(dispatch(controller,entity,ctx,{},entity,entity.player))return;
+  switch(controller.type){
+   case 'HitDef':if(!entity.activeHitDef)entity.activeHitDef={hitKey:entity.key+':'+(++serial),params:numeric(params,ctx)};break;
+   case 'ParentVarSet':case 'ParentVarAdd':{const index=Number(params.target.match(/\d+/)[0]),vars=root(entity.player).vars;vars[index]=(controller.type==='ParentVarAdd'?(vars[index]||0):0)+api.eval(params.value,ctx);break;}
+   case 'BindtoRoot':entity.bindUntil=entity.time+Number(params.time);entity.bindOffset=api.pair(params.pos).map(value=>api.eval(value,ctx));break;
+   case 'Explod':api.explod(params,entity,entity.player,ctx);break;
+   case 'HitOverride':entity.overrideState=Number(params.stateno);entity.overrideAttr=params.attr;break;
+   case 'HitBy':entity.hitBy=params.value;break;
+   case 'NotHitBy':entity.notHitBy={value:params.value,until:api.tick()+Number(api.eval(params.time??1,ctx))};break;
+   case 'PosFreeze':entity.positionFrozen=params.value===undefined||!!api.eval(params.value,ctx);break;
+   case 'PlayerPush':entity.playerPush=!!Number(params.value);break;
+   case 'AssertSpecial':if(String(params.flag).toLowerCase()==='invisible')entity.invisible=true;else if(String(params.flag).toLowerCase()!=='noshadow')throw Error('Unsupported helper assertion');break;
+   case 'DestroySelf':entity.destroyed=true;break;
+   case 'VarRandom':{const bounds=api.pair(params.range||'0,1000').map(value=>api.eval(value,ctx));entity.vars[Number(params.v)]=bounds[0]+Math.floor(Math.random()*(bounds[1]-bounds[0]+1));break;}
+   default:{const binding=Object.create(entity);Object.defineProperties(binding,{vx:{get:()=>entity.vx*entity.facing,set:value=>{entity.vx=value*entity.facing}},vy:{get:()=>entity.vy,set:value=>{entity.vy=value}},anim:{get:()=>entity.anim,set:value=>{entity.anim=value;entity.animStartTime=entity.time}},elem:{get:()=>entity.elem,set:value=>{entity.elem=value}},elemTick:{get:()=>entity.elemTick,set:value=>{entity.elemTick=value}}});for(const key of ['x','y','ctrl','type','physics','moveType'])Object.defineProperty(binding,key,{get:()=>entity[key],set:value=>{entity[key]=value}});api.controller(controller,binding,ctx,{player:entity.player,owner:entity,changeState:state=>enter(entity,state),playSound:(value,channel)=>api.sound(value,channel<0?channel:channel+(entity.player===2?4:0),entity.player),explod:params=>api.explod(params,entity,entity.player,ctx)});}
+  }
+ }
+ function hit(entity){
+  const defender=root(entity.player===1?2:1);
+  if(entity.moveType!=='A'||entity.hitSpent||api.tick()<(entity.nextHitTick||0)||!entity.activeHitDef||!api.collision({...entity,hitDef:entity.activeHitDef},defender).contact)return;
+  if(entity.activeHitDef.params.nochainid!==undefined&&Number(entity.activeHitDef.params.nochainid)===Number(defender.getHit?.hitid))return;
+  const result=api.hit(entity,defender,entity.activeHitDef.params);
+  if(!result)return;
+  entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
+  entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:1;
+  entity.hitPause=result.attackerPause;
+  if(entity.kind==='projectile'){
+   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
+   entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
+   if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
+   entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
+   if(entity.anim<0)entity.destroyed=true;
+  }
+ }
+ function removeProjectile(entity,reason){
+  entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
+  const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??entity.params.projhitanim??-1;
+  if(selected!==undefined){entity.anim=Number(selected);entity.time=0;entity.elem=1;entity.elemTick=0}
+  else entity.time=api.frames(entity.anim,entity.player).slice(0,entity.elem-1).reduce((total,frame)=>total+Math.max(1,Number(frame.time)||1),0)+entity.elemTick;
+  entity.animStartTime=0;if(entity.anim<0||api.duration(entity.anim,entity.player)<=0)entity.destroyed=true;
+ }
+ function step(){
+  for(const entity of [...entities]){
+   if(entity.destroyed||blocked(entity.player,entity))continue;
+   if(entity.hitPause>0){entity.hitPause--;continue}
+   if(entity.created===api.tick())continue;
+   if(entity.kind==='helper'){
+    entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
+    const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
+    for(let index=0;index<controllers.length;index++){helperController(entity,controllers[index],index);if(entity.destroyed||entity.state!==previous)break}
+    if(entity.destroyed)continue;
+    if(entity.state!==previous)continue;
+    if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
+   }else if(!entity.removing){
+    const invisible=entity.scale.every(value=>value===0);
+    if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}
+    if(entity.removetime===0)removeProjectile(entity,'expire');
+    if(entity.removetime>0)entity.removetime--;
+   }
+   if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
+   hit(entity);
+   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);
+   if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
+  }
+  const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
+  for(let first=0;first<projectiles.length;first++)for(let second=first+1;second<projectiles.length;second++){
+   const left=projectiles[first],right=projectiles[second];if(left.player===right.player||!api.collision({...left,hitDef:left.activeHitDef},right).overlap)continue;
+   if(left.priority<=right.priority)removeProjectile(left,'cancel');if(right.priority<=left.priority)removeProjectile(right,'cancel');
+  }
+  const overrides=[];
+  for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
+   const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
+   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
+  }
+  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)
+  }
+  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
+ }
+ function finishTick(){
+  const superActive=pauses.super.some(pause=>pause?.remaining>0);
+  for(const slot of ['super','normal'])for(const [index,pause] of pauses[slot].entries())if(pause&&pause.created!==api.tick()){if(slot==='normal'&&superActive)continue;pause.remaining--;if(pause.movetime>0)pause.movetime--;if(pause.remaining<=0)pauses[slot][index]=null}
+  if(bgTime>0&&bgCreated!==api.tick()&&--bgTime===0)api.background([256,256,256]);
+ }
+ return {entities,pauses,blocked,context,numeric,dispatch,step,finishTick,
+  unhittable:player=>unhittableUntil[player]>api.tick(),
+  numProj:(player,id)=>entities.filter(entity=>entity.kind==='projectile'&&entity.player===player&&entity.id===id&&!entity.destroyed).length,
+  projectileContact:(player,id)=>projectileContacts.has(player+':'+id)?api.tick()-projectileContacts.get(player+':'+id).tick:-1,
+  projectileEvent:(player,id,kind)=>{const contact=projectileContacts.get(player+':'+id);return !!contact&&api.tick()-contact.tick===1&&(kind==='contact'||kind==='guarded'&&contact.guarded||kind==='hit'&&!contact.guarded)},
+  reset:()=>{entities.length=0;projectileContacts.clear();pauses.normal.fill(null);pauses.super.fill(null);unhittableUntil[1]=0;unhittableUntil[2]=0;bgTime=0;api.background([256,256,256])}};
+}

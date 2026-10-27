@@ -1,0 +1,48 @@
+{
+  "filter": {
+    "file": "stage_filter.webp",
+    "width": 1280,
+    "height": 720,
+    "axisX": 640,
+    "axisY": 0,
+    "originalSprite": {
+      "x": 2,
+      "y": 2,
+      "w": 3840,
+      "h": 2160,
+      "axisX": 1920,
+      "axisY": 1080
+    },
+    "sourceCrop": [
+      1280,
+      1080,
+      1280,
+      720
+    ],
+    "start": [
+      0,
+      0
+    ],
+    "delta": [
+      0,
+      0
+    ],
+    "layerno": 1,
+    "trans": "none",
+    "mask": 1,
+    "sprite": [
+      1,
+      0
+    ]
+  },
+  "reflection": {
+    "intensity": 50,
+    "xscale": 1,
+    "yscale": 1
+  },
+  "source": {
+    "defSHA256": "ac044c65d89ae4a02322ff136545f88bfd6c26f270b60abf1c90ce966d138e43",
+    "sffSHA256": "a1e5f5e71148a2aec98e9b1a1129f1c27c80f2071ed306ad494e1ddc00aec351",
+    "glbSHA256": "a13de10dcc86a70877a14772516e606c4c4fab62286272d0ec8f2f0b7c5f4ffd"
+  }
+}
