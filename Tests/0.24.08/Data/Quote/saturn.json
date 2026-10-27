@@ -1,0 +1,1488 @@
+{
+  "character": "SailorSaturn",
+  "logicalSize": [
+    1280,
+    720
+  ],
+  "tickRate": 60,
+  "frames": {
+    "900000": {
+      "file": "Char/Saturn/Quote/900000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 425,
+      "y": 0,
+      "cropWidth": 377,
+      "cropHeight": 720
+    },
+    "900001": {
+      "file": "Char/Saturn/Quote/900001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 477,
+      "y": 0,
+      "cropWidth": 335,
+      "cropHeight": 720
+    },
+    "900002": {
+      "file": "Char/Saturn/Quote/900002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 466,
+      "y": 0,
+      "cropWidth": 368,
+      "cropHeight": 720
+    },
+    "900003": {
+      "file": "Char/Saturn/Quote/900003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 467,
+      "y": 0,
+      "cropWidth": 368,
+      "cropHeight": 720
+    },
+    "900004": {
+      "file": "Char/Saturn/Quote/900004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 456,
+      "y": 139,
+      "cropWidth": 423,
+      "cropHeight": 581
+    },
+    "900005": {
+      "file": "Char/Saturn/Quote/900005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 456,
+      "y": 139,
+      "cropWidth": 423,
+      "cropHeight": 581
+    },
+    "900006": {
+      "file": "Char/Saturn/Quote/900006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 455,
+      "y": 139,
+      "cropWidth": 424,
+      "cropHeight": 581
+    },
+    "900007": {
+      "file": "Char/Saturn/Quote/900007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 455,
+      "y": 139,
+      "cropWidth": 425,
+      "cropHeight": 581
+    },
+    "900008": {
+      "file": "Char/Saturn/Quote/900008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 454,
+      "y": 139,
+      "cropWidth": 426,
+      "cropHeight": 581
+    },
+    "900009": {
+      "file": "Char/Saturn/Quote/900009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 454,
+      "y": 139,
+      "cropWidth": 426,
+      "cropHeight": 581
+    },
+    "900010": {
+      "file": "Char/Saturn/Quote/900010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 454,
+      "y": 139,
+      "cropWidth": 426,
+      "cropHeight": 581
+    },
+    "900011": {
+      "file": "Char/Saturn/Quote/900011.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 454,
+      "y": 139,
+      "cropWidth": 426,
+      "cropHeight": 581
+    },
+    "900012": {
+      "file": "Char/Saturn/Quote/900012.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 454,
+      "y": 139,
+      "cropWidth": 427,
+      "cropHeight": 581
+    },
+    "900013": {
+      "file": "Char/Saturn/Quote/900013.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 453,
+      "y": 139,
+      "cropWidth": 428,
+      "cropHeight": 581
+    },
+    "901000": {
+      "file": "Char/Saturn/Quote/901000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 200,
+      "y": 81,
+      "cropWidth": 1080,
+      "cropHeight": 639
+    },
+    "901001": {
+      "file": "Char/Saturn/Quote/901001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 209,
+      "y": 100,
+      "cropWidth": 1071,
+      "cropHeight": 620
+    },
+    "901002": {
+      "file": "Char/Saturn/Quote/901002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 220,
+      "y": 114,
+      "cropWidth": 1060,
+      "cropHeight": 606
+    },
+    "901003": {
+      "file": "Char/Saturn/Quote/901003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 231,
+      "y": 130,
+      "cropWidth": 1049,
+      "cropHeight": 590
+    },
+    "901004": {
+      "file": "Char/Saturn/Quote/901004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 148,
+      "cropWidth": 1014,
+      "cropHeight": 572
+    },
+    "901005": {
+      "file": "Char/Saturn/Quote/901005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 148,
+      "cropWidth": 1014,
+      "cropHeight": 572
+    },
+    "901006": {
+      "file": "Char/Saturn/Quote/901006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 149,
+      "cropWidth": 1014,
+      "cropHeight": 571
+    },
+    "901007": {
+      "file": "Char/Saturn/Quote/901007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 148,
+      "cropWidth": 1014,
+      "cropHeight": 572
+    },
+    "901008": {
+      "file": "Char/Saturn/Quote/901008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 149,
+      "cropWidth": 1014,
+      "cropHeight": 571
+    },
+    "901009": {
+      "file": "Char/Saturn/Quote/901009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 148,
+      "cropWidth": 1014,
+      "cropHeight": 572
+    },
+    "901010": {
+      "file": "Char/Saturn/Quote/901010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 148,
+      "cropWidth": 1014,
+      "cropHeight": 572
+    },
+    "902000": {
+      "file": "Char/Saturn/Quote/902000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 465,
+      "y": 0,
+      "cropWidth": 612,
+      "cropHeight": 720
+    },
+    "902001": {
+      "file": "Char/Saturn/Quote/902001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 467,
+      "y": 0,
+      "cropWidth": 593,
+      "cropHeight": 720
+    },
+    "902002": {
+      "file": "Char/Saturn/Quote/902002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 472,
+      "y": 0,
+      "cropWidth": 569,
+      "cropHeight": 720
+    },
+    "902003": {
+      "file": "Char/Saturn/Quote/902003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 480,
+      "y": 0,
+      "cropWidth": 539,
+      "cropHeight": 720
+    },
+    "902004": {
+      "file": "Char/Saturn/Quote/902004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 479,
+      "y": 0,
+      "cropWidth": 517,
+      "cropHeight": 720
+    },
+    "902005": {
+      "file": "Char/Saturn/Quote/902005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 479,
+      "y": 0,
+      "cropWidth": 517,
+      "cropHeight": 720
+    },
+    "902006": {
+      "file": "Char/Saturn/Quote/902006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 479,
+      "y": 0,
+      "cropWidth": 517,
+      "cropHeight": 720
+    },
+    "902007": {
+      "file": "Char/Saturn/Quote/902007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 479,
+      "y": 0,
+      "cropWidth": 517,
+      "cropHeight": 720
+    },
+    "902008": {
+      "file": "Char/Saturn/Quote/902008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 479,
+      "y": 0,
+      "cropWidth": 517,
+      "cropHeight": 720
+    },
+    "903000": {
+      "file": "Char/Saturn/Quote/903000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 452,
+      "y": 0,
+      "cropWidth": 810,
+      "cropHeight": 720
+    },
+    "903001": {
+      "file": "Char/Saturn/Quote/903001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 423,
+      "y": 143,
+      "cropWidth": 685,
+      "cropHeight": 577
+    },
+    "903002": {
+      "file": "Char/Saturn/Quote/903002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 304,
+      "y": 144,
+      "cropWidth": 495,
+      "cropHeight": 576
+    },
+    "903003": {
+      "file": "Char/Saturn/Quote/903003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 427,
+      "y": 145,
+      "cropWidth": 371,
+      "cropHeight": 575
+    },
+    "903004": {
+      "file": "Char/Saturn/Quote/903004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 427,
+      "y": 145,
+      "cropWidth": 371,
+      "cropHeight": 575
+    },
+    "903005": {
+      "file": "Char/Saturn/Quote/903005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 427,
+      "y": 145,
+      "cropWidth": 371,
+      "cropHeight": 575
+    }
+  },
+  "actions": {
+    "9000": {
+      "frames": [
+        {
+          "sprite": "900000",
+          "ticks": 12
+        },
+        {
+          "sprite": "900001",
+          "ticks": 3
+        },
+        {
+          "sprite": "900002",
+          "ticks": 3
+        },
+        {
+          "sprite": "900003",
+          "ticks": 3
+        },
+        {
+          "sprite": "900004",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900013",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": 21
+    },
+    "9010": {
+      "frames": [
+        {
+          "sprite": "901000",
+          "ticks": 12
+        },
+        {
+          "sprite": "901001",
+          "ticks": 4
+        },
+        {
+          "sprite": "901002",
+          "ticks": 4
+        },
+        {
+          "sprite": "901003",
+          "ticks": 4
+        },
+        {
+          "sprite": "901004",
+          "ticks": 4
+        },
+        {
+          "sprite": "901005",
+          "ticks": 4
+        },
+        {
+          "sprite": "901006",
+          "ticks": 4
+        },
+        {
+          "sprite": "901007",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9019": {
+      "frames": [
+        {
+          "sprite": "902000",
+          "ticks": -1
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9011": {
+      "frames": [
+        {
+          "sprite": "901010",
+          "ticks": 8
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901010",
+          "ticks": 16
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 10
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 48,
+          "file": "Char/Saturn/Quote/Intro-Sat02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9012": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 10
+        },
+        {
+          "sprite": "901009",
+          "ticks": 8
+        },
+        {
+          "sprite": "901010",
+          "ticks": 22
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901010",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 7
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 79,
+          "file": "Char/Saturn/Quote/Intro-Sat05.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9020": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 8
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 26
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 12
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 2
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 6
+        },
+        {
+          "sprite": "902007",
+          "ticks": 6
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902006",
+          "ticks": 2
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 6
+        },
+        {
+          "sprite": "902006",
+          "ticks": 6
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 12
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 2
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 2
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 31
+        },
+        {
+          "sprite": "902006",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 24,
+          "duration": 139,
+          "file": "Char/Saturn/Quote/Win-Sat01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9021": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 8
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 20
+        },
+        {
+          "sprite": "902007",
+          "ticks": 6
+        },
+        {
+          "sprite": "902006",
+          "ticks": 34
+        },
+        {
+          "sprite": "902008",
+          "ticks": 6
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 6
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902006",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 8
+        },
+        {
+          "sprite": "902007",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 18
+        },
+        {
+          "sprite": "902007",
+          "ticks": 8
+        },
+        {
+          "sprite": "902006",
+          "ticks": 21
+        },
+        {
+          "sprite": "902006",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 24,
+          "duration": 137,
+          "file": "Char/Saturn/Quote/Win-Sat16.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9030": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 16
+        },
+        {
+          "sprite": "903004",
+          "ticks": 10
+        },
+        {
+          "sprite": "903003",
+          "ticks": 10
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 28
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 9
+        },
+        {
+          "sprite": "903005",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 117,
+          "file": "Char/Saturn/Quote/Lose-Sat01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9031": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 28
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 8
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 6
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 12
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 8
+        },
+        {
+          "sprite": "903005",
+          "ticks": 7
+        },
+        {
+          "sprite": "903005",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 107,
+          "file": "Char/Saturn/Quote/Lose-Sat05.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9040": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 10
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 6
+        },
+        {
+          "sprite": "903005",
+          "ticks": 6
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 16
+        },
+        {
+          "sprite": "903005",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 12
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 16
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 14
+        },
+        {
+          "sprite": "903005",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 124,
+          "file": "Char/Saturn/Quote/TLose-Sat01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9041": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 8
+        },
+        {
+          "sprite": "903003",
+          "ticks": 50
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 78
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903005",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 6
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 6
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 13
+        },
+        {
+          "sprite": "903005",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 207,
+          "file": "Char/Saturn/Quote/TLose-Sat02.ogg"
+        }
+      ],
+      "loop": null
+    }
+  },
+  "timelineNotes": {
+    "9011": {
+      "source": "Intro Sat02.wav",
+      "speechStartTick": 0,
+      "speechTicks": 48,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.20906772762537001,
+        "closedWindows": 3,
+        "halfWindows": 6,
+        "openWindows": 15
+      }
+    },
+    "9012": {
+      "source": "Intro Sat05.wav",
+      "speechStartTick": 0,
+      "speechTicks": 79,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.3063031375408173,
+        "closedWindows": 2,
+        "halfWindows": 14,
+        "openWindows": 24
+      }
+    },
+    "9020": {
+      "source": "Win Sat01.wav",
+      "speechStartTick": 24,
+      "speechTicks": 139,
+      "mouthSprites": [
+        "902006",
+        "902007",
+        "902008"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.29586502611637117,
+        "closedWindows": 17,
+        "halfWindows": 20,
+        "openWindows": 33
+      }
+    },
+    "9021": {
+      "source": "Win Sat16.wav",
+      "speechStartTick": 24,
+      "speechTicks": 137,
+      "mouthSprites": [
+        "902006",
+        "902007",
+        "902008"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.16952884197235107,
+        "closedWindows": 22,
+        "halfWindows": 14,
+        "openWindows": 33
+      }
+    },
+    "9030": {
+      "source": "Lose Sat01.wav",
+      "speechStartTick": 12,
+      "speechTicks": 117,
+      "mouthSprites": [
+        "903005",
+        "903004",
+        "903003"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.2824658215045929,
+        "closedWindows": 24,
+        "halfWindows": 11,
+        "openWindows": 24
+      }
+    },
+    "9031": {
+      "source": "Lose Sat05.wav",
+      "speechStartTick": 12,
+      "speechTicks": 107,
+      "mouthSprites": [
+        "903005",
+        "903004",
+        "903003"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.26079967021942146,
+        "closedWindows": 20,
+        "halfWindows": 15,
+        "openWindows": 19
+      }
+    },
+    "9040": {
+      "sources": [
+        "TLose Sat01.wav"
+      ],
+      "speechStartTick": 12,
+      "mouthSprites": [
+        "903005",
+        "903004",
+        "903003"
+      ],
+      "splitGapTicks": 10
+    },
+    "9041": {
+      "sources": [
+        "TLose Sat02.wav"
+      ],
+      "speechStartTick": 12,
+      "mouthSprites": [
+        "903005",
+        "903004",
+        "903003"
+      ],
+      "splitGapTicks": 10
+    }
+  },
+  "audioSources": {
+    "Intro-Sat02.ogg": {
+      "source": "Intro Sat02.wav",
+      "samples": 34583,
+      "sampleRate": 44100,
+      "sha256": "31a63cda4ce6cdcf3daa46eed5a47570328b0fa2a01eb75732e2a82845a2387a"
+    },
+    "Intro-Sat05.ogg": {
+      "source": "Intro Sat05.wav",
+      "samples": 57344,
+      "sampleRate": 44100,
+      "sha256": "3f4e0254cf26a2377ab033e48c34271465cab6dfd551accf3795e65886fef36a"
+    },
+    "Win-Sat01.ogg": {
+      "source": "Win Sat01.wav",
+      "samples": 101980,
+      "sampleRate": 44100,
+      "sha256": "50218af8551704120cc9ee171f907a272d170bf3d356d4cc2be4e193aa197fef"
+    },
+    "Win-Sat16.ogg": {
+      "source": "Win Sat16.wav",
+      "samples": 100134,
+      "sampleRate": 44100,
+      "sha256": "4b95290562e3196ad0bf54b8ab00aa9389cf35eb96b64ea51fa48eb063a18773"
+    },
+    "Lose-Sat01.ogg": {
+      "source": "Lose Sat01.wav",
+      "samples": 85716,
+      "sampleRate": 44100,
+      "sha256": "e38de16daca499e4b36bb34e6fab2b9e336a26797c2cae59b7d508c60e732f6c"
+    },
+    "Lose-Sat05.ogg": {
+      "source": "Lose Sat05.wav",
+      "samples": 77952,
+      "sampleRate": 44100,
+      "sha256": "31c30e28155cf81b2895986fd539cd5573a85fc4059c3e80f017524f04241b70"
+    },
+    "TLose-Sat01.ogg": {
+      "source": "TLose Sat01.wav",
+      "samples": 90471,
+      "sampleRate": 44100,
+      "sha256": "0f9024d3f111b27123dbc9aa92a6e78b9b7c6c008a20ca648ad224699eb7cd91"
+    },
+    "TLose-Sat02.ogg": {
+      "source": "TLose Sat02.wav",
+      "samples": 151668,
+      "sampleRate": 44100,
+      "sha256": "f87cd20789e4be95af212bd18fbd5e287911361b934a532463a9d56e14d0758f"
+    }
+  }
+}

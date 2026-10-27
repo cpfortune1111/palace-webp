@@ -1,0 +1,1366 @@
+{
+  "character": "SailorMoon",
+  "logicalSize": [
+    1280,
+    720
+  ],
+  "tickRate": 60,
+  "frames": {
+    "900000": {
+      "file": "Char/Moon/Quote/900000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 331,
+      "y": 108,
+      "cropWidth": 621,
+      "cropHeight": 612
+    },
+    "900001": {
+      "file": "Char/Moon/Quote/900001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 209,
+      "y": 99,
+      "cropWidth": 717,
+      "cropHeight": 621
+    },
+    "900002": {
+      "file": "Char/Moon/Quote/900002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 107,
+      "y": 90,
+      "cropWidth": 807,
+      "cropHeight": 630
+    },
+    "900003": {
+      "file": "Char/Moon/Quote/900003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 53,
+      "y": 0,
+      "cropWidth": 877,
+      "cropHeight": 720
+    },
+    "900004": {
+      "file": "Char/Moon/Quote/900004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 957,
+      "cropHeight": 720
+    },
+    "900005": {
+      "file": "Char/Moon/Quote/900005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 954,
+      "cropHeight": 720
+    },
+    "900006": {
+      "file": "Char/Moon/Quote/900006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 951,
+      "cropHeight": 720
+    },
+    "900007": {
+      "file": "Char/Moon/Quote/900007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 948,
+      "cropHeight": 720
+    },
+    "900008": {
+      "file": "Char/Moon/Quote/900008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 946,
+      "cropHeight": 720
+    },
+    "900009": {
+      "file": "Char/Moon/Quote/900009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 943,
+      "cropHeight": 720
+    },
+    "900010": {
+      "file": "Char/Moon/Quote/900010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 940,
+      "cropHeight": 720
+    },
+    "900011": {
+      "file": "Char/Moon/Quote/900011.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 937,
+      "cropHeight": 720
+    },
+    "900012": {
+      "file": "Char/Moon/Quote/900012.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 934,
+      "cropHeight": 720
+    },
+    "900013": {
+      "file": "Char/Moon/Quote/900013.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 0,
+      "y": 0,
+      "cropWidth": 931,
+      "cropHeight": 720
+    },
+    "901000": {
+      "file": "Char/Moon/Quote/901000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 289,
+      "y": 0,
+      "cropWidth": 839,
+      "cropHeight": 720
+    },
+    "901001": {
+      "file": "Char/Moon/Quote/901001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 249,
+      "y": 0,
+      "cropWidth": 910,
+      "cropHeight": 720
+    },
+    "901002": {
+      "file": "Char/Moon/Quote/901002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 200,
+      "y": 3,
+      "cropWidth": 1006,
+      "cropHeight": 717
+    },
+    "901003": {
+      "file": "Char/Moon/Quote/901003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 150,
+      "y": 46,
+      "cropWidth": 1078,
+      "cropHeight": 674
+    },
+    "901004": {
+      "file": "Char/Moon/Quote/901004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 76,
+      "y": 80,
+      "cropWidth": 1128,
+      "cropHeight": 640
+    },
+    "901005": {
+      "file": "Char/Moon/Quote/901005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 118,
+      "y": 80,
+      "cropWidth": 1050,
+      "cropHeight": 640
+    },
+    "901006": {
+      "file": "Char/Moon/Quote/901006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 164,
+      "y": 80,
+      "cropWidth": 960,
+      "cropHeight": 640
+    },
+    "901007": {
+      "file": "Char/Moon/Quote/901007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 212,
+      "y": 80,
+      "cropWidth": 852,
+      "cropHeight": 640
+    },
+    "901008": {
+      "file": "Char/Moon/Quote/901008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 262,
+      "y": 80,
+      "cropWidth": 739,
+      "cropHeight": 640
+    },
+    "901009": {
+      "file": "Char/Moon/Quote/901009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 262,
+      "y": 80,
+      "cropWidth": 739,
+      "cropHeight": 640
+    },
+    "901010": {
+      "file": "Char/Moon/Quote/901010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 262,
+      "y": 80,
+      "cropWidth": 739,
+      "cropHeight": 640
+    },
+    "902000": {
+      "file": "Char/Moon/Quote/902000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 235,
+      "y": 74,
+      "cropWidth": 652,
+      "cropHeight": 646
+    },
+    "902001": {
+      "file": "Char/Moon/Quote/902001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 226,
+      "y": 72,
+      "cropWidth": 676,
+      "cropHeight": 648
+    },
+    "902002": {
+      "file": "Char/Moon/Quote/902002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 220,
+      "y": 67,
+      "cropWidth": 685,
+      "cropHeight": 653
+    },
+    "902003": {
+      "file": "Char/Moon/Quote/902003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 215,
+      "y": 62,
+      "cropWidth": 679,
+      "cropHeight": 658
+    },
+    "902004": {
+      "file": "Char/Moon/Quote/902004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 211,
+      "y": 57,
+      "cropWidth": 671,
+      "cropHeight": 663
+    },
+    "902005": {
+      "file": "Char/Moon/Quote/902005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 202,
+      "y": 57,
+      "cropWidth": 674,
+      "cropHeight": 663
+    },
+    "902006": {
+      "file": "Char/Moon/Quote/902006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 192,
+      "y": 57,
+      "cropWidth": 683,
+      "cropHeight": 663
+    },
+    "902007": {
+      "file": "Char/Moon/Quote/902007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 183,
+      "y": 57,
+      "cropWidth": 706,
+      "cropHeight": 663
+    },
+    "902008": {
+      "file": "Char/Moon/Quote/902008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 174,
+      "y": 57,
+      "cropWidth": 729,
+      "cropHeight": 663
+    },
+    "902009": {
+      "file": "Char/Moon/Quote/902009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 174,
+      "y": 57,
+      "cropWidth": 729,
+      "cropHeight": 663
+    },
+    "902010": {
+      "file": "Char/Moon/Quote/902010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 174,
+      "y": 57,
+      "cropWidth": 729,
+      "cropHeight": 663
+    },
+    "903000": {
+      "file": "Char/Moon/Quote/903000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 234,
+      "y": 76,
+      "cropWidth": 608,
+      "cropHeight": 644
+    },
+    "903001": {
+      "file": "Char/Moon/Quote/903001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 232,
+      "y": 78,
+      "cropWidth": 626,
+      "cropHeight": 642
+    },
+    "903002": {
+      "file": "Char/Moon/Quote/903002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 231,
+      "y": 82,
+      "cropWidth": 657,
+      "cropHeight": 638
+    },
+    "903003": {
+      "file": "Char/Moon/Quote/903003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 228,
+      "y": 86,
+      "cropWidth": 645,
+      "cropHeight": 634
+    },
+    "903004": {
+      "file": "Char/Moon/Quote/903004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 231,
+      "y": 88,
+      "cropWidth": 642,
+      "cropHeight": 632
+    },
+    "903005": {
+      "file": "Char/Moon/Quote/903005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 234,
+      "y": 91,
+      "cropWidth": 639,
+      "cropHeight": 629
+    },
+    "903006": {
+      "file": "Char/Moon/Quote/903006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 237,
+      "y": 94,
+      "cropWidth": 637,
+      "cropHeight": 626
+    },
+    "903007": {
+      "file": "Char/Moon/Quote/903007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 240,
+      "y": 97,
+      "cropWidth": 634,
+      "cropHeight": 623
+    }
+  },
+  "actions": {
+    "9000": {
+      "frames": [
+        {
+          "sprite": "900000",
+          "ticks": 12
+        },
+        {
+          "sprite": "900001",
+          "ticks": 3
+        },
+        {
+          "sprite": "900002",
+          "ticks": 3
+        },
+        {
+          "sprite": "900003",
+          "ticks": 3
+        },
+        {
+          "sprite": "900004",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900013",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": 21
+    },
+    "9010": {
+      "frames": [
+        {
+          "sprite": "901000",
+          "ticks": 12
+        },
+        {
+          "sprite": "901001",
+          "ticks": 4
+        },
+        {
+          "sprite": "901002",
+          "ticks": 4
+        },
+        {
+          "sprite": "901003",
+          "ticks": 4
+        },
+        {
+          "sprite": "901004",
+          "ticks": 4
+        },
+        {
+          "sprite": "901005",
+          "ticks": 4
+        },
+        {
+          "sprite": "901006",
+          "ticks": 4
+        },
+        {
+          "sprite": "901007",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9019": {
+      "frames": [
+        {
+          "sprite": "902000",
+          "ticks": -1
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9011": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 10
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 10
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 12
+        },
+        {
+          "sprite": "901008",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 22
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901008",
+          "ticks": 7
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 99,
+          "file": "Char/Moon/Quote/Intro-Moon01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9012": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 10
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 14
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 8
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 14
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 7
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 99,
+          "file": "Char/Moon/Quote/Intro-Moon03.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9020": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 12
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902008",
+          "ticks": 16
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 8
+        },
+        {
+          "sprite": "902008",
+          "ticks": 38
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 34
+        },
+        {
+          "sprite": "902010",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 28,
+          "duration": 98,
+          "file": "Char/Moon/Quote/Win-Moon01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9021": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 6
+        },
+        {
+          "sprite": "902008",
+          "ticks": 32
+        },
+        {
+          "sprite": "902009",
+          "ticks": 8
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902008",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 36
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 20
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 12
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 8
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 12
+        },
+        {
+          "sprite": "902009",
+          "ticks": 8
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 18
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 24
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 23
+        },
+        {
+          "sprite": "902010",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 28,
+          "duration": 257,
+          "file": "Char/Moon/Quote/Win-Moon02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9030": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 104,
+          "file": "Char/Moon/Quote/Lose-Moon01.ogg"
+        }
+      ],
+      "loop": 12
+    },
+    "9031": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 185,
+          "file": "Char/Moon/Quote/Lose-Moon02.ogg"
+        }
+      ],
+      "loop": 12
+    },
+    "9040": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 153,
+          "file": "Char/Moon/Quote/TLose-Moon01.ogg"
+        }
+      ],
+      "loop": 12
+    },
+    "9041": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 72,
+          "file": "Char/Moon/Quote/TLose-Moon02a.ogg"
+        },
+        {
+          "tick": 94,
+          "duration": 49,
+          "file": "Char/Moon/Quote/TLose-Moon02b.ogg"
+        }
+      ],
+      "loop": 12
+    }
+  },
+  "timelineNotes": {
+    "9011": {
+      "source": "Intro Moon01.wav",
+      "speechStartTick": 0,
+      "speechTicks": 99,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.3529946804046631,
+        "closedWindows": 11,
+        "halfWindows": 14,
+        "openWindows": 25
+      }
+    },
+    "9012": {
+      "source": "Intro Moon03.wav",
+      "speechStartTick": 0,
+      "speechTicks": 99,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.22760428339242939,
+        "closedWindows": 17,
+        "halfWindows": 20,
+        "openWindows": 13
+      }
+    },
+    "9020": {
+      "source": "Win Moon01.wav",
+      "speechStartTick": 28,
+      "speechTicks": 98,
+      "mouthSprites": [
+        "902010",
+        "902009",
+        "902008"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.3535577535629273,
+        "closedWindows": 11,
+        "halfWindows": 5,
+        "openWindows": 33
+      }
+    },
+    "9021": {
+      "source": "Win Moon02.wav",
+      "speechStartTick": 28,
+      "speechTicks": 257,
+      "mouthSprites": [
+        "902010",
+        "902009",
+        "902008"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.3976615846157074,
+        "closedWindows": 24,
+        "halfWindows": 27,
+        "openWindows": 78
+      }
+    },
+    "9030": {
+      "source": "Lose Moon01.wav",
+      "speechStartTick": 12,
+      "speechTicks": 104,
+      "mode": "cry-loop-no-lip-sync"
+    },
+    "9031": {
+      "source": "Lose Moon02.wav",
+      "speechStartTick": 12,
+      "speechTicks": 185,
+      "mode": "cry-loop-no-lip-sync"
+    },
+    "9040": {
+      "sources": [
+        "TLose Moon01.wav"
+      ],
+      "speechStartTick": 12,
+      "splitGapTicks": 10,
+      "mode": "cry-loop-no-lip-sync"
+    },
+    "9041": {
+      "sources": [
+        "TLose Moon02a.wav",
+        "TLose Moon02b.wav"
+      ],
+      "speechStartTick": 12,
+      "splitGapTicks": 10,
+      "mode": "cry-loop-no-lip-sync"
+    }
+  },
+  "audioSources": {
+    "Intro-Moon01.ogg": {
+      "source": "Intro Moon01.wav",
+      "samples": 72296,
+      "sampleRate": 44100,
+      "sha256": "ac2d51a97fa362d92c1e7916b1e8e337c108ac48f3e5d8a51ddc2cc3179c736d"
+    },
+    "Intro-Moon03.ogg": {
+      "source": "Intro Moon03.wav",
+      "samples": 72628,
+      "sampleRate": 44100,
+      "sha256": "37aa62ec05cabef2d9a663e7032f8499e82619bbc47c9f434b9caa737a40da50"
+    },
+    "Win-Moon01.ogg": {
+      "source": "Win Moon01.wav",
+      "samples": 71786,
+      "sampleRate": 44100,
+      "sha256": "49de52731b0626b2c40bade06a4f045659abc294214071c1519be3472d4992fd"
+    },
+    "Win-Moon02.ogg": {
+      "source": "Win Moon02.wav",
+      "samples": 188895,
+      "sampleRate": 44100,
+      "sha256": "d829e25d265dfa21d376bdf13fca902c3874b6b96946bda241bb8bb7174455e8"
+    },
+    "Lose-Moon01.ogg": {
+      "source": "Lose Moon01.wav",
+      "samples": 75931,
+      "sampleRate": 44100,
+      "sha256": "0017ab1a62cf0b49a13f047a04e3414d3bed37eb2a8c8b5f4a0a9ed2b468d22a"
+    },
+    "Lose-Moon02.ogg": {
+      "source": "Lose Moon02.wav",
+      "samples": 135520,
+      "sampleRate": 44100,
+      "sha256": "55c2159ee929ee74e1c84375c2a0a88e442d7a500a38f28944569c4a2ab3739a"
+    },
+    "TLose-Moon01.ogg": {
+      "source": "TLose Moon01.wav",
+      "samples": 112032,
+      "sampleRate": 44100,
+      "sha256": "9d874752254967a135d2ae1a400380fb404f246f5cca0cd92f4bf1596eb5432c"
+    },
+    "TLose-Moon02a.ogg": {
+      "source": "TLose Moon02a.wav",
+      "samples": 52200,
+      "sampleRate": 44100,
+      "sha256": "93d2b36ab635e724d94212980680bc6df6de0cb08817bfbe6b23834b06c9e33a"
+    },
+    "TLose-Moon02b.ogg": {
+      "source": "TLose Moon02b.wav",
+      "samples": 35336,
+      "sampleRate": 44100,
+      "sha256": "ec224972eb08ef24eb13ce59d93596dca8f33d8d6a6c5754adf8a4e6714118a6"
+    }
+  }
+}

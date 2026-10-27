@@ -1,0 +1,1314 @@
+{
+  "character": "SailorNeptune",
+  "logicalSize": [
+    1280,
+    720
+  ],
+  "tickRate": 60,
+  "frames": {
+    "900000": {
+      "file": "Char/Neptune/Quote/900000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 35,
+      "cropWidth": 466,
+      "cropHeight": 685
+    },
+    "900001": {
+      "file": "Char/Neptune/Quote/900001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 366,
+      "y": 41,
+      "cropWidth": 599,
+      "cropHeight": 679
+    },
+    "900002": {
+      "file": "Char/Neptune/Quote/900002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 356,
+      "y": 48,
+      "cropWidth": 671,
+      "cropHeight": 672
+    },
+    "900003": {
+      "file": "Char/Neptune/Quote/900003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 362,
+      "y": 56,
+      "cropWidth": 618,
+      "cropHeight": 664
+    },
+    "900004": {
+      "file": "Char/Neptune/Quote/900004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 3,
+      "cropWidth": 610,
+      "cropHeight": 717
+    },
+    "900005": {
+      "file": "Char/Neptune/Quote/900005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 2,
+      "cropWidth": 610,
+      "cropHeight": 718
+    },
+    "900006": {
+      "file": "Char/Neptune/Quote/900006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 0,
+      "cropWidth": 610,
+      "cropHeight": 720
+    },
+    "900007": {
+      "file": "Char/Neptune/Quote/900007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 0,
+      "cropWidth": 610,
+      "cropHeight": 720
+    },
+    "900008": {
+      "file": "Char/Neptune/Quote/900008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 609,
+      "cropHeight": 720
+    },
+    "900009": {
+      "file": "Char/Neptune/Quote/900009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 609,
+      "cropHeight": 720
+    },
+    "900010": {
+      "file": "Char/Neptune/Quote/900010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 609,
+      "cropHeight": 720
+    },
+    "900011": {
+      "file": "Char/Neptune/Quote/900011.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 609,
+      "cropHeight": 720
+    },
+    "900012": {
+      "file": "Char/Neptune/Quote/900012.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 610,
+      "cropHeight": 720
+    },
+    "900013": {
+      "file": "Char/Neptune/Quote/900013.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 0,
+      "cropWidth": 610,
+      "cropHeight": 720
+    },
+    "901000": {
+      "file": "Char/Neptune/Quote/901000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 412,
+      "y": 247,
+      "cropWidth": 433,
+      "cropHeight": 473
+    },
+    "901001": {
+      "file": "Char/Neptune/Quote/901001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 404,
+      "y": 179,
+      "cropWidth": 424,
+      "cropHeight": 541
+    },
+    "901002": {
+      "file": "Char/Neptune/Quote/901002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 423,
+      "y": 121,
+      "cropWidth": 406,
+      "cropHeight": 599
+    },
+    "901003": {
+      "file": "Char/Neptune/Quote/901003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 455,
+      "y": 73,
+      "cropWidth": 411,
+      "cropHeight": 647
+    },
+    "901004": {
+      "file": "Char/Neptune/Quote/901004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 445,
+      "y": 36,
+      "cropWidth": 454,
+      "cropHeight": 684
+    },
+    "901005": {
+      "file": "Char/Neptune/Quote/901005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 462,
+      "y": 36,
+      "cropWidth": 437,
+      "cropHeight": 684
+    },
+    "901006": {
+      "file": "Char/Neptune/Quote/901006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 474,
+      "y": 36,
+      "cropWidth": 425,
+      "cropHeight": 684
+    },
+    "901007": {
+      "file": "Char/Neptune/Quote/901007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 488,
+      "y": 36,
+      "cropWidth": 411,
+      "cropHeight": 684
+    },
+    "901008": {
+      "file": "Char/Neptune/Quote/901008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 498,
+      "y": 36,
+      "cropWidth": 401,
+      "cropHeight": 684
+    },
+    "901009": {
+      "file": "Char/Neptune/Quote/901009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 498,
+      "y": 36,
+      "cropWidth": 401,
+      "cropHeight": 684
+    },
+    "901010": {
+      "file": "Char/Neptune/Quote/901010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 498,
+      "y": 36,
+      "cropWidth": 401,
+      "cropHeight": 684
+    },
+    "902000": {
+      "file": "Char/Neptune/Quote/902000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 423,
+      "y": 46,
+      "cropWidth": 405,
+      "cropHeight": 674
+    },
+    "902001": {
+      "file": "Char/Neptune/Quote/902001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 419,
+      "y": 45,
+      "cropWidth": 498,
+      "cropHeight": 675
+    },
+    "902002": {
+      "file": "Char/Neptune/Quote/902002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 340,
+      "y": 44,
+      "cropWidth": 547,
+      "cropHeight": 676
+    },
+    "902003": {
+      "file": "Char/Neptune/Quote/902003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 332,
+      "y": 43,
+      "cropWidth": 522,
+      "cropHeight": 677
+    },
+    "902004": {
+      "file": "Char/Neptune/Quote/902004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 346,
+      "y": 43,
+      "cropWidth": 514,
+      "cropHeight": 677
+    },
+    "902005": {
+      "file": "Char/Neptune/Quote/902005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 346,
+      "y": 43,
+      "cropWidth": 514,
+      "cropHeight": 677
+    },
+    "902006": {
+      "file": "Char/Neptune/Quote/902006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 346,
+      "y": 43,
+      "cropWidth": 514,
+      "cropHeight": 677
+    },
+    "902007": {
+      "file": "Char/Neptune/Quote/902007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 347,
+      "y": 43,
+      "cropWidth": 513,
+      "cropHeight": 677
+    },
+    "902008": {
+      "file": "Char/Neptune/Quote/902008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 346,
+      "y": 43,
+      "cropWidth": 514,
+      "cropHeight": 677
+    },
+    "903000": {
+      "file": "Char/Neptune/Quote/903000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 426,
+      "y": 48,
+      "cropWidth": 458,
+      "cropHeight": 672
+    },
+    "903001": {
+      "file": "Char/Neptune/Quote/903001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 388,
+      "y": 49,
+      "cropWidth": 489,
+      "cropHeight": 671
+    },
+    "903002": {
+      "file": "Char/Neptune/Quote/903002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 378,
+      "y": 51,
+      "cropWidth": 478,
+      "cropHeight": 669
+    },
+    "903003": {
+      "file": "Char/Neptune/Quote/903003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 415,
+      "y": 54,
+      "cropWidth": 481,
+      "cropHeight": 666
+    },
+    "903004": {
+      "file": "Char/Neptune/Quote/903004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 415,
+      "y": 54,
+      "cropWidth": 481,
+      "cropHeight": 666
+    },
+    "903005": {
+      "file": "Char/Neptune/Quote/903005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 415,
+      "y": 54,
+      "cropWidth": 481,
+      "cropHeight": 666
+    }
+  },
+  "actions": {
+    "9000": {
+      "frames": [
+        {
+          "sprite": "900000",
+          "ticks": 12
+        },
+        {
+          "sprite": "900001",
+          "ticks": 3
+        },
+        {
+          "sprite": "900002",
+          "ticks": 3
+        },
+        {
+          "sprite": "900003",
+          "ticks": 3
+        },
+        {
+          "sprite": "900004",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900013",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": 21
+    },
+    "9010": {
+      "frames": [
+        {
+          "sprite": "901000",
+          "ticks": 12
+        },
+        {
+          "sprite": "901001",
+          "ticks": 4
+        },
+        {
+          "sprite": "901002",
+          "ticks": 4
+        },
+        {
+          "sprite": "901003",
+          "ticks": 4
+        },
+        {
+          "sprite": "901004",
+          "ticks": 4
+        },
+        {
+          "sprite": "901005",
+          "ticks": 4
+        },
+        {
+          "sprite": "901006",
+          "ticks": 4
+        },
+        {
+          "sprite": "901007",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9019": {
+      "frames": [
+        {
+          "sprite": "902000",
+          "ticks": -1
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9011": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 8
+        },
+        {
+          "sprite": "901009",
+          "ticks": 8
+        },
+        {
+          "sprite": "901010",
+          "ticks": 8
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 10
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 48,
+          "file": "Char/Neptune/Quote/Intro-Nep01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9012": {
+      "frames": [
+        {
+          "sprite": "901010",
+          "ticks": 6
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 18
+        },
+        {
+          "sprite": "901009",
+          "ticks": 8
+        },
+        {
+          "sprite": "901010",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 6
+        },
+        {
+          "sprite": "901009",
+          "ticks": 16
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901008",
+          "ticks": 9
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 81,
+          "file": "Char/Neptune/Quote/Intro-Nep02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9020": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 2
+        },
+        {
+          "sprite": "902006",
+          "ticks": 20
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 24
+        },
+        {
+          "sprite": "902004",
+          "ticks": 5
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 28
+        },
+        {
+          "sprite": "902008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 59,
+          "file": "Char/Neptune/Quote/Win-Nep01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9021": {
+      "frames": [
+        {
+          "sprite": "902001",
+          "ticks": 4
+        },
+        {
+          "sprite": "902002",
+          "ticks": 4
+        },
+        {
+          "sprite": "902003",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 2
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902004",
+          "ticks": 2
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 14
+        },
+        {
+          "sprite": "902005",
+          "ticks": 10
+        },
+        {
+          "sprite": "902006",
+          "ticks": 2
+        },
+        {
+          "sprite": "902005",
+          "ticks": 10
+        },
+        {
+          "sprite": "902004",
+          "ticks": 6
+        },
+        {
+          "sprite": "902005",
+          "ticks": 8
+        },
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 18
+        },
+        {
+          "sprite": "902008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 66,
+          "file": "Char/Neptune/Quote/Win-Nep02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9030": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 6
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 14
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 18
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 12
+        },
+        {
+          "sprite": "903003",
+          "ticks": 8
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 14
+        },
+        {
+          "sprite": "903004",
+          "ticks": 8
+        },
+        {
+          "sprite": "903003",
+          "ticks": 9
+        },
+        {
+          "sprite": "903003",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 139,
+          "file": "Char/Neptune/Quote/Lose-Nep01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9031": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 6
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 10
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 20
+        },
+        {
+          "sprite": "903005",
+          "ticks": 10
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 20
+        },
+        {
+          "sprite": "903003",
+          "ticks": 10
+        },
+        {
+          "sprite": "903003",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 128,
+          "file": "Char/Neptune/Quote/Lose-Nep02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9040": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 10
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 14
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 10
+        },
+        {
+          "sprite": "903005",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 8
+        },
+        {
+          "sprite": "903005",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 2
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903005",
+          "ticks": 8
+        },
+        {
+          "sprite": "903004",
+          "ticks": 2
+        },
+        {
+          "sprite": "903003",
+          "ticks": 6
+        },
+        {
+          "sprite": "903004",
+          "ticks": 10
+        },
+        {
+          "sprite": "903003",
+          "ticks": 14
+        },
+        {
+          "sprite": "903003",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 12,
+          "duration": 142,
+          "file": "Char/Neptune/Quote/TLose-Nep01.ogg"
+        }
+      ],
+      "loop": null
+    }
+  },
+  "timelineNotes": {
+    "9011": {
+      "source": "Intro Nep01.wav",
+      "speechStartTick": 0,
+      "speechTicks": 48,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.15929490476846692,
+        "closedWindows": 4,
+        "halfWindows": 9,
+        "openWindows": 11
+      }
+    },
+    "9012": {
+      "source": "Intro Nep02.wav",
+      "speechStartTick": 0,
+      "speechTicks": 81,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.15912295877933502,
+        "closedWindows": 9,
+        "halfWindows": 17,
+        "openWindows": 15
+      }
+    },
+    "9020": {
+      "source": "Win Nep01.wav",
+      "speechStartTick": 12,
+      "speechTicks": 59,
+      "mouthSprites": [
+        "902004",
+        "902005",
+        "902006"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.22209135591983795,
+        "closedWindows": 3,
+        "halfWindows": 15,
+        "openWindows": 12
+      }
+    },
+    "9021": {
+      "source": "Win Nep02.wav",
+      "speechStartTick": 12,
+      "speechTicks": 66,
+      "mouthSprites": [
+        "902004",
+        "902005",
+        "902006"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.20387225747108462,
+        "closedWindows": 6,
+        "halfWindows": 17,
+        "openWindows": 10
+      }
+    },
+    "9030": {
+      "source": "Lose Nep01.wav",
+      "speechStartTick": 12,
+      "speechTicks": 139,
+      "mouthSprites": [
+        "903003",
+        "903004",
+        "903005"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.2905270099639893,
+        "closedWindows": 16,
+        "halfWindows": 27,
+        "openWindows": 27
+      }
+    },
+    "9031": {
+      "source": "Lose Nep02.wav",
+      "speechStartTick": 12,
+      "speechTicks": 128,
+      "mouthSprites": [
+        "903003",
+        "903004",
+        "903005"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.20393715202808382,
+        "closedWindows": 16,
+        "halfWindows": 25,
+        "openWindows": 23
+      }
+    },
+    "9040": {
+      "sources": [
+        "TLose Nep01.wav"
+      ],
+      "speechStartTick": 12,
+      "mouthSprites": [
+        "903003",
+        "903004",
+        "903005"
+      ],
+      "splitGapTicks": 10
+    }
+  },
+  "audioSources": {
+    "Intro-Nep01.ogg": {
+      "source": "Intro Nep01.wav",
+      "samples": 34699,
+      "sampleRate": 44100,
+      "sha256": "55358e1ead08933a998e46ef33a058d849c6ad0a1c9b0598bef9f11189cde479"
+    },
+    "Intro-Nep02.ogg": {
+      "source": "Intro Nep02.wav",
+      "samples": 59360,
+      "sampleRate": 44100,
+      "sha256": "6162d3cb5aaf6335cdf7d340074ac318578b9d2b7c79cb5ca35e9ff884bb9f2a"
+    },
+    "Win-Nep01.ogg": {
+      "source": "Win Nep01.wav",
+      "samples": 42806,
+      "sampleRate": 44100,
+      "sha256": "9ddb6c3d2ec7137e0ff60e542830293949df6c51263b4999a1cadd7a92435080"
+    },
+    "Win-Nep02.ogg": {
+      "source": "Win Nep02.wav",
+      "samples": 48216,
+      "sampleRate": 44100,
+      "sha256": "f2bb83bba680b3a6a9a701038ace9437b795bcc7862efde67f157d3fab144258"
+    },
+    "Lose-Nep01.ogg": {
+      "source": "Lose Nep01.wav",
+      "samples": 101980,
+      "sampleRate": 44100,
+      "sha256": "899ab36229e36a5cd0fc35ccb5c75b92fbb108854f48ba7809c2754eba6abf1c"
+    },
+    "Lose-Nep02.ogg": {
+      "source": "Lose Nep02.wav",
+      "samples": 93610,
+      "sampleRate": 44100,
+      "sha256": "b912584a5b7495f55828ff6fdbaf3dea7cd5593f3570ba4d202d72a887132a01"
+    },
+    "TLose-Nep01.ogg": {
+      "source": "TLose Nep01.wav",
+      "samples": 103973,
+      "sampleRate": 44100,
+      "sha256": "d08c6a035019bca2744905fdb9f82d5409889270b82a70ef1531e6399e42449a"
+    }
+  }
+}

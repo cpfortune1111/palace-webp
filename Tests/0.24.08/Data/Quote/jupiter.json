@@ -1,0 +1,1466 @@
+{
+  "character": "SailorJupiter",
+  "logicalSize": [
+    1280,
+    720
+  ],
+  "tickRate": 60,
+  "frames": {
+    "900000": {
+      "file": "Char/Jupiter/Quote/900000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 395,
+      "y": 39,
+      "cropWidth": 439,
+      "cropHeight": 681
+    },
+    "900001": {
+      "file": "Char/Jupiter/Quote/900001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 330,
+      "y": 29,
+      "cropWidth": 666,
+      "cropHeight": 691
+    },
+    "900002": {
+      "file": "Char/Jupiter/Quote/900002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 25,
+      "cropWidth": 845,
+      "cropHeight": 695
+    },
+    "900003": {
+      "file": "Char/Jupiter/Quote/900003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 396,
+      "y": 26,
+      "cropWidth": 586,
+      "cropHeight": 694
+    },
+    "900004": {
+      "file": "Char/Jupiter/Quote/900004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 352,
+      "y": 33,
+      "cropWidth": 465,
+      "cropHeight": 687
+    },
+    "900005": {
+      "file": "Char/Jupiter/Quote/900005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 354,
+      "y": 34,
+      "cropWidth": 462,
+      "cropHeight": 686
+    },
+    "900006": {
+      "file": "Char/Jupiter/Quote/900006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 357,
+      "y": 34,
+      "cropWidth": 458,
+      "cropHeight": 686
+    },
+    "900007": {
+      "file": "Char/Jupiter/Quote/900007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 360,
+      "y": 34,
+      "cropWidth": 453,
+      "cropHeight": 686
+    },
+    "900008": {
+      "file": "Char/Jupiter/Quote/900008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 363,
+      "y": 35,
+      "cropWidth": 448,
+      "cropHeight": 685
+    },
+    "900009": {
+      "file": "Char/Jupiter/Quote/900009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 366,
+      "y": 36,
+      "cropWidth": 442,
+      "cropHeight": 684
+    },
+    "900010": {
+      "file": "Char/Jupiter/Quote/900010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 370,
+      "y": 36,
+      "cropWidth": 436,
+      "cropHeight": 684
+    },
+    "900011": {
+      "file": "Char/Jupiter/Quote/900011.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 373,
+      "y": 36,
+      "cropWidth": 433,
+      "cropHeight": 684
+    },
+    "900012": {
+      "file": "Char/Jupiter/Quote/900012.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 376,
+      "y": 37,
+      "cropWidth": 430,
+      "cropHeight": 683
+    },
+    "900013": {
+      "file": "Char/Jupiter/Quote/900013.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 380,
+      "y": 37,
+      "cropWidth": 426,
+      "cropHeight": 683
+    },
+    "901000": {
+      "file": "Char/Jupiter/Quote/901000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 266,
+      "y": 0,
+      "cropWidth": 822,
+      "cropHeight": 720
+    },
+    "901001": {
+      "file": "Char/Jupiter/Quote/901001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 404,
+      "y": 0,
+      "cropWidth": 556,
+      "cropHeight": 720
+    },
+    "901002": {
+      "file": "Char/Jupiter/Quote/901002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 413,
+      "y": 16,
+      "cropWidth": 547,
+      "cropHeight": 704
+    },
+    "901003": {
+      "file": "Char/Jupiter/Quote/901003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 398,
+      "y": 29,
+      "cropWidth": 702,
+      "cropHeight": 691
+    },
+    "901004": {
+      "file": "Char/Jupiter/Quote/901004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 321,
+      "y": 25,
+      "cropWidth": 915,
+      "cropHeight": 695
+    },
+    "901005": {
+      "file": "Char/Jupiter/Quote/901005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 323,
+      "y": 22,
+      "cropWidth": 907,
+      "cropHeight": 698
+    },
+    "901006": {
+      "file": "Char/Jupiter/Quote/901006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 23,
+      "cropWidth": 900,
+      "cropHeight": 697
+    },
+    "901007": {
+      "file": "Char/Jupiter/Quote/901007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 27,
+      "cropWidth": 900,
+      "cropHeight": 693
+    },
+    "901008": {
+      "file": "Char/Jupiter/Quote/901008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 29,
+      "cropWidth": 900,
+      "cropHeight": 691
+    },
+    "901009": {
+      "file": "Char/Jupiter/Quote/901009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 29,
+      "cropWidth": 900,
+      "cropHeight": 691
+    },
+    "901010": {
+      "file": "Char/Jupiter/Quote/901010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 325,
+      "y": 29,
+      "cropWidth": 900,
+      "cropHeight": 691
+    },
+    "902000": {
+      "file": "Char/Jupiter/Quote/902000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 397,
+      "y": 48,
+      "cropWidth": 532,
+      "cropHeight": 672
+    },
+    "902001": {
+      "file": "Char/Jupiter/Quote/902001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 396,
+      "y": 36,
+      "cropWidth": 538,
+      "cropHeight": 684
+    },
+    "902002": {
+      "file": "Char/Jupiter/Quote/902002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 396,
+      "y": 27,
+      "cropWidth": 544,
+      "cropHeight": 693
+    },
+    "902003": {
+      "file": "Char/Jupiter/Quote/902003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 417,
+      "y": 18,
+      "cropWidth": 523,
+      "cropHeight": 702
+    },
+    "902004": {
+      "file": "Char/Jupiter/Quote/902004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 9,
+      "cropWidth": 483,
+      "cropHeight": 711
+    },
+    "902005": {
+      "file": "Char/Jupiter/Quote/902005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 10,
+      "cropWidth": 483,
+      "cropHeight": 710
+    },
+    "902006": {
+      "file": "Char/Jupiter/Quote/902006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 10,
+      "cropWidth": 483,
+      "cropHeight": 710
+    },
+    "902007": {
+      "file": "Char/Jupiter/Quote/902007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 18,
+      "cropWidth": 483,
+      "cropHeight": 702
+    },
+    "902008": {
+      "file": "Char/Jupiter/Quote/902008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 20,
+      "cropWidth": 483,
+      "cropHeight": 700
+    },
+    "902009": {
+      "file": "Char/Jupiter/Quote/902009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 20,
+      "cropWidth": 483,
+      "cropHeight": 700
+    },
+    "902010": {
+      "file": "Char/Jupiter/Quote/902010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 442,
+      "y": 20,
+      "cropWidth": 483,
+      "cropHeight": 700
+    },
+    "903000": {
+      "file": "Char/Jupiter/Quote/903000.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 409,
+      "y": 41,
+      "cropWidth": 495,
+      "cropHeight": 679
+    },
+    "903001": {
+      "file": "Char/Jupiter/Quote/903001.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 422,
+      "y": 33,
+      "cropWidth": 459,
+      "cropHeight": 687
+    },
+    "903002": {
+      "file": "Char/Jupiter/Quote/903002.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 426,
+      "y": 24,
+      "cropWidth": 438,
+      "cropHeight": 696
+    },
+    "903003": {
+      "file": "Char/Jupiter/Quote/903003.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 403,
+      "y": 16,
+      "cropWidth": 458,
+      "cropHeight": 704
+    },
+    "903004": {
+      "file": "Char/Jupiter/Quote/903004.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 403,
+      "y": 16,
+      "cropWidth": 458,
+      "cropHeight": 704
+    },
+    "903005": {
+      "file": "Char/Jupiter/Quote/903005.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 403,
+      "y": 16,
+      "cropWidth": 458,
+      "cropHeight": 704
+    },
+    "903006": {
+      "file": "Char/Jupiter/Quote/903006.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 399,
+      "y": 19,
+      "cropWidth": 462,
+      "cropHeight": 701
+    },
+    "903007": {
+      "file": "Char/Jupiter/Quote/903007.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 20,
+      "cropWidth": 468,
+      "cropHeight": 700
+    },
+    "903008": {
+      "file": "Char/Jupiter/Quote/903008.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 20,
+      "cropWidth": 468,
+      "cropHeight": 700
+    },
+    "903009": {
+      "file": "Char/Jupiter/Quote/903009.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 21,
+      "cropWidth": 468,
+      "cropHeight": 699
+    },
+    "903010": {
+      "file": "Char/Jupiter/Quote/903010.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 21,
+      "cropWidth": 468,
+      "cropHeight": 699
+    },
+    "903011": {
+      "file": "Char/Jupiter/Quote/903011.webp",
+      "width": 1280,
+      "height": 720,
+      "x": 394,
+      "y": 21,
+      "cropWidth": 468,
+      "cropHeight": 699
+    }
+  },
+  "actions": {
+    "9000": {
+      "frames": [
+        {
+          "sprite": "900000",
+          "ticks": 12
+        },
+        {
+          "sprite": "900001",
+          "ticks": 3
+        },
+        {
+          "sprite": "900002",
+          "ticks": 3
+        },
+        {
+          "sprite": "900003",
+          "ticks": 3
+        },
+        {
+          "sprite": "900004",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900013",
+          "ticks": 4
+        },
+        {
+          "sprite": "900012",
+          "ticks": 4
+        },
+        {
+          "sprite": "900011",
+          "ticks": 4
+        },
+        {
+          "sprite": "900010",
+          "ticks": 4
+        },
+        {
+          "sprite": "900009",
+          "ticks": 4
+        },
+        {
+          "sprite": "900008",
+          "ticks": 4
+        },
+        {
+          "sprite": "900007",
+          "ticks": 4
+        },
+        {
+          "sprite": "900006",
+          "ticks": 4
+        },
+        {
+          "sprite": "900005",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": 21
+    },
+    "9010": {
+      "frames": [
+        {
+          "sprite": "901000",
+          "ticks": 12
+        },
+        {
+          "sprite": "901001",
+          "ticks": 4
+        },
+        {
+          "sprite": "901002",
+          "ticks": 4
+        },
+        {
+          "sprite": "901003",
+          "ticks": 4
+        },
+        {
+          "sprite": "901004",
+          "ticks": 4
+        },
+        {
+          "sprite": "901005",
+          "ticks": 4
+        },
+        {
+          "sprite": "901006",
+          "ticks": 4
+        },
+        {
+          "sprite": "901007",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 4
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9019": {
+      "frames": [
+        {
+          "sprite": "902000",
+          "ticks": -1
+        }
+      ],
+      "cues": [],
+      "loop": null
+    },
+    "9011": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 10
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 4
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 12
+        },
+        {
+          "sprite": "901010",
+          "ticks": 10
+        },
+        {
+          "sprite": "901009",
+          "ticks": 6
+        },
+        {
+          "sprite": "901010",
+          "ticks": 8
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 10
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 70,
+          "file": "Char/Jupiter/Quote/Intro-Jup02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9012": {
+      "frames": [
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901008",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 2
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 8
+        },
+        {
+          "sprite": "901010",
+          "ticks": 12
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 2
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901010",
+          "ticks": 12
+        },
+        {
+          "sprite": "901009",
+          "ticks": 4
+        },
+        {
+          "sprite": "901008",
+          "ticks": 7
+        },
+        {
+          "sprite": "901008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 0,
+          "duration": 61,
+          "file": "Char/Jupiter/Quote/Intro-Jup03.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9020": {
+      "frames": [
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 6
+        },
+        {
+          "sprite": "902008",
+          "ticks": 8
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 2
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 8
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 14
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 32
+        },
+        {
+          "sprite": "902008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 20,
+          "duration": 70,
+          "file": "Char/Jupiter/Quote/Win-Jup01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9021": {
+      "frames": [
+        {
+          "sprite": "902004",
+          "ticks": 4
+        },
+        {
+          "sprite": "902005",
+          "ticks": 4
+        },
+        {
+          "sprite": "902006",
+          "ticks": 4
+        },
+        {
+          "sprite": "902007",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 2
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 6
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 2
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 2
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 6
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902008",
+          "ticks": 16
+        },
+        {
+          "sprite": "902009",
+          "ticks": 4
+        },
+        {
+          "sprite": "902010",
+          "ticks": 10
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 8
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 18
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902010",
+          "ticks": 8
+        },
+        {
+          "sprite": "902009",
+          "ticks": 2
+        },
+        {
+          "sprite": "902008",
+          "ticks": 20
+        },
+        {
+          "sprite": "902008",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 20,
+          "duration": 134,
+          "file": "Char/Jupiter/Quote/Win-Jup03.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9030": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903008",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 2
+        },
+        {
+          "sprite": "903011",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903011",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 12
+        },
+        {
+          "sprite": "903009",
+          "ticks": 16
+        },
+        {
+          "sprite": "903010",
+          "ticks": 8
+        },
+        {
+          "sprite": "903011",
+          "ticks": 4
+        },
+        {
+          "sprite": "903009",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903011",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": 2
+        },
+        {
+          "sprite": "903010",
+          "ticks": 4
+        },
+        {
+          "sprite": "903011",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 4
+        },
+        {
+          "sprite": "903011",
+          "ticks": 10
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": 10
+        },
+        {
+          "sprite": "903009",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 36,
+          "duration": 132,
+          "file": "Char/Jupiter/Quote/Lose-Jup01.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9031": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903008",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": 2
+        },
+        {
+          "sprite": "903010",
+          "ticks": 4
+        },
+        {
+          "sprite": "903011",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 10
+        },
+        {
+          "sprite": "903009",
+          "ticks": 20
+        },
+        {
+          "sprite": "903010",
+          "ticks": 4
+        },
+        {
+          "sprite": "903011",
+          "ticks": 18
+        },
+        {
+          "sprite": "903009",
+          "ticks": 2
+        },
+        {
+          "sprite": "903010",
+          "ticks": 2
+        },
+        {
+          "sprite": "903011",
+          "ticks": 8
+        },
+        {
+          "sprite": "903010",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": 6
+        },
+        {
+          "sprite": "903009",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 36,
+          "duration": 88,
+          "file": "Char/Jupiter/Quote/Lose-Jup02.ogg"
+        }
+      ],
+      "loop": null
+    },
+    "9040": {
+      "frames": [
+        {
+          "sprite": "903000",
+          "ticks": 4
+        },
+        {
+          "sprite": "903001",
+          "ticks": 4
+        },
+        {
+          "sprite": "903002",
+          "ticks": 4
+        },
+        {
+          "sprite": "903003",
+          "ticks": 4
+        },
+        {
+          "sprite": "903004",
+          "ticks": 4
+        },
+        {
+          "sprite": "903005",
+          "ticks": 4
+        },
+        {
+          "sprite": "903006",
+          "ticks": 4
+        },
+        {
+          "sprite": "903007",
+          "ticks": 4
+        },
+        {
+          "sprite": "903008",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 4
+        },
+        {
+          "sprite": "903011",
+          "ticks": 8
+        },
+        {
+          "sprite": "903010",
+          "ticks": 8
+        },
+        {
+          "sprite": "903009",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 2
+        },
+        {
+          "sprite": "903011",
+          "ticks": 4
+        },
+        {
+          "sprite": "903010",
+          "ticks": 2
+        },
+        {
+          "sprite": "903009",
+          "ticks": 6
+        },
+        {
+          "sprite": "903010",
+          "ticks": 2
+        },
+        {
+          "sprite": "903011",
+          "ticks": 28
+        },
+        {
+          "sprite": "903010",
+          "ticks": 8
+        },
+        {
+          "sprite": "903009",
+          "ticks": 16
+        },
+        {
+          "sprite": "903009",
+          "ticks": -1
+        }
+      ],
+      "cues": [
+        {
+          "tick": 36,
+          "duration": 82,
+          "file": "Char/Jupiter/Quote/TLose-Jup01.ogg"
+        }
+      ],
+      "loop": null
+    }
+  },
+  "timelineNotes": {
+    "9011": {
+      "source": "Intro Jup02.wav",
+      "speechStartTick": 0,
+      "speechTicks": 70,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.29889087080955506,
+        "closedWindows": 4,
+        "halfWindows": 15,
+        "openWindows": 16
+      }
+    },
+    "9012": {
+      "source": "Intro Jup03.wav",
+      "speechStartTick": 0,
+      "speechTicks": 61,
+      "mouthSprites": [
+        "901008",
+        "901009",
+        "901010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.17591264843940735,
+        "closedWindows": 3,
+        "halfWindows": 13,
+        "openWindows": 15
+      }
+    },
+    "9020": {
+      "source": "Win Jup01.wav",
+      "speechStartTick": 20,
+      "speechTicks": 70,
+      "mouthSprites": [
+        "902008",
+        "902009",
+        "902010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.2588941752910614,
+        "closedWindows": 10,
+        "halfWindows": 12,
+        "openWindows": 13
+      }
+    },
+    "9021": {
+      "source": "Win Jup03.wav",
+      "speechStartTick": 20,
+      "speechTicks": 134,
+      "mouthSprites": [
+        "902008",
+        "902009",
+        "902010"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.19651418924331662,
+        "closedWindows": 12,
+        "halfWindows": 19,
+        "openWindows": 36
+      }
+    },
+    "9030": {
+      "source": "Lose Jup01.wav",
+      "speechStartTick": 36,
+      "speechTicks": 132,
+      "mouthSprites": [
+        "903009",
+        "903010",
+        "903011"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.33219608664512634,
+        "closedWindows": 17,
+        "halfWindows": 30,
+        "openWindows": 19
+      }
+    },
+    "9031": {
+      "source": "Lose Jup02.wav",
+      "speechStartTick": 36,
+      "speechTicks": 88,
+      "mouthSprites": [
+        "903009",
+        "903010",
+        "903011"
+      ],
+      "analysis": {
+        "windowTicks": 2,
+        "referenceRms": 0.2941792368888855,
+        "closedWindows": 13,
+        "halfWindows": 16,
+        "openWindows": 15
+      }
+    },
+    "9040": {
+      "sources": [
+        "TLose Jup01.wav"
+      ],
+      "speechStartTick": 36,
+      "mouthSprites": [
+        "903009",
+        "903010",
+        "903011"
+      ],
+      "splitGapTicks": 10
+    }
+  },
+  "audioSources": {
+    "Intro-Jup02.ogg": {
+      "source": "Intro Jup02.wav",
+      "samples": 50960,
+      "sampleRate": 44100,
+      "sha256": "844ac24fb6ba40d8f873edf947dd561527ef80382af4d107c7ea8cc50968830a"
+    },
+    "Intro-Jup03.ogg": {
+      "source": "Intro Jup03.wav",
+      "samples": 44247,
+      "sampleRate": 44100,
+      "sha256": "232f79e8bf2d8712305e7d99ae9927ced8fb5b1029f1be6450dd04652669c547"
+    },
+    "Win-Jup01.ogg": {
+      "source": "Win Jup01.wav",
+      "samples": 51082,
+      "sampleRate": 44100,
+      "sha256": "611b0edff2ce7a2f3b68064e7e067d1b084eadc0117e19eecc00a907524f3e22"
+    },
+    "Win-Jup03.ogg": {
+      "source": "Win Jup03.wav",
+      "samples": 97992,
+      "sampleRate": 44100,
+      "sha256": "cb4fccdab23968de452d6256040548a4d96a87d7f8572d7ad91ab68fb911961b"
+    },
+    "Lose-Jup01.ogg": {
+      "source": "Lose Jup01.wav",
+      "samples": 96956,
+      "sampleRate": 44100,
+      "sha256": "3b69f02435188c2f5058b821906a66bb45f3893e63d46cd1f6edc3bedcdad01d"
+    },
+    "Lose-Jup02.ogg": {
+      "source": "Lose Jup02.wav",
+      "samples": 63961,
+      "sampleRate": 44100,
+      "sha256": "eaed20e26e316191b74c040c874539ec4d05ca19ba59e1940b056e57c28a9407"
+    },
+    "TLose-Jup01.ogg": {
+      "source": "TLose Jup01.wav",
+      "samples": 59856,
+      "sampleRate": 44100,
+      "sha256": "187f6f21a6d08fdf0b44a0408b35954c1f2e4e8de927132ef1f20592f136bfbb"
+    }
+  }
+}
