@@ -1,0 +1,22 @@
+{
+  "ikemen.wasm": {
+    "bytes": 25176351,
+    "sha256": "c85e793bdacfe6a1adbf6a07fd20902553094f0fdb9480e761f7f0d3567358a5"
+  },
+  "ikemen.wasm.gz": {
+    "bytes": 5798159,
+    "sha256": "2132dcf8313e11afeef292d95ce0780bed91e354b3b7fc8d186cbc3d6cb97efe"
+  },
+  "wasm_exec.js": {
+    "bytes": 16992,
+    "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14"
+  },
+  "fs-shim.js": {
+    "bytes": 32681,
+    "sha256": "658190b2516b856e07c35ac5ad045db2350e978c78cf4d5c148bb8d418942021"
+  },
+  "smoke-content.zip": {
+    "bytes": 4916,
+    "sha256": "5cf14b5f437683bfcd75e88f2626bd34d2d644a4a66ce25e58a4f3fde45a4d9e"
+  }
+}

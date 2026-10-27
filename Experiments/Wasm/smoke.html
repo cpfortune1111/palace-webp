@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><link rel="icon" href="data:,"><title>Moon Palace WASM engine test</title>
+<style>body{margin:0;background:#fff;color:#333;font:18px Arial;text-align:center}canvas{display:block;width:min(100%,1280px);margin:auto}button{margin:12px;padding:12px 24px}pre{white-space:pre-wrap}</style>
+<h1>WASM engine test</h1><p>Independent engine check. The main game is unchanged.</p>
+<button id="start">Start engine</button><canvas id="ikemen-canvas" width="1280" height="720"></canvas><pre id="status">Ready to start</pre>
+<script src="wasm_exec.js"></script><script src="fs-shim.js"></script>
+<script>
+window.__ikemenBootLog=[];
+for(const event of ['pointerdown','keydown'])addEventListener(event,()=>window.__ikemenResumeAudio?.());
+document.getElementById('start').onclick=async function(){
+ this.disabled=true;const status=document.getElementById('status');
+ try{
+  await mountZip('smoke-content.zip','/ikemen');process.chdir('/ikemen');
+  const go=new Go();go.argv=['ikemen','-config','config.ini','-windowed'];
+  go.exit=code=>{window.__palaceExit=code;status.textContent='Engine exited: '+code};
+  const response=await fetch('ikemen.wasm.gz');if(!response.ok)throw Error('Engine download failed: '+response.status);
+  const bytes=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  const hashes=await(await fetch('artifact-hashes.json')).json();
+  const actual=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),n=>n.toString(16).padStart(2,'0')).join('');
+  if(actual!==hashes['ikemen.wasm'].sha256)throw Error('Engine verification failed');
+  const {instance}=await WebAssembly.instantiate(bytes,go.importObject);
+  window.__palaceWasm=instance;status.textContent='Engine running';
+  go.run(instance).catch(error=>{window.__palaceFailure=String(error);status.textContent=String(error)});
+ }catch(error){window.__palaceFailure=String(error);status.textContent=String(error)}
+};
+</script></html>

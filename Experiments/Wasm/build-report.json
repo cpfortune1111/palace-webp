@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-27",
+  "nativeCommit": "81c6da71d689625e20db79586815b695da00dd6d",
+  "browserCommit": "716cc944a6f19bf845e08595a1c9b7b5f8f8525b",
+  "mergeBase": "05b7d98af690c73c7bffe5cb4f4eeb6933fa2703",
+  "go": "1.27.3",
+  "target": "js/wasm",
+  "goexperiment": "arenas",
+  "reproducibleFreshIntegrations": true,
+  "wasmSha256": "c85e793bdacfe6a1adbf6a07fd20902553094f0fdb9480e761f7f0d3567358a5",
+  "wasmBytes": 25176351,
+  "gzipBytes": 5798159,
+  "officialCoreFilesUnchanged": [
+    "anim.go",
+    "bytecode.go",
+    "char.go",
+    "compiler.go",
+    "compiler_functions.go",
+    "fightscreen.go",
+    "model.go",
+    "stage.go",
+    "state.go",
+    "stats.go",
+    "script.go"
+  ],
+  "browserTest": {
+    "browser": "Microsoft Edge 156 (headless SwiftShader)",
+    "webgl2": true,
+    "uiTicks": 180,
+    "p1AndP2Keyboard": true,
+    "audioNonzeroSamples": true,
+    "pageErrors": 0
+  },
+  "liveRuntimeChanged": false,
+  "characterBattleVerified": false,
+  "originalCharacterAssetsPublished": false,
+  "encryptionImplemented": false,
+  "hostUiBridgeImplemented": false,
+  "limitations": [
+    "WebGL2 model shadows unavailable",
+    "Raw TCP/UDP browser netplay unavailable",
+    "Video scaling modes other than None not implemented by port",
+    "HTML video volume uses linear approximation",
+    "No real-device performance or touch-bridge qualification yet"
+  ]
+}

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "src/video_js.go",
+    "before": "\tloop      bool\n",
+    "after": "\tloop      bool\n\tmuted     bool\n\tvolume    int\n"
+  },
+  {
+    "path": "src/video_js.go",
+    "before": "\tbgv.scaleMode = sm\n",
+    "after": "\tbgv.scaleMode = sm\n\tbgv.volume = volume\n"
+  },
+  {
+    "path": "src/video_js.go",
+    "before": "bgv.el.Set(\"muted\", bgv.gestureMuted || !bgv.visible || !bgv.inMixer)",
+    "after": "bgv.el.Set(\"muted\", bgv.gestureMuted || bgv.muted || !bgv.visible || !bgv.inMixer)"
+  },
+  {
+    "path": "src/video_js.go",
+    "before": "func (bgv *bgVideo) installGestureHook() {",
+    "after": "// updateAudioVolume implements the v1.0.0 stage-video audio seam.\n// HTML media volume remains linear, as in the browser port.\nfunc (bgv *bgVideo) updateAudioVolume() {\n\tif !bgv.opened { return }\n\t_, noMusic := sys.cmdFlags[\"-nomusic\"]\n\t_, noSound := sys.cmdFlags[\"-nosound\"]\n\tvolume := float64(Clamp(int32(bgv.volume), 0, int32(sys.cfg.Sound.MaxBGMVolume))) / 100\n\tvolume *= float64(sys.cfg.Sound.BGMVolume) / 100\n\tvolume *= float64(sys.cfg.Sound.MasterVolume) / 100\n\tif volume > 1 { volume = 1 }\n\tif volume < 0 { volume = 0 }\n\tbgv.el.Set(\"volume\", volume)\n\tbgv.updateMuted()\n\tif noMusic || noSound { bgv.el.Set(\"muted\", true) }\n}\n\nfunc (bgv *bgVideo) installGestureHook() {"
+  }
+]

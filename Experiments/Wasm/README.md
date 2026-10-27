@@ -2,8 +2,22 @@
 
 This directory pins official IKEMEN GO v1.0.0 (`81c6da71d689625e20db79586815b695da00dd6d`) and the third-party fiiight `upstream-wasm-port` source (`716cc944a6f19bf845e08595a1c9b7b5f8f8525b`). The latter is a browser port patch source, not an officially merged browser release. Full per-file Git blob hashes are in source-lock.json.
 
-Run `python fetch_sources.py --destination <private-directory>` to materialize and verify the two immutable source snapshots. Use an empty destination outside this published site. No demo roster, font, screenpack or touch implementation is installed into Moon Palace. Source retrieval alone does not prove the browser patches build against v1.0.0; rebasing and a reproducible integrated WASM build are the next experiment, and have not been completed here.
+The browser port is now integrated onto v1.0.0 and compiled with pinned Go 1.27.3. Two fresh source integrations produced byte-identical 25,176,351-byte WASM binaries (5,798,159 bytes gzipped). The actual compressed distribution passed Edge/WebGL2 startup, 180 UI ticks, separate P1/P2 keyboard inputs and nonzero WebAudio sample tests without page errors. This is an engine smoke test, not a Moon Palace battle or 3D-stage compatibility result. See build-report.json and Dist/artifact-hashes.json.
+
+[Open the standalone engine test](Dist/). It renders a pink rectangle and plays a quiet generated test tone. No character, demo roster, screenpack, font or alternative touch interface is bundled. Main Moon Palace runtime is unchanged.
+
+Reproduce using empty private source/build directories outside the published site:
+
+1. `python fetch_sources.py --destination <sources>`
+2. `python integrate_sources.py --sources <sources> --destination <integrated>`
+3. `python apply_port_fixes.py <integrated>`
+4. `./build_wasm.ps1 -Source <integrated> -Go <Go1.27.3 executable> -Out <build>`
+5. `python collect_notices.py <integrated> <Go1.27.3 executable> <build>/THIRD-PARTY-NOTICES.txt`
+6. `python package_smoke.py <build>`
+7. `node check_smoke.cjs <build> <test-results>` (requires Playwright and Edge; PLAYWRIGHT_MODULE can identify an existing Playwright installation).
+
+Serve the build directory over HTTP to inspect it. stage_distribution.py copies only the explicit engine/test distribution whitelist into Dist; it never copies original native character assets. The July merge base is fixed at 05b7d98af690c73c7bffe5cb4f4eeb6933fa2703. Compiler, save-state and statistics conflicts retain official v1.0.0 code; music and system conflict hunks retain the official side. Remaining browser changes are applied by a three-way merge and checked before compilation.
 
 The existing Web UI, pre-fight dialogue, Ability Customize and touch controls remain authoritative. Future integration must expose configuration/start/round/result interfaces and preserve per-round ability settings. The asset reader must consume compressed derivatives from encrypted mixed chunks on demand, rather than publish original SFF/SND or reconstruct large original archives in memory. Browser-side decryption cannot guarantee that assets are impossible to extract.
 
-Go is pinned to 1.27.3 (Windows amd64 archive hash in the lock). Generate wasm_exec.js from the same toolchain used for the eventual WASM binary. Both engine source repositories contain MIT license notices; retain those and audit dependency licenses when distributing an integrated binary. This step has not changed the live battle runtime, implemented encryption, or deployed a WASM game.
+Go is pinned to 1.27.3 (Windows amd64 archive hash in the lock). wasm_exec.js is copied from that same toolchain. The distribution retains engine and Go notices plus notices from the 27 linked dependency modules. The port still lacks 3D model shadows and browser TCP/UDP netplay; video volume uses the port's linear HTML media approximation. These limitations have not been hidden by the successful build. This step has not changed the live battle runtime or implemented encryption. Next: compressed/encrypted asset reader and the host UI battle interface, followed by real character/stage tests.

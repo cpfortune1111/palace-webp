@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "status": "sources-pinned-not-integrated",
+  "status": "integrated-wasm-smoke-verified",
   "sources": [
     {
       "name": "ikemen-native",
@@ -3269,6 +3269,6 @@
     "importDemoContent": false,
     "publishOriginalAssets": false,
     "assetAdapter": "compressed encrypted mixed chunks; pending",
-    "integratedBuildVerified": false
+    "integratedBuildVerified": true
   }
 }
