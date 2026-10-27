@@ -91,13 +91,16 @@ export function createSpecialRuntime(api){
   entity.hitSpent=true;entity.hitTarget=result.guarded?null:defender.player;
   entity.moveContact=1;entity.moveHit=result.guarded?0:1;entity.moveGuarded=result.guarded?1:0;entity.hitCount+=result.guarded?0:1;
   entity.hitPause=result.attackerPause;
-  if(entity.kind==='projectile'){
-   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded:result.guarded});
+  if(entity.kind==='projectile')consumeProjectileContact(entity,result.guarded);
+ }
+ function consumeProjectileContact(entity,guarded=false){
+   if(entity.removing||entity.destroyed||!entity.activeHitDef)return;
+   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded});
+   entity.moveContact=1;entity.moveHit=guarded?0:1;entity.moveGuarded=guarded?1:0;entity.hitSpent=true;
    entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
    if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
    entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
    if(entity.anim<0)entity.destroyed=true;
-  }
  }
  function removeProjectile(entity,reason){
   entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
@@ -137,9 +140,9 @@ export function createSpecialRuntime(api){
   const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   if(helper.hitBy&&attacks.some(attack=>{if(!attack?.hitDef?.params||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact}))overrides.push(helper);
+   const attack=helper.hitBy&&attacks.find(attack=>{if(!attack?.hitDef?.params||attack.removing||attack.destroyed||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact});if(attack)overrides.push({helper,attack});
   }
-  for(const helper of overrides){enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index)
+  for(const {helper,attack} of overrides){const projectile=attack.kind==='projectile'?entities.find(entity=>entity.key===attack.key):null;if(projectile&&(projectile.removing||projectile.destroyed))continue;enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index);if(projectile)consumeProjectileContact(projectile)
   }
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
  }

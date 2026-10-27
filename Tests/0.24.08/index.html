@@ -7,6 +7,6 @@ try{
  await navigator.serviceWorker.register('./snapshot-worker.js',{scope:'./',updateViaCache:'none'});
  await navigator.serviceWorker.ready;
  if(!navigator.serviceWorker.controller)await new Promise(resolve=>navigator.serviceWorker.addEventListener('controllerchange',resolve,{once:true}));
- const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision','02408r3');target.hash=location.hash;location.replace(target);
+ const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision','02408r4');target.hash=location.hash;location.replace(target);
 }catch(error){document.getElementById('status').textContent='Unable to open the test page. '+error.message}
 </script></html>
