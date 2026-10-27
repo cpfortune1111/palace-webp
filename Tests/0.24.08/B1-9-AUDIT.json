@@ -1,0 +1,1720 @@
+{
+  "B1": [
+    {
+      "character": "Venus",
+      "state": "5101",
+      "helper": false,
+      "type": "PosAdd",
+      "params": {
+        "x": "Const(movement.down.bounce.offset.x)"
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 1705
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5101",
+      "helper": false,
+      "type": "PosAdd",
+      "params": {
+        "x": "Const(movement.down.bounce.offset.x)"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1783
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5101",
+      "helper": false,
+      "type": "PosAdd",
+      "params": {
+        "x": "Const(movement.down.bounce.offset.x)"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1794
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5101",
+      "helper": false,
+      "type": "PosAdd",
+      "params": {
+        "x": "Const(movement.down.bounce.offset.x)"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1683
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5101",
+      "helper": false,
+      "type": "PosAdd",
+      "params": {
+        "x": "Const(movement.down.bounce.offset.x)"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1752
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    }
+  ],
+  "B2": [],
+  "B3": [],
+  "B4": [],
+  "B5": [],
+  "B6": [
+    {
+      "character": "Venus",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 953
+      },
+      "triggers": {
+        "1": [
+          "!var(5)"
+        ]
+      }
+    },
+    {
+      "character": "Venus",
+      "state": "3050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 631
+      },
+      "triggers": {
+        "1": [
+          "MoveContact"
+        ]
+      }
+    },
+    {
+      "character": "Venus",
+      "state": "3055",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "persistent": "0",
+        "ignorehitpause": "1",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 759
+      },
+      "triggers": {
+        "1": [
+          "MoveGuarded"
+        ]
+      }
+    },
+    {
+      "character": "Venus",
+      "state": "3055",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "10",
+        "persistent": "0",
+        "ignorehitpause": "1",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 767
+      },
+      "triggers": {
+        "1": [
+          "MoveHit"
+        ]
+      }
+    },
+    {
+      "character": "Venus",
+      "state": "3056",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "venus_Helper.st",
+        "line": 784
+      },
+      "triggers": {
+        "1": [
+          "!Time"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "1050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 850
+      },
+      "triggers": {
+        "1": [
+          "MoveContact"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "1050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "3",
+        "ignorehitpause": "1",
+        "target": "var(19)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 857
+      },
+      "triggers": {
+        "1": [
+          "P2StateType = A",
+          "MoveHit",
+          "Enemy,HitFall"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "1050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(4)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 866
+      },
+      "triggers": {
+        "1": [
+          "MoveHit"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "3050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "3",
+        "ignorehitpause": "1",
+        "target": "var(19)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 1064
+      },
+      "triggers": {
+        "1": [
+          "P2StateType = A",
+          "MoveHit",
+          "Enemy,HitFall"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "3051",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "3",
+        "ignorehitpause": "1",
+        "target": "var(19)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 1224
+      },
+      "triggers": {
+        "1": [
+          "P2StateType = A",
+          "MoveHit",
+          "Enemy,HitFall"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(1)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 1418
+      },
+      "triggers": {
+        "1": [
+          "root,MoveType = I"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "moon_Helper.st",
+        "line": 1564
+      },
+      "triggers": {
+        "1": [
+          "!var(5)"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "1151",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 868
+      },
+      "triggers": {
+        "1": [
+          "root,ProjContact(1150) = 1"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "1151",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(4)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 875
+      },
+      "triggers": {
+        "1": [
+          "root,ProjHit(1150) = 1",
+          "root,ProjGuarded(1150) = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "3050",
+      "helper": true,
+      "type": "ParentVarAdd",
+      "params": {
+        "value": "1",
+        "persistent": "0",
+        "ignorehitpause": "1",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 987
+      },
+      "triggers": {
+        "1": [
+          "MoveGuarded"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "3051",
+      "helper": true,
+      "type": "ParentVarAdd",
+      "params": {
+        "value": "10",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 1006
+      },
+      "triggers": {
+        "1": [
+          "!Time"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(1)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 1157
+      },
+      "triggers": {
+        "1": [
+          "root,MoveType = I"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 1303
+      },
+      "triggers": {
+        "1": [
+          "!var(5)"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(30)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 1447
+      },
+      "triggers": {
+        "1": [
+          "root,StateType = A"
+        ],
+        "2": [
+          "root,P2BodyDist X = [0,160]"
+        ],
+        "3": [
+          "root,P2BodyDist X = [440,676]"
+        ],
+        "4": [
+          "EnemyNear,HitDefAttr = SA,NA,SA,HA"
+        ],
+        "5": [
+          "(root,PrevStateNo = 52  || root,PrevStateNo = 5120) && P2StateType = A"
+        ],
+        "6": [
+          "root,P2BodyDist X < 180 && root,FrontEdgeBodyDist > 200 && P2StateType != A"
+        ],
+        "7": [
+          "P2StateNo = [5090,5119]"
+        ],
+        "8": [
+          "P2StateNo = [5121,5899]"
+        ],
+        "9": [
+          "(var(20) || var(21))"
+        ],
+        "10": [
+          "root,P2BodyDist X < 180 && root,FrontEdgeBodyDist > 200"
+        ],
+        "11": [
+          "var(8) > 0 && root,P2BodyDist X < 240"
+        ],
+        "12": [
+          "var(10) > 0 || var(11) > 0"
+        ],
+        "13": [
+          "root,var(41) > 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(30)"
+      },
+      "source": {
+        "file": "jupiter_Helper.st",
+        "line": 1479
+      },
+      "triggers": {
+        "1": [
+          "root,ctrl && P2MoveType = A && P2StateType = C"
+        ],
+        "2": [
+          "P2StateType = C"
+        ],
+        "3": [
+          "Enemy,HitDefAttr = SC,AT && (root,StateNo = 130 || root,StateNo = 120)"
+        ],
+        "4": [
+          "root,P2BodyDist X > 680"
+        ],
+        "5": [
+          "root,NumHelper(1150) && P2BodyDist X > 600"
+        ],
+        "6": [
+          "P2StateNo = 5120 && (root,P2BodyDist X = [220,480]) && root, ctrl"
+        ],
+        "7": [
+          "P2StateNo = 5120 && root,FrontEdgeDist < 240 && root,ctrl"
+        ],
+        "8": [
+          "P2StateNo = 5120 && (root,P2BodyDist X < 120 || root,FrontEdgeDist < 240) &&  root,ctrl"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "1050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 661
+      },
+      "triggers": {
+        "1": [
+          "MoveContact"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "1050",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(4)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 753
+      },
+      "triggers": {
+        "1": [
+          "MoveHit"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "3050",
+      "helper": true,
+      "type": "ParentVarAdd",
+      "params": {
+        "value": "1",
+        "persistent": "0",
+        "ignorehitpause": "1",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 946
+      },
+      "triggers": {
+        "1": [
+          "MoveGuarded"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "3055",
+      "helper": true,
+      "type": "ParentVarAdd",
+      "params": {
+        "value": "10",
+        "target": "var(47)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 1085
+      },
+      "triggers": {
+        "1": [
+          "!Time"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(1)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 1108
+      },
+      "triggers": {
+        "1": [
+          "root,MoveType = I"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 1254
+      },
+      "triggers": {
+        "1": [
+          "!var(5)"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(30)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 1396
+      },
+      "triggers": {
+        "1": [
+          "root,StateType = A"
+        ],
+        "2": [
+          "root,P2BodyDist X = [0,160]"
+        ],
+        "3": [
+          "root,P2BodyDist X = [440,676]"
+        ],
+        "4": [
+          "EnemyNear,HitDefAttr = SA,NA,SA,HA"
+        ],
+        "5": [
+          "(root,PrevStateNo = 52  || root,PrevStateNo = 5120) && P2StateType = A"
+        ],
+        "6": [
+          "root,P2BodyDist X < 180 && root,FrontEdgeBodyDist > 200 && P2StateType != A"
+        ],
+        "7": [
+          "P2StateNo = [5090,5119]"
+        ],
+        "8": [
+          "P2StateNo = [5121,5899]"
+        ],
+        "9": [
+          "(var(20) || var(21))"
+        ],
+        "10": [
+          "root,P2BodyDist X < 180 && root,FrontEdgeBodyDist > 200"
+        ],
+        "11": [
+          "var(8) > 0 && root,P2BodyDist X < 240"
+        ],
+        "12": [
+          "var(10) > 0 || var(11) > 0"
+        ],
+        "13": [
+          "root,var(41) > 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(30)"
+      },
+      "source": {
+        "file": "neptune_Helper.st",
+        "line": 1428
+      },
+      "triggers": {
+        "1": [
+          "root,ctrl && P2MoveType = A && P2StateType = C"
+        ],
+        "2": [
+          "P2StateType = C"
+        ],
+        "3": [
+          "Enemy,HitDefAttr = SC,AT && (root,StateNo = 130 || root,StateNo = 120)"
+        ],
+        "4": [
+          "root,P2BodyDist X > 680"
+        ],
+        "5": [
+          "root,NumHelper(1050) && P2BodyDist X > 600"
+        ],
+        "6": [
+          "P2StateNo = 5120 && (root,P2BodyDist X = [220,480]) && root, ctrl"
+        ],
+        "7": [
+          "P2StateNo = 5120 && root,FrontEdgeDist < 240 && root,ctrl"
+        ],
+        "8": [
+          "P2StateNo = 5120 && (root,P2BodyDist X < 120 || root,FrontEdgeDist < 240) &&  root,ctrl"
+        ],
+        "9": [
+          "BackEdgeBodyDist < 80",
+          "ctrl",
+          "P2StateType = A"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "1250",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "ignorehitpause": "1",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "saturn_Helper.st",
+        "line": 667
+      },
+      "triggers": {
+        "1": [
+          "MoveContact"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "1250",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "1",
+        "target": "var(4)"
+      },
+      "source": {
+        "file": "saturn_Helper.st",
+        "line": 674
+      },
+      "triggers": {
+        "1": [
+          "MoveHit"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(1)"
+      },
+      "source": {
+        "file": "saturn_Helper.st",
+        "line": 726
+      },
+      "triggers": {
+        "1": [
+          "root,MoveType = I"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "9999",
+      "helper": true,
+      "type": "ParentVarSet",
+      "params": {
+        "value": "0",
+        "target": "var(15)"
+      },
+      "source": {
+        "file": "saturn_Helper.st",
+        "line": 872
+      },
+      "triggers": {
+        "1": [
+          "!var(5)"
+        ]
+      }
+    }
+  ],
+  "B7": [
+    {
+      "character": "Venus",
+      "state": "5030",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 1320
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Venus",
+      "state": "5071",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "venus_Common.cns",
+        "line": 1505
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "151",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 828
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "153",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 902
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "155",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 953
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5001",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1179
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5011",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1285
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5030",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1398
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5071",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1583
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5081",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1647
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "151",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 838
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "153",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 912
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "155",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 963
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5001",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1190
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5011",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1296
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5030",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1409
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5071",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1594
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5081",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1658
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5810",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 2251
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "151",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 756
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "153",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 830
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "155",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 881
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5001",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1079
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5011",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1185
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5030",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1298
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5071",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1483
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5081",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1547
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "151",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 825
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "153",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 899
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "155",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 950
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5001",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1148
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5011",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1254
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5030",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1367
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5071",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1",
+        "y": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1552
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5081",
+      "helper": false,
+      "type": "HitVelSet",
+      "params": {
+        "x": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1616
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    }
+  ],
+  "B8": [
+    {
+      "character": "Moon",
+      "state": "5001",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1199
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Moon",
+      "state": "5011",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 1305
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5001",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1210
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "5011",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 1316
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5001",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1099
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Neptune",
+      "state": "5011",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "neptune_Common.cns",
+        "line": 1205
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5001",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1168
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "5011",
+      "helper": false,
+      "type": "DefenceMulSet",
+      "params": {
+        "value": "1"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 1274
+      },
+      "triggers": {
+        "1": [
+          "HitOver"
+        ]
+      }
+    }
+  ],
+  "B9": [
+    {
+      "character": "Moon",
+      "state": "105",
+      "helper": false,
+      "type": "AfterImage",
+      "params": {
+        "time": "10",
+        "timegap": "1",
+        "length": "9",
+        "palcolor": "128",
+        "palbright": "0,0,0",
+        "palcontrast": "256,256,256",
+        "trans": "addalpha",
+        "alpha": "128,128"
+      },
+      "source": {
+        "file": "moon_Common.cns",
+        "line": 571
+      },
+      "triggers": {
+        "1": [
+          "Time = 0"
+        ]
+      }
+    },
+    {
+      "character": "Jupiter",
+      "state": "105",
+      "helper": false,
+      "type": "AfterImage",
+      "params": {
+        "time": "10",
+        "timegap": "1",
+        "length": "9",
+        "palcolor": "128",
+        "palbright": "0,0,0",
+        "palcontrast": "256,256,256",
+        "trans": "addalpha",
+        "alpha": "128,128"
+      },
+      "source": {
+        "file": "jupiter_Common.cns",
+        "line": 547
+      },
+      "triggers": {
+        "1": [
+          "Time = 9990"
+        ]
+      }
+    },
+    {
+      "character": "Saturn",
+      "state": "105",
+      "helper": false,
+      "type": "AfterImage",
+      "params": {
+        "time": "10",
+        "timegap": "1",
+        "length": "9",
+        "palcolor": "128",
+        "palbright": "0,0,0",
+        "palcontrast": "256,256,256",
+        "trans": "addalpha",
+        "alpha": "128,128"
+      },
+      "source": {
+        "file": "saturn_Common.cns",
+        "line": 534
+      },
+      "triggers": {
+        "1": [
+          "Time = 9990"
+        ]
+      }
+    }
+  ]
+}
