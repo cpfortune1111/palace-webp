@@ -1,4 +1,4 @@
-import {createWasmHost,validateMatch} from './host-runtime.js';
+import {createWasmHost,validateMatch} from './host-runtime.js?on-demand=1';
 import {createRoundView} from '../../Engine/round-flow-view.js';
 const startup=document.getElementById('status');startup.textContent='Preparing protected assets…';
 const registration=await navigator.serviceWorker.register(new URL('./asset-worker.js?on-demand=1',import.meta.url),{type:'module',scope:new URL('./',import.meta.url).pathname,updateViaCache:'none'});

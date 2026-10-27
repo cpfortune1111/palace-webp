@@ -27,7 +27,7 @@ export function createWasmHost({container=document.body,onSnapshot=()=>{},onResu
   if(kind==='matchEnded'){const result=lastSnapshot;stop();Promise.resolve(onResult(winner,value,result)).catch(onError)}
   if(kind==='error'||kind==='exit'&&value!==0){const error=Error('Battle engine: '+String(value));clearTimeout(timeout);rejectStart?.(error);settle=rejectStart=null;onError(error)}
  });
- async function start(config){stop();session=crypto.randomUUID();winner=0;lastSnapshot=null;frame=document.createElement('iframe');frame.title='Moon Palace battle';frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:1;pointer-events:none';frame.src=new URL('./host-frame.html',import.meta.url);container.appendChild(frame);
+ async function start(config){stop();session=crypto.randomUUID();winner=0;lastSnapshot=null;frame=document.createElement('iframe');frame.title='Moon Palace battle';frame.style.cssText='position:fixed;inset:0;width:100%;height:100%;border:0;z-index:1;pointer-events:none';frame.src=new URL('./host-frame.html?on-demand=1',import.meta.url);container.appendChild(frame);
   return new Promise((resolve,reject)=>{settle=resolve;rejectStart=reject;timeout=setTimeout(()=>{rejectStart?.(Error('Battle loading timed out'));settle=rejectStart=null},180000);frame.onload=()=>send('start',{config,pack})})
  }
  return {start,stop,input,release,pause:(value,hide=true)=>{if(value)release();if(frame)frame.style.visibility=value&&hide?'hidden':'visible';send('control',{control:{paused:!!value}})},kill:player=>send('control',{control:{kill:player}}),all1hp:()=>send('control',{control:{all1hp:true}}),snapshot:()=>lastSnapshot};

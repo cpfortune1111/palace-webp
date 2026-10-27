@@ -1,4 +1,4 @@
-import {openAssetPack} from './encrypted-assets.js';
+import {openAssetPack} from './encrypted-assets.js?on-demand=1';
 let started=false,token;window.__ikemenBootLog=[];window.__palaceControl={paused:false};
 const emit=(kind,value)=>parent.postMessage({palaceWasm:1,token,kind,value},location.origin);
 window.__palaceEmit=(kind,value)=>{let parsed;try{parsed=JSON.parse(value)}catch{parsed=value}emit(kind,parsed)};
