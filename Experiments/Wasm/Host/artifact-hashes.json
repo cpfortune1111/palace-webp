@@ -1,0 +1,26 @@
+{
+  "ikemen.wasm": {
+    "bytes": 25469096,
+    "sha256": "35dbbfeee49b14be2aec3d1f9292900ce18a8933a2bf82922fba4a2c8501ea96"
+  },
+  "fs-shim.js": {
+    "bytes": 33221,
+    "sha256": "938ed003d90c59171d83cae3f397c09c81aaef7d95e002f9764e73709238ab3d"
+  },
+  "ikemen.wasm.gz": {
+    "bytes": 5870173,
+    "sha256": "c21e4b65c999219bbb0558424cb4557f17f11354daf46b5d496a4bd2ed30c255"
+  },
+  "LICENCE.txt": {
+    "bytes": 3743,
+    "sha256": "0779202d0207f16bb50a76f04da4d5458c78d69e48a423f75536154006a1f558"
+  },
+  "THIRD-PARTY-NOTICES.txt": {
+    "bytes": 80041,
+    "sha256": "9eebf8684b986e60e68f0bd0ba328f0e56270500bb26957d416a4720c72aa58d"
+  },
+  "wasm_exec.js": {
+    "bytes": 16992,
+    "sha256": "0c949f4996f9a89698e4b5c586de32249c3b69b7baadb64d220073cc04acba14"
+  }
+}

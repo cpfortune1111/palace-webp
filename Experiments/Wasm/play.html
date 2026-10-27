@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Moon Palace WASM Preview</title><link rel="icon" href="data:,"><style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
+#app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
+#venus{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
+#mars{position:fixed;inset:0;z-index:1;width:100%;height:100%;display:block;pointer-events:none}
+#hud{position:fixed;z-index:10;left:8px;top:8px;background:#08080dcc;padding:6px 8px;border-radius:9px;width:min(570px,80vw);max-width:80vw;font-size:10px;line-height:1.22;overflow-wrap:anywhere;cursor:pointer;user-select:none;-webkit-user-select:none}
+#hud b{font-size:13px;line-height:1.15;display:block}
+#buildid{font-size:9px!important;line-height:1.15;margin-top:1px!important}
+#status{font-size:10px;margin-top:2px}
+#act{font-size:12px;line-height:1.35;margin-top:3px;white-space:pre-wrap;font-family:ui-monospace,monospace}
+#hud.collapsed{width:auto;max-width:70vw;padding:5px 7px}
+#hud.collapsed #buildid,#hud.collapsed #status,#hud.collapsed #detail,#hud.collapsed #pbar{display:none}
+#hud.collapsed b{display:none}
+#hud.collapsed #act{margin:0;white-space:pre-wrap}
+#ctrl{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;white-space:nowrap}
+button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #ffffff55;background:#09090dcc;color:white}
+#detail{font-size:9px;line-height:1.18;opacity:.78;margin-top:2px} #pbar{height:3px;background:#ffffff22;border-radius:8px;overflow:hidden;margin-top:4px;width:100%}
+#pfill{height:100%;width:0;background:white;transition:width .15s}
+
+#ctrl{position:fixed!important;z-index:4!important;left:34px!important;right:auto!important;bottom:max(28px,env(safe-area-inset-bottom))!important;transform:none!important;display:block!important}
+#touchShoulders{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}
+#stick{width:150px;height:150px;border-radius:50%;background:#202126cc;border:2px solid #777;position:relative;touch-action:none;box-shadow:0 4px 18px #0008}
+#stick:before{content:"";position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;background:#777;transform:translate(-50%,-50%)}
+#stickKnob{width:64px;height:64px;border-radius:50%;background:#555d;border:2px solid #aaa;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+#touchAttacks{position:fixed;right:max(24px,env(safe-area-inset-right));bottom:max(28px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(2,1fr);gap:12px;z-index:9}
+.touchButton{width:70px;height:70px;padding:0;border-radius:50%;border:2px solid #aaa;background:#333a;color:#fff;font:bold 26px system-ui;touch-action:none;user-select:none;-webkit-user-select:none}
+.touchButton.pressed{background:#777a}
+@media(max-width:500px){#ctrl{left:max(12px,env(safe-area-inset-left))!important}#stick{width:130px;height:130px}#touchAttacks{right:max(12px,env(safe-area-inset-right));gap:10px}.touchButton{width:60px;height:60px}}
+
+#debugBtns{position:fixed;right:8px;top:8px;display:flex;gap:6px;z-index:30}
+#debugBtns button{width:38px;height:32px;border:1px solid rgba(255,255,255,.35);border-radius:7px;background:rgba(0,0,0,.58);color:#fff;font:700 16px system-ui;touch-action:manipulation}
+#debugBtns button:active{transform:scale(.94)}
+#debugBtns button.on{background:rgba(255,255,255,.22)}
+#collision{position:fixed;inset:0;z-index:8;pointer-events:none}
+#inputPanel{position:fixed;right:8px;top:48px;z-index:30;background:#08080dcc;padding:6px 8px;border-radius:7px;font-size:11px;max-width:260px}
+#inputPanel select{background:#202126;color:white;border:1px solid #777;border-radius:4px;font-size:12px}
+#inputHint{margin-top:4px}
+body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
+</style><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head><body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.26.29 · Controller Integration</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD command-buffer-02629-20261027-01</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
+<div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
+<script type="module" src="Experiments/Wasm/host-ui.js"></script></body></html>

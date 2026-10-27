@@ -1,0 +1,32 @@
+{
+  "status": "experimental desktop integration preview",
+  "engineSha256": "35dbbfeee49b14be2aec3d1f9292900ce18a8933a2bf82922fba4a2c8501ea96",
+  "reproducibleFreshBuild": true,
+  "pack": {
+    "files": 1916,
+    "logicalBytes": 331743506,
+    "bundleBytes": 287997948,
+    "bundles": 71
+  },
+  "checks": {
+    "authenticatedAssetReads": true,
+    "tamperingRejected": true,
+    "http200BundleReuse": true,
+    "settingsValidation": true,
+    "fullOriginalUiFlowToReportAndHome": true,
+    "acsHpPersistsAcrossRounds": 1083,
+    "plaintextMediaNetworkRequests": 0,
+    "pageErrorsInUiFlow": 0,
+    "moonJupiterCastleTwoRoundP2Win": true,
+    "neptuneSaturnActiveBattle": true,
+    "watchAiActionsAndDamage": true,
+    "touchTwoButtonsAndBlurRelease": true
+  },
+  "bounds": [
+    "No original SFF/SND archives published or reconstructed",
+    "Main runtime and backup unchanged",
+    "Large selected sprite sets currently allocate RGBA textures eagerly; mobile memory/performance remains unqualified",
+    "Underlying browser port lacks native model shadows and TCP/UDP netplay",
+    "Round voice gap is source-derived; not yet an independent audio timing measurement"
+  ]
+}

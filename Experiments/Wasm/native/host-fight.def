@@ -1,0 +1,38 @@
+[Info]
+name = Moon Palace Web HUD
+localcoord = 1280,720
+mugenversion = 1.1
+[Files]
+[Lifebar]
+[Powerbar]
+[Simul Lifebar]
+[Turns Lifebar]
+[Simul Face]
+[Turns Face]
+[Simul Name]
+[Turns Name]
+[Guardbar]
+[Stunbar]
+[Face]
+[Name]
+[Time]
+[Combo]
+[WinIcon]
+[Action]
+[Timer]
+[Score]
+[Match]
+[AILevel]
+[WinCount]
+[Mode]
+[Round]
+match.wins = 2
+start.waittime = 30
+ctrl.time = 30
+round.time = 30
+fight.time = 30
+KO.time = 60
+over.waittime = 60
+over.hittime = 10
+over.wintime = 60
+over.time = 120

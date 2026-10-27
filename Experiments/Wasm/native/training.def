@@ -1,0 +1,36 @@
+[Info]
+name = Training
+displayname = Training
+mugenversion = 1.1
+[Camera]
+startx = 0
+starty = 0
+boundleft = -2000
+boundright = 2000
+boundhigh = -1000
+boundlow = 0
+verticalfollow = .5
+floortension = 100
+tension = 200
+[PlayerInfo]
+p1startx = -280
+p1starty = 0
+p1facing = 1
+p2startx = 280
+p2starty = 0
+p2facing = -1
+leftbound = -2400
+rightbound = 2400
+[Bound]
+screenleft = 60
+screenright = 60
+[StageInfo]
+zoffset = 660
+localcoord = 1280,720
+autoturn = 1
+resetBG = 1
+[Shadow]
+intensity = 128
+yscale = .3
+[BGdef]
+bgclearcolor = 30,65,90

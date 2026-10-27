@@ -1,0 +1,11 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {openAssetPack} from './encrypted-assets.js';
+const root=path.resolve(process.argv[2]);let requests=0,corrupt=false,range=true;
+const fetcher=async(url,options={})=>{const name=new URL(url).pathname.slice(1),file=path.join(root,name);if(!fs.existsSync(file))return new Response(null,{status:404});let bytes=new Uint8Array(fs.readFileSync(file));requests++;const r=options.headers?.Range?.match(/^bytes=(\d+)-(\d+)$/);if(r&&range)bytes=bytes.slice(Number(r[1]),Number(r[2])+1);if(corrupt&&name.endsWith('.mpak')){bytes=bytes.slice();bytes[0]^=1}return new Response(bytes,{status:r&&range?206:200})};
+const pack=await openAssetPack('http://fixture/manifest.json',{fetcher,cacheBytes:1024*1024});const name=Object.keys(pack.files).find(name=>pack.files[name].size>100&&pack.files[name].size<100000);assert(name);
+const before=requests;const [one,two]=await Promise.all([pack.read(name),pack.read(name)]);assert.deepEqual(one,two);const fetched=requests;await pack.read(name);assert.equal(requests,fetched);one[0]^=1;assert.notDeepEqual(one,await pack.read(name));assert(fetched>before);
+range=false;const fallback=await openAssetPack('http://fixture/manifest.json',{fetcher});assert.deepEqual(await fallback.read(name),two);
+const sameBundle=Object.keys(fallback.files).find(other=>other!==name&&fallback.files[other].parts.every(part=>part.file===fallback.files[name].parts[0].file));
+assert(sameBundle);const fallbackRequests=requests;await fallback.read(sameBundle);assert.equal(requests,fallbackRequests,'HTTP 200 bundle must be reused across logical assets');
+range=true;corrupt=true;const bad=await openAssetPack('http://fixture/manifest.json',{fetcher});await assert.rejects(()=>bad.read(name));
+await assert.rejects(()=>pack.read('unavailable.sff'));
+console.log('PASS authenticated reads, decompression, concurrent-read coalescing, immutable cache copies, HTTP 200 fallback, tamper rejection and missing-asset rejection');

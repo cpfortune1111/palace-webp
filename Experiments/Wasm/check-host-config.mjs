@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {validateMatch} from './host-runtime.js';
+const choice={players:['SailorMoon','SailorSaturn'],stage:'moon',hardware:['saturn','snes'],command:['auto','normal'],acs:[[0,0,0,0,1,0],[0,0,0,0,0,0]]};
+const result=validateMatch('vs','99',choice);
+assert.equal(result.acs[0][4],1);choice.acs[0][4]=2;assert.equal(result.acs[0][4],1);
+assert.deepEqual(validateMatch('training','infinite',choice).acs,[Array(6).fill(0),Array(6).fill(0)]);
+assert.throws(()=>validateMatch('vs','99',{...choice,stage:'../config'}));
+assert.throws(()=>validateMatch('vs','99',{...choice,hardware:['3do','snes']}));
+assert.throws(()=>validateMatch('vs','99',{...choice,players:['Unknown','SailorMoon']}));
+assert.throws(()=>validateMatch('vs','99',{...choice,acs:[Array(6).fill(5),Array(6).fill(0)]}));
+assert.throws(()=>validateMatch('vs','14',choice));
+assert.throws(()=>validateMatch('unsupported','99',choice));
+console.log('PASS supported match settings, independent ACS copies, training reset and invalid setting rejection');

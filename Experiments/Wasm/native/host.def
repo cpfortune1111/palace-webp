@@ -1,0 +1,23 @@
+[Info]
+name = Moon Palace Web Host
+localcoord = 1280,720
+mugenversion = 1.1
+[Files]
+fight = data/host-fight.def
+[Select Info]
+rows = 1
+columns = 2
+[VS Screen]
+time = 0
+[Continue Screen]
+enabled = 0
+[Victory Screen]
+enabled = 0
+[Win Screen]
+enabled = 0
+[Hiscore Info]
+enabled = 0
+[Challenger Info]
+enabled = 0
+[Pause Menu]
+enabled = 0
