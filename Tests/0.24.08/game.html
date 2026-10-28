@@ -1,4 +1,8 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<script>
+// Direct links also pass through the launcher before loading routed modules.
+if(navigator.serviceWorker?.controller?.scriptURL!==new URL('./snapshot-worker.js?v=02408r7',location.href).href){const target=new URL('./',location.href);target.search=location.search;target.searchParams.set('revision','02408r7');target.hash=location.hash;location.replace(target)}
+</script>
 <title>Prototype 0.24.08-r7 · Presentation Preload</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
@@ -50,6 +54,8 @@ body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touc
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
+import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r7';
+await ensurePresentationWorker();
 import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r7';
 import {createPageBackground} from './Engine/page-background.js?v=02408r7';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
