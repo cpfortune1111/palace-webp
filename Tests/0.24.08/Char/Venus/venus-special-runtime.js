@@ -1,4 +1,4 @@
-import {applyStateVelocity} from '../../Engine/state-entry-velocity.js?v=02408r9';
+import {applyStateVelocity} from '../../Engine/state-entry-velocity.js?v=02408r10';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
@@ -13,7 +13,7 @@ export function createSpecialRuntime(api){
  };
  const numeric=(params,context)=>{
   const result={...params};
-  for(const key of ['damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
+  for(const key of ['pausetime','guard.pausetime','damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
