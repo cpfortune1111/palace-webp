@@ -1,3 +1,4 @@
+import {applyStateVelocity} from '../../Engine/state-entry-velocity.js?v=02408r9';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
@@ -27,7 +28,7 @@ export function createSpecialRuntime(api){
   const definition=api.data(entity.player).helperStates[String(state)]||api.data(entity.player).lifecycleHelpers?.[String(state)];if(!definition)throw Error('Unknown helper state '+state);
   Object.assign(entity,{state,time:0,type:definition.type??entity.type,physics:definition.physics??entity.physics,moveType:definition.moveType??entity.moveType,ctrl:definition.ctrl??entity.ctrl,animStartTime:0,once:new Set(),moveContact:0,moveHit:0,moveGuarded:0,activeHitDef:null});
   entity.sprPriority=definition.sprpriority??entity.sprPriority;
-  if(definition.velset){entity.vx=definition.velset[0]*entity.facing;entity.vy=definition.velset[1]}
+  applyStateVelocity(entity,definition.velset,entity.facing);
   if(definition.anim!==undefined){entity.anim=definition.anim;entity.elem=1;entity.elemTick=0}
  }
  function spawn(params,owner,player,kind){
