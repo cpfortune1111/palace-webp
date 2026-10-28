@@ -1,14 +1,15 @@
 const libraries=new Map(),pending=new Map();
 const idOf=character=>String(character).replace(/^Sailor/,'').toLowerCase();
 async function library(character){
- if(!libraries.has(character))libraries.set(character,fetch('./Data/Quote/'+idOf(character)+'.json?v=02408r3').then(r=>{if(!r.ok)throw Error('Portrait timeline unavailable: '+character);return r.json()}).then(manifest=>({manifest,images:new Map(),sounds:new Map()})));
+ if(!libraries.has(character))libraries.set(character,fetch('./Data/Quote/'+idOf(character)+'.json?v=02408r7').then(r=>{if(!r.ok)throw Error('Portrait timeline unavailable: '+character);return r.json()}).then(manifest=>({manifest,images:new Map(),sounds:new Map()})));
  return libraries.get(character);
 }
-export async function preloadQuoteAssets(character='SailorVenus',actions=['9000']){
+export async function preloadQuoteAssets(character='SailorVenus',actions=['9000'],progress=()=>{}){
  const assets=await library(character),ids=actions==='all'?Object.keys(assets.manifest.actions):actions,frames=new Set(),sounds=new Set();
  for(const id of ids){const action=assets.manifest.actions[id];if(!action)throw Error(character+' missing portrait action '+id);for(const f of action.frames)frames.add(f.sprite);for(const cue of action.cues)sounds.add(cue.file)}
- await Promise.all([...frames].map(async key=>{if(assets.images.has(key))return;const token=character+':'+key;if(!pending.has(token))pending.set(token,(async()=>{const entry=assets.manifest.frames[key],image=new Image();image.src='./'+entry.file;await image.decode();assets.images.set(key,image)})().finally(()=>pending.delete(token)));await pending.get(token)}));
- await Promise.all([...sounds].map(async file=>{if(assets.sounds.has(file))return;const token='audio:'+file;if(!pending.has(token))pending.set(token,fetch('./'+file).then(r=>{if(!r.ok)throw Error('Portrait voice unavailable: '+file);return r.blob()}).then(blob=>assets.sounds.set(file,URL.createObjectURL(blob))).finally(()=>pending.delete(token)));await pending.get(token)}));
+ let completed=0;const total=frames.size+sounds.size,update=()=>progress(++completed/Math.max(1,total));
+ await Promise.all([...frames].map(async key=>{if(assets.images.has(key)){update();return;}const token=character+':'+key;if(!pending.has(token))pending.set(token,(async()=>{const entry=assets.manifest.frames[key],image=new Image();image.src='./'+entry.file;await image.decode();assets.images.set(key,image)})().finally(()=>pending.delete(token)));await pending.get(token);update()}));
+ await Promise.all([...sounds].map(async file=>{if(assets.sounds.has(file)){update();return;}const token='audio:'+file;if(!pending.has(token))pending.set(token,fetch('./'+file).then(r=>{if(!r.ok)throw Error('Portrait voice unavailable: '+file);return r.blob()}).then(blob=>assets.sounds.set(file,URL.createObjectURL(blob))).finally(()=>pending.delete(token)));await pending.get(token);update()}));
  return assets;
 }
 export function quoteFrame(action,tick){

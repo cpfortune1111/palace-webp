@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Prototype 0.24.08-r6 · White Cursor</title>
+<title>Prototype 0.24.08-r7 · Presentation Preload</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -38,14 +38,20 @@ button{font-size:15px;padding:12px 14px;border-radius:16px;border:1px solid #fff
 #inputPanel select{background:#202126;color:white;border:1px solid #777;border-radius:4px;font-size:12px}
 #inputHint{margin-top:4px}
 body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAttacks{display:none!important}
+#hud{z-index:300;max-height:calc(100vh - 16px);overflow:auto}
+#inputPanel{z-index:310;max-height:calc(100vh - 60px);overflow:auto}
+#debugBtns{z-index:320}
+#ctrl,#touchAttacks{z-index:300!important}
+body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touchAttacks){display:none!important}
+@media(max-width:900px){#hud{width:max(120px,calc(100vw - 310px));max-width:calc(100vw - 16px)}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r6 · White Cursor</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r6-20261028</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r7 · Presentation Preload</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r7-20261028</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r6';
-import {createPageBackground} from './Engine/page-background.js?v=02408r6';
+import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r7';
+import {createPageBackground} from './Engine/page-background.js?v=02408r7';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
@@ -57,7 +63,7 @@ import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r6';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r7';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -108,14 +114,19 @@ c.zoom=STAGE_CALIBRATION;
 c.clearViewOffset();
 c.updateProjectionMatrix();
 let stageModel,activeStage='training';const stageCache=new Map();
-async function prepareStage(id='training'){if(id===activeStage)return;if(!['training','moon'].includes(id))throw Error('Unsupported stage '+id);if(!stageCache.has('training'))stageCache.set('training',{scene:stageModel,mixer:mix,config:JSON.parse(JSON.stringify(stageCameraConfig))});if(!stageCache.has(id)){const response=await fetch('./Stage/Millennium/StageMoon.glb.gz?v=02370');if(!response.ok)throw Error('Stage HTTP '+response.status);const buffer=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();const model=await new Promise((resolve,reject)=>new GLTFLoader().parse(buffer,'./',resolve,reject));model.scene.scale.setScalar(.125);const mixer=new THREE.AnimationMixer(model.scene);model.animations.forEach(animation=>mixer.clipAction(animation).play());const cameraResponse=await fetch('./Stage/Millennium/stage-camera.json?v=02370');if(!cameraResponse.ok)throw Error('Camera HTTP '+cameraResponse.status);stageCache.set(id,{scene:model.scene,mixer,config:await cameraResponse.json()})}s.remove(stageModel);const entry=stageCache.get(id);stageModel=entry.scene;mix=entry.mixer;s.add(stageModel);Object.assign(stageCameraConfig,entry.config);Object.assign(STAGE_CAMERA,entry.config.camera);Object.assign(STAGE_PLAYER,{leftbound:entry.config.player.leftbound,rightbound:entry.config.player.rightbound,...entry.config.bound});activeStage=id;applyCamera()}
+async function prepareStage(id='training',onProgress=()=>{}){
+ onProgress(0);const warm=async()=>{if(r.compileAsync)await r.compileAsync(s,c);r.render(s,c)};if(id===activeStage){onProgress(.9);await warm();onProgress(1);return}
+ if(!['training','moon'].includes(id))throw Error('Unsupported stage '+id);if(!stageCache.has('training'))stageCache.set('training',{scene:stageModel,mixer:mix,config:JSON.parse(JSON.stringify(stageCameraConfig))});
+ if(!stageCache.has(id)){const response=await fetch('./Stage/Millennium/StageMoon.glb.gz?v=02370');if(!response.ok)throw Error('Stage HTTP '+response.status);const reader=response.body.getReader(),chunks=[],total=Number(response.headers.get('Content-Length'));let length=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);length+=value.length;if(total)onProgress(Math.min(.65,length/total*.65))}const packed=new Uint8Array(length);let offset=0;for(const chunk of chunks){packed.set(chunk,offset);offset+=chunk.length}onProgress(.7);const buffer=await new Response(new Response(packed).body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();onProgress(.78);const model=await new Promise((resolve,reject)=>new GLTFLoader().parse(buffer,'./',resolve,reject));model.scene.scale.setScalar(.125);const mixer=new THREE.AnimationMixer(model.scene);model.animations.forEach(animation=>mixer.clipAction(animation).play());onProgress(.86);const cameraResponse=await fetch('./Stage/Millennium/stage-camera.json?v=02370');if(!cameraResponse.ok)throw Error('Camera HTTP '+cameraResponse.status);stageCache.set(id,{scene:model.scene,mixer,config:await cameraResponse.json()})}
+ s.remove(stageModel);const entry=stageCache.get(id);stageModel=entry.scene;mix=entry.mixer;s.add(stageModel);Object.assign(stageCameraConfig,entry.config);Object.assign(STAGE_CAMERA,entry.config.camera);Object.assign(STAGE_PLAYER,{leftbound:entry.config.player.leftbound,rightbound:entry.config.player.rightbound,...entry.config.bound});activeStage=id;applyCamera();onProgress(.9);await warm();onProgress(1)
+}
 let mix;const detail=document.querySelector('#detail'),pfill=document.querySelector('#pfill');const STAGE_BYTES=16414592;
 async function loadStage(){try{
 status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0.0 / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r6 · White Cursor';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r7 · Presentation Preload';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -123,7 +134,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02408';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02408';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02408';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r6';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r7';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02408';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -133,8 +144,8 @@ let reactionDat,reactionAtlases=[];
 const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02408').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let throwSpriteDat;const throwSpriteAtlases=[];
 const throwSpriteSupplements=new Map();
-async function loadThrowSupplement(character){if(throwSpriteSupplements.has(character))return;const folder=character.replace('Sailor',''),base='./Char/'+folder+'/Battle/',r=await fetch(base+'throw805.json?v=02408r6');if(!r.ok)throw Error(character+' throw sprites unavailable');const data=await r.json(),images=await Promise.all(data.atlasFiles.map(async file=>{const image=new Image();image.src=base+file;await image.decode();return image}));throwSpriteSupplements.set(character,{data,images})}
-const throwSpritesReady=fetch('./Char/Venus/venus_throw805.json?v=02408r6').then(r=>{if(!r.ok)throw Error('Throw sprites unavailable');return r.json()}).then(async data=>{await Promise.all(data.atlasFiles.map(async(file,index)=>{const image=new Image();image.src='./Char/Venus/'+file;await image.decode();throwSpriteAtlases[index]=image}));throwSpriteDat=data});throwSpritesReady.catch(showRuntimeError);
+async function loadThrowSupplement(character){if(throwSpriteSupplements.has(character))return;const folder=character.replace('Sailor',''),base='./Char/'+folder+'/Battle/',r=await fetch(base+'throw805.json?v=02408r7');if(!r.ok)throw Error(character+' throw sprites unavailable');const data=await r.json(),images=await Promise.all(data.atlasFiles.map(async file=>{const image=new Image();image.src=base+file;await image.decode();return image}));throwSpriteSupplements.set(character,{data,images})}
+const throwSpritesReady=fetch('./Char/Venus/venus_throw805.json?v=02408r7').then(r=>{if(!r.ok)throw Error('Throw sprites unavailable');return r.json()}).then(async data=>{await Promise.all(data.atlasFiles.map(async(file,index)=>{const image=new Image();image.src='./Char/Venus/'+file;await image.decode();throwSpriteAtlases[index]=image}));throwSpriteDat=data});throwSpritesReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -509,15 +520,17 @@ function withCharacter(player,callback){
  if(profile){battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands}
  try{return callback()}finally{[battleDat,stateIR,cmdDat,characterScopePlayer]=saved}
 }
-async function prepareCharacters(players=['SailorVenus','SailorVenus']){
+async function prepareCharacters(players=['SailorVenus','SailorVenus'],onProgress=()=>{}){
+ onProgress(0);
  await Promise.all([...new Set(players)].filter(c=>!['SailorVenus','SailorMoon'].includes(c)).map(loadThrowSupplement));
  if(!reactionDat)await reactionReady;
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
+ const pendingCharacters=[...new Set(players)].filter(c=>!characterProfiles.has(c));let characterDone=0;const characterProgress=value=>onProgress(.05+.9*(characterDone+value)/Math.max(1,pendingCharacters.length));onProgress(.05);
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
   const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02408'),fetch(base+prefix+'_full.json?v=02408'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02408')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
-  const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));
+  const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));characterProgress(.15);
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
   const actionIds=new Set([0,5,6,5300,1910,1911,1912,1920,1921,1922,9999,1000,1005,1100,1105,1200,1205]);
   for(const [key,frames] of Object.entries(all.actions))if(['SailorNeptune','SailorSaturn'].includes(character)||Number(key)<1000||Number(key)>=5000&&Number(key)<=5999)actionIds.add(Number(key));
@@ -535,13 +548,13 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus']){
   const actions=Object.fromEntries(Object.entries(all.actions).filter(([key])=>actionIds.has(Number(key))));
   const data={...all,actions},pages=new Set(),images=[];
   for(const frames of Object.values(actions))for(const frame of frames){frameProfiles.set(frame,character);if(!frame.empty)pages.add(data.sprites[frame.group+','+frame.item].page)}
-  await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02408';images[page]=image})));
+  let pagesDone=0;await Promise.all([...pages].map(page=>new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>{characterProgress(.15+.85*(++pagesDone/Math.max(1,pages.size)));resolve()};image.onerror=()=>reject(Error(character+' atlas '+page));image.src=base+data.atlasFiles[page]+'?v=02408';images[page]=image})));
   fightHud.setCharacterEmblem(character,data,images);
-  characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});
+  characterProfiles.set(character,{battle,states:{states:battle.states,constants:battle.constants},commands:{commands:battle.commands},data,images,sounds,soundBase:'./Char/'+folder+'/Sound/'});characterDone++;characterProgress(0);
  }
  customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);
  for(const [index,character] of players.entries()){if(!characterProfiles.has(character))throw Error('Unsupported character '+character);battleCharacters[index]=character;resetCommandList(index+1)}
- const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;
+ const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;onProgress(1);
 }
 const ownForeignFrames=foreignFrameResolver((frame,character)=>frameProfiles.set(frame,character));
 function framesFor(anim,player=characterScopePlayer,ownAnimation=false){
@@ -1003,6 +1016,8 @@ function enterGroundReactionStateForCharacter(fighter,n){
  if(n===151||n===153){fighter.type=n===153?'C':'S';fighter.physics=fighter.type;fighter.moveType='H';fighter.ctrl=0;fighter.anim=n===153?151:150}
  if([151,153,5001,5011].includes(n))applyGroundHitVelocityM1(fighter);
  if(fallEntry){const context=fighterExpressionContext(fighter,specialRoot(3-fighterPlayer(fighter)));for(const controller of battleDat.fallStates[String(n)].controllers)if(controller.type==='ChangeAnim'&&[...controller.triggerall,...Object.values(controller.triggers).flat()].some(trigger=>/\bTime\s*=\s*0\b/i.test(trigger))&&controllerTriggered(controller,context)){fighter.anim=Number(evalM1(controller.params.value,context));fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}}
+ // A lethal entry into a standard hit state must not retain the interrupted attack pose during hitshake.
+ if(fighter.life<=0&&n>=5000&&n<5100&&!(fighter.anim>=5000&&fighter.anim<5100)&&framesFor(5030,fighterPlayer(fighter)).length){fighter.anim=5030;fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}
 }
 function enterP2State(n){return withCharacter(2,()=>enterP2StateForCharacter(n))}
 function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBindings[1]=null}
@@ -1650,7 +1665,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.08-r6',build:'baseline-02408-r6-20261028',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.08-r7',build:'baseline-02408-r7-20261028',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1658,7 +1673,7 @@ function commandBufferSnapshot(player){return (playerCommandLists[player]?.comma
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.08-r6-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.08-r7-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){

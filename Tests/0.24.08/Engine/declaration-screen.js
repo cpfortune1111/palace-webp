@@ -1,5 +1,5 @@
-import {createDeclarationFlow} from './declaration-flow.js?v=02408r3';
-import {createQuotePortrait,quoteDuration} from './quote-animation.js?v=02408r3';
+import {createDeclarationFlow} from './declaration-flow.js?v=02408r7';
+import {createQuotePortrait,quoteDuration} from './quote-animation.js?v=02408r7';
 export function createDeclarationScreen(api){
  const portraits=[createQuotePortrait(),createQuotePortrait()];let variants=[],active=false,preparedPlayers=[];
  const ready=Promise.all(portraits.map(p=>p.ready));
