@@ -1,9 +1,9 @@
 <!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <script>
 // Direct links also pass through the launcher before loading routed modules.
-if(navigator.serviceWorker?.controller?.scriptURL!==new URL('./snapshot-worker.js?v=02408r7',location.href).href){const target=new URL('./',location.href);target.search=location.search;target.searchParams.set('revision','02408r7');target.hash=location.hash;location.replace(target)}
+if(navigator.serviceWorker?.controller?.scriptURL!==new URL('./snapshot-worker.js?v=02408r8',location.href).href){const target=new URL('./',location.href);target.search=location.search;target.searchParams.set('revision','02408r8');target.hash=location.hash;location.replace(target)}
 </script>
-<title>Prototype 0.24.08-r7 · Presentation Preload</title>
+<title>Prototype 0.24.08-r8 · Battle Readiness / Diagnostics</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -50,16 +50,20 @@ body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touc
 @media(max-width:900px){#hud{width:max(120px,calc(100vw - 310px));max-width:calc(100vw - 16px)}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r7 · Presentation Preload</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r7-20261028</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export last 10 seconds of combat trace" title="匯出最近 10 秒對戰紀錄">↓</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r8 · Presentation Preload</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r8-20261028</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export match log" title="Export entire match log">LOG</button><button id="dbgMark" title="Mark the current problem time">MARK</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r7';
+import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r8';
 await ensurePresentationWorker();
-import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r7';
-import {createPageBackground} from './Engine/page-background.js?v=02408r7';
+import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r8';
+import {createPageBackground} from './Engine/page-background.js?v=02408r8';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
+import {createBattleAudio} from './Engine/battle-audio.js?v=02408r8';
+const battleAudio=createBattleAudio();
+import {createMatchLog} from './Engine/match-log.js?v=02408r8';
+const matchLog=createMatchLog();
 import * as THREE from 'three'; import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createFightHud} from './Engine/fight-hud-runtime.js?v=02408';
 import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
@@ -69,7 +73,7 @@ import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r7';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r8';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -78,7 +82,7 @@ for(let seconds=15;seconds<99;seconds++){const option=document.createElement('op
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){if(['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'].includes(battleCharacters[player-1])&&choice.hardware[player-1]==='3do')throw Error('Moon 3DO is disabled');const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r8',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){if(['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'].includes(battleCharacters[player-1])&&choice.hardware[player-1]==='3do')throw Error('Moon 3DO is disabled');const root=specialRoot(player);hardwareModes[player-1]=choice.hardware[player-1];root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -132,7 +136,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r7 · Presentation Preload';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r8 · Presentation Preload';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -140,7 +144,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02408';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02408';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02408';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r7';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r8';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02408';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -150,8 +154,8 @@ let reactionDat,reactionAtlases=[];
 const reactionReady=fetch('./Char/Venus/venus_reactions_full.json?v=02408').then(response=>{if(!response.ok)throw Error('Reaction sprites HTTP '+response.status);return response.json()}).then(async data=>{await Promise.all(data.atlasFiles.map((file,index)=>new Promise((resolve,reject)=>{const image=new Image();image.onload=resolve;image.onerror=reject;reactionAtlases[index]=image;image.src='./Char/Venus/'+file})));reactionDat=data});reactionReady.catch(showRuntimeError);
 let throwSpriteDat;const throwSpriteAtlases=[];
 const throwSpriteSupplements=new Map();
-async function loadThrowSupplement(character){if(throwSpriteSupplements.has(character))return;const folder=character.replace('Sailor',''),base='./Char/'+folder+'/Battle/',r=await fetch(base+'throw805.json?v=02408r7');if(!r.ok)throw Error(character+' throw sprites unavailable');const data=await r.json(),images=await Promise.all(data.atlasFiles.map(async file=>{const image=new Image();image.src=base+file;await image.decode();return image}));throwSpriteSupplements.set(character,{data,images})}
-const throwSpritesReady=fetch('./Char/Venus/venus_throw805.json?v=02408r7').then(r=>{if(!r.ok)throw Error('Throw sprites unavailable');return r.json()}).then(async data=>{await Promise.all(data.atlasFiles.map(async(file,index)=>{const image=new Image();image.src='./Char/Venus/'+file;await image.decode();throwSpriteAtlases[index]=image}));throwSpriteDat=data});throwSpritesReady.catch(showRuntimeError);
+async function loadThrowSupplement(character){if(throwSpriteSupplements.has(character))return;const folder=character.replace('Sailor',''),base='./Char/'+folder+'/Battle/',r=await fetch(base+'throw805.json?v=02408r8');if(!r.ok)throw Error(character+' throw sprites unavailable');const data=await r.json(),images=await Promise.all(data.atlasFiles.map(async file=>{const image=new Image();image.src=base+file;await image.decode();return image}));throwSpriteSupplements.set(character,{data,images})}
+const throwSpritesReady=fetch('./Char/Venus/venus_throw805.json?v=02408r8').then(r=>{if(!r.ok)throw Error('Throw sprites unavailable');return r.json()}).then(async data=>{await Promise.all(data.atlasFiles.map(async(file,index)=>{const image=new Image();image.src='./Char/Venus/'+file;await image.decode();throwSpriteAtlases[index]=image}));throwSpriteDat=data});throwSpritesReady.catch(showRuntimeError);
 let battleDat,guardDat,guardAtlas,fallDat,fallAtlas,airDat,airAtlas,commonFallDat,commonFallAtlas,p1HitPause=0,moveContact=0,moveHit=0,moveGuarded=0,randomValue=0;
 const soundChannels=new Map();
 const automaticSounds=new Set();
@@ -236,7 +240,7 @@ function playSourceSound(value,channel=-1,player=characterScopePlayer){
  const match=String(value).match(/^S?(-?\d+)\s*,\s*(-?\d+)$/i);if(!match)throw Error('Unsupported sound '+value);
  const profile=profileFor(player),moonSound=profile?.sounds?.[match[1]+'-'+match[2]];if(profile?.data&&!moonSound)return null;
  if([170,180,190,191,192].includes(Number(match[1])))roundVoiceUntil=Math.max(roundVoiceUntil,combatTraceTick+(moonSound?.ticks||roundAudioTicks['battle-sounds/'+match[1]+'-'+match[2]+'.wav']||0));
- const key=Number(channel),sound=new Audio(moonSound?profile.soundBase+moonSound.file:assetUrl('./battle-sounds/'+match[1]+'-'+match[2]+'.wav'));
+ const key=Number(channel),sound=battleAudio.create(moonSound?profile.soundBase+moonSound.file:assetUrl('./battle-sounds/'+match[1]+'-'+match[2]+'.wav'));
  gameShell.sound(sound);
  if(key>=0){soundChannels.get(key)?.pause();soundChannels.set(key,sound)}else automaticSounds.add(sound);
  const release=()=>{automaticSounds.delete(sound);if(key>=0&&soundChannels.get(key)===sound)soundChannels.delete(key)};
@@ -531,7 +535,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus'],onProgres
  await Promise.all([...new Set(players)].filter(c=>!['SailorVenus','SailorMoon'].includes(c)).map(loadThrowSupplement));
  if(!reactionDat)await reactionReady;
  if(!characterProfiles.has('SailorVenus'))characterProfiles.set('SailorVenus',{battle:battleDat,states:stateIR,commands:cmdDat});
- const pendingCharacters=[...new Set(players)].filter(c=>!characterProfiles.has(c));let characterDone=0;const characterProgress=value=>onProgress(.05+.9*(characterDone+value)/Math.max(1,pendingCharacters.length));onProgress(.05);
+ const pendingCharacters=[...new Set(players)].filter(c=>!characterProfiles.has(c));let characterDone=0;const characterProgress=value=>onProgress(.05+.65*(characterDone+value)/Math.max(1,pendingCharacters.length));onProgress(.05);
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
   const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02408'),fetch(base+prefix+'_full.json?v=02408'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02408')]);
@@ -560,7 +564,11 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus'],onProgres
  }
  customStateOwners.fill(null);customAnimationOwners.fill(null);notHitByMasks.forEach(masks=>masks.length=0);
  for(const [index,character] of players.entries()){if(!characterProfiles.has(character))throw Error('Unsupported character '+character);battleCharacters[index]=character;resetCommandList(index+1)}
- const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;onProgress(1);
+ const profile=profileFor(1);battleDat=profile.battle;stateIR=profile.states;cmdDat=profile.commands;
+ const aliases=await fetch(assetUrl('./Data/asset-layout.json')).then(r=>{if(!r.ok)throw Error('Battle audio index');return r.json()});
+ const urls=Object.keys(aliases).filter(name=>name.startsWith('round-sounds/')||name.startsWith('battle-sounds/common-')||players.includes('SailorVenus')&&name.startsWith('battle-sounds/')).map(name=>assetUrl('./'+name));
+ for(const character of new Set(players)){const p=characterProfiles.get(character);if(p.sounds)for(const sound of Object.values(p.sounds))urls.push(p.soundBase+sound.file)}
+ await battleAudio.prepare(urls,value=>onProgress(.7+.3*value));onProgress(1);
 }
 const ownForeignFrames=foreignFrameResolver((frame,character)=>frameProfiles.set(frame,character));
 function framesFor(anim,player=characterScopePlayer,ownAnimation=false){
@@ -1207,7 +1215,7 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
  message:roundView.message,
  voiceReady:()=>combatTraceTick>=roundVoiceUntil&&roundNotOverUntil.every(until=>combatTraceTick>=until),
  announcerReady:()=>combatTraceTick>=roundAnnouncerUntil,
- sound:value=>{roundAnnouncerUntil=combatTraceTick+(roundAudioTicks['round-sounds/'+value.replace(',','-')+'.wav']||0);const audio=new Audio(assetUrl('./round-sounds/'+value.replace(',','-')+'.wav'));gameShell.sound(audio);audio.play().catch(()=>{})},
+ sound:value=>{roundAnnouncerUntil=combatTraceTick+(roundAudioTicks['round-sounds/'+value.replace(',','-')+'.wav']||0);const audio=battleAudio.create(assetUrl('./round-sounds/'+value.replace(',','-')+'.wav'));gameShell.sound(audio);audio.play().catch(()=>{})},
  matchEnd:()=>{scoreRuntime.matchWin(roundFlow.snapshot().matchWinner,{homeTeam:1,opponentAI:gameShell.isWatch()});roundView.hideMatch();gameShell.showResult(roundFlow.snapshot().matchWinner,{...scoreRuntime.snapshot(),reason:roundFlow.snapshot().reason}).catch(showRuntimeError)}
 });
 function stepLifecycleState(player){return withCharacter(player,()=>stepLifecycleStateForCharacter(player))}
@@ -1302,7 +1310,7 @@ function applyP2SourcePhysicsForCharacter(){
 function stepP2SourceState(){return withCharacter(2,()=>stepP2SourceStateForCharacter())}
 function stepP2SourceStateForCharacter(){
  const previous=p2.state,def=sourceState(previous);
- for(const controller of (previous===52?[battleDat.landingSound,...def.controllers]:def.controllers||[])){runP2ControllerM1(controller);if(p2.state!==previous)return}
+ for(const controller of (previous===52?[battleDat.landingSound,...def.controllers]:def.controllers||[])){runP2ControllerM1(controller);if(p2.state!==previous){if(previous===40&&p2.state===50)applyP2SourcePhysics();return}}
  applyP2SourcePhysics();if(p2.state!==previous)return;
  if(p2.ctrl&&p2.type!=='A'&&[10,12,52].includes(p2.state)){if(p2Input.up){enterP2State(40);return}if(p2Input.down&&p2.state!==10){enterP2State(10);return}if(!p2Input.down&&p2.state===10){enterP2State(12);return}}
  p2.time++;advanceFighterAirOneTick(p2);
@@ -1397,6 +1405,7 @@ function stepSourceFallM1ForCharacter(fighter){
   }else executeControllerM1({...controller,triggers:{1:['1']},triggerall:[]},binding,context,{changeState:next=>fighter===p2&&next===52?enterP2State(next):enterGroundReactionState(fighter,next)});
   if(fighter.state!==previous)break;
  }
+ if(fighter.state!==previous)return;
  if(!frozen){fighter.x+=fighter.vx;fighter.y+=fighter.vy;if(definition.physics==='S'||definition.physics==='C')fighter.vx*=constVal(definition.physics==='C'?'movement.crouch.friction':'movement.stand.friction')}
  if(definition.physics==='A'&&fighter.state===previous&&!frozen){fighter.vy+=constVal('movement.yaccel');if(fighter.vy>0&&fighter.y>=0){fighter.y=0;if(fighter===p2)enterP2State(52);else enterGroundReactionState(fighter,52)}}
  fighter.x=Math.max(STAGE_PLAYER.leftbound,Math.min(STAGE_PLAYER.rightbound,fighter.x));
@@ -1406,7 +1415,7 @@ function stepSourceFallM1ForCharacter(fighter){
  fighter.time++;advanceFighterAirOneTick(fighter);
 }
 function playCommonSound(group,item,channel){
- soundChannels.get(channel)?.pause();const sound=new Audio(assetUrl('./battle-sounds/common-'+group+'-'+item+'.wav'));gameShell.sound(sound);soundChannels.set(channel,sound);sound.play().catch(()=>{});
+ soundChannels.get(channel)?.pause();const sound=battleAudio.create(assetUrl('./battle-sounds/common-'+group+'-'+item+'.wav'));gameShell.sound(sound);soundChannels.set(channel,sound);sound.play().catch(()=>{});
 }
 let fallShake=null;
 function stepFallShake(){
@@ -1671,15 +1680,18 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.08-r7',build:'baseline-02408-r7-20261028',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.08-r8',build:'baseline-02408-r8-20261028',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
 function commandBufferSnapshot(player){return (playerCommandLists[player]?.commands||[]).filter(command=>command.buffer>0).map(command=>({name:command.definition.name,buffer:command.buffer}))}
+document.querySelector('#dbgMark').addEventListener('click',()=>{const mark=matchLog.mark(combatTraceTick);document.querySelector('#dbgMark').textContent='MARK '+mark.number;document.querySelector('#dbgMark').title='Marked '+mark.seconds.toFixed(2)+' seconds';document.querySelector('#dbgMark').blur()});
+function recordMatchLog(){matchLog.record(combatTraceTick,roundFlow.snapshot().phase,{...p1ExpressionFighter(),hitPause:p1HitPause},{...p2,hitPause:p2.attackPause||0},{camera:[cameraX,cameraY,cameraZoom],effects:sourceExplods.length,entities:specialRuntime.entities.map(e=>[e.player,e.state,e.anim,e.x,e.y,e.vx,e.vy])})}
+window.addEventListener('keydown',event=>{if(event.code==='F7'||event.code==='F8'){event.preventDefault();event.stopImmediatePropagation();document.querySelector(event.code==='F7'?'#dbgMark':'#dbgTrace').click()}},true);
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
- const blob=new Blob([JSON.stringify(combatTraceExport(),null,2)],{type:'application/json'});
+ const blob=new Blob([JSON.stringify({...matchLog.exportLog(),recentTrace:combatTraceExport()})],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.08-r7-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.08-r8-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
@@ -1687,7 +1699,7 @@ function simStep(){
  fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life/p1LifeMax*1000,p2.life/p2.lifeMax*1000]);
  stepFallShake();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat||!specialDat||!lifecycleDat)return;
- if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();bindSourceEffects();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
+ if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();bindSourceEffects();recordMatchLog();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
  stepSourceExplods();
  const before=combatTraceSnapshot(),physicalInput={...input,x:xHeld||!!input.x,p2Punch:p2PunchRequested,p2Left:p2Input.left,p2Right:p2Input.right},guardMode=p2GuardMode();
  simStepCore();stepAfterImages();
@@ -1699,14 +1711,14 @@ function simStep(){
  scoreRuntime.step(specialRoot(1),specialRoot(2));
  roundFlow.step();
  if(!roundFlow.enabled()&&((before.p1.life>0&&p1Life<=0)||(before.p2.life>0&&p2.life<=0)))roundFlow.triggerKoSlow();
- combatTraceTick++;combatTraceCount=Math.min(combatTraceCount+1,combatTraceCapacity);
+ recordMatchLog();combatTraceTick++;combatTraceCount=Math.min(combatTraceCount+1,combatTraceCapacity);
 }
 function aiControlled(player){return gameShell.isWatch()||player===2&&roundFlow.snapshot().mode==='arcade'}
 function stepWatchAI(){
  if(!roundFlow.canFight()||p1Life<=0||p2.life<=0||!aiControlled(1)&&!aiControlled(2))return;
  p2.randomValue=Math.floor(Math.random()*1000);
  const advancing1=[20,100].includes(state)&&Math.abs(p2.x-posX)>160,advancing2=[20,100].includes(p2.state)&&Math.abs(p2.x-posX)>160;if(aiControlled(1)){input.left=advancing1&&p1Facing<0;input.right=advancing1&&p1Facing>0;}p2Input.left=advancing2&&p2.facing<0;p2Input.right=advancing2&&p2.facing>0;
- for(const player of [1,2]){if(!aiControlled(player))continue;const actor=specialRoot(player);if(actor.ctrl&&actor.type!=='A'&&[0,11,20].includes(actor.state)){const facing=player===1?(p2.x>=posX?1:-1):(posX>=p2.x?1:-1);if(player===1)setP1Facing(facing);else if(p2.facing!==facing){p2.facing=facing;p2.vx=-p2.vx}}const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of (profileFor(player)?.battle||battleDat).aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
+ for(const player of [1,2]){if(!aiControlled(player)||specialRuntime.blocked(player)||(player===1?p1HitPause>0||p1Reaction?.hitShake>0:p2.attackPause>0||p2.hitShake>0))continue;const actor=specialRoot(player);if(actor.ctrl&&actor.type!=='A'&&[0,11,20].includes(actor.state)){const facing=player===1?(p2.x>=posX?1:-1):(posX>=p2.x?1:-1);if(player===1)setP1Facing(facing);else if(p2.facing!==facing){p2.facing=facing;p2.vx=-p2.vx}}const root={...specialRoot(player),randomValue:player===1?randomValue:p2.randomValue},opponent=specialRoot(3-player);if(root.life<=0||root.moveType==='H')continue;const context=fighterExpressionContext(root,opponent);for(const controller of (profileFor(player)?.battle||battleDat).aiCommands||[]){if(!controllerTriggered(controller,context))continue;const target=Number(controller.params.value);if(target===120){if(player===1){p1Reaction={...root,id:1,getHit:null};enterGroundReactionState(p1Reaction,120);syncP1Reaction()}else enterGroundReactionState(p2,120)}else if(player===1){p1Reaction=null;enterIRState(target)}else enterP2State(target);break;}}
 }
 function simStepCore(){return withCharacter(1,()=>simStepCoreForCharacter())}
 function simStepCoreForCharacter(){
@@ -1732,8 +1744,7 @@ function simStepCoreForCharacter(){
  const tickEntry=stateEntrySerial;
  const tickState=state;
  let def=stateDef();
-const locomotionTick=[70,100,105,106,210,230,240,400,410,430,440,600,610,630,640,1000,1100,1200,3000,3005].includes(state);
- if(!locomotionTick)applyPhysics(def);
+// Apply controllers before physics, including the take-off transition.
  posX+=cornerPush.distance;
  cornerPushVelocity*=cornerPush.multiplier;
  if(Math.abs(cornerPushVelocity)<battleDat.cornerpushProfile.stopThreshold)cornerPushVelocity=0;
@@ -1743,7 +1754,7 @@ const locomotionTick=[70,100,105,106,210,230,240,400,410,430,440,600,610,630,640
  for(const c of [...(state===52?[battleDat.landingSound,...(def.controllers||[])]:def.controllers||[]),...(state===20?battleDat.aiWalkControllers||[]:[])]){
    const st=state;runController(c);if(state!==st)break;
  }
- if(locomotionTick)applyPhysics(stateDef());
+ applyPhysics(stateDef());
  if(!runStateMinus1M1())dispatchGroundCommands();
  if(moveContact>0)moveContact++;if(moveHit>0)moveHit++;if(moveGuarded>0)moveGuarded++;
  playerPushM1();clampFighterScreenM1();
@@ -1819,7 +1830,7 @@ function updateStageClipping(){
 }
 const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
- runtimeFailed=true;console.error(e);
+ runtimeFailed=true;matchLog.mark(combatTraceTick,'Runtime error: '+(e?.message||e));console.error(e);
  status.textContent='RUNTIME ERROR · '+(e&&e.message?e.message:String(e));
  act.textContent='Simulation stopped — check runtime error above';
 }

@@ -4,10 +4,10 @@
 <script type="module">
 try{
  if(!('serviceWorker' in navigator))throw Error('This browser does not support the test page asset router.');
- const workerURL=new URL('./snapshot-worker.js?v=02408r7',location.href).href;
+ const workerURL=new URL('./snapshot-worker.js?v=02408r8',location.href).href;
  await navigator.serviceWorker.register(workerURL,{scope:'./',updateViaCache:'none'});
  await navigator.serviceWorker.ready;
  if(navigator.serviceWorker.controller?.scriptURL!==workerURL)await new Promise(resolve=>{const changed=()=>{if(navigator.serviceWorker.controller?.scriptURL===workerURL){navigator.serviceWorker.removeEventListener('controllerchange',changed);resolve()}};navigator.serviceWorker.addEventListener('controllerchange',changed);changed()});
- const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision','02408r7');target.hash=location.hash;location.replace(target);
+ const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision','02408r8');target.hash=location.hash;location.replace(target);
 }catch(error){document.getElementById('status').textContent='Unable to open the test page. '+error.message}
 </script></html>
