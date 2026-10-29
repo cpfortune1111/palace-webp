@@ -41,7 +41,7 @@ export function createSpecialRuntime(api){
   if(kind==='projectile'){entity.anim=Number(values.projanim);entity.scale=String(params.projscale||'1,1').split(',').map(Number);entity.activeHitDef=values.attr?{hitKey:entity.key,params:values}:null;entity.removetime=Number(values.projremovetime??-1);entity.priority=Number(params.projpriority??1)}
   else enter(entity,Number(params.stateno));
   if(api.data(player).character==='SailorMoon'&&[3050,3051].includes(entity.state))entity.y=0;
-  entities.push(entity);return entity;
+  entities.push(entity);api.event?.('spawn',entity);return entity;
  }
  function startPause(params,player,kind){
   const remaining=Number(params.time),movetime=Math.max(0,Math.min(remaining,Number(params.movetime||0))),slot=kind==='super'?'super':'normal';
@@ -96,14 +96,14 @@ export function createSpecialRuntime(api){
  }
  function consumeProjectileContact(entity,guarded=false){
    if(entity.removing||entity.destroyed||!entity.activeHitDef)return;
-   projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded});
+   api.event?.(guarded?'guard':'hit',entity);projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded});
    entity.moveContact=1;entity.moveHit=guarded?0:1;entity.moveGuarded=guarded?1:0;entity.hitSpent=true;
    entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
    if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
    entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
    if(entity.anim<0)entity.destroyed=true;
  }
- function removeProjectile(entity,reason){
+ function removeProjectile(entity,reason){api.event?.(reason,entity);entity.removeReason=reason;
   entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
   const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??entity.params.projhitanim??-1;
   if(selected!==undefined){entity.anim=Number(selected);entity.time=0;entity.elem=1;entity.elemTick=0}
@@ -124,7 +124,7 @@ export function createSpecialRuntime(api){
     if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
    }else if(!entity.removing){
     const invisible=entity.scale.every(value=>value===0);
-    if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&api.projectileOutside?.(entity)){entity.destroyed=true;continue}
+    const outside=!invisible&&api.projectileOutside?.(entity);if(!outside)entity.enteredViewport=true;if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&outside&&(entity.enteredViewport||api.projectileEscapedHorizontal?.(entity))){entity.destroyed=true;entity.removeReason='viewport-exit';continue}
     if(entity.removetime===0)removeProjectile(entity,'expire');
     if(entity.removetime>0)entity.removetime--;
    }
@@ -145,7 +145,7 @@ export function createSpecialRuntime(api){
   }
   for(const {helper,attack} of overrides){const projectile=attack.kind==='projectile'?entities.find(entity=>entity.key===attack.key):null;if(projectile&&(projectile.removing||projectile.destroyed))continue;enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index);if(projectile)consumeProjectileContact(projectile)
   }
-  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed)entities.splice(index,1);
+  for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){api.event?.('remove',entities[index],entities[index].removeReason||'state-or-animation');entities.splice(index,1)};
  }
  function finishTick(){
   const superActive=pauses.super.some(pause=>pause?.remaining>0);

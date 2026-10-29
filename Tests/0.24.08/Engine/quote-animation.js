@@ -1,7 +1,7 @@
 const libraries=new Map(),pending=new Map();
 const idOf=character=>String(character).replace(/^Sailor/,'').toLowerCase();
 async function library(character){
- if(!libraries.has(character))libraries.set(character,fetch('./Data/Quote/'+idOf(character)+'.json?v=02408r7').then(r=>{if(!r.ok)throw Error('Portrait timeline unavailable: '+character);return r.json()}).then(manifest=>({manifest,images:new Map(),sounds:new Map()})));
+ if(!libraries.has(character))libraries.set(character,fetch('./Data/Quote/'+idOf(character)+'.json?v=02408r7').then(r=>{if(!r.ok)throw Error('Portrait timeline unavailable: '+character);return r.json()}).then(manifest=>({manifest,images:new Map(),sounds:new Map()})).catch(error=>{libraries.delete(character);throw error}));
  return libraries.get(character);
 }
 export async function preloadQuoteAssets(character='SailorVenus',actions=['9000'],progress=()=>{}){
