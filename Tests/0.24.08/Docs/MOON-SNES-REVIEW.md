@@ -1,10 +1,18 @@
-# Moon SNES 差異結果 — 0.24.08-r20
+# Moon SNES 差異結果 — 0.24.08-r21
 
 只收錄「今次已接入／更新」、「尚未完整接入／待確認」、「非SNES暫不接入」及沿用作者要求停用的未完成段落。之前已有相同功能效果的段落不逐項列出。以下 **State 是 controller 段落，不是整個 StateDef**；有一個參數待跟進，不代表整個招式未做。
 
 四份原文件合共10,049行，逐段讀取892個controller，並核對StateDef欄位、常數及command definitions。採用「Web有做到原效果就算接入」；容許既有專用實作及UI替代。註解不當成可執行code，重複定義、停用分支分開處理。原檔未改；原文快照及逐行核對資料保留本機。
 
-## 今次已接入／更新
+## r21 防禦退出修正
+
+Trace 記錄 P2 於 S150 的 hitShake 歸零後仍未退出，最後 time=263。原因是 Web 篩選錯將 `!AILevel || var(50) != 0` 當成純非 SNES 分支，漏掉 AILevel=0 的玩家路徑；原文件條件正確，毋須修改。
+
+已還原 moon_Common.cns 的個別 controller：S120:701、S130:745、S131:796 的 trigger3；S150:884、S152:974 的 ChangeState。保留原條件、次序及 HitShakeOver，並非強制超時轉 S0。3DO／SEGA 維持停用。
+
+驗證：P1／P2 × 玩家／AI × S150／S152 × 站／蹲共16組，均等待8tick震動後轉S151／S153，30tick內經防禦退出回S0／S11、ctrl=1。另WATCH 2,200tick、Silver Crystal完整收招、S140退出及載入文字樣式檢查通過。
+
+## r20 已接入／更新
 
 81個controller效果／資料段落，加兩個command definition；不是81個整招。
 
@@ -103,7 +111,7 @@
 - `moon.cmd:53` `[Command] name = S_SNES_AUTO_SilverCrystal`：今次已同步command／buffer設定。
 - `moon.cmd:177` `[Command] name = NHHJ`：今次已同步command／buffer設定。
 
-## 尚未完整接入／待確認：5個controller段落
+## 尚未完整接入／待確認：1個controller段落
 
 ### moon_Common.cns：[State 105, AfterImage]（約599行）
 
@@ -123,99 +131,12 @@ trans = addalpha
 alpha = 128,128
 ```
 
-### moon.cns：4段 ScreenBound
+## 作者確認不需接入
 
-以下`value = 1`的畫面邊界效果目前由共用clamp提供；但`movecamera = 1,0`未按controller獨立排除該角色對縱向鏡頭的影響（執行分支目前為空操作）。現有招式仍可運作，唔代表這個參數已逐段完成。今次先核對並記錄；沒有將已PASS鏡頭全面改寫，需另行對照具體鏡頭情況。
+`juggle`／`airjuggle`：Moon Palace不使用空中追打額度，無視相關扣額，不列為BUG或待接入。原有受擊無敵幀照舊。
 
-`moon.cns:1177` `[State 822, ScreenBound]`：未完整（movecamera）。
+`ScreenBound.movecamera`：作者接受現有鏡頭效果，無視此參數，不列為待接入。
 
-```ini
-[State 822, ScreenBound]
-type = ScreenBound
-trigger1 =1
-value = 1
-movecamera = 1,0
-```
-
-`moon.cns:1967` `[State 3000, ScreenBound]`：未完整（movecamera）。
-
-```ini
-[State 3000, ScreenBound]
-type = ScreenBound
-trigger1 = 1
-value = 1
-movecamera = 1,0
-```
-
-`moon.cns:2076` `[State 3001, ScreenBound]`：未完整（movecamera）。
-
-```ini
-[State 3001, ScreenBound]
-type = ScreenBound
-trigger1 = 1
-value = 1
-movecamera = 1,0
-```
-
-`moon.cns:2100` `[State 3002, ScreenBound]`：未完整（movecamera）。
-
-```ini
-[State 3002, ScreenBound]
-type = ScreenBound
-trigger1 = 1
-value = 1
-movecamera = 1,0
-```
-
-`moon.cns:2156` `[State 3005, ScreenBound]`：未完整（movecamera）。
-
-```ini
-[State 3005, ScreenBound]
-type = ScreenBound
-trigger1 = 1
-value = 1
-movecamera = 1,0
-```
-
-`moon.cns:2187` `[State 3100, ScreenBound]`：未完整（movecamera）。
-
-```ini
-[State 3100, ScreenBound]
-type = ScreenBound
-trigger1 = 1
-value = 1
-movecamera = 1,0
-```
-
-## StateDef欄位：juggle尚未按原額度扣除
-
-這不是整個StateDef未接入，也不代表每招都有可見BUG。`juggle`值目前有保存，但Web未用原生airjuggle額度限制空中追打。沒有直接加入一套新扣額規則改動已PASS連段；先列明這個欄位差異，供你決定後續。只列欄位，不貼整個StateDef；無攻擊或juggle=0的段落不一定有實戰影響。
-
-|StateDef位置（只指juggle欄位）|juggle值|結果|
-|---|---:|---|
-|`moon.cns:257` S200|1|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:318` S210|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:379` S230|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:434` S240|5|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:489` S400|5|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:544` S410|6|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:600` S430|5|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:656` S440|7|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:714` S600|2|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:763` S610|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:813` S630|3|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:862` S640|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:915` S800|0|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:1221` S1000|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon_Helper.st:720` S1050|8|原生扣額未接入；其餘State功能不因此判未接|
-|`moon_Helper.st:905` S1051|8|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:1328` S1100|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:1481` S1200|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:2053` S3001|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon.cns:2110` S3005|4|原生扣額未接入；其餘State功能不因此判未接|
-|`moon_Helper.st:931` S3050|8|原生扣額未接入；其餘State功能不因此判未接|
-|`moon_Helper.st:1088` S3051|8|原生扣額未接入；其餘State功能不因此判未接|
-|`moon_Helper.st:1408` S9999|8|原生扣額未接入；其餘State功能不因此判未接|
 
 ## 非SNES暫不接入
 
@@ -337,8 +258,6 @@ movecamera = 1,0
 |`moon_Common.cns:272`|`[State 40, VarSet]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
 |`moon_Common.cns:281`|`[State 40, VarSet]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
 |`moon_Common.cns:308`|`[State 40, ChangeState]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
-|`moon_Common.cns:884`|`[State 150, ChangeState]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
-|`moon_Common.cns:974`|`[State 152, ChangeState]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
 |`moon_Helper.st:838`|`[State 1050, VelSet]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
 |`moon_Helper.st:1254`|`[State 3150, NoShadow]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
 |`moon_Helper.st:1259`|`[State 3150, StateTypeSet]`|非SNES暫不接入（3DO／SEGA或其meter／combo準備）|
