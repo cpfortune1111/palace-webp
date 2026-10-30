@@ -1,17 +1,17 @@
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
 import {createMenuAudio} from './menu-audio.js?v=02408r13';
-import {createHomeCarousel} from './home-carousel.js?v=02408r18';
+import {createHomeCarousel} from './home-carousel.js?v=02408r19';
 import {createArcadeProgress} from './arcade-progress.js?v=02408r13';
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02382';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02408r15';
-import {createSelectScreen} from './select-screen.js?v=02408r18';
+import {createSelectScreen} from './select-screen.js?v=02408r19';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r13';
 import {createAcsScreen} from './acs-screen.js?v=02408r13';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
 import {createLoadingScreen} from './loading-screen.js?v=02408r15';
 
-import {createTitlePresentation} from './title-presentation.js?v=02408r18';
+import {createTitlePresentation} from './title-presentation.js?v=02408r19';
 
 export function createPalaceMenu(api){
  const presentation=createTitlePresentation();
