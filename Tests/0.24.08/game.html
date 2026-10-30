@@ -3,10 +3,10 @@
 // Direct links also pass through the launcher before loading routed modules.
 {const router=new URL('./snapshot-worker.js',location.href),controller=navigator.serviceWorker?.controller?.scriptURL;let routed=false;try{const active=new URL(controller);routed=active.origin===router.origin&&active.pathname===router.pathname}catch{}
 if(!routed){const key='palace-router-redirect',now=Date.now();let recent=false;try{recent=now-Number(sessionStorage.getItem(key)||0)<30000;if(!recent)sessionStorage.setItem(key,String(now))}catch{recent=true}
-if(!recent){const target=new URL('./',location.href);target.search=location.search;target.searchParams.set('revision','02408r15');target.hash=location.hash;location.replace(target)}else window.addEventListener('DOMContentLoaded',()=>{const warning=document.createElement('div');warning.textContent='The game asset router could not start. Automatic navigation has stopped to prevent repeated refreshes.';warning.style.cssText='position:fixed;inset:0;background:white;color:#333;padding:10%;font:26px/48px Arial,sans-serif;z-index:99999';document.body.appendChild(warning)})
+if(!recent){const target=new URL('./',location.href);target.search=location.search;target.searchParams.set('revision','02408r16');target.hash=location.hash;location.replace(target)}else window.addEventListener('DOMContentLoaded',()=>{const warning=document.createElement('div');warning.textContent='The game asset router could not start. Automatic navigation has stopped to prevent repeated refreshes.';warning.style.cssText='position:fixed;inset:0;background:white;color:#333;padding:10%;font:26px/48px Arial,sans-serif;z-index:99999';document.body.appendChild(warning)})
 }else try{sessionStorage.removeItem('palace-router-redirect')}catch{}}
 </script>
-<title>Prototype 0.24.08-r15 · SNES Trial / Menu</title>
+<title>Prototype 0.24.08-r16 · SNES Trial / Menu</title>
 <style>
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05050d;font-family:system-ui;color:#fff}
 #app{position:fixed;inset:0;z-index:0;pointer-events:none} #app canvas{position:absolute;display:block}
@@ -53,11 +53,11 @@ body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touc
 @media(max-width:900px){#hud{width:max(120px,calc(100vw - 310px));max-width:calc(100vw - 16px)}}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r15 · Automatic Load Recovery</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r15-20261030</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export match log" title="Export entire match log">LOG</button><button id="dbgMark" title="Mark the current problem time">MARK</button></div>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r16 · Guard Velocity / Ready Portraits</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r16-20261030</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export match log" title="Export entire match log">LOG</button><button id="dbgMark" title="Mark the current problem time">MARK</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r15';
+import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r16';
 await ensurePresentationWorker();
 import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r13';
 import {createPageBackground} from './Engine/page-background.js?v=02408r13';
@@ -70,6 +70,8 @@ const hitSoundPolicy=createHitSoundPolicy();
 import {createSourceWidth} from './Engine/source-width.js?v=02408r13';
 import {sourceFeedback} from './Engine/source-feedback.js?v=02408r13';
 const sourceWidth=createSourceWidth();
+import {hitVelocityVector} from './Engine/hit-velocity-defaults.js?v=02408r16';
+import {primeRoundPortraits} from './Engine/round-portraits.js?v=02408r16';
 const battleAudio=createBattleAudio();
 import {createMatchLog} from './Engine/match-log.js?v=02408r13';
 const matchLog=createMatchLog();
@@ -82,7 +84,7 @@ import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 import {createRoundView} from './Engine/round-flow-view.js?v=02362';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
-import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r15';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=02408r16';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const fightHud=createFightHud();fightHud.ready.catch(error=>showRuntimeError(error));
@@ -91,7 +93,7 @@ for(let seconds=15;seconds<99;seconds++){const option=document.createElement('op
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r15',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]='snes';root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r16',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]='snes';root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -145,7 +147,7 @@ status.textContent='Downloading StageTraining.glb… 0.0%';detail.textContent='0
 const res=await fetch(assetUrl('./StageTraining.glb'),{cache:'default'});if(!res.ok)throw new Error('HTTP '+res.status);let buffer;
 if(res.body&&res.body.getReader){const reader=res.body.getReader(),chunks=[];let received=0;while(true){const {done,value}=await reader.read();if(done)break;chunks.push(value);received+=value.byteLength;const p=Math.min(100,received/STAGE_BYTES*100);status.textContent='Downloading StageTraining.glb… '+p.toFixed(1)+'%';detail.textContent=(received/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width=p+'%'}const all=new Uint8Array(received);let off=0;for(const ch of chunks){all.set(ch,off);off+=ch.byteLength}buffer=all.buffer}else buffer=await res.arrayBuffer();
 status.textContent='Parsing / preparing GPU…';detail.textContent=(buffer.byteLength/1048576).toFixed(1)+' / '+(STAGE_BYTES/1048576).toFixed(1)+' MB';pfill.style.width='100%';
-new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r15 · Neptune SNES Update';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
+new GLTFLoader().parse(buffer,'./',g=>{stageModel=g.scene;g.scene.scale.setScalar(.075);g.scene.position.set(0,-.2,-.9);s.add(g.scene);if(g.animations.length){mix=new THREE.AnimationMixer(g.scene);g.animations.forEach(a=>mix.clipAction(a).play())}status.textContent='READY · 0.24.08-r16 · Neptune SNES Update';detail.textContent='camera ±2850 · posMul '+posMul.toFixed(8)+' · player ±4350 · screen margin 60 · zoom '+c.zoom.toFixed(3);resize()},e=>{throw e});
 }catch(e){status.textContent='Stage ERROR';detail.textContent=String(e?.message||e)}} loadStage();
 const cv=document.querySelector('#venus'),ctx=cv.getContext('2d');let atlas,dat,stateIR,current=0,fi=0,ticks=0,attackAtlas,attackDat;
 let turnAtlas,turnDat,p1TurnTime=0,p2TurnTime=0,specialDat;
@@ -153,7 +155,7 @@ const specialAtlases=[];
 import {electricHitStates} from './Engine/electric-hit-states.js?v=02408';
 import {resolveHitPriority} from './Engine/hit-priority.js?v=02408';
 import {excludesHit} from './Engine/hit-attribute-mask.js?v=02408';
-import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r13';
+import {createSpecialRuntime} from './Char/Venus/venus-special-runtime.js?v=02408r16';
 import {createLifecycleRuntime} from './Char/Venus/venus-lifecycle-runtime.js?v=02408';
 let lifecycleDat;
 const lifecycleAtlases=[];
@@ -548,7 +550,7 @@ async function prepareCharacters(players=['SailorVenus','SailorVenus'],onProgres
  const pendingCharacters=[...new Set(players)].filter(c=>!characterProfiles.has(c));let characterDone=0;const characterProgress=value=>onProgress(.05+.65*(characterDone+value)/Math.max(1,pendingCharacters.length));onProgress(.05);
  for(const character of ['SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'])if(players.includes(character)&&!characterProfiles.has(character)){
   const folder=character==='SailorMoon'?'Moon':character==='SailorJupiter'?'Jupiter':character==='SailorNeptune'?'Neptune':'Saturn',prefix=folder.toLowerCase();
-  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v=02408'),fetch(base+prefix+'_full.json?v=02408'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02408')]);
+  const base='./Char/'+folder+'/Battle/',responses=await Promise.all([fetch(base+prefix+'_runtime.json?v='+(character==='SailorNeptune'?'02408r16':'02408')),fetch(base+prefix+'_full.json?v=02408'),fetch('./Char/'+folder+'/Sound/sounds.json?v=02408')]);
   if(responses.some(response=>!response.ok))throw Error(character+' assets could not load');
   const [battle,all,sounds]=await Promise.all(responses.map(response=>response.json()));characterProgress(.15);
   for(const [key,definition] of Object.entries(electricHitStates)){battle.states[key]??=definition;battle.fallStates[key]??=definition;}
@@ -1095,14 +1097,15 @@ function resolveGroundHitM1(attacker,defender,params,guardMode){
  const push=Number(params[prefix+'.cornerpush.veloff']??params['ground.cornerpush.veloff']??0)*attacker.facing;
  const multiplier=Number(params[prefix+'.cornerpush.velmul']??battleDat.cornerpushProfile.defaultMultiplier);
  if(!Number.isFinite(push)||!Number.isFinite(multiplier))throw Error('Invalid cornerpush parameters');
- const velocity=pair(params[prefix+'.velocity']);
+ const velocity=hitVelocityVector(params,prefix);
  const getHit={attackerId:attacker.id,attackerFacing:attacker.facing,damage:dmg,guarded,animtype:['med','medium'].includes(String(aerial?params['air.animtype']??params.animtype:params.animtype).toLowerCase())?1:0,groundtype:({low:2,trip:3})[String(params['ground.type']).toLowerCase()]||1,airtype:({low:2,trip:3})[String(params['air.type']??params['ground.type']).toLowerCase()]||1,
   xvel:-velocity[0]*attacker.facing,yvel:guarded?0:(velocity[1]||0),hitid:Number(params.id??-1),fall:Number((aerial?params['air.fall']??params.fall:params.fall)||0),yaccel:Number(params.yaccel??1.4),
   'fall.xvel':params['fall.xvelocity']===undefined?null:-Number(params['fall.xvelocity'])*attacker.facing,
   'fall.yvel':Number(params['fall.yvelocity']??-18),'fall.damage':Number(params['fall.damage']??0),'fall.kill':Number(params['fall.kill']??1),
   'fall.envshake.time':Number(params['fall.envshake.time']??0),shake:{freq:Number(params['fall.envshake.freq']??60),phase:Number(params['fall.envshake.phase']??(Number(params['fall.envshake.freq']??60)>=90?90:0)),ampl:Number(params['fall.envshake.ampl']??-4),mul:Number(params['fall.envshake.mul']??1)},downRecovery:Number(params['down.recovertime']??constVal('data.liedown.time')),
   slidetime:Number(params[prefix+'.slidetime']??0),hittime:Number(params[prefix+'.hittime']??(aerial?20:0)),
-  ctrltime:Number(params['guard.ctrltime']??params['guard.slidetime']),crouch:guarded&&guardMode==='crouch'};
+  ctrltime:Number(params['guard.ctrltime']??params['guard.slidetime']??params['guard.hittime']??params['ground.slidetime']??0),crouch:guarded&&guardMode==='crouch'};
+ for(const key of ['xvel','yvel','slidetime','hittime','ctrltime','yaccel'])if(!Number.isFinite(getHit[key]))throw Error('Invalid HitDef '+key+' in state '+attacker.state);
  const reactionType=String(aerial?params['air.animtype']??params.animtype:params.animtype).toLowerCase();if(reactionType==='hard')getHit.animtype=2;if(reactionType==='diagup')getHit.animtype=3;
  const lethal=guardKO||dmg>=defender.life&&kill;
  if(lethal&&!guarded){
@@ -1217,7 +1220,9 @@ const roundFlow=createRoundFlow({fade:value=>{roundTransition.style.opacity=Stri
   else {Object.assign(p2,{life:p2.lifeMax,getHit:null,hitShake:0,hitTime:-1,attackPause:0,vx:0,vy:0,y:0,activeHitDef:null,attackFrame:null,lastHitKey:null,cornerPushVelocity:0,downRecovery:0});enterP2State(0);p2.ctrl=1}
   resetCommandList(player);
  },
- initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2]){lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)));if(['SailorJupiter','SailorNeptune','SailorSaturn'].includes(battleCharacters[player-1]))specialRoot(player).vars[49]=player}},
+ initialize:()=>{enterIRState(5900);enterP2State(5900);for(const player of [1,2]){lifecycleRuntime.initialize(player===1?p1LifecycleBinding:p2,specialRuntime.context(specialRoot(player)));if(['SailorJupiter','SailorNeptune','SailorSaturn'].includes(battleCharacters[player-1]))specialRoot(player).vars[49]=player}
+  primeRoundPortraits({data:player=>profileFor(player)?.battle||battleDat,root:specialRoot,entities:specialRuntime.entities,spawnHelper:(player,controller)=>withCharacter(player,()=>specialRuntime.dispatch(controller,{},specialRuntime.context(specialRoot(player)),{},specialRoot(player),player)),spawnEffect:(player,params,helper)=>withCharacter(player,()=>spawnSourceExplod(params,helper,player,specialRuntime.context(helper)))});
+ },
  fight:()=>{p1Reaction=null;enterIRState(0);enterP2State(0);runtimeCtrl=1;p2.ctrl=1;resetPlayerInput()},
  lock:()=>{runtimeCtrl=0;p2.ctrl=0},
  stepPresentation:()=>{stepLifecycleGlobals();stepLifecycleState(1);stepLifecycleState(2)},
@@ -1705,7 +1710,7 @@ function combatTraceSnapshot(){
 function combatTraceExport(){
  const frames=[];
  for(let offset=combatTraceCount;offset>0;offset--)frames.push(combatTraceFrames[(combatTraceTick-offset)%combatTraceCapacity]);
- return {schema:'palace-combat-trace-v1',version:'0.24.08-r15',build:'baseline-02408-r12-20261030',tickRate:60,capacity:combatTraceCapacity,
+ return {schema:'palace-combat-trace-v1',version:'0.24.08-r16',build:'baseline-02408-r12-20261030',tickRate:60,capacity:combatTraceCapacity,
   firstTick:frames[0]?.tick??null,lastTick:frames.at(-1)?.tick??null,droppedTicks:combatTraceTick-combatTraceCount,
   purpose:'Diagnostic trace only; not a replay save',source:battleDat?.source??null,frames};
 }
@@ -1716,7 +1721,7 @@ window.addEventListener('keydown',event=>{if(event.code==='F7'||event.code==='F8
 document.querySelector('#dbgTrace').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify({...matchLog.exportLog(),recentTrace:combatTraceExport()})],{type:'application/json'});
  const url=URL.createObjectURL(blob),link=document.createElement('a');
- link.href=url;link.download='palace-0.24.08-r15-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ link.href=url;link.download='palace-0.24.08-r16-trace.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  document.querySelector('#dbgTrace').blur();
 });
 function simStep(){
