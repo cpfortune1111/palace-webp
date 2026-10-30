@@ -15,7 +15,7 @@ export function createSpecialRuntime(api){
   const result={...params};
   for(const key of ['pausetime','guard.pausetime','damage','ground.velocity','guard.velocity','air.velocity','ground.cornerpush.veloff','guard.cornerpush.veloff','air.cornerpush.veloff','offset','velocity','p1facing','p2facing','p1stateno','p2stateno'])if(params[key]!==undefined&&!/^[\s\d.,+-]+$/.test(params[key]))result[key]=api.pair(params[key]).map(value=>api.eval(value,context)).join(',');
   if(result.priority!==undefined&&!String(result.priority).includes(','))result.priority+=', Hit';
-  for(const key of ['ground.slidetime','ground.hittime','guard.slidetime','guard.hittime','guard.ctrltime','air.slidetime','air.hittime','yaccel','fall.xvelocity','fall.yvelocity','fall.damage','fall.kill','fall.recover','air.fall','fall','id'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
+  for(const key of ['ground.slidetime','ground.hittime','guard.slidetime','guard.hittime','guard.ctrltime','air.slidetime','air.hittime','yaccel','fall.xvelocity','fall.yvelocity','fall.damage','fall.kill','fall.recover','air.fall','fall','id','kill','guard.kill','p1sprpriority','p2sprpriority','down.recovertime','fall.envshake.time','fall.envshake.freq','fall.envshake.ampl','fall.envshake.phase','fall.envshake.mul','ground.cornerpush.velmul','guard.cornerpush.velmul','air.cornerpush.velmul'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   for(const key of ['projanim','projhitanim','projremanim','projcancelanim','projhits','projmisstime','projremovetime'])if(params[key]!==undefined)result[key]=api.eval(params[key],context);
   return result;
  };
