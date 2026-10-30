@@ -4,10 +4,13 @@ export function createHitSoundPolicy(){
  const active=new Map();
  return {
   track(sound,owner,channel,explicit){
-   active.set(sound,{owner,stop:explicit===undefined?channel===0:!!explicit});
+   active.set(sound,{owner,channel,stop:channel===0});
    const release=()=>active.delete(sound);
    sound.addEventListener('ended',release,{once:true});
    sound.addEventListener('error',release,{once:true});
+  },
+  stopChannel(owner,channel){
+   for(const [sound,entry] of [...active])if(entry.owner===owner&&entry.channel===channel){active.delete(sound);sound.pause()}
   },
   hit(owner,guarded=false){
    if(guarded)return;

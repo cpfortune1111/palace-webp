@@ -1,17 +1,17 @@
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
 import {createMenuAudio} from './menu-audio.js?v=02408r13';
-import {createHomeCarousel} from './home-carousel.js?v=02408r17';
+import {createHomeCarousel} from './home-carousel.js?v=02408r18';
 import {createArcadeProgress} from './arcade-progress.js?v=02408r13';
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02382';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02408r15';
-import {createSelectScreen} from './select-screen.js?v=02408r17';
+import {createSelectScreen} from './select-screen.js?v=02408r18';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r13';
 import {createAcsScreen} from './acs-screen.js?v=02408r13';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
 import {createLoadingScreen} from './loading-screen.js?v=02408r15';
 
-import {createTitlePresentation} from './title-presentation.js?v=02408r17';
+import {createTitlePresentation} from './title-presentation.js?v=02408r18';
 
 export function createPalaceMenu(api){
  const presentation=createTitlePresentation();
@@ -51,7 +51,7 @@ export function createPalaceMenu(api){
  }
  function closeSettings(){effect('btn-back');mode='settingsClosing';presentation.settings(0)}
  homeButton.addEventListener('click',showHome);window.addEventListener('resize',draw);
- document.addEventListener('keydown',event=>{if(mode==='loading'){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='result'&&resultDeclarations.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(homeFading)return;if(mode==='acs'&&acs.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='select'&&selection.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(overlay.hidden||document.querySelector('dialog[open]'))return;if(event.code==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(mode==='options')closeSettings();return}if(event.target.matches('input,select'))return;event.preventDefault();event.stopImmediatePropagation();if(mode==='home'){if(event.code==='ArrowDown'||event.code==='ArrowUp'){carousel.move(event.code==='ArrowDown'?1:-1)}else if(event.code==='Enter'){selected===4?showOptions():showSelect(['arcade','vs','training','watch'][selected])}}else if(event.code==='Escape')showHome()},true);
+ document.addEventListener('keydown',event=>{if(mode==='loading'){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='result'&&resultDeclarations.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(homeFading)return;if(mode==='acs'&&acs.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(mode==='select'&&selection.handleKey(event)){event.preventDefault();event.stopImmediatePropagation();return}if(overlay.hidden||document.querySelector('dialog[open]'))return;if(event.code==='Escape'){event.preventDefault();event.stopImmediatePropagation();if(mode==='options')closeSettings();return}if(event.target.matches('input,select'))return;event.preventDefault();event.stopImmediatePropagation();if(mode==='home'){if(event.code==='ArrowDown'||event.code==='ArrowUp'){carousel.move(event.code==='ArrowDown'?1:-1)}else if(!event.repeat&&['Enter','KeyZ','KeyX','KeyA','KeyS','Numpad1','Numpad2','Numpad0','NumpadDecimal'].includes(event.code)){selected===4?showOptions():showSelect(['arcade','vs','training','watch'][selected])}}else if(event.code==='Escape')showHome()},true);
  const requested=new URLSearchParams(location.search).get('mode');
 
  function checkpoint(phase){return {phase,mode:phase==='selection'?recoveryTarget:battleMode,choice:phase==='selection'?selection.snapshot():battleChoice,players:[...battlePlayers],arcade:arcade.checkpoint(),result:pendingResult}}

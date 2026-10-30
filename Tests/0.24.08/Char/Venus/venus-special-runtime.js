@@ -1,5 +1,6 @@
 import {applyStateVelocity} from '../../Engine/state-entry-velocity.js?v=02408r10';
 import {excludesHit} from '../../Engine/hit-attribute-mask.js';
+import {resolveHitPriority} from '../../Engine/hit-priority.js';
 export function createSpecialRuntime(api){
  const entities=[],pauses={normal:[null,null],super:[null,null]},unhittableUntil={1:0,2:0};let serial=0,bgTime=0,bgCreated=-1;
  const projectileContacts=new Map();
@@ -112,10 +113,11 @@ export function createSpecialRuntime(api){
   entity.animStartTime=0;if(entity.anim<0||api.duration(entity.anim,entity.player)<=0)entity.destroyed=true;
  }
  function step(){
+  const stepped=[];
   for(const entity of [...entities]){
    if(entity.destroyed||blocked(entity.player,entity))continue;
    if(entity.hitPause>0){entity.hitPause--;continue}
-   if(entity.created===api.tick())continue;
+   if(entity.created===api.tick()&&!(api.data(entity.player).character==='SailorJupiter'&&entity.state===3050))continue;
    if(entity.kind==='helper'){
     entity.positionFrozen=false;entity.randomValue=Math.floor(Math.random()*1000);
     const previous=entity.state,controllers=(api.data(entity.player).helperStates[String(previous)]||api.data(entity.player).lifecycleHelpers[String(previous)]).controllers;
@@ -130,22 +132,23 @@ export function createSpecialRuntime(api){
     if(entity.removetime>0)entity.removetime--;
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
-   hit(entity);
-   if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);
-   if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true;
+   stepped.push(entity);
   }
-  const projectiles=entities.filter(entity=>entity.kind==='projectile'&&!entity.removing&&!entity.destroyed);
+  const projectiles=entities.filter(entity=>!entity.removing&&!entity.destroyed&&entity.activeHitDef&&(entity.kind==='projectile'||String(entity.activeHitDef.params.attr).split(',')[1]?.trim().toUpperCase().endsWith('P')));
   for(let first=0;first<projectiles.length;first++)for(let second=first+1;second<projectiles.length;second++){
-   const left=projectiles[first],right=projectiles[second];if(left.player===right.player||!api.collision({...left,hitDef:left.activeHitDef},right).overlap)continue;
-   if(left.priority<=right.priority)removeProjectile(left,'cancel');if(right.priority<=left.priority)removeProjectile(right,'cancel');
+   const left=projectiles[first],right=projectiles[second];if(left.destroyed||right.destroyed||left.removing||right.removing||left.player===right.player||!(api.collision({...left,hitDef:left.activeHitDef},right).overlap||api.collision({...right,hitDef:right.activeHitDef},left).overlap))continue;
+   const [leftHits,rightHits]=resolveHitPriority(left.kind==='projectile'?left.priority:left.activeHitDef.params.priority,right.kind==='projectile'?right.priority:right.activeHitDef.params.priority);
+   const cancel=entity=>{if(entity.kind==='projectile')removeProjectile(entity,'cancel');else{api.event?.('cancel',entity);if(entity.overrideState!==undefined){enter(entity,entity.overrideState);for(const [index,controller] of api.data(entity.player).helperStates[String(entity.state)].controllers.entries())helperController(entity,controller,index)}else{entity.destroyed=true;entity.removeReason='projectile-priority'}}};
+   if(rightHits)cancel(left);if(leftHits)cancel(right);
   }
   const overrides=[];
   for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
-   const attack=helper.hitBy&&attacks.find(attack=>{if(!attack?.hitDef?.params||attack.removing||attack.destroyed||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact});if(attack)overrides.push({helper,attack});
+   const attack=helper.hitBy&&attacks.find(attack=>{if(!attack?.hitDef?.params||attack.removing||attack.destroyed||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;if(helper.activeHitDef&&!resolveHitPriority(helper.activeHitDef.params.priority,attack.kind==='projectile'?attack.priority:attack.hitDef.params.priority)[1])return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact});if(attack)overrides.push({helper,attack});
   }
   for(const {helper,attack} of overrides){const projectile=attack.kind==='projectile'?entities.find(entity=>entity.key===attack.key):null;if(projectile&&(projectile.removing||projectile.destroyed))continue;enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index);if(projectile)consumeProjectileContact(projectile)
   }
+  for(const entity of stepped){if(entity.destroyed)continue;if(!entity.removing)hit(entity);if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true}
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){api.event?.('remove',entities[index],entities[index].removeReason||'state-or-animation');entities.splice(index,1)};
  }
  function finishTick(){
