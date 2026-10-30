@@ -1,8 +1,8 @@
-import {preloadQuoteAssets} from './quote-animation.js?v=02408r12';
+import {preloadQuoteAssets} from './quote-animation.js?v=02408r13';
 export const presentationCharacters=['SailorVenus','SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'];
 export async function ensurePresentationWorker(){
  if(!navigator.serviceWorker)throw Error('Open the test in a browser with service worker support.');
- const url=new URL('../snapshot-worker.js?v=02408r12',import.meta.url).href;if(navigator.serviceWorker.controller?.scriptURL===url)return;
+ const url=new URL('../snapshot-worker.js?v=02408r13',import.meta.url).href;if(navigator.serviceWorker.controller?.scriptURL===url)return;
  await navigator.serviceWorker.register(url,{scope:new URL('../',import.meta.url).pathname,updateViaCache:'none'});await navigator.serviceWorker.ready;
  if(navigator.serviceWorker.controller?.scriptURL!==url)await new Promise(resolve=>{const changed=()=>{if(navigator.serviceWorker.controller?.scriptURL===url){navigator.serviceWorker.removeEventListener('controllerchange',changed);resolve()}};navigator.serviceWorker.addEventListener('controllerchange',changed);changed()});
 }

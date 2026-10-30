@@ -1,17 +1,17 @@
-import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery} from './load-recovery.js?v=02408r12';
-import {createMenuAudio} from './menu-audio.js?v=02408r12';
-import {createHomeCarousel} from './home-carousel.js?v=02408r12';
-import {createArcadeProgress} from './arcade-progress.js?v=02408r12';
+import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery} from './load-recovery.js?v=02408r13';
+import {createMenuAudio} from './menu-audio.js?v=02408r13';
+import {createHomeCarousel} from './home-carousel.js?v=02408r13';
+import {createArcadeProgress} from './arcade-progress.js?v=02408r13';
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02382';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02384';
-import {createSelectScreen} from './select-screen.js?v=02408r12';
-import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r12';
-import {createAcsScreen} from './acs-screen.js?v=02408r12';
+import {createSelectScreen} from './select-screen.js?v=02408r13';
+import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r13';
+import {createAcsScreen} from './acs-screen.js?v=02408r13';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
-import {createLoadingScreen} from './loading-screen.js?v=02408r12';
+import {createLoadingScreen} from './loading-screen.js?v=02408r13';
 
-import {createTitlePresentation} from './title-presentation.js?v=02408r12';
+import {createTitlePresentation} from './title-presentation.js?v=02408r13';
 
 export function createPalaceMenu(api){
  const presentation=createTitlePresentation();

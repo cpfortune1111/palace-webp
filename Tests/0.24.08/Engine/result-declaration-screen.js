@@ -1,4 +1,4 @@
-import {createDeclarationScreen} from './declaration-screen.js?v=02408r12';
+import {createDeclarationScreen} from './declaration-screen.js?v=02408r13';
 import {createReportCard} from './report-card.js?v=02408r4';
 export function createResultDeclarationScreen(parent,api){
  const view=document.createElement('section');view.id='resultDeclarations';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:5';parent.appendChild(view);
