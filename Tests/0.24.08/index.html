@@ -2,12 +2,18 @@
 <style>body{margin:0;background:white;color:#333;font:18px Arial,sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center}p{max-width:32em;padding:20px}</style>
 <p id="status">Opening Moon Palace 0.24.08…</p>
 <script type="module">
-try{
- if(!('serviceWorker' in navigator))throw Error('This browser does not support the test page asset router.');
- const workerURL=new URL('./snapshot-worker.js?v=02408r14',location.href).href;
- await navigator.serviceWorker.register(workerURL,{scope:'./',updateViaCache:'none'});
- await navigator.serviceWorker.ready;
- if(navigator.serviceWorker.controller?.scriptURL!==workerURL)await new Promise(resolve=>{const changed=()=>{if(navigator.serviceWorker.controller?.scriptURL===workerURL){navigator.serviceWorker.removeEventListener('controllerchange',changed);resolve()}};navigator.serviceWorker.addEventListener('controllerchange',changed);changed()});
- const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision','02408r14');target.hash=location.hash;location.replace(target);
-}catch(error){document.getElementById('status').textContent='Unable to open the test page. '+error.message}
+let attempts=0,moduleAttempt=0,running=false;
+async function openGame(){
+ if(running)return;running=true;
+ try{
+  if(navigator.onLine===false)throw Error('Connection is offline.');
+  const {ensureRouter,pageRevision}=await import('./Engine/boot-router.js?v=02408r15&attempt='+(moduleAttempt++));await ensureRouter();
+  const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision',pageRevision);target.hash=location.hash;location.replace(target);
+ }catch(error){
+  const status=document.getElementById('status');status.style.whiteSpace='pre-wrap';status.textContent='Connection / startup problem\n'+error.message+'\n'+(navigator.onLine===false?'Waiting for the connection to return.':'Recovering automatically.');
+  if(navigator.onLine!==false&&attempts<3)setTimeout(openGame,[1000,3000,8000][attempts++]);
+  else if(navigator.onLine!==false)status.textContent='Unable to start the game.\n'+error.message+'\nAutomatic recovery stopped to prevent repeated page refreshes.';
+ }finally{running=false}
+}
+window.addEventListener('online',()=>{attempts=0;openGame()});openGame();
 </script></html>

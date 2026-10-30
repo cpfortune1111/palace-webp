@@ -1,7 +1,7 @@
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createLoadingScreen} from './loading-screen.js?v=02408r13';
+import {createLoadingScreen} from './loading-screen.js?v=02408r15';
 import {createQuotePortrait,preloadQuoteAssets} from './quote-animation.js?v=02408r13';
-import {preloadPresentationPack,preloadPresentationPortraits} from './presentation-preload.js?v=02408r13';
+import {preloadPresentationPack,preloadPresentationPortraits} from './presentation-preload.js?v=02408r15';
 export function createSelectScreen(parent,api){
  const view=document.createElement('section');view.id='palaceSelection';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:2';parent.appendChild(view);
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none';view.appendChild(canvas);const context=canvas.getContext('2d');
@@ -12,7 +12,7 @@ export function createSelectScreen(parent,api){
  const commandValues=['normal','auto'];
  let data,assets,stage3D,phase='p1',targetMode='vs',choices=['SailorVenus','SailorVenus'],stage='random',cursor=16,hardware=['snes','snes'],command=['normal','normal'],confirmed=new Set(),ticks=0,lastTime;
  const stageReady=(api.createStage?Promise.resolve({createSelectStage:api.createStage}):import('../Stage/Select/select-stage.js?v=02408r3')).then(async module=>{const candidate=module.createSelectStage(view);if(!candidate)return;await candidate.ready;stage3D=candidate}).catch(error=>{console.error('Selection 3D stage',error);throw error});
- async function loadEntries(value){if(value.file){const image=new Image();image.src=assetUrl('./'+value.file+'?v=02386');await image.decode();loading.update(++completed/total);return {...value,image}}const result=Array.isArray(value)?[]:{};for(const key of Object.keys(value))result[key]=await loadEntries(value[key]);return result}
+ async function loadEntries(value){if(value.file){const image=new Image();image.src=assetUrl('./'+value.file+'?v=02386');try{await image.decode()}catch(error){error.resource=image.src;throw error}loading.update(++completed/total);return {...value,image}}const result=Array.isArray(value)?[]:{};for(const key of Object.keys(value))result[key]=await loadEntries(value[key]);return result}
  const ready=Promise.all(['Data/Select/select-screen.json','Data/Select/selection-assets.json'].map(path=>fetch(assetUrl('./'+path+'?v=02406')).then(response=>{if(!response.ok)throw Error('Selection data '+path);return response.json()}))).then(async ([config,manifest])=>{total=countEntries(config.background)+countEntries(manifest)+1;data={...config,background:await loadEntries(config.background)};assets=await loadEntries(manifest);await stageReady;await portraitsReady;await Promise.all(portraits.map(portrait=>portrait.ready));await api.preloadACS?.();loading.update(1);loaded=true;loading.hide();render()}).catch(error=>{loadError=error;if(!view.hidden)loading.fail(error,()=>{hide();api.back()});throw error});
  function player(){return phase.startsWith('p2')?1:0}
  function selectPlayer(target){phase='p'+(target+1);cursor=data.cells.findIndex(cell=>cell.id===choices[target]&&cell.available);render()}
