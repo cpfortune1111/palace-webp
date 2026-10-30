@@ -6,7 +6,7 @@ export function loadFailureInfo(error,online=true){
  const exhausted=error?.code==='RECOVERY_LIMIT';
  const program=error instanceof ReferenceError||/not defined|unsupported|SyntaxError|Cannot (?:read|access)/i.test(message)||/RUNTIME ERROR/i.test(message)&&!connection&&!status;
  return {kind:exhausted?'persistent':program?'program':connection?'connection':'asset',recoverable:!exhausted&&!program,
-  title:exhausted?'Waiting to continue':program?'Waiting for an update':connection?'Waiting for connection':'Waiting for a response',
+  title:exhausted?'Waiting to continue':program?'Waiting for an update':connection?'Waiting for connection':'just a sec. chibiusa is finding her key...',
   detail:message+(resource?'\nResource: '+resource:'')+(error?.phase?'\nLoading step: '+error.phase:''),status,resource};
 }
 export function createLoadFailureRecovery({notify,online=()=>navigator.onLine!==false,schedule=setTimeout,cancel=clearTimeout,listen=fn=>{window.addEventListener('online',fn);return()=>window.removeEventListener('online',fn)}}){

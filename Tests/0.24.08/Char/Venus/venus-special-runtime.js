@@ -54,7 +54,7 @@ export function createSpecialRuntime(api){
   const params=controller.params;
   switch(controller.type){
    case 'Projectile':spawn(params,owner,player,'projectile');return true;
-   case 'Helper':if(Number(params.stateno)!==950)spawn(params,owner,player,'helper');return true;
+   case 'Helper':if(![950,951].includes(Number(params.stateno)))spawn(params,owner,player,'helper');return true;
    case 'Pause':startPause(params,player,'normal');return true;
    case 'SuperPause':startPause(params,player,'super');return true;
    case 'BGPalFX':api.background(String(params.mul).split(',').map(Number));bgTime=Number(params.time);bgCreated=api.tick();return true;

@@ -7,7 +7,7 @@ async function openGame(){
  if(running)return;running=true;
  try{
   if(navigator.onLine===false)throw Error('Connection is offline.');
-  const {ensureRouter,pageRevision}=await import('./Engine/boot-router.js?v=02408r21&attempt='+(moduleAttempt++));await ensureRouter();
+  const {ensureRouter,pageRevision}=await import('./Engine/boot-router.js?v=02408r22&attempt='+(moduleAttempt++));await ensureRouter();
   const target=new URL('./game.html',location.href);target.search=location.search;target.searchParams.set('revision',pageRevision);target.hash=location.hash;location.replace(target);
  }catch(error){
   const status=document.getElementById('status');status.style.whiteSpace='pre-wrap';status.textContent='Connection / startup problem\n'+error.message+'\n'+(navigator.onLine===false?'Waiting for the connection to return.':'Recovering automatically.');
