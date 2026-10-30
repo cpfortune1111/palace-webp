@@ -1,5 +1,5 @@
 // One stable worker URL is shared by launcher and game. Do not alternate revisions.
-export const pageRevision='02408r19';
+export const pageRevision='02408r20';
 export const routerURL=new URL('../snapshot-worker.js',import.meta.url).href;
 let pending;
 export function ensureRouter(){

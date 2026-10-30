@@ -1,5 +1,5 @@
 import {requestLoadRecovery} from './load-recovery.js?v=02408r15';
-import {createLoadFailureRecovery} from './load-failure-policy.js?v=02408r15';
+import {createLoadFailureRecovery} from './load-failure-policy.js?v=02408r20';
 import {letterBouncePose} from './letter-animation.js?v=02375';
 
 let assetsPromise;
@@ -11,18 +11,18 @@ export function preloadLoadingAssets(){
 export function loadingLetterPose(tick,index,duration=58){const age=((tick%(duration*10))+duration*10)%(duration*10)-index*duration;if(age<0||age>=duration)return {alpha:1,y:0};return {alpha:1,y:letterBouncePose(age,duration).y-36*Math.max(0,1-age/22)}}
 
 export function createLoadingScreen(parent=document.body,id='palaceLoading'){
- const view=document.createElement('section');view.id=id;view.hidden=true;view.style.cssText='position:fixed;inset:0;z-index:90;background:#fff;color:#222;display:none;touch-action:none';view.setAttribute('aria-label','Loading');view.setAttribute('aria-busy','true');
+ const view=document.createElement('section');view.id=id;view.hidden=true;view.style.cssText='position:fixed;inset:0;z-index:90;background:#fff;color:#525252;display:none;touch-action:none';view.setAttribute('aria-label','Loading');view.setAttribute('aria-busy','true');
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';view.appendChild(canvas);const context=canvas.getContext('2d');
  const content=document.createElement('div');content.style.cssText='position:absolute;width:1280px;height:720px;transform-origin:0 0;pointer-events:none';view.appendChild(content);
  const label=document.createElement('div');label.textContent='NOW LOADING';label.setAttribute('role','status');content.appendChild(label);
  const bar=document.createElement('div');bar.style.cssText='position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)';bar.setAttribute('role','progressbar');bar.setAttribute('aria-label','Loading progress');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax','100');content.appendChild(bar);
  const fill=document.createElement('div');fill.style.cssText='height:100%;width:0%;background:#FF3EA7';bar.appendChild(fill);
- const percentage=document.createElement('div');percentage.style.cssText='position:absolute;left:640px;top:480px;transform:translate(-50%,-50%);font:bold 16px system-ui;color:#222';percentage.setAttribute('aria-hidden','true');content.appendChild(percentage);
- const errorPanel=document.createElement('div');errorPanel.hidden=true;errorPanel.setAttribute('role','alert');errorPanel.style.cssText='position:absolute;left:640px;top:510px;transform:translateX(-50%);width:1100px;max-height:185px;overflow:auto;box-sizing:border-box;padding:12px 20px;border:1px solid #ccc;border-radius:12px;background:#fffffff5;color:#333333;text-align:center;font-family:"Arial Rounded MT Bold",Arial,sans-serif;font-size:26px;line-height:36px;pointer-events:auto;user-select:text;touch-action:pan-y';
- const errorTitle=document.createElement('strong'),errorNotice=document.createElement('div'),errorDetail=document.createElement('div');errorDetail.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere';errorPanel.append(errorTitle,errorNotice,errorDetail);content.appendChild(errorPanel);
+ const percentage=document.createElement('div');percentage.style.cssText='position:absolute;left:640px;top:480px;transform:translate(-50%,-50%);font:bold 16px system-ui;color:#525252';percentage.setAttribute('aria-hidden','true');content.appendChild(percentage);
+ const errorPanel=document.createElement('div');errorPanel.hidden=true;errorPanel.setAttribute('role','alert');errorPanel.style.cssText='position:absolute;left:640px;top:510px;transform:translateX(-50%);width:1100px;max-height:185px;overflow:auto;box-sizing:border-box;padding:12px 20px;border:1px solid #ccc;border-radius:12px;background:#fffffff5;color:#525252;text-align:center;font-family:"Arial Rounded MT Bold",Arial,sans-serif;font-size:26px;line-height:36px;pointer-events:auto;user-select:text;touch-action:pan-y';
+ const errorTitle=document.createElement('strong'),errorNotice=document.createElement('div'),errorDetail=document.createElement('div');errorDetail.style.cssText='white-space:pre-wrap;overflow-wrap:anywhere';errorPanel.append(errorTitle,errorDetail);content.appendChild(errorPanel);
  parent.appendChild(view);
  let assets,progress=0,tick=0,lastFrame,animationFrame;
- const recovery=createLoadFailureRecovery({notify:(info,message)=>{errorPanel.hidden=false;errorTitle.textContent=info.title;errorNotice.textContent=message;errorDetail.textContent=info.detail;label.textContent=info.title;view.setAttribute('aria-busy','false')}});
+ const recovery=createLoadFailureRecovery({notify:(info,message)=>{errorPanel.hidden=false;errorTitle.textContent=info.title;errorDetail.textContent=info.status?'HTTP '+info.status:'';errorPanel.dataset.diagnostic=info.detail;label.textContent=info.title;view.setAttribute('aria-busy','false')}});
  const ready=preloadLoadingAssets().then(value=>{assets=value;if(!view.hidden)render();return value});ready.catch(error=>{if(!view.hidden)fail(error)});
  function resize(){const ratio=devicePixelRatio||1,width=Math.round(innerWidth*ratio),height=Math.round(innerHeight*ratio);if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height}const scale=Math.min(innerWidth/1280,innerHeight/720),left=(innerWidth-1280*scale)/2,top=(innerHeight-720*scale)/2;content.style.left=left+'px';content.style.top=top+'px';content.style.transform='scale('+scale+')';context.setTransform(ratio,0,0,ratio,0,0);context.fillStyle='#fff';context.imageSmoothingEnabled=true;context.imageSmoothingQuality='high';context.fillRect(0,0,innerWidth,innerHeight);context.translate(left,top);context.scale(scale,scale)}
  function sprite(name,x,y,scale=1){const entry=assets.config.sprites[name];context.drawImage(assets.atlas,entry.x,entry.y,entry.w,entry.h,x-entry.originalSize[0]*scale/2+entry.crop[0]*scale,y-entry.originalSize[1]*scale/2+entry.crop[1]*scale,entry.w*scale,entry.h*scale)}
