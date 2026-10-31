@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Super spark colours</title>
+<style>body{margin:24px;background:#fff;color:#555;font:16px Arial,sans-serif}canvas{display:block;width:100%;max-width:1320px;height:auto;margin:16px 0}button,select{font:inherit;padding:8px 12px}p{line-height:1.5}</style>
+<h2>A953 / A951 colour review</h2><p>One neutral animation. Upper row: A953 (Lifebar / Team 2). Lower row: A951 (Team 1). Moon / SuperMoon: Script Cyan / Gold.</p>
+<label>Background <select id="bg"><option value="#606060">Grey</option><option value="#ffffff">White</option><option value="#101026">Dark</option></select></label> <button id="pause">Pause</button> <button id="restart">Restart animation / floating sample</button><p id="status">Loading…</p>
+<canvas id="preview" width="1320" height="540"></canvas>
+<script type="module">
+import {createSuperSparks} from './Engine/super-sparks.js?v=02408r24';
+const sparks=createSuperSparks(),canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d'),roles=['Moon','Mercury','Mars','Jupiter','Venus','Pluto','Neptune','Uranus','CMoon','Saturn','LSwatheshia','TuxedoMask'];let paused=false,age=0,previous;
+await sparks.ready;const data=await fetch('./Data/Fight/super-spark.json?v=02408r24').then(r=>r.json());document.querySelector('#status').textContent='Ready · one shared atlas · colours cached before animation';
+document.querySelector('#pause').onclick=()=>{paused=!paused;document.querySelector('#pause').textContent=paused?'Resume':'Pause'};document.querySelector('#restart').onclick=()=>age=0;
+function loop(now){if(previous!==undefined&&!paused)age+=(now-previous)*.06;previous=now;ctx.fillStyle=document.querySelector('#bg').value;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.font='14px Arial';ctx.textAlign='center';ctx.fillStyle=document.querySelector('#bg').value==='#ffffff'?'#555':'#fff';ctx.fillText('A953',43,125);ctx.fillText('A951',43,255);
+for(const [i,role]of roles.entries()){const x=118+i*102;ctx.fillText(role==='Moon'?'Moon / SuperM':role,x,32);for(const [variant,y]of [[953,125],[951,255]]){sparks.draw(ctx,{character:role,variant,age,x,y,scale:2.5});ctx.fillText(data.profiles[role].colours?.[variant]||(variant===953?'Script Cyan':'Script Gold'),x,y+55)}}
+ctx.fillText('Floating sample: Team 1 / A951',370,375);ctx.fillText('Floating sample: Team 2 / A953',900,375);const n=age%90,alpha=n<=24?1:Math.max(0,(40-n)/16);if(n<64){sparks.draw(ctx,{character:'Moon',variant:951,age:n,x:370,y:480-n*2,scale:2,alpha});sparks.draw(ctx,{character:'Moon',variant:953,age:n,x:900,y:480-n*2,scale:2,alpha})}requestAnimationFrame(loop)}requestAnimationFrame(loop);
+</script></html>

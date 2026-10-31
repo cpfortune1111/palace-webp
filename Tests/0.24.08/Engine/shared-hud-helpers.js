@@ -5,15 +5,17 @@ export function superIndicatorReady(life,lifeMax,remainingTicks,elapsedTicks){
 export function sharedEmblemLayers(data,life,lifeMax,remainingTicks,elapsedTicks){
  if(life<=0)return [952];
  if(!superIndicatorReady(life,lifeMax,remainingTicks,elapsedTicks))return [950];
- return [950,data.actions['953']?.length?953:951];
+ return [950,953];
 }
 export function createSuperIndicatorTracker(onReady){
- const last=[false,false];
- return {reset:()=>last.fill(false),step:(fighters,remainingTicks,elapsedTicks,active=true)=>{
+ const last=[false,false],ages=[0,0];
+ return {reset:()=>{last.fill(false);ages.fill(0)},step:(fighters,remainingTicks,elapsedTicks,active=true)=>{
   for(const [index,f]of fighters.entries()){
    const ready=superIndicatorReady(f.life,f.lifeMax,remainingTicks,elapsedTicks);
-   if(active&&ready&&!last[index])onReady(index+1);
+   if(ready&&last[index])ages[index]++;
+   if(!ready)ages[index]=0;
+   if(active&&ready&&!last[index]){ages[index]=0;onReady(index+1)}
    if(active||!ready)last[index]=ready;
   }
- },snapshot:()=>[...last]};
+ },snapshot:()=>[...last],ages:()=>[...ages]};
 }
