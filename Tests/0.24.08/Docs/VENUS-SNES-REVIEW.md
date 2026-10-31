@@ -24,11 +24,11 @@
 - S950：沿用現有 Lifebar 等效繪製，SNES 單人隊伍位置 P1=(180,85)、P2=(1100,85)，正常／無 HP 角色標保持一份，**不重新產生第二個 H950**。原 TeamSize／PlayerNo 公式保存在共用資料，今次遊戲仍是 1v1。
 - S951：已按作者確認，**有 A953 用 A953，沒有用 A951**。五角由現有 HUD 統一實現原低 HP／回合時段判斷，不依賴各原檔有沒有召喚 H951 的入口。提示啟用時各播自己已預載的 S980,0 一次；持續有效時不重播，死亡／條件失效時移除提示。用 channel4 所有權，不當作人聲 channel0 被受擊中止。
 
-## 原碼差異記錄（未擅改招式條件）
+## r23 作者確認：SNES 超必條件統一
 
-新 Helper 提示條件 `Life <= LifeMax/4 || TimeRemaining = [0,TimeElapsed / 5]` 是最後約1/6回合時段；Venus CMD 超必條件仍為低血量或 `TimeRemaining = [1,600]`（最後10秒）。提示與招式可用時機是原碼差異，今次按兩份原碼各自保留；如想一致可由作者再決定。這不列成漏接。
+五角玩家／AI及共用輸入副本已統一為 `Life <= LifeMax/4 || TimeRemaining = [0,TimeElapsed / 5]`，與提示亮起條件一致。Moon／Neptune AI 額外的純低血量限制亦已合併，避免時間條件被另一個 triggerall 擋住。保留各招距離、取消、AI機率等其他條件。原檔沒有直接改寫；此為作者確認的 Web 規則更新。
 
-Helper951 的四段原 controller（301 PlaySnd／309 SuperExplod／327 RemoveExplod／337 DestroySelf）現已由同一 HUD 效果及提示音生命週期等效處理，沒有額外疊一套 H950/H951。原 `anim=953` 保留在資料，fallback 由 HUD 執行。
+Helper951 四段由同一 HUD 效果及提示音生命週期等效處理；原 anim=953 保留，依作者指示有A953用A953、沒有則用A951。
 
 ## 本次更新的個別 controller
 

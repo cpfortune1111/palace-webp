@@ -1,5 +1,5 @@
 import {requestLoadRecovery} from './load-recovery.js?v=02408r15';
-import {createLoadFailureRecovery} from './load-failure-policy.js?v=02408r22';
+import {createLoadFailureRecovery} from './load-failure-policy.js?v=02408r23';
 import {letterBouncePose} from './letter-animation.js?v=02375';
 
 let assetsPromise;
