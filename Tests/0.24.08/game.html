@@ -1743,6 +1743,7 @@ function simStep(){
  fightHud.step(roundActive&&p1Life>0&&p2.life>0&&p1HitPause===0&&!specialRuntime.blocked(1)&&!specialRuntime.blocked(2),[p1Life/p1LifeMax*1000,p2.life/p2.lifeMax*1000]);
  stepFallShake();
  if(!dat||!stateIR||!turnDat||!battleDat||!guardDat||!fallDat||!airDat||!specialDat||!lifecycleDat)return;
+ const superRemaining=fightHud.remainingExact();superIndicators.step([{life:p1Life,lifeMax:p1LifeMax},{life:p2.life,lifeMax:p2.lifeMax}],superRemaining===null?null:superRemaining*60,fightHud.elapsedTicks(),roundActive);
  if(roundFlow.enabled()&&!roundActive){stepSourceExplods();roundFlow.step();specialRuntime.step();specialRuntime.finishTick();bindSourceEffects();recordMatchLog();combatTraceTick++;logicFrame={...liveP1(),p2:{...p2}};return}
  stepSourceExplods();
  const p2PauseGeneration=p2.attackPauseGeneration||0,p2PauseAtEntry=p2.attackPause||0;
