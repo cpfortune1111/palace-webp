@@ -1,0 +1,3 @@
+const images={};
+export const navigationReady=Promise.all(['Back','Exit'].map(async name=>{const image=new Image();image.src='./Data/Buttons/'+name+'.webp?v=02408r32';await image.decode();images[name]=image}));
+export function navigationArtwork(button,name){button.textContent='';button.setAttribute('aria-label',name);Object.assign(button.style,{background:'transparent',border:'0',padding:'0',width:'118.5px',height:'36.5px',lineHeight:'0'});const image=document.createElement('img');image.src='./Data/Buttons/'+name+'.webp?v=02408r32';image.alt=name;image.draggable=false;image.style.cssText='width:100%;height:100%;object-fit:contain;pointer-events:none';button.append(image);return button}
