@@ -137,7 +137,11 @@ export function createSpecialRuntime(api){
   const projectiles=entities.filter(entity=>!entity.removing&&!entity.destroyed&&entity.activeHitDef&&(entity.kind==='projectile'||String(entity.activeHitDef.params.attr).split(',')[1]?.trim().toUpperCase().endsWith('P')));
   for(let first=0;first<projectiles.length;first++)for(let second=first+1;second<projectiles.length;second++){
    const left=projectiles[first],right=projectiles[second];if(left.destroyed||right.destroyed||left.removing||right.removing||left.player===right.player||!(api.collision({...left,hitDef:left.activeHitDef},right).overlap||api.collision({...right,hitDef:right.activeHitDef},left).overlap))continue;
-   const [leftHits,rightHits]=resolveHitPriority(left.kind==='projectile'?left.priority:left.activeHitDef.params.priority,right.kind==='projectile'?right.priority:right.activeHitDef.params.priority);
+   // Moon's hittable tiara consumes an ordinary projectile on cancellation.
+   // HitDef priority is not Projectile projpriority; don't compare those namespaces.
+   const tiara=e=>e.kind==='helper'&&e.id===1050&&api.data(e.player).character==='SailorMoon',ordinary=e=>e.kind==='projectile'&&/^[NS]P$/i.test(String(e.activeHitDef.params.attr).split(',')[1]?.trim()||'');
+   const mutual=tiara(left)&&ordinary(right)||tiara(right)&&ordinary(left);
+   const [leftHits,rightHits]=mutual?[true,true]:resolveHitPriority(left.kind==='projectile'?left.priority:left.activeHitDef.params.priority,right.kind==='projectile'?right.priority:right.activeHitDef.params.priority);
    const cancel=entity=>{if(entity.kind==='projectile')removeProjectile(entity,'cancel');else{api.event?.('cancel',entity);if(entity.overrideState!==undefined){enter(entity,entity.overrideState);for(const [index,controller] of api.data(entity.player).helperStates[String(entity.state)].controllers.entries())helperController(entity,controller,index)}else{entity.destroyed=true;entity.removeReason='projectile-priority'}}};
    if(rightHits)cancel(left);if(leftHits)cancel(right);
   }
