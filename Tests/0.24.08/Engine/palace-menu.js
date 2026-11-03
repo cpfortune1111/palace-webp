@@ -1,14 +1,14 @@
-import {navigationArtwork} from './artwork-navigation.js?v=02408r32';
+import {navigationArtwork} from './artwork-navigation.js?v=02408r33';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
 import {createMenuAudio} from './menu-audio.js?v=02408r13';
-import {createHomeCarousel} from './home-carousel.js?v=02408r32';
+import {createHomeCarousel} from './home-carousel.js?v=02408r33';
 import {createArcadeProgress} from './arcade-progress.js?v=02408r13';
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createTitleStage} from '../Stage/Title/title-stage.js?v=02408r32';
+import {createTitleStage} from '../Stage/Title/title-stage.js?v=02408r33';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02408r15';
-import {createSelectScreen} from './select-screen.js?v=02408r32';
+import {createSelectScreen} from './select-screen.js?v=02408r33';
 import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r13';
-import {createAcsScreen} from './acs-screen.js?v=02408r32';
+import {createAcsScreen} from './acs-screen.js?v=02408r33';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
 import {createLoadingScreen} from './loading-screen.js?v=02408r25';
 
@@ -64,5 +64,5 @@ export function createPalaceMenu(api){
  mode='logo';overlay.hidden=true;api.pause(true);logoIntro=createLogoIntro(async()=>{homeFading=true;await Promise.all([ready,titleStage.ready,optionReady,loading.ready]);showHome(true)},{preload:Promise.all([loading.ready,audio.ready]),onFirstLetter:()=>effect('logo'),onLoadError:error=>{loading.show();saveLoadRecovery(checkpoint('home'));loading.fail(error,{retry:reloadCheckpoint})}});logoIntro.done.then(()=>{homeFading=false;if(['vs','training','watch'].includes(requested))start(requested)});document.addEventListener('keydown',event=>{if(!logoIntro.finished){event.preventDefault();event.stopImmediatePropagation()}},true);
  }
  let lastTitleFrame=performance.now();function animate(){document.body.dataset.battleUi=overlay.hidden&&!starting&&mode!=='logo'&&mode!=='loading'?'visible':'hidden';const now=performance.now(),dt=Math.min((now-lastTitleFrame)/1000,.05);lastTitleFrame=now;audio.step(dt);presentation.step(dt);carousel.setActive(mode==='home'&&!homeFading);carousel.step(dt);if(mode==='settingsClosing'&&presentation.snapshot().settings===0){mode='home';popup.hidden=true}titleStage.setVisible(!overlay.hidden&&(['home','options','settingsClosing','entrance'].includes(mode)));if(!overlay.hidden){draw();if(['home','options','settingsClosing','entrance'].includes(mode))titleStage.render(dt)}requestAnimationFrame(animate)}requestAnimationFrame(animate);
- return {audio,arcade,carousel,ready:Promise.all([ready,titleStage.ready,loading.ready,audio.ready]),loading,titleStage,logoIntro,selection,acs,resultDeclarations,showResult,showSelect,showSettings:showOptions,closeSettings,presentation,sound,options,start,showHome,isWatch:()=>mode==='watch',isHome:()=>mode==='logo'||!overlay.hidden};
+ return {audio,arcade,carousel,ready:Promise.all([ready,titleStage.ready,loading.ready,audio.ready,carousel.ready]),loading,titleStage,logoIntro,selection,acs,resultDeclarations,showResult,showSelect,showSettings:showOptions,closeSettings,presentation,sound,options,start,showHome,isWatch:()=>mode==='watch',isHome:()=>mode==='logo'||!overlay.hidden};
 }

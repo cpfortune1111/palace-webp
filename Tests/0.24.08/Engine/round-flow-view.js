@@ -1,4 +1,4 @@
-import {loadBitmapFont,drawBitmapText,announcementStyle} from './bitmap-font.js?v=02408r32';
+import {loadBitmapFont,drawBitmapText,announcementStyle} from './bitmap-font.js?v=02408r33';
 import {assetUrl} from './asset-paths.js?v=02362';
 export function createRoundView(api){
  const canvas=document.createElement('canvas');canvas.id='roundAnnouncements';canvas.style.cssText='position:fixed;inset:0;z-index:7;pointer-events:none';document.body.appendChild(canvas);const context=canvas.getContext('2d');
@@ -15,7 +15,7 @@ export function createRoundView(api){
   context.textAlign='center';context.fillStyle='#fff';context.shadowColor='#101025';context.shadowBlur=8;
   let drawn=false;
   if(animation&&data){let elapsed=0;const age=api.tick()-animationStart;const frame=data.actions[String(animation)].find(frame=>{elapsed+=Math.max(1,frame.time);return age<elapsed});if(frame){const sprite=data.sprites[frame.group+','+frame.item];context.shadowBlur=0;context.drawImage(atlas,sprite.x,sprite.y,sprite.w,sprite.h,640-sprite.axisX+frame.ox,-sprite.axisY+frame.oy,sprite.w,sprite.h);drawn=true}else animation=null}
-  if(message&&!drawn){const style=announcementStyle(message);if(style&&announcementFont){context.shadowBlur=0;drawBitmapText(context,announcementFont,style.text,{group:style.group,x:640,y:178-71/2})}else{context.font='bold 42px Georgia';context.fillText(message,640,178)}}
+  if(message&&!drawn){const style=announcementStyle(message,api.characters?.());if(style&&announcementFont){context.shadowBlur=0;drawBitmapText(context,announcementFont,style.text,{group:style.group,x:640,y:178-71/2})}else{context.font='bold 42px Georgia';context.fillText(message,640,178)}}
  }
  return {ready:Promise.all([ready,statisticsReady,fontReady]),render,message:value=>{message=value;if(value==='FIGHT'||value==='K.O.'){animation=value==='FIGHT'?80:200;animationStart=api.tick()}else if(value)animation=null},showMatch:()=>{buttons.hidden=false},hideMatch:()=>{buttons.hidden=true;animation=null;message=''}};
 }
