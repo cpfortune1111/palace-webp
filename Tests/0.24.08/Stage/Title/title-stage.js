@@ -1,4 +1,4 @@
-import {createWinnerFireworks} from './winner-fireworks.js?v=02408r29';
+import {createWinnerFireworks} from './winner-fireworks.js?v=02408r30';
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
