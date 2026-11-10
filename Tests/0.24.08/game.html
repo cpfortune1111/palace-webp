@@ -1623,7 +1623,7 @@ function applyNotHitBy(params,fighter,value){
  const masks=fighter.kind?(fighter.notHitByMasks??=[]):notHitByMasks[(fighter.player||1)-1],duration=value(params.time??1);
  for(const [slot,key] of ['value','value2'].entries())if(params[key]!==undefined)masks[slot]={attribute:params[key],until:duration<0?Infinity:combatTraceTick+duration};
 }
-function projectileClash(left,right){const boxes=e=>{const f=(profileFor(e.player)?.battle||battleDat).collision[String(e.anim)]?.[Math.max(0,e.elem-1)];return worldBoxes(f?.c1?.length?f.c1:f?.c2||[],e.x,e.y,e.facing)};for(const a of boxes(left))for(const b of boxes(right)){if(rectOverlap(a,b))return true;let enter=0,exit=1,valid=true;for(const [lo,hi,v]of [['l','r',(left.vx||0)-(right.vx||0)],['t','b',(left.vy||0)-(right.vy||0)]]){if(!v){if(a[hi]<b[lo]||a[lo]>b[hi]){valid=false;break}}else{const first=(b[lo]-a[hi])/v,last=(b[hi]-a[lo])/v;enter=Math.max(enter,Math.min(first,last));exit=Math.min(exit,Math.max(first,last))}}if(valid&&enter<=exit&&exit>=0&&enter<=1)return true}return false}
+function projectileClash(left,right){const boxes=e=>{const f=(characterProfiles.get(battleCharacters[e.player-1])?.battle||battleDat).collision[String(e.anim)]?.[Math.max(0,e.elem-1)];return worldBoxes(f?.c1?.length?f.c1:f?.c2||[],e.x,e.y,e.facing)};for(const a of boxes(left))for(const b of boxes(right)){if(rectOverlap(a,b))return true;let enter=0,exit=1,valid=true;for(const [lo,hi,v]of [['l','r',(left.vx||0)-(right.vx||0)],['t','b',(left.vy||0)-(right.vy||0)]]){if(!v){if(a[hi]<b[lo]||a[lo]>b[hi]){valid=false;break}}else{const first=(b[lo]-a[hi])/v,last=(b[hi]-a[lo])/v;enter=Math.max(enter,Math.min(first,last));exit=Math.min(exit,Math.max(first,last))}}if(valid&&enter<=exit&&exit>=0&&enter<=1)return true}return false}
 function resolveFighterCollisionM1(frame,defender){
  if(roundFlow.enabled()&&!roundFlow.canFight())return {overlap:false,contact:false};
  if(!defender.kind&&specialRuntime.unhittable(defender.player||defender.id||1))return {overlap:false,contact:false};
@@ -1632,9 +1632,9 @@ function resolveFighterCollisionM1(frame,defender){
  if(!frame?.hitDef)return {overlap:false,contact:false};
  const masks=defender.kind?defender.notHitByMasks||[]:notHitByMasks[(defender.player||defender.id||1)-1];
  if(masks.some(mask=>mask&&mask.until>combatTraceTick&&excludesHit(mask.attribute,frame.hitDef.params?.attr)))return {overlap:false,contact:false};
- const set=(profileFor(frame.player||2)?.battle||battleDat).collision[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
+ const set=((frame.kind?characterProfiles.get(battleCharacters[(frame.player||2)-1]):profileFor(frame.player||2))?.battle||battleDat).collision[String(frame.anim)]?.[Math.max(0,frame.elem-1)];
  const atk=worldBoxes(set?.c1||[],frame.x,frame.y,frame.facing);
- const body=worldBoxes((profileFor(defender.player||1)?.battle||battleDat).collision[String(defender.anim)]?.[Math.max(0,defender.elem-1)]?.c2||[],defender.x,defender.y,defender.facing);
+ const body=worldBoxes(((defender.kind?characterProfiles.get(battleCharacters[(defender.player||1)-1]):profileFor(defender.player||1))?.battle||battleDat).collision[String(defender.anim)]?.[Math.max(0,defender.elem-1)]?.c2||[],defender.x,defender.y,defender.facing);
  const overlap=atk.some(a=>body.some(b=>rectOverlap(a,b)));
  if(!frame?.hitDef?.params)return {contact:false};
  const hitflag=String(frame.hitDef.params?.hitflag||'MAF'),eligible=(defender.type==='A'?hitflag.includes('A'):hitflag.includes('M')||hitflag.includes(defender.type==='C'?'L':'H'))&&(!defender.getHit?.fall||defender.moveType!=='H'||hitflag.includes('F'));
