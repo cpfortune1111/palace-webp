@@ -19,7 +19,7 @@ export function createSettingsPresentation(){
  if(!p.crescent.front)crescent();
  shape(ctx,art[1],p.heart.x,p.heart.y,p.heart.width,p.heart.width,'#E763B9',5,p.heart.opacity,p.heart.scaleX);
  if(p.trail.visible||p.sparkle.visible){ctx.save();ctx.globalAlpha*=p.heart.opacity;ctx.translate(640+p.heart.x,360+p.heart.y);ctx.scale(p.heart.scaleX,1);const scale=p.heart.width/100,index=Math.min(400,Math.floor(p.sparkle.progress*400));
- if(p.trail.visible){ctx.beginPath();for(let i=0;i<=index;i++){const [x,y]=points[i];i?ctx.lineTo(x*scale,y*scale):ctx.moveTo(x*scale,y*scale)}ctx.strokeStyle='#fff';ctx.lineWidth=2.5*p.trail.width;ctx.setLineDash([120,80,70,20,30,10,20]);ctx.shadowColor='#fff';ctx.shadowBlur=2*p.trail.width;if(p.trail.width>0)ctx.stroke()}
+ if(p.trail.visible){ctx.beginPath();for(let i=0;i<=index;i++){const [x,y]=points[i];i?ctx.lineTo(x*scale,y*scale):ctx.moveTo(x*scale,y*scale)}ctx.strokeStyle='#fff';ctx.lineWidth=2.5*p.trail.width;ctx.setLineDash([120,80,70,20,30,10,20]);ctx.shadowColor='rgba(255,255,255,'+p.trail.width+')';ctx.shadowBlur=2;if(p.trail.width>0)ctx.stroke()}
  if(p.sparkle.visible&&p.sparkle.scale>0){const [x,y]=points[index],size=100*p.sparkle.scale;ctx.shadowColor='#fff';ctx.shadowBlur=5;ctx.filter='blur(2.5px)';ctx.drawImage(art[2],x*scale-size/2,y*scale-size/2,size,size);ctx.filter='none'}ctx.restore()}
  for(const h of p.hearts)shape(ctx,art[1],h.x,h.y,h.width,h.width,'#E763B9',5);
  if(p.crescent.front)crescent();ctx.restore()}
