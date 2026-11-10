@@ -1,4 +1,4 @@
-import {createRoundPresentation} from './round-presentation.js?v=02408r35';
+import {createRoundPresentation} from './round-presentation.js?v=02408r36';
 import {assetUrl} from './asset-paths.js?v=02362';
 export function createRoundView(api){
  const canvas=document.createElement('canvas');canvas.id='roundAnnouncements';canvas.style.cssText='position:fixed;inset:0;z-index:7;pointer-events:none';document.body.appendChild(canvas);const context=canvas.getContext('2d');

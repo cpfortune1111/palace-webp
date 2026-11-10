@@ -1,7 +1,7 @@
 import {menuArtworkReady,drawModeHeading} from './menu-artwork.js?v=02408r33';
 import {navigationReady,navigationArtwork} from './artwork-navigation.js?v=02408r33';
 import {assetUrl} from './asset-paths.js?v=02362';
-import {createLoadingScreen} from './loading-screen.js?v=02408r25';
+import {createLoadingScreen} from './loading-screen.js?v=02408r36';
 import {createQuotePortrait,preloadQuoteAssets} from './quote-animation.js?v=02408r13';
 import {preloadPresentationPack,preloadPresentationPortraits} from './presentation-preload.js?v=02408r25';
 export function createSelectScreen(parent,api){

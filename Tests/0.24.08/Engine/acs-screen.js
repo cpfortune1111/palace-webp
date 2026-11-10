@@ -1,6 +1,6 @@
 import {navigationReady,navigationArtwork} from './artwork-navigation.js?v=02408r32';
 import {createQuotePortrait} from './quote-animation.js?v=02408r13';
-import {createDeclarationScreen} from './declaration-screen.js?v=02408r13';
+import {createDeclarationScreen} from './declaration-screen.js?v=02408r36';
 import {abilityKeys,abilityBudget,abilityProfile,changeAbility} from './ability-system.js?v=acs1';
 import {lightSeeds,drawFallingLights} from './falling-lights.js?v=02368';
 export function createAcsScreen(parent,api){
