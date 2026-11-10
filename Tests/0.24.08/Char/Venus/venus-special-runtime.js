@@ -96,18 +96,20 @@ export function createSpecialRuntime(api){
   entity.hitPause=result.attackerPause;
   if(entity.kind==='projectile')consumeProjectileContact(entity,result.guarded);
  }
+ const cyclone=entity=>entity.kind==='projectile'&&entity.id===1150&&api.data(entity.player).character==='SailorJupiter';
  function consumeProjectileContact(entity,guarded=false){
    if(entity.removing||entity.destroyed||!entity.activeHitDef)return;
    api.event?.(guarded?'guard':'hit',entity);projectileContacts.set(entity.player+':'+entity.id,{tick:api.tick(),guarded});
    entity.moveContact=1;entity.moveHit=guarded?0:1;entity.moveGuarded=guarded?1:0;entity.hitSpent=true;
    entity.remainingHits=(entity.remainingHits??Math.max(1,Number(entity.params.projhits)||1))-1;
    if(entity.remainingHits>0){entity.hitSpent=false;entity.nextHitTick=api.tick()+Math.max(1,Number(entity.params.projmisstime)||0);entity.activeHitDef={...entity.activeHitDef,hitKey:entity.key+':'+(++serial)};return;}
+   if(cyclone(entity)){entity.hitSpent=true;return;}
    entity.activeHitDef=null;entity.removing=true;entity.anim=Number(entity.params.projhitanim??-1);entity.time=0;entity.animStartTime=0;entity.elem=1;entity.elemTick=0;entity.vx=0;entity.vy=0;
    if(entity.anim<0)entity.destroyed=true;
  }
  function removeProjectile(entity,reason){api.event?.(reason,entity);entity.removeReason=reason;
   entity.removing=true;entity.activeHitDef=null;entity.vx=0;entity.vy=0;
-  const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??entity.params.projhitanim??-1;
+  const selected=entity.params[reason==='cancel'?'projcancelanim':'projremanim']??(cyclone(entity)?entity.params.projremanim:undefined)??entity.params.projhitanim??-1;
   if(selected!==undefined){entity.anim=Number(selected);entity.time=0;entity.elem=1;entity.elemTick=0}
   else entity.time=api.frames(entity.anim,entity.player).slice(0,entity.elem-1).reduce((total,frame)=>total+Math.max(1,Number(frame.time)||1),0)+entity.elemTick;
   entity.animStartTime=0;if(entity.anim<0||api.duration(entity.anim,entity.player)<=0)entity.destroyed=true;
@@ -126,31 +128,31 @@ export function createSpecialRuntime(api){
     if(entity.state!==previous)continue;
     if(entity.bindUntil>entity.time){const parent=root(entity.player);entity.x=parent.x+(entity.bindOffset[0]||0)*parent.facing;entity.y=parent.y+(entity.bindOffset[1]||0);entity.facing=parent.facing}
    }else if(!entity.removing){
+    if((api.character?.(entity.player)||api.data(entity.player).character)==='SailorVenus'&&entity.id===1150){const top=api.projectileTop?.(entity)||0;if(entity.y+top+Math.min(0,entity.vy)<=api.cameraTop()){entity.y=api.cameraTop()-top;entity.params.projremanim=9041;removeProjectile(entity,'camera-top')}else entity.removetime=-1;}
     const invisible=entity.scale.every(value=>value===0);
-    const outside=!invisible&&api.projectileOutside?.(entity);if(!outside)entity.enteredViewport=true;if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&outside&&(entity.enteredViewport||api.projectileEscapedHorizontal?.(entity))){entity.destroyed=true;entity.removeReason='viewport-exit';continue}
-    if(entity.removetime===0)removeProjectile(entity,'expire');
-    if(entity.removetime>0)entity.removetime--;
+    const outside=!entity.removing&&!invisible&&api.projectileOutside?.(entity);if(!outside)entity.enteredViewport=true;if(invisible&&entity.parentKey&&!entities.some(parent=>parent.key===entity.parentKey&&!parent.destroyed)||!invisible&&outside&&(entity.enteredViewport||api.projectileEscapedHorizontal?.(entity))){entity.destroyed=true;entity.removeReason='viewport-exit';continue}
+    if(!entity.removing&&(entity.removetime===0||entity.removetime>0&&--entity.removetime===0))removeProjectile(entity,'expire');
    }
    if(entity.moveContact>0)entity.moveContact++;if(entity.moveHit>0)entity.moveHit++;if(entity.moveGuarded>0)entity.moveGuarded++;
    stepped.push(entity);
   }
   const projectiles=entities.filter(entity=>!entity.removing&&!entity.destroyed&&entity.activeHitDef&&(entity.kind==='projectile'||String(entity.activeHitDef.params.attr).split(',')[1]?.trim().toUpperCase().endsWith('P')));
   for(let first=0;first<projectiles.length;first++)for(let second=first+1;second<projectiles.length;second++){
-   const left=projectiles[first],right=projectiles[second];if(left.destroyed||right.destroyed||left.removing||right.removing||left.player===right.player||!(api.collision({...left,hitDef:left.activeHitDef},right).overlap||api.collision({...right,hitDef:right.activeHitDef},left).overlap))continue;
-   // Moon's hittable tiara consumes an ordinary projectile on cancellation.
-   // HitDef priority is not Projectile projpriority; don't compare those namespaces.
+   const left=projectiles[first],right=projectiles[second];if(left.destroyed||right.destroyed||left.removing||right.removing||left.player===right.player||!(api.projectileClash?api.projectileClash(left,right):(api.collision({...left,hitDef:left.activeHitDef},right).overlap||api.collision({...right,hitDef:right.activeHitDef},left).overlap)))continue;
+   // Moon Palace: tiara trades with ordinary projectiles below tier5.
+   // Tier5+ uses the effective helper/Projectile cancellation priority.
    const tiara=e=>e.kind==='helper'&&e.id===1050&&api.data(e.player).character==='SailorMoon',ordinary=e=>e.kind==='projectile'&&/^[NS]P$/i.test(String(e.activeHitDef.params.attr).split(',')[1]?.trim()||'');
-   const mutual=tiara(left)&&ordinary(right)||tiara(right)&&ordinary(left);
+   const mutual=tiara(left)&&ordinary(right)&&right.priority<5||tiara(right)&&ordinary(left)&&left.priority<5;
    const [leftHits,rightHits]=mutual?[true,true]:resolveHitPriority(left.kind==='projectile'?left.priority:left.activeHitDef.params.priority,right.kind==='projectile'?right.priority:right.activeHitDef.params.priority);
-   const cancel=entity=>{if(entity.kind==='projectile')removeProjectile(entity,'cancel');else{api.event?.('cancel',entity);if(entity.overrideState!==undefined){enter(entity,entity.overrideState);for(const [index,controller] of api.data(entity.player).helperStates[String(entity.state)].controllers.entries())helperController(entity,controller,index)}else{entity.destroyed=true;entity.removeReason='projectile-priority'}}};
+   const cancel=entity=>{if(entity.kind==='projectile')removeProjectile(entity,'cancel');else{entity.cancelled=true;api.event?.('cancel',entity);if(entity.overrideState!==undefined){enter(entity,entity.overrideState);for(const [index,controller] of api.data(entity.player).helperStates[String(entity.state)].controllers.entries())helperController(entity,controller,index)}else{entity.destroyed=true;entity.removeReason='projectile-priority'}}};
    if(rightHits)cancel(left);if(leftHits)cancel(right);
   }
   const overrides=[];
-  for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed)){
+  for(const helper of entities.filter(entity=>entity.kind==='helper'&&!entity.destroyed&&!entity.cancelled)){
    const opponent=root(helper.player===1?2:1),attacks=[api.attack(opponent),...entities.filter(entity=>entity.player!==helper.player&&!entity.destroyed&&entity.activeHitDef).map(entity=>({...entity,hitDef:entity.activeHitDef}))];
    const attack=helper.hitBy&&attacks.find(attack=>{if(!attack?.hitDef?.params||attack.removing||attack.destroyed||helper.notHitBy?.until>api.tick()&&excludesHit(helper.notHitBy.value,attack.hitDef.params.attr))return false;if(helper.activeHitDef&&!resolveHitPriority(helper.activeHitDef.params.priority,attack.kind==='projectile'?attack.priority:attack.hitDef.params.priority)[1])return false;const [stance,kind]=String(attack.hitDef.params.attr).toUpperCase().split(',').map(value=>value.trim()),allowed=helper.hitBy.toUpperCase().split(',').map(value=>value.trim());return allowed[0].includes(stance)&&allowed.slice(1).some(value=>(value[0]==='A'||value[0]===kind?.[0])&&value[1]===kind?.[1])&&api.collision(attack,helper).contact});if(attack)overrides.push({helper,attack});
   }
-  for(const {helper,attack} of overrides){const projectile=attack.kind==='projectile'?entities.find(entity=>entity.key===attack.key):null;if(projectile&&(projectile.removing||projectile.destroyed))continue;enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index);if(projectile)consumeProjectileContact(projectile)
+  for(const {helper,attack} of overrides){const projectile=attack.kind==='projectile'?entities.find(entity=>entity.key===attack.key):null;if(projectile&&(projectile.removing||projectile.destroyed))continue;helper.cancelled=true;enter(helper,helper.overrideState);for(const [index,controller] of api.data(helper.player).helperStates[String(helper.state)].controllers.entries())helperController(helper,controller,index);if(projectile)consumeProjectileContact(projectile)
   }
   for(const entity of stepped){if(entity.destroyed)continue;if(!entity.removing)hit(entity);if(!entity.positionFrozen){entity.x+=entity.vx;entity.y+=entity.vy}entity.time++;api.advance(entity);if(entity.removing&&entity.time>=api.duration(entity.anim,entity.player))entity.destroyed=true}
   for(let index=entities.length-1;index>=0;index--)if(entities[index].destroyed){api.event?.('remove',entities[index],entities[index].removeReason||'state-or-animation');entities.splice(index,1)};

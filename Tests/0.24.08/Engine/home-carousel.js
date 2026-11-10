@@ -1,4 +1,4 @@
-import {menuArtworkReady,drawHomeArtwork} from './menu-artwork.js?v=02408r33';
+import {menuArtworkReady,drawHomeArtwork} from './menu-artwork.js?v=02408r39';
 // The menu uses logical 1280x720 coordinates, matching the title artwork.
 export function createHomeCarousel(parent,api){
  const labels=['Arcade','VS','Training','Watch','Settings'],count=labels.length,row=48;
