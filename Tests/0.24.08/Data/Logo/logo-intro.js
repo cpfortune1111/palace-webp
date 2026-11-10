@@ -5,7 +5,7 @@ export function logoLetterPose(tick,index,config){
  return letterBouncePose(age,config.letterDuration-17*index/9);
 }
 
-export function createLogoIntro(onFadeIn,{preload=Promise.resolve(),onFirstLetter=()=>{},onLoadError}={}){
+export function createLogoIntro(onFadeIn,{skipNotice=false,preload=Promise.resolve(),onFirstLetter=()=>{},onLoadError}={}){
  const overlay=document.createElement('canvas');overlay.id='logoIntro';overlay.setAttribute('aria-label','TsukinoAi+ logo animation');overlay.style.cssText='position:fixed;inset:0;width:100%;height:100%;z-index:100;background:white;touch-action:none';document.body.appendChild(overlay);
  const context=overlay.getContext('2d');let config,lastFrame=null,tick=0,finished=false,animationFrame,phase='notice',fadeTick=0;let resolveFinished,firstLetter=false;
  const notice=document.createElement('div');notice.id='importantNotice';notice.style.cssText='position:fixed;inset:0;z-index:101;background:white;display:flex;align-items:center;justify-content:center;touch-action:none;cursor:pointer';
@@ -16,6 +16,7 @@ export function createLogoIntro(onFadeIn,{preload=Promise.resolve(),onFirstLette
  function fitNotice(){noticeText.style.transform='scale('+Math.min(innerWidth/1280,innerHeight/720)+')'}
  function startNotice(event){if(phase!=='notice')return;if(event.type==='keydown'&&(event.repeat||event.ctrlKey||event.altKey||event.metaKey||!['Enter','KeyA','KeyB','KeyX','KeyY','KeyZ','KeyS','Numpad1','Numpad2','Numpad0','NumpadDecimal'].includes(event.code)))return;event.preventDefault();event.stopImmediatePropagation();started=true;notice.remove();window.removeEventListener('keydown',startNotice,true);window.removeEventListener('resize',fitNotice);if(loaded){phase='logo';lastFrame=null;render(0);animationFrame=requestAnimationFrame(animateLogo)}}
  notice.addEventListener('pointerdown',startNotice);window.addEventListener('keydown',startNotice,true);window.addEventListener('resize',fitNotice);fitNotice();requestAnimationFrame(()=>requestAnimationFrame(()=>{noticeText.style.opacity='1'}));
+ if(skipNotice){started=true;notice.remove();window.removeEventListener('keydown',startNotice,true);window.removeEventListener('resize',fitNotice)}
  const done=new Promise(resolve=>{resolveFinished=resolve});
  const load=async entry=>{const image=new Image();image.src=assetUrl('./'+entry.file);try{await image.decode()}catch(error){error.resource=image.src;throw error}const bitmap=await createImageBitmap(image);return {...entry,image:bitmap}};
  const ready=fetch(assetUrl('./logo-intro.json?v=02362')).then(response=>{if(!response.ok)throw Error('Logo configuration');return response.json()}).then(async data=>{
