@@ -982,7 +982,7 @@ function dispatchGroundCommands(){
  }
  vx=0;if(state!==0)enterIRState(0);
 }
-function customAnimationEndsInState(player,number){return !!customStateOwners[player-1]&&withCharacter(player,()=>sourceState(number)?.controllers?.some(c=>['SelfState','ChangeState','ChangeAnim','ChangeAnim2'].includes(c.type)&&[...(c.triggerall||[]),...Object.values(c.triggers||{}).flat()].some(t=>/animtime/i.test(t))))}
+function animationEndsInState(player,number){return (!!customStateOwners[player-1]||(number===801&&battleCharacters[player-1]==="SailorJupiter"))&&withCharacter(player,()=>sourceState(number)?.controllers?.some(c=>['SelfState','ChangeState','ChangeAnim','ChangeAnim2'].includes(c.type)&&[...(c.triggerall||[]),...Object.values(c.triggers||{}).flat()].some(t=>/animtime/i.test(t))))}
 function advanceAirOneTick(){return withCharacter(1,()=>advanceAirOneTickForCharacter())}
 function advanceAirOneTickForCharacter(){
  if(current===5||current===6)return;
@@ -994,7 +994,7 @@ function advanceAirOneTickForCharacter(){
  if(ticks>=dur){
    ticks=0;
    if(fi<frames.length-1)fi++;
-   else if(customAnimationEndsInState(1,state)){ticks=Math.max(0,dur-1)}
+   else if(animationEndsInState(1,state)){ticks=Math.max(0,dur-1)}
    else if(!(state===12&&current===12)&&![1000,1100,1200,3000,3005].includes(state)){const loop=battleDat.loopStarts?.[String(current)]??0;fi=loop;if(loop>0)p1AnimStartTime+=actionDuration(current)-frames.slice(0,loop).reduce((total,frame)=>total+Math.max(1,frame.time),0)}
  }
 }
@@ -1027,7 +1027,7 @@ function advanceFighterAirOneTickForCharacter(f){
  if(f.elemTick>=Math.max(1,Number(el.time)||1)){
    f.elemTick=0;
    if(f.elem<frames.length)f.elem++;
-   else if(!f.kind&&customAnimationEndsInState(fighterPlayer(f),f.state)){f.elemTick=Math.max(0,Number(el.time)-1)}
+   else if(!f.kind&&animationEndsInState(fighterPlayer(f),f.state)){f.elemTick=Math.max(0,Number(el.time)-1)}
    else if(!(f.state===12&&f.anim===12)&&![1000,1100,1200,3000,3005].includes(f.state)&&!battleDat?.fallStates?.[String(f.state)]&&![120,121,140,141,5000,5001,5002,5010,5011,5012,5020,5021,5022].includes(f.anim)){const loop=battleDat.loopStarts?.[String(f.anim)]??0;f.elem=loop+1;if(loop>0)f.animStartTime=(f.animStartTime||0)+actionDuration(f.anim)-frames.slice(0,loop).reduce((total,frame)=>total+Math.max(1,frame.time),0)}
  }
 }
