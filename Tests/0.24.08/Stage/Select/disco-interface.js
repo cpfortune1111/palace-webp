@@ -20,7 +20,7 @@ function mirrorMaterial(opacity, overlay) {
    void main(){
     vec3 sphere=normalize(surface);
     vec2 tile=vec2(atan(sphere.x,sphere.z)/6.2831853+.5,asin(sphere.y)/3.1415927+.5)*vec2(104.0,52.0);
-    vec2 cell=floor(tile), local=fract(tile);
+    vec2 cell=floor(tile);
     float seed=hash(cell);
     vec3 normal=normalize(cross(dFdx(surface),dFdy(surface)));
     if(dot(normal,sphere)<0.0)normal=-normal;
@@ -29,9 +29,8 @@ function mirrorMaterial(opacity, overlay) {
     float soft=pow(max(0.0,dot(reflected,normalize(vec3(-.65,.55,1.0)))),8.0);
     float strip=pow(max(0.0,dot(reflected,normalize(vec3(.45,-.15,1.0)))),45.0);
     float rim=pow(1.0-abs(sphere.z),3.0);
-    float seam=1.0-smoothstep(.015,.095,min(min(local.x,1.0-local.x),min(local.y,1.0-local.y)));
     vec3 color=mix(vec3(.007,.018,.075),vec3(.035,.28,.95),pow(seed,1.8));
-    color+=vec3(.12,.52,1.0)*(soft*.88+rim*1.45+seam*.22);
+    color+=vec3(.12,.52,1.0)*(soft*.88+rim*1.45);
     color+=vec3(.74,.92,1.0)*strip*(.8+seed*2.2);
     gl_FragColor=vec4(color,coverage);
     #include <colorspace_fragment>
@@ -77,12 +76,22 @@ export function createDiscoInterface(model,camera){const regions=new Map(),portr
       const outer=region.path[i].clone().add(region.path[i].clone().normalize().multiplyScalar(normalLength));
       outer.applyMatrix4(region.node.matrixWorld).project(camera);
       const x=(outer.x+1)*640,y=(1-outer.y)*360;
-      if(Math.hypot(x-a.x,y-a.y)>.1){
-       const light=ctx.createLinearGradient(a.x,a.y,x,y);
-       light.addColorStop(0,color);light.addColorStop(1,color+'00');
-       ctx.shadowBlur=0;ctx.fillStyle=light;ctx.globalAlpha=.65;
-       ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
-       ctx.lineTo(b.x+x-a.x,b.y+y-a.y);ctx.lineTo(x,y);ctx.closePath();ctx.fill();
+      const reach=Math.hypot(x-a.x,y-a.y);
+      if(reach<.1)continue;
+      const samples=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)/3));
+      ctx.shadowBlur=0;
+      for(let sample=0;sample<samples;sample++){
+       const along=sample/samples;
+       const px=a.x+(b.x-a.x)*along,py=a.y+(b.y-a.y)*along;
+       for(let layer=1;layer<=3;layer++){
+        const distance=layer/4;
+        const cx=px+(x-a.x)*distance,cy=py+(y-a.y)*distance;
+        const radius=4+distance*reach*.45;
+        const light=ctx.createRadialGradient(cx,cy,0,cx,cy,radius);
+        light.addColorStop(0,color);light.addColorStop(1,color+'00');
+        ctx.fillStyle=light;ctx.globalAlpha=.24*(1-distance);
+        ctx.fillRect(cx-radius,cy-radius,radius*2,radius*2);
+       }
       }
      }
      ctx.globalAlpha=1;ctx.shadowBlur=12;ctx.strokeStyle=color;ctx.lineWidth=2.5;
