@@ -1,5 +1,7 @@
 const clamp=n=>Math.max(0,Math.min(1,n)),lerp=(a,b,t)=>a+(b-a)*clamp(t),between=(t,a,b)=>clamp((t-a)/(b-a));
 const heartPath='M50,90.6c0-12.2,50-15.6,50-51.9,0-18.3-13.3-29.2-29.2-29.2-11.8,0-20.8,8.9-20.8,8.9,0,0-9-8.9-20.8-8.9S0,20.4,0,38.7c0,36.3,50,39.8,50,51.9Z';
+const trailDashes=[120,80,70,20,30,10,20];
+const trailLength=trailDashes.reduce((total,dash)=>total+dash,0);
 export function settingsPose(t){
  const c=between(t,144,156),h=between(t,20,144),small=between(t,144,160),turn=(Math.max(0,t-152)%30),smooth=n=>(1-Math.cos(Math.PI*clamp(n)))/2;
  const spin=t<152?1:turn<13.5?lerp(1,.2,smooth(turn/13.5)):turn<16.5?.2:lerp(.2,1,smooth((turn-16.5)/13.5));
@@ -19,9 +21,21 @@ export function createSettingsPresentation(){
  const crescent=()=>shape(ctx,art[0],p.crescent.x,p.crescent.y,p.crescent.height,p.crescent.height,'#FFE868',10);
  if(!p.crescent.front)crescent();
  shape(ctx,art[1],p.heart.x,p.heart.y,p.heart.width,p.heart.height,'#E763B9',5,p.heart.opacity,p.heart.scaleX);
- if(p.trail.visible||p.sparkle.visible){ctx.save();ctx.globalAlpha*=p.heart.opacity;ctx.translate(640+p.heart.x,360+p.heart.y);ctx.scale(p.heart.scaleX,1);const scale=p.heart.width/100,index=Math.min(400,Math.floor(p.sparkle.progress*400));
- if(p.trail.visible){ctx.beginPath();for(let i=0;i<=index;i++){const [x,y]=points[i];i?ctx.lineTo(x*scale,y*scale):ctx.moveTo(x*scale,y*scale)}ctx.strokeStyle='#fff';ctx.lineWidth=2.5*p.trail.width;ctx.setLineDash([120,80,70,20,30,10,20]);ctx.shadowColor='rgba(255,255,255,'+p.trail.width+')';ctx.shadowBlur=2;if(p.trail.width>0)ctx.stroke()}
- if(p.sparkle.visible&&p.sparkle.scale>0){const [x,y]=points[index],size=100*p.sparkle.scale;ctx.drawImage(art[2],x*scale-size/2,y*scale-size/2,size,size);}ctx.restore()}
+ if(p.trail.visible||p.sparkle.visible){ctx.save();ctx.globalAlpha*=p.heart.opacity;ctx.translate(640+p.heart.x,360+p.heart.y);ctx.scale(p.heart.scaleX,1);const scale=p.heart.width/100;
+ function pointAt(progress){
+  const sample=((progress%1+1)%1)*400;
+  const i=Math.floor(sample),fraction=sample-i;
+  return [lerp(points[i][0],points[i+1][0],fraction)*scale,lerp(points[i][1],points[i+1][1],fraction)*scale];
+ }
+ if(p.trail.visible&&p.trail.width>0){
+  const span=trailLength/(length*scale);
+  const start=p.trail.progress-span,steps=Math.ceil(span*400);
+  ctx.beginPath();ctx.moveTo(...pointAt(start));
+  for(let i=1;i<=steps;i++)ctx.lineTo(...pointAt(start+span*i/steps));
+  ctx.strokeStyle='#fff';ctx.lineWidth=2.5*p.trail.width;ctx.setLineDash(trailDashes);
+  ctx.shadowColor='rgba(255,255,255,'+p.trail.width+')';ctx.shadowBlur=2;ctx.stroke();
+ }
+ if(p.sparkle.visible&&p.sparkle.scale>0){const [x,y]=pointAt(p.sparkle.progress),size=100*p.sparkle.scale;ctx.drawImage(art[2],x-size/2,y-size/2,size,size);}ctx.restore()}
  for(const h of p.hearts)shape(ctx,art[1],h.x,h.y,h.width,h.width,'#E763B9',5);
  if(p.crescent.front)crescent();ctx.restore()}
  return {ready,begin(){age=0;active=true;closing=false;closeAge=0},close(){closing=true;closeAge=0},reset(){active=false;closing=false},step(seconds){if(active){age+=seconds*60;if(closing)closeAge+=seconds*60}},draw,snapshot,seek(t){age=Math.max(0,t)}};

@@ -1,5 +1,5 @@
 import {createContinueScreen} from './continue-screen.js?v=02408r39';
-import {createSettingsPresentation} from './settings-presentation.js?v=02408r39';
+import {createSettingsPresentation} from './settings-presentation.js?v=02408r42';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
 import {createMenuAudio} from './menu-audio.js?v=02408r13';
