@@ -1,5 +1,5 @@
-import {createVersusModel,versusPose} from './versus-model.js?v=02408r40';
-import {createDeclarationFlow} from './declaration-flow.js?v=02408r40';
+import {createVersusModel,versusPose} from './versus-model.js?v=02408r43';
+import {createDeclarationFlow} from './declaration-flow.js?v=02408r43';
 import {createQuotePortrait,quoteDuration} from './quote-animation.js?v=02408r40';
 export function createDeclarationScreen(api){
  const portraits=[createQuotePortrait(),createQuotePortrait()];let variants=[],active=false,preparedPlayers=[];

@@ -1,5 +1,5 @@
 import {createContinueScreen} from './continue-screen.js?v=02408r39';
-import {createSettingsPresentation} from './settings-presentation.js?v=02408r42';
+import {createSettingsPresentation} from './settings-presentation.js?v=02408r43';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
 import {createMenuAudio} from './menu-audio.js?v=02408r13';
@@ -9,7 +9,7 @@ import {assetUrl} from './asset-paths.js?v=02362';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=02408r39';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02408r39';
 import {createSelectScreen} from './select-screen.js?v=02408r40';
-import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r40';
+import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r43';
 import {createAcsScreen} from './acs-screen.js?v=02408r39';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
 import {createLoadingScreen} from './loading-screen.js?v=02408r39';

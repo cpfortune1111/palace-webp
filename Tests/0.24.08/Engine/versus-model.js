@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 let shared;
-export function versusPose(ticks,exitAge=null){if(exitAge!==null){const t=Math.min(1,Math.max(0,exitAge/112));return {angle:-Math.PI*6-Math.PI*3.5*t,height:.2*(1-t),turns:3+1.75*t,fade:Math.min(1,Math.max(0,(exitAge-96)/36))}}const t=Math.min(1,Math.max(0,ticks/96));return {angle:-Math.PI*6*t,height:.6-.4*t,turns:3*t,fade:0}}
+export function versusPose(ticks,exitAge=null){if(exitAge!==null){const t=Math.min(1,Math.max(0,exitAge/56));return {angle:-Math.PI*6-Math.PI*3.5*t,height:.2*(1-t),turns:3+1.75*t,fade:Math.min(1,Math.max(0,(exitAge-48)/18))}}const t=Math.min(1,Math.max(0,ticks/96));return {angle:-Math.PI*6*t,height:.6-.4*t,turns:3*t,fade:0}}
 export function createVersusModel(){if(shared)return shared;const renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,preserveDrawingBuffer:true,powerPreference:'low-power'});renderer.setPixelRatio(1);renderer.setSize(1280,720,false);renderer.setClearColor(0x000000,0);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
 const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(-16/9,16/9,1,-1,.01,100);camera.position.set(0,0,10);camera.lookAt(0,0,0);const pivot=new THREE.Group();scene.add(pivot);const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();
 const panels=[

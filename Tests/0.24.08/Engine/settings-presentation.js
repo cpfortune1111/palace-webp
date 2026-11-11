@@ -9,7 +9,7 @@ export function settingsPose(t){
  const heart={height,x:0,y:t<=144?20:t<=152?lerp(20,-27,between(t,144,152)):lerp(-27,-252,between(t,152,160)),width:t<=144?lerp(860,535,h):t<=152?lerp(535,120,between(t,144,152)):lerp(120,136,between(t,152,160)),opacity:between(t,20,44),scaleX:spin};
  const top=[[-109,-45,-424,-238],[-70,52,-232,-238],[70,52,232,-238],[109,-45,424,-238]],bottom=[[-72,42,-414,268],[-25.5,66,-138,268],[25.5,66,138,268],[72,42,414,268]];
  const hearts=t<144?[]:[...top.map(p=>({x:lerp(p[0],p[2],small),y:lerp(p[1],p[3],small),width:lerp(136,86,small)})),...bottom.map(p=>({x:lerp(p[0],p[2],small),y:lerp(p[1],p[3],small),width:lerp(136,108,small)}))];
- return {tick:t,background:between(t,28,68),crescent:{x:lerp(-7,28.5,c),y:lerp(6,0,c),height:t<60?lerp(1840,104,t/60):lerp(104,620,c),front:t<=156},heart,hearts,sparkle:{visible:t>=20&&t<133,scale:1-between(t,120,132),progress:.86*between(t,20,120)},trail:{visible:t>=20&&t<132,width:1-between(t,120,132),progress:.86*between(t,20,120)},controls:between(t,160,172)};
+ return {tick:t,background:between(t,28,68),crescent:{x:lerp(-7,28.5,c),y:lerp(6,0,c),height:t<144?lerp(1840,104,t/144):lerp(104,620,c),front:t<=156},heart,hearts,sparkle:{visible:t>=20&&t<133,scale:1-between(t,120,132),progress:.86*between(t,20,120)},trail:{visible:t>=20&&t<132,width:1-between(t,120,132),progress:.86*between(t,20,120)},controls:between(t,160,172)};
 }
 async function image(name){const img=new Image();img.src=new URL('../Data/Settings/'+name+'.webp?v=02408r38',import.meta.url);await img.decode();return img}
 export function createSettingsPresentation(){
@@ -29,9 +29,9 @@ export function createSettingsPresentation(){
  }
  if(p.trail.visible&&p.trail.width>0){
   const span=trailLength/(length*scale);
-  const start=p.trail.progress-span,steps=Math.ceil(span*400);
-  ctx.beginPath();ctx.moveTo(...pointAt(start));
-  for(let i=1;i<=steps;i++)ctx.lineTo(...pointAt(start+span*i/steps));
+  const head=p.sparkle.progress,steps=Math.ceil(span*400);
+  ctx.beginPath();ctx.moveTo(...pointAt(head));
+  for(let i=1;i<=steps;i++)ctx.lineTo(...pointAt(head-span*i/steps));
   ctx.strokeStyle='#fff';ctx.lineWidth=2.5*p.trail.width;ctx.setLineDash(trailDashes);
   ctx.shadowColor='rgba(255,255,255,'+p.trail.width+')';ctx.shadowBlur=2;ctx.stroke();
  }
