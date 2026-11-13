@@ -1,7 +1,7 @@
 import {mirrorCharacters} from './disco-interface.js?v=layers2';
 
 const foreground={Moon:'Moo',Jupiter:'Jup',Venus:'Ven',Neptune:'Nep',Saturn:'Sat'};
-const offset=-52;
+const offset=-17;
 
 export function createCharacterTiles(parent){
  const layer=document.createElement('div');
