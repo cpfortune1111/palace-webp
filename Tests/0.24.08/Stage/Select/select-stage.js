@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
-import {createDiscoInterface} from './disco-interface.js?v=panorama1';
+import {createDiscoInterface} from './disco-interface.js?v=opaque1';
 export function createSelectStage(parent){
  const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.domElement.id='selectStage3D';renderer.domElement.style.cssText='position:absolute;pointer-events:none';parent.appendChild(renderer.domElement);
  const scene=new THREE.Scene();scene.background=new THREE.Color(0x061b40);const ballScene=new THREE.Scene();let ballCamera;scene.add(new THREE.HemisphereLight(0xd9faff,0x3977be,2));let camera,mixer,settings,disco,visible=false,time=0,accumulator=0,renderedFrames=0,pendingSelection={players:[],confirmed:[],available:[]};
@@ -19,5 +19,5 @@ export function createSelectStage(parent){
  renderer.render(ballScene,ballCamera);renderer.autoClear=autoClear;
  renderedFrames++}
  window.addEventListener('resize',resize);
- return {ready,setPortraits,setSelection(value){pendingSelection=value;disco?.setSelection(value)},pickCharacter:(x,y)=>disco?.pickCharacter(x,y),navigateCharacter:(id,x,y,ids)=>disco?.navigateCharacter(id,x,y,ids)||id,drawSurfaceGlares:ctx=>disco?.draw(ctx),render:dt=>{if(visible)render(dt)},setVisible:value=>{visible=value;if(!value)accumulator=0;renderer.domElement.hidden=!value},snapshot:()=>({loaded:!!disco,visible,time,fps:30,renderedFrames,portraitLayers:portraitMeshes.filter(m=>m.visible).length,disco:disco?.snapshot(),legacyEffectsBackup:'58ecfe3258b0c2954562124b1502838e17225725'})};
+ return {ready,setOpaque:value=>disco?.setOpaque(value),setPortraits,setSelection(value){pendingSelection=value;disco?.setSelection(value)},pickCharacter:(x,y)=>disco?.pickCharacter(x,y),navigateCharacter:(id,x,y,ids)=>disco?.navigateCharacter(id,x,y,ids)||id,drawSurfaceGlares:ctx=>disco?.draw(ctx),render:dt=>{if(visible)render(dt)},setVisible:value=>{visible=value;if(!value)accumulator=0;renderer.domElement.hidden=!value},snapshot:()=>({loaded:!!disco,visible,time,fps:30,renderedFrames,portraitLayers:portraitMeshes.filter(m=>m.visible).length,disco:disco?.snapshot(),legacyEffectsBackup:'58ecfe3258b0c2954562124b1502838e17225725'})};
 }
