@@ -34,19 +34,6 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
     vec2 uv=vec2(.5-atan(direction.y,direction.x)/6.2831853,
                  .5+asin(clamp(direction.z,-1.0,1.0))/3.1415927);
     vec3 color=texture2D(panorama,uv).rgb;
-    if(bloom.w>0.0){
-     vec3 glow=vec3(0.0);
-     for(int i=0;i<8;i++){
-      float theta=float(i)*.785398;
-      vec3 sampleColor=texture2D(panorama,uv+vec2(cos(theta),sin(theta))*.007*bloom.z).rgb;
-      float peak=max(sampleColor.r,max(sampleColor.g,sampleColor.b));
-      float knee=max(.001,bloom.y);
-      glow+=sampleColor*smoothstep(bloom.x-knee,bloom.x+knee,peak);
-     }
-     glow*=bloom.w/8.0;
-     if(bloomClamp>0.0)glow=min(glow,vec3(bloomClamp));
-     color+=glow*bloomColor;
-    }
     gl_FragColor=vec4(color,coverage);
     #include <colorspace_fragment>
    }`
@@ -54,7 +41,7 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
  material.opacity=opacity;
  return material;
 }
-export function createDiscoInterface(model,camera,panorama){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={mapping:{value:new THREE.Vector3(0,0,-2.0943951)},bloom:{value:new THREE.Vector4(.8,.5,1.75,0)},color:{value:new THREE.Color(0xffffff)},clamp:{value:0}};const rotation=new THREE.Vector3(0,0,-2.0943951),speed=new THREE.Vector3(0,0,.1075),phase=new THREE.Vector3();const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
+export function createDiscoInterface(model,camera,panorama){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={mapping:{value:new THREE.Vector3(0,0,-2.0943951)},bloom:{value:new THREE.Vector4(.8,.5,1.75,0)},color:{value:new THREE.Color(0xffffff)},clamp:{value:0}};const rotation=new THREE.Vector3(0,0,-2.0943951),speed=new THREE.Vector3(0,0,4*Math.PI/180),phase=new THREE.Vector3();const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
  model.traverse(node=>{if(!node.isMesh)return;const name=node.material.name;if(name.startsWith('Mirror.')){const id=mirrorCharacters[name.slice(7)];const backing=new THREE.Mesh(node.geometry,mirrorMaterial(1,false,reflectionTime,panorama));backing.material.depthWrite=false;backing.renderOrder=2;node.add(backing);node.material=mirrorMaterial(.2,true,reflectionTime,panorama);node.material.depthTest=false;node.renderOrder=4;const backdrop=new THREE.MeshBasicMaterial({color:backdropColors[id]??0x2459a5,depthWrite:false});regions.set(id,{node,backing,backdrop,mirror:backing.material,path:boundary(node.geometry)});}else if(name==='Mirror'){node.material=mirrorMaterial(1,false,reflectionTime,panorama);node.renderOrder=2}else if(portraitIds[name]){node.material=node.material.clone();node.material.transparent=true;node.material.depthWrite=false;node.material.side=THREE.DoubleSide;node.material.alphaTest=.01;node.renderOrder=3;portraits.set(mirrorCharacters[portraitIds[name]],node);if(name==='Tux')node.visible=false}});
  function setOpaque(enabled){for(const {node} of regions.values()){node.material.transparent=!enabled;node.material.uniforms.coverage.value=enabled?1:node.material.opacity;node.renderOrder=enabled?2:4}}
  function setSelection(next){players=next.players||[];confirmed=next.confirmed||[];available=new Set(next.available||[]);for(const[id,r]of regions){const factor=players.includes(id)?.05:.2;r.backing.material=available.has(id)&&backdropColors[id]!==undefined?r.backdrop:r.mirror;r.node.material.opacity=factor;r.node.material.uniforms.coverage.value=r.node.material.transparent?factor:1}for(const[id,node]of portraits)node.material.opacity=available.has(id)?1:.35}
