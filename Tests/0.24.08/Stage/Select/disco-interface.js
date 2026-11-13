@@ -26,7 +26,7 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
     if(dot(normal,sphere)<0.0)normal=-normal;
     normal=normalize(normal);
     vec3 reflected=reflect(vec3(0.0,0.0,-1.0),normal);
-    float angle=-2.0943951+reflectionTime*.43;
+    float angle=-2.0943951+reflectionTime*.1075;
     float c=cos(angle),s=sin(angle);
     reflected.xz=mat2(c,-s,s,c)*reflected.xz;
     vec3 direction=vec3(reflected.x,-reflected.z,reflected.y);

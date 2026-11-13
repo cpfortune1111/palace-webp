@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
-import {createDiscoInterface} from './disco-interface.js?v=opaque1';
+import {createDiscoInterface} from './disco-interface.js?v=opaque2';
 export function createSelectStage(parent){
  const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.domElement.id='selectStage3D';renderer.domElement.style.cssText='position:absolute;pointer-events:none';parent.appendChild(renderer.domElement);
  const scene=new THREE.Scene();scene.background=new THREE.Color(0x061b40);const ballScene=new THREE.Scene();let ballCamera;scene.add(new THREE.HemisphereLight(0xd9faff,0x3977be,2));let camera,mixer,settings,disco,visible=false,time=0,accumulator=0,renderedFrames=0,pendingSelection={players:[],confirmed:[],available:[]};
