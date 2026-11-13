@@ -1,9 +1,9 @@
-import {createDiscoBloom} from './disco-bloom.js?v=discoBloom1';
-import {createLegacyEffects} from './legacy-select-effects.js?v=layers1';
+import {createDiscoBloom} from './disco-bloom.js?v=layers2';
+import {createLegacyEffects} from './legacy-select-effects.js?v=layers2';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {assetUrl} from '../../Engine/asset-paths.js?v=02362';
-import {createDiscoInterface} from './disco-interface.js?v=layers1';
+import {createDiscoInterface} from './disco-interface.js?v=layers2';
 export function createSelectStage(parent){
  const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.domElement.id='selectStage3D';renderer.domElement.style.cssText='position:absolute;pointer-events:none';parent.appendChild(renderer.domElement);
  const bloom=createDiscoBloom(renderer);const scene=new THREE.Scene();scene.background=new THREE.Color(0x061b40);const ballScene=new THREE.Scene(),portraitLayer=new THREE.Scene();let ballCamera,legacy;scene.add(new THREE.HemisphereLight(0xd9faff,0x3977be,2));let camera,mixer,settings,disco,visible=false,time=0,accumulator=0,renderedFrames=0,pendingSelection={players:[],confirmed:[],available:[]};
@@ -18,8 +18,8 @@ export function createSelectStage(parent){
  ballScene.add(ball.scene);ball.scene.updateMatrixWorld(true);panorama.colorSpace=THREE.SRGBColorSpace;panorama.wrapS=THREE.RepeatWrapping;disco=createDiscoInterface(ball.scene,ballCamera,panorama,portraitLayer);legacy=createLegacyEffects(renderer,camera,center);disco.setOpaque(true);disco.setSelection(pendingSelection);resize();render(0)});
  function render(dt){if(!camera||!disco)return;time+=Math.max(0,dt);disco.step(Math.max(0,dt));accumulator+=Math.max(0,dt);const steps=Math.floor((accumulator+1e-9)*30);if(!steps&&renderedFrames)return;const elapsed=steps/30;accumulator-=elapsed;mixer.update(elapsed);renderer.render(scene,camera);
  const autoClear=renderer.autoClear;renderer.autoClear=false;renderer.clearDepth();
- bloom.draw(ballScene,ballCamera);renderer.clearDepth();renderer.render(portraitLayer,ballCamera);legacy.draw(time);renderer.autoClear=autoClear;
+ legacy.draw(time,true);bloom.draw(ballScene,ballCamera);renderer.clearDepth();renderer.render(portraitLayer,ballCamera);legacy.draw(time,false);renderer.autoClear=autoClear;
  renderedFrames++}
  window.addEventListener('resize',resize);
- return {ready,setLegacyEffect:(name,value)=>legacy?.set(name,value),tune:value=>{disco?.tune(value);bloom.tune(value)},setOpaque:value=>disco?.setOpaque(value),setPortraits,setSelection(value){pendingSelection=value;disco?.setSelection(value)},pickCharacter:(x,y)=>disco?.pickCharacter(x,y),navigateCharacter:(id,x,y,ids)=>disco?.navigateCharacter(id,x,y,ids)||id,drawSurfaceGlares:ctx=>{legacy?.drawSurfaceGlares(ctx);disco?.draw(ctx)},render:dt=>{if(visible)render(dt)},setVisible:value=>{visible=value;if(!value)accumulator=0;renderer.domElement.hidden=!value},snapshot:()=>({loaded:!!disco,visible,time,fps:30,renderedFrames,portraitLayers:portraitMeshes.filter(m=>m.visible).length,disco:disco?.snapshot(),legacyEffectsBackup:'58ecfe3258b0c2954562124b1502838e17225725'})};
+ return {ready,setLegacyEffect:(name,value)=>legacy?.set(name,value),tune:value=>{disco?.tune(value);bloom.tune(value)},setOpaque:value=>disco?.setOpaque(value),setPortraits,setSelection(value){pendingSelection=value;disco?.setSelection(value)},pickCharacter:(x,y)=>disco?.pickCharacter(x,y),navigateCharacter:(id,x,y,ids)=>disco?.navigateCharacter(id,x,y,ids)||id,drawSurfaceGlares:ctx=>{legacy?.drawSurfaceGlares(ctx);disco?.draw(ctx)},render:dt=>{if(visible)render(dt)},setVisible:value=>{visible=value;if(!value)accumulator=0;renderer.domElement.hidden=!value},snapshot:()=>({loaded:!!disco,orthographicWidth:ballCamera?ballCamera.right-ballCamera.left:null,modelCenter:ballScene.children[0]?.position.toArray(),visible,time,fps:30,renderedFrames,portraitLayers:portraitMeshes.filter(m=>m.visible).length,disco:disco?.snapshot(),legacyEffectsBackup:'58ecfe3258b0c2954562124b1502838e17225725'})};
 }

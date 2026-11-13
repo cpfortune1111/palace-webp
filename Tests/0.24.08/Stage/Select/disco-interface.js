@@ -104,9 +104,9 @@ export function createDiscoInterface(model,camera,panorama,portraitLayer){const 
     }else{
      const head=(time*.22+player*.5)*total;
      ctx.strokeStyle=color;ctx.shadowBlur=9;
-     for(let i=16;i>=0;i--){
+     for(let i=169;i>=0;i--){
       const a=pointAt(head-i*3),b=pointAt(head-(i+1)*3);
-      const strength=1-i/17;
+      const strength=1-i/170;
       ctx.globalAlpha=strength*strength;ctx.lineWidth=1+strength*3;
       ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
      }

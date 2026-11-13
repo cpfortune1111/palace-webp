@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export function createDiscoBloom(renderer) {
  const source=new THREE.WebGLRenderTarget(1,1,{samples:4});
  const blur=new THREE.WebGLRenderTarget(1,1,{depthBuffer:false});
- const settings={value:new THREE.Vector4(.8,.5,1.75,.05)};
+ const settings={value:new THREE.Vector4(1.5,2,2,.5)};
  const tint={value:new THREE.Color(0xffffff)},limit={value:0};
  const scene=new THREE.Scene(),camera=new THREE.Camera();
  const vertexShader=`varying vec2 uvScreen;

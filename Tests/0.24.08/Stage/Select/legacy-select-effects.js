@@ -3,7 +3,7 @@ import {lightSeeds} from '../../Engine/falling-lights.js?v=02368';
 import {effectPulse} from './select-effects-timing.js?v=selection8';
 export const legacyLayers=['Inner glow', 'Outer glow', 'Rear rays', 'Rear reflection star', 'Surface stars', 'Falling lights', 'Particle halos'];
 export function createLegacyEffects(renderer,camera,center){
- const scene=new THREE.Scene(),enabled=new Set(),surfaceGlares=[],rearGlares=[];
+ const scene=new THREE.Scene(),enabled=new Set(legacyLayers.filter(name=>name!=="Outer glow")),surfaceGlares=[],rearGlares=[];
  let time=0,innerGlow,outerGlow,glare,particles,particleHalos;
  const effects=new THREE.Group();scene.add(effects);
  const vertexShader='varying vec2 effectUv;void main(){effectUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}';
@@ -30,7 +30,7 @@ export function createLegacyEffects(renderer,camera,center){
  return {
   set(name,value){if(value)enabled.add(name);else enabled.delete(name)},
   drawSurfaceGlares,
-  draw(age){
+  draw(age,behind){
    if(!enabled.size)return;
    time=age;
    for(const [index,meshes] of layers.entries())for(const mesh of meshes)mesh.visible=enabled.has(legacyLayers[index]);
@@ -45,6 +45,14 @@ export function createLegacyEffects(renderer,camera,center){
    const uniforms=particles.material.uniforms;
    uniforms.time.value=time;uniforms.viewportScale.value=width/1280;uniforms.viewportHeight.value=height;
    renderer.getDrawingBufferSize(uniforms.viewportSize.value);
+      for(const [index,meshes] of layers.entries())for(const [part,mesh] of meshes.entries()){
+    if(index<5){mesh.visible=mesh.visible&&(behind===(index===2||index===3));continue}
+    const start=part*192,end=start+192,split=48*6;
+    const first=behind?start:Math.max(start,split);
+    const last=behind?Math.min(end,split):end;
+    mesh.visible=mesh.visible&&last>first;
+    if(mesh.visible)mesh.geometry.setDrawRange(first,last-first);
+   }
    renderer.render(scene,camera);
   }
  };
