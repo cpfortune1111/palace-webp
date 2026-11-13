@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Disco Ball character select preview</title><style>body{margin:0;background:#05050d;color:white;font:14px Arial}#preview{position:fixed;inset:0}header{position:fixed;z-index:1000;right:8px;top:8px;background:#111b;padding:5px}select{font:inherit}#parameters{display:grid;grid-template-columns:auto 7em;gap:4px 10px}header{max-height:90vh;overflow:auto}</style><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script><header><select id="mode"><option value="vs">VS</option><option value="arcade">Arcade</option><option value="training">Training</option><option value="watch">Watch</option></select><label><input id="opaque" type="checkbox" checked> Opaque mirrors</label> <label><input id="hideTiles" type="checkbox"> Hide character tiles</label> <button id="screencap" disabled>Screenshot</button><details id="tuning"><summary>Reflection &amp; Bloom</summary><div id="parameters"></div><button id="resetPhase">Restart motion</button></details><details><summary>Legacy effects</summary><div id="legacyLayers"></div></details><span id="status">Loading…</span></header><div id="preview"></div><script type="module">
+import {ensureRouter} from './Engine/boot-router.js?v=02408r39';await ensureRouter();const {createSelectScreen}=await import('./Engine/select-screen-mask.js'),status=document.querySelector('#status'),mode=document.querySelector('#mode');let screen;screen=createSelectScreen(document.querySelector('#preview'),{effect:()=>{},confirm:(name,choice)=>status.textContent='Confirmed · '+choice.players.join(' / '),back:()=>screen.show(mode.value)});await screen.ready;
+const hideTiles=document.querySelector('#hideTiles'),screencap=document.querySelector('#screencap');
+hideTiles.onchange=()=>screen.setHideTiles(hideTiles.checked);
+screencap.disabled=false;
+screencap.onclick=()=>screen.capture()?.toBlob(blob=>{
+ if(!blob)return;
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download='disco-ball-preview.png';link.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+},'image/png');
+const {legacyLayers}=await import('./Stage/Select/legacy-select-effects.js?v=layers2');
+for(const name of legacyLayers){
+ const label=document.createElement('label'),checkbox=document.createElement('input');
+ label.style.display='block';checkbox.type='checkbox';checkbox.checked=name!=='Outer glow';label.append(checkbox,name);
+ checkbox.onchange=()=>screen.setLegacyEffect(name,checkbox.checked);
+ document.querySelector('#legacyLayers').append(label);
+}
+const opaque=document.querySelector("#opaque");screen.setOpaque(opaque.checked);opaque.onchange=()=>screen.setOpaque(opaque.checked);const fields={};const panel=document.querySelector('#parameters');
+for(const [name,value] of Object.entries({'X angle':0,'Y angle':0,'Z angle':-120,'X speed':0,'Y speed':0,'Z speed':4,'Threshold':1.5,'Knee':2,'Radius':2,'Intensity':.5,'Clamp':0,'Color':'#ffffff'})){
+ const label=document.createElement('label'),input=document.createElement('input');
+ input.id='tune-'+name.replace(' ','-');label.htmlFor=input.id;label.textContent=name;
+ input.type=typeof value==='number'?'number':'color';input.step='any';input.value=value;fields[name]=input;panel.append(label,input);
+}
+function tune(reset=false){
+ const n=name=>Number(fields[name].value);
+ screen.tune({angles:['X','Y','Z'].map(a=>n(a+' angle')),rates:['X','Y','Z'].map(a=>n(a+' speed')),glow:['Threshold','Knee','Radius','Intensity'].map(n),color:fields.Color.value,clamp:n('Clamp'),reset});
+}
+panel.oninput=()=>tune();document.querySelector('#resetPhase').onclick=()=>tune(true);tune();
+screen.show(mode.value);status.textContent='Ready';mode.onchange=()=>{screen.show(mode.value);status.textContent='Ready'};document.addEventListener('keydown',event=>{if(event.target.closest("header"))return;if(screen.handleKey(event)){event.preventDefault();event.stopImmediatePropagation()}},true);window.selectReview={screen};
+</script></html>
