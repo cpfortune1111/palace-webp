@@ -6,7 +6,7 @@ function boundary(geometry){const p=geometry.attributes.position,index=geometry.
 function mirrorMaterial(opacity, overlay, clock, panorama) {
  const material=new THREE.ShaderMaterial({
   transparent:overlay, depthWrite:!overlay, side:THREE.FrontSide,
-  uniforms:{coverage:{value:opacity}, reflectionTime:clock, panorama:{value:panorama}},
+  uniforms:{coverage:{value:opacity}, mapping:clock.mapping, bloom:clock.bloom, bloomColor:clock.color, bloomClamp:clock.clamp, panorama:{value:panorama}},
   vertexShader:`
    varying vec3 surface;
    void main(){
@@ -14,7 +14,7 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
     gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
    }`,
   fragmentShader:`
-   uniform float coverage; uniform float reflectionTime; uniform sampler2D panorama;
+   uniform float coverage; uniform vec3 mapping; uniform vec4 bloom; uniform vec3 bloomColor; uniform float bloomClamp; uniform sampler2D panorama;
    varying vec3 surface;
 
    void main(){
@@ -26,13 +26,27 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
     if(dot(normal,sphere)<0.0)normal=-normal;
     normal=normalize(normal);
     vec3 reflected=reflect(vec3(0.0,0.0,-1.0),normal);
-    float angle=-2.0943951+reflectionTime*.1075;
-    float c=cos(angle),s=sin(angle);
-    reflected.xz=mat2(c,-s,s,c)*reflected.xz;
     vec3 direction=vec3(reflected.x,-reflected.z,reflected.y);
+    vec3 c=cos(mapping),s=sin(mapping);
+    direction.yz=mat2(c.x,s.x,-s.x,c.x)*direction.yz;
+    direction.zx=mat2(c.y,s.y,-s.y,c.y)*direction.zx;
+    direction.xy=mat2(c.z,s.z,-s.z,c.z)*direction.xy;
     vec2 uv=vec2(.5-atan(direction.y,direction.x)/6.2831853,
                  .5+asin(clamp(direction.z,-1.0,1.0))/3.1415927);
     vec3 color=texture2D(panorama,uv).rgb;
+    if(bloom.w>0.0){
+     vec3 glow=vec3(0.0);
+     for(int i=0;i<8;i++){
+      float theta=float(i)*.785398;
+      vec3 sampleColor=texture2D(panorama,uv+vec2(cos(theta),sin(theta))*.007*bloom.z).rgb;
+      float peak=max(sampleColor.r,max(sampleColor.g,sampleColor.b));
+      float knee=max(.001,bloom.y);
+      glow+=sampleColor*smoothstep(bloom.x-knee,bloom.x+knee,peak);
+     }
+     glow*=bloom.w/8.0;
+     if(bloomClamp>0.0)glow=min(glow,vec3(bloomClamp));
+     color+=glow*bloomColor;
+    }
     gl_FragColor=vec4(color,coverage);
     #include <colorspace_fragment>
    }`
@@ -40,7 +54,7 @@ function mirrorMaterial(opacity, overlay, clock, panorama) {
  material.opacity=opacity;
  return material;
 }
-export function createDiscoInterface(model,camera,panorama){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={value:0};const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
+export function createDiscoInterface(model,camera,panorama){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={mapping:{value:new THREE.Vector3(0,0,-2.0943951)},bloom:{value:new THREE.Vector4(.8,.5,1.75,0)},color:{value:new THREE.Color(0xffffff)},clamp:{value:0}};const rotation=new THREE.Vector3(0,0,-2.0943951),speed=new THREE.Vector3(0,0,.1075),phase=new THREE.Vector3();const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
  model.traverse(node=>{if(!node.isMesh)return;const name=node.material.name;if(name.startsWith('Mirror.')){const id=mirrorCharacters[name.slice(7)];const backing=new THREE.Mesh(node.geometry,mirrorMaterial(1,false,reflectionTime,panorama));backing.material.depthWrite=false;backing.renderOrder=2;node.add(backing);node.material=mirrorMaterial(.2,true,reflectionTime,panorama);node.material.depthTest=false;node.renderOrder=4;const backdrop=new THREE.MeshBasicMaterial({color:backdropColors[id]??0x2459a5,depthWrite:false});regions.set(id,{node,backing,backdrop,mirror:backing.material,path:boundary(node.geometry)});}else if(name==='Mirror'){node.material=mirrorMaterial(1,false,reflectionTime,panorama);node.renderOrder=2}else if(portraitIds[name]){node.material=node.material.clone();node.material.transparent=true;node.material.depthWrite=false;node.material.side=THREE.DoubleSide;node.material.alphaTest=.01;node.renderOrder=3;portraits.set(mirrorCharacters[portraitIds[name]],node);if(name==='Tux')node.visible=false}});
  function setOpaque(enabled){for(const {node} of regions.values()){node.material.transparent=!enabled;node.material.uniforms.coverage.value=enabled?1:node.material.opacity;node.renderOrder=enabled?2:4}}
  function setSelection(next){players=next.players||[];confirmed=next.confirmed||[];available=new Set(next.available||[]);for(const[id,r]of regions){const factor=players.includes(id)?.05:.2;r.backing.material=available.has(id)&&backdropColors[id]!==undefined?r.backdrop:r.mirror;r.node.material.opacity=factor;r.node.material.uniforms.coverage.value=r.node.material.transparent?factor:1}for(const[id,node]of portraits)node.material.opacity=available.has(id)?1:.35}
@@ -118,5 +132,5 @@ export function createDiscoInterface(model,camera,panorama){const regions=new Ma
  }
  function pickCharacter(clientX,clientY){const fit=Math.min(innerWidth/1280,innerHeight/720),x=(clientX-(innerWidth-1280*fit)/2)/fit,y=(clientY-(innerHeight-720*fit)/2)/fit;ray.setFromCamera(new THREE.Vector2(x/640-1,1-y/360),camera);const hit=ray.intersectObjects([...regions.values()].map(r=>r.node),false)[0];if(!hit)return null;return [...regions].find(([id,r])=>r.node===hit.object&&available.has(id))?.[0]||null}
  function navigate(id,dx,dy,ids){const centers=[...regions].filter(([id])=>ids.includes(id)).map(([id,r])=>{const p=project(r);return {id,x:p.reduce((n,p)=>n+p.x,0)/p.length,y:p.reduce((n,p)=>n+p.y,0)/p.length}}),from=centers.find(p=>p.id===id);if(!from)return centers[0]?.id;return centers.filter(p=>(p.x-from.x)*dx+(p.y-from.y)*dy>3).sort((a,b)=>{const score=p=>{const x=p.x-from.x,y=p.y-from.y,d=Math.hypot(x,y),dot=(x*dx+y*dy)/d;return d/(dot**3)};return score(a)-score(b)})[0]?.id||id}
- return {setOpaque,setSelection,pickCharacter,navigateCharacter:navigate,draw,step:dt=>{time+=dt;reflectionTime.value=time},snapshot:()=>({fixed:true,regions:[...regions].map(([id,r])=>({id,points:r.path.length,factor:r.node.material.opacity})),players:[...players],confirmed:[...confirmed],colors})};
+ return {tune({angles,rates,glow,color,clamp,reset}){rotation.fromArray(angles).multiplyScalar(Math.PI/180);speed.fromArray(rates).multiplyScalar(Math.PI/180);reflectionTime.bloom.value.fromArray(glow);reflectionTime.color.value.set(color);reflectionTime.clamp.value=clamp;if(reset)phase.set(0,0,0)},setOpaque,setSelection,pickCharacter,navigateCharacter:navigate,draw,step:dt=>{time+=dt;phase.addScaledVector(speed,dt);reflectionTime.mapping.value.copy(rotation).add(phase)},snapshot:()=>({fixed:true,regions:[...regions].map(([id,r])=>({id,points:r.path.length,factor:r.node.material.opacity})),players:[...players],confirmed:[...confirmed],colors})};
 }
