@@ -90,8 +90,8 @@ const hardwareIndicator=createHardwareIndicator();
 import {createAIWalkGate,guardStartupPending} from './Engine/ai-action-gates.js?v=02408r39';
 const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
-import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=02408r39';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=maskFinal';
+import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=continueCamera2';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();

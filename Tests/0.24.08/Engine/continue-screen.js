@@ -1,6 +1,6 @@
 import {createContinueFlow,CONTINUE_TIMING,LP0,LP1,K01,sequenceFrame} from './continue-flow.js?v=02408r38';
 import {createContinueEnergy} from './continue-energy.js?v=02408r38';
-import {createContinueStage} from './swatheshia-scene.js?v=02408r38';
+import {createContinueStage} from './swatheshia-scene.js?v=continueCamera2';
 import {createDeclarationScreen} from './declaration-screen.js?v=02408r36';
 import {loadBitmapFont,drawBitmapText,fontLayout} from './bitmap-font.js?v=02408r33';
 const clamp=n=>Math.max(0,Math.min(1,n));
@@ -15,7 +15,7 @@ export function createContinueScreen(parent,api){
  async function show(nextPlayers){await prepare(nextPlayers);active=true;view.hidden=false;last=undefined;accumulator=0;flow.begin();draw()}
  function hide(){active=false;view.hidden=true;flow.reset();declaration.reset();stage.release();energy.clear();for(const s of sounds)s.stop();sounds.clear();last=undefined}
  function sprite(name,alpha=1){const s=data.sprites[name];if(!s||alpha<=0)return;ctx.save();ctx.globalAlpha*=alpha;ctx.drawImage(atlas,s.x,s.y,s.w,s.h,s.left*2/3,s.top*2/3,s.w*2/3,s.h*2/3);ctx.restore()}
- function ui(s){sprite('Continue',s.uiOpacity);for(const value of ['yes','no']){sprite((value==='yes'?'Yes':'No')+' xselected',s.uiOpacity);if(value===s.selected&&s.phase!=='cinematic')sprite((value==='yes'?'Yes':'No')+' selected',s.uiOpacity*s.highlight)}if(s.countdown!==null){const text=String(s.countdown),layout=fontLayout(font,text,0);drawBitmapText(ctx,font,text,{group:0,x:640,y:360-layout.height*3/2,scale:3})}}
+ function ui(s){sprite('Continue',s.uiOpacity);for(const value of ['yes','no']){sprite((value==='yes'?'Yes':'No')+' xselected',s.uiOpacity);if(value===s.selected&&s.phase!=='cinematic')sprite((value==='yes'?'Yes':'No')+' selected',s.uiOpacity*s.highlight)}if(s.countdown!==null){const text=String(s.countdown),layout=fontLayout(font,text,0);drawBitmapText(ctx,font,text,{group:0,x:640,y:360-layout.height*1.5/2,scale:1.5})}}
  function draw(){if(!active||!atlas)return;const fit=Math.min(innerWidth/1280,innerHeight/720);if(canvas.width!==Math.round(innerWidth*devicePixelRatio)||canvas.height!==Math.round(innerHeight*devicePixelRatio)){canvas.width=Math.round(innerWidth*devicePixelRatio);canvas.height=Math.round(innerHeight*devicePixelRatio)}ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);ctx.fillStyle='black';ctx.fillRect(0,0,innerWidth,innerHeight);ctx.translate((innerWidth-1280*fit)/2,(innerHeight-720*fit)/2);ctx.scale(fit,fit);ctx.save();ctx.beginPath();ctx.rect(0,0,1280,720);ctx.clip();const s=flow.snapshot();
  if(s.phase==='gameover'){const e=ease(clamp(s.age/120)),scale=1+.95*e,x=640+16*e,y=360+56*e;ctx.save();ctx.filter='grayscale('+clamp((s.age-180)/15)+')';ctx.drawImage(floor,x-640*scale,y-360*scale,1280*scale,720*scale);ctx.globalAlpha=clamp((s.age-120)/60);ctx.drawImage(title,0,0,1280,720);ctx.restore();ctx.globalAlpha=clamp((s.age-190)/20);ctx.fillStyle='black';ctx.fillRect(0,0,1280,720);ctx.globalAlpha=1}
  else if(s.phase==='declaration'){ctx.drawImage(background,0,0,1280,720);declaration.draw(ctx);ctx.fillStyle='white';ctx.globalAlpha=1-clamp(s.age/30);ctx.fillRect(0,0,1280,720);ctx.globalAlpha=1}

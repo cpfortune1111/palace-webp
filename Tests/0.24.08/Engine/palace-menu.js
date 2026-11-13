@@ -1,4 +1,4 @@
-import {createContinueScreen} from './continue-screen.js?v=02408r39';
+import {createContinueScreen} from './continue-screen.js?v=continueCamera2';
 import {createSettingsPresentation} from './settings-presentation.js?v=02408r43';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
