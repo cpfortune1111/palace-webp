@@ -91,7 +91,7 @@ import {createAIWalkGate,guardStartupPending} from './Engine/ai-action-gates.js?
 const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
 import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=continueCamera2';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=keyConfig1';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();
@@ -102,7 +102,7 @@ for(let seconds=15;seconds<99;seconds++){const option=document.createElement('op
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
 let hudCollapsed=false;
 let simPaused=false,stepRequested=false;
-const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,keyConfig:()=>settingsButton.click(),start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r39',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]='snes';root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
+const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,bindings:{get:()=>keyboardBindings,get defaults(){return defaultBindings},save:next=>saveKeyboardBindings(next)},start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r39',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]='snes';root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
 let showCollision=false;
@@ -435,6 +435,11 @@ function validBindings(bindings){
  const codes=[];
  for(const player of ['p1','p2'])for(const action of keyboardActions){const code=bindings?.[player]?.[action];if(typeof code!=='string'||!(/^(Key[A-Z]|Digit[0-9]|Numpad[0-9]|NumpadDecimal|NumpadDivide|NumpadMultiply|NumpadAdd|NumpadSubtract|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)$/.test(code)))return false;codes.push(code)}
  return new Set(codes).size===codes.length;
+}
+function saveKeyboardBindings(next){
+ if(!validBindings(next))return false;
+ try{localStorage.setItem('palace-keyboard-bindings-v1',JSON.stringify(next))}catch{return false}
+ keyboardBindings=structuredClone(next);resetPlayerInput();refreshBindings();setInputMode(activeInputMode);return true;
 }
 function loadKeyboardBindings(){try{const saved=JSON.parse(localStorage.getItem('palace-keyboard-bindings-v1'));if(validBindings(saved))return saved}catch{}return structuredClone(defaultBindings)}
 let keyboardBindings=loadKeyboardBindings();
