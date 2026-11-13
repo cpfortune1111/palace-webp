@@ -3,10 +3,10 @@ export const mirrorCharacters={Moon:'SailorMoon',Mercury:'SailorMercury',Mars:'S
 const portraitIds={Moon:'Moon',Mer:'Mercury',Mar:'Mars',Ven:'Venus',Jup:'Jupiter',Plu:'Pluto',Nep:'Neptune',Ura:'Uranus',CM:'CMoon',Sat:'Saturn',Tux:'Tuxedo'};
 function boundary(geometry){const p=geometry.attributes.position,index=geometry.index,vertices=new Map(),edges=new Map(),key=i=>{const v=new THREE.Vector3().fromBufferAttribute(p,i),k=v.toArray().map(x=>Math.round(x*1e5)).join(',');vertices.set(k,v);return k};for(let i=0;i<(index?.count??p.count);i+=3){const ids=[0,1,2].map(j=>key(index?index.getX(i+j):i+j));for(let j=0;j<3;j++){const a=ids[j],b=ids[(j+1)%3],k=[a,b].sort().join('|'),e=edges.get(k);if(e)e.count++;else edges.set(k,{a,b,count:1})}}
  const graph=new Map();for(const e of edges.values())if(e.count===1){for(const[a,b]of [[e.a,e.b],[e.b,e.a]]){if(!graph.has(a))graph.set(a,[]);graph.get(a).push(b)}}const used=new Set(),loops=[];for(const first of graph.keys()){if(used.has(first))continue;const loop=[];let at=first,previous;for(let guard=0;guard<graph.size+2;guard++){loop.push(vertices.get(at));used.add(at);const next=(graph.get(at)||[]).find(n=>n!==previous&&(!used.has(n)||n===first));if(!next||next===first)break;previous=at;at=next}if(loop.length>2)loops.push(loop)}return loops.sort((a,b)=>b.length-a.length)[0]||[]}
-function mirrorMaterial(opacity, overlay, clock) {
+function mirrorMaterial(opacity, overlay, clock, panorama) {
  const material=new THREE.ShaderMaterial({
   transparent:overlay, depthWrite:!overlay, side:THREE.FrontSide,
-  uniforms:{coverage:{value:opacity}, reflectionTime:clock},
+  uniforms:{coverage:{value:opacity}, reflectionTime:clock, panorama:{value:panorama}},
   vertexShader:`
    varying vec3 surface;
    void main(){
@@ -14,32 +14,25 @@ function mirrorMaterial(opacity, overlay, clock) {
     gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
    }`,
   fragmentShader:`
-   uniform float coverage; uniform float reflectionTime;
+   uniform float coverage; uniform float reflectionTime; uniform sampler2D panorama;
    varying vec3 surface;
-   float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+
    void main(){
     vec3 sphere=normalize(surface);
-    vec2 tile=vec2(atan(sphere.x,sphere.z)/6.2831853+.5,asin(sphere.y)/3.1415927+.5)*vec2(104.0,52.0);
-    vec2 cell=floor(tile);
-    float seed=hash(cell);
+
+
+
     vec3 normal=normalize(cross(dFdx(surface),dFdy(surface)));
     if(dot(normal,sphere)<0.0)normal=-normal;
-    normal=normalize(normal+vec3(seed-.5,hash(cell+13.0)-.5,0.0)*.13);
+    normal=normalize(normal);
     vec3 reflected=reflect(vec3(0.0,0.0,-1.0),normal);
-    float angle=reflectionTime*.43;
+    float angle=-2.0943951+reflectionTime*.43;
     float c=cos(angle),s=sin(angle);
     reflected.xz=mat2(c,-s,s,c)*reflected.xz;
-    float soft=pow(max(0.0,dot(reflected,normalize(vec3(-.65,.55,1.0)))),8.0);
-    float strip=pow(max(0.0,dot(reflected,normalize(vec3(.45,-.15,1.0)))),45.0);
-    float rim=pow(1.0-abs(sphere.z),3.0);
-    vec3 color=mix(vec3(.007,.018,.075),vec3(.035,.28,.95),pow(seed,1.8));
-    color+=vec3(.12,.52,1.0)*(soft*.88+rim*1.45);
-    color+=vec3(.74,.92,1.0)*strip*(.8+seed*2.2);
-    float panel=pow(max(0.0,dot(reflected,normalize(vec3(-.8,-.37,.4)))),28.0);
-    float glint=pow(max(0.0,dot(reflected,normalize(vec3(.9,.28,-.3)))),85.0);
-    color+=vec3(.43,.78,1.0)*panel*(.4+seed*1.8);
-    color+=vec3(.95,.96,1.0)*glint*3.4;
-    color+=vec3(.45,.8,1.0)*pow(rim,5.0);
+    vec3 direction=vec3(reflected.x,-reflected.z,reflected.y);
+    vec2 uv=vec2(.5-atan(direction.y,direction.x)/6.2831853,
+                 .5+asin(clamp(direction.z,-1.0,1.0))/3.1415927);
+    vec3 color=texture2D(panorama,uv).rgb;
     gl_FragColor=vec4(color,coverage);
     #include <colorspace_fragment>
    }`
@@ -47,8 +40,8 @@ function mirrorMaterial(opacity, overlay, clock) {
  material.opacity=opacity;
  return material;
 }
-export function createDiscoInterface(model,camera){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={value:0};const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
- model.traverse(node=>{if(!node.isMesh)return;const name=node.material.name;if(name.startsWith('Mirror.')){const id=mirrorCharacters[name.slice(7)];const backing=new THREE.Mesh(node.geometry,mirrorMaterial(1,false,reflectionTime));backing.material.depthWrite=false;backing.renderOrder=2;node.add(backing);node.material=mirrorMaterial(.2,true,reflectionTime);node.material.depthTest=false;node.renderOrder=4;const backdrop=new THREE.MeshBasicMaterial({color:backdropColors[id]??0x2459a5,depthWrite:false});regions.set(id,{node,backing,backdrop,mirror:backing.material,path:boundary(node.geometry)});}else if(name==='Mirror'){node.material=mirrorMaterial(1,false,reflectionTime);node.renderOrder=2}else if(portraitIds[name]){node.material=node.material.clone();node.material.transparent=true;node.material.depthWrite=false;node.material.side=THREE.DoubleSide;node.material.alphaTest=.01;node.renderOrder=3;portraits.set(mirrorCharacters[portraitIds[name]],node);if(name==='Tux')node.visible=false}});
+export function createDiscoInterface(model,camera,panorama){const regions=new Map(),portraits=new Map(),ray=new THREE.Raycaster(),colors=['#5EDFFF','#FF67BF'];const reflectionTime={value:0};const backdropColors={SailorMoon:0xff648f,SailorVenus:0xffc86d,SailorJupiter:0x55d597,SailorNeptune:0x00baa8,SailorSaturn:0x8359bf};let players=[],confirmed=[],available=new Set(),time=0;
+ model.traverse(node=>{if(!node.isMesh)return;const name=node.material.name;if(name.startsWith('Mirror.')){const id=mirrorCharacters[name.slice(7)];const backing=new THREE.Mesh(node.geometry,mirrorMaterial(1,false,reflectionTime,panorama));backing.material.depthWrite=false;backing.renderOrder=2;node.add(backing);node.material=mirrorMaterial(.2,true,reflectionTime,panorama);node.material.depthTest=false;node.renderOrder=4;const backdrop=new THREE.MeshBasicMaterial({color:backdropColors[id]??0x2459a5,depthWrite:false});regions.set(id,{node,backing,backdrop,mirror:backing.material,path:boundary(node.geometry)});}else if(name==='Mirror'){node.material=mirrorMaterial(1,false,reflectionTime,panorama);node.renderOrder=2}else if(portraitIds[name]){node.material=node.material.clone();node.material.transparent=true;node.material.depthWrite=false;node.material.side=THREE.DoubleSide;node.material.alphaTest=.01;node.renderOrder=3;portraits.set(mirrorCharacters[portraitIds[name]],node);if(name==='Tux')node.visible=false}});
  function setSelection(next){players=next.players||[];confirmed=next.confirmed||[];available=new Set(next.available||[]);for(const[id,r]of regions){const factor=players.includes(id)?.05:.2;r.backing.material=available.has(id)&&backdropColors[id]!==undefined?r.backdrop:r.mirror;r.node.material.opacity=factor;r.node.material.uniforms.coverage.value=factor}for(const[id,node]of portraits)node.material.opacity=available.has(id)?1:.35}
  function project(r){r.node.updateWorldMatrix(true,false);return r.path.map(p=>p.clone().multiplyScalar(1.001).applyMatrix4(r.node.matrixWorld).project(camera)).map(v=>({x:(v.x+1)*640,y:(1-v.y)*360}))}
  function draw(ctx){
