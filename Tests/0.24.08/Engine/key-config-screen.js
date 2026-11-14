@@ -22,14 +22,14 @@ const labels={NumLock:'NUM',CapsLock:'CAP',ScrollLock:'SL',Pause:'PU',Home:'HM',
 const keyText=code=>labels[code]??code.replace(/^Numpad/,'N').replace(/^(Key|Digit)/,'');
 
 export function createKeyConfig(layer,bindings,{back,dim,effect}){
- const buttons=new Map(),titles=[],plates=[];
- let glow={innerBlur:2.5,outerBlur:5,innerOpacity:1,outerOpacity:.5,repeat:2,selectedRepeat:1};
- function shadows(player,selected,filter=false){
+ const buttons=new Map(),titles=[],plates=[],highlights=[];
+ let glow={innerBlur:6,outerBlur:4,innerOpacity:1,outerOpacity:.5,repeat:2,selectedRepeat:0};
+ function shadows(player,selected){
   const rgb=player==='1'?'94,223,255':'255,103,191';
   const count=Math.min(12,Math.max(0,Math.round(glow.repeat+(selected?glow.selectedRepeat:0))));
-  const pair=[`0 0 ${glow.innerBlur}px rgba(${rgb},${glow.innerOpacity})`,`0 0 ${glow.outerBlur}px rgba(${rgb},${glow.outerOpacity})`];
+  const pair=[`0 0 ${selected?10:glow.innerBlur}px rgba(${rgb},${glow.innerOpacity})`,`0 0 ${glow.outerBlur}px rgba(${rgb},${glow.outerOpacity})`];
   const items=Array.from({length:count},()=>pair).flat();
-  return items.length?items.map(item=>filter?'drop-shadow('+item+')':item).join(filter?' ':','):'none';
+  return items.length?items.map(item=>'drop-shadow('+item+')').join(' '):'none';
  }
  let active=null,selected='1l',branch=null;
  layer.addEventListener('contextmenu',event=>event.preventDefault());
@@ -41,12 +41,22 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   for(const [id,button] of buttons){
    button.textContent=keyText(current['p'+id[0]][id.slice(1)]);
    button.style.opacity=active?.8:1;
-   button.style.boxShadow=shadows(id[0],id===selected);
+   button.style.outline="none";
   }
   for(let i=0;i<2;i++){
-   titles[i].style.filter=shadows(String(i+1),false,true);
+   titles[i].style.filter=shadows(String(i+1),false);
    titles[i].style.opacity=active&&active[0]!==String(i+1)?.8:1;
-   plates[i].style.opacity=active?.8:1;
+      plates[i].style.opacity=active?.8:1;
+   plates[i].style.filter=shadows(String(i+1),false);
+   const focus=active??selected, highlight=highlights[i];
+   highlight.hidden=focus[0]!==String(i+1);
+   if(!highlight.hidden){
+    const key=focus.slice(1),[x,y,w,h]=positions[key];
+    const left=Math.max(0,x-w/2-(key.length===1?9:0)),top=Math.max(0,y-h/2-(key.length===1?8:0));
+    highlight.firstChild.style.clipPath='inset('+top+'px '+Math.max(0,376-x-w/2)+'px '+Math.max(0,249-y-h/2)+'px '+left+'px)';
+    highlight.style.filter=shadows(String(i+1),true);
+    highlight.style.opacity=active?.8:1;
+   }
   }
   dim(!!active);
   status.textContent=active?'Press a key for '+active.slice(1).toUpperCase():'';
@@ -55,7 +65,7 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
  for(const [i,player] of [1,2].entries()){
   const group=document.createElement('div');
   group.style.cssText='position:absolute;width:376px;height:249px;left:'+(640+(i?288:-288)-188)+'px;top:'+(360-12.5-124.5)+'px';
-  const plate=new Image();plate.src=new URL(artwork+'Keys.webp',import.meta.url);plate.alt='';group.append(plate);plates.push(plate);
+  const plate=new Image();plate.src=new URL(artwork+'Keys.webp',import.meta.url);plate.alt='';group.append(plate);plates.push(plate);const highlight=document.createElement("div");highlight.style.cssText="position:absolute;inset:0;pointer-events:none";highlight.append(plate.cloneNode());group.append(highlight);highlights.push(highlight);
   for(const [key,[x,y,w,h]] of Object.entries(positions)){
    const id=player+key,button=document.createElement('button');button.type='button';
    button.setAttribute('aria-label','P'+player+' '+key.toUpperCase());

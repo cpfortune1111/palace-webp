@@ -1,4 +1,4 @@
-import {createKeyConfig,settingsArt} from './key-config-screen.js?v=keyConfig4';
+import {createKeyConfig,settingsArt} from './key-config-screen.js?v=keyConfig5';
 import {createContinueScreen} from './continue-screen.js?v=keyConfig1';
 import {createSettingsPresentation} from './settings-presentation.js?v=02408r43';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
@@ -21,7 +21,7 @@ export function createPalaceMenu(api){
  const presentation=createTitlePresentation(),settingsPresentation=createSettingsPresentation();
  const defaults={difficulty:4,timer:'99',master:100,bgm:100,sfx:100};let options={...defaults};try{const saved=JSON.parse(localStorage.getItem('palace-options-v1'));for(const key of Object.keys(defaults))if(saved&&saved[key]!==undefined)options[key]=saved[key]}catch{}
  options.difficulty=Math.max(1,Math.min(8,Number(options.difficulty)||4));options.timer=options.timer==='infinite'?'infinite':String(Math.max(15,Math.min(99,Number(options.timer)||99)));for(const key of ['master','bgm','sfx'])options[key]=Math.max(0,Math.min(100,Number(options[key])||0));
- const recovery=readLoadRecovery(),arcade=createArcadeProgress();let recoveryTarget='vs',pendingResult;let battleMode='vs',battleChoice,battleWinner=0;let battlePlayers=['SailorVenus','SailorVenus'];let mode='home',selected=0,logoIntro=null,homeFading=false;const sounds=new Set(),music=new Audio(assetUrl('./title-bgm.mp3'));music.loop=true;const settingsMusic=new Audio('./Data/Sound/settings-loop.wav');settingsMusic.loop=true;const audio=createMenuAudio(music,()=>options),effect=name=>audio.effect(name);
+ const recovery=readLoadRecovery(),arcade=createArcadeProgress();let recoveryTarget='vs',pendingResult;let battleMode='vs',battleChoice,battleWinner=0;let battlePlayers=['SailorVenus','SailorVenus'];let mode='home',selected=0,logoIntro=null,homeFading=false;const sounds=new Set(),music=new Audio(assetUrl('./title-bgm.mp3'));music.loop=true;const settingsMusic=new Audio('./Data/Sound/Settings-bgm.mp3?v=keyConfig5');settingsMusic.loop=true;const audio=createMenuAudio(music,()=>options),effect=name=>audio.effect(name);
  const overlay=document.createElement('div');overlay.id='palaceMenu';overlay.style.cssText='position:fixed;inset:0;z-index:40;background:#05050d;overflow:hidden';
  const titleStage=createTitleStage(overlay);titleStage.ready.catch(error=>console.error('Title stage',error));
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none';overlay.appendChild(canvas);const context=canvas.getContext('2d');
@@ -78,9 +78,9 @@ export function createPalaceMenu(api){
     controls.style.cssText='position:absolute;right:12px;top:12px;background:#081450;color:white;display:grid;gap:4px;z-index:1';
     const legend=document.createElement('legend');legend.textContent='Key glow';controls.append(legend);
     for(const [key,label,value,min,max,step] of [
-     ['innerBlur','Inner blur',2.5,0,24,.5],['outerBlur','Outer blur',5,0,40,.5],
+     ['innerBlur','Inner blur',6,0,24,.5],['outerBlur','Outer blur',4,0,40,.5],
      ['innerOpacity','Inner opacity',1,0,1,.05],['outerOpacity','Outer opacity',.5,0,1,.05],
-     ['repeat','Repeat layers',2,0,8,1],['selectedRepeat','Extra when selected',1,0,4,1]
+     ['repeat','Repeat layers',2,0,8,1],['selectedRepeat','Extra when selected',0,0,4,1]
     ]){
      const row=document.createElement('label'),input=document.createElement('input');
      input.type='number';input.min=min;input.max=max;input.step=step;input.value=value;
