@@ -1,4 +1,4 @@
-export const canBindKey=code=>typeof code==='string' && /^[A-Za-z][A-Za-z0-9]+$/.test(code) && !/^(?:Unidentified|Escape|F(?:[1-9]|1[0-2])|PrintScreen|(?:Numpad)?Enter|Shift(?:Left|Right)?|(?:Meta|OS|Win)(?:Left|Right)?|Backspace)$/.test(code);
+export const canBindKey=code=>typeof code==='string' && /^[A-Za-z][A-Za-z0-9]+$/.test(code) && !/^(?:Unidentified|Tab|Alt(?:Left|Right)?|ContextMenu|Escape|F(?:[1-9]|1[0-2])|PrintScreen|(?:Numpad)?Enter|Shift(?:Left|Right)?|(?:Meta|OS|Win)(?:Left|Right)?|Backspace)$/.test(code);
 export const settingsText='color:#fff;font: bold 22px "Arial Rounded MT Bold",Arial,sans-serif;text-shadow:0 0 10px #081450';
 const artwork='../Data/Settings/';
 export function settingsArt(name,x,y,label,action){
@@ -18,12 +18,21 @@ const horizontal=[
  ['1down','1x','1y','2down','2x','2y'],['1left','1right','1a','2left','2right','2a']
 ];
 const vertical=[1,2].flatMap(p=>[['l','up','left','down'],['r','a','x'],['r','b','y'],['up','right','down']].map(row=>row.map(key=>p+key)));
-const labels={NumLock:'NUM',CapsLock:'CAPS',ScrollLock:'SCR',Home:'HOME',End:'END',PageUp:'PG↑',PageDown:'PG↓',Insert:'INS',Delete:'DEL',Space:'SPC',ControlLeft:'LCTRL',ControlRight:'RCTRL',AltLeft:'LALT',AltRight:'RALT',Minus:'-',Equal:'=',BracketLeft:'[',BracketRight:']',Backslash:'\\',IntlBackslash:'\\',Semicolon:';',Quote:"'",Comma:',',Period:'.',Slash:'/',Backquote:String.fromCharCode(96),ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',NumpadDecimal:'N.',NumpadDivide:'N/',NumpadMultiply:'N*',NumpadAdd:'N+',NumpadSubtract:'N−'};
+const labels={NumLock:'NUM',CapsLock:'CAP',ScrollLock:'SL',Pause:'PU',Home:'HM',End:'END',PageUp:'PG↑',PageDown:'PG↓',Insert:'INS',Delete:'DEL',Space:'SPC',ControlLeft:'LCTR',ControlRight:'RCTR',AltLeft:'LALT',AltRight:'RALT',Minus:'-',Equal:'=',BracketLeft:'[',BracketRight:']',Backslash:'\\',IntlBackslash:'\\',Semicolon:';',Quote:"'",Comma:',',Period:'.',Slash:'/',Backquote:String.fromCharCode(96),ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',NumpadDecimal:'N.',NumpadDivide:'N/',NumpadMultiply:'N*',NumpadAdd:'N+',NumpadSubtract:'N−'};
 const keyText=code=>labels[code]??code.replace(/^Numpad/,'N').replace(/^(Key|Digit)/,'');
 
 export function createKeyConfig(layer,bindings,{back,dim,effect}){
  const buttons=new Map(),titles=[],plates=[];
+ let glow={innerBlur:2.5,outerBlur:5,innerOpacity:1,outerOpacity:.5,repeat:2,selectedRepeat:1};
+ function shadows(player,selected,filter=false){
+  const rgb=player==='1'?'94,223,255':'255,103,191';
+  const count=Math.min(12,Math.max(0,Math.round(glow.repeat+(selected?glow.selectedRepeat:0))));
+  const pair=[`0 0 ${glow.innerBlur}px rgba(${rgb},${glow.innerOpacity})`,`0 0 ${glow.outerBlur}px rgba(${rgb},${glow.outerOpacity})`];
+  const items=Array.from({length:count},()=>pair).flat();
+  return items.length?items.map(item=>filter?'drop-shadow('+item+')':item).join(filter?' ':','):'none';
+ }
  let active=null,selected='1l',branch=null;
+ layer.addEventListener('contextmenu',event=>event.preventDefault());
  const status=document.createElement('div');
  status.style.cssText=settingsText+';position:absolute;top:6px;width:100%;text-align:center;pointer-events:none';
  status.setAttribute('aria-live','polite');layer.append(status);
@@ -32,9 +41,10 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   for(const [id,button] of buttons){
    button.textContent=keyText(current['p'+id[0]][id.slice(1)]);
    button.style.opacity=active?.8:1;
-   button.style.boxShadow=id===selected?'0 0 2.5px '+(id[0]==='1'?'#5EDFFF':'#FF67BF')+',0 0 5px '+(id[0]==='1'?'#5EDFFF80':'#FF67BF80'):'none';
+   button.style.boxShadow=shadows(id[0],id===selected);
   }
   for(let i=0;i<2;i++){
+   titles[i].style.filter=shadows(String(i+1),false,true);
    titles[i].style.opacity=active&&active[0]!==String(i+1)?.8:1;
    plates[i].style.opacity=active?.8:1;
   }
@@ -63,11 +73,11 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   next[player][key]=code;
   if(bindings.save(next)){active=null;refresh()}
  }
- layer.append(settingsArt('Default',-138,188,'Default',()=>{
+ layer.append(settingsArt('Default',-138,170,'Default',()=>{
   effect('btn-click');
   if(active)commit(bindings.defaults['p'+active[0]][active.slice(1)]);
   else if(bindings.save(bindings.defaults))refresh();
- }),settingsArt('Back',138,188,'Back',cancel));
+ }),settingsArt('Back',138,170,'Back',cancel));
  refresh();
  function handle(event){
   const code=event.code;
@@ -88,5 +98,6 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   branch=row;effect('select');refresh();
  };
  handle.capturing=()=>!!active;
+ handle.tune=value=>{glow={...glow,...value};refresh()};
  return handle;
 }
