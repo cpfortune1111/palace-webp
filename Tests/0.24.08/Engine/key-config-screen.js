@@ -63,11 +63,11 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   next[player][key]=code;
   if(bindings.save(next)){active=null;refresh()}
  }
- layer.append(settingsArt('Default',-138,288,'Default',()=>{
+ layer.append(settingsArt('Default',-138,188,'Default',()=>{
   effect('btn-click');
   if(active)commit(bindings.defaults['p'+active[0]][active.slice(1)]);
   else if(bindings.save(bindings.defaults))refresh();
- }),settingsArt('Back',138,288,'Back',cancel));
+ }),settingsArt('Back',138,188,'Back',cancel));
  refresh();
  return function handle(event){
   const code=event.code;
