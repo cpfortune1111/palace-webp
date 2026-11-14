@@ -1,3 +1,4 @@
+export const canBindKey=code=>typeof code==='string' && /^[A-Za-z][A-Za-z0-9]+$/.test(code) && !/^(?:Unidentified|Escape|F(?:[1-9]|1[0-2])|PrintScreen|(?:Numpad)?Enter|Shift(?:Left|Right)?|(?:Meta|OS|Win)(?:Left|Right)?|Backspace)$/.test(code);
 export const settingsText='color:#fff;font: bold 22px "Arial Rounded MT Bold",Arial,sans-serif;text-shadow:0 0 10px #081450';
 const artwork='../Data/Settings/';
 export function settingsArt(name,x,y,label,action){
@@ -17,7 +18,7 @@ const horizontal=[
  ['1down','1x','1y','2down','2x','2y'],['1left','1right','1a','2left','2right','2a']
 ];
 const vertical=[1,2].flatMap(p=>[['l','up','left','down'],['r','a','x'],['r','b','y'],['up','right','down']].map(row=>row.map(key=>p+key)));
-const labels={ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',NumpadDecimal:'N.',NumpadDivide:'N/',NumpadMultiply:'N*',NumpadAdd:'N+',NumpadSubtract:'N−'};
+const labels={NumLock:'NUM',CapsLock:'CAPS',ScrollLock:'SCR',Home:'HOME',End:'END',PageUp:'PG↑',PageDown:'PG↓',Insert:'INS',Delete:'DEL',Space:'SPC',ControlLeft:'LCTRL',ControlRight:'RCTRL',AltLeft:'LALT',AltRight:'RALT',Minus:'-',Equal:'=',BracketLeft:'[',BracketRight:']',Backslash:'\\',IntlBackslash:'\\',Semicolon:';',Quote:"'",Comma:',',Period:'.',Slash:'/',Backquote:String.fromCharCode(96),ArrowUp:'↑',ArrowDown:'↓',ArrowLeft:'←',ArrowRight:'→',NumpadDecimal:'N.',NumpadDivide:'N/',NumpadMultiply:'N*',NumpadAdd:'N+',NumpadSubtract:'N−'};
 const keyText=code=>labels[code]??code.replace(/^Numpad/,'N').replace(/^(Key|Digit)/,'');
 
 export function createKeyConfig(layer,bindings,{back,dim,effect}){
@@ -31,7 +32,7 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   for(const [id,button] of buttons){
    button.textContent=keyText(current['p'+id[0]][id.slice(1)]);
    button.style.opacity=active?.8:1;
-   button.style.boxShadow=id===selected?'0 0 12px '+(id[0]==='1'?'#5EDFFF':'#FF67BF'):'none';
+   button.style.boxShadow=id===selected?'0 0 2.5px '+(id[0]==='1'?'#5EDFFF':'#FF67BF')+',0 0 5px '+(id[0]==='1'?'#5EDFFF80':'#FF67BF80'):'none';
   }
   for(let i=0;i<2;i++){
    titles[i].style.opacity=active&&active[0]!==String(i+1)?.8:1;
@@ -43,7 +44,7 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
  function begin(id){active=selected=id;effect('btn-click');refresh()}
  for(const [i,player] of [1,2].entries()){
   const group=document.createElement('div');
-  group.style.cssText='position:absolute;width:376px;height:249px;left:'+(640+(i?288:-288)-188)+'px;top:'+(360+(i?-12.5:12.5)-124.5)+'px';
+  group.style.cssText='position:absolute;width:376px;height:249px;left:'+(640+(i?288:-288)-188)+'px;top:'+(360-12.5-124.5)+'px';
   const plate=new Image();plate.src=new URL(artwork+'Keys.webp',import.meta.url);plate.alt='';group.append(plate);plates.push(plate);
   for(const [key,[x,y,w,h]] of Object.entries(positions)){
    const id=player+key,button=document.createElement('button');button.type='button';
@@ -51,8 +52,7 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
    button.style.cssText=settingsText+';position:absolute;left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;transform:translate(-50%,-50%);border:0;border-radius:'+(key.length===1&&key!=='l'&&key!=='r'?'50%':'12px')+';background:transparent;cursor:pointer';
    button.onclick=()=>{if(!active)begin(id)};group.append(button);buttons.set(id,button);
   }
-  const title=document.createElement('span');title.textContent='P'+player;
-  title.style.cssText=settingsText+';position:absolute;top:254px;left:'+(640+(i?41:-41))+'px;transform:translate(-50%,-50%)';titles.push(title);
+  const title=settingsArt('P'+player,i?41:-41,-111,'P'+player);titles.push(title);
   layer.append(group,title);
  }
  const cancel=()=>{effect('btn-back');if(active){active=null;refresh()}else back()};
@@ -69,11 +69,11 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   else if(bindings.save(bindings.defaults))refresh();
  }),settingsArt('Back',138,188,'Back',cancel));
  refresh();
- return function handle(event){
+ function handle(event){
   const code=event.code;
   if(code==='Escape'){if(!event.repeat)cancel();return}
   if(active){
-   if(!event.repeat&&/^(Key[A-Z]|Digit[0-9]|Numpad(?:[0-9]|Decimal|Divide|Multiply|Add|Subtract)|Arrow(?:Left|Right|Up|Down))$/.test(code))commit(code);
+   if(!event.repeat&&canBindKey(code))commit(code);
    return;
   }
   if(code==='Enter'){if(!event.repeat){const target=event.target;if(target instanceof HTMLButtonElement&&layer.contains(target)&&!Array.from(buttons.values()).includes(target))target.click();else begin(selected)}return}
@@ -87,4 +87,6 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   selected=row[(row.indexOf(selected)+direction+row.length)%row.length];buttons.get(selected).focus();
   branch=row;effect('select');refresh();
  };
+ handle.capturing=()=>!!active;
+ return handle;
 }

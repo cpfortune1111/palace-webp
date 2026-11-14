@@ -91,7 +91,8 @@ import {createAIWalkGate,guardStartupPending} from './Engine/ai-action-gates.js?
 const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
 import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=keyConfig2';
+import {canBindKey} from './Engine/key-config-screen.js?v=keyConfig3';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=keyConfig3';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();
@@ -433,7 +434,7 @@ const defaultBindings={p1:{left:'ArrowLeft',right:'ArrowRight',up:'ArrowUp',down
 const keyboardActions=Object.keys(defaultBindings.p1);
 function validBindings(bindings){
  const codes=[];
- for(const player of ['p1','p2'])for(const action of keyboardActions){const code=bindings?.[player]?.[action];if(typeof code!=='string'||!(/^(Key[A-Z]|Digit[0-9]|Numpad[0-9]|NumpadDecimal|NumpadDivide|NumpadMultiply|NumpadAdd|NumpadSubtract|ArrowLeft|ArrowRight|ArrowUp|ArrowDown)$/.test(code)))return false;codes.push(code)}
+ for(const player of ['p1','p2'])for(const action of keyboardActions){const code=bindings?.[player]?.[action];if(!canBindKey(code))return false;codes.push(code)}
  return new Set(codes).size===codes.length;
 }
 function saveKeyboardBindings(next){
