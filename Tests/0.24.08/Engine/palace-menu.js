@@ -1,5 +1,5 @@
 import {createKeyConfig,settingsArt} from './key-config-screen.js?v=keyConfig5';
-import {createContinueScreen} from './continue-screen.js?v=keyConfig1';
+import {createContinueScreen} from './continue-screen.js?v=buttonPress1';
 import {createSettingsPresentation} from './settings-presentation.js?v=02408r43';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
