@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Movelist sparkle preview</title>
+<style>
+body{margin:16px;background:#13182b;color:#fff;font:16px Arial,sans-serif}main{max-width:1280px;margin:auto}fieldset{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}label{display:inline-flex;align-items:center;gap:5px}input,select,button{font:inherit}canvas{display:block;width:100%;height:auto;background:linear-gradient(#233e64,#557f91)}#values{white-space:pre-wrap}
+</style>
+<main><h1>Movelist sparkle preview</h1>
+<fieldset><legend>Preview</legend><label>P1 <select id="p1"></select></label><label>P2 <select id="p2"></select></label><label>Compositing <select id="composition"><option value="independent">Independent opacity</option><option value="grouped">Original grouped opacity</option></select></label><button id="copy" type="button">Copy settings</button></fieldset>
+<div id="layers"></div><div id="preview"></div><output id="values"></output></main>
+<script type="module">
+import {createMoveList} from './Engine/move-list.js?v=sparkPreview1';
+const $=id=>document.getElementById(id);
+const modes={'一般':'source-over','色彩增值':'multiply','網屏':'screen','重疊':'overlay','柔光':'soft-light','實光':'hard-light','變暗':'darken','變亮':'lighten','加深顏色':'color-burn','加亮顏色':'color-dodge','差異化':'difference','排除':'exclusion','色相':'hue','飽和度':'saturation','顏色':'color','明度':'luminosity','加法':'lighter'};
+const layers=[['C','screen'],['B','overlay'],['A','source-over']].map(([id,blend])=>{
+ const row=document.createElement('fieldset'),legend=document.createElement('legend');
+ legend.textContent='BGSpark '+id;row.append(legend);
+ row.insertAdjacentHTML('beforeend','<label><input type="checkbox" checked> Visible</label><label>Opacity <input type="range" min="0" max="100" value="80"><output>80%</output></label><label>Blend <select></select></label>');
+ const select=row.querySelector('select');
+ for(const [name,value] of Object.entries(modes))select.add(new Option(name,value));
+ select.value=blend;$('layers').append(row);
+ return {id,visible:row.querySelector('[type=checkbox]'),opacity:row.querySelector('[type=range]'),output:row.querySelector('output'),select};
+});
+for(const id of ['p1','p2'])for(const name of ['Moon','Jupiter','Venus','Neptune','Saturn'])$(id).add(new Option(name,name));
+$('p2').value='Venus';
+const options=()=>layers.map(({id,visible,opacity,select,output})=>{
+ output.value=opacity.value+'%';
+ return {name:'BGSpark'+id,visible:visible.checked,opacity:Number(opacity.value)/100,blend:select.value};
+});
+const preview=createMoveList({parent:$('preview'),preview:true,settings:()=>({layers:options(),independent:$('composition').value==='independent'})});
+const open=()=>preview.open(['p1','p2'].map(id=>({character:$(id).value})));
+for(const id of ['p1','p2'])$(id).onchange=open;
+$('copy').onclick=async()=>{
+ const result=JSON.stringify({composition:$('composition').value,layers:options()},null,2);
+ $('values').value=result;
+ try{await navigator.clipboard.writeText(result)}catch{}
+};
+try{await preview.ready;open()}catch(error){$('values').value='Unable to load preview artwork.';console.error(error)}
+</script></html>
