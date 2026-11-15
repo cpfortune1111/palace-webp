@@ -34,9 +34,10 @@ export function createMoveList(){
  function frameImage(w,h){
   const image=images.SkillFrame;if(!image)return;
   const sx=[132,232,1044,1144],sy=[97,140,685,713];
-  const x=(1280-w)/2,y=405-h/2;
-  const bx=Math.min(100,w/2),by=Math.min(28,h/2);
-  const dx=[x,x+bx,x+w-bx,x+w],dy=[y,y+by,y+h-by,y+h];
+  if(w===1012&&h===616){ctx.drawImage(image,2,0);return}
+  const x=640-w/2,y=405-h/2;
+  const bx=Math.min(100,w/2),top=Math.min(43,h/2),bottom=Math.min(28,h/2);
+  const dx=[x,x+bx,x+w-bx,x+w],dy=[y,y+top,y+h-bottom,y+h];
   for(let j=0;j<3;j++)for(let i=0;i<3;i++){
    const dw=dx[i+1]-dx[i],dh=dy[j+1]-dy[j];
    if(dw>0&&dh>0)ctx.drawImage(image,sx[i],sy[j],sx[i+1]-sx[i],sy[j+1]-sy[j],dx[i],dy[j],dw,dh);
@@ -59,7 +60,8 @@ export function createMoveList(){
     if(!images[name])continue;layer.globalCompositeOperation=blend;layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544);
    }
    layer.globalAlpha=1;layer.globalCompositeOperation='source-over';
-   ctx.save();ctx.beginPath();ctx.rect((1280-w)/2+20,405-h/2+28,w-40,h-56);ctx.clip();
+   ctx.save();if(w<1012||h<616){ctx.beginPath();ctx.rect((1280-w)/2+18,405-h/2+43,w-36,Math.max(0,h-71));ctx.clip()}
+   ctx.beginPath();ctx.roundRect(152,140,976,544,[12,12,40,40]);ctx.clip();
    ctx.globalAlpha=.8;ctx.drawImage(bg,152,140);ctx.globalAlpha=1;
    ctx.fillStyle='#db9900';ctx.fillRect(640,184,1,468);
    columns.forEach((list,i)=>{
