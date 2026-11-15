@@ -55,7 +55,7 @@ export function createMoveList(){
    const left=colorPass(0),right=colorPass(1);layer.drawImage(left,0,0,508,544);
    layer.drawImage(right,508,0,468,544);
    for(let x=468;x<508;x++){layer.globalAlpha=(x-468)/40;layer.drawImage(right,x,0)}
-   layer.globalAlpha=.4;
+   layer.globalAlpha=.8;
    for(const [name,blend] of [['BGSparkC','screen'],['BGSparkB','overlay'],['BGSparkA','source-over']]){
     if(!images[name])continue;layer.globalCompositeOperation=blend;layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544);
    }
