@@ -3,12 +3,13 @@
 <title>Movelist sparkle preview</title>
 <style>
 body{margin:16px;background:#13182b;color:#fff;font:16px Arial,sans-serif}main{max-width:1280px;margin:auto}fieldset{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0}label{display:inline-flex;align-items:center;gap:5px}input,select,button{font:inherit}canvas{display:block;width:100%;height:auto;background:linear-gradient(#233e64,#557f91)}#values{white-space:pre-wrap}
+#gradient{display:block}#gradientTrack{position:relative;height:42px;margin:8px 16px}#gradientTrack input{position:absolute;inset:0;width:100%;margin:0;appearance:none;background:transparent;pointer-events:none}#gradientTrack input::-webkit-slider-thumb{appearance:none;pointer-events:auto;width:16px;height:32px;background:#fff;border:2px solid #344566;border-radius:4px;cursor:ew-resize}#gradientTrack input::-moz-range-thumb{pointer-events:auto;width:16px;height:28px;background:#fff;border:2px solid #344566;cursor:ew-resize}#gradientValues{display:flex;flex-wrap:wrap;gap:10px}#gradientValues input{width:4em}
 </style>
 <main><h1>Movelist sparkle preview</h1>
 <fieldset><legend>Preview</legend><label>P1 <select id="p1"></select></label><label>P2 <select id="p2"></select></label><label>Compositing <select id="composition"><option value="independent">Independent opacity</option><option value="grouped">Original grouped opacity</option></select></label><button id="copy" type="button">Copy settings</button></fieldset>
-<div id="layers"></div><div id="preview"></div><output id="values"></output></main>
+<fieldset id="gradient"><legend>Background gradient · top to bottom</legend><div id="gradientTrack"></div><div id="gradientValues"></div></fieldset><div id="layers"></div><div id="preview"></div><output id="values"></output></main>
 <script type="module">
-import {createMoveList} from './Engine/move-list.js?v=sparkGradient1';
+import {createMoveList} from './Engine/move-list.js?v=sparkGradient3';
 const $=id=>document.getElementById(id);
 const modes={'一般':'source-over','色彩增值':'multiply','網屏':'screen','重疊':'overlay','柔光':'soft-light','實光':'hard-light','變暗':'darken','變亮':'lighten','加深顏色':'color-burn','加亮顏色':'color-dodge','差異化':'difference','排除':'exclusion','色相':'hue','飽和度':'saturation','顏色':'color','明度':'luminosity','加法':'lighter'};
 const layers=[['C','screen'],['B','overlay'],['A','source-over']].map(([id,blend])=>{
@@ -26,11 +27,37 @@ const options=()=>layers.map(({id,visible,opacity,select,output})=>{
  output.value=opacity.value+'%';
  return {name:'BGSpark'+id,visible:visible.checked,opacity:Number(opacity.value)/100,blend:select.value};
 });
-const preview=createMoveList({parent:$('preview'),preview:true,settings:()=>({layers:options(),independent:$('composition').value==='independent'})});
+const gradient={stops:[5,45,65,95],ab:60,bc:40};
+const handles=[],numbers=[];
+function field(label,value,onChange,max=100){
+ const row=document.createElement('label'),input=document.createElement('input');
+ input.type='number';input.min=0;input.max=max;input.value=value;
+ input.oninput=()=>{if(input.value!==''&&input.validity.valid)onChange(Number(input.value))};
+ row.append(label+' ',input,' %');$('gradientValues').append(row);return input;
+}
+function updateStop(i,value){
+ gradient.stops[i]=Math.min(gradient.stops[i+1]??100,Math.max(gradient.stops[i-1]??0,value));
+ handles[i].value=numbers[i].value=gradient.stops[i];
+ updateTrack();
+}
+function updateTrack(){
+ const [a,b,c,d]=gradient.stops;
+ $('gradientTrack').style.background='linear-gradient(90deg,#f77ad3 '+a+'%,#18428e '+b+'%,#18428e '+c+'%,#0884af '+d+'%)';
+}
+for(const [i,label] of ['A','B upper','B lower','C'].entries()){
+ const input=document.createElement('input');input.type='range';input.min=0;input.max=100;input.value=gradient.stops[i];
+ input.setAttribute('aria-label',label+' position');input.oninput=()=>updateStop(i,Number(input.value));
+ handles.push(input);$('gradientTrack').append(input);
+ numbers.push(field(label,gradient.stops[i],value=>updateStop(i,value)));
+}
+field('A–B midpoint',60,value=>gradient.ab=value);
+field('B–C midpoint',40,value=>gradient.bc=value);
+updateTrack();
+const preview=createMoveList({parent:$('preview'),preview:true,settings:()=>({layers:options(),gradient,independent:$('composition').value==='independent'})});
 const open=()=>preview.open(['p1','p2'].map(id=>({character:$(id).value})));
 for(const id of ['p1','p2'])$(id).onchange=open;
 $('copy').onclick=async()=>{
- const result=JSON.stringify({composition:$('composition').value,layers:options()},null,2);
+ const result=JSON.stringify({composition:$('composition').value,gradient,layers:options()},null,2);
  $('values').value=result;
  try{await navigator.clipboard.writeText(result)}catch{}
 };

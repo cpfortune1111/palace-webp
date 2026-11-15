@@ -35,7 +35,8 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
    const channels=[0,2,4].map(i=>Math.round((parseInt(from.slice(i,i+2),16)+parseInt(to.slice(i,i+2),16))/2));
    return 'rgb('+channels.join(',')+')';
   }
-  const gradientStops=[[.05,'#'+a],[.29,midpoint(a,b)],[.45,'#'+b],[.65,'#'+b],[.77,midpoint(b,c)],[.95,'#'+c]];
+  const {stops=[5,45,65,95],ab=60,bc=40}=settings?.().gradient??{}; const [top,upper,lower,bottom]=stops.map(value=>value/100);
+  const gradientStops=[[top,'#'+a],[top+(upper-top)*ab/100,midpoint(a,b)],[upper,'#'+b],[lower,'#'+b],[lower+(bottom-lower)*bc/100,midpoint(b,c)],[bottom,'#'+c]];
   for(const [position,color] of gradientStops)g.addColorStop(position,color);
   return g;
  }
