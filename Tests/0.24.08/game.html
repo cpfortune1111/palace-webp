@@ -670,6 +670,7 @@ function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=nu
  p1HitCount=0;
  moveContact=0;moveHit=0;moveGuarded=0;
  if(battleDat?.statePriorities?.[String(st)]!==undefined)p1SprPriority=battleDat.statePriorities[String(st)];
+ const runningTakeoff=st===50&&state===40&&prevState===100;
  const inheritedAnimAge=stateTicks-p1AnimStartTime;prevState=state;state=st;stateTicks=0;p1AnimStartTime=0;activeHitDef=null;stateEntrySerial++;
  const incoming=sourceState(st);p1StateType=incoming?.type==='U'?p1StateType:incoming?.type||'S';p1Physics=incoming?.physics==='U'?p1Physics:incoming?.physics||'S';runtimeCtrl=incoming&&incoming.ctrl!==undefined?Number(incoming.ctrl):runtimeCtrl;
  runtimeMoveType=String(incoming?.moveType??'I').toUpperCase();if(st===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[0])){runtimeVar[48]=battleCharacters[0]==='SailorNeptune'?191:191+Math.floor(Math.random()*2);current=runtimeVar[48];fi=0;ticks=0;}
@@ -679,6 +680,7 @@ function enterIRStateForCharacter(st,animOverride){if(st===0){throwTargets[0]=nu
  // CNS StateDef velset is an entry-time property. Apply it generically when the
  // new state is entered so velocity from the previous state cannot leak through.
  applyStateVelocity({set vx(value){vx=value},set vy(value){vy=value}},def?.velset);
+ if(runningTakeoff)vx=constVal('velocity.runjump.fwd.x');
  if(animOverride!==undefined){current=animOverride;fi=0;ticks=0}else if(def)setAnimForState(def);
  if(st===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[0])){current=runtimeVar[48];fi=0;ticks=0;}
  if(st===0&&profileFor()?.data&&current!==5){current=p1Life<=p1LifeMax/4?5300:0;fi=0;ticks=0}
@@ -1080,7 +1082,7 @@ function enterGroundReactionStateForCharacter(fighter,n){
  if(fighter.life<=0&&n>=5000&&n<5100&&!(fighter.anim>=5000&&fighter.anim<5100)&&framesFor(5030,fighterPlayer(fighter)).length){fighter.anim=5030;fighter.animStartTime=0;fighter.elem=1;fighter.elemTick=0}
 }
 function enterP2State(n){return withCharacter(2,()=>enterP2StateForCharacter(n))}
-function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBindings[1]=null}
+function enterP2StateForCharacter(n){const runningTakeoff=n===50&&p2.state===40&&p2.prevState===100;if(n===0){throwTargets[1]=null;throwBindings[1]=null}
  p2.entrySerial=(p2.entrySerial||0)+1;
  p2.entryCommands=[1000,1100,1200].includes(n)?Object.fromEntries(cmdDat.commands.map(definition=>[definition.name,commandActive(definition.name,2)])):null;
  p2.hitCount=0;
@@ -1093,6 +1095,7 @@ function enterP2StateForCharacter(n){if(n===0){throwTargets[1]=null;throwBinding
  if(battleDat?.locomotionStates?.[String(n)]){const def=battleDat.locomotionStates[String(n)];p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType;p2.anim=def.anim;if(def.ctrl!==undefined)p2.ctrl=def.ctrl}
  if([10,12,40,50,52].includes(n)){const def=sourceState(n);p2.type=def.type;p2.physics=def.physics;p2.moveType=def.moveType||'I';if(def.ctrl!==undefined)p2.ctrl=def.ctrl;if(def.anim!==undefined&&def.anim!=='Keep')p2.anim=Number(def.anim);if(n===40&&p2.x!==posX)p2.facing=p2.x<posX?1:-1;}
  if(n===190&&profileFor()?.data&&!['SailorNeptune','SailorSaturn'].includes(battleCharacters[1])){p2.anim=p2.vars[48];p2.elem=1;p2.elemTick=0;}
+ if(runningTakeoff)p2.vx=constVal('velocity.runjump.fwd.x',2)*p2.facing;
  if(n===0&&profileFor()?.data&&p2.anim!==5){p2.anim=p2.life<=p2.lifeMax/4?5300:0;p2.elem=1;p2.elemTick=0}if(n===106)for(const controller of battleDat.locomotionStates['106'].controllers.filter(item=>['VelSet','PosSet'].includes(item.type)))runP2ControllerM1(controller);
 }
 function bindThrowTarget(player){const binding=throwBindings[player-1];if(!binding)return;if(binding.until<=combatTraceTick){throwBindings[player-1]=null;return;}const root=specialRoot(player),x=root.x+binding.offset[0]*root.facing,y=root.y+binding.offset[1];if(binding.target===1){posX=x;posY=y;vx=root.vx*p1Facing;vy=root.vy}else{p2.x=x;p2.y=y;p2.vx=root.vx;p2.vy=root.vy}}
@@ -1576,7 +1579,7 @@ function stepP2M1ForCharacter(){
  const attackTick=isAttackState(p2.state,2);
  if(attackTick)stepP2AttackM1();
  const commands=p2Commands();
- if(p2ControlMode==='keyboard'&&p2.ctrl&&commands.holdup&&[0,11,20,52].includes(p2.state)){enterP2State(40);return}
+ if(p2ControlMode==='keyboard'&&commands.holdup&&(p2.state===100||p2.ctrl&&[0,11,20,52].includes(p2.state))){enterP2State(40);return}
  for(const controller of battleDat.playerCommands)if(controllerTriggered(controller,fighterExpressionContext(p2,p1ExpressionFighter(),commands))){runP2ControllerM1(controller,commands);return}
  p2PunchRequested=false;p2ButtonCommands={};
  if(attackTick)return;
@@ -1837,6 +1840,7 @@ function simStepCoreForCharacter(){
  if(Math.abs(cornerPushVelocity)<battleDat.cornerpushProfile.stopThreshold)cornerPushVelocity=0;
  // State controllers run before command dispatch so State 52 CtrlSet(Time=3)
  // can grant control according to the original CNS.
+ if(state===100&&!aiControlled(1)&&commandActive('holdup'))enterIRState(40);
  def=stateDef();
  for(const c of [...(state===52?[battleDat.landingSound,...(def.controllers||[])]:def.controllers||[]),...(state===20?battleDat.aiWalkControllers||[]:[])]){
    const st=state;runController(c);if(state!==st)break;
