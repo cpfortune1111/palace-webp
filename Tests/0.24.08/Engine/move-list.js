@@ -31,7 +31,12 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
  function gradient(name){
   const [a,b,c]=(colors[name]||colors.Moon).split(' ');
   const g=layer.createLinearGradient(0,0,0,544);
-  [c,b,b,a].forEach((color,i)=>g.addColorStop([.05,.35,.55,.95][i],'#'+color));
+  function midpoint(from,to){
+   const channels=[0,2,4].map(i=>Math.round((parseInt(from.slice(i,i+2),16)+parseInt(to.slice(i,i+2),16))/2));
+   return 'rgb('+channels.join(',')+')';
+  }
+  const gradientStops=[[.05,'#'+a],[.29,midpoint(a,b)],[.45,'#'+b],[.65,'#'+b],[.77,midpoint(b,c)],[.95,'#'+c]];
+  for(const [position,color] of gradientStops)g.addColorStop(position,color);
   return g;
  }
  function frameImage(w,h){
