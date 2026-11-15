@@ -6,7 +6,7 @@ export function settingsArt(name,x,y,label,action){
  image.src=new URL(artwork+name+'.webp',import.meta.url);
  image.alt=action?'':label;
  const element=action?document.createElement('button'):image;
- element.style.cssText='position:absolute;left:'+(640+x)+'px;top:'+(360+y)+'px;transform:translate(-50%,-50%);border:0;padding:0;background:none';
+ element.style.cssText='position:absolute;left:'+(640+x)+'px;top:'+(360+y)+'px;translate:-50% -50%;border:0;padding:0;background:none';
  if(action){element.type='button';element.setAttribute('aria-label',label);element.append(image);image.style.display='block';element.onclick=action}
  return element;
 }
@@ -69,7 +69,7 @@ export function createKeyConfig(layer,bindings,{back,dim,effect}){
   for(const [key,[x,y,w,h]] of Object.entries(positions)){
    const id=player+key,button=document.createElement('button');button.type='button';
    button.setAttribute('aria-label','P'+player+' '+key.toUpperCase());
-   button.style.cssText=settingsText+';position:absolute;left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;transform:translate(-50%,-50%);border:0;border-radius:'+(key.length===1&&key!=='l'&&key!=='r'?'50%':'12px')+';background:transparent;cursor:pointer';
+   button.style.cssText=settingsText+';position:absolute;left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;translate:-50% -50%;border:0;border-radius:'+(key.length===1&&key!=='l'&&key!=='r'?'50%':'12px')+';background:transparent;cursor:pointer';
    button.onclick=()=>{if(!active)begin(id)};group.append(button);buttons.set(id,button);
   }
   const title=settingsArt('P'+player,i?41:-41,-111,'P'+player);titles.push(title);
