@@ -9,6 +9,8 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
  if(preview)canvas.style.cssText="width:100%;height:auto;touch-action:none";
  parent.append(canvas);
  const ctx=canvas.getContext('2d'),bg=document.createElement('canvas');bg.width=976;bg.height=544;
+ const sparkleC=document.createElement("canvas");sparkleC.width=bg.width;sparkleC.height=bg.height;
+ const sparkle= sparkleC.getContext("2d");
  const strips=[0,1].map(()=>Object.assign(document.createElement("canvas"),{width:1,height:544}));
  const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];const displayed=[null,null],previous=[null,null],changed=[0,0];let start=0,frame=0,side=0,drag=null;
  const ready=Promise.all(files.map(async name=>{const img=new Image();img.src=new URL(root+name+'.webp',import.meta.url);await img.decode();images[name]=img}));
@@ -56,12 +58,20 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
    const left=colorPass(0),right=colorPass(1);layer.drawImage(left,0,0,508,544);
    layer.drawImage(right,508,0,468,544);
    for(let x=468;x<508;x++){layer.globalAlpha=(x-468)/40;layer.drawImage(right,x,0)}
-   const config=settings?.()??{independent:false,layers:[
+   const config=settings?.()??{independent:true,layers:[
     {name:'BGSparkC',blend:'screen',opacity:.8,visible:true},
     {name:'BGSparkB',blend:'overlay',opacity:.8,visible:true},
     {name:'BGSparkA',blend:'source-over',opacity:.8,visible:true}
    ]};
    layer.globalAlpha=1;
+   if(images.BGSparkC){
+    sparkle.globalCompositeOperation='source-over';sparkle.clearRect(0,0,976,544);
+    sparkle.drawImage(bg,0,0);
+    sparkle.globalCompositeOperation='destination-in';
+    sparkle.fillStyle=sparkle.createPattern(images.BGSparkC,'repeat-x');
+    sparkle.fillRect(0,0,976,544);
+    sparkle.globalCompositeOperation='source-over';
+   }
    if(config.independent){
     layer.globalCompositeOperation='destination-in';layer.fillStyle='rgba(0,0,0,.8)';
     layer.fillRect(0,0,976,544);
@@ -69,7 +79,7 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
    for(const {name,blend,opacity,visible} of config.layers){
     if(!visible||!images[name])continue;
     layer.globalAlpha=opacity;layer.globalCompositeOperation=blend;
-    layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544);
+    if(name==='BGSparkC'){layer.drawImage(sparkleC,0,0)}else{layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544)}
    }
    layer.globalAlpha=1;layer.globalCompositeOperation='source-over';
    ctx.save();if(w<1012||h<616){ctx.beginPath();ctx.rect((1280-w)/2+18,405-h/2+43,w-36,Math.max(0,h-71));ctx.clip()}

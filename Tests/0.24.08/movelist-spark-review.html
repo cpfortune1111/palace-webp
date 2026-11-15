@@ -8,7 +8,7 @@ body{margin:16px;background:#13182b;color:#fff;font:16px Arial,sans-serif}main{m
 <fieldset><legend>Preview</legend><label>P1 <select id="p1"></select></label><label>P2 <select id="p2"></select></label><label>Compositing <select id="composition"><option value="independent">Independent opacity</option><option value="grouped">Original grouped opacity</option></select></label><button id="copy" type="button">Copy settings</button></fieldset>
 <div id="layers"></div><div id="preview"></div><output id="values"></output></main>
 <script type="module">
-import {createMoveList} from './Engine/move-list.js?v=sparkPreview1';
+import {createMoveList} from './Engine/move-list.js?v=sparkGradient1';
 const $=id=>document.getElementById(id);
 const modes={'一般':'source-over','色彩增值':'multiply','網屏':'screen','重疊':'overlay','柔光':'soft-light','實光':'hard-light','變暗':'darken','變亮':'lighten','加深顏色':'color-burn','加亮顏色':'color-dodge','差異化':'difference','排除':'exclusion','色相':'hue','飽和度':'saturation','顏色':'color','明度':'luminosity','加法':'lighter'};
 const layers=[['C','screen'],['B','overlay'],['A','source-over']].map(([id,blend])=>{
