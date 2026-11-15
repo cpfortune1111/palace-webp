@@ -8,7 +8,8 @@ export function createMoveList(){
  canvas.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.7778vh);height:min(56.25vw,100vh);z-index:100;touch-action:none';
  document.body.append(canvas);
  const ctx=canvas.getContext('2d'),bg=document.createElement('canvas');bg.width=976;bg.height=544;
- const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];let start=0,frame=0,side=0,drag=null;
+ const strips=[0,1].map(()=>Object.assign(document.createElement("canvas"),{width:1,height:544}));
+ const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];const displayed=[null,null],previous=[null,null],changed=[0,0];let start=0,frame=0,side=0,drag=null;
  const ready=Promise.all(files.map(async name=>{const img=new Image();img.src=new URL(root+name+'.webp',import.meta.url);await img.decode();images[name]=img}));
  ready.catch(console.error);
  function move(index,amount){scroll[index]=clamp(scroll[index]+amount,Math.max(0,columns[index].length*544-544))}
@@ -19,7 +20,7 @@ export function createMoveList(){
     const name=character.replace(/^Sailor/,'');
     unique.set(name+'/'+mode,{name,mode});
    }
-   columns[i]=[...unique.values()];scroll[i]=0;
+   columns[i]=[...unique.values()];scroll[i]=0;displayed[i]=columns[i][0]?.name;previous[i]=displayed[i];changed[i]=0;
   });
   start=performance.now();side=0;canvas.hidden=false;cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);
  }
@@ -48,9 +49,11 @@ export function createMoveList(){
   if(h>56){
    layer.clearRect(0,0,976,544);
    const current=columns.map((list,i)=>list[Math.floor(scroll[i]/544)]?.name);
-   layer.fillStyle=gradient(current[0]);layer.fillRect(0,0,976,544);
-   layer.save();layer.fillStyle=gradient(current[1]);layer.beginPath();layer.rect(508,0,468,544);layer.fill();layer.restore();
-   layer.fillStyle=gradient(current[1]);for(let x=468;x<508;x++){layer.globalAlpha=(x-468)/40;layer.fillRect(x,0,1,544)}
+   current.forEach((name,i)=>{if(name!==displayed[i]){previous[i]=displayed[i];displayed[i]=name;changed[i]=now}});
+   const colorPass=(i)=>{const bitmap=strips[i];const paint=bitmap.getContext("2d");paint.globalAlpha=1;paint.fillStyle=gradient(previous[i]);paint.fillRect(0,0,1,544);paint.globalAlpha=clamp((now-changed[i])/160);paint.fillStyle=gradient(displayed[i]);paint.fillRect(0,0,1,544);return bitmap};
+   const left=colorPass(0),right=colorPass(1);layer.drawImage(left,0,0,508,544);
+   layer.drawImage(right,508,0,468,544);
+   for(let x=468;x<508;x++){layer.globalAlpha=(x-468)/40;layer.drawImage(right,x,0)}
    layer.globalAlpha=.4;
    for(const [name,blend] of [['BGSparkC','screen'],['BGSparkB','overlay'],['BGSparkA','source-over']]){
     if(!images[name])continue;layer.globalCompositeOperation=blend;layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544);
