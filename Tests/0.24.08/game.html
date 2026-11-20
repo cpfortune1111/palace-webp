@@ -52,8 +52,24 @@ body[data-input-mode="keyboard"] #ctrl,body[data-input-mode="keyboard"] #touchAt
 body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touchAttacks){display:none!important}
 @media(max-width:900px){#hud{width:max(120px,calc(100vw - 310px));max-width:calc(100vw - 16px)}}
 </style>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script><style>#keyboardSettings,#keyboardSettings *{font-family:"Arial Rounded MT Bold",Arial,sans-serif;font-weight:bold}</style><style>button:not([data-own-press]),input:is([type=button],[type=submit],[type=reset]){transform-origin:50% 50%;transition:scale 80ms}button:enabled:not([data-own-press]):active,input:is([type=button],[type=submit],[type=reset]):enabled:active{scale:.9}</style></head>
-<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r39 · Disco Mirrors / Projectile Priority</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r39-20261030</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><button id="dbgBoxes" aria-label="Toggle collision boxes">□</button><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export match log" title="Export entire match log">LOG</button><button id="dbgMark" title="Mark the current problem time">MARK</button></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script><style>#keyboardSettings,#keyboardSettings *{font-family:"Arial Rounded MT Bold",Arial,sans-serif;font-weight:bold}</style><style>button:not([data-own-press]),input:is([type=button],[type=submit],[type=reset]){transform-origin:50% 50%;transition:scale 80ms}button:enabled:not([data-own-press]):active,input:is([type=button],[type=submit],[type=reset]):enabled:active{scale:.9}</style><style>
+#hud{width:max-content!important;max-width:calc(100vw - 16px)!important}
+#hud :is(#buildid,#status,#detail,#pbar){display:none!important}
+#hud b,#hudCamera,#act{font:11px/1.4 ui-monospace,monospace;margin:0}
+#hud.collapsed #hudCamera{display:none}
+#inputPanel>*:not(#battleDebugControls){display:none!important}
+#inputPanel{top:8px;max-width:none}
+#debugBtns{position:static;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
+#debugBtns :is(button,select){width:auto;height:28px;padding:2px 6px;font:11px system-ui;white-space:nowrap}
+#dbgPlay,#dbgPause,#dbgMark{display:none!important}
+#battlePauseSettings input[type=range]{appearance:none;-webkit-appearance:none;height:5px;background:#f3dbf4}
+#battlePauseSettings input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:36px;height:36px;border:0;background:url(./Data/Settings/LunaP.webp) center/contain no-repeat;transform:translateY(-4px)}
+#battlePauseSettings input[type=range]::-moz-range-thumb{width:36px;height:36px;border:0;background:url(./Data/Settings/LunaP.webp) center/contain no-repeat;transform:translateY(-4px)}
+body:not([data-battle-ui="visible"]) #battlePauseButtons{display:none}
+body[data-touch-mirrored="true"] #ctrl{left:auto!important;right:34px!important}
+body[data-touch-mirrored="true"] #touchAttacks{right:auto;left:24px}
+</style></head>
+<body><div id="app"></div><canvas id="venus"></canvas><canvas id="mars"></canvas><canvas id="collision"></canvas><div id="hud"><b>Prototype 0.24.08-r39 · Disco Mirrors / Projectile Priority</b><div id="buildid" style="font-size:12px;opacity:.72;margin-top:2px">BUILD baseline-02408-r39-20261030</div><div id="status">Downloading StageTraining.glb…</div><div id="detail">0 / ? MB</div><div id="pbar"><div id="pfill"></div></div><div id="hudCamera">CAMERA</div><div id="act">Action 0 · Idle</div></div><div id="debugBtns"><select id="dbgBoxes" aria-label="Collision boxes"><option value="none">NO CLSN</option><option value="hurt">SHOW HURTBOX</option><option value="hit">SHOW HITBOX</option><option value="both">SHOW BOXES</option></select><button id="dbgPlay" aria-label="Play">▶</button><button id="dbgPause" aria-label="Pause / step">Ⅱ</button><button id="dbgTrace" aria-label="Export match log" title="Export entire match log">EXPORT LOG</button><button id="dbgMark" title="Mark the current problem time">MARK</button></div>
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
@@ -92,8 +108,9 @@ const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
 import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
 import {canBindKey} from './Engine/key-config-screen.js?v=centerPress1';
-import {createMoveList} from './Engine/move-list.js?v=1';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=centerPress1';
+import {createBattlePause} from './Engine/battle-pause.js?v=pauseHUD1';
+import {inputLayout} from './Engine/input-layout.js?v=pauseHUD1';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=pauseHUD1';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();
@@ -102,18 +119,18 @@ const fightHud=createFightHud({sparks:superSparks});fightHud.ready.catch(error=>
 const timerMode=document.createElement('select');timerMode.id='timerMode';timerMode.title='Training timer';timerMode.innerHTML='<option value="infinite">Timer ∞</option><option value="99">Timer 99</option>';document.querySelector('#inputPanel').appendChild(timerMode);timerMode.addEventListener('change',()=>{fightHud.setMode(timerMode.value);timerMode.blur()});
 for(let seconds=15;seconds<99;seconds++){const option=document.createElement('option');option.value=String(seconds);option.textContent='Timer '+seconds;timerMode.appendChild(option)}
 const app=document.querySelector('#app'),status=document.querySelector('#status'),act=document.querySelector('#act'),hud=document.querySelector('#hud');
-let hudCollapsed=false;
-const moveList=createMoveList();
+let hudCollapsed=true;hud.classList.add('collapsed');
+const moveList=createBattlePause({members:()=>battleCharacters.map((character,i)=>({character,mode:hardwareModes[i]})),canPause:()=>roundFlow.canFight()&&!runtimeFailed&&!gameShell.isHome(),pause:()=>{resetPlayerInput();simPaused=true;stepRequested=false},resume:()=>{resetPlayerInput();simPaused=false;stepRequested=false},shell:()=>gameShell,bindings:{get:()=>keyboardBindings,get defaults(){return defaultBindings},save:next=>saveKeyboardBindings(next)}});
 let simPaused=false,stepRequested=false;
 const gameShell=createPalaceMenu({pause:value=>{simPaused=value},prepareStage,ready:onProgress=>new Promise((resolve,reject)=>{const wait=setInterval(()=>{if(runtimeFailed||/ERROR/.test(status.textContent)){clearInterval(wait);reject(Error(status.textContent));return}const groups=[throwSpriteDat,reactionDat,battleDat,stateIR,lifecycleDat,dat,cmdDat,attackDat,gethitDat,turnDat,guardDat,fallDat,airDat,specialDat,roundConfig.matchWins,roundCharDat,roundFxDat,stageCameraReady,roundAudioReady,stageModel],done=groups.filter(Boolean).length;onProgress?.(done/(groups.length+2));if(done===groups.length){clearInterval(wait);Promise.all([fightHud.ready,roundView.ready,hardwareIndicator.ready]).then(()=>{onProgress?.(1);resolve()},reject)}},50)}),prepareCharacters,bindings:{get:()=>keyboardBindings,get defaults(){return defaultBindings},save:next=>saveKeyboardBindings(next)},start:(mode,timer,choice)=>{matchLog.begin({version:'0.24.08-r39',mode,timer,characters:[...battleCharacters],hardware:choice?.hardware,command:choice?.command},combatTraceTick);battleAbilities=[0,1].map(player=>{const points=mode==='training'?Array(6).fill(0):choice?.acs?.[player]||Array(6).fill(0);if(points.reduce((sum,value)=>sum+value,0)>abilityBudget(mode))throw Error('ACS point budget exceeded');return abilityProfile(points)});p1LifeMax=1000*battleAbilities[0].hp;p2.lifeMax=1000*battleAbilities[1].hp;setP2ControlMode(mode==='vs'?'keyboard':'dummy');if(choice)for(const player of [1,2]){const root=specialRoot(player);hardwareModes[player-1]='snes';root.vars[50]=['snes','3do','saturn'].indexOf(hardwareModes[player-1]);setCommandMode(choice.command[player-1],player)}roundFlow.begin(mode,timer)}});
 gameShell.ready.catch(showRuntimeError);
 const dbgPlay=document.querySelector('#dbgPlay'),dbgPause=document.querySelector('#dbgPause'),dbgBoxes=document.querySelector('#dbgBoxes');
-let showCollision=false;
+let showCollision=false;let collisionMode='none';
 function debugPress(el,fn){
  el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn()});
  el.addEventListener('click',e=>{e.preventDefault();e.stopPropagation()});
 }
-debugPress(dbgBoxes,()=>{showCollision=!showCollision;dbgBoxes.classList.toggle('on',showCollision)});
+dbgBoxes.addEventListener('change',()=>{collisionMode=dbgBoxes.value;showCollision=collisionMode!=='none';drawCollision()});
 function playDebug(){if(moveList.active)return;simPaused=false;stepRequested=false;dbgPause.textContent='Ⅱ'}
 function stepDebug(){
  if(!simPaused){simPaused=true;stepRequested=false;dbgPause.textContent='▸|'}
@@ -129,7 +146,7 @@ function restorePlayerHealth(){
  if(p2.state===5150){p2.hitShake=0;p2.hitTime=-1;p2.getHit.fall=0;enterP2State(5120)}
  logicFrame={...liveP1(),p2:{...p2}};updateDebugHud();draw();drawMars();drawCollision();
 }
-const dbgHeal=document.createElement('button');dbgHeal.id='dbgHeal';dbgHeal.textContent='HP';dbgHeal.title='回復雙方 HP／KO 起身 · Space';dbgHeal.setAttribute('aria-label','Restore both players health');document.querySelector('#debugBtns').appendChild(dbgHeal);debugPress(dbgHeal,restorePlayerHealth);
+const dbgHeal=document.createElement('button');dbgHeal.id='dbgHeal';dbgHeal.textContent='FULL HP';dbgHeal.style.cssText='font-size:11px;padding:3px 6px;border-radius:4px';dbgHeal.title='回復雙方 HP／KO 起身 · Space';dbgHeal.setAttribute('aria-label','Restore both players health');document.querySelector('#debugBtns').appendChild(dbgHeal);debugPress(dbgHeal,restorePlayerHealth);
 dbgPlay.title='Play · Pause/Break';dbgPause.title='Pause / Step · Scroll Lock';
 
 hud.addEventListener('click',()=>{hudCollapsed=!hudCollapsed;hud.classList.toggle('collapsed',hudCollapsed)});
@@ -524,15 +541,8 @@ addEventListener('keydown',event=>{
   if(!validBindings(candidate)){settings.querySelector('#bindingMessage').textContent='按鍵重複或不支援，請選另一個按鍵';return}
   draftBindings=candidate;bindingCapture=null;renderBindings();settings.querySelector('#bindingMessage').textContent='按儲存套用新鍵位';return;
  }
- if(moveList.active){
-  event.preventDefault();event.stopImmediatePropagation();
-  if(event.code==='Enter'&&!event.repeat){
-   moveList.close();resetPlayerInput();simPaused=false;stepRequested=false;
-   dbgPause.textContent='Ⅱ';gameShell.audio.effect('btn-click');
-  }else moveList.key(event.code);
-  return;
- }
- if(event.code==='Escape'||event.code==='Enter'){if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||gameShell.isHome()||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;event.preventDefault();resetPlayerInput();if(event.code==='Escape')gameShell.showHome();else if(roundFlow.canFight()&&!runtimeFailed){simPaused=true;stepRequested=false;dbgPause.textContent='▮▮';moveList.open(battleCharacters.map((character,i)=>({character,mode:hardwareModes[i]})));gameShell.audio.effect('btn-click')}return}
+ if(moveList.active){event.preventDefault();event.stopImmediatePropagation();if(event.code==='Pause'&&!event.repeat&&moveList.view!=='config')moveList.close();else moveList.key(event);return;}
+ if(event.code==='Escape'||event.code==='Enter'){if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||gameShell.isHome()||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;event.preventDefault();resetPlayerInput();if(event.code==='Escape')gameShell.showHome();else if(roundFlow.canFight()&&!runtimeFailed){moveList.open()}return}
  if(event.code==='Pause'||event.code==='ScrollLock'||event.code==='Space'){
   if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||event.target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;
   event.preventDefault();if(event.code==='Space')restorePlayerHealth();else if(event.code==='Pause')playDebug();else stepDebug();return;
@@ -713,7 +723,8 @@ let consumedXPress=false;
 const playerCommandLists={};
 let prevCanonical={F:false,B:false,U:false,D:false,a:false,b:false,c:false,x:false,y:false,z:false,s:false};
 try{const saved=localStorage.getItem('palace-input-mode');if(['auto','keyboard','touch'].includes(saved))inputPreference=saved}catch{}
-modeSelect.value=inputPreference;setInputMode(inputPreference==='auto'?initialInputMode():inputPreference);
+function applyInputLayout(value){inputPreference=value.mode;modeSelect.value=value.mode;setInputMode(value.mode);document.body.dataset.touchMirrored=String(value.mirrored)}
+addEventListener('palace-input-layout',event=>applyInputLayout(event.detail));applyInputLayout(inputLayout());
 function canonicalNow(){
  // MUGEN F/B are facing-relative. Physical right is F only while facing right.
  const physF=p1Facing>0?!!input.right:!!input.left;
@@ -1490,7 +1501,7 @@ function stepFallShake(){
  for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate='0 '+offset+'px';
  fallShake.age++;if(--fallShake.remaining<=0){fallShake=null;for(const selector of ['#app','#venus','#mars','#collision','#sourceEffects','#groundEffects'])document.querySelector(selector).style.translate=''}
 }
-const killControls=document.createElement('div');killControls.innerHTML='<button id="killPlayer" type="button" style="font-size:11px;padding:3px 6px;border-radius:4px">KILL PLAYER</button> <select id="killTarget" aria-label="Kill target"><option value="random">RANDOM</option><option value="p1">P1</option><option value="p2">P2</option><option value="all">ALL</option></select> <button id="allOneHp" type="button" style="font-size:11px;padding:3px 6px;border-radius:4px">ALL 1HP</button>';document.querySelector('#inputPanel').appendChild(killControls);
+const killControls=document.createElement('div');killControls.innerHTML='<button id="killPlayer" type="button" style="font-size:11px;padding:3px 6px;border-radius:4px">KILL PLAYER</button> <select id="killTarget" aria-label="Kill target"><option value="random">RANDOM</option><option value="p1">P1</option><option value="p2">P2</option><option value="all">ALL</option></select> <button id="allOneHp" type="button" style="font-size:11px;padding:3px 6px;border-radius:4px">ALL 1HP</button>';document.querySelector('#inputPanel').appendChild(killControls);const debugRow=document.querySelector('#debugBtns');killControls.prepend(debugRow);killControls.insertBefore(dbgHeal,document.querySelector('#allOneHp'));killControls.id='battleDebugControls';
 document.querySelector('#killPlayer').addEventListener('click',()=>{
  if(gameShell.isHome()||!roundFlow.canFight())return;
  let target=document.querySelector('#killTarget').value;if(target==='random')target=Math.random()<.5?'p1':'p2';
@@ -1894,10 +1905,10 @@ function drawCollision(){
    colctx.fillRect(x,y,w,h);colctx.strokeRect(x,y,w,h);
   }
  }
- for(const [playerIndex,fighter] of [displayP1(),displayP2()].entries()){
-  const set=(profileFor(playerIndex+1)?.battle||battleDat).collision[String(fighter.anim)]?.[Math.max(0,fighter.elem-1)];
-  boxes(set?.c2||[],fighter,'rgba(70,150,255,.95)','rgba(70,150,255,.18)');
-  boxes(set?.c1||[],fighter,'rgba(255,60,60,.98)','rgba(255,60,60,.22)');
+ for(const fighter of [{...displayP1(),player:1},{...displayP2(),player:2},...specialRuntime.entities.filter(entity=>!entity.destroyed)]){
+  const set=(profileFor(fighter.player)?.battle||battleDat).collision[String(fighter.anim)]?.[Math.max(0,fighter.elem-1)];
+  if(collisionMode==='hurt'||collisionMode==='both')boxes(set?.c2||[],fighter,'rgba(70,150,255,.95)','rgba(70,150,255,.18)');
+  if(collisionMode==='hit'||collisionMode==='both')boxes(set?.c1||[],fighter,'rgba(255,60,60,.98)','rgba(255,60,60,.22)');
  }
 }
 
@@ -1922,16 +1933,16 @@ const clock=new THREE.Clock();let runtimeFailed=false;
 function showRuntimeError(e){
  runtimeFailed=true;matchLog.mark(combatTraceTick,'Runtime error: '+(e?.message||e));matchLog.event(combatTraceTick,'runtime-error',{message:String(e?.message||e),stack:e?.stack?String(e.stack):null});console.error(e);
  status.textContent='RUNTIME ERROR · '+(e&&e.message?e.message:String(e));
- act.textContent='Simulation stopped — check runtime error above';
+ document.querySelector('#hud b').textContent='0.24.08-r39 — ERROR';hud.title=String(e?.message||e);
 }
 function updateDebugHud(){
  fightHud.render({...displayP1(),character:battleCharacters[0],life:p1Life,lifeMax:p1LifeMax},{...p2,character:battleCharacters[1]},{showTimeOver:!roundFlow.enabled(),superAges:superIndicators.ages()});roundView.render(roundFlow.snapshot());
  const signed=value=>(Number(value)<0?'':'+')+Number(value).toFixed(1);
- const row=(player,fighter,localVX)=>'P'+player+'_S'+fighter.state+'_T'+fighter.time+'_A'+fighter.anim+'_E'+fighter.elem+
-  '_F'+(fighter.facing<0?'-1':'+1')+'_X'+signed(fighter.x)+'_Y'+signed(fighter.y)+
-  '_VX'+signed(localVX)+'_VY'+signed(fighter.vy)+'_HP'+fighter.life;
+ const row=(player,fighter,localVX)=>'Player'+player+'__State'+fighter.state+'__Time'+fighter.time+'__Anim'+fighter.anim+'__Elem'+fighter.elem+'__VelX'+signed(localVX)+'__VelY'+signed(fighter.vy);
  const first=displayP1(),second=displayP2();
- act.textContent=row(1,first,first.vx)+'_MC'+moveContact+'_MH'+moveHit+'_MG'+moveGuarded+'\n'+row(2,second,second.vx*second.facing)+'_MC'+(p2.moveContact||0)+'_MH'+(p2.moveHit||0)+'_MG'+(p2.moveGuarded||0)+'\nVX=CNS/local · CP(world) '+signed(cornerPushVelocity)+' · P2 CP(world) '+signed(p2.cornerPushVelocity||0)+' · CAM '+signed(cameraX)+','+signed(cameraY);
+ act.textContent=row(1,first,first.vx)+'\n'+row(2,second,second.vx*second.facing);
+ document.querySelector('#hud b').textContent='0.24.08-r39 — '+(runtimeFailed?'ERROR':'READY');
+ document.querySelector('#hudCamera').textContent='CAMERA '+signed(cameraX)+', '+signed(cameraY)+' · ZOOM '+cameraZoom.toFixed(3);
 }
 let simulationAccumulator=0,pausedVisualAccumulator=0;
 function advancePausedVisuals(dt){

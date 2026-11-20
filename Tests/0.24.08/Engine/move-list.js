@@ -2,7 +2,7 @@ const root='../Data/Movelist/';
 const files=['SkillFrame','SkillBG','BGSparkA','BGSparkB','BGSparkC','Moon SNES','Jupiter SNES','Venus SNES','Neptune SNES','Saturn SNES'];
 const colors={Moon:'f77ad3 18428e 0884af',Mercury:'96f0ff 104dce 05a7aa',Mars:'d0304c 7b1829 7b45b5',Jupiter:'4ac76b 005518 efa2bd',Venus:'f9e97b 393cb5 f7aa08',Pluto:'963036 290c21 7b2052',Neptune:'08bea5 001439 105984',Uranus:'ffdd65 21307b 4265ef',ChibiMoon:'ff6796 733073 f78ac6',Saturn:'7371d6 291c7b 9455c6',TuxedoMask:'9c3073 18418c 3975ff',SuperMoon:'cc99ff 2244bb 77bbcc',LadySwatheshia:'bb44aa 000044 33ccdd'};
 const clamp=(x,max=1)=>Math.max(0,Math.min(max,x));
-export function createMoveList({parent=document.body,preview=false,settings}={}){
+export function createMoveList({parent=document.body,preview=false,settings,alternate,phase}={}){
  const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;
  canvas.hidden=true;canvas.setAttribute('aria-label','Move list. Enter to resume');
  canvas.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.7778vh);height:min(56.25vw,100vh);z-index:100;touch-action:none';
@@ -12,7 +12,7 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
  const sparkleC=document.createElement("canvas");sparkleC.width=bg.width;sparkleC.height=bg.height;
  const sparkle= sparkleC.getContext("2d");
  const strips=[0,1].map(()=>Object.assign(document.createElement("canvas"),{width:1,height:544}));
- const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];const displayed=[null,null],previous=[null,null],changed=[0,0];let start=0,frame=0,side=0,drag=null;
+ const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];const displayed=[null,null],previous=[null,null],changed=[0,0];let start=0,frame=0,side=0,drag=null,view='movelist',switchAt=0,pending='movelist';
  const ready=Promise.all(files.map(async name=>{const img=new Image();img.src=new URL(root+name+'.webp',import.meta.url);await img.decode();images[name]=img}));
  ready.catch(console.error);
  function move(index,amount){scroll[index]=clamp(scroll[index]+amount,Math.max(0,columns[index].length*544-544))}
@@ -25,7 +25,7 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
    }
    columns[i]=[...unique.values()];scroll[i]=0;displayed[i]=columns[i][0]?.name;previous[i]=displayed[i];changed[i]=0;
   });
-  start=performance.now();side=0;canvas.hidden=false;cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);
+  view=pending='movelist';switchAt=0;start=performance.now();side=0;canvas.hidden=false;cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);
  }
  function close(){canvas.hidden=true;drag=null;cancelAnimationFrame(frame)}
  function gradient(name){
@@ -42,10 +42,10 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
  }
  function frameImage(w,h){
   const image=images.SkillFrame;if(!image)return;
-  const sx=[132,232,1044,1144],sy=[97,140,685,713];
-  if(w===1012&&h===616){ctx.drawImage(image,2,0);return}
-  const x=640-w/2,y=405-h/2;
-  const bx=Math.min(100,w/2),top=Math.min(43,h/2),bottom=Math.min(28,h/2);
+  const sx=[140,240,1040,1140],sy=[108,140,685,720];
+  if(w===1000&&h===612){ctx.drawImage(image,0,0);return}
+  const x=640-w/2,y=414-h/2;
+  const bx=Math.min(100,w/2),top=Math.min(32,h/2),bottom=Math.min(35,h/2);
   const dx=[x,x+bx,x+w-bx,x+w],dy=[y,y+top,y+h-bottom,y+h];
   for(let j=0;j<3;j++)for(let i=0;i<3;i++){
    const dw=dx[i+1]-dx[i],dh=dy[j+1]-dy[j];
@@ -55,8 +55,10 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
  function draw(now){
   if(canvas.hidden)return;
   ctx.clearRect(0,0,1280,720);
-  const w=220+792*clamp((now-start)/120),h=56+560*clamp((now-start-120)/150);
-  if(h>56){
+  let w=220+780*clamp((now-start)/120),h=56+556*clamp((now-start-120)/150),opacity=clamp((now-start-120)/150);
+  if(switchAt){const age=now-switchAt;if(age<120){opacity=1-age/120;w=1000;h=612}else if(age<270){opacity=0;w=1000;h=612-556*(age-120)/150}else{view=pending;w=1000;h=56+556*clamp((age-270)/150);opacity=clamp((age-270)/150);if(age>=420)switchAt=0}}
+  phase?.({view,opacity,transitioning:!!switchAt});
+  if(h>56&&view==='movelist'){
    layer.clearRect(0,0,976,544);
    const current=columns.map((list,i)=>list[Math.floor(scroll[i]/544)]?.name);
    current.forEach((name,i)=>{if(name!==displayed[i]){previous[i]=displayed[i];displayed[i]=name;changed[i]=now}});
@@ -88,9 +90,9 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
     if(name==='BGSparkC'){layer.drawImage(sparkleC,0,0)}else{layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544)}
    }
    layer.globalAlpha=1;layer.globalCompositeOperation='source-over';
-   ctx.save();if(w<1012||h<616){ctx.beginPath();ctx.rect((1280-w)/2+18,405-h/2+43,w-36,Math.max(0,h-71));ctx.clip()}
+   ctx.save();if(w<1000||h<612){ctx.beginPath();ctx.rect((1280-w)/2+18,414-h/2+32,w-36,Math.max(0,h-67));ctx.clip()}
    ctx.beginPath();ctx.roundRect(152,140,976,544,[12,12,40,40]);ctx.clip();
-   ctx.globalAlpha=config.independent?1:.8;ctx.drawImage(bg,152,140);ctx.globalAlpha=1;
+   ctx.globalAlpha=opacity*(config.independent?1:.8);ctx.drawImage(bg,152,140);ctx.globalAlpha=opacity;
    ctx.fillStyle='#db9900';ctx.fillRect(640,184,1,468);
    columns.forEach((list,i)=>{
     ctx.save();ctx.beginPath();ctx.rect(152+i*488,140,488,544);ctx.clip();
@@ -101,12 +103,13 @@ export function createMoveList({parent=document.body,preview=false,settings}={})
     ctx.restore();
    });ctx.restore();
   }
-  frameImage(w,h);frame=requestAnimationFrame(draw);
+  if(view!=='movelist'){ctx.save();ctx.beginPath();ctx.roundRect(152,140,976,544,[12,12,40,40]);ctx.clip();ctx.beginPath();ctx.rect(152,414-h/2+32,976,Math.max(0,h-67));ctx.clip();alternate?.(ctx,view,opacity);ctx.restore()}
+  ctx.save();ctx.shadowColor='#9f9500';ctx.shadowBlur=5;frameImage(w,h);ctx.restore();frame=requestAnimationFrame(draw);
  }
- canvas.onpointerdown=e=>{if(!e.isPrimary)return;side=e.clientX<innerWidth/2?0:1;drag={id:e.pointerId,y:e.clientY};canvas.setPointerCapture(e.pointerId)};
+ canvas.onpointerdown=e=>{if(!e.isPrimary||view!=='movelist')return;side=e.clientX<innerWidth/2?0:1;drag={id:e.pointerId,y:e.clientY};canvas.setPointerCapture(e.pointerId)};
  canvas.onpointermove=e=>{if(drag?.id!==e.pointerId)return;move(side,(drag.y-e.clientY)*720/canvas.getBoundingClientRect().height);drag.y=e.clientY};
  canvas.onlostpointercapture=()=>drag=null;
  canvas.addEventListener('wheel',e=>{e.preventDefault();move(e.clientX<innerWidth/2?0:1,e.deltaY)},{passive:false});
- return {ready,open,close,get active(){return !canvas.hidden},key(code){if(code==='ArrowLeft')side=0;if(code==='ArrowRight')side=1;if(code==='ArrowUp'||code==='ArrowDown')move(side,code==='ArrowUp'?-42:42)}};
+ return {ready,open,close,get active(){return !canvas.hidden},get view(){return view},switchView(next){if(canvas.hidden||switchAt||next===view)return false;pending=next;switchAt=performance.now();return true},key(code){if(code==='ArrowLeft')side=0;if(code==='ArrowRight')side=1;if(code==='ArrowUp'||code==='ArrowDown')move(side,code==='ArrowUp'?-42:42)}};
 }
 
