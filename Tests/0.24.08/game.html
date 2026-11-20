@@ -108,7 +108,7 @@ const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
 import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
 import {canBindKey} from './Engine/key-config-screen.js?v=centerPress1';
-import {createBattlePause} from './Engine/battle-pause.js?v=pauseHUD1';
+import {createBattlePause} from './Engine/battle-pause.js?v=pauseHUD2';
 import {inputLayout} from './Engine/input-layout.js?v=pauseHUD1';
 import {createPalaceMenu} from './Engine/palace-menu.js?v=pauseHUD1';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
@@ -545,7 +545,7 @@ addEventListener('keydown',event=>{
  if(event.code==='Escape'||event.code==='Enter'){if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||gameShell.isHome()||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;event.preventDefault();resetPlayerInput();if(event.code==='Escape')gameShell.showHome();else if(roundFlow.canFight()&&!runtimeFailed){moveList.open()}return}
  if(event.code==='Pause'||event.code==='ScrollLock'||event.code==='Space'){
   if(event.repeat||event.ctrlKey||event.metaKey||event.altKey||event.target?.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(event.target?.tagName||''))return;
-  event.preventDefault();if(event.code==='Space')restorePlayerHealth();else if(event.code==='Pause')playDebug();else stepDebug();return;
+  event.preventDefault();if(event.code==='Space')restorePlayerHealth();else if(event.code==='Pause'){if(simPaused)playDebug();else stepDebug()}else stepDebug();return;
  }
  if(p2Keymap[event.code]){
   if(editableTarget(event.target)||event.ctrlKey||event.metaKey||event.altKey||inputPreference==='touch')return;
@@ -1941,7 +1941,7 @@ function updateDebugHud(){
  const row=(player,fighter,localVX)=>'Player'+player+'__State'+fighter.state+'__Time'+fighter.time+'__Anim'+fighter.anim+'__Elem'+fighter.elem+'__VelX'+signed(localVX)+'__VelY'+signed(fighter.vy);
  const first=displayP1(),second=displayP2();
  act.textContent=row(1,first,first.vx)+'\n'+row(2,second,second.vx*second.facing);
- document.querySelector('#hud b').textContent='0.24.08-r39 — '+(runtimeFailed?'ERROR':'READY');
+ document.querySelector('#hud b').textContent='0.24.08-r39 — '+(runtimeFailed?'ERROR':simPaused?'PAUSE':'READY');
  document.querySelector('#hudCamera').textContent='CAMERA '+signed(cameraX)+', '+signed(cameraY)+' · ZOOM '+cameraZoom.toFixed(3);
 }
 let simulationAccumulator=0,pausedVisualAccumulator=0;

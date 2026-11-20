@@ -91,7 +91,7 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
    }
    layer.globalAlpha=1;layer.globalCompositeOperation='source-over';
    ctx.save();if(w<1000||h<612){ctx.beginPath();ctx.rect((1280-w)/2+18,414-h/2+32,w-36,Math.max(0,h-67));ctx.clip()}
-   ctx.beginPath();ctx.roundRect(152,140,976,544,[12,12,40,40]);ctx.clip();
+   ctx.beginPath();ctx.rect(152,140,976,544);ctx.clip();
    ctx.globalAlpha=opacity*(config.independent?1:.8);ctx.drawImage(bg,152,140);ctx.globalAlpha=opacity;
    ctx.fillStyle='#db9900';ctx.fillRect(640,184,1,468);
    columns.forEach((list,i)=>{
@@ -103,7 +103,7 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
     ctx.restore();
    });ctx.restore();
   }
-  if(view!=='movelist'){ctx.save();ctx.beginPath();ctx.roundRect(152,140,976,544,[12,12,40,40]);ctx.clip();ctx.beginPath();ctx.rect(152,414-h/2+32,976,Math.max(0,h-67));ctx.clip();alternate?.(ctx,view,opacity);ctx.restore()}
+  if(view!=='movelist'){ctx.save();ctx.beginPath();ctx.rect(152,140,976,544);ctx.clip();ctx.beginPath();ctx.rect(152,414-h/2+32,976,Math.max(0,h-67));ctx.clip();alternate?.(ctx,view,opacity);ctx.restore()}
   ctx.save();ctx.shadowColor='#9f9500';ctx.shadowBlur=5;frameImage(w,h);ctx.restore();frame=requestAnimationFrame(draw);
  }
  canvas.onpointerdown=e=>{if(!e.isPrimary||view!=='movelist')return;side=e.clientX<innerWidth/2?0:1;drag={id:e.pointerId,y:e.clientY};canvas.setPointerCapture(e.pointerId)};
