@@ -1,4 +1,4 @@
-import {preloadQuoteAssets} from './quote-animation.js?v=02408r13';
+import {preloadQuoteAssets} from './quote-animation.js?v=saturnQuote1';
 import {ensureRouter,installAssetFetch} from './boot-router.js?v=02408r25';
 export const presentationCharacters=['SailorVenus','SailorMoon','SailorJupiter','SailorNeptune','SailorSaturn'];
 export async function ensurePresentationWorker(){

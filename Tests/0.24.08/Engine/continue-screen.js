@@ -1,7 +1,7 @@
 import {createContinueFlow,CONTINUE_TIMING,LP0,LP1,K01,sequenceFrame} from './continue-flow.js?v=02408r38';
 import {createContinueEnergy} from './continue-energy.js?v=02408r38';
 import {createContinueStage} from './swatheshia-scene.js?v=continueCamera2';
-import {createDeclarationScreen} from './declaration-screen.js?v=02408r36';
+import {createDeclarationScreen} from './declaration-screen.js?v=saturnQuote1';
 import {loadBitmapFont,drawBitmapText,fontLayout} from './bitmap-font.js?v=02408r33';
 const clamp=n=>Math.max(0,Math.min(1,n));
 function ease(p){let lo=0,hi=1,t=.5;for(let i=0;i<18;i++){t=(lo+hi)/2;const x=3*(1-t)**2*t*.25+3*(1-t)*t*t*.35+t**3;if(x<p)lo=t;else hi=t}return 3*(1-t)*t*t+t**3}

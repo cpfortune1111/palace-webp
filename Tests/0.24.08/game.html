@@ -70,7 +70,7 @@ body[data-touch-mirrored="true"] #touchAttacks{right:auto;left:24px}
 <div id="ctrl"><div id="touchShoulders"><button id="atkL" class="touchButton" data-action="l" aria-label="L">L</button><button id="atkR" class="touchButton" data-action="r" aria-label="R">R</button></div><div id="stick"><div id="stickKnob"></div></div></div><div id="touchAttacks"><button id="atkA" class="touchButton" data-action="a" aria-label="A attack">A</button><button id="atkB" class="touchButton" data-action="b" aria-label="B attack">B</button><button id="atkX" class="touchButton" data-action="x" aria-label="X attack">X</button><button id="atkY" class="touchButton" data-action="y" aria-label="Y attack">Y</button></div>
 <div id="inputPanel"><label for="inputMode">Input </label><select id="inputMode"><option value="auto">Auto / 自動</option><option value="keyboard">Keyboard / 鍵盤</option><option value="touch">Touch / 觸控</option></select><div id="inputHint" aria-live="polite"></div><label> P2 <select id="p2Guard"><option value="none">不防禦</option><option value="stand">站立防禦</option><option value="crouch">蹲下防禦</option></select></label><label> 控制 <select id="p2Control"><option value="dummy">Dummy / 測試</option><option value="keyboard">Keyboard / Numpad</option></select></label><button id="p2Punch" style="font-size:11px;padding:3px 6px;margin-left:6px;border-radius:4px" title="Numpad0 / 地面單次出拳測試，非 AI">P2 出拳測試</button></div>
 <script type="module">
-import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r39';
+import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=saturnQuote1';
 await ensurePresentationWorker();
 import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r13';
 import {installAssetInteractions} from './Engine/asset-interactions.js?v=uiPolish1';installAssetInteractions();
@@ -108,7 +108,7 @@ import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
 import {canBindKey} from './Engine/key-config-screen.js?v=centerPress1';
 import {createBattlePause} from './Engine/battle-pause.js?v=uiPolish1';
 import {inputLayout} from './Engine/input-layout.js?v=uiPolish1';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=uiPolish1';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=saturnQuote1';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();

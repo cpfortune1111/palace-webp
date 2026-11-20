@@ -1,6 +1,7 @@
+export function declarationPortraitOrder(players,result=false){return !result&&players[1]==='SailorSaturn'&&players[0]!=='SailorSaturn'?[1,0]:[0,1]}
 import {createVersusModel,versusPose} from './versus-model.js?v=02408r43';
 import {createDeclarationFlow} from './declaration-flow.js?v=02408r43';
-import {createQuotePortrait,quoteDuration} from './quote-animation.js?v=02408r40';
+import {createQuotePortrait,quoteDuration} from './quote-animation.js?v=saturnQuote1';
 export function createDeclarationScreen(api){
  const portraits=[createQuotePortrait(),createQuotePortrait()];let variants=[],active=false,preparedPlayers=[];
  const versus=createVersusModel(),ready=Promise.all([versus.ready,...portraits.map(p=>p.ready)]);
@@ -8,12 +9,12 @@ export function createDeclarationScreen(api){
  const flow=createDeclarationFlow({variant:player=>variants[player-1],voiceTick:player=>portraits[player-1].tick,startVoice:player=>{portraits[player-1].set(variants[player-1].id);if(!flow.snapshot().result)portraits[player-1].step(0,audio=>api.sound?api.sound(audio):audio)},play:()=>{},playing:()=>portraits.some(p=>p.playing),complete:()=>{active=false;api.complete()}});
  function begin(players,options={}){
   if(players.some((c,i)=>preparedPlayers[i]!==c))throw Error('Selected portrait declarations were not prepared');
-  variants=players.map((c,index)=>{const actions=portraits[index].manifest.actions;let ids=options.result?(options.winner===index+1?['9020','9021']:options.reason==='time'?['9040','9041']:['9030','9031']):['9011','9012'];ids=ids.filter(id=>actions[id]);if(!ids.length)ids=['9030','9031'].filter(id=>actions[id]);const id=ids[Math.floor(Math.random()*ids.length)];return {id,cues:[],duration:quoteDuration(actions[id])}});
+  variants=players.map((c,index)=>{const actions=portraits[index].manifest.actions;let ids=options.result?(options.winner===index+1?['9020','9021']:options.reason==='time'?['9040','9041']:['9030','9031']):['9011','9012'];ids=ids.filter(id=>actions[id]);if(!ids.length)ids=['9030','9031'].filter(id=>actions[id]);const id=ids.includes(options.variants?.[index])?options.variants[index]:ids[Math.floor(Math.random()*ids.length)];return {id,cues:[],duration:quoteDuration(actions[id])}});
   portraits.forEach(p=>p.set(options.result?'9019':'9010'));active=true;flow.begin(options);api.start?.();
  }
  function reset(){active=false;portraits.forEach(p=>p.stop());flow.reset()}
  function draw(context){if(!active&&flow.snapshot().phase!=='done')return;const{ticks,result,winner,movement,loserOpacity}=flow.snapshot(),progress=Math.min(1,ticks/90),ease=1-(1-progress)**3;
-  portraits.forEach((p,index)=>{const center=result?(index?1000:280):(index?1000+(1-ease)*450:280-(1-ease)*450),vertical=360+(result?60:0)+(result&&winner?(index+1===winner?-60:60)*movement:0);p.draw(context,center-640,vertical-360,1280,720,(result?1:progress)*(result&&winner&&index+1!==winner?loserOpacity:1),index?-1:1)});
+  declarationPortraitOrder(preparedPlayers,result).forEach(index=>{const p=portraits[index],center=result?(index?1000:280):(index?1000+(1-ease)*450:280-(1-ease)*450),vertical=360+(result?60:0)+(result&&winner?(index+1===winner?-60:60)*movement:0);p.draw(context,center-640,vertical-360,1280,720,(result?1:progress)*(result&&winner&&index+1!==winner?loserOpacity:1),index?-1:1)});
   if(!result)versus.draw(context,versusPose(ticks,flow.snapshot().vsExitAge));
   const fade=flow.fade();if(fade){context.save();context.globalAlpha=fade;context.fillStyle='black';context.fillRect(0,0,1280,720);context.restore()}
  }

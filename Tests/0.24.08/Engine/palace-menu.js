@@ -1,7 +1,7 @@
 import {styleSettingsSlider} from './settings-slider.js?v=uiPolish1';
 import {inputSwitchRow} from './input-layout.js?v=uiPolish1';
 import {createKeyConfig,settingsArt} from './key-config-screen.js?v=centerPress1';
-import {createContinueScreen} from './continue-screen.js?v=centerPress1';
+import {createContinueScreen} from './continue-screen.js?v=saturnQuote1';
 import {createSettingsPresentation} from './settings-presentation.js?v=02408r43';
 import {navigationArtwork} from './artwork-navigation.js?v=02408r39';
 import {readLoadRecovery,saveLoadRecovery,clearLoadRecovery,rebuildPageOnce} from './load-recovery.js?v=02408r15';
@@ -12,9 +12,9 @@ import {assetUrl} from './asset-paths.js?v=02362';
 import {celebrationWinner} from '../Stage/Title/winner-fireworks.js?v=fireworkPool1';
 import {createTitleStage} from '../Stage/Title/title-stage.js?v=fireworkPool1';
 import {createLogoIntro} from '../Data/Logo/logo-intro.js?v=02408r39';
-import {createSelectScreen} from './select-screen.js?v=centerPress1';
-import {createResultDeclarationScreen} from './result-declaration-screen.js?v=02408r43';
-import {createAcsScreen} from './acs-screen.js?v=centerPress1';
+import {createSelectScreen} from './select-screen.js?v=saturnQuote1';
+import {createResultDeclarationScreen} from './result-declaration-screen.js?v=saturnQuote1';
+import {createAcsScreen} from './acs-screen.js?v=saturnQuote1';
 import {createMenuEntrance} from './menu-entrance.js?v=02370';
 import {createLoadingScreen} from './loading-screen.js?v=02408r39';
 

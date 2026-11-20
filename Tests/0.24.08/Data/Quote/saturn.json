@@ -136,109 +136,169 @@
       "file": "Char/Saturn/Quote/901000.webp",
       "width": 1280,
       "height": 720,
-      "x": 200,
-      "y": 81,
-      "cropWidth": 1080,
-      "cropHeight": 639
+      "x": 116,
+      "y": 0,
+      "cropWidth": 1091,
+      "cropHeight": 720,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901001": {
       "file": "Char/Saturn/Quote/901001.webp",
       "width": 1280,
       "height": 720,
-      "x": 209,
-      "y": 100,
-      "cropWidth": 1071,
-      "cropHeight": 620
+      "x": 125,
+      "y": 30,
+      "cropWidth": 1141,
+      "cropHeight": 690,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901002": {
       "file": "Char/Saturn/Quote/901002.webp",
       "width": 1280,
       "height": 720,
-      "x": 220,
-      "y": 114,
-      "cropWidth": 1060,
-      "cropHeight": 606
+      "x": 135,
+      "y": 96,
+      "cropWidth": 1140,
+      "cropHeight": 624,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901003": {
       "file": "Char/Saturn/Quote/901003.webp",
       "width": 1280,
       "height": 720,
-      "x": 231,
+      "x": 146,
       "y": 130,
-      "cropWidth": 1049,
-      "cropHeight": 590
+      "cropWidth": 1134,
+      "cropHeight": 590,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901004": {
       "file": "Char/Saturn/Quote/901004.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
+      "x": 181,
       "y": 148,
-      "cropWidth": 1014,
-      "cropHeight": 572
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901005": {
       "file": "Char/Saturn/Quote/901005.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
+      "x": 181,
       "y": 148,
-      "cropWidth": 1014,
-      "cropHeight": 572
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901006": {
       "file": "Char/Saturn/Quote/901006.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
-      "y": 149,
-      "cropWidth": 1014,
-      "cropHeight": 571
+      "x": 181,
+      "y": 148,
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901007": {
       "file": "Char/Saturn/Quote/901007.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
+      "x": 181,
       "y": 148,
-      "cropWidth": 1014,
-      "cropHeight": 572
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901008": {
       "file": "Char/Saturn/Quote/901008.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
-      "y": 149,
-      "cropWidth": 1014,
-      "cropHeight": 571
+      "x": 181,
+      "y": 148,
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901009": {
       "file": "Char/Saturn/Quote/901009.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
+      "x": 181,
       "y": 148,
-      "cropWidth": 1014,
-      "cropHeight": 572
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "901010": {
       "file": "Char/Saturn/Quote/901010.webp",
       "width": 1280,
       "height": 720,
-      "x": 266,
+      "x": 181,
       "y": 148,
-      "cropWidth": 1014,
-      "cropHeight": 572
+      "cropWidth": 1099,
+      "cropHeight": 572,
+      "sourceSize": [
+        1920,
+        1080
+      ],
+      "alignment": "bottom"
     },
     "902000": {
       "file": "Char/Saturn/Quote/902000.webp",
       "width": 1280,
       "height": 720,
       "x": 465,
-      "y": 0,
+      "y": -65,
       "cropWidth": 612,
-      "cropHeight": 720
+      "cropHeight": 785,
+      "sourceSize": [
+        1920,
+        1501
+      ],
+      "alignment": "bottom"
     },
     "902001": {
       "file": "Char/Saturn/Quote/902001.webp",

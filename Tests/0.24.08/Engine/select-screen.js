@@ -2,8 +2,8 @@ import {menuArtworkReady,drawModeHeading} from './menu-artwork.js?v=02408r39';
 import {navigationReady,navigationArtwork} from './artwork-navigation.js?v=02408r33';
 import {assetUrl} from './asset-paths.js?v=02362';
 import {createLoadingScreen} from './loading-screen.js?v=02408r36';
-import {createQuotePortrait,preloadQuoteAssets} from './quote-animation.js?v=02408r13';
-import {preloadPresentationPack,preloadPresentationPortraits} from './presentation-preload.js?v=02408r25';
+import {createQuotePortrait,preloadQuoteAssets} from './quote-animation.js?v=saturnQuote1';
+import {preloadPresentationPack,preloadPresentationPortraits} from './presentation-preload.js?v=saturnQuote1';
 export function createSelectScreen(parent,api){
  const view=document.createElement('section');view.id='palaceSelection';view.hidden=true;view.style.cssText='position:absolute;inset:0;background:#05050d;z-index:2';parent.appendChild(view);
  const canvas=document.createElement('canvas');canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none';view.appendChild(canvas);const context=canvas.getContext('2d');
