@@ -1,4 +1,4 @@
-import {createMoveList} from './move-list.js?v=pauseHUD2';
+import {createMoveList} from './move-list.js?v=movelistLens1';
 import {createKeyConfig,settingsArt,settingsText} from './key-config-screen.js?v=centerPress1';
 import {touchOnly,inputSwitchRow} from './input-layout.js?v=pauseHUD1';
 export function createBattlePause({members,canPause,pause,resume,shell,bindings}){

@@ -8,12 +8,30 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
  canvas.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,177.7778vh);height:min(56.25vw,100vh);z-index:100;touch-action:none';
  if(preview)canvas.style.cssText="width:100%;height:auto;touch-action:none";
  parent.append(canvas);
- const ctx=canvas.getContext('2d'),bg=document.createElement('canvas');bg.width=976;bg.height=544;
+ const screen=canvas.getContext('2d');let ctx=screen;const bg=document.createElement('canvas');bg.width=976;bg.height=544;
+ const content=document.createElement('canvas');content.width=1952;content.height=1088;
+ const contentContext=content.getContext('2d');contentContext.setTransform(2,0,0,2,-304,-280);
+ const lens=document.createElement('canvas');lens.width=2560;lens.height=1440;lens.dataset.movelistLens='';lens.hidden=true;lens.ariaHidden='true';
+ lens.style.cssText=canvas.style.cssText+';pointer-events:none;z-index:101';parent.append(lens);
+ const lensContext=lens.getContext('2d');lensContext.scale(2,2);
+ function renderLens(){
+  lensContext.clearRect(0,0,1280,720);
+  if(!drag||canvas.hidden||view!=='movelist'||switchAt)return;
+  if(preview){const bounds=canvas.getBoundingClientRect();lens.style.cssText=`position:fixed;left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px;pointer-events:none;z-index:101`}
+  const {x,y}=drag,c=lensContext;
+  screen.save();screen.beginPath();screen.rect(152,140,976,544);screen.clip();screen.globalCompositeOperation='destination-out';screen.beginPath();screen.arc(x,y,120,0,Math.PI*2);screen.fill();screen.restore();
+  c.save();c.beginPath();c.rect(152,140,976,544);c.clip();
+  c.shadowColor='rgba(0,0,0,.25)';c.shadowOffsetY=4;c.shadowBlur=4;c.fillStyle='#000';
+  c.beginPath();c.arc(x,y,120,0,Math.PI*2);c.fill();
+  c.shadowColor='transparent';c.shadowOffsetY=0;c.shadowBlur=0;c.globalCompositeOperation='destination-out';c.fill();c.globalCompositeOperation='source-over';c.clip();
+  c.drawImage(content,x+(152-x)*1.4,y+(140-y)*1.4,976*1.4,544*1.4);
+  c.restore();
+ }
  const sparkleC=document.createElement("canvas");sparkleC.width=bg.width;sparkleC.height=bg.height;
  const sparkle= sparkleC.getContext("2d");
  const strips=[0,1].map(()=>Object.assign(document.createElement("canvas"),{width:1,height:544}));
  const layer=bg.getContext('2d'),images={},columns=[[],[]],scroll=[0,0];const displayed=[null,null],previous=[null,null],changed=[0,0];let start=0,frame=0,side=0,drag=null,view='movelist',switchAt=0,pending='movelist';
- const ready=Promise.all(files.map(async name=>{const img=new Image();img.src=new URL(root+name+'.webp',import.meta.url);await img.decode();images[name]=img}));
+ const ready=Promise.all(files.map(async name=>{const img=new Image();img.src=new URL(root+name+'.webp?v=movelistLens1',import.meta.url);await img.decode();images[name]=img}));
  ready.catch(console.error);
  function move(index,amount){scroll[index]=clamp(scroll[index]+amount,Math.max(0,columns[index].length*544-544))}
  function open(members){
@@ -25,9 +43,9 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
    }
    columns[i]=[...unique.values()];scroll[i]=0;displayed[i]=columns[i][0]?.name;previous[i]=displayed[i];changed[i]=0;
   });
-  view=pending='movelist';switchAt=0;start=performance.now();side=0;canvas.hidden=false;cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);
+  drag=null;lens.hidden=false;view=pending='movelist';switchAt=0;start=performance.now();side=0;canvas.hidden=false;cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);
  }
- function close(){canvas.hidden=true;drag=null;cancelAnimationFrame(frame)}
+ function close(){canvas.hidden=true;lens.hidden=true;drag=null;renderLens();cancelAnimationFrame(frame)}
  function gradient(name){
   const [a,b,c]=(colors[name]||colors.Moon).split(' ');
   const g=layer.createLinearGradient(0,0,0,544);
@@ -90,7 +108,7 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
     if(name==='BGSparkC'){layer.drawImage(sparkleC,0,0)}else{layer.fillStyle=layer.createPattern(images[name],'repeat-x');layer.fillRect(0,0,976,544)}
    }
    layer.globalAlpha=1;layer.globalCompositeOperation='source-over';
-   ctx.save();if(w<1000||h<612){ctx.beginPath();ctx.rect((1280-w)/2+18,414-h/2+32,w-36,Math.max(0,h-67));ctx.clip()}
+   ctx=contentContext;ctx.clearRect(152,140,976,544);ctx.save();if(w<1000||h<612){ctx.beginPath();ctx.rect((1280-w)/2+18,414-h/2+32,w-36,Math.max(0,h-67));ctx.clip()}
    ctx.beginPath();ctx.rect(152,140,976,544);ctx.clip();
    ctx.globalAlpha=opacity*(config.independent?1:.8);ctx.drawImage(bg,152,140);ctx.globalAlpha=opacity;
    ctx.fillStyle='#db9900';ctx.fillRect(640,184,1,468);
@@ -98,18 +116,26 @@ export function createMoveList({parent=document.body,preview=false,settings,alte
     ctx.save();ctx.beginPath();ctx.rect(152+i*488,140,488,544);ctx.clip();
     list.forEach(({name,mode},index)=>{
      const image=images[name+' '+mode.toUpperCase()],y=140+index*544-scroll[i];
-     if(image)ctx.drawImage(image,152+i*488,y);
+     if(image)ctx.drawImage(image,152+i*488,y,488,544);
     });
     ctx.restore();
-   });ctx.restore();
+   });ctx.restore();ctx=screen;ctx.drawImage(content,152,140,976,544);
   }
   if(view!=='movelist'){ctx.save();ctx.beginPath();ctx.rect(152,140,976,544);ctx.clip();ctx.beginPath();ctx.rect(152,414-h/2+32,976,Math.max(0,h-67));ctx.clip();alternate?.(ctx,view,opacity);ctx.restore()}
-  ctx.save();ctx.shadowColor='#9f9500';ctx.shadowBlur=5;frameImage(w,h);ctx.restore();frame=requestAnimationFrame(draw);
+  renderLens();ctx.save();ctx.shadowColor='#9f9500';ctx.shadowBlur=5;frameImage(w,h);ctx.restore();frame=requestAnimationFrame(draw);
  }
- canvas.onpointerdown=e=>{if(!e.isPrimary||view!=='movelist')return;side=e.clientX<innerWidth/2?0:1;drag={id:e.pointerId,y:e.clientY};canvas.setPointerCapture(e.pointerId)};
- canvas.onpointermove=e=>{if(drag?.id!==e.pointerId)return;move(side,(drag.y-e.clientY)*720/canvas.getBoundingClientRect().height);drag.y=e.clientY};
- canvas.onlostpointercapture=()=>drag=null;
+ function point(event){const bounds=canvas.getBoundingClientRect();return {x:(event.clientX-bounds.left)*1280/bounds.width,y:(event.clientY-bounds.top)*720/bounds.height}}
+ function redraw(){if(canvas.hidden)return;cancelAnimationFrame(frame);draw(performance.now())}
+ function release(event){if(drag&&(!event||drag.id===event.pointerId)){drag=null;redraw()}}
+ canvas.onpointerdown=e=>{
+  if(!e.isPrimary||e.button!==0||view!=='movelist'||switchAt||performance.now()-start<270)return;
+  const p=point(e);if(p.x<152||p.x>1128||p.y<140||p.y>684)return;
+  e.preventDefault();side=p.x<640?0:1;drag={id:e.pointerId,...p};canvas.setPointerCapture(e.pointerId);redraw();
+ };
+ canvas.onpointermove=e=>{if(drag?.id!==e.pointerId)return;Object.assign(drag,point(e));redraw()};
+ canvas.onpointerup=release;canvas.onpointercancel=release;canvas.onlostpointercapture=release;
+ addEventListener('blur',()=>release());
  canvas.addEventListener('wheel',e=>{e.preventDefault();move(e.clientX<innerWidth/2?0:1,e.deltaY)},{passive:false});
- return {ready,open,close,get active(){return !canvas.hidden},get view(){return view},switchView(next){if(canvas.hidden||switchAt||next===view)return false;pending=next;switchAt=performance.now();return true},key(code){if(code==='ArrowLeft')side=0;if(code==='ArrowRight')side=1;if(code==='ArrowUp'||code==='ArrowDown')move(side,code==='ArrowUp'?-42:42)}};
+ return {ready,open,close,get active(){return !canvas.hidden},get view(){return view},switchView(next){if(canvas.hidden||switchAt||next===view)return false;drag=null;renderLens();pending=next;switchAt=performance.now();return true},key(code){if(code==='ArrowLeft')side=0;if(code==='ArrowRight')side=1;if(code==='ArrowUp'||code==='ArrowDown')move(side,code==='ArrowUp'?-42:42)}};
 }
 
