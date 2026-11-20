@@ -62,9 +62,6 @@ body:not([data-battle-ui="visible"]) :is(#hud,#inputPanel,#debugBtns,#ctrl,#touc
 #debugBtns{position:static;display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
 #debugBtns :is(button,select){width:auto;height:28px;padding:2px 6px;font:11px system-ui;white-space:nowrap}
 #dbgPlay,#dbgPause,#dbgMark{display:none!important}
-#battlePauseSettings input[type=range]{appearance:none;-webkit-appearance:none;height:5px;background:#f3dbf4}
-#battlePauseSettings input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:36px;height:36px;border:0;background:url(./Data/Settings/LunaP.webp) center/contain no-repeat;transform:translateY(-4px)}
-#battlePauseSettings input[type=range]::-moz-range-thumb{width:36px;height:36px;border:0;background:url(./Data/Settings/LunaP.webp) center/contain no-repeat;transform:translateY(-4px)}
 body:not([data-battle-ui="visible"]) #battlePauseButtons{display:none}
 body[data-touch-mirrored="true"] #ctrl{left:auto!important;right:34px!important}
 body[data-touch-mirrored="true"] #touchAttacks{right:auto;left:24px}
@@ -76,7 +73,8 @@ body[data-touch-mirrored="true"] #touchAttacks{right:auto;left:24px}
 import {ensurePresentationWorker} from './Engine/presentation-preload.js?v=02408r39';
 await ensurePresentationWorker();
 import {resultFacing,resultNeutralState,bindEffects,foreignFrameResolver} from './Engine/baseline-fixes.js?v=02408r13';
-import {createPageBackground} from './Engine/page-background.js?v=02408r13';
+import {installAssetInteractions} from './Engine/asset-interactions.js?v=uiPolish1';installAssetInteractions();
+import {createPageBackground} from './Engine/page-background.js?v=uiPolish1';
 createPageBackground().ready.catch(error=>console.error('Page background',error));
 import {assetUrl} from './Engine/asset-paths.js?v=02362';
 import {applyStateVelocity} from './Engine/state-entry-velocity.js?v=02408r13';
@@ -100,7 +98,7 @@ import {createScoreRuntime} from './Engine/score-runtime.js?v=02376';
 import {createRoundFlow} from './Engine/round-flow-runtime.js?v=02366';
 
 
-import {createRoundView} from './Engine/round-flow-view.js?v=02408r39';
+import {createRoundView} from './Engine/round-flow-view.js?v=uiPolish1';
 import {createHardwareIndicator} from './Engine/hardware-indicator.js?v=02385';
 const hardwareIndicator=createHardwareIndicator();
 import {createAIWalkGate,guardStartupPending} from './Engine/ai-action-gates.js?v=02408r39';
@@ -108,9 +106,9 @@ const aiWalkGate=createAIWalkGate(6);
 function aiGuardStartupPending(actor){return aiControlled(fighterPlayer(actor))&&guardStartupPending(actor,actionDuration(actor.anim,fighterPlayer(actor)))}
 import {loadSwatheshia} from './Engine/swatheshia-scene.js?v=continueCamera2';
 import {canBindKey} from './Engine/key-config-screen.js?v=centerPress1';
-import {createBattlePause} from './Engine/battle-pause.js?v=movelistLens1';
-import {inputLayout} from './Engine/input-layout.js?v=pauseHUD1';
-import {createPalaceMenu} from './Engine/palace-menu.js?v=pauseHUD1';
+import {createBattlePause} from './Engine/battle-pause.js?v=uiPolish1';
+import {inputLayout} from './Engine/input-layout.js?v=uiPolish1';
+import {createPalaceMenu} from './Engine/palace-menu.js?v=uiPolish1';
 import {abilityProfile,abilityDamage,abilityBudget} from './Engine/ability-system.js?v=acs1';
 let battleAbilities=[abilityProfile(),abilityProfile()];
 const superSparks=createSuperSparks();

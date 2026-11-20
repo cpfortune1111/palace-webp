@@ -1,6 +1,7 @@
-import {createMoveList} from './move-list.js?v=movelistLens1';
+import {styleSettingsSlider} from './settings-slider.js?v=uiPolish1';
+import {createMoveList} from './move-list.js?v=uiPolish1';
 import {createKeyConfig,settingsArt,settingsText} from './key-config-screen.js?v=centerPress1';
-import {touchOnly,inputSwitchRow} from './input-layout.js?v=pauseHUD1';
+import {touchOnly,inputSwitchRow} from './input-layout.js?v=uiPolish1';
 export function createBattlePause({members,canPause,pause,resume,shell,bindings}){
  let config=null,page='movelist',readyToInteract=false,dim=false;
  const surface=document.createElement('div');surface.id='battlePauseSurface';surface.hidden=true;
@@ -36,7 +37,7 @@ export function createBattlePause({members,canPause,pause,resume,shell,bindings}
   }
   const box=document.createElement('div');box.style.cssText=settingsText+';position:absolute;top:268px;left:50%;translate:-50% 0;width:600px';
   for(const [key,label] of [['master','Master Volume'],['bgm','BGM Volume'],['sfx','SFX Volume']]){
-   const row=document.createElement('label');row.style.cssText='display:flex;align-items:center;gap:24px;margin:16px 0';const caption=document.createElement('span'),input=document.createElement('input'),value=document.createElement('span');caption.textContent=label;caption.style.width='200px';input.type='range';input.min=0;input.max=100;input.value=shell().options[key];input.style.width='236px';input.ariaLabel=label;value.style.width='70px';value.textContent=input.value+'%';input.oninput=()=>{shell().options[key]=+input.value;value.textContent=input.value+'%';shell().saveOptions()};row.append(caption,input,value);box.append(row)
+   const row=document.createElement('label');row.style.cssText='display:flex;align-items:center;gap:24px;margin:16px 0;justify-content:center';const caption=document.createElement('span'),input=document.createElement('input'),value=document.createElement('span');caption.textContent=label;caption.style.width='200px';input.type='range';input.min=0;input.max=100;input.value=shell().options[key];input.style.width='236px';input.ariaLabel=label;value.style.width='70px';value.textContent=input.value+'%';input.oninput=()=>{shell().options[key]=+input.value;value.textContent=input.value+'%';shell().saveOptions()};row.append(caption,input,value);box.append(row);styleSettingsSlider(input)
   }
   box.append(inputSwitchRow());content.append(box);
   const button=settingsArt('Config',-138,170,'Key Config',()=>{if(list.switchView('config'))shell().audio.effect('btn-click')});button.disabled=touchOnly();if(button.disabled)button.style.filter='grayscale(1)';content.append(button,settingsArt('Back',138,170,'Back to movelist',()=>{if(list.switchView('movelist'))toggleIcon('movelist')}));
